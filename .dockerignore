@@ -1,0 +1,16 @@
+.cache
+.coverage
+.coverage.*
+docker-compose.yml
+Dockerfile
+.dockerignore
+.env
+.git
+*.pyc
+__pycache__
+*.pyd
+*.pyo
+.pytest_cache
+.Python
+.python-version
+*.swp

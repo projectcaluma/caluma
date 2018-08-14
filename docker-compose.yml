@@ -1,0 +1,20 @@
+version: '2'
+services:
+  db:
+    image: postgres
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=caluma
+      - POSTGRES_PASSWORD=caluma
+  backend:
+    build: .
+    ports:
+      - '8000:80'
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+    environment:
+      - DJANGO_DATABASE_HOST=db
+      - ENV=docker

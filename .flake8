@@ -1,0 +1,34 @@
+[flake8]
+ignore =
+    # whitespace before ':'
+    E203,
+    # multiple spaces before operator
+    E221,
+    # multiple spaces after operator
+    E222,
+    # multiple spaces after ','
+    E241,
+    # unexpected spaces around keyword / parameter equals
+    E251,
+    # multiple spaces after keyword
+    E272,
+    # Missing docstring in public module
+    D100,
+    # Missing docstring in public class
+    D101,
+    # Missing docstring in public method
+    D102,
+    # Missing docstring in public function
+    D103,
+    # Missing docstring in public package
+    D104,
+    # Missing docstring in magic method
+    D105,
+    # Missing docstring in public package
+    D106,
+    # Missing docstring in __init__
+    D107
+
+jobs=auto
+exclude = migrations
+max-complexity = 10
