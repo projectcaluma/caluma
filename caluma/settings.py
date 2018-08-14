@@ -8,7 +8,7 @@ env = environ.Env()
 django_root = environ.Path(__file__) - 2
 
 ENV_FILE = env.str('ENV_FILE', default=django_root('.env'))
-if os.path.exists(ENV_FILE):
+if os.path.exists(ENV_FILE):  # pragma: no cover
     environ.Env.read_env(ENV_FILE)
 
 # per default production is enabled for security reasons
@@ -142,7 +142,7 @@ def parse_admins(admins):  # pragma: no cover
     result = []
     for admin in admins:
         match = re.search('(.+) \<(.+@.+)\>', admin)
-        if not match:  # pragma: no cover
+        if not match:
             raise environ.ImproperlyConfigured(
                 'In ADMINS admin "{0}" is not in correct '
                 '"Firstname Lastname <email@example.com>"'.format(admin))
