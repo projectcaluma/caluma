@@ -14,10 +14,13 @@ install:
   - make install-dev
 
 before_script:
-  - psql -c "CREATE ROLE timed CREATEDB LOGIN PASSWORD 'caluma';" -U postgres
+  - psql -c "CREATE ROLE caluma CREATEDB LOGIN PASSWORD 'caluma';" -U postgres
   - psql -c "CREATE DATABASE caluma;" -U postgres
 
 script: make test
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
+
+addons:
+  postgresql: "9.3"
