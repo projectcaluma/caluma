@@ -5,9 +5,9 @@ services:
     ports:
       - '5432:5432'
     environment:
-      - POSTGRES_USER={{cookiecutter.project_name}}
-      - POSTGRES_PASSWORD={{cookiecutter.project_name}}
-  backend:
+      - POSTGRES_USER=caluma
+      - POSTGRES_PASSWORD=caluma
+  caluma:
     build: .
     ports:
       - '8000:80'

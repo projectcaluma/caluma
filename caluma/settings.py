@@ -132,7 +132,7 @@ JWT_AUTH = {
 }
 
 
-def parse_admins(admins):
+def parse_admins(admins):  # pragma: no cover
     """
     Parse env admins to django admins.
 
