@@ -27,5 +27,5 @@ def client():
 
 @pytest.fixture
 def admin_client(db, admin_user, client):
-    client.login(username=admin_user.username, password='password')
+    client.login(username=admin_user.username, password="password")
     return client

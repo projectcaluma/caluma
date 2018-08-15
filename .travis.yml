@@ -18,6 +18,7 @@ before_script:
   - psql -c "CREATE DATABASE caluma;" -U postgres
 
 script:
+  - black --check .
   - flake8
   - pytest --no-cov-on-fail --cov --create-db
 
