@@ -1,0 +1,8 @@
+django==1.11.15 # pyup: >=1.11,<1.12
+django-environ==0.4.5
+django-filter==2.0.0
+djangorestframework==3.8.2
+djangorestframework-jsonapi==2.5.0
+djangorestframework-jwt==1.11.0
+psycopg2-binary==2.7.5
+uwsgi==2.0.17.1
