@@ -1,3 +1,4 @@
+black==18.6b4
 factory-boy==2.11.1
 flake8==3.5.0
 flake8-debugger==3.1.0

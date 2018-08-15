@@ -1,11 +1,9 @@
 import inspect
 
-import pytest
 from factory.base import FactoryMetaClass
 from pytest_factoryboy import register
-from rest_framework_jwt import test
 
-from .form import factories as user_factories
+from .form import factories as form_factories
 
 
 def register_module(module):
@@ -17,15 +15,4 @@ def register_module(module):
             register(obj, base_name)
 
 
-register_module(user_factories)
-
-
-@pytest.fixture
-def client():
-    return test.APIJWTClient()
-
-
-@pytest.fixture
-def admin_client(db, admin_user, client):
-    client.login(username=admin_user.username, password="password")
-    return client
+register_module(form_factories)

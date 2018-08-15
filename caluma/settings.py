@@ -1,4 +1,3 @@
-import datetime
 import os
 import re
 
@@ -29,9 +28,9 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=default(["*"]))
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.postgres",
+    "graphene_django",
     "caluma.form.apps.DefaultConfig",
 ]
 
@@ -61,25 +60,6 @@ DATABASES = {
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },  # noqa: E501
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"
-    },  # noqa: E501
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"
-    },  # noqa: E501
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"
-    },  # noqa: E501
-]
-
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -88,48 +68,6 @@ TIME_ZONE = env.str("TIME_ZONE", "UTC")
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
-
-AUTH_USER_MODEL = "form.User"
-
-REST_FRAMEWORK = {
-    "EXCEPTION_HANDLER": "rest_framework_json_api.exceptions.exception_handler",
-    "DEFAULT_PAGINATION_CLASS": "rest_framework_json_api.pagination.JsonApiPageNumberPagination",
-    "DEFAULT_PARSER_CLASSES": (
-        "rest_framework_json_api.parsers.JSONParser",
-        "rest_framework.parsers.JSONParser",
-        "rest_framework.parsers.FormParser",
-        "rest_framework.parsers.MultiPartParser",
-    ),
-    "DEFAULT_RENDERER_CLASSES": (
-        "rest_framework_json_api.renderers.JSONRenderer",
-        "rest_framework.renderers.JSONRenderer",
-    ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_jwt.authentication.JSONWebTokenAuthentication",
-    ),
-    "DEFAULT_METADATA_CLASS": "rest_framework_json_api.metadata.JSONAPIMetadata",
-    "DEFAULT_FILTER_BACKENDS": (
-        "django_filters.rest_framework.DjangoFilterBackend",
-        "rest_framework.filters.SearchFilter",
-        "rest_framework.filters.OrderingFilter",
-    ),
-    "ORDERING_PARAM": "sort",
-    "TEST_REQUEST_RENDERER_CLASSES": (
-        "rest_framework_json_api.renderers.JSONRenderer",
-        "rest_framework.renderers.JSONRenderer",
-    ),
-    "TEST_REQUEST_DEFAULT_FORMAT": "vnd.api+json",
-}
-
-JSON_API_FORMAT_FIELD_NAMES = "dasherize"
-JSON_API_FORMAT_TYPES = "dasherize"
-JSON_API_PLURALIZE_TYPES = True
-
-JWT_AUTH = {
-    "JWT_EXPIRATION_DELTA": datetime.timedelta(minutes=30),
-    "JWT_ALLOW_REFRESH": True,
-}
 
 
 def parse_admins(admins):  # pragma: no cover
@@ -152,3 +90,8 @@ def parse_admins(admins):  # pragma: no cover
 
 
 ADMINS = parse_admins(env.list("ADMINS", default=[]))
+
+
+# GraphQL
+
+GRAPHENE = {"SCHEMA": "caluma.schema.schema"}
