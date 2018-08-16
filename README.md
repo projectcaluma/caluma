@@ -20,6 +20,8 @@ commands to complete the installation:
 make start
 ```
 
+And access GraphiQL at [http://localhost:8000/graphql](http://localhost:8000/graphql)
+
 ## Testing
 Run tests by executing:
 
