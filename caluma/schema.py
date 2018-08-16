@@ -1,9 +1,9 @@
 import graphene
 
-from .form import schema
+from .form import schema as form_schema
 
 
-class Query(schema.Query, graphene.ObjectType):
+class Query(form_schema.Query, graphene.ObjectType):
     pass
 
 

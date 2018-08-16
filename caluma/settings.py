@@ -42,6 +42,20 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "caluma.urls"
 WSGI_APPLICATION = "caluma.wsgi.application"
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.messages.context_processors.messages",
+            ]
+        },
+    }
+]
 
 
 # Database
