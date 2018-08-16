@@ -1,0 +1,13 @@
+query AllFormsQuery {
+  allForms {
+    edges {
+      node {
+        id
+        slug
+        name
+        description
+        meta
+      }
+    }
+  }
+}
