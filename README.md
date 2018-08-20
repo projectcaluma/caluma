@@ -6,7 +6,7 @@
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/projectcaluma/caluma)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-A collaborative form editing service. See [project site](https://projectcaluma.github.io/) for more dedtails.
+A collaborative form editing service. See [project site](https://projectcaluma.github.io/) for more details.
 
 ## Installation
 
