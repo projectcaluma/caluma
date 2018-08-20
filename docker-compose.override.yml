@@ -1,5 +1,8 @@
 version: "3"
 services:
   caluma:
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
     volumes:
       - ./:/app
+    command: /bin/sh -c "wait-for-it.sh db:3306 -- ./manage.py migrate && ./manage.py runserver 0.0.0.0:80"
