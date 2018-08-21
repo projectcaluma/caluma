@@ -23,6 +23,7 @@ def test_save_form(db, snapshot, form):
 
     inp = {"input": FormSerializer(form).data}
     inp["input"].pop("meta")
+    inp["input"]["clientMutationId"] = "testid"
     result = schema.execute(query, variables=inp)
 
     assert not result.errors
@@ -45,7 +46,9 @@ def test_delete_form(db, snapshot, form):
     """
 
     global_id = to_global_id(models.Form.__name__, form.pk)
-    result = schema.execute(query, variables={"input": {"id": global_id}})
+    result = schema.execute(
+        query, variables={"input": {"id": global_id, "clientMutationId": "testid"}}
+    )
 
     assert not result.errors
     snapshot.assert_match(result.data)

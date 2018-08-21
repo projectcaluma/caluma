@@ -9,7 +9,7 @@ snapshots = Snapshot()
 
 snapshots["test_save_form 1"] = {
     "saveForm": {
-        "clientMutationId": None,
+        "clientMutationId": "testid",
         "form": {
             "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",
             "meta": "{}",
@@ -21,7 +21,7 @@ snapshots["test_save_form 1"] = {
 
 snapshots["test_delete_form 1"] = {
     "deleteForm": {
-        "clientMutationId": None,
+        "clientMutationId": "testid",
         "form": {
             "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",
             "meta": "{}",
