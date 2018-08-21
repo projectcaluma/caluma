@@ -21,7 +21,7 @@ def schema_query_files():
 
 
 @pytest.mark.parametrize("query_file", schema_query_files())
-def test_schema_queries(db, form, snapshot, query_file):
+def test_schema_queries(db, form, question, snapshot, query_file):
     """Add your graphql test file to queries folder for automatic testing."""
 
     with open(os.path.join(DIR_NAME, query_file)) as query:

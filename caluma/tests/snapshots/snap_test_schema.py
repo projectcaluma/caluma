@@ -22,3 +22,20 @@ snapshots["test_schema_queries[queries/AllFormsQuery.graphql] 1"] = {
         ]
     }
 }
+
+snapshots["test_schema_queries[queries/AllQuestionsQuery.graphql] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "configuration": "{}",
+                    "id": "UXVlc3Rpb246cmF0aGVyLWNvc3QtYWRtaXQ=",
+                    "label": "Courtney Brewer",
+                    "meta": "{}",
+                    "slug": "rather-cost-admit",
+                    "type": "NUMBER",
+                }
+            }
+        ]
+    }
+}

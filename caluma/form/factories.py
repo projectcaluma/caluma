@@ -12,3 +12,16 @@ class FormFactory(DjangoModelFactory):
 
     class Meta:
         model = models.Form
+
+
+class QuestionFactory(DjangoModelFactory):
+    slug = Faker("slug")
+    label = Faker("name")
+    type = Faker("word", ext_word_list=models.Question.TYPE_CHOICES)
+    is_required = "true"
+    is_hidden = "false"
+    configuration = {}
+    meta = {}
+
+    class Meta:
+        model = models.Question
