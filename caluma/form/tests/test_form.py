@@ -22,7 +22,7 @@ def test_save_form(db, snapshot, form):
     """
 
     inp = {"input": FormSerializer(form).data}
-    inp["input"].pop("meta")
+    inp["input"]["meta"] = "{}"
     inp["input"]["clientMutationId"] = "testid"
     result = schema.execute(query, variables=inp)
 

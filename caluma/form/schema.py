@@ -15,6 +15,17 @@ class Form(DjangoObjectType):
         interfaces = (Node,)
 
 
+class Question(DjangoObjectType):
+    class Meta:
+        model = models.Question
+        interfaces = (Node,)
+
+
+class SaveQuestion(UserDefinedPrimaryKeyNodeSerializerMutation):
+    class Meta:
+        serializer_class = serializers.QuestionSerializer
+
+
 class SaveForm(UserDefinedPrimaryKeyNodeSerializerMutation):
     class Meta:
         serializer_class = serializers.FormSerializer
@@ -28,6 +39,7 @@ class DeleteForm(relay.ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
+        # TODO: do not allow deleting of forms with documents referencing it
         _, form_id = from_global_id(input["id"])
         form = get_object_or_404(models.Form, pk=form_id)
         form.delete()
@@ -39,7 +51,9 @@ class DeleteForm(relay.ClientIDMutation):
 class Mutation(object):
     save_form = SaveForm().Field()
     delete_form = DeleteForm().Field()
+    save_question = SaveQuestion().Field()
 
 
 class Query(object):
     all_forms = DjangoConnectionField(Form)
+    all_questions = DjangoConnectionField(Question)

@@ -18,7 +18,9 @@ ignore =
     D106,
     D107,
     # needed because of https://github.com/ambv/black/issues/144
-    D202
+    D202,
+    # other string does contain unindexed parameters
+    P103
 max-line-length = 80
 exclude = migrations snapshots
 max-complexity = 10
