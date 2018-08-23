@@ -52,12 +52,12 @@ class SerializerMutation(ClientIDMutation):
         return_field_name=None,
         **options
     ):
-        if not serializer_class:  # pragma: no cover
+        if not serializer_class:  # pragma: todo cover
             raise Exception("serializer_class is required for the SerializerMutation")
 
         if (
             "update" not in model_operations and "create" not in model_operations
-        ):  # pragma: no cover
+        ):  # pragma: todo cover
             raise Exception('model_operations must contain "create" and/or "update"')
 
         serializer = serializer_class()
@@ -96,7 +96,7 @@ class SerializerMutation(ClientIDMutation):
         )
 
     @classmethod
-    def get_serializer_kwargs(cls, root, info, **input):
+    def get_serializer_kwargs(cls, root, info, **input):  # pragma: todo cover
         lookup_field = cls._meta.lookup_field
         model_class = cls._meta.model_class
 
