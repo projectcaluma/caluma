@@ -7,8 +7,8 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots["test_save_form 1"] = {
-    "saveForm": {
+snapshots["test_delete_form 1"] = {
+    "deleteForm": {
         "clientMutationId": "testid",
         "form": {
             "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",
@@ -19,8 +19,8 @@ snapshots["test_save_form 1"] = {
     }
 }
 
-snapshots["test_delete_form 1"] = {
-    "deleteForm": {
+snapshots["test_save_form 1"] = {
+    "saveForm": {
         "clientMutationId": "testid",
         "form": {
             "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",

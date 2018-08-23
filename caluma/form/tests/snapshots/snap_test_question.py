@@ -7,6 +7,17 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
+snapshots["test_save_question[true|invalid] 1"] = {
+    "data": {"saveQuestion": None},
+    "errors": [
+        {
+            "locations": [{"column": 11, "line": 3}],
+            "message": "{'is_required': [ErrorDetail(string='The `invalid` transform is undefined.', code='invalid')]}",
+            "path": ["saveQuestion"],
+        }
+    ],
+}
+
 snapshots["test_save_question[true] 1"] = {
     "data": {
         "saveQuestion": {
@@ -21,10 +32,5 @@ snapshots["test_save_question[true] 1"] = {
             },
         }
     },
-    "errors": None,
-}
-
-snapshots["test_save_question[true|invalid] 1"] = {
-    "data": {"saveQuestion": {"clientMutationId": None, "question": None}},
-    "errors": None,
+    "errors": [],
 }
