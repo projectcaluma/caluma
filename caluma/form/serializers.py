@@ -14,17 +14,20 @@ class QuestionSerializer(serializers.ModelSerializer):
     is_required = serializers.CharField()
     is_hidden = serializers.CharField()
 
-    def validate_is_required(self, value):
+    def _validate_jexl_expression(self, expression):
         jexl = JEXL()
         # TODO: define transforms e.g. answer
-        errors = list(jexl.validate(value))
+        errors = list(jexl.validate(expression))
         if errors:
             raise exceptions.ValidationError(errors)
 
-        return value
+        return expression
+
+    def validate_is_required(self, value):
+        return self._validate_jexl_expression(value)
 
     def validate_is_hidden(self, value):
-        return self.validate_is_required(value)
+        return self._validate_jexl_expression(value)
 
     # TODO: validate configuration depending on type
 
