@@ -21,17 +21,12 @@ class Question(DjangoObjectType):
         interfaces = (Node,)
 
 
-class SaveQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
-    class Meta:
-        serializer_class = serializers.QuestionSerializer
-
-
 class SaveForm(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
         serializer_class = serializers.FormSerializer
 
 
-class DeleteForm(relay.ClientIDMutation):
+class ArchiveForm(relay.ClientIDMutation):
     class Input:
         id = graphene.ID()
 
@@ -39,19 +34,55 @@ class DeleteForm(relay.ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
-        # TODO: do not allow deleting of forms with documents referencing it
         _, form_id = from_global_id(input["id"])
         form = get_object_or_404(models.Form, pk=form_id)
-        form.delete()
-        # pk is reset after delete
-        form.slug = form_id
-        return DeleteForm(form=form)
+        form.is_archived = True
+        form.save(update_fields=["is_archived"])
+        return ArchiveForm(form=form)
+
+
+class PublishForm(relay.ClientIDMutation):
+    class Input:
+        id = graphene.ID()
+
+    form = graphene.Field(Form)
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+        _, form_id = from_global_id(input["id"])
+        form = get_object_or_404(models.Form, pk=form_id)
+        form.is_published = True
+        form.save(update_fields=["is_published"])
+        return PublishForm(form=form)
+
+
+class ArchiveQuestion(relay.ClientIDMutation):
+    class Input:
+        id = graphene.ID()
+
+    question = graphene.Field(Question)
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+        _, question_id = from_global_id(input["id"])
+        question = get_object_or_404(models.Question, pk=question_id)
+        question.is_archived = True
+        question.save(update_fields=["is_archived"])
+        return ArchiveQuestion(question=question)
+
+
+class SaveQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+    class Meta:
+        serializer_class = serializers.QuestionSerializer
 
 
 class Mutation(object):
     save_form = SaveForm().Field()
-    delete_form = DeleteForm().Field()
+    archive_form = ArchiveForm().Field()
+    publish_form = PublishForm().Field()
+
     save_question = SaveQuestion().Field()
+    archive_question = ArchiveQuestion().Field()
 
 
 class Query(object):

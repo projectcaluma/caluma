@@ -1,8 +1,5 @@
-import pytest
-from graphql_relay import to_global_id
-
-from .. import models
 from ...schema import schema
+from ...tests import extract_global_id_input_fields, extract_serializer_input_fields
 from ..serializers import FormSerializer
 
 
@@ -21,37 +18,54 @@ def test_save_form(db, snapshot, form):
         }
     """
 
-    inp = {"input": FormSerializer(form).data}
-    inp["input"]["meta"] = "{}"
-    inp["input"]["clientMutationId"] = "testid"
+    inp = {"input": extract_serializer_input_fields(FormSerializer, form)}
     result = schema.execute(query, variables=inp)
 
     assert not result.errors
     snapshot.assert_match(result.data)
 
 
-def test_delete_form(db, snapshot, form):
+def test_archive_form(db, form):
     query = """
-        mutation DeleteForm($input: DeleteFormInput!) {
-          deleteForm(input: $input) {
+        mutation ArchiveForm($input: ArchiveFormInput!) {
+          archiveForm(input: $input) {
             form {
-              id
-              slug
-              name
-              meta
+              isArchived
             }
             clientMutationId
           }
         }
     """
 
-    global_id = to_global_id(models.Form.__name__, form.pk)
     result = schema.execute(
-        query, variables={"input": {"id": global_id, "clientMutationId": "testid"}}
+        query, variables={"input": extract_global_id_input_fields(form)}
     )
 
     assert not result.errors
-    snapshot.assert_match(result.data)
+    assert result.data["archiveForm"]["form"]["isArchived"]
 
-    with pytest.raises(models.Form.DoesNotExist):
-        form.refresh_from_db()
+    form.refresh_from_db()
+    assert form.is_archived
+
+
+def test_publish_form(db, form):
+    query = """
+        mutation PublishForm($input: PublishFormInput!) {
+          publishForm(input: $input) {
+            form {
+              isPublished
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    result = schema.execute(
+        query, variables={"input": extract_global_id_input_fields(form)}
+    )
+
+    assert not result.errors
+    assert result.data["publishForm"]["form"]["isPublished"]
+
+    form.refresh_from_db()
+    assert form.is_published

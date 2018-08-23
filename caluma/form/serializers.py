@@ -8,6 +8,7 @@ class FormSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Form
         fields = "__all__"
+        read_only_fields = ("is_archived", "is_published")
 
 
 class QuestionSerializer(serializers.ModelSerializer):
@@ -34,3 +35,4 @@ class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Question
         fields = "__all__"
+        read_only_fields = ("is_archived",)
