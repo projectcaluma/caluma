@@ -33,7 +33,7 @@ class SerializerMutation(ClientIDMutation):
 
     https://github.com/graphql-python/graphene-django/issues/380
 
-    Goal would be to get rid of this custom class anymore when referenced issue
+    Goal would be to get rid of this custom class when referenced issues
     have been resolved successfully.
     """
 
