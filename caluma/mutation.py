@@ -1,29 +1,40 @@
 from collections import OrderedDict
 
 import graphene
+from django.shortcuts import get_object_or_404
+from graphene.relay.mutation import ClientIDMutation
 from graphene.types import Field, InputField
+from graphene.types.mutation import MutationOptions
 from graphene.types.objecttype import yank_fields_from_attrs
 from graphene_django.registry import get_global_registry
-from graphene_django.rest_framework.mutation import (
-    SerializerMutation,
-    SerializerMutationOptions,
-    fields_for_serializer,
-)
+from graphene_django.rest_framework.mutation import fields_for_serializer
 
 
-class NodeSerializerMutationOptions(SerializerMutationOptions):
+class SerializerMutationOptions(MutationOptions):
+    lookup_field = None
+    model_class = None
+    model_operations = ["create", "update"]
+    serializer_class = None
     return_field_name = None
 
 
-class NodeSerializerMutation(SerializerMutation):
+class SerializerMutation(ClientIDMutation):
     """
-    Returns a node of given serializer model instead of serializing data directly.
+    Caluma specific SerializerMutation solving following upstream issues.
 
-    This is a fix for following issue:
+    1. Expose node instead of attributes directly.
+
+    Dependend issues:
     https://github.com/graphql-python/graphene-django/issues/376
+    https://github.com/graphql-python/graphene-django/issues/386
+    https://github.com/graphql-python/graphene-django/issues/462
 
-    Once this has been proven to be a good abstraction an upstream PR
-    should be provided.
+    2. Validation should be GraphQL errors
+
+    https://github.com/graphql-python/graphene-django/issues/380
+
+    Goal would be to get rid of this custom class anymore when referenced issue
+    have been resolved successfully.
     """
 
     class Meta:
@@ -36,12 +47,11 @@ class NodeSerializerMutation(SerializerMutation):
         serializer_class=None,
         model_class=None,
         model_operations=["create", "update"],
-        return_field_name=None,
         only_fields=(),
         exclude_fields=(),
+        return_field_name=None,
         **options
     ):
-
         if not serializer_class:  # pragma: no cover
             raise Exception("serializer_class is required for the SerializerMutation")
 
@@ -72,7 +82,7 @@ class NodeSerializerMutation(SerializerMutation):
         output_fields = OrderedDict()
         output_fields[return_field_name] = graphene.Field(model_type)
 
-        _meta = NodeSerializerMutationOptions(cls)
+        _meta = SerializerMutationOptions(cls)
         _meta.lookup_field = lookup_field
         _meta.model_operations = model_operations
         _meta.serializer_class = serializer_class
@@ -86,13 +96,51 @@ class NodeSerializerMutation(SerializerMutation):
         )
 
     @classmethod
+    def get_serializer_kwargs(cls, root, info, **input):
+        lookup_field = cls._meta.lookup_field
+        model_class = cls._meta.model_class
+
+        if model_class:
+            if "update" in cls._meta.model_operations and lookup_field in input:
+                instance = get_object_or_404(
+                    model_class, **{lookup_field: input[lookup_field]}
+                )
+            elif "create" in cls._meta.model_operations:
+                instance = None
+            else:
+                raise Exception(
+                    'Invalid update operation. Input parameter "{0}" required.'.format(
+                        lookup_field
+                    )
+                )
+
+            return {
+                "instance": instance,
+                "data": input,
+                "context": {"request": info.context},
+            }
+
+        return {"data": input, "context": {"request": info.context}}
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+        kwargs = cls.get_serializer_kwargs(root, info, **input)
+        serializer = cls._meta.serializer_class(**kwargs)
+
+        # TODO: use extensions of error to define what went wrong in validation
+        # also see https://github.com/graphql-python/graphql-core/pull/204
+        # potentially split each validation error into on GraphQL error
+        serializer.is_valid(raise_exception=True)
+        return cls.perform_mutate(serializer, info)
+
+    @classmethod
     def perform_mutate(cls, serializer, info):
         obj = serializer.save()
         kwargs = {cls._meta.return_field_name: obj}
-        return cls(errors=None, **kwargs)
+        return cls(**kwargs)
 
 
-class UserDefinedPrimaryKeyNodeSerializerMutation(NodeSerializerMutation):
+class UserDefinedPrimaryKeyMixin(object):
     """
     Allows a primary key to be overwritten by user.
 

@@ -1,5 +1,6 @@
 import pytest
 from graphene.utils.str_converters import to_camel_case
+from graphql.error import format_error
 
 from .. import serializers
 from ...schema import schema
@@ -33,4 +34,6 @@ def test_save_question(db, snapshot, question):
     inp["input"]["configuration"] = "{}"
     inp["clientMutationId"] = "test"
     result = schema.execute(query, variables=inp)
-    snapshot.assert_match({"data": result.data, "errors": result.errors})
+    snapshot.assert_match(
+        {"data": result.data, "errors": [format_error(e) for e in result.errors or []]}
+    )

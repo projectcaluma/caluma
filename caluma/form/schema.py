@@ -6,7 +6,7 @@ from graphene_django.types import DjangoObjectType
 from graphql_relay import from_global_id
 
 from . import models, serializers
-from ..mutation import UserDefinedPrimaryKeyNodeSerializerMutation
+from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
 
 
 class Form(DjangoObjectType):
@@ -21,12 +21,12 @@ class Question(DjangoObjectType):
         interfaces = (Node,)
 
 
-class SaveQuestion(UserDefinedPrimaryKeyNodeSerializerMutation):
+class SaveQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
         serializer_class = serializers.QuestionSerializer
 
 
-class SaveForm(UserDefinedPrimaryKeyNodeSerializerMutation):
+class SaveForm(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
         serializer_class = serializers.FormSerializer
 
