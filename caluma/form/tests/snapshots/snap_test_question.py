@@ -21,7 +21,7 @@ snapshots["test_save_question[true|invalid] 1"] = {
 snapshots["test_save_question[true] 1"] = {
     "data": {
         "saveQuestion": {
-            "clientMutationId": None,
+            "clientMutationId": "testid",
             "question": {
                 "configuration": "{}",
                 "id": "UXVlc3Rpb246bXJzLXNoYWtlLXJlY2VudA==",

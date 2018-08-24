@@ -9,6 +9,8 @@ class FormFactory(DjangoModelFactory):
     name = Faker("name")
     description = Faker("text")
     meta = {}
+    is_published = False
+    is_archived = False
 
     class Meta:
         model = models.Form
@@ -22,6 +24,7 @@ class QuestionFactory(DjangoModelFactory):
     is_hidden = "false"
     configuration = {}
     meta = {}
+    is_archived = False
 
     class Meta:
         model = models.Question

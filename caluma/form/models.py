@@ -7,6 +7,8 @@ class Form(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     meta = JSONField(default={})
+    is_published = models.BooleanField(default=False)
+    is_archived = models.BooleanField(default=False)
     # TODO: ManyToMany questions
 
 
@@ -25,5 +27,6 @@ class Question(models.Model):
     type = models.CharField(choices=TYPE_CHOICES_TUPLE, max_length=10)
     is_required = models.TextField()
     is_hidden = models.TextField()
+    is_archived = models.BooleanField(default=False)
     configuration = JSONField(default={})
     meta = JSONField(default={})
