@@ -20,10 +20,11 @@ class Form(models.Model):
 class FormQuestion(models.Model):
     form = models.ForeignKey("Form")
     question = models.ForeignKey("Question")
-    sort_order = models.PositiveIntegerField(editable=False, db_index=True, default=0)
+    sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
 
     class Meta:
-        ordering = ("-sort_order", "id")
+        ordering = ("-sort", "id")
+        unique_together = ("form", "question")
 
 
 class Question(models.Model):

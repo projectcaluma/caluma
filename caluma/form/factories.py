@@ -33,7 +33,7 @@ class QuestionFactory(DjangoModelFactory):
 class FormQuestionFactory(DjangoModelFactory):
     form = SubFactory(FormFactory)
     question = SubFactory(QuestionFactory)
-    sort_order = 0
+    sort = 0
 
     class Meta:
         model = models.FormQuestion
