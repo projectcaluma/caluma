@@ -10,6 +10,12 @@ from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
 
 
 class Form(DjangoObjectType):
+    def resolve_questions(self, info):
+        # TODO: potential cause for query explosions
+        # see https://github.com/graphql-python/graphene-django/pull/220
+        # and https://docs.djangoproject.com/en/2.1/ref/models/querysets/#django.db.models.Prefetch
+        return self.questions.order_by("-formquestion__sort_order", "formquestion__id")
+
     class Meta:
         model = models.Form
         interfaces = (Node,)

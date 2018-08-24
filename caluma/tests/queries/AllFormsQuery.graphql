@@ -7,6 +7,15 @@ query AllFormsQuery {
         name
         description
         meta
+        questions {
+          edges {
+            node {
+              id
+              slug
+              label
+            }
+          }
+        }
       }
     }
   }

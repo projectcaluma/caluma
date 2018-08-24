@@ -9,7 +9,21 @@ class Form(models.Model):
     meta = JSONField(default={})
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
-    # TODO: ManyToMany questions
+    questions = models.ManyToManyField(
+        "Question", through="FormQuestion", related_name="forms"
+    )
+
+    def __str__(self):
+        return self.slug
+
+
+class FormQuestion(models.Model):
+    form = models.ForeignKey("Form")
+    question = models.ForeignKey("Question")
+    sort_order = models.PositiveIntegerField(editable=False, db_index=True, default=0)
+
+    class Meta:
+        ordering = ("-sort_order", "id")
 
 
 class Question(models.Model):
@@ -30,3 +44,6 @@ class Question(models.Model):
     is_archived = models.BooleanField(default=False)
     configuration = JSONField(default={})
     meta = JSONField(default={})
+
+    def __str__(self):
+        return self.slug
