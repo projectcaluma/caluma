@@ -28,8 +28,10 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=default(["*"]))
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.contenttypes",
     "django.contrib.postgres",
+    "localized_fields",
+    "psqlextra",
+    "django.contrib.contenttypes",
     "graphene_django",
     "caluma.form.apps.DefaultConfig",
 ]
@@ -63,9 +65,7 @@ TEMPLATES = [
 
 DATABASES = {
     "default": {
-        "ENGINE": env.str(
-            "DATABASE_ENGINE", default="django.db.backends.postgresql_psycopg2"
-        ),
+        "ENGINE": "psqlextra.backend",
         "NAME": env.str("DATABASE_NAME", default="caluma"),
         "USER": env.str("DATABASE_USER", default="caluma"),
         "PASSWORD": env.str("DATABASE_PASSWORD", default=default("caluma")),
@@ -77,7 +77,7 @@ DATABASES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = env.str("LANGUAGE_CODE", "en-us")
+LANGUAGE_CODE = env.str("LANGUAGE_CODE", "en")
 TIME_ZONE = env.str("TIME_ZONE", "UTC")
 USE_I18N = True
 USE_L10N = True

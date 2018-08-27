@@ -1,12 +1,13 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from graphql.error import GraphQLError
+from localized_fields.fields import LocalizedField
 
 
 class Form(models.Model):
     slug = models.SlugField(max_length=50, primary_key=True)
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
+    name = LocalizedField(blank=False, null=False, required=False)
+    description = LocalizedField(blank=True, null=True, required=False)
     meta = JSONField(default={})
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
@@ -55,7 +56,7 @@ class Question(models.Model):
     TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
 
     slug = models.SlugField(max_length=50, primary_key=True)
-    label = models.CharField(max_length=255)
+    label = LocalizedField(blank=False, null=False, required=False)
     type = models.CharField(choices=TYPE_CHOICES_TUPLE, max_length=10)
     is_required = models.TextField()
     is_hidden = models.TextField()

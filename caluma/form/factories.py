@@ -6,8 +6,8 @@ from . import models
 
 class FormFactory(DjangoModelFactory):
     slug = Faker("slug")
-    name = Faker("name")
-    description = Faker("text")
+    name = Faker("multilang", faker_provider="name")
+    description = Faker("multilang", faker_provider="text")
     meta = {}
     is_published = False
     is_archived = False
@@ -18,7 +18,7 @@ class FormFactory(DjangoModelFactory):
 
 class QuestionFactory(DjangoModelFactory):
     slug = Faker("slug")
-    label = Faker("name")
+    label = Faker("multilang", faker_provider="name")
     type = Faker("word", ext_word_list=models.Question.TYPE_CHOICES)
     is_required = "true"
     is_hidden = "false"

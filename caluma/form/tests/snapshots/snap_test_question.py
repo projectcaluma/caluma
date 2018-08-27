@@ -28,7 +28,7 @@ snapshots["test_save_question[true] 1"] = {
                 "label": "Jordan Mccarthy",
                 "meta": "{}",
                 "slug": "mrs-shake-recent",
-                "type": "INTEGER",
+                "type": "CHECKBOX",
             },
         }
     },

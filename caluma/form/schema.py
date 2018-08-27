@@ -1,13 +1,17 @@
 import graphene
 from django.shortcuts import get_object_or_404
 from graphene import Node, relay
+from graphene_django.converter import convert_django_field, convert_field_to_string
 from graphene_django.fields import DjangoConnectionField
 from graphene_django.types import DjangoObjectType
 from graphql.error import GraphQLError
 from graphql_relay import from_global_id
+from localized_fields.fields import LocalizedField
 
 from . import models, serializers
 from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
+
+convert_django_field.register(LocalizedField, convert_field_to_string)
 
 
 class Form(DjangoObjectType):

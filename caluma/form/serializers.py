@@ -1,3 +1,4 @@
+from localized_fields.fields import LocalizedField
 from pyjexl.jexl import JEXL
 from rest_framework import exceptions, serializers
 
@@ -39,3 +40,8 @@ class QuestionSerializer(serializers.ModelSerializer):
             "configuration",
             "meta",
         )
+
+
+serializers.ModelSerializer.serializer_field_mapping.update(
+    {LocalizedField: serializers.CharField}
+)

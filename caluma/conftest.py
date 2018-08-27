@@ -1,12 +1,16 @@
 import inspect
 
 import pytest
+from factory import Faker
 from factory.base import FactoryMetaClass
 from graphql.error import format_error
 from pytest_factoryboy import register
 from snapshottest.pytest import PyTestSnapshotTest
 
+from .faker import MultilangProvider
 from .form import factories as form_factories
+
+Faker.add_provider(MultilangProvider)
 
 
 def register_module(module):
