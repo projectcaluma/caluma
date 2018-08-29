@@ -7,6 +7,38 @@ from ...tests import extract_global_id_input_fields, extract_serializer_input_fi
 from ..serializers import FormSerializer
 
 
+def test_query_all_forms(db, snapshot, form):
+    query = """
+        query AllFormsQuery($name: String!) {
+          allForms(name: $name) {
+            edges {
+              node {
+                id
+                slug
+                name
+                description
+                meta
+                questions {
+                  edges {
+                    node {
+                      id
+                      slug
+                      label
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    result = schema.execute(query, variables={"name": form.name})
+
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
 def test_save_form(db, snapshot, form):
     query = """
         mutation SaveForm($input: SaveFormInput!) {

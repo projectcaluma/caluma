@@ -1,17 +1,22 @@
 import graphene
 from django.shortcuts import get_object_or_404
-from graphene import Node, relay
+from graphene import relay
 from graphene_django.converter import convert_django_field, convert_field_to_string
-from graphene_django.fields import DjangoConnectionField
+from graphene_django.filter import DjangoFilterConnectionField
+from graphene_django.filter.filterset import GrapheneFilterSetMixin
 from graphene_django.types import DjangoObjectType
 from graphql.error import GraphQLError
 from graphql_relay import from_global_id
 from localized_fields.fields import LocalizedField
 
 from . import models, serializers
+from ..filters import LocalizedFilter
 from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
 
 convert_django_field.register(LocalizedField, convert_field_to_string)
+GrapheneFilterSetMixin.FILTER_DEFAULTS.update(
+    {LocalizedField: {"filter_class": LocalizedFilter}}
+)
 
 
 class Form(DjangoObjectType):
@@ -23,13 +28,22 @@ class Form(DjangoObjectType):
 
     class Meta:
         model = models.Form
-        interfaces = (Node,)
+        filter_fields = ("slug", "name", "description", "is_published", "is_archived")
+        interfaces = (relay.Node,)
 
 
 class Question(DjangoObjectType):
     class Meta:
         model = models.Question
-        interfaces = (Node,)
+        filter_fields = (
+            "slug",
+            "label",
+            "type",
+            "is_required",
+            "is_hidden",
+            "is_archived",
+        )
+        interfaces = (relay.Node,)
 
 
 class SaveForm(UserDefinedPrimaryKeyMixin, SerializerMutation):
@@ -176,5 +190,5 @@ class Mutation(object):
 
 
 class Query(object):
-    all_forms = DjangoConnectionField(Form)
-    all_questions = DjangoConnectionField(Question)
+    all_forms = DjangoFilterConnectionField(Form)
+    all_questions = DjangoFilterConnectionField(Question)

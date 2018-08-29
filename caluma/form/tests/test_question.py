@@ -5,6 +5,30 @@ from ...schema import schema
 from ...tests import extract_global_id_input_fields, extract_serializer_input_fields
 
 
+def test_query_all_questions(db, snapshot, question):
+    query = """
+        query AllQuestionsQuery {
+          allQuestions(isArchived: false) {
+            edges {
+              node {
+                id
+                slug
+                label
+                type
+                configuration
+                meta
+              }
+            }
+          }
+        }
+    """
+
+    result = schema.execute(query)
+
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
 @pytest.mark.parametrize("question__is_required", ("true", "true|invalid"))
 def test_save_question(db, snapshot, question):
     query = """

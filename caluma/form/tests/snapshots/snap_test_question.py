@@ -34,3 +34,20 @@ snapshots["test_save_question[true] 1"] = {
     },
     "errors": [],
 }
+
+snapshots["test_query_all_questions 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "configuration": "{}",
+                    "id": "UXVlc3Rpb246bXJzLXNoYWtlLXJlY2VudA==",
+                    "label": "Jordan Mccarthy",
+                    "meta": "{}",
+                    "slug": "mrs-shake-recent",
+                    "type": "CHECKBOX",
+                }
+            }
+        ]
+    }
+}
