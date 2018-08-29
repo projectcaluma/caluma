@@ -16,6 +16,17 @@ snapshots["test_schema_queries[queries/AllFormsQuery.graphql] 1"] = {
                     "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",
                     "meta": "{}",
                     "name": "Jordan Mccarthy",
+                    "questions": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "id": "UXVlc3Rpb246cmF0aGVyLWNvc3QtYWRtaXQ=",
+                                    "label": "Courtney Brewer",
+                                    "slug": "rather-cost-admit",
+                                }
+                            }
+                        ]
+                    },
                     "slug": "mrs-shake-recent",
                 }
             }

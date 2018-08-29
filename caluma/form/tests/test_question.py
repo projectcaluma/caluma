@@ -1,5 +1,4 @@
 import pytest
-from graphql.error import format_error
 
 from .. import serializers
 from ...schema import schema
@@ -30,9 +29,7 @@ def test_save_question(db, snapshot, question):
         )
     }
     result = schema.execute(query, variables=inp)
-    snapshot.assert_match(
-        {"data": result.data, "errors": [format_error(e) for e in result.errors or []]}
-    )
+    snapshot.assert_execution_result(result)
 
 
 def test_archive_question(db, question):

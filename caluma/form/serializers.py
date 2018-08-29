@@ -7,14 +7,10 @@ from . import models
 class FormSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Form
-        fields = "__all__"
-        read_only_fields = ("is_archived", "is_published")
+        fields = ("slug", "name", "description", "meta")
 
 
 class QuestionSerializer(serializers.ModelSerializer):
-    is_required = serializers.CharField()
-    is_hidden = serializers.CharField()
-
     def _validate_jexl_expression(self, expression):
         jexl = JEXL()
         # TODO: define transforms e.g. answer
@@ -34,5 +30,12 @@ class QuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Question
-        fields = "__all__"
-        read_only_fields = ("is_archived",)
+        fields = (
+            "slug",
+            "label",
+            "type",
+            "is_required",
+            "is_hidden",
+            "configuration",
+            "meta",
+        )

@@ -1,4 +1,4 @@
-from factory import Faker
+from factory import Faker, SubFactory
 from factory.django import DjangoModelFactory
 
 from . import models
@@ -28,3 +28,12 @@ class QuestionFactory(DjangoModelFactory):
 
     class Meta:
         model = models.Question
+
+
+class FormQuestionFactory(DjangoModelFactory):
+    form = SubFactory(FormFactory)
+    question = SubFactory(QuestionFactory)
+    sort = 0
+
+    class Meta:
+        model = models.FormQuestion
