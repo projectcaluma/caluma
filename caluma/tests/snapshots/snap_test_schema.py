@@ -44,7 +44,7 @@ snapshots["test_schema_queries[queries/AllQuestionsQuery.graphql] 1"] = {
                     "label": "Courtney Brewer",
                     "meta": "{}",
                     "slug": "rather-cost-admit",
-                    "type": "NUMBER",
+                    "type": "INTEGER",
                 }
             }
         ]

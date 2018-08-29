@@ -38,12 +38,20 @@ class FormQuestion(models.Model):
 
 class Question(models.Model):
     TYPE_CHECKBOX = "checkbox"
-    TYPE_NUMBER = "number"
+    TYPE_INTEGER = "integer"
+    TYPE_FLOAT = "float"
     TYPE_RADIO = "radio"
     TYPE_TEXTAREA = "textarea"
     TYPE_TEXT = "text"
 
-    TYPE_CHOICES = (TYPE_CHECKBOX, TYPE_NUMBER, TYPE_RADIO, TYPE_TEXTAREA, TYPE_TEXT)
+    TYPE_CHOICES = (
+        TYPE_CHECKBOX,
+        TYPE_INTEGER,
+        TYPE_FLOAT,
+        TYPE_RADIO,
+        TYPE_TEXTAREA,
+        TYPE_TEXT,
+    )
     TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
 
     slug = models.SlugField(max_length=50, primary_key=True)
