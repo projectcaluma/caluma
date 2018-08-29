@@ -61,11 +61,7 @@ class AddFormQuestion(relay.ClientIDMutation):
     def mutate_and_get_payload(cls, root, info, **input):
         _, form_id = from_global_id(input["form_id"])
         form = get_object_or_404(models.Form, pk=form_id)
-
-        if form.is_archived or form.is_published:
-            raise GraphQLError(
-                "Form %s may not be edited as it is archived or published" % form_id
-            )
+        form.validate_editable()
 
         _, question_id = from_global_id(input["question_id"])
         question = get_object_or_404(models.Question, pk=question_id)
@@ -87,11 +83,7 @@ class RemoveFormQuestion(relay.ClientIDMutation):
     def mutate_and_get_payload(cls, root, info, **input):
         _, form_id = from_global_id(input["form_id"])
         form = get_object_or_404(models.Form, pk=form_id)
-
-        if form.is_archived or form.is_published:
-            raise GraphQLError(
-                "Form %s may not be edited as it is archived or published" % form_id
-            )
+        form.validate_editable()
 
         _, question_id = from_global_id(input["question_id"])
         question = get_object_or_404(models.Question, pk=question_id)
