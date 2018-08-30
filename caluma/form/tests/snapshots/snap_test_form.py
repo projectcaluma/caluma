@@ -60,3 +60,22 @@ snapshots["test_remove_form_question[False] 1"] = {
     },
     "errors": [],
 }
+
+snapshots["test_query_all_forms 1"] = {
+    "allForms": {
+        "edges": [
+            {
+                "node": {
+                    "description": """Story first where during teach.
+Across drop argue move. Anyone remember prove.
+Kid avoid player relationship to range whose. Draw free property consider.""",
+                    "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",
+                    "meta": "{}",
+                    "name": "Jordan Mccarthy",
+                    "questions": {"edges": []},
+                    "slug": "mrs-shake-recent",
+                }
+            }
+        ]
+    }
+}
