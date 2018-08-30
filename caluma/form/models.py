@@ -3,8 +3,10 @@ from django.db import models
 from graphql.error import GraphQLError
 from localized_fields.fields import LocalizedField
 
+from caluma.models import BaseModel
 
-class Form(models.Model):
+
+class Form(BaseModel):
     slug = models.SlugField(max_length=50, primary_key=True)
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
@@ -27,9 +29,9 @@ class Form(models.Model):
         return self.slug
 
 
-class FormQuestion(models.Model):
-    form = models.ForeignKey("Form")
-    question = models.ForeignKey("Question")
+class FormQuestion(BaseModel):
+    form = models.ForeignKey("Form", on_delete=models.CASCADE)
+    question = models.ForeignKey("Question", on_delete=models.CASCADE)
     sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
 
     class Meta:
@@ -37,7 +39,7 @@ class FormQuestion(models.Model):
         unique_together = ("form", "question")
 
 
-class Question(models.Model):
+class Question(BaseModel):
     TYPE_CHECKBOX = "checkbox"
     TYPE_INTEGER = "integer"
     TYPE_FLOAT = "float"

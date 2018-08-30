@@ -7,6 +7,7 @@ from graphql.error import format_error
 from pytest_factoryboy import register
 from snapshottest.pytest import PyTestSnapshotTest
 
+from .document import factories as document_factories
 from .faker import MultilangProvider
 from .form import factories as form_factories
 
@@ -23,6 +24,7 @@ def register_module(module):
 
 
 register_module(form_factories)
+register_module(document_factories)
 
 
 @pytest.fixture
