@@ -34,7 +34,7 @@ snapshots["test_add_form_question[False] 1"] = {
     "data": {
         "addFormQuestion": {
             "clientMutationId": None,
-            "form": {"questions": {"edges": [{"node": {"slug": "rather-cost-admit"}}]}},
+            "form": {"questions": {"edges": [{"node": {"slug": "fly-even-yourself"}}]}},
         }
     },
     "errors": [],

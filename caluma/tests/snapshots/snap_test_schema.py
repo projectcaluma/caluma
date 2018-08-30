@@ -12,7 +12,9 @@ snapshots["test_schema_queries[queries/AllFormsQuery.graphql] 1"] = {
         "edges": [
             {
                 "node": {
-                    "description": "Bit among again across environment long line. Team suggest traditional boy above.",
+                    "description": """Story first where during teach.
+Across drop argue move. Anyone remember prove.
+Kid avoid player relationship to range whose. Draw free property consider.""",
                     "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",
                     "meta": "{}",
                     "name": "Jordan Mccarthy",
@@ -20,9 +22,9 @@ snapshots["test_schema_queries[queries/AllFormsQuery.graphql] 1"] = {
                         "edges": [
                             {
                                 "node": {
-                                    "id": "UXVlc3Rpb246cmF0aGVyLWNvc3QtYWRtaXQ=",
-                                    "label": "Courtney Brewer",
-                                    "slug": "rather-cost-admit",
+                                    "id": "UXVlc3Rpb246Zmx5LWV2ZW4teW91cnNlbGY=",
+                                    "label": "Amanda Boyd",
+                                    "slug": "fly-even-yourself",
                                 }
                             }
                         ]
@@ -40,11 +42,11 @@ snapshots["test_schema_queries[queries/AllQuestionsQuery.graphql] 1"] = {
             {
                 "node": {
                     "configuration": "{}",
-                    "id": "UXVlc3Rpb246cmF0aGVyLWNvc3QtYWRtaXQ=",
-                    "label": "Courtney Brewer",
+                    "id": "UXVlc3Rpb246Zmx5LWV2ZW4teW91cnNlbGY=",
+                    "label": "Amanda Boyd",
                     "meta": "{}",
-                    "slug": "rather-cost-admit",
-                    "type": "INTEGER",
+                    "slug": "fly-even-yourself",
+                    "type": "RADIO",
                 }
             }
         ]
