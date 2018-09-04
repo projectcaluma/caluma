@@ -70,18 +70,18 @@ class AddFormQuestion(relay.ClientIDMutation):
     """Add question at the end of form."""
 
     class Input:
-        form_id = graphene.ID(required=True)
-        question_id = graphene.ID(required=True)
+        form = graphene.ID(required=True)
+        question = graphene.ID(required=True)
 
     form = graphene.Field(Form)
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
-        _, form_id = from_global_id(input["form_id"])
+        _, form_id = from_global_id(input["form"])
         form = get_object_or_404(models.Form, pk=form_id)
         form.validate_editable()
 
-        _, question_id = from_global_id(input["question_id"])
+        _, question_id = from_global_id(input["question"])
         question = get_object_or_404(models.Question, pk=question_id)
 
         models.FormQuestion.objects.create(form=form, question=question)
@@ -92,18 +92,18 @@ class RemoveFormQuestion(relay.ClientIDMutation):
     """Add question at the end of form."""
 
     class Input:
-        form_id = graphene.ID(required=True)
-        question_id = graphene.ID(required=True)
+        form = graphene.ID(required=True)
+        question = graphene.ID(required=True)
 
     form = graphene.Field(Form)
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
-        _, form_id = from_global_id(input["form_id"])
+        _, form_id = from_global_id(input["form"])
         form = get_object_or_404(models.Form, pk=form_id)
         form.validate_editable()
 
-        _, question_id = from_global_id(input["question_id"])
+        _, question_id = from_global_id(input["question"])
         question = get_object_or_404(models.Question, pk=question_id)
 
         models.FormQuestion.objects.filter(form=form, question=question).delete()
@@ -112,19 +112,19 @@ class RemoveFormQuestion(relay.ClientIDMutation):
 
 class ReorderFormQuestions(relay.ClientIDMutation):
     class Input:
-        form_id = graphene.ID(required=True)
-        question_ids = graphene.List(graphene.ID, required=True)
+        form = graphene.ID(required=True)
+        questions = graphene.List(graphene.ID, required=True)
 
     form = graphene.Field(Form)
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
-        _, form_id = from_global_id(input["form_id"])
+        _, form_id = from_global_id(input["form"])
         form = get_object_or_404(models.Form, pk=form_id)
 
         curr_questions = form.questions.values_list("slug", flat=True)
         inp_questions = [
-            from_global_id(question_id)[1] for question_id in input["question_ids"]
+            from_global_id(question_id)[1] for question_id in input["questions"]
         ]
         diff_questions = set(curr_questions).symmetric_difference(inp_questions)
 

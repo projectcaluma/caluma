@@ -2,6 +2,7 @@ import json
 
 from graphene.utils.str_converters import to_camel_case
 from graphql_relay import to_global_id
+from rest_framework import fields
 
 
 def extract_serializer_input_fields(serializer_class, instance):
@@ -9,7 +10,9 @@ def extract_serializer_input_fields(serializer_class, instance):
 
     result = {}
     for key, value in serializer.data.items():
-        if isinstance(value, dict):
+        field = serializer.fields[key]
+
+        if isinstance(field, fields.JSONField):
             value = json.dumps(value)
         result[to_camel_case(key)] = value
 
