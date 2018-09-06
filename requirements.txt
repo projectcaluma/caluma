@@ -1,6 +1,6 @@
 django==1.11.15 # pyup: >=1.11,<1.12
 django-environ==0.4.5
-django-filter==1.1.0  # pyup: >=1.1,<2.0
+django-filter==1.1.0
 django-localized-fields==4.5
 django-postgres-extra==1.20
 djangorestframework==3.8.2
