@@ -55,6 +55,7 @@ def test_save_form(db, snapshot, form):
     """
 
     inp = {"input": extract_serializer_input_fields(FormSerializer, form)}
+    form.delete()  # test creation of form
     result = schema.execute(query, variables=inp)
 
     assert not result.errors
