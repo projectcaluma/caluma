@@ -131,8 +131,8 @@ def test_add_form_question(db, form, question, snapshot):
         query,
         variables={
             "input": {
-                "formId": to_global_id(type(form).__name__, form.pk),
-                "questionId": to_global_id(type(question).__name__, question.pk),
+                "form": to_global_id(type(form).__name__, form.pk),
+                "question": to_global_id(type(question).__name__, question.pk),
             }
         },
     )
@@ -163,8 +163,8 @@ def test_remove_form_question(db, form, formquestion, question, snapshot):
         query,
         variables={
             "input": {
-                "formId": to_global_id(type(form).__name__, form.pk),
-                "questionId": to_global_id(type(question).__name__, question.pk),
+                "form": to_global_id(type(form).__name__, form.pk),
+                "question": to_global_id(type(question).__name__, question.pk),
             }
         },
     )
@@ -199,8 +199,8 @@ def test_reorder_form_questions(db, form, form_question_factory):
         query,
         variables={
             "input": {
-                "formId": to_global_id(type(form).__name__, form.pk),
-                "questionIds": [
+                "form": to_global_id(type(form).__name__, form.pk),
+                "questions": [
                     to_global_id(type(models.Question).__name__, question_id)
                     for question_id in question_ids
                 ],
@@ -242,8 +242,8 @@ def test_reorder_form_questions_invalid_question(db, form):
         query,
         variables={
             "input": {
-                "formId": to_global_id(type(form).__name__, form.pk),
-                "questionIds": [
+                "form": to_global_id(type(form).__name__, form.pk),
+                "questions": [
                     to_global_id(type(models.Question).__name__, "invalidquestion")
                 ],
             }

@@ -7,7 +7,16 @@ from graphene.types import Field, InputField
 from graphene.types.mutation import MutationOptions
 from graphene.types.objecttype import yank_fields_from_attrs
 from graphene_django.registry import get_global_registry
+from graphene_django.rest_framework import serializer_converter
 from graphene_django.rest_framework.mutation import fields_for_serializer
+from rest_framework import relations
+
+
+@serializer_converter.get_graphene_type_from_serializer_field.register(
+    relations.RelatedField
+)
+def convert_serializer_relation_to_id(field):
+    return graphene.ID
 
 
 class SerializerMutationOptions(MutationOptions):

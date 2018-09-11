@@ -9,7 +9,7 @@ from .form import schema as form_schema
 convert_django_field.register(LocalizedField, convert_field_to_string)
 
 
-class Mutation(form_schema.Mutation, graphene.ObjectType):
+class Mutation(form_schema.Mutation, document_schema.Mutation, graphene.ObjectType):
     pass
 
 
