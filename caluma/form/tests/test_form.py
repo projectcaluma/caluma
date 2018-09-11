@@ -141,7 +141,7 @@ def test_add_form_question(db, form, question, snapshot):
 
 
 @pytest.mark.parametrize("form__is_published", (True, False))
-def test_remove_form_question(db, form, formquestion, question, snapshot):
+def test_remove_form_question(db, form, form_question, question, snapshot):
     query = """
         mutation RemoveFormQuestion($input: RemoveFormQuestionInput!) {
           removeFormQuestion(input: $input) {

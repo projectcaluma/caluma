@@ -5,6 +5,7 @@ from localized_fields.fields import LocalizedField
 
 from .document import schema as document_schema
 from .form import schema as form_schema
+from .workflow import schema as workflow_schema
 
 convert_django_field.register(LocalizedField, convert_field_to_string)
 
@@ -13,7 +14,9 @@ class Mutation(form_schema.Mutation, document_schema.Mutation, graphene.ObjectTy
     pass
 
 
-class Query(form_schema.Query, document_schema.Query, graphene.ObjectType):
+class Query(
+    form_schema.Query, document_schema.Query, workflow_schema.Query, graphene.ObjectType
+):
     node = Node.Field()
 
 
