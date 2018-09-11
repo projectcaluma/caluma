@@ -1,5 +1,6 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from graphql.error import GraphQLError
 from localized_fields.fields import LocalizedField
 
 from caluma.models import BaseModel
@@ -18,6 +19,9 @@ class TaskSpecification(BaseModel):
     meta = JSONField(default={})
     is_archived = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.slug
+
 
 class WorkflowSpecification(BaseModel):
     slug = models.SlugField(max_length=50, primary_key=True)
@@ -29,6 +33,17 @@ class WorkflowSpecification(BaseModel):
     start = models.ForeignKey(
         TaskSpecification, on_delete=models.CASCADE, related_name="+"
     )
+
+    def validate_editable(self):
+        # TODO: Think of a more generic way to be implemented in graphene
+        # https://github.com/graphql-python/graphene/issues/777
+        if self.is_archived or self.is_published:
+            raise GraphQLError(
+                f"Workflow {self.pk} may not be edited as it is archived or published"
+            )
+
+    def __str__(self):
+        return self.slug
 
 
 class Flow(BaseModel):

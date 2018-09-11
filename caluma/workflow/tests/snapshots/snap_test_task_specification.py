@@ -23,3 +23,18 @@ Material minute ago get. Range whose scientist draw free property consider. Have
         ]
     }
 }
+
+snapshots["test_save_task_specification 1"] = {
+    "data": {
+        "saveTaskSpecification": {
+            "clientMutationId": "testid",
+            "taskSpecification": {
+                "meta": "{}",
+                "name": "Jordan Mccarthy",
+                "slug": "mrs-shake-recent",
+                "type": "SIMPLE",
+            },
+        }
+    },
+    "errors": [],
+}

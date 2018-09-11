@@ -10,7 +10,12 @@ from .workflow import schema as workflow_schema
 convert_django_field.register(LocalizedField, convert_field_to_string)
 
 
-class Mutation(form_schema.Mutation, document_schema.Mutation, graphene.ObjectType):
+class Mutation(
+    form_schema.Mutation,
+    document_schema.Mutation,
+    workflow_schema.Mutation,
+    graphene.ObjectType,
+):
     pass
 
 
