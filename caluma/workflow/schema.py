@@ -4,7 +4,6 @@ from graphene import relay
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType
 from graphql_relay import from_global_id
-from pyjexl.jexl import JEXL
 from rest_framework import exceptions
 
 from . import models, serializers
@@ -59,8 +58,7 @@ class PublishWorkflowSpecification(relay.ClientIDMutation):
             models.WorkflowSpecification, pk=workflow_specification_id
         )
 
-        # TODO: validate workflow specification
-
+        workflow_specification.validate_flows()
         workflow_specification.is_published = True
         workflow_specification.save(update_fields=["is_published"])
 
@@ -110,8 +108,8 @@ class AddWorkflowSpecificationFlow(relay.ClientIDMutation):
             models.TaskSpecification, pk=task_specification_id
         )
 
-        jexl = JEXL()
-        # TODO: define transforms e.g. answer, task etc.
+        # TODO: use DRF serializers for validation
+        jexl = workflow_specification.create_flow_jexl()
         errors = list(jexl.validate(input["next"]))
         if errors:
             raise exceptions.ValidationError(errors)

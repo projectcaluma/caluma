@@ -64,7 +64,14 @@ def test_save_workflow_specification(db, snapshot, workflow_specification):
     snapshot.assert_match(result.data)
 
 
-def test_publish_workflow_specification(db, workflow_specification):
+@pytest.mark.parametrize(
+    "task_specification__slug,flow__next",
+    [
+        ("task-slug", '"task-slug"|taskSpecification'),
+        ("task-slug", '"not-av-task-slug"|taskSpecification'),
+    ],
+)
+def test_publish_workflow_specification(db, workflow_specification, snapshot, flow):
     query = """
         mutation PublishWorkflowSpecification($input: PublishWorkflowSpecificationInput!) {
           publishWorkflowSpecification(input: $input) {
@@ -81,13 +88,7 @@ def test_publish_workflow_specification(db, workflow_specification):
         variables={"input": extract_global_id_input_fields(workflow_specification)},
     )
 
-    assert not result.errors
-    assert result.data["publishWorkflowSpecification"]["workflowSpecification"][
-        "isPublished"
-    ]
-
-    workflow_specification.refresh_from_db()
-    assert workflow_specification.is_published
+    snapshot.assert_execution_result(result)
 
 
 def test_archive_workflow_specification(db, workflow_specification):

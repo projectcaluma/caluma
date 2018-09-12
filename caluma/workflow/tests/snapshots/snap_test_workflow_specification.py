@@ -43,12 +43,37 @@ snapshots["test_save_workflow_specification 1"] = {
     }
 }
 
+snapshots[
+    'test_publish_workflow_specification[task-slug-"task-slug"|taskSpecification] 1'
+] = {
+    "data": {
+        "publishWorkflowSpecification": {
+            "clientMutationId": "testid",
+            "workflowSpecification": {"isPublished": True},
+        }
+    },
+    "errors": [],
+}
+
+snapshots[
+    'test_publish_workflow_specification[task-slug-"not-av-task-slug"|taskSpecification] 1'
+] = {
+    "data": {"publishWorkflowSpecification": None},
+    "errors": [
+        {
+            "locations": [{"column": 11, "line": 3}],
+            "message": "['Task specifications `not-av-task-slug` specified in expression `\"not-av-task-slug\"|taskSpecification` but only `task-slug` are available in workflow specification `deep-public-these`']",
+            "path": ["publishWorkflowSpecification"],
+        }
+    ],
+}
+
 snapshots["test_add_workflow_specification_flow[True-task-slug] 1"] = {
     "data": {"addWorkflowSpecificationFlow": None},
     "errors": [
         {
             "locations": [{"column": 11, "line": 3}],
-            "message": "Workflow star-check-record may not be edited as it is archived or published",
+            "message": "['Workflow star-check-record may not be edited as it is archived or published']",
             "path": ["addWorkflowSpecificationFlow"],
         }
     ],
@@ -59,7 +84,7 @@ snapshots["test_add_workflow_specification_flow[True-task-slug|invalid] 1"] = {
     "errors": [
         {
             "locations": [{"column": 11, "line": 3}],
-            "message": "Workflow star-check-record may not be edited as it is archived or published",
+            "message": "['Workflow star-check-record may not be edited as it is archived or published']",
             "path": ["addWorkflowSpecificationFlow"],
         }
     ],
@@ -97,7 +122,7 @@ snapshots["test_remove_workflow_specification_flow[True] 1"] = {
     "errors": [
         {
             "locations": [{"column": 11, "line": 3}],
-            "message": "Workflow star-check-record may not be edited as it is archived or published",
+            "message": "['Workflow star-check-record may not be edited as it is archived or published']",
             "path": ["removeWorkflowSpecificationFlow"],
         }
     ],
