@@ -15,7 +15,7 @@ class TaskSpecification(SlugModel):
     TYPE_SIMPLE = "simple"
 
     TYPE_CHOICES = (TYPE_SIMPLE,)
-    TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
+    TYPE_CHOICES_TUPLE = ((TYPE_SIMPLE, "Task which can only be marked as completed."),)
 
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
