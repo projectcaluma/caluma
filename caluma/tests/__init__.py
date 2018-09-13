@@ -1,6 +1,6 @@
 import json
 
-from graphene.utils.str_converters import to_camel_case
+from graphene.utils.str_converters import to_camel_case, to_const
 from graphql_relay import to_global_id
 from rest_framework import fields
 
@@ -14,6 +14,8 @@ def extract_serializer_input_fields(serializer_class, instance):
 
         if isinstance(field, fields.JSONField):
             value = json.dumps(value)
+        elif isinstance(field, fields.ChoiceField):
+            value = to_const(value)
         result[to_camel_case(key)] = value
 
     result["clientMutationId"] = "testid"

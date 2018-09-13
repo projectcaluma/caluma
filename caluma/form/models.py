@@ -40,6 +40,7 @@ class FormQuestion(BaseModel):
 
 
 class Question(BaseModel):
+    # TODO: add descriptions
     TYPE_CHECKBOX = "checkbox"
     TYPE_INTEGER = "integer"
     TYPE_FLOAT = "float"
