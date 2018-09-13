@@ -130,7 +130,7 @@ def test_add_workflow_specification_flow(
                 edges {
                   node {
                     taskSpecification {
-                        slug
+                      slug
                     }
                   }
                 }
@@ -170,7 +170,7 @@ def test_remove_workflow_specification_flow(
                 edges {
                   node {
                     taskSpecification {
-                        slug
+                      slug
                     }
                   }
                 }
