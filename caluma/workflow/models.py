@@ -31,7 +31,11 @@ class WorkflowSpecification(SlugModel):
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
     start = models.ForeignKey(
-        TaskSpecification, on_delete=models.CASCADE, related_name="+"
+        TaskSpecification,
+        on_delete=models.CASCADE,
+        related_name="+",
+        blank=True,
+        null=True,
     )
 
     def validate_editable(self):
@@ -45,6 +49,9 @@ class WorkflowSpecification(SlugModel):
         added_task_specs = set(self.flows.values_list("task_specification", flat=True))
 
         errors = []
+        if self.start is None:
+            errors.append("Start needs to be set")
+
         for expr in self.flows.values_list("next", flat=True):
             task_specs = set(
                 jexl.analyze(

@@ -1,5 +1,6 @@
 import pytest
 from graphql_relay import to_global_id
+from pytest_factoryboy import LazyFixture
 
 from .. import serializers
 from ...schema import schema
@@ -64,11 +65,57 @@ def test_save_workflow_specification(db, snapshot, workflow_specification):
     snapshot.assert_match(result.data)
 
 
+def test_set_workflow_specification_start(
+    db, workflow_specification, task_specification
+):
+    query = """
+        mutation SetWorkflowSpecificationStart($input: SetWorkflowSpecificationStartInput!) {
+          setWorkflowSpecificationStart(input: $input) {
+            workflowSpecification {
+              start {
+                slug
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": {
+            "workflowSpecification": to_global_id(
+                type(workflow_specification).__name__, workflow_specification.pk
+            ),
+            "start": to_global_id(
+                type(task_specification).__name__, task_specification.pk
+            ),
+        }
+    }
+    workflow_specification.start = None
+    workflow_specification.save()
+    result = schema.execute(query, variables=inp)
+
+    assert not result.errors
+    assert (
+        result.data["setWorkflowSpecificationStart"]["workflowSpecification"]["start"][
+            "slug"
+        ]
+        == task_specification.slug
+    )
+
+    workflow_specification.refresh_from_db()
+    assert workflow_specification.start == task_specification
+
+
 @pytest.mark.parametrize(
-    "task_specification__slug,flow__next",
+    "task_specification__slug,flow__next,workflow_specification__start",
     [
-        ("task-slug", '"task-slug"|taskSpecification'),
-        ("task-slug", '"not-av-task-slug"|taskSpecification'),
+        (
+            "task-slug",
+            '"task-slug"|taskSpecification',
+            LazyFixture("task_specification"),
+        ),
+        ("task-slug", '"not-av-task-slug"|taskSpecification', None),
     ],
 )
 def test_publish_workflow_specification(db, workflow_specification, snapshot, flow):

@@ -6,7 +6,7 @@ from . import models
 class WorkflowSpecificationSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.WorkflowSpecification
-        fields = ("slug", "name", "description", "meta", "start")
+        fields = ("slug", "name", "description", "meta")
 
 
 class TaskSpecificationSerializer(serializers.ModelSerializer):
