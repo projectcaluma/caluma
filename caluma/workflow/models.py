@@ -6,30 +6,25 @@ from django.db import models
 from localized_fields.fields import LocalizedField
 from pyjexl import JEXL
 
-from caluma.models import BaseModel
+from caluma.models import BaseModel, SlugModel
 
 from ..jexl import ExtractTransformSubjectAnalyzer
 
 
-class TaskSpecification(BaseModel):
+class TaskSpecification(SlugModel):
     TYPE_SIMPLE = "simple"
 
     TYPE_CHOICES = (TYPE_SIMPLE,)
     TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
 
-    slug = models.SlugField(max_length=50, primary_key=True)
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
     type = models.CharField(choices=TYPE_CHOICES_TUPLE, max_length=50)
     meta = JSONField(default={})
     is_archived = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.slug
 
-
-class WorkflowSpecification(BaseModel):
-    slug = models.SlugField(max_length=50, primary_key=True)
+class WorkflowSpecification(SlugModel):
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
     meta = JSONField(default={})
@@ -77,9 +72,6 @@ class WorkflowSpecification(BaseModel):
         jexl.add_transform("taskSpecification", lambda spec: spec)
         # TODO: add transforms e.g. answer
         return jexl
-
-    def __str__(self):
-        return self.slug
 
 
 class Flow(BaseModel):
