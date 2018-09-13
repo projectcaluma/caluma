@@ -6,10 +6,11 @@ from graphene.relay.mutation import ClientIDMutation
 from graphene.types import Field, InputField
 from graphene.types.mutation import MutationOptions
 from graphene.types.objecttype import yank_fields_from_attrs
+from graphene_django.converter import convert_django_field_with_choices
 from graphene_django.registry import get_global_registry
 from graphene_django.rest_framework import serializer_converter
 from graphene_django.rest_framework.mutation import fields_for_serializer
-from rest_framework import relations
+from rest_framework import relations, serializers
 
 
 @serializer_converter.get_graphene_type_from_serializer_field.register(
@@ -17,6 +18,28 @@ from rest_framework import relations
 )
 def convert_serializer_relation_to_id(field):
     return graphene.ID
+
+
+@serializer_converter.get_graphene_type_from_serializer_field.register(
+    serializers.ChoiceField
+)
+def convert_serializer_field_to_enum(field):
+    model_class = None
+    serializer_meta = getattr(field.parent, "Meta", None)
+    if serializer_meta:
+        model_class = getattr(serializer_meta, "model", None)
+
+    result_type = graphene.String
+    if model_class:
+        registry = get_global_registry()
+        for model_field in model_class._meta.fields:
+            if model_field.name == field.source:
+                result_type = convert_django_field_with_choices(model_field, registry)
+                if result_type is not None:
+                    result_type = type(result_type)
+                break
+
+    return result_type
 
 
 class SerializerMutationOptions(MutationOptions):
@@ -164,8 +187,6 @@ class UserDefinedPrimaryKeyMixin(object):
         lookup_field = cls._meta.lookup_field
         model_class = cls._meta.model_class
 
-        # TODO: needs to verify whether 404 needs to be thrown in case
-        # lookup_field is an AutoField
         instance = model_class.objects.filter(
             **{lookup_field: input[lookup_field]}
         ).first()
