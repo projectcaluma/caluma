@@ -31,17 +31,12 @@ def convert_serializer_field_to_enum(field):
     if serializer_meta:
         model_class = getattr(serializer_meta, "model", None)
 
-    result_type = graphene.String
     if model_class:
         registry = get_global_registry()
-        for model_field in model_class._meta.fields:
-            if model_field.name == field.source:
-                result_type = convert_django_field_with_choices(model_field, registry)
-                if result_type is not None:
-                    result_type = type(result_type)
-                break
+        model_field = model_class._meta.get_field(field.source)
+        return type(convert_django_field_with_choices(model_field, registry))
 
-    return result_type
+    return graphene.String
 
 
 class SerializerMutationOptions(MutationOptions):
