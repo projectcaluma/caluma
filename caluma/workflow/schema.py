@@ -6,7 +6,7 @@ from graphene_django.types import DjangoObjectType
 from graphql_relay import from_global_id
 from rest_framework import exceptions
 
-from . import models, serializers
+from . import filters, models, serializers
 from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
 
 
@@ -30,14 +30,34 @@ class WorkflowSpecification(DjangoObjectType):
     class Meta:
         model = models.WorkflowSpecification
         filter_fields = ("slug", "name", "description", "is_published", "is_archived")
+        only_fields = (
+            "created",
+            "modified",
+            "slug",
+            "name",
+            "description",
+            "meta",
+            "is_published",
+            "is_archived",
+            "start",
+        )
         interfaces = (relay.Node,)
 
 
 class TaskSpecification(DjangoObjectType):
     class Meta:
         model = models.TaskSpecification
-        filter_fields = ("slug", "name", "description", "type", "is_archived")
         interfaces = (relay.Node,)
+        only_fields = (
+            "created",
+            "modified",
+            "slug",
+            "name",
+            "description",
+            "type",
+            "meta",
+            "is_archived",
+        )
 
 
 class SaveWorkflowSpecification(UserDefinedPrimaryKeyMixin, SerializerMutation):
@@ -219,5 +239,9 @@ class Mutation(object):
 
 
 class Query(object):
-    all_workflow_specifications = DjangoFilterConnectionField(WorkflowSpecification)
-    all_task_specifications = DjangoFilterConnectionField(TaskSpecification)
+    all_workflow_specifications = DjangoFilterConnectionField(
+        WorkflowSpecification, filterset_class=filters.WorkflowSpecificationFilterSet
+    )
+    all_task_specifications = DjangoFilterConnectionField(
+        TaskSpecification, filterset_class=filters.TaskSpecificationFilterSet
+    )
