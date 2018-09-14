@@ -4,7 +4,7 @@ from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType
 from graphql_relay import from_global_id
 
-from . import models, serializers
+from . import filters, models, serializers
 from ..form.schema import Question
 from ..mutation import SerializerMutation
 
@@ -72,6 +72,7 @@ class Document(DjangoObjectType):
     class Meta:
         model = models.Document
         interfaces = (graphene.Node,)
+        only_fields = ("created", "modified", "form", "meta", "answers")
         filter_fields = ("form",)
 
 
@@ -146,4 +147,6 @@ class Mutation(object):
 
 
 class Query(object):
-    all_documents = DjangoFilterConnectionField(Document)
+    all_documents = DjangoFilterConnectionField(
+        Document, filterset_class=filters.DocumentFilterSet
+    )

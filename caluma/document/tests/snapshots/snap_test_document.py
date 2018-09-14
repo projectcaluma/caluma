@@ -57,31 +57,6 @@ snapshots["test_query_all_documents[float-2.1] 1"] = {
     }
 }
 
-snapshots["test_query_all_documents[text-Test] 1"] = {
-    "allDocuments": {
-        "edges": [
-            {
-                "node": {
-                    "answers": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "__typename": "StringAnswer",
-                                    "question": {
-                                        "label": "Amanda Boyd",
-                                        "slug": "fly-even-yourself",
-                                    },
-                                    "string_value": "Test",
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
-        ]
-    }
-}
-
 snapshots["test_query_all_documents[checkbox-answer__value3] 1"] = {
     "allDocuments": {
         "edges": [
@@ -92,7 +67,7 @@ snapshots["test_query_all_documents[checkbox-answer__value3] 1"] = {
                             {
                                 "node": {
                                     "__typename": "ListAnswer",
-                                    "list_value": ["123", "1"],
+                                    "list_value": ["somevalue", "anothervalue"],
                                     "question": {
                                         "label": "Amanda Boyd",
                                         "slug": "fly-even-yourself",
@@ -141,5 +116,30 @@ snapshots[
     "saveDocumentListAnswer": {
         "answer": {"list_value": ['["123", "1"]']},
         "clientMutationId": "testid",
+    }
+}
+
+snapshots["test_query_all_documents[text-somevalue] 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "StringAnswer",
+                                    "question": {
+                                        "label": "Amanda Boyd",
+                                        "slug": "fly-even-yourself",
+                                    },
+                                    "string_value": "somevalue",
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
     }
 }

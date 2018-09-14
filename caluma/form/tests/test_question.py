@@ -7,8 +7,8 @@ from ...tests import extract_global_id_input_fields, extract_serializer_input_fi
 
 def test_query_all_questions(db, snapshot, question):
     query = """
-        query AllQuestionsQuery {
-          allQuestions(isArchived: false) {
+        query AllQuestionsQuery($search: String) {
+          allQuestions(isArchived: false, search: $search) {
             edges {
               node {
                 id
@@ -23,7 +23,7 @@ def test_query_all_questions(db, snapshot, question):
         }
     """
 
-    result = schema.execute(query)
+    result = schema.execute(query, variables={"search": question.label})
 
     assert not result.errors
     snapshot.assert_match(result.data)

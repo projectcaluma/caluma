@@ -11,15 +11,15 @@ from ...tests import extract_serializer_input_fields
     [
         (Question.TYPE_INTEGER, 1),
         (Question.TYPE_FLOAT, 2.1),
-        (Question.TYPE_TEXT, "Test"),
-        (Question.TYPE_CHECKBOX, ["123", "1"]),
+        (Question.TYPE_TEXT, "somevalue"),
+        (Question.TYPE_CHECKBOX, ["somevalue", "anothervalue"]),
     ],
 )
 def test_query_all_documents(db, snapshot, form_question, form, document, answer):
 
     query = """
-        query AllDocumentsQuery {
-          allDocuments {
+        query AllDocumentsQuery($search: String) {
+          allDocuments(search: $search) {
             edges {
               node {
                 answers {
@@ -51,7 +51,8 @@ def test_query_all_documents(db, snapshot, form_question, form, document, answer
         }
     """
 
-    result = schema.execute(query)
+    search = isinstance(answer.value, list) and " ".join(answer.value) or answer.value
+    result = schema.execute(query, variables={"search": search})
     assert not result.errors
     snapshot.assert_match(result.data)
 
