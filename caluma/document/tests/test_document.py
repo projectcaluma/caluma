@@ -15,7 +15,7 @@ from ...tests import extract_serializer_input_fields
         (Question.TYPE_CHECKBOX, ["123", "1"]),
     ],
 )
-def test_query_all_documents(db, snapshot, formquestion, form, document, answer):
+def test_query_all_documents(db, snapshot, form_question, form, document, answer):
 
     query = """
         query AllDocumentsQuery {
