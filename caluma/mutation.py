@@ -24,6 +24,8 @@ def convert_serializer_relation_to_id(field):
     serializers.ChoiceField
 )
 def convert_serializer_field_to_enum(field):
+    # TODO: could be removed once following issue is fixed
+    # https://github.com/graphql-python/graphene-django/issues/517
     model_class = None
     serializer_meta = getattr(field.parent, "Meta", None)
     if serializer_meta:
