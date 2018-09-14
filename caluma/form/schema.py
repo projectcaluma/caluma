@@ -3,23 +3,46 @@ from django.shortcuts import get_object_or_404
 from graphene import relay
 from graphene_django.converter import convert_django_field, convert_field_to_string
 from graphene_django.filter import DjangoFilterConnectionField
-from graphene_django.filter.filterset import GrapheneFilterSetMixin
 from graphene_django.types import DjangoObjectType
 from graphql.error import GraphQLError
 from graphql_relay import from_global_id
 from localized_fields.fields import LocalizedField
 
-from . import models, serializers
-from ..filters import LocalizedFilter
+from . import filters, models, serializers
 from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
 
 convert_django_field.register(LocalizedField, convert_field_to_string)
-GrapheneFilterSetMixin.FILTER_DEFAULTS.update(
-    {LocalizedField: {"filter_class": LocalizedFilter}}
-)
+
+
+class Question(DjangoObjectType):
+    forms = DjangoFilterConnectionField(
+        "caluma.form.schema.Form", filterset_class=filters.FormFilterSet
+    )
+
+    class Meta:
+        model = models.Question
+        interfaces = (relay.Node,)
+        only_fields = (
+            "created",
+            "modified",
+            "slug",
+            "label",
+            "type",
+            "is_required",
+            "is_hidden",
+            "is_archived",
+            "meta",
+            "configuration",
+            "forms",
+            "id",
+        )
 
 
 class Form(DjangoObjectType):
+    questions = DjangoFilterConnectionField(
+        Question, filterset_class=filters.QuestionFilterSet
+    )
+
     def resolve_questions(self, info):
         # TODO: potential cause for query explosions
         # see https://github.com/graphql-python/graphene-django/pull/220
@@ -28,22 +51,18 @@ class Form(DjangoObjectType):
 
     class Meta:
         model = models.Form
-        filter_fields = ("slug", "name", "description", "is_published", "is_archived")
         interfaces = (relay.Node,)
-
-
-class Question(DjangoObjectType):
-    class Meta:
-        model = models.Question
-        filter_fields = (
+        only_fields = (
+            "created",
+            "modified",
             "slug",
-            "label",
-            "type",
-            "is_required",
-            "is_hidden",
+            "name",
+            "description",
+            "meta",
+            "is_published",
             "is_archived",
+            "questions",
         )
-        interfaces = (relay.Node,)
 
 
 class SaveForm(UserDefinedPrimaryKeyMixin, SerializerMutation):
@@ -190,5 +209,7 @@ class Mutation(object):
 
 
 class Query(object):
-    all_forms = DjangoFilterConnectionField(Form)
-    all_questions = DjangoFilterConnectionField(Question)
+    all_forms = DjangoFilterConnectionField(Form, filterset_class=filters.FormFilterSet)
+    all_questions = DjangoFilterConnectionField(
+        Question, filterset_class=filters.QuestionFilterSet
+    )
