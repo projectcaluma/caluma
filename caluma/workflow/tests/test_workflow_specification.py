@@ -164,7 +164,7 @@ def test_archive_workflow_specification(db, workflow_specification):
     assert workflow_specification.is_archived
 
 
-@pytest.mark.parametrize("next", ("task-slug", "task-slug|invalid"))
+@pytest.mark.parametrize("next", ("task-slug|taskSpecification", "task-slug|invalid"))
 @pytest.mark.parametrize("workflow_specification__is_published", (True, False))
 def test_add_workflow_specification_flow(
     db, workflow_specification, task_specification, snapshot, next
@@ -176,6 +176,7 @@ def test_add_workflow_specification_flow(
               flows {
                 edges {
                   node {
+                    next
                     taskSpecification {
                       slug
                     }
