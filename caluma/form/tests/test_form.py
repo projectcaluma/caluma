@@ -7,9 +7,9 @@ from ...tests import extract_global_id_input_fields, extract_serializer_input_fi
 from ..serializers import FormSerializer
 
 
-def test_query_all_forms(db, snapshot, form):
+def test_query_all_forms(db, snapshot, form, form_question, question):
     query = """
-        query AllFormsQuery($name: String!) {
+        query AllFormsQuery($name: String!, $question: String!) {
           allForms(name: $name) {
             edges {
               node {
@@ -18,7 +18,7 @@ def test_query_all_forms(db, snapshot, form):
                 name
                 description
                 meta
-                questions {
+                questions(search: $question) {
                   edges {
                     node {
                       id
@@ -33,7 +33,9 @@ def test_query_all_forms(db, snapshot, form):
         }
     """
 
-    result = schema.execute(query, variables={"name": form.name})
+    result = schema.execute(
+        query, variables={"name": form.name, "question": question.label}
+    )
 
     assert not result.errors
     snapshot.assert_match(result.data)

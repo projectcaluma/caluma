@@ -43,7 +43,7 @@ class Form(DjangoObjectType):
         Question, filterset_class=filters.QuestionFilterSet
     )
 
-    def resolve_questions(self, info):
+    def resolve_questions(self, info, **kwargs):
         # TODO: potential cause for query explosions
         # see https://github.com/graphql-python/graphene-django/pull/220
         # and https://docs.djangoproject.com/en/2.1/ref/models/querysets/#django.db.models.Prefetch
