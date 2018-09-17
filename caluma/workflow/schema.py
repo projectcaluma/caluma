@@ -17,6 +17,8 @@ class FlowJexl(graphene.String):
 
 
 class Flow(DjangoObjectType):
+    next = FlowJexl()
+
     class Meta:
         model = models.Flow
         filter_fields = ("task_specification",)
