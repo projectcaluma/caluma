@@ -5,10 +5,12 @@ from ...schema import schema
 from ...tests import extract_global_id_input_fields, extract_serializer_input_fields
 
 
-def test_query_all_questions(db, snapshot, question):
+def test_query_all_questions(db, snapshot, question, form, form_question_factory):
+    form_question_factory.create(form=form)
+
     query = """
-        query AllQuestionsQuery($search: String) {
-          allQuestions(isArchived: false, search: $search) {
+        query AllQuestionsQuery($search: String, $form: ID) {
+          allQuestions(isArchived: false, search: $search, excludeFormQuestions: $form) {
             edges {
               node {
                 id
@@ -23,7 +25,13 @@ def test_query_all_questions(db, snapshot, question):
         }
     """
 
-    result = schema.execute(query, variables={"search": question.label})
+    result = schema.execute(
+        query,
+        variables={
+            "search": question.label,
+            "form": extract_global_id_input_fields(form)["id"],
+        },
+    )
 
     assert not result.errors
     snapshot.assert_match(result.data)

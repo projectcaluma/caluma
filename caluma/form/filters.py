@@ -1,3 +1,5 @@
+from graphene_django.filter.filterset import GlobalIDFilter
+
 from . import models
 from ..filters import FilterSet, SearchFilter
 
@@ -7,17 +9,11 @@ class FormFilterSet(FilterSet):
 
     class Meta:
         model = models.Form
-        fields = (
-            "slug",
-            "name",
-            "description",
-            "is_published",
-            "is_archived",
-            "search",
-        )
+        fields = ("slug", "name", "description", "is_published", "is_archived")
 
 
 class QuestionFilterSet(FilterSet):
+    exclude_form_questions = GlobalIDFilter(field_name="forms", exclude=True)
     search = SearchFilter(fields=("slug", "label", "type"))
 
     class Meta:
