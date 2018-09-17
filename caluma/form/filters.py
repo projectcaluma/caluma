@@ -1,4 +1,4 @@
-from graphene_django.filter.filterset import GlobalIDFilter
+from graphene_django.filter.filterset import GlobalIDMultipleChoiceFilter
 
 from . import models
 from ..filters import FilterSet, SearchFilter
@@ -13,7 +13,7 @@ class FormFilterSet(FilterSet):
 
 
 class QuestionFilterSet(FilterSet):
-    exclude_form_questions = GlobalIDFilter(field_name="forms", exclude=True)
+    exclude_forms = GlobalIDMultipleChoiceFilter(field_name="forms", exclude=True)
     search = SearchFilter(fields=("slug", "label", "type"))
 
     class Meta:

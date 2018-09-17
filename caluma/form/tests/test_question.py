@@ -9,8 +9,8 @@ def test_query_all_questions(db, snapshot, question, form, form_question_factory
     form_question_factory.create(form=form)
 
     query = """
-        query AllQuestionsQuery($search: String, $form: ID) {
-          allQuestions(isArchived: false, search: $search, excludeFormQuestions: $form) {
+        query AllQuestionsQuery($search: String, $forms: [ID]) {
+          allQuestions(isArchived: false, search: $search, excludeForms: $forms) {
             edges {
               node {
                 id
@@ -29,7 +29,7 @@ def test_query_all_questions(db, snapshot, question, form, form_question_factory
         query,
         variables={
             "search": question.label,
-            "form": extract_global_id_input_fields(form)["id"],
+            "forms": [extract_global_id_input_fields(form)["id"]],
         },
     )
 
