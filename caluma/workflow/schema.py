@@ -165,10 +165,10 @@ class AddWorkflowSpecificationFlow(relay.ClientIDMutation):
         if errors:
             raise exceptions.ValidationError(errors)
 
-        models.Flow.objects.create(
+        models.Flow.objects.update_or_create(
             workflow_specification=workflow_specification,
             task_specification=task_specification,
-            next=input["next"],
+            defaults={"next": input["next"]},
         )
 
         return AddWorkflowSpecificationFlow(

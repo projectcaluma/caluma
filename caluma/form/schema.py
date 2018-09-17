@@ -103,7 +103,7 @@ class AddFormQuestion(relay.ClientIDMutation):
         _, question_id = from_global_id(input["question"])
         question = get_object_or_404(models.Question, pk=question_id)
 
-        models.FormQuestion.objects.create(form=form, question=question)
+        models.FormQuestion.objects.get_or_create(form=form, question=question)
         return AddFormQuestion(form=form)
 
 

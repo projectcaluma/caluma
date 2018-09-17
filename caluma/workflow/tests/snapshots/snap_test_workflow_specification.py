@@ -43,17 +43,6 @@ snapshots["test_save_workflow_specification 1"] = {
     }
 }
 
-snapshots["test_add_workflow_specification_flow[True-task-slug] 1"] = {
-    "data": {"addWorkflowSpecificationFlow": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "['Workflow star-check-record may not be edited as it is archived or published']",
-            "path": ["addWorkflowSpecificationFlow"],
-        }
-    ],
-}
-
 snapshots["test_add_workflow_specification_flow[True-task-slug|invalid] 1"] = {
     "data": {"addWorkflowSpecificationFlow": None},
     "errors": [
@@ -63,22 +52,6 @@ snapshots["test_add_workflow_specification_flow[True-task-slug|invalid] 1"] = {
             "path": ["addWorkflowSpecificationFlow"],
         }
     ],
-}
-
-snapshots["test_add_workflow_specification_flow[False-task-slug] 1"] = {
-    "data": {
-        "addWorkflowSpecificationFlow": {
-            "clientMutationId": None,
-            "workflowSpecification": {
-                "flows": {
-                    "edges": [
-                        {"node": {"taskSpecification": {"slug": "mrs-shake-recent"}}}
-                    ]
-                }
-            },
-        }
-    },
-    "errors": [],
 }
 
 snapshots["test_add_workflow_specification_flow[False-task-slug|invalid] 1"] = {
@@ -136,4 +109,40 @@ snapshots[
             "path": ["publishWorkflowSpecification"],
         }
     ],
+}
+
+snapshots[
+    "test_add_workflow_specification_flow[True-task-slug|taskSpecification] 1"
+] = {
+    "data": {"addWorkflowSpecificationFlow": None},
+    "errors": [
+        {
+            "locations": [{"column": 11, "line": 3}],
+            "message": "['Workflow star-check-record may not be edited as it is archived or published']",
+            "path": ["addWorkflowSpecificationFlow"],
+        }
+    ],
+}
+
+snapshots[
+    "test_add_workflow_specification_flow[False-task-slug|taskSpecification] 1"
+] = {
+    "data": {
+        "addWorkflowSpecificationFlow": {
+            "clientMutationId": None,
+            "workflowSpecification": {
+                "flows": {
+                    "edges": [
+                        {
+                            "node": {
+                                "next": "task-slug|taskSpecification",
+                                "taskSpecification": {"slug": "mrs-shake-recent"},
+                            }
+                        }
+                    ]
+                }
+            },
+        }
+    },
+    "errors": [],
 }
