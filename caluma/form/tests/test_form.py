@@ -4,7 +4,7 @@ from graphql_relay import to_global_id
 from .. import models
 from ...schema import schema
 from ...tests import extract_global_id_input_fields, extract_serializer_input_fields
-from ..serializers import FormSerializer
+from ..serializers import SaveFormSerializer
 
 
 def test_query_all_forms(db, snapshot, form, form_question, question):
@@ -56,7 +56,7 @@ def test_save_form(db, snapshot, form):
         }
     """
 
-    inp = {"input": extract_serializer_input_fields(FormSerializer, form)}
+    inp = {"input": extract_serializer_input_fields(SaveFormSerializer, form)}
     form.delete()  # test creation of form
     result = schema.execute(query, variables=inp)
 

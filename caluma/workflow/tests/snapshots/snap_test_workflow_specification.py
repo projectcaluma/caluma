@@ -87,31 +87,6 @@ snapshots["test_remove_workflow_specification_flow[False] 1"] = {
 }
 
 snapshots[
-    'test_publish_workflow_specification[task-slug-"task-slug"|taskSpecification-workflow_specification__start0] 1'
-] = {
-    "data": {
-        "publishWorkflowSpecification": {
-            "clientMutationId": "testid",
-            "workflowSpecification": {"isPublished": True},
-        }
-    },
-    "errors": [],
-}
-
-snapshots[
-    'test_publish_workflow_specification[task-slug-"not-av-task-slug"|taskSpecification-None] 1'
-] = {
-    "data": {"publishWorkflowSpecification": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "['Start needs to be set', 'Task specifications `not-av-task-slug` specified in expression `\"not-av-task-slug\"|taskSpecification` but only `task-slug` are available in workflow specification `mrs-shake-recent`']",
-            "path": ["publishWorkflowSpecification"],
-        }
-    ],
-}
-
-snapshots[
     "test_add_workflow_specification_flow[True-task-slug|taskSpecification] 1"
 ] = {
     "data": {"addWorkflowSpecificationFlow": None},
@@ -145,4 +120,29 @@ snapshots[
         }
     },
     "errors": [],
+}
+
+snapshots[
+    'test_publish_workflow_specification[task-slug-"task-slug"|taskSpecification] 1'
+] = {
+    "data": {
+        "publishWorkflowSpecification": {
+            "clientMutationId": "testid",
+            "workflowSpecification": {"isPublished": True},
+        }
+    },
+    "errors": [],
+}
+
+snapshots[
+    'test_publish_workflow_specification[task-slug-"not-av-task-slug"|taskSpecification] 1'
+] = {
+    "data": {"publishWorkflowSpecification": None},
+    "errors": [
+        {
+            "locations": [{"column": 11, "line": 3}],
+            "message": "{'non_field_errors': [ErrorDetail(string='Task specifications `not-av-task-slug` specified in expression `\"not-av-task-slug\"|taskSpecification` but only `task-slug` are available in workflow specification `deep-public-these`', code='invalid')]}",
+            "path": ["publishWorkflowSpecification"],
+        }
+    ],
 }

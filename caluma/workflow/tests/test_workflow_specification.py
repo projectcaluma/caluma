@@ -55,7 +55,7 @@ def test_save_workflow_specification(db, snapshot, workflow_specification):
 
     inp = {
         "input": extract_serializer_input_fields(
-            serializers.WorkflowSpecificationSerializer, workflow_specification
+            serializers.SaveWorkflowSpecificationSerializer, workflow_specification
         )
     }
     workflow_specification.delete()  # test creation

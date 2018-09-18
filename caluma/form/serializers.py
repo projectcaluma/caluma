@@ -1,17 +1,43 @@
-from localized_fields.fields import LocalizedField
 from pyjexl.jexl import JEXL
-from rest_framework import exceptions, serializers
+from rest_framework import exceptions
 
 from . import models
+from .. import serializers
 
 
-class FormSerializer(serializers.ModelSerializer):
+class SaveFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Form
         fields = ("slug", "name", "description", "meta")
 
 
-class QuestionSerializer(serializers.ModelSerializer):
+class ArchiveFormSerializer(serializers.ModelSerializer):
+    id = serializers.GlobalIDField(source="slug")
+
+    def update(self, instance, validated_data):
+        instance.is_archived = True
+        instance.save(update_fields=["is_archived"])
+        return instance
+
+    class Meta:
+        fields = ("id",)
+        model = models.Form
+
+
+class PublishFormSerializer(serializers.ModelSerializer):
+    id = serializers.GlobalIDField(source="slug")
+
+    def update(self, instance, validated_data):
+        instance.is_published = True
+        instance.save(update_fields=["is_published"])
+        return instance
+
+    class Meta:
+        fields = ("id",)
+        model = models.Form
+
+
+class SaveQuestionSerializer(serializers.ModelSerializer):
     def _validate_jexl_expression(self, expression):
         jexl = JEXL()
         # TODO: define transforms e.g. answer
@@ -42,6 +68,14 @@ class QuestionSerializer(serializers.ModelSerializer):
         )
 
 
-serializers.ModelSerializer.serializer_field_mapping.update(
-    {LocalizedField: serializers.CharField}
-)
+class ArchiveQuestionSerializer(serializers.ModelSerializer):
+    id = serializers.GlobalIDField(source="slug")
+
+    def update(self, instance, validated_data):
+        instance.is_archived = True
+        instance.save(update_fields=["is_archived"])
+        return instance
+
+    class Meta:
+        fields = ("id",)
+        model = models.Question

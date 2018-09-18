@@ -64,7 +64,7 @@ class TaskSpecification(DjangoObjectType):
 
 class SaveWorkflowSpecification(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
-        serializer_class = serializers.WorkflowSpecificationSerializer
+        serializer_class = serializers.SaveWorkflowSpecificationSerializer
 
 
 class SetWorkflowSpecificationStart(relay.ClientIDMutation):
@@ -96,46 +96,16 @@ class SetWorkflowSpecificationStart(relay.ClientIDMutation):
             workflow_specification=workflow_specification
         )
 
-
-class PublishWorkflowSpecification(relay.ClientIDMutation):
-    class Input:
-        id = graphene.ID(required=True)
-
-    workflow_specification = graphene.Field(WorkflowSpecification)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, workflow_specification_id = from_global_id(input["id"])
-        workflow_specification = get_object_or_404(
-            models.WorkflowSpecification, pk=workflow_specification_id
-        )
-
-        workflow_specification.validate_flows()
-        workflow_specification.is_published = True
-        workflow_specification.save(update_fields=["is_published"])
-
-        return PublishWorkflowSpecification(
-            workflow_specification=workflow_specification
-        )
+class PublishWorkflowSpecification(SerializerMutation):
+    class Meta:
+        serializer_class = serializers.PublishWorkflowSpecificationSerializer
+        lookup_input_kwarg = "id"
 
 
-class ArchiveWorkflowSpecification(relay.ClientIDMutation):
-    class Input:
-        id = graphene.ID(required=True)
-
-    workflow_specification = graphene.Field(WorkflowSpecification)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, workflow_specification_id = from_global_id(input["id"])
-        workflow_specification = get_object_or_404(
-            models.WorkflowSpecification, pk=workflow_specification_id
-        )
-        workflow_specification.is_archived = True
-        workflow_specification.save(update_fields=["is_archived"])
-        return ArchiveWorkflowSpecification(
-            workflow_specification=workflow_specification
-        )
+class ArchiveWorkflowSpecification(SerializerMutation):
+    class Meta:
+        serializer_class = serializers.ArchiveWorkflowSpecificationSerializer
+        lookup_input_kwarg = "id"
 
 
 class AddWorkflowSpecificationFlow(relay.ClientIDMutation):
@@ -208,29 +178,17 @@ class RemoveWorkflowSpecificationFlow(relay.ClientIDMutation):
 
 class SaveTaskSpecification(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
-        serializer_class = serializers.TaskSpecificationSerializer
+        serializer_class = serializers.SaveTaskSpecificationSerializer
 
 
-class ArchiveTaskSpecification(relay.ClientIDMutation):
-    class Input:
-        id = graphene.ID(required=True)
-
-    task_specification = graphene.Field(TaskSpecification)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, task_specification_id = from_global_id(input["id"])
-        task_specification = get_object_or_404(
-            models.TaskSpecification, pk=task_specification_id
-        )
-        task_specification.is_archived = True
-        task_specification.save(update_fields=["is_archived"])
-        return ArchiveTaskSpecification(task_specification=task_specification)
+class ArchiveTaskSpecification(SerializerMutation):
+    class Meta:
+        serializer_class = serializers.ArchiveTaskSpecificationSerializer
+        lookup_input_kwarg = "id"
 
 
 class Mutation(object):
     save_workflow_specification = SaveWorkflowSpecification().Field()
-    set_workflow_specification_start = SetWorkflowSpecificationStart().Field()
     publish_workflow_specification = PublishWorkflowSpecification().Field()
     archive_workflow_specification = ArchiveWorkflowSpecification().Field()
     add_workflow_specification_flow = AddWorkflowSpecificationFlow().Field()

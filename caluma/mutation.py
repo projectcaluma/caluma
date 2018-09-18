@@ -6,41 +6,15 @@ from graphene.relay.mutation import ClientIDMutation
 from graphene.types import Field, InputField
 from graphene.types.mutation import MutationOptions
 from graphene.types.objecttype import yank_fields_from_attrs
-from graphene_django.converter import convert_django_field_with_choices
 from graphene_django.registry import get_global_registry
-from graphene_django.rest_framework import serializer_converter
 from graphene_django.rest_framework.mutation import fields_for_serializer
-from rest_framework import relations, serializers
 
-
-@serializer_converter.get_graphene_type_from_serializer_field.register(
-    relations.RelatedField
-)
-def convert_serializer_relation_to_id(field):
-    return graphene.ID
-
-
-@serializer_converter.get_graphene_type_from_serializer_field.register(
-    serializers.ChoiceField
-)
-def convert_serializer_field_to_enum(field):
-    # TODO: could be removed once following issue is fixed
-    # https://github.com/graphql-python/graphene-django/issues/517
-    model_class = None
-    serializer_meta = getattr(field.parent, "Meta", None)
-    if serializer_meta:
-        model_class = getattr(serializer_meta, "model", None)
-
-    if model_class:
-        registry = get_global_registry()
-        model_field = model_class._meta.get_field(field.source)
-        return type(convert_django_field_with_choices(model_field, registry))
-
-    return graphene.String
+from .relay import extract_global_id
 
 
 class SerializerMutationOptions(MutationOptions):
     lookup_field = None
+    lookup_input_kwarg = None
     model_class = None
     model_operations = ["create", "update"]
     serializer_class = None
@@ -73,6 +47,7 @@ class SerializerMutation(ClientIDMutation):
     def __init_subclass_with_meta__(
         cls,
         lookup_field=None,
+        lookup_input_kwarg=None,
         serializer_class=None,
         model_class=None,
         model_operations=["create", "update"],
@@ -97,6 +72,8 @@ class SerializerMutation(ClientIDMutation):
 
         if lookup_field is None and model_class:
             lookup_field = model_class._meta.pk.name
+        if lookup_input_kwarg is None:
+            lookup_input_kwarg = lookup_field
 
         input_fields = fields_for_serializer(
             serializer, only_fields, exclude_fields, is_input=True
@@ -113,6 +90,7 @@ class SerializerMutation(ClientIDMutation):
 
         _meta = SerializerMutationOptions(cls)
         _meta.lookup_field = lookup_field
+        _meta.lookup_input_kwarg = lookup_input_kwarg
         _meta.model_operations = model_operations
         _meta.serializer_class = serializer_class
         _meta.model_class = model_class
@@ -127,12 +105,14 @@ class SerializerMutation(ClientIDMutation):
     @classmethod
     def get_serializer_kwargs(cls, root, info, **input):  # pragma: todo cover
         lookup_field = cls._meta.lookup_field
+        lookup_input_kwarg = cls._meta.lookup_input_kwarg
         model_class = cls._meta.model_class
 
         if model_class:
-            if "update" in cls._meta.model_operations and lookup_field in input:
+            if "update" in cls._meta.model_operations and lookup_input_kwarg in input:
                 instance = get_object_or_404(
-                    model_class, **{lookup_field: input[lookup_field]}
+                    model_class,
+                    **{lookup_field: extract_global_id(input[lookup_input_kwarg])}
                 )
             elif "create" in cls._meta.model_operations:
                 instance = None

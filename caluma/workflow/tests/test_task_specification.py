@@ -43,7 +43,7 @@ def test_save_task_specification(db, snapshot, task_specification):
 
     inp = {
         "input": extract_serializer_input_fields(
-            serializers.TaskSpecificationSerializer, task_specification
+            serializers.SaveTaskSpecificationSerializer, task_specification
         )
     }
     result = schema.execute(query, variables=inp)

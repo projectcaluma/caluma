@@ -67,22 +67,13 @@ class Form(DjangoObjectType):
 
 class SaveForm(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
-        serializer_class = serializers.FormSerializer
+        serializer_class = serializers.SaveFormSerializer
 
 
-class ArchiveForm(relay.ClientIDMutation):
-    class Input:
-        id = graphene.ID(required=True)
-
-    form = graphene.Field(Form)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, form_id = from_global_id(input["id"])
-        form = get_object_or_404(models.Form, pk=form_id)
-        form.is_archived = True
-        form.save(update_fields=["is_archived"])
-        return ArchiveForm(form=form)
+class ArchiveForm(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "id"
+        serializer_class = serializers.ArchiveFormSerializer
 
 
 class AddFormQuestion(relay.ClientIDMutation):
@@ -161,39 +152,21 @@ class ReorderFormQuestions(relay.ClientIDMutation):
         return ReorderFormQuestions(form=form)
 
 
-class PublishForm(relay.ClientIDMutation):
-    class Input:
-        id = graphene.ID()
-
-    form = graphene.Field(Form)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, form_id = from_global_id(input["id"])
-        form = get_object_or_404(models.Form, pk=form_id)
-        form.is_published = True
-        form.save(update_fields=["is_published"])
-        return PublishForm(form=form)
+class PublishForm(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "id"
+        serializer_class = serializers.PublishFormSerializer
 
 
-class ArchiveQuestion(relay.ClientIDMutation):
-    class Input:
-        id = graphene.ID(required=True)
-
-    question = graphene.Field(Question)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, question_id = from_global_id(input["id"])
-        question = get_object_or_404(models.Question, pk=question_id)
-        question.is_archived = True
-        question.save(update_fields=["is_archived"])
-        return ArchiveQuestion(question=question)
+class ArchiveQuestion(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "id"
+        serializer_class = serializers.ArchiveQuestionSerializer
 
 
 class SaveQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
-        serializer_class = serializers.QuestionSerializer
+        serializer_class = serializers.SaveQuestionSerializer
 
 
 class Mutation(object):

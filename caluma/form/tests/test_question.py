@@ -57,7 +57,7 @@ def test_save_question(db, snapshot, question):
 
     inp = {
         "input": extract_serializer_input_fields(
-            serializers.QuestionSerializer, question
+            serializers.SaveQuestionSerializer, question
         )
     }
     result = schema.execute(query, variables=inp)
