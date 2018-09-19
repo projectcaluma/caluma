@@ -5,6 +5,12 @@ from rest_framework import exceptions
 from . import models
 from .. import serializers
 from ..jexl import ExtractTransformSubjectAnalyzer
+from .jexl import FlowJexl
+
+
+class FlowJexlField(serializers.JexlField):
+    def __init__(self, **kwargs):
+        super().__init__(FlowJexl(), **kwargs)
 
 
 class SaveWorkflowSpecificationSerializer(serializers.ModelSerializer):
@@ -36,7 +42,7 @@ class PublishWorkflowSpecificationSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         instance = self.instance
-        jexl = instance.create_flow_jexl()
+        jexl = FlowJexl(instance)
         added_task_specs = set(
             instance.flows.values_list("task_specification", flat=True)
         )
@@ -69,6 +75,46 @@ class PublishWorkflowSpecificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ("id",)
+        model = models.WorkflowSpecification
+
+
+class AddWorkflowSpecificationFlowSerializer(serializers.ModelSerializer):
+    workflow_specification = serializers.GlobalIDField(source="slug")
+    task_specification = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.TaskSpecification.objects
+    )
+    next = FlowJexlField()
+
+    def update(self, instance, validated_data):
+        models.Flow.objects.update_or_create(
+            workflow_specification=instance,
+            task_specification=validated_data["task_specification"],
+            defaults={"next": validated_data["next"]},
+        )
+
+        return instance
+
+    class Meta:
+        fields = ("workflow_specification", "task_specification", "next")
+        model = models.WorkflowSpecification
+
+
+class RemoveWorkflowSpecificationFlowSerializer(serializers.ModelSerializer):
+    workflow_specification = serializers.GlobalIDField(source="slug")
+    task_specification = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.TaskSpecification.objects
+    )
+
+    def update(self, instance, validated_data):
+        task_specification = validated_data["task_specification"]
+        models.Flow.objects.filter(
+            task_specification=task_specification, workflow_specification=instance
+        ).delete()
+
+        return instance
+
+    class Meta:
+        fields = ("workflow_specification", "task_specification")
         model = models.WorkflowSpecification
 
 

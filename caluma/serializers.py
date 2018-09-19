@@ -6,6 +6,7 @@ from graphql_relay import to_global_id
 from localized_fields.fields import LocalizedField
 from rest_framework import relations, serializers
 
+from . import validators
 from .relay import extract_global_id
 
 
@@ -24,19 +25,23 @@ class GlobalIDField(serializers.Field):
         return extract_global_id(data)
 
 
+class JexlField(serializers.CharField):
+    def __init__(self, jexl, **kwargs):
+        super().__init__(**kwargs)
+        self.validators.append(validators.JexlValidator(jexl))
+
+
 class ModelSerializer(serializers.ModelSerializer):
     serializer_related_field = GlobalIDPrimaryKeyRelatedField
 
 
-serializers.ModelSerializer.serializer_field_mapping.update(
-    {LocalizedField: serializers.CharField}
-)
+ModelSerializer.serializer_field_mapping.update({LocalizedField: serializers.CharField})
 
 
 @serializer_converter.get_graphene_type_from_serializer_field.register(
     serializers.ManyRelatedField
 )
-def convert_serializer_primary_key_related_field(field, is_input=True):
+def convert_serializer_primary_key_related_field(field):
     return (graphene.List, graphene.ID)
 
 
@@ -65,5 +70,4 @@ def convert_serializer_field_to_enum(field):
         registry = get_global_registry()
         model_field = model_class._meta.get_field(field.source)
         return type(convert_django_field_with_choices(model_field, registry))
-
     return graphene.String

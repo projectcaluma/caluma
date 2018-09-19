@@ -118,7 +118,6 @@ def test_archive_workflow_specification(db, workflow_specification):
 
 
 @pytest.mark.parametrize("next", ("task-slug|taskSpecification", "task-slug|invalid"))
-@pytest.mark.parametrize("workflow_specification__is_published", (True, False))
 def test_add_workflow_specification_flow(
     db, workflow_specification, task_specification, snapshot, next
 ):
@@ -159,7 +158,6 @@ def test_add_workflow_specification_flow(
     snapshot.assert_execution_result(result)
 
 
-@pytest.mark.parametrize("workflow_specification__is_published", (True, False))
 def test_remove_workflow_specification_flow(
     db, workflow_specification, task_specification, flow, snapshot
 ):
@@ -195,4 +193,5 @@ def test_remove_workflow_specification_flow(
             }
         },
     )
-    snapshot.assert_execution_result(result)
+    assert not result.errors
+    assert workflow_specification.flows.count() == 0
