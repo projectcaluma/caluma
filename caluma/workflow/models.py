@@ -27,11 +27,7 @@ class WorkflowSpecification(SlugModel):
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
     start = models.ForeignKey(
-        TaskSpecification,
-        on_delete=models.CASCADE,
-        related_name="+",
-        blank=True,
-        null=True,
+        TaskSpecification, on_delete=models.CASCADE, related_name="+"
     )
 
     def validate_editable(self):

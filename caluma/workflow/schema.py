@@ -67,35 +67,6 @@ class SaveWorkflowSpecification(UserDefinedPrimaryKeyMixin, SerializerMutation):
         serializer_class = serializers.SaveWorkflowSpecificationSerializer
 
 
-class SetWorkflowSpecificationStart(relay.ClientIDMutation):
-    class Input:
-        workflow_specification = graphene.ID(required=True)
-        start = graphene.ID(required=True)
-
-    workflow_specification = graphene.Field(WorkflowSpecification)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, workflow_specification_id = from_global_id(input["workflow_specification"])
-        workflow_specification = get_object_or_404(
-            models.WorkflowSpecification, pk=workflow_specification_id
-        )
-        workflow_specification.validate_editable()
-
-        _, task_specification_id = from_global_id(input["start"])
-        task_specification = get_object_or_404(
-            models.TaskSpecification, pk=task_specification_id
-        )
-
-        # TODO: use DRF serializers for validation
-        workflow_specification.validate_editable()
-        workflow_specification.start = task_specification
-        workflow_specification.save(update_fields=["start"])
-
-        return SetWorkflowSpecificationStart(
-            workflow_specification=workflow_specification
-        )
-
 class PublishWorkflowSpecification(SerializerMutation):
     class Meta:
         serializer_class = serializers.PublishWorkflowSpecificationSerializer
