@@ -1,4 +1,3 @@
-import pytest
 from graphql_relay import to_global_id
 
 from .. import models
@@ -110,7 +109,6 @@ def test_publish_form(db, form):
     assert form.is_published
 
 
-@pytest.mark.parametrize("form__is_published", (True, False))
 def test_add_form_question(db, form, question, snapshot):
     query = """
         mutation AddFormQuestion($input: AddFormQuestionInput!) {
@@ -142,7 +140,6 @@ def test_add_form_question(db, form, question, snapshot):
     snapshot.assert_execution_result(result)
 
 
-@pytest.mark.parametrize("form__is_published", (True, False))
 def test_remove_form_question(db, form, form_question, question, snapshot):
     query = """
         mutation RemoveFormQuestion($input: RemoveFormQuestionInput!) {
@@ -221,7 +218,9 @@ def test_reorder_form_questions(db, form, form_question_factory):
     assert result_questions == list(question_ids)
 
 
-def test_reorder_form_questions_invalid_question(db, form):
+def test_reorder_form_questions_invalid_question(db, form, question_factory):
+
+    invalid_question = question_factory()
 
     query = """
         mutation ReorderFormQuestions($input: ReorderFormQuestionsInput!) {
@@ -246,7 +245,7 @@ def test_reorder_form_questions_invalid_question(db, form):
             "input": {
                 "form": to_global_id(type(form).__name__, form.pk),
                 "questions": [
-                    to_global_id(type(models.Question).__name__, "invalidquestion")
+                    to_global_id(type(models.Question).__name__, invalid_question.slug)
                 ],
             }
         },

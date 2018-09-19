@@ -34,10 +34,19 @@ serializers.ModelSerializer.serializer_field_mapping.update(
 
 
 @serializer_converter.get_graphene_type_from_serializer_field.register(
+    serializers.ManyRelatedField
+)
+def convert_serializer_primary_key_related_field(field, is_input=True):
+    return (graphene.List, graphene.ID)
+
+
+@serializer_converter.get_graphene_type_from_serializer_field.register(
     relations.RelatedField
 )
 @serializer_converter.get_graphene_type_from_serializer_field.register(GlobalIDField)
 def convert_serializer_relation_to_id(field):
+    # TODO: could be removed once following issue is fixed
+    # https://github.com/graphql-python/graphene-django/issues/389
     return graphene.ID
 
 

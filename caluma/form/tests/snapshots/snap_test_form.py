@@ -19,48 +19,6 @@ snapshots["test_save_form 1"] = {
     }
 }
 
-snapshots["test_add_form_question[True] 1"] = {
-    "data": {"addFormQuestion": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "Form mrs-shake-recent may not be edited as it is archived or published",
-            "path": ["addFormQuestion"],
-        }
-    ],
-}
-
-snapshots["test_add_form_question[False] 1"] = {
-    "data": {
-        "addFormQuestion": {
-            "clientMutationId": None,
-            "form": {"questions": {"edges": [{"node": {"slug": "fly-even-yourself"}}]}},
-        }
-    },
-    "errors": [],
-}
-
-snapshots["test_remove_form_question[True] 1"] = {
-    "data": {"removeFormQuestion": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "Form mrs-shake-recent may not be edited as it is archived or published",
-            "path": ["removeFormQuestion"],
-        }
-    ],
-}
-
-snapshots["test_remove_form_question[False] 1"] = {
-    "data": {
-        "removeFormQuestion": {
-            "clientMutationId": None,
-            "form": {"questions": {"edges": []}},
-        }
-    },
-    "errors": [],
-}
-
 snapshots["test_query_all_forms 1"] = {
     "allForms": {
         "edges": [
@@ -88,4 +46,24 @@ Kid avoid player relationship to range whose. Draw free property consider.""",
             }
         ]
     }
+}
+
+snapshots["test_add_form_question 1"] = {
+    "data": {
+        "addFormQuestion": {
+            "clientMutationId": None,
+            "form": {"questions": {"edges": [{"node": {"slug": "fly-even-yourself"}}]}},
+        }
+    },
+    "errors": [],
+}
+
+snapshots["test_remove_form_question 1"] = {
+    "data": {
+        "removeFormQuestion": {
+            "clientMutationId": None,
+            "form": {"questions": {"edges": []}},
+        }
+    },
+    "errors": [],
 }
