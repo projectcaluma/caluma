@@ -1,4 +1,5 @@
 import graphene
+from django.utils import translation
 from graphene_django.converter import convert_django_field_with_choices
 from graphene_django.registry import get_global_registry
 from graphene_django.rest_framework import serializer_converter
@@ -33,6 +34,18 @@ class JexlField(serializers.CharField):
 
 class ModelSerializer(serializers.ModelSerializer):
     serializer_related_field = GlobalIDPrimaryKeyRelatedField
+
+    def build_standard_field(self, field_name, model_field):
+        field_class, field_kwargs = super().build_standard_field(
+            field_name, model_field
+        )
+
+        if isinstance(model_field, LocalizedField):
+            lang = translation.get_language()
+            allow_blank = model_field.blank or lang not in model_field.required
+            field_kwargs["allow_blank"] = allow_blank
+
+        return field_class, field_kwargs
 
 
 ModelSerializer.serializer_field_mapping.update({LocalizedField: serializers.CharField})
