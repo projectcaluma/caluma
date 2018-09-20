@@ -38,6 +38,20 @@ class SerializerMutation(ClientIDMutation):
 
     Goal would be to get rid of this custom class when referenced issues
     have been resolved successfully.
+
+
+    The following `Meta` attributes control the basic behavior:
+    * `lookup_field`: The model field that should be used to for performing object lookup of
+      individual model instances. Defaults to 'pk'.
+    * `lookup_input_kwarg`: Input argument that should be used for object lookup.
+      Defaults to 'lookup_field'
+    * `serializer_class`: The serializer class that should be used for validating, deserializing input
+      and performing side effect.
+    * `model_class`: The model class to lookup instance of. Defaults to model of serializer.
+    * `model_operations`: Define which operations are allowed. Defaults to `['create', 'update'].
+    * `only_fields`: Restrict input fields. Defaults to serializer fields.
+    * `exclude_fields`: Exclude input fields. Defaults to serializer fields.
+    * `return_field_name`: Name of return graph. Defaults to camel cased model class name
     """
 
     class Meta:
