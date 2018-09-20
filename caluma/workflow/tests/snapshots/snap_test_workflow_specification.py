@@ -43,51 +43,8 @@ snapshots["test_save_workflow_specification 1"] = {
     }
 }
 
-snapshots["test_add_workflow_specification_flow[True-task-slug|invalid] 1"] = {
-    "data": {"addWorkflowSpecificationFlow": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "['Workflow star-check-record may not be edited as it is archived or published']",
-            "path": ["addWorkflowSpecificationFlow"],
-        }
-    ],
-}
-
-snapshots["test_add_workflow_specification_flow[False-task-slug|invalid] 1"] = {
-    "data": {"addWorkflowSpecificationFlow": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "[ErrorDetail(string='The `invalid` transform is undefined.', code='invalid')]",
-            "path": ["addWorkflowSpecificationFlow"],
-        }
-    ],
-}
-
-snapshots["test_remove_workflow_specification_flow[True] 1"] = {
-    "data": {"removeWorkflowSpecificationFlow": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "['Workflow star-check-record may not be edited as it is archived or published']",
-            "path": ["removeWorkflowSpecificationFlow"],
-        }
-    ],
-}
-
-snapshots["test_remove_workflow_specification_flow[False] 1"] = {
-    "data": {
-        "removeWorkflowSpecificationFlow": {
-            "clientMutationId": None,
-            "workflowSpecification": {"flows": {"edges": []}},
-        }
-    },
-    "errors": [],
-}
-
 snapshots[
-    'test_publish_workflow_specification[task-slug-"task-slug"|taskSpecification-workflow_specification__start0] 1'
+    'test_publish_workflow_specification[task-slug-"task-slug"|taskSpecification] 1'
 ] = {
     "data": {
         "publishWorkflowSpecification": {
@@ -99,34 +56,19 @@ snapshots[
 }
 
 snapshots[
-    'test_publish_workflow_specification[task-slug-"not-av-task-slug"|taskSpecification-None] 1'
+    'test_publish_workflow_specification[task-slug-"not-av-task-slug"|taskSpecification] 1'
 ] = {
     "data": {"publishWorkflowSpecification": None},
     "errors": [
         {
             "locations": [{"column": 11, "line": 3}],
-            "message": "['Start needs to be set', 'Task specifications `not-av-task-slug` specified in expression `\"not-av-task-slug\"|taskSpecification` but only `task-slug` are available in workflow specification `mrs-shake-recent`']",
+            "message": "{'non_field_errors': [ErrorDetail(string='Task specifications `not-av-task-slug` specified in expression `\"not-av-task-slug\"|taskSpecification` but only `task-slug` are available in workflow specification `deep-public-these`', code='invalid')]}",
             "path": ["publishWorkflowSpecification"],
         }
     ],
 }
 
-snapshots[
-    "test_add_workflow_specification_flow[True-task-slug|taskSpecification] 1"
-] = {
-    "data": {"addWorkflowSpecificationFlow": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "['Workflow star-check-record may not be edited as it is archived or published']",
-            "path": ["addWorkflowSpecificationFlow"],
-        }
-    ],
-}
-
-snapshots[
-    "test_add_workflow_specification_flow[False-task-slug|taskSpecification] 1"
-] = {
+snapshots["test_add_workflow_specification_flow[task-slug|taskSpecification] 1"] = {
     "data": {
         "addWorkflowSpecificationFlow": {
             "clientMutationId": None,
@@ -145,4 +87,15 @@ snapshots[
         }
     },
     "errors": [],
+}
+
+snapshots["test_add_workflow_specification_flow[task-slug|invalid] 1"] = {
+    "data": {"addWorkflowSpecificationFlow": None},
+    "errors": [
+        {
+            "locations": [{"column": 11, "line": 3}],
+            "message": "{'next': [ErrorDetail(string='The `invalid` transform is undefined.', code='invalid')]}",
+            "path": ["addWorkflowSpecificationFlow"],
+        }
+    ],
 }

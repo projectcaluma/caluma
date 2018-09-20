@@ -1,6 +1,5 @@
 import pytest
 from graphql_relay import to_global_id
-from pytest_factoryboy import LazyFixture
 
 from .. import serializers
 from ...schema import schema
@@ -55,7 +54,7 @@ def test_save_workflow_specification(db, snapshot, workflow_specification):
 
     inp = {
         "input": extract_serializer_input_fields(
-            serializers.WorkflowSpecificationSerializer, workflow_specification
+            serializers.SaveWorkflowSpecificationSerializer, workflow_specification
         )
     }
     workflow_specification.delete()  # test creation
@@ -65,57 +64,11 @@ def test_save_workflow_specification(db, snapshot, workflow_specification):
     snapshot.assert_match(result.data)
 
 
-def test_set_workflow_specification_start(
-    db, workflow_specification, task_specification
-):
-    query = """
-        mutation SetWorkflowSpecificationStart($input: SetWorkflowSpecificationStartInput!) {
-          setWorkflowSpecificationStart(input: $input) {
-            workflowSpecification {
-              start {
-                slug
-              }
-            }
-            clientMutationId
-          }
-        }
-    """
-
-    inp = {
-        "input": {
-            "workflowSpecification": to_global_id(
-                type(workflow_specification).__name__, workflow_specification.pk
-            ),
-            "start": to_global_id(
-                type(task_specification).__name__, task_specification.pk
-            ),
-        }
-    }
-    workflow_specification.start = None
-    workflow_specification.save()
-    result = schema.execute(query, variables=inp)
-
-    assert not result.errors
-    assert (
-        result.data["setWorkflowSpecificationStart"]["workflowSpecification"]["start"][
-            "slug"
-        ]
-        == task_specification.slug
-    )
-
-    workflow_specification.refresh_from_db()
-    assert workflow_specification.start == task_specification
-
-
 @pytest.mark.parametrize(
-    "task_specification__slug,flow__next,workflow_specification__start",
+    "task_specification__slug,flow__next",
     [
-        (
-            "task-slug",
-            '"task-slug"|taskSpecification',
-            LazyFixture("task_specification"),
-        ),
-        ("task-slug", '"not-av-task-slug"|taskSpecification', None),
+        ("task-slug", '"task-slug"|taskSpecification'),
+        ("task-slug", '"not-av-task-slug"|taskSpecification'),
     ],
 )
 def test_publish_workflow_specification(db, workflow_specification, snapshot, flow):
@@ -165,7 +118,6 @@ def test_archive_workflow_specification(db, workflow_specification):
 
 
 @pytest.mark.parametrize("next", ("task-slug|taskSpecification", "task-slug|invalid"))
-@pytest.mark.parametrize("workflow_specification__is_published", (True, False))
 def test_add_workflow_specification_flow(
     db, workflow_specification, task_specification, snapshot, next
 ):
@@ -206,7 +158,6 @@ def test_add_workflow_specification_flow(
     snapshot.assert_execution_result(result)
 
 
-@pytest.mark.parametrize("workflow_specification__is_published", (True, False))
 def test_remove_workflow_specification_flow(
     db, workflow_specification, task_specification, flow, snapshot
 ):
@@ -242,4 +193,5 @@ def test_remove_workflow_specification_flow(
             }
         },
     )
-    snapshot.assert_execution_result(result)
+    assert not result.errors
+    assert workflow_specification.flows.count() == 0

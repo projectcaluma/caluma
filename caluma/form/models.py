@@ -1,6 +1,5 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
-from graphql.error import GraphQLError
 from localized_fields.fields import LocalizedField
 
 from caluma.models import BaseModel, SlugModel
@@ -15,14 +14,6 @@ class Form(SlugModel):
     questions = models.ManyToManyField(
         "Question", through="FormQuestion", related_name="forms"
     )
-
-    def validate_editable(self):
-        # TODO: Think of a more generic way to be implemented in graphene
-        # https://github.com/graphql-python/graphene/issues/777
-        if self.is_archived or self.is_published:
-            raise GraphQLError(
-                "Form %s may not be edited as it is archived or published" % self.pk
-            )
 
 
 class FormQuestion(BaseModel):

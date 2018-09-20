@@ -1,10 +1,9 @@
-import pytest
 from graphql_relay import to_global_id
 
 from .. import models
 from ...schema import schema
 from ...tests import extract_global_id_input_fields, extract_serializer_input_fields
-from ..serializers import FormSerializer
+from ..serializers import SaveFormSerializer
 
 
 def test_query_all_forms(db, snapshot, form, form_question, question):
@@ -56,7 +55,7 @@ def test_save_form(db, snapshot, form):
         }
     """
 
-    inp = {"input": extract_serializer_input_fields(FormSerializer, form)}
+    inp = {"input": extract_serializer_input_fields(SaveFormSerializer, form)}
     form.delete()  # test creation of form
     result = schema.execute(query, variables=inp)
 
@@ -110,7 +109,6 @@ def test_publish_form(db, form):
     assert form.is_published
 
 
-@pytest.mark.parametrize("form__is_published", (True, False))
 def test_add_form_question(db, form, question, snapshot):
     query = """
         mutation AddFormQuestion($input: AddFormQuestionInput!) {
@@ -142,7 +140,6 @@ def test_add_form_question(db, form, question, snapshot):
     snapshot.assert_execution_result(result)
 
 
-@pytest.mark.parametrize("form__is_published", (True, False))
 def test_remove_form_question(db, form, form_question, question, snapshot):
     query = """
         mutation RemoveFormQuestion($input: RemoveFormQuestionInput!) {
@@ -221,7 +218,9 @@ def test_reorder_form_questions(db, form, form_question_factory):
     assert result_questions == list(question_ids)
 
 
-def test_reorder_form_questions_invalid_question(db, form):
+def test_reorder_form_questions_invalid_question(db, form, question_factory):
+
+    invalid_question = question_factory()
 
     query = """
         mutation ReorderFormQuestions($input: ReorderFormQuestionsInput!) {
@@ -246,7 +245,7 @@ def test_reorder_form_questions_invalid_question(db, form):
             "input": {
                 "form": to_global_id(type(form).__name__, form.pk),
                 "questions": [
-                    to_global_id(type(models.Question).__name__, "invalidquestion")
+                    to_global_id(type(models.Question).__name__, invalid_question.slug)
                 ],
             }
         },

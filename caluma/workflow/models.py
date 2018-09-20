@@ -1,14 +1,8 @@
-from functools import partial
-
 from django.contrib.postgres.fields import JSONField
-from django.core import exceptions
 from django.db import models
 from localized_fields.fields import LocalizedField
-from pyjexl import JEXL
 
 from caluma.models import BaseModel, SlugModel
-
-from ..jexl import ExtractTransformSubjectAnalyzer
 
 
 class TaskSpecification(SlugModel):
@@ -31,54 +25,8 @@ class WorkflowSpecification(SlugModel):
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
     start = models.ForeignKey(
-        TaskSpecification,
-        on_delete=models.CASCADE,
-        related_name="+",
-        blank=True,
-        null=True,
+        TaskSpecification, on_delete=models.CASCADE, related_name="+"
     )
-
-    def validate_editable(self):
-        if self.is_archived or self.is_published:
-            raise exceptions.ValidationError(
-                f"Workflow {self.pk} may not be edited as it is archived or published"
-            )
-
-    def validate_flows(self):
-        jexl = self.create_flow_jexl()
-        added_task_specs = set(self.flows.values_list("task_specification", flat=True))
-
-        errors = []
-        if self.start is None:
-            errors.append("Start needs to be set")
-
-        for expr in self.flows.values_list("next", flat=True):
-            task_specs = set(
-                jexl.analyze(
-                    expr,
-                    partial(
-                        ExtractTransformSubjectAnalyzer,
-                        transforms=["taskSpecification"],
-                    ),
-                )
-            )
-
-            not_found_tasks = task_specs - added_task_specs
-            if not_found_tasks:
-                errors.append(
-                    f"Task specifications `{', '.join(task_specs)}` specified in "
-                    f"expression `{expr}` but only `{', '.join(added_task_specs)}` "
-                    f"are available in workflow specification `{self.slug}`"
-                )
-
-        if errors:
-            raise exceptions.ValidationError(errors)
-
-    def create_flow_jexl(self):
-        jexl = JEXL()
-        jexl.add_transform("taskSpecification", lambda spec: spec)
-        # TODO: add transforms e.g. answer
-        return jexl
 
 
 class Flow(BaseModel):

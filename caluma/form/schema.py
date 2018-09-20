@@ -1,11 +1,7 @@
-import graphene
-from django.shortcuts import get_object_or_404
 from graphene import relay
 from graphene_django.converter import convert_django_field, convert_field_to_string
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType
-from graphql.error import GraphQLError
-from graphql_relay import from_global_id
 from localized_fields.fields import LocalizedField
 
 from . import filters, models, serializers
@@ -67,133 +63,50 @@ class Form(DjangoObjectType):
 
 class SaveForm(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
-        serializer_class = serializers.FormSerializer
+        serializer_class = serializers.SaveFormSerializer
 
 
-class ArchiveForm(relay.ClientIDMutation):
-    class Input:
-        id = graphene.ID(required=True)
-
-    form = graphene.Field(Form)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, form_id = from_global_id(input["id"])
-        form = get_object_or_404(models.Form, pk=form_id)
-        form.is_archived = True
-        form.save(update_fields=["is_archived"])
-        return ArchiveForm(form=form)
+class ArchiveForm(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "id"
+        serializer_class = serializers.ArchiveFormSerializer
 
 
-class AddFormQuestion(relay.ClientIDMutation):
+class AddFormQuestion(SerializerMutation):
     """Add question at the end of form."""
 
-    class Input:
-        form = graphene.ID(required=True)
-        question = graphene.ID(required=True)
-
-    form = graphene.Field(Form)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, form_id = from_global_id(input["form"])
-        form = get_object_or_404(models.Form, pk=form_id)
-        form.validate_editable()
-
-        _, question_id = from_global_id(input["question"])
-        question = get_object_or_404(models.Question, pk=question_id)
-
-        models.FormQuestion.objects.get_or_create(form=form, question=question)
-        return AddFormQuestion(form=form)
+    class Meta:
+        lookup_input_kwarg = "form"
+        serializer_class = serializers.AddFormQuestionSerializer
 
 
-class RemoveFormQuestion(relay.ClientIDMutation):
-    """Add question at the end of form."""
-
-    class Input:
-        form = graphene.ID(required=True)
-        question = graphene.ID(required=True)
-
-    form = graphene.Field(Form)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, form_id = from_global_id(input["form"])
-        form = get_object_or_404(models.Form, pk=form_id)
-        form.validate_editable()
-
-        _, question_id = from_global_id(input["question"])
-        question = get_object_or_404(models.Question, pk=question_id)
-
-        models.FormQuestion.objects.filter(form=form, question=question).delete()
-        return RemoveFormQuestion(form=form)
+class RemoveFormQuestion(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "form"
+        serializer_class = serializers.RemoveFormQuestionSerializer
 
 
-class ReorderFormQuestions(relay.ClientIDMutation):
-    class Input:
-        form = graphene.ID(required=True)
-        questions = graphene.List(graphene.ID, required=True)
-
-    form = graphene.Field(Form)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, form_id = from_global_id(input["form"])
-        form = get_object_or_404(models.Form, pk=form_id)
-
-        curr_questions = form.questions.values_list("slug", flat=True)
-        inp_questions = [
-            from_global_id(question_id)[1] for question_id in input["questions"]
-        ]
-        diff_questions = set(curr_questions).symmetric_difference(inp_questions)
-
-        if diff_questions:
-            raise GraphQLError(
-                "Questions to reorder needs to match current form questions. Difference: "
-                + ", ".join(diff_questions)
-            )
-
-        for sort, question in enumerate(reversed(inp_questions)):
-            models.FormQuestion.objects.filter(form=form, question_id=question).update(
-                sort=sort
-            )
-
-        return ReorderFormQuestions(form=form)
+class ReorderFormQuestions(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "form"
+        serializer_class = serializers.ReorderFormQuestionsSerializer
 
 
-class PublishForm(relay.ClientIDMutation):
-    class Input:
-        id = graphene.ID()
-
-    form = graphene.Field(Form)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, form_id = from_global_id(input["id"])
-        form = get_object_or_404(models.Form, pk=form_id)
-        form.is_published = True
-        form.save(update_fields=["is_published"])
-        return PublishForm(form=form)
+class PublishForm(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "id"
+        serializer_class = serializers.PublishFormSerializer
 
 
-class ArchiveQuestion(relay.ClientIDMutation):
-    class Input:
-        id = graphene.ID(required=True)
-
-    question = graphene.Field(Question)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        _, question_id = from_global_id(input["id"])
-        question = get_object_or_404(models.Question, pk=question_id)
-        question.is_archived = True
-        question.save(update_fields=["is_archived"])
-        return ArchiveQuestion(question=question)
+class ArchiveQuestion(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "id"
+        serializer_class = serializers.ArchiveQuestionSerializer
 
 
 class SaveQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
-        serializer_class = serializers.QuestionSerializer
+        serializer_class = serializers.SaveQuestionSerializer
 
 
 class Mutation(object):
