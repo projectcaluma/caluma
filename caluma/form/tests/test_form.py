@@ -1,3 +1,4 @@
+import pytest
 from graphql_relay import to_global_id
 
 from .. import models
@@ -40,6 +41,7 @@ def test_query_all_forms(db, snapshot, form, form_question, question):
     snapshot.assert_match(result.data)
 
 
+@pytest.mark.parametrize("form__description", ("some description text", ""))
 def test_save_form(db, snapshot, form):
     query = """
         mutation SaveForm($input: SaveFormInput!) {

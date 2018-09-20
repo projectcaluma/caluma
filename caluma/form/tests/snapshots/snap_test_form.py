@@ -7,18 +7,6 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots["test_save_form 1"] = {
-    "saveForm": {
-        "clientMutationId": "testid",
-        "form": {
-            "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",
-            "meta": "{}",
-            "name": "Jordan Mccarthy",
-            "slug": "mrs-shake-recent",
-        },
-    }
-}
-
 snapshots["test_query_all_forms 1"] = {
     "allForms": {
         "edges": [
@@ -66,4 +54,28 @@ snapshots["test_remove_form_question 1"] = {
         }
     },
     "errors": [],
+}
+
+snapshots["test_save_form[some description text] 1"] = {
+    "saveForm": {
+        "clientMutationId": "testid",
+        "form": {
+            "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",
+            "meta": "{}",
+            "name": "Jordan Mccarthy",
+            "slug": "mrs-shake-recent",
+        },
+    }
+}
+
+snapshots["test_save_form[] 1"] = {
+    "saveForm": {
+        "clientMutationId": "testid",
+        "form": {
+            "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",
+            "meta": "{}",
+            "name": "Jordan Mccarthy",
+            "slug": "mrs-shake-recent",
+        },
+    }
 }
