@@ -28,7 +28,14 @@ class Query(
 schema = graphene.Schema(
     query=Query,
     mutation=Mutation,
+    # TODO: define what app exposes what types
     types=[
+        form_schema.TextQuestion,
+        form_schema.RadioQuestion,
+        form_schema.CheckboxQuestion,
+        form_schema.TextareaQuestion,
+        form_schema.FloatQuestion,
+        form_schema.IntegerQuestion,
         document_schema.StringAnswer,
         document_schema.ListAnswer,
         document_schema.IntegerAnswer,

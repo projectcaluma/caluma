@@ -14,8 +14,8 @@ class FormFilterSet(FilterSet):
 
 class QuestionFilterSet(FilterSet):
     exclude_forms = GlobalIDMultipleChoiceFilter(field_name="forms", exclude=True)
-    search = SearchFilter(fields=("slug", "label", "type"))
+    search = SearchFilter(fields=("slug", "label"))
 
     class Meta:
         model = models.Question
-        fields = ("slug", "label", "type", "is_required", "is_hidden", "is_archived")
+        fields = ("slug", "label", "is_required", "is_hidden", "is_archived")

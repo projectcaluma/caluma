@@ -111,19 +111,63 @@ class SaveQuestionSerializer(serializers.ModelSerializer):
     def validate_is_hidden(self, value):
         return self._validate_jexl_expression(value)
 
-    # TODO: validate configuration depending on type
-
     class Meta:
         model = models.Question
-        fields = (
-            "slug",
-            "label",
-            "type",
-            "is_required",
-            "is_hidden",
-            "configuration",
-            "meta",
-        )
+        fields = ("slug", "label", "is_required", "is_hidden", "meta")
+
+
+class SaveTextQuestionSerializer(SaveQuestionSerializer):
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_TEXT
+        return data
+
+    class Meta(SaveQuestionSerializer.Meta):
+        pass
+
+
+class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_TEXTAREA
+        return data
+
+    class Meta(SaveQuestionSerializer.Meta):
+        pass
+
+
+class SaveCheckboxQuestionSerializer(SaveQuestionSerializer):
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_CHECKBOX
+        return data
+
+    class Meta(SaveQuestionSerializer.Meta):
+        pass
+
+
+class SaveRadioQuestionSerializer(SaveQuestionSerializer):
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_RADIO
+        return data
+
+    class Meta(SaveQuestionSerializer.Meta):
+        pass
+
+
+class SaveFloatQuestionSerializer(SaveQuestionSerializer):
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_FLOAT
+        return data
+
+    class Meta(SaveQuestionSerializer.Meta):
+        pass
+
+
+class SaveIntegerQuestionSerializer(SaveQuestionSerializer):
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_INTEGER
+        return data
+
+    class Meta(SaveQuestionSerializer.Meta):
+        pass
 
 
 class ArchiveQuestionSerializer(serializers.ModelSerializer):
