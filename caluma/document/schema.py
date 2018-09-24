@@ -11,8 +11,21 @@ from ..mutation import SerializerMutation
 
 class Answer(graphene.Interface):
     id = graphene.ID()
+    created = graphene.DateTime(required=True)
+    modified = graphene.DateTime(required=True)
     question = graphene.Field(Question, required=True)
     meta = graphene.JSONString()
+
+    @classmethod
+    def resolve_type(cls, instance, info):
+        ANSWER_TYPE = {
+            list: ListAnswer,
+            str: StringAnswer,
+            float: FloatAnswer,
+            int: IntegerAnswer,
+        }
+
+        return ANSWER_TYPE[type(instance.value)]
 
 
 class IntegerAnswer(graphene.ObjectType):
@@ -48,26 +61,11 @@ class AnswerConnection(graphene.Connection):
         node = Answer
 
 
-def create_answer_node(answer):
-    ANSWER_TYPE = {
-        list: ListAnswer,
-        str: StringAnswer,
-        float: FloatAnswer,
-        int: IntegerAnswer,
-    }
-
-    answer_type = ANSWER_TYPE[type(answer.value)]
-    return answer_type(
-        id=answer.id, question=answer.question, meta=answer.meta, value=answer.value
-    )
-
-
 class Document(DjangoObjectType):
     answers = graphene.ConnectionField(AnswerConnection)
 
-    def resolve_answers(self, info):
-        # TODO: filter by question
-        return [create_answer_node(answer) for answer in self.answers.all()]
+    def resolve_answers(self, info, **kwargs):
+        return self.answers.all()
 
     class Meta:
         model = models.Document
@@ -103,7 +101,7 @@ class SaveDocumentAnswer(ClientIDMutation):
         serializer.is_valid(raise_exception=True)
         answer = serializer.save()
 
-        return cls(answer=create_answer_node(answer))
+        return cls(answer=answer)
 
 
 class SaveDocumentStringAnswer(SaveDocumentAnswer):
