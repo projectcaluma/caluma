@@ -4711,6 +4711,12 @@ value as specified by
                     {
                         "defaultValue": None,
                         "description": None,
+                        "name": "maxLength",
+                        "type": {"kind": "SCALAR", "name": "Int", "ofType": None},
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
                         "name": "clientMutationId",
                         "type": {"kind": "SCALAR", "name": "String", "ofType": None},
                     },
@@ -4805,6 +4811,12 @@ value as specified by
                             "name": "JSONString",
                             "ofType": None,
                         },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "maxLength",
+                        "type": {"kind": "SCALAR", "name": "Int", "ofType": None},
                     },
                     {
                         "defaultValue": None,
@@ -5103,6 +5115,18 @@ value as specified by
                     {
                         "defaultValue": None,
                         "description": None,
+                        "name": "minValue",
+                        "type": {"kind": "SCALAR", "name": "Float", "ofType": None},
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "maxValue",
+                        "type": {"kind": "SCALAR", "name": "Float", "ofType": None},
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
                         "name": "clientMutationId",
                         "type": {"kind": "SCALAR", "name": "String", "ofType": None},
                     },
@@ -5197,6 +5221,18 @@ value as specified by
                             "name": "JSONString",
                             "ofType": None,
                         },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "minValue",
+                        "type": {"kind": "SCALAR", "name": "Int", "ofType": None},
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "maxValue",
+                        "type": {"kind": "SCALAR", "name": "Int", "ofType": None},
                     },
                     {
                         "defaultValue": None,
@@ -6315,6 +6351,18 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "ofType": None,
                         },
                     },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "maxLength",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "Int", "ofType": None},
+                        },
+                    },
                 ],
                 "inputFields": None,
                 "interfaces": [
@@ -7104,6 +7152,18 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "ofType": None,
                         },
                     },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "maxLength",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "Int", "ofType": None},
+                        },
+                    },
                 ],
                 "inputFields": None,
                 "interfaces": [
@@ -7367,6 +7427,38 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "ofType": None,
                         },
                     },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "minValue",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Float",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "maxValue",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Float",
+                                "ofType": None,
+                            },
+                        },
+                    },
                 ],
                 "inputFields": None,
                 "interfaces": [
@@ -7628,6 +7720,30 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "kind": "OBJECT",
                             "name": "FormConnection",
                             "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "maxValue",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "Int", "ofType": None},
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "minValue",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "Int", "ofType": None},
                         },
                     },
                 ],

@@ -83,15 +83,36 @@ def test_save_document(db, snapshot, document):
 
 
 @pytest.mark.parametrize(
-    "question__type,answer__value,mutation",
+    "question__type,question__configuration,answer__value,mutation,success",
     [
-        (Question.TYPE_INTEGER, 1, "SaveDocumentIntegerAnswer"),
-        (Question.TYPE_FLOAT, 2.1, "SaveDocumentFloatAnswer"),
-        (Question.TYPE_TEXT, "Test", "SaveDocumentStringAnswer"),
-        (Question.TYPE_CHECKBOX, ["123", "1"], "SaveDocumentListAnswer"),
+        (Question.TYPE_INTEGER, {}, 1, "SaveDocumentIntegerAnswer", True),
+        (
+            Question.TYPE_INTEGER,
+            {"min_value": 100},
+            1,
+            "SaveDocumentIntegerAnswer",
+            False,
+        ),
+        (Question.TYPE_FLOAT, {}, 2.1, "SaveDocumentFloatAnswer", True),
+        (
+            Question.TYPE_FLOAT,
+            {"min_value": 100.0},
+            1,
+            "SaveDocumentFloatAnswer",
+            False,
+        ),
+        (Question.TYPE_TEXT, {}, "Test", "SaveDocumentStringAnswer", True),
+        (
+            Question.TYPE_TEXT,
+            {"max_length": 1},
+            "toolong",
+            "SaveDocumentStringAnswer",
+            False,
+        ),
+        (Question.TYPE_CHECKBOX, {}, ["123", "1"], "SaveDocumentListAnswer", True),
     ],
 )
-def test_save_document_answer(db, snapshot, answer, mutation):
+def test_save_document_answer(db, snapshot, answer, mutation, success):
     mutation_func = mutation[0].lower() + mutation[1:]
     query = f"""
         mutation {mutation}($input: {mutation}Input!) {{
@@ -120,5 +141,6 @@ def test_save_document_answer(db, snapshot, answer, mutation):
     }
     result = schema.execute(query, variables=inp)
 
-    assert not result.errors
-    snapshot.assert_match(result.data)
+    assert not bool(result.errors) == success
+    if success:
+        snapshot.assert_match(result.data)

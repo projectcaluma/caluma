@@ -1,5 +1,6 @@
 from pyjexl.jexl import JEXL
 from rest_framework import exceptions
+from rest_framework.serializers import FloatField, IntegerField
 
 from . import models
 from .. import serializers
@@ -117,21 +118,25 @@ class SaveQuestionSerializer(serializers.ModelSerializer):
 
 
 class SaveTextQuestionSerializer(SaveQuestionSerializer):
+    max_length = IntegerField(min_value=1, required=False, allow_null=True)
+
     def validate(self, data):
         data["type"] = models.Question.TYPE_TEXT
         return data
 
     class Meta(SaveQuestionSerializer.Meta):
-        pass
+        fields = SaveQuestionSerializer.Meta.fields + ("max_length",)
 
 
 class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
+    max_length = IntegerField(min_value=1, required=False, allow_null=True)
+
     def validate(self, data):
         data["type"] = models.Question.TYPE_TEXTAREA
         return data
 
     class Meta(SaveQuestionSerializer.Meta):
-        pass
+        fields = SaveQuestionSerializer.Meta.fields + ("max_length",)
 
 
 class SaveCheckboxQuestionSerializer(SaveQuestionSerializer):
@@ -153,21 +158,55 @@ class SaveRadioQuestionSerializer(SaveQuestionSerializer):
 
 
 class SaveFloatQuestionSerializer(SaveQuestionSerializer):
+    min_value = FloatField(required=False, allow_null=True)
+    max_value = FloatField(required=False, allow_null=True)
+
     def validate(self, data):
+        min_value = (
+            data.get("min_value")
+            if data.get("min_value") is not None
+            else float("-inf")
+        )
+        max_value = (
+            data.get("max_value") if data.get("max_value") is not None else float("inf")
+        )
+
+        if min_value > max_value:
+            raise exceptions.ValidationError(
+                f"max_value {max_value} is smaller than {min_value}"
+            )
+
         data["type"] = models.Question.TYPE_FLOAT
         return data
 
     class Meta(SaveQuestionSerializer.Meta):
-        pass
+        fields = SaveQuestionSerializer.Meta.fields + ("min_value", "max_value")
 
 
 class SaveIntegerQuestionSerializer(SaveQuestionSerializer):
+    min_value = IntegerField(required=False, allow_null=True)
+    max_value = IntegerField(required=False, allow_null=True)
+
     def validate(self, data):
+        min_value = (
+            data.get("min_value")
+            if data.get("min_value") is not None
+            else float("-inf")
+        )
+        max_value = (
+            data.get("max_value") if data.get("max_value") is not None else float("inf")
+        )
+
+        if min_value > max_value:
+            raise exceptions.ValidationError(
+                f"max_value {max_value} is smaller than {min_value}"
+            )
+
         data["type"] = models.Question.TYPE_INTEGER
         return data
 
     class Meta(SaveQuestionSerializer.Meta):
-        pass
+        fields = SaveQuestionSerializer.Meta.fields + ("min_value", "max_value")
 
 
 class ArchiveQuestionSerializer(serializers.ModelSerializer):
