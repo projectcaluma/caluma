@@ -36,3 +36,7 @@ def test_schema_node(db, snapshot, request, node_type):
     result = schema.execute(node_query, variables={"id": global_id})
     assert not result.errors
     assert result.data["node"]["id"] == global_id
+
+
+def test_schema_introspect(snapshot):
+    snapshot.assert_match(schema.introspect())
