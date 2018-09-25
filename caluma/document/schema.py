@@ -2,11 +2,11 @@ import graphene
 from graphene.relay.mutation import ClientIDMutation
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType
-from graphql_relay import from_global_id
 
 from . import filters, models, serializers
 from ..form.schema import Question
 from ..mutation import SerializerMutation
+from ..relay import extract_global_id
 
 
 class Answer(graphene.Interface):
@@ -89,8 +89,8 @@ class SaveDocumentAnswer(ClientIDMutation):
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
-        _, question_id = from_global_id(input["question"])
-        _, document_id = from_global_id(input["document"])
+        question_id = extract_global_id(input["question"])
+        document_id = extract_global_id(input["document"])
         answer = models.Answer.objects.filter(
             question=question_id, document=document_id
         ).first()
