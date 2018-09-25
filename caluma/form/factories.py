@@ -30,6 +30,16 @@ class QuestionFactory(DjangoModelFactory):
         model = models.Question
 
 
+class OptionFactory(DjangoModelFactory):
+    question = SubFactory(QuestionFactory)
+    slug = Faker("slug")
+    label = Faker("multilang", faker_provider="name")
+    meta = {}
+
+    class Meta:
+        model = models.Option
+
+
 class FormQuestionFactory(DjangoModelFactory):
     form = SubFactory(FormFactory)
     question = SubFactory(QuestionFactory)

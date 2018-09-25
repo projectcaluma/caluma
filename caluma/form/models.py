@@ -81,3 +81,9 @@ class Question(SlugModel):
     @min_value.setter
     def min_value(self, value):
         self.configuration["min_value"] = value
+
+
+class Option(SlugModel):
+    question = models.ForeignKey(Question, related_name="options")
+    label = LocalizedField(blank=False, null=False, required=False)
+    meta = JSONField(default={})

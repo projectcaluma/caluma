@@ -1046,6 +1046,7 @@ snapshots["test_schema_introspect 1"] = {
                     {"kind": "OBJECT", "name": "Form", "ofType": None},
                     {"kind": "OBJECT", "name": "TextQuestion", "ofType": None},
                     {"kind": "OBJECT", "name": "RadioQuestion", "ofType": None},
+                    {"kind": "OBJECT", "name": "Option", "ofType": None},
                     {"kind": "OBJECT", "name": "CheckboxQuestion", "ofType": None},
                     {"kind": "OBJECT", "name": "TextareaQuestion", "ofType": None},
                     {"kind": "OBJECT", "name": "FloatQuestion", "ofType": None},
@@ -3239,6 +3240,33 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
+                                        "name": "SaveQuestionOptionInput",
+                                        "ofType": None,
+                                    },
+                                },
+                            }
+                        ],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "saveQuestionOption",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "SaveQuestionOptionPayload",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "input",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": None,
+                                    "ofType": {
+                                        "kind": "INPUT_OBJECT",
                                         "name": "ArchiveQuestionInput",
                                         "ofType": None,
                                     },
@@ -5274,6 +5302,106 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
+                "name": "SaveQuestionOptionPayload",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": None,
+                "inputFields": [
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "question",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "slug",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "label",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "meta",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "JSONString",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "interfaces": None,
+                "kind": "INPUT_OBJECT",
+                "name": "SaveQuestionOptionInput",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": [
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "question",
+                        "type": {
+                            "kind": "INTERFACE",
+                            "name": "Question",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "inputFields": None,
+                "interfaces": [],
+                "kind": "OBJECT",
                 "name": "ArchiveQuestionPayload",
                 "possibleTypes": None,
             },
@@ -6626,6 +6754,89 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "ofType": None,
                         },
                     },
+                    {
+                        "args": [
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "before",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "after",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "first",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "last",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "slug",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "label",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "search",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                        ],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "options",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "OptionConnection",
+                            "ofType": None,
+                        },
+                    },
                 ],
                 "inputFields": None,
                 "interfaces": [
@@ -6634,6 +6845,191 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                 ],
                 "kind": "OBJECT",
                 "name": "RadioQuestion",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": [
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "pageInfo",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "PageInfo",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "edges",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "LIST",
+                                "name": None,
+                                "ofType": {
+                                    "kind": "OBJECT",
+                                    "name": "OptionEdge",
+                                    "ofType": None,
+                                },
+                            },
+                        },
+                    },
+                ],
+                "inputFields": None,
+                "interfaces": [],
+                "kind": "OBJECT",
+                "name": "OptionConnection",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": [
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "The item at the end of the edge",
+                        "isDeprecated": False,
+                        "name": "node",
+                        "type": {"kind": "OBJECT", "name": "Option", "ofType": None},
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "A cursor for use in pagination",
+                        "isDeprecated": False,
+                        "name": "cursor",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                ],
+                "inputFields": None,
+                "interfaces": [],
+                "kind": "OBJECT",
+                "name": "OptionEdge",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": [
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "",
+                        "isDeprecated": False,
+                        "name": "created",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "DateTime",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "",
+                        "isDeprecated": False,
+                        "name": "modified",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "DateTime",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "",
+                        "isDeprecated": False,
+                        "name": "slug",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "",
+                        "isDeprecated": False,
+                        "name": "label",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "",
+                        "isDeprecated": False,
+                        "name": "meta",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "JSONString",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "The ID of the object.",
+                        "isDeprecated": False,
+                        "name": "id",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                        },
+                    },
+                ],
+                "inputFields": None,
+                "interfaces": [{"kind": "INTERFACE", "name": "Node", "ofType": None}],
+                "kind": "OBJECT",
+                "name": "Option",
                 "possibleTypes": None,
             },
             {
@@ -6886,6 +7282,89 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "type": {
                             "kind": "OBJECT",
                             "name": "FormConnection",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "before",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "after",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "first",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "last",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "slug",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "label",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "search",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                        ],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "options",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "OptionConnection",
                             "ofType": None,
                         },
                     },

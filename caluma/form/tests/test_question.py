@@ -12,9 +12,13 @@ from ...tests import extract_global_id_input_fields, extract_serializer_input_fi
         (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 0.0}),
         (models.Question.TYPE_TEXT, {"max_length": 10}),
         (models.Question.TYPE_TEXTAREA, {"max_length": 10}),
+        (models.Question.TYPE_RADIO, {}),
+        (models.Question.TYPE_CHECKBOX, {}),
     ],
 )
-def test_query_all_questions(db, snapshot, question, form, form_question_factory):
+def test_query_all_questions(
+    db, snapshot, question, form, form_question_factory, option
+):
     form_question_factory.create(form=form)
 
     query = """
@@ -40,6 +44,24 @@ def test_query_all_questions(db, snapshot, question, form, form_question_factory
                 ... on IntegerQuestion {
                   integerMinValue: minValue
                   integerMaxValue: maxValue
+                }
+                ... on CheckboxQuestion {
+                  options {
+                    edges {
+                      node {
+                        slug
+                      }
+                    }
+                  }
+                }
+                ... on RadioQuestion {
+                  options {
+                    edges {
+                      node {
+                        slug
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -257,3 +279,52 @@ def test_archive_question(db, question):
 
     question.refresh_from_db()
     assert question.is_archived
+
+
+@pytest.mark.parametrize(
+    "question__type,success",
+    [
+        (models.Question.TYPE_RADIO, True),
+        (models.Question.TYPE_CHECKBOX, True),
+        (models.Question.TYPE_TEXT, False),
+    ],
+)
+def test_save_question_option(db, option, success):
+    query = """
+        mutation SaveQuestionOption($input: SaveQuestionOptionInput!) {
+          saveQuestionOption(input: $input) {
+            question {
+            __typename
+              slug
+              ... on CheckboxQuestion {
+                options {
+                  edges {
+                    node {
+                      slug
+                    }
+                  }
+                }
+              }
+              ... on RadioQuestion {
+                options {
+                  edges {
+                    node {
+                      slug
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(serializers.OptionSerializer, option)
+    }
+
+    result = schema.execute(query, variables=inp)
+    assert not bool(result.errors) == success
+    if success:
+        question_data = result.data["saveQuestionOption"]["question"]
+        assert question_data["options"]["edges"][0]["node"]["slug"] == option.slug

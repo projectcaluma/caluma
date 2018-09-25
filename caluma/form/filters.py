@@ -12,6 +12,14 @@ class FormFilterSet(FilterSet):
         fields = ("slug", "name", "description", "is_published", "is_archived")
 
 
+class OptionFilterSet(FilterSet):
+    search = SearchFilter(fields=("slug", "label"))
+
+    class Meta:
+        model = models.Option
+        fields = ("slug", "label")
+
+
 class QuestionFilterSet(FilterSet):
     exclude_forms = GlobalIDMultipleChoiceFilter(field_name="forms", exclude=True)
     search = SearchFilter(fields=("slug", "label"))

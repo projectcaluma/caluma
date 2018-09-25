@@ -294,3 +294,37 @@ snapshots["test_save_question[true|invalid-SaveFloatQuestion] 1"] = {
         }
     ],
 }
+
+snapshots["test_query_all_questions[radio-question__configuration4] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "RadioQuestion",
+                    "id": "UmFkaW9RdWVzdGlvbjpOb25l",
+                    "label": "Jordan Mccarthy",
+                    "meta": "{}",
+                    "options": {"edges": [{"node": {"slug": "enter-them-his-half"}}]},
+                    "slug": "mrs-shake-recent",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_questions[checkbox-question__configuration5] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "CheckboxQuestion",
+                    "id": "Q2hlY2tib3hRdWVzdGlvbjpOb25l",
+                    "label": "Jordan Mccarthy",
+                    "meta": "{}",
+                    "options": {"edges": [{"node": {"slug": "enter-them-his-half"}}]},
+                    "slug": "mrs-shake-recent",
+                }
+            }
+        ]
+    }
+}

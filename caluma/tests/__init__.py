@@ -12,7 +12,7 @@ def extract_serializer_input_fields(serializer_class, instance):
     for key, value in serializer.data.items():
         field = serializer.fields[key]
 
-        if isinstance(field, fields.JSONField):
+        if isinstance(field, fields.JSONField) and key == "meta":
             value = json.dumps(value)
         elif isinstance(field, fields.ChoiceField):
             value = to_const(value)

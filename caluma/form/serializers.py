@@ -209,6 +209,26 @@ class SaveIntegerQuestionSerializer(SaveQuestionSerializer):
         fields = SaveQuestionSerializer.Meta.fields + ("min_value", "max_value")
 
 
+class OptionSerializer(serializers.ModelSerializer):
+    def validate(self, data):
+
+        question = data["question"]
+
+        if question.type not in (
+            models.Question.TYPE_CHECKBOX,
+            models.Question.TYPE_RADIO,
+        ):
+            raise exceptions.ValidationError(
+                "Option may only added to question of type checkbox and radio"
+            )
+
+        return data
+
+    class Meta:
+        fields = ("slug", "label", "meta", "question")
+        model = models.Option
+
+
 class ArchiveQuestionSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField(source="slug")
 
