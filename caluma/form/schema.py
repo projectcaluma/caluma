@@ -42,14 +42,14 @@ class QuestionConnection(graphene.Connection):
 
 
 class TextQuestion(graphene.ObjectType):
-    max_length = graphene.Int()
+    max_length = graphene.Int(required=True)
 
     class Meta:
         interfaces = (Question, graphene.Node)
 
 
 class TextareaQuestion(graphene.ObjectType):
-    max_length = graphene.Int()
+    max_length = graphene.Int(required=True)
 
     class Meta:
         interfaces = (Question, graphene.Node)
@@ -66,28 +66,16 @@ class CheckboxQuestion(graphene.ObjectType):
 
 
 class IntegerQuestion(graphene.ObjectType):
-    max_value = graphene.Int()
-    min_value = graphene.Int()
-
-    def resolve_max_value(self, info):
-        return self.configuration["max_value"]
-
-    def resolve_min_value(self, info):
-        return self.configuration["min_value"]
+    max_value = graphene.Int(required=True)
+    min_value = graphene.Int(required=True)
 
     class Meta:
         interfaces = (Question, graphene.Node)
 
 
 class FloatQuestion(graphene.ObjectType):
-    min_value = graphene.Float()
-    max_value = graphene.Float()
-
-    def resolve_max_value(self, info):
-        return self.configuration["max_value"]
-
-    def resolve_min_value(self, info):
-        return self.configuration["min_value"]
+    min_value = graphene.Float(required=True)
+    max_value = graphene.Float(required=True)
 
     class Meta:
         interfaces = (Question, graphene.Node)
