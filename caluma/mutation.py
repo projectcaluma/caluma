@@ -6,10 +6,14 @@ from graphene.relay.mutation import ClientIDMutation
 from graphene.types import Field, InputField
 from graphene.types.mutation import MutationOptions
 from graphene.types.objecttype import yank_fields_from_attrs
+from graphene_django.converter import convert_django_field, convert_field_to_string
 from graphene_django.registry import get_global_registry
 from graphene_django.rest_framework.mutation import fields_for_serializer
+from localized_fields.fields import LocalizedField
 
 from .relay import extract_global_id
+
+convert_django_field.register(LocalizedField, convert_field_to_string)
 
 
 class SerializerMutationOptions(MutationOptions):
@@ -19,6 +23,7 @@ class SerializerMutationOptions(MutationOptions):
     model_operations = ["create", "update"]
     serializer_class = None
     return_field_name = None
+    return_field_type = None
 
 
 class SerializerMutation(ClientIDMutation):
@@ -52,6 +57,7 @@ class SerializerMutation(ClientIDMutation):
     * `only_fields`: Restrict input fields. Defaults to serializer fields.
     * `exclude_fields`: Exclude input fields. Defaults to serializer fields.
     * `return_field_name`: Name of return graph. Defaults to camel cased model class name
+    * `return_field_type`: Type of return graph. Defaults to object type of given model_class.
     """
 
     class Meta:
@@ -68,6 +74,7 @@ class SerializerMutation(ClientIDMutation):
         only_fields=(),
         exclude_fields=(),
         return_field_name=None,
+        return_field_type=None,
         **options
     ):
         if not serializer_class:  # pragma: todo cover
@@ -97,10 +104,12 @@ class SerializerMutation(ClientIDMutation):
             model_name = model_class.__name__
             return_field_name = model_name[:1].lower() + model_name[1:]
 
-        registry = get_global_registry()
-        model_type = registry.get_type_for_model(model_class)
+        if not return_field_type:
+            registry = get_global_registry()
+            return_field_type = registry.get_type_for_model(model_class)
+
         output_fields = OrderedDict()
-        output_fields[return_field_name] = graphene.Field(model_type)
+        output_fields[return_field_name] = graphene.Field(return_field_type)
 
         _meta = SerializerMutationOptions(cls)
         _meta.lookup_field = lookup_field
@@ -110,6 +119,7 @@ class SerializerMutation(ClientIDMutation):
         _meta.model_class = model_class
         _meta.fields = yank_fields_from_attrs(output_fields, _as=Field)
         _meta.return_field_name = return_field_name
+        _meta.return_field_type = return_field_type
 
         input_fields = yank_fields_from_attrs(input_fields, _as=InputField)
         super(SerializerMutation, cls).__init_subclass_with_meta__(

@@ -9,6 +9,8 @@ from django.db.models.functions import Cast
 from django.utils import translation
 from django_filters import Filter, FilterSet
 from django_filters.constants import EMPTY_VALUES
+from graphene.types.utils import get_type
+from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.filter.filterset import GrapheneFilterSetMixin
 from localized_fields.fields import LocalizedField
 
@@ -74,3 +76,17 @@ class SearchFilter(Filter):
 
 class FilterSet(GrapheneFilterSetMixin, FilterSet):
     pass
+
+
+class DjangoFilterSetConnectionField(DjangoFilterConnectionField):
+    @property
+    def filterset_class(self):
+        return self._provided_filterset_class
+
+    @property
+    def model(self):
+        return self.filterset_class._meta.model
+
+    @property
+    def type(self):
+        return get_type(self._type)

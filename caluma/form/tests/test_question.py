@@ -16,8 +16,6 @@ def test_query_all_questions(db, snapshot, question, form, form_question_factory
                 id
                 slug
                 label
-                type
-                configuration
                 meta
               }
             }
@@ -37,22 +35,33 @@ def test_query_all_questions(db, snapshot, question, form, form_question_factory
     snapshot.assert_match(result.data)
 
 
+@pytest.mark.parametrize(
+    "mutation",
+    [
+        "SaveTextQuestion",
+        "SaveTextareaQuestion",
+        "SaveCheckboxQuestion",
+        "SaveRadioQuestion",
+        "SaveIntegerQuestion",
+        "SaveFloatQuestion",
+    ],
+)
 @pytest.mark.parametrize("question__is_required", ("true", "true|invalid"))
-def test_save_question(db, snapshot, question):
-    query = """
-        mutation SaveQuestion($input: SaveQuestionInput!) {
-          saveQuestion(input: $input) {
-            question {
-                id
-                slug
-                label
-                type
-                configuration
-                meta
-            }
+def test_save_question(db, snapshot, question, mutation):
+    mutation_func = mutation[0].lower() + mutation[1:]
+    query = f"""
+        mutation {mutation}($input: {mutation}Input!) {{
+          {mutation_func}(input: $input) {{
+            question {{
+              id
+              slug
+              label
+              meta
+              __typename
+            }}
             clientMutationId
-          }
-        }
+          }}
+        }}
     """
 
     inp = {
@@ -61,6 +70,7 @@ def test_save_question(db, snapshot, question):
         )
     }
     result = schema.execute(query, variables=inp)
+
     snapshot.assert_execution_result(result)
 
 
