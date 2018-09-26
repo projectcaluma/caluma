@@ -328,3 +328,34 @@ def test_save_question_option(db, option, success):
     if success:
         question_data = result.data["saveQuestionOption"]["question"]
         assert question_data["options"]["edges"][0]["node"]["slug"] == option.slug
+
+
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_CHECKBOX])
+def test_remove_question_option(db, question, option):
+    query = """
+        mutation RemoveQuestionOption($input: RemoveQuestionOptionInput!) {
+          removeQuestionOption(input: $input) {
+            question {
+              __typename
+              slug
+              ... on CheckboxQuestion {
+                options {
+                  edges {
+                    node {
+                      slug
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    result = schema.execute(
+        query, variables={"input": {"question": question.pk, "option": option.slug}}
+    )
+    assert not result.errors
+    with pytest.raises(models.Option.DoesNotExist):
+        option.refresh_from_db()
+    assert len(result.data["removeQuestionOption"]["question"]["options"]["edges"]) == 0

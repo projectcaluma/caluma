@@ -3267,6 +3267,33 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
+                                        "name": "RemoveQuestionOptionInput",
+                                        "ofType": None,
+                                    },
+                                },
+                            }
+                        ],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "removeQuestionOption",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "RemoveQuestionOptionPayload",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "input",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": None,
+                                    "ofType": {
+                                        "kind": "INPUT_OBJECT",
                                         "name": "ArchiveQuestionInput",
                                         "ofType": None,
                                     },
@@ -5372,6 +5399,66 @@ value as specified by
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
                 "name": "SaveQuestionOptionInput",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": [
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "question",
+                        "type": {
+                            "kind": "INTERFACE",
+                            "name": "Question",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "inputFields": None,
+                "interfaces": [],
+                "kind": "OBJECT",
+                "name": "RemoveQuestionOptionPayload",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": None,
+                "inputFields": [
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "question",
+                        "type": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "option",
+                        "type": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "interfaces": None,
+                "kind": "INPUT_OBJECT",
+                "name": "RemoveQuestionOptionInput",
                 "possibleTypes": None,
             },
             {

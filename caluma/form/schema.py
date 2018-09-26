@@ -1,4 +1,5 @@
 import graphene
+from django.shortcuts import get_object_or_404
 from graphene import relay
 from graphene.relay.mutation import ClientIDMutation
 from graphene_django.filter import DjangoFilterConnectionField
@@ -227,6 +228,24 @@ class SaveQuestionOption(ClientIDMutation):
         return cls(question=option.question)
 
 
+class RemoveQuestionOption(ClientIDMutation):
+    question = graphene.Field(Question)
+
+    class Input:
+        question = graphene.ID()
+        option = graphene.ID()
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+        question_id = extract_global_id(input["question"])
+        question = get_object_or_404(models.Question.objects, pk=question_id)
+        option_id = extract_global_id(input["option"])
+
+        models.Option.objects.filter(question=question_id, pk=option_id).delete()
+
+        return cls(question=question)
+
+
 class Mutation(object):
     save_form = SaveForm().Field()
     archive_form = ArchiveForm().Field()
@@ -242,6 +261,7 @@ class Mutation(object):
     save_float_question = SaveFloatQuestion().Field()
     save_integer_question = SaveIntegerQuestion().Field()
     save_question_option = SaveQuestionOption().Field()
+    remove_question_option = RemoveQuestionOption().Field()
     archive_question = ArchiveQuestion().Field()
 
 
