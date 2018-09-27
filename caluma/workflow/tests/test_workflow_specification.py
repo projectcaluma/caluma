@@ -64,13 +64,6 @@ def test_save_workflow_specification(db, snapshot, workflow_specification):
     snapshot.assert_match(result.data)
 
 
-@pytest.mark.parametrize(
-    "task_specification__slug,flow__next",
-    [
-        ("task-slug", '"task-slug"|taskSpecification'),
-        ("task-slug", '"not-av-task-slug"|taskSpecification'),
-    ],
-)
 def test_publish_workflow_specification(db, workflow_specification, snapshot, flow):
     query = """
         mutation PublishWorkflowSpecification($input: PublishWorkflowSpecificationInput!) {
@@ -88,7 +81,12 @@ def test_publish_workflow_specification(db, workflow_specification, snapshot, fl
         variables={"input": extract_global_id_input_fields(workflow_specification)},
     )
 
-    snapshot.assert_execution_result(result)
+    assert result.data["publishWorkflowSpecification"]["workflowSpecification"][
+        "isPublished"
+    ]
+
+    workflow_specification.refresh_from_db()
+    assert workflow_specification.is_published
 
 
 def test_archive_workflow_specification(db, workflow_specification):
@@ -117,7 +115,15 @@ def test_archive_workflow_specification(db, workflow_specification):
     assert workflow_specification.is_archived
 
 
-@pytest.mark.parametrize("next", ("task-slug|taskSpecification", "task-slug|invalid"))
+@pytest.mark.parametrize(
+    "task_specification__slug,next",
+    [
+        ("task-slug", '"task-slug"|taskSpecification'),
+        ("task-slug", '"not-av-task-slug"|taskSpecification'),
+        ("task-slug", '"not-av-task-slug"|invalid'),
+        ("task-slug", '""'),
+    ],
+)
 def test_add_workflow_specification_flow(
     db, workflow_specification, task_specification, snapshot, next
 ):

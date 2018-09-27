@@ -44,31 +44,8 @@ snapshots["test_save_workflow_specification 1"] = {
 }
 
 snapshots[
-    'test_publish_workflow_specification[task-slug-"task-slug"|taskSpecification] 1'
+    'test_add_workflow_specification_flow[task-slug-"task-slug"|taskSpecification] 1'
 ] = {
-    "data": {
-        "publishWorkflowSpecification": {
-            "clientMutationId": "testid",
-            "workflowSpecification": {"isPublished": True},
-        }
-    },
-    "errors": [],
-}
-
-snapshots[
-    'test_publish_workflow_specification[task-slug-"not-av-task-slug"|taskSpecification] 1'
-] = {
-    "data": {"publishWorkflowSpecification": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "{'non_field_errors': [ErrorDetail(string='Task specifications `not-av-task-slug` specified in expression `\"not-av-task-slug\"|taskSpecification` but only `task-slug` are available in workflow specification `deep-public-these`', code='invalid')]}",
-            "path": ["publishWorkflowSpecification"],
-        }
-    ],
-}
-
-snapshots["test_add_workflow_specification_flow[task-slug|taskSpecification] 1"] = {
     "data": {
         "addWorkflowSpecificationFlow": {
             "clientMutationId": None,
@@ -77,8 +54,8 @@ snapshots["test_add_workflow_specification_flow[task-slug|taskSpecification] 1"]
                     "edges": [
                         {
                             "node": {
-                                "next": "task-slug|taskSpecification",
-                                "taskSpecification": {"slug": "mrs-shake-recent"},
+                                "next": '"task-slug"|taskSpecification',
+                                "taskSpecification": {"slug": "task-slug"},
                             }
                         }
                     ]
@@ -89,7 +66,33 @@ snapshots["test_add_workflow_specification_flow[task-slug|taskSpecification] 1"]
     "errors": [],
 }
 
-snapshots["test_add_workflow_specification_flow[task-slug|invalid] 1"] = {
+snapshots[
+    'test_add_workflow_specification_flow[task-slug-"not-av-task-slug"|taskSpecification] 1'
+] = {
+    "data": {"addWorkflowSpecificationFlow": None},
+    "errors": [
+        {
+            "locations": [{"column": 11, "line": 3}],
+            "message": "{'next': [ErrorDetail(string='jexl `\"not-av-task-slug\"|taskSpecification` contains invalid task specification: [not-av-task-slug]', code='invalid')]}",
+            "path": ["addWorkflowSpecificationFlow"],
+        }
+    ],
+}
+
+snapshots['test_add_workflow_specification_flow[task-slug-""] 1'] = {
+    "data": {"addWorkflowSpecificationFlow": None},
+    "errors": [
+        {
+            "locations": [{"column": 11, "line": 3}],
+            "message": "{'next': [ErrorDetail(string='jexl `\"\"` does not contain any task specification as return value', code='invalid')]}",
+            "path": ["addWorkflowSpecificationFlow"],
+        }
+    ],
+}
+
+snapshots[
+    'test_add_workflow_specification_flow[task-slug-"not-av-task-slug"|invalid] 1'
+] = {
     "data": {"addWorkflowSpecificationFlow": None},
     "errors": [
         {
