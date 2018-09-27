@@ -1,11 +1,13 @@
 import graphene
 from graphene import relay
+from graphene.relay.mutation import ClientIDMutation
 from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.types import DjangoObjectType
 
 from . import filters, models, serializers
 from ..filters import DjangoFilterSetConnectionField
 from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
+from ..relay import extract_global_id
 
 
 class Question(graphene.Interface):
@@ -36,6 +38,13 @@ class Question(graphene.Interface):
         return QUESTION_OBJECT_TYPE[instance.type]
 
 
+class Option(DjangoObjectType):
+    class Meta:
+        model = models.Option
+        interfaces = (relay.Node,)
+        only_fields = ("created", "modified", "label", "slug", "meta")
+
+
 class QuestionConnection(graphene.Connection):
     class Meta:
         node = Question
@@ -56,11 +65,25 @@ class TextareaQuestion(graphene.ObjectType):
 
 
 class RadioQuestion(graphene.ObjectType):
+    options = DjangoFilterConnectionField(
+        Option, filterset_class=filters.OptionFilterSet
+    )
+
+    def resolve_options(self, info, **kwargs):
+        return self.options.order_by("-questionoption__sort", "questionoption__id")
+
     class Meta:
         interfaces = (Question, graphene.Node)
 
 
 class CheckboxQuestion(graphene.ObjectType):
+    options = DjangoFilterConnectionField(
+        Option, filterset_class=filters.OptionFilterSet
+    )
+
+    def resolve_options(self, info, **kwargs):
+        return self.options.order_by("-questionoption__sort", "questionoption__id")
+
     class Meta:
         interfaces = (Question, graphene.Node)
 
@@ -187,6 +210,22 @@ class SaveFloatQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
         return_field_type = Question
 
 
+class SaveOption(UserDefinedPrimaryKeyMixin, SerializerMutation):
+    class Meta:
+        serializer_class = serializers.SaveOptionSerializer
+
+
+class RemoveOption(ClientIDMutation):
+    class Input:
+        option = graphene.ID()
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+        option_id = extract_global_id(input["option"])
+        models.Option.objects.filter(pk=option_id).delete()
+        return cls()
+
+
 class Mutation(object):
     save_form = SaveForm().Field()
     archive_form = ArchiveForm().Field()
@@ -194,6 +233,9 @@ class Mutation(object):
     add_form_question = AddFormQuestion().Field()
     remove_form_question = RemoveFormQuestion().Field()
     reorder_form_questions = ReorderFormQuestions().Field()
+
+    save_option = SaveOption().Field()
+    remove_option = RemoveOption().Field()
 
     save_text_question = SaveTextQuestion().Field()
     save_textarea_question = SaveTextareaQuestion().Field()

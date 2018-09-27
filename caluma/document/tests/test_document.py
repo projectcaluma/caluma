@@ -82,6 +82,7 @@ def test_save_document(db, snapshot, document):
     snapshot.assert_match(result.data)
 
 
+@pytest.mark.parametrize("option__slug", ["option-slug"])
 @pytest.mark.parametrize(
     "question__type,question__configuration,answer__value,mutation,success",
     [
@@ -109,26 +110,51 @@ def test_save_document(db, snapshot, document):
             "SaveDocumentStringAnswer",
             False,
         ),
-        (Question.TYPE_CHECKBOX, {}, ["123", "1"], "SaveDocumentListAnswer", True),
+        (
+            Question.TYPE_TEXTAREA,
+            {"max_length": 1},
+            "toolong",
+            "SaveDocumentStringAnswer",
+            False,
+        ),
+        (Question.TYPE_CHECKBOX, {}, ["option-slug"], "SaveDocumentListAnswer", True),
+        (
+            Question.TYPE_CHECKBOX,
+            {},
+            ["option-slug", "option-invalid-slug"],
+            "SaveDocumentStringAnswer",
+            False,
+        ),
+        (Question.TYPE_RADIO, {}, "option-slug", "SaveDocumentStringAnswer", True),
+        (
+            Question.TYPE_RADIO,
+            {},
+            "invalid-option-slug",
+            "SaveDocumentStringAnswer",
+            False,
+        ),
     ],
 )
-def test_save_document_answer(db, snapshot, answer, mutation, success):
+def test_save_document_answer(db, snapshot, answer, mutation, question_option, success):
     mutation_func = mutation[0].lower() + mutation[1:]
     query = f"""
         mutation {mutation}($input: {mutation}Input!) {{
           {mutation_func}(input: $input) {{
             answer {{
               ... on StringAnswer {{
-                string_value: value
+                stringValue: value
               }}
               ... on IntegerAnswer {{
-                integer_value: value
+                integerValue: value
               }}
               ... on ListAnswer {{
-                list_value: value
+                listValue: value
               }}
               ... on FloatAnswer {{
-                float_value: value
+                floatValue: value
+              }}
+              ... on ListAnswer {{
+                listValue: value
               }}
             }}
             clientMutationId

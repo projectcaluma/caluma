@@ -12,9 +12,13 @@ from ...tests import extract_global_id_input_fields, extract_serializer_input_fi
         (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 0.0}),
         (models.Question.TYPE_TEXT, {"max_length": 10}),
         (models.Question.TYPE_TEXTAREA, {"max_length": 10}),
+        (models.Question.TYPE_RADIO, {}),
+        (models.Question.TYPE_CHECKBOX, {}),
     ],
 )
-def test_query_all_questions(db, snapshot, question, form, form_question_factory):
+def test_query_all_questions(
+    db, snapshot, question, form, form_question_factory, question_option
+):
     form_question_factory.create(form=form)
 
     query = """
@@ -41,6 +45,24 @@ def test_query_all_questions(db, snapshot, question, form, form_question_factory
                   integerMinValue: minValue
                   integerMaxValue: maxValue
                 }
+                ... on CheckboxQuestion {
+                  options {
+                    edges {
+                      node {
+                        slug
+                      }
+                    }
+                  }
+                }
+                ... on RadioQuestion {
+                  options {
+                    edges {
+                      node {
+                        slug
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -64,8 +86,6 @@ def test_query_all_questions(db, snapshot, question, form, form_question_factory
     [
         "SaveTextQuestion",
         "SaveTextareaQuestion",
-        "SaveCheckboxQuestion",
-        "SaveRadioQuestion",
         "SaveIntegerQuestion",
         "SaveFloatQuestion",
     ],
@@ -234,6 +254,88 @@ def test_save_integer_question(db, snapshot, question):
     }
     result = schema.execute(query, variables=inp)
     snapshot.assert_execution_result(result)
+
+
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_CHECKBOX])
+def test_save_checkbox_question(db, snapshot, question, question_option_factory):
+    question_option_factory.create_batch(2, question=question)
+
+    option_ids = (
+        question.options.order_by("slug").reverse().values_list("slug", flat=True)
+    )
+
+    query = """
+        mutation SaveCheckboxQuestion($input: SaveCheckboxQuestionInput!) {
+          saveCheckboxQuestion(input: $input) {
+            question {
+              id
+              slug
+              label
+              meta
+              __typename
+              ... on CheckboxQuestion {
+                options {
+                  edges {
+                    node {
+                      slug
+                      label
+                    }
+                  }
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveCheckboxQuestionSerializer, question
+        )
+    }
+    inp["input"]["options"] == option_ids
+    result = schema.execute(query, variables=inp)
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_RADIO])
+def test_save_radio_question(db, snapshot, question, question_option):
+    query = """
+        mutation SaveRadioQuestion($input: SaveRadioQuestionInput!) {
+          saveRadioQuestion(input: $input) {
+            question {
+              id
+              slug
+              label
+              meta
+              __typename
+              ... on RadioQuestion {
+                options {
+                  edges {
+                    node {
+                      slug
+                      label
+                    }
+                  }
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveRadioQuestionSerializer, question
+        )
+    }
+    question.delete()  # test creation
+    result = schema.execute(query, variables=inp)
+    assert not result.errors
+    snapshot.assert_match(result.data)
 
 
 def test_archive_question(db, question):

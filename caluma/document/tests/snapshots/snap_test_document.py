@@ -115,37 +115,46 @@ snapshots["test_query_all_documents[text-somevalue] 1"] = {
 }
 
 snapshots[
-    "test_save_document_answer[integer-question__configuration0-1-SaveDocumentIntegerAnswer-True] 1"
+    "test_save_document_answer[integer-question__configuration0-1-SaveDocumentIntegerAnswer-True-option-slug] 1"
 ] = {
     "saveDocumentIntegerAnswer": {
-        "answer": {"integer_value": 1},
+        "answer": {"integerValue": 1},
         "clientMutationId": "testid",
     }
 }
 
 snapshots[
-    "test_save_document_answer[float-question__configuration2-2.1-SaveDocumentFloatAnswer-True] 1"
+    "test_save_document_answer[float-question__configuration2-2.1-SaveDocumentFloatAnswer-True-option-slug] 1"
 ] = {
     "saveDocumentFloatAnswer": {
-        "answer": {"float_value": 2.1},
+        "answer": {"floatValue": 2.1},
         "clientMutationId": "testid",
     }
 }
 
 snapshots[
-    "test_save_document_answer[text-question__configuration4-Test-SaveDocumentStringAnswer-True] 1"
+    "test_save_document_answer[text-question__configuration4-Test-SaveDocumentStringAnswer-True-option-slug] 1"
 ] = {
     "saveDocumentStringAnswer": {
-        "answer": {"string_value": '"Test"'},
+        "answer": {"stringValue": "Test"},
         "clientMutationId": "testid",
     }
 }
 
 snapshots[
-    "test_save_document_answer[checkbox-question__configuration6-answer__value6-SaveDocumentListAnswer-True] 1"
+    "test_save_document_answer[checkbox-question__configuration7-answer__value7-SaveDocumentListAnswer-True-option-slug] 1"
 ] = {
     "saveDocumentListAnswer": {
-        "answer": {"list_value": ['["123", "1"]']},
+        "answer": {"listValue": ["option-slug"]},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[radio-question__configuration9-option-slug-SaveDocumentStringAnswer-True-option-slug] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "option-slug"},
         "clientMutationId": "testid",
     }
 }

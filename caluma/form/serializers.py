@@ -1,3 +1,4 @@
+from django.db import transaction
 from pyjexl.jexl import JEXL
 from rest_framework import exceptions
 from rest_framework.serializers import FloatField, IntegerField
@@ -139,22 +140,54 @@ class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
         fields = SaveQuestionSerializer.Meta.fields + ("max_length",)
 
 
-class SaveCheckboxQuestionSerializer(SaveQuestionSerializer):
+class SaveQuestionOptionsMixin(object):
+    def create_question_options(self, question, options):
+        question_option = [
+            models.QuestionOption(sort=sort, question=question, option=option)
+            for sort, option in enumerate(reversed(options))
+        ]
+        models.QuestionOption.objects.bulk_create(question_option)
+
+    @transaction.atomic
+    def create(self, validated_data):
+        options = validated_data.pop("options")
+        instance = super().create(validated_data)
+        self.create_question_options(instance, options)
+        return instance
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        options = validated_data.pop("options")
+        models.QuestionOption.objects.filter(question=instance).delete()
+        instance = super().update(instance, validated_data)
+        self.create_question_options(instance, options)
+        return instance
+
+
+class SaveCheckboxQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSerializer):
+    options = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.Option.objects.all(), many=True, required=True
+    )
+
     def validate(self, data):
         data["type"] = models.Question.TYPE_CHECKBOX
         return data
 
     class Meta(SaveQuestionSerializer.Meta):
-        pass
+        fields = SaveQuestionSerializer.Meta.fields + ("options",)
 
 
-class SaveRadioQuestionSerializer(SaveQuestionSerializer):
+class SaveRadioQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSerializer):
+    options = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.Option.objects.all(), many=True, required=True
+    )
+
     def validate(self, data):
         data["type"] = models.Question.TYPE_RADIO
         return data
 
     class Meta(SaveQuestionSerializer.Meta):
-        pass
+        fields = SaveQuestionSerializer.Meta.fields + ("options",)
 
 
 class SaveFloatQuestionSerializer(SaveQuestionSerializer):
@@ -207,6 +240,12 @@ class SaveIntegerQuestionSerializer(SaveQuestionSerializer):
 
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + ("min_value", "max_value")
+
+
+class SaveOptionSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ("slug", "label", "meta")
+        model = models.Option
 
 
 class ArchiveQuestionSerializer(serializers.ModelSerializer):
