@@ -1357,7 +1357,15 @@ value as specified by
                         "description": None,
                         "isDeprecated": False,
                         "name": "next",
-                        "type": {"kind": "SCALAR", "name": "FlowJexl", "ofType": None},
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "FlowJexl",
+                                "ofType": None,
+                            },
+                        },
                     },
                     {
                         "args": [],

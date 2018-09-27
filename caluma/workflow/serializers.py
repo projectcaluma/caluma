@@ -40,39 +40,6 @@ class PublishWorkflowSpecificationSerializer(serializers.ModelSerializer):
         instance.save(update_fields=["is_published"])
         return instance
 
-    def validate(self, data):
-        instance = self.instance
-        jexl = FlowJexl(instance)
-        added_task_specs = set(
-            instance.flows.values_list("task_specification", flat=True)
-        )
-
-        errors = []
-
-        for expr in instance.flows.values_list("next", flat=True):
-            task_specs = set(
-                jexl.analyze(
-                    expr,
-                    partial(
-                        ExtractTransformSubjectAnalyzer,
-                        transforms=["taskSpecification"],
-                    ),
-                )
-            )
-
-            not_found_tasks = task_specs - added_task_specs
-            if not_found_tasks:
-                errors.append(
-                    f"Task specifications `{', '.join(task_specs)}` specified in "
-                    f"expression `{expr}` but only `{', '.join(added_task_specs)}` "
-                    f"are available in workflow specification `{instance.slug}`"
-                )
-
-        if errors:
-            raise exceptions.ValidationError(errors)
-
-        return data
-
     class Meta:
         fields = ("id",)
         model = models.WorkflowSpecification
@@ -83,7 +50,39 @@ class AddWorkflowSpecificationFlowSerializer(serializers.ModelSerializer):
     task_specification = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.TaskSpecification.objects
     )
-    next = FlowJexlField()
+    next = FlowJexlField(required=True)
+
+    def validate_next(self, value):
+        jexl = FlowJexl()
+
+        task_specs = set(
+            jexl.analyze(
+                value,
+                partial(
+                    ExtractTransformSubjectAnalyzer, transforms=["taskSpecification"]
+                ),
+            )
+        )
+
+        if not task_specs:
+            raise exceptions.ValidationError(
+                f"jexl `{value}` does not contain any task specification as return value"
+            )
+
+        available_task_specs = set(
+            models.TaskSpecification.objects.filter(slug__in=task_specs).values_list(
+                "slug", flat=True
+            )
+        )
+
+        not_found_task_specs = task_specs - available_task_specs
+        if not_found_task_specs:
+            raise exceptions.ValidationError(
+                f"jexl `{value}` contains invalid task specification: "
+                f"[{', '.join(not_found_task_specs)}]"
+            )
+
+        return value
 
     def update(self, instance, validated_data):
         models.Flow.objects.update_or_create(

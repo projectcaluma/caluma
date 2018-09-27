@@ -20,7 +20,7 @@ serializer_converter.get_graphene_type_from_serializer_field.register(
 
 
 class Flow(DjangoObjectType):
-    next = FlowJexl()
+    next = FlowJexl(required=True)
 
     class Meta:
         model = models.Flow
