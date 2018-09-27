@@ -1,5 +1,4 @@
 import graphene
-from django.shortcuts import get_object_or_404
 from graphene import relay
 from graphene.relay.mutation import ClientIDMutation
 from graphene_django.filter import DjangoFilterConnectionField
@@ -70,6 +69,9 @@ class RadioQuestion(graphene.ObjectType):
         Option, filterset_class=filters.OptionFilterSet
     )
 
+    def resolve_options(self, info, **kwargs):
+        return self.options.order_by("-questionoption__sort", "questionoption__id")
+
     class Meta:
         interfaces = (Question, graphene.Node)
 
@@ -78,6 +80,9 @@ class CheckboxQuestion(graphene.ObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
+
+    def resolve_options(self, info, **kwargs):
+        return self.options.order_by("-questionoption__sort", "questionoption__id")
 
     class Meta:
         interfaces = (Question, graphene.Node)
@@ -205,45 +210,20 @@ class SaveFloatQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
         return_field_type = Question
 
 
-class SaveQuestionOption(ClientIDMutation):
-    question = graphene.Field(Question)
+class SaveOption(UserDefinedPrimaryKeyMixin, SerializerMutation):
+    class Meta:
+        serializer_class = serializers.SaveOptionSerializer
 
+
+class RemoveOption(ClientIDMutation):
     class Input:
-        question = graphene.ID(required=True)
-        slug = graphene.String(required=True)
-        label = graphene.String(required=True)
-        meta = graphene.JSONString(required=True)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        question_id = extract_global_id(input["question"])
-        option = models.Option.objects.filter(question=question_id).first()
-
-        serializer = serializers.OptionSerializer(
-            data=input, instance=option, context={"request": info.context}
-        )
-        serializer.is_valid(raise_exception=True)
-        option = serializer.save()
-
-        return cls(question=option.question)
-
-
-class RemoveQuestionOption(ClientIDMutation):
-    question = graphene.Field(Question)
-
-    class Input:
-        question = graphene.ID()
         option = graphene.ID()
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
-        question_id = extract_global_id(input["question"])
-        question = get_object_or_404(models.Question.objects, pk=question_id)
         option_id = extract_global_id(input["option"])
-
-        models.Option.objects.filter(question=question_id, pk=option_id).delete()
-
-        return cls(question=question)
+        models.Option.objects.filter(pk=option_id).delete()
+        return cls()
 
 
 class Mutation(object):
@@ -254,14 +234,15 @@ class Mutation(object):
     remove_form_question = RemoveFormQuestion().Field()
     reorder_form_questions = ReorderFormQuestions().Field()
 
+    save_option = SaveOption().Field()
+    remove_option = RemoveOption().Field()
+
     save_text_question = SaveTextQuestion().Field()
     save_textarea_question = SaveTextareaQuestion().Field()
     save_radio_question = SaveRadioQuestion().Field()
     save_checkbox_question = SaveCheckboxQuestion().Field()
     save_float_question = SaveFloatQuestion().Field()
     save_integer_question = SaveIntegerQuestion().Field()
-    save_question_option = SaveQuestionOption().Field()
-    remove_question_option = RemoveQuestionOption().Field()
     archive_question = ArchiveQuestion().Field()
 
 

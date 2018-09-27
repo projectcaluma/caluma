@@ -135,7 +135,7 @@ def test_save_document(db, snapshot, document):
         ),
     ],
 )
-def test_save_document_answer(db, snapshot, answer, mutation, option, success):
+def test_save_document_answer(db, snapshot, answer, mutation, question_option, success):
     mutation_func = mutation[0].lower() + mutation[1:]
     query = f"""
         mutation {mutation}($input: {mutation}Input!) {{

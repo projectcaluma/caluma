@@ -54,6 +54,9 @@ class Question(SlugModel):
     is_archived = models.BooleanField(default=False)
     configuration = JSONField(default={})
     meta = JSONField(default={})
+    options = models.ManyToManyField(
+        "Option", through="QuestionOption", related_name="questions"
+    )
 
     @property
     def max_length(self):
@@ -83,7 +86,16 @@ class Question(SlugModel):
         self.configuration["min_value"] = value
 
 
+class QuestionOption(BaseModel):
+    question = models.ForeignKey("Question", on_delete=models.CASCADE)
+    option = models.ForeignKey("Option", on_delete=models.CASCADE)
+    sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
+
+    class Meta:
+        ordering = ("-sort", "id")
+        unique_together = ("option", "question")
+
+
 class Option(SlugModel):
-    question = models.ForeignKey(Question, related_name="options")
     label = LocalizedField(blank=False, null=False, required=False)
     meta = JSONField(default={})

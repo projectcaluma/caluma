@@ -17,7 +17,7 @@ from ...tests import extract_global_id_input_fields, extract_serializer_input_fi
     ],
 )
 def test_query_all_questions(
-    db, snapshot, question, form, form_question_factory, option
+    db, snapshot, question, form, form_question_factory, question_option
 ):
     form_question_factory.create(form=form)
 
@@ -86,8 +86,6 @@ def test_query_all_questions(
     [
         "SaveTextQuestion",
         "SaveTextareaQuestion",
-        "SaveCheckboxQuestion",
-        "SaveRadioQuestion",
         "SaveIntegerQuestion",
         "SaveFloatQuestion",
     ],
@@ -258,6 +256,88 @@ def test_save_integer_question(db, snapshot, question):
     snapshot.assert_execution_result(result)
 
 
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_CHECKBOX])
+def test_save_checkbox_question(db, snapshot, question, question_option_factory):
+    question_option_factory.create_batch(2, question=question)
+
+    option_ids = (
+        question.options.order_by("slug").reverse().values_list("slug", flat=True)
+    )
+
+    query = """
+        mutation SaveCheckboxQuestion($input: SaveCheckboxQuestionInput!) {
+          saveCheckboxQuestion(input: $input) {
+            question {
+              id
+              slug
+              label
+              meta
+              __typename
+              ... on CheckboxQuestion {
+                options {
+                  edges {
+                    node {
+                      slug
+                      label
+                    }
+                  }
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveCheckboxQuestionSerializer, question
+        )
+    }
+    inp["input"]["options"] == option_ids
+    result = schema.execute(query, variables=inp)
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_RADIO])
+def test_save_radio_question(db, snapshot, question, question_option):
+    query = """
+        mutation SaveRadioQuestion($input: SaveRadioQuestionInput!) {
+          saveRadioQuestion(input: $input) {
+            question {
+              id
+              slug
+              label
+              meta
+              __typename
+              ... on RadioQuestion {
+                options {
+                  edges {
+                    node {
+                      slug
+                      label
+                    }
+                  }
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveRadioQuestionSerializer, question
+        )
+    }
+    question.delete()  # test creation
+    result = schema.execute(query, variables=inp)
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
 def test_archive_question(db, question):
     query = """
         mutation ArchiveQuestion($input: ArchiveQuestionInput!) {
@@ -279,83 +359,3 @@ def test_archive_question(db, question):
 
     question.refresh_from_db()
     assert question.is_archived
-
-
-@pytest.mark.parametrize(
-    "question__type,success",
-    [
-        (models.Question.TYPE_RADIO, True),
-        (models.Question.TYPE_CHECKBOX, True),
-        (models.Question.TYPE_TEXT, False),
-    ],
-)
-def test_save_question_option(db, option, success):
-    query = """
-        mutation SaveQuestionOption($input: SaveQuestionOptionInput!) {
-          saveQuestionOption(input: $input) {
-            question {
-            __typename
-              slug
-              ... on CheckboxQuestion {
-                options {
-                  edges {
-                    node {
-                      slug
-                    }
-                  }
-                }
-              }
-              ... on RadioQuestion {
-                options {
-                  edges {
-                    node {
-                      slug
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-    """
-
-    inp = {
-        "input": extract_serializer_input_fields(serializers.OptionSerializer, option)
-    }
-
-    result = schema.execute(query, variables=inp)
-    assert not bool(result.errors) == success
-    if success:
-        question_data = result.data["saveQuestionOption"]["question"]
-        assert question_data["options"]["edges"][0]["node"]["slug"] == option.slug
-
-
-@pytest.mark.parametrize("question__type", [models.Question.TYPE_CHECKBOX])
-def test_remove_question_option(db, question, option):
-    query = """
-        mutation RemoveQuestionOption($input: RemoveQuestionOptionInput!) {
-          removeQuestionOption(input: $input) {
-            question {
-              __typename
-              slug
-              ... on CheckboxQuestion {
-                options {
-                  edges {
-                    node {
-                      slug
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-    """
-
-    result = schema.execute(
-        query, variables={"input": {"question": question.pk, "option": option.slug}}
-    )
-    assert not result.errors
-    with pytest.raises(models.Option.DoesNotExist):
-        option.refresh_from_db()
-    assert len(result.data["removeQuestionOption"]["question"]["options"]["edges"]) == 0
