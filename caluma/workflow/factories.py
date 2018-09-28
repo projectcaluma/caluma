@@ -36,3 +36,22 @@ class FlowFactory(DjangoModelFactory):
 
     class Meta:
         model = models.Flow
+
+
+class WorkflowFactory(DjangoModelFactory):
+    workflow_specification = SubFactory(WorkflowSpecificationFactory)
+    status = Faker("word", ext_word_list=models.Workflow.STATUS_CHOICES)
+    meta = {}
+
+    class Meta:
+        model = models.Workflow
+
+
+class TaskFactory(DjangoModelFactory):
+    workflow = SubFactory(WorkflowFactory)
+    task_specification = SubFactory(TaskSpecificationFactory)
+    status = Faker("word", ext_word_list=models.Task.STATUS_CHOICES)
+    meta = {}
+
+    class Meta:
+        model = models.Task

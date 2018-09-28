@@ -1,10 +1,8 @@
-from functools import partial
-
+from django.db import transaction
 from rest_framework import exceptions
 
 from . import models
 from .. import serializers
-from ..jexl import ExtractTransformSubjectAnalyzer
 from .jexl import FlowJexl
 
 
@@ -54,15 +52,7 @@ class AddWorkflowSpecificationFlowSerializer(serializers.ModelSerializer):
 
     def validate_next(self, value):
         jexl = FlowJexl()
-
-        task_specs = set(
-            jexl.analyze(
-                value,
-                partial(
-                    ExtractTransformSubjectAnalyzer, transforms=["taskSpecification"]
-                ),
-            )
-        )
+        task_specs = set(jexl.extract_task_specifications(value))
 
         if not task_specs:
             raise exceptions.ValidationError(
@@ -134,3 +124,69 @@ class ArchiveTaskSpecificationSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("id",)
         model = models.TaskSpecification
+
+
+class StartWorkflowSerializer(serializers.ModelSerializer):
+    workflow_specification = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.WorkflowSpecification.objects.select_related("start")
+    )
+
+    @transaction.atomic
+    def create(self, validated_data):
+        validated_data["status"] = models.Workflow.STATUS_RUNNING
+        instance = super().create(validated_data)
+
+        workflow_specification = instance.workflow_specification
+
+        models.Task.objects.create(
+            workflow=instance,
+            task_specification=workflow_specification.start,
+            status=models.Task.STATUS_READY,
+        )
+
+        return instance
+
+    class Meta:
+        model = models.Workflow
+        fields = ("workflow_specification", "meta")
+
+
+class CompleteTaskSerializer(serializers.ModelSerializer):
+    id = serializers.GlobalIDField()
+
+    def validate(self, data):
+        if self.instance.status == models.Task.STATUS_COMPLETE:
+            raise exceptions.ValidationError("Task has already been completed.")
+
+        # TODO: add validation according to task specification type
+
+        data["status"] = models.Task.STATUS_COMPLETE
+        return data
+
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        workflow = instance.workflow
+
+        flow = models.Flow.objects.filter(
+            workflow_specification=workflow.workflow_specification_id,
+            task_specification=instance.task_specification_id,
+        ).first()
+
+        if flow:
+            jexl = FlowJexl()
+            task_specification = jexl.evaluate(flow.next)
+            models.Task.objects.create(
+                task_specification_id=task_specification,
+                workflow=workflow,
+                status=models.Task.STATUS_READY,
+            )
+        else:
+            # no more tasks, mark workflow as complete
+            workflow.status = models.Workflow.STATUS_COMPLETE
+            workflow.save()
+
+        return instance
+
+    class Meta:
+        model = models.Task
+        fields = ("id",)

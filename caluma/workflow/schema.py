@@ -65,6 +65,36 @@ class TaskSpecification(DjangoObjectType):
         )
 
 
+class Workflow(DjangoObjectType):
+    class Meta:
+        model = models.Workflow
+        interfaces = (relay.Node,)
+        only_fields = (
+            "id",
+            "created",
+            "modified",
+            "meta",
+            "workflow_specification",
+            "status",
+            "tasks",
+        )
+
+
+class Task(DjangoObjectType):
+    class Meta:
+        model = models.Task
+        interfaces = (relay.Node,)
+        only_fields = (
+            "id",
+            "created",
+            "modified",
+            "meta",
+            "task_specification",
+            "status",
+            "workflow",
+        )
+
+
 class SaveWorkflowSpecification(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
         serializer_class = serializers.SaveWorkflowSpecificationSerializer
@@ -105,6 +135,18 @@ class ArchiveTaskSpecification(SerializerMutation):
         lookup_input_kwarg = "id"
 
 
+class StartWorkflow(SerializerMutation):
+    class Meta:
+        serializer_class = serializers.StartWorkflowSerializer
+        model_operations = ["create"]
+
+
+class CompleteTask(SerializerMutation):
+    class Meta:
+        serializer_class = serializers.CompleteTaskSerializer
+        model_operations = ["update"]
+
+
 class Mutation(object):
     save_workflow_specification = SaveWorkflowSpecification().Field()
     publish_workflow_specification = PublishWorkflowSpecification().Field()
@@ -115,6 +157,9 @@ class Mutation(object):
     save_task_specification = SaveTaskSpecification().Field()
     archive_task_specification = ArchiveTaskSpecification().Field()
 
+    start_workflow = StartWorkflow().Field()
+    complete_task = CompleteTask().Field()
+
 
 class Query(object):
     all_workflow_specifications = DjangoFilterConnectionField(
@@ -123,3 +168,7 @@ class Query(object):
     all_task_specifications = DjangoFilterConnectionField(
         TaskSpecification, filterset_class=filters.TaskSpecificationFilterSet
     )
+    all_workflows = DjangoFilterConnectionField(
+        Workflow, filterset_class=filters.WorkflowFilterSet
+    )
+    all_tasks = DjangoFilterConnectionField(Task, filterset_class=filters.TaskFilterSet)
