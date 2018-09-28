@@ -241,6 +241,131 @@ class RemoveOption(ClientIDMutation):
         return cls()
 
 
+class Answer(graphene.Interface):
+    id = graphene.ID()
+    created = graphene.DateTime(required=True)
+    modified = graphene.DateTime(required=True)
+    question = graphene.Field(Question, required=True)
+    meta = graphene.JSONString()
+
+    @classmethod
+    def resolve_type(cls, instance, info):
+        ANSWER_TYPE = {
+            list: ListAnswer,
+            str: StringAnswer,
+            float: FloatAnswer,
+            int: IntegerAnswer,
+        }
+
+        return ANSWER_TYPE[type(instance.value)]
+
+
+class IntegerAnswer(graphene.ObjectType):
+    value = graphene.Int(required=True)
+
+    class Meta:
+        interfaces = (Answer, graphene.Node)
+
+
+class FloatAnswer(graphene.ObjectType):
+    value = graphene.Float(required=True)
+
+    class Meta:
+        interfaces = (Answer, graphene.Node)
+
+
+class StringAnswer(graphene.ObjectType):
+    value = graphene.String(required=True)
+
+    class Meta:
+        interfaces = (Answer, graphene.Node)
+
+
+class ListAnswer(graphene.ObjectType):
+    value = graphene.List(graphene.String, required=True)
+
+    class Meta:
+        interfaces = (Answer, graphene.Node)
+
+
+class AnswerConnection(graphene.Connection):
+    class Meta:
+        node = Answer
+
+
+class Form(DjangoObjectType):
+    answers = graphene.ConnectionField(AnswerConnection)
+
+    def resolve_answers(self, info, **kwargs):
+        return self.answers.all()
+
+    class Meta:
+        model = models.Form
+        interfaces = (graphene.Node,)
+        only_fields = ("created", "modified", "form_specification", "meta", "answers")
+        filter_fields = ("form_specification",)
+
+
+class SaveForm(SerializerMutation):
+    class Meta:
+        serializer_class = serializers.FormSerializer
+
+
+class SaveFormAnswer(ClientIDMutation):
+    class Meta:
+        abstract = True
+
+    answer = graphene.Field(Answer)
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+        question_id = extract_global_id(input["question"])
+        form_id = extract_global_id(input["form"])
+        answer = models.Answer.objects.filter(
+            question=question_id, form=form_id
+        ).first()
+
+        serializer = serializers.AnswerSerializer(
+            data=input, instance=answer, context={"request": info.context}
+        )
+        serializer.is_valid(raise_exception=True)
+        answer = serializer.save()
+
+        return cls(answer=answer)
+
+
+class SaveFormStringAnswer(SaveFormAnswer):
+    class Input:
+        question = graphene.ID(required=True)
+        form = graphene.ID(required=True)
+        meta = graphene.JSONString(required=True)
+        value = graphene.String(required=True)
+
+
+class SaveFormListAnswer(SaveFormAnswer):
+    class Input:
+        question = graphene.ID(required=True)
+        form = graphene.ID(required=True)
+        meta = graphene.JSONString(required=True)
+        value = graphene.List(graphene.String, required=True)
+
+
+class SaveFormIntegerAnswer(SaveFormAnswer):
+    class Input:
+        question = graphene.ID(required=True)
+        form = graphene.ID(required=True)
+        meta = graphene.JSONString(required=True)
+        value = graphene.Int(required=True)
+
+
+class SaveFormFloatAnswer(SaveFormAnswer):
+    class Input:
+        question = graphene.ID(required=True)
+        form = graphene.ID(required=True)
+        meta = graphene.JSONString(required=True)
+        value = graphene.Float(required=True)
+
+
 class Mutation(object):
     save_form_specification = SaveFormSpecification().Field()
     archive_form_specification = ArchiveFormSpecification().Field()
@@ -260,6 +385,12 @@ class Mutation(object):
     save_integer_question = SaveIntegerQuestion().Field()
     archive_question = ArchiveQuestion().Field()
 
+    save_form = SaveForm().Field()
+    save_form_string_answer = SaveFormStringAnswer().Field()
+    save_form_integer_answer = SaveFormIntegerAnswer().Field()
+    save_form_float_answer = SaveFormFloatAnswer().Field()
+    save_form_list_answer = SaveFormListAnswer().Field()
+
 
 class Query(object):
     all_form_specifications = DjangoFilterConnectionField(
@@ -268,3 +399,4 @@ class Query(object):
     all_questions = DjangoFilterSetConnectionField(
         QuestionConnection, filterset_class=filters.QuestionFilterSet
     )
+    all_forms = DjangoFilterConnectionField(Form, filterset_class=filters.FormFilterSet)

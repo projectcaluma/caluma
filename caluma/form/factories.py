@@ -55,3 +55,21 @@ class FormSpecificationQuestionFactory(DjangoModelFactory):
 
     class Meta:
         model = models.FormSpecificationQuestion
+
+
+class FormFactory(DjangoModelFactory):
+    form_specification = SubFactory(FormSpecificationFactory)
+    meta = {}
+
+    class Meta:
+        model = models.Form
+
+
+class AnswerFactory(DjangoModelFactory):
+    question = SubFactory(QuestionFactory)
+    form = SubFactory(FormFactory)
+    value = Faker("name")
+    meta = {}
+
+    class Meta:
+        model = models.Answer

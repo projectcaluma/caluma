@@ -2,7 +2,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from localized_fields.fields import LocalizedField
 
-from caluma.models import BaseModel, SlugModel
+from caluma.models import SlugModel, UUIDModel
 
 
 class FormSpecification(SlugModel):
@@ -18,7 +18,7 @@ class FormSpecification(SlugModel):
     )
 
 
-class FormSpecificationQuestion(BaseModel):
+class FormSpecificationQuestion(UUIDModel):
     form_specification = models.ForeignKey(
         "FormSpecification", on_delete=models.CASCADE
     )
@@ -85,7 +85,7 @@ class Question(SlugModel):
         self.configuration["min_value"] = value
 
 
-class QuestionOption(BaseModel):
+class QuestionOption(UUIDModel):
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
     option = models.ForeignKey("Option", on_delete=models.CASCADE)
     sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
@@ -98,3 +98,24 @@ class QuestionOption(BaseModel):
 class Option(SlugModel):
     label = LocalizedField(blank=False, null=False, required=False)
     meta = JSONField(default={})
+
+
+class Form(UUIDModel):
+    # TODO: add user field once authentication is implemented
+    form_specification = models.ForeignKey(
+        "form.FormSpecification", on_delete=models.DO_NOTHING, related_name="forms"
+    )
+    meta = JSONField(default={})
+
+
+class Answer(UUIDModel):
+    question = models.ForeignKey(
+        "form.Question", on_delete=models.DO_NOTHING, related_name="answers"
+    )
+    value = JSONField()
+    meta = JSONField(default={})
+    form = models.ForeignKey(Form, on_delete=models.CASCADE, related_name="answers")
+
+    class Meta:
+        # a question may only be answerd once per form
+        unique_together = ("form", "question")

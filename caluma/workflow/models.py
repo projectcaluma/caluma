@@ -2,7 +2,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from localized_fields.fields import LocalizedField
 
-from caluma.models import BaseModel, SlugModel
+from caluma.models import SlugModel, UUIDModel
 
 
 class TaskSpecification(SlugModel):
@@ -29,7 +29,7 @@ class WorkflowSpecification(SlugModel):
     )
 
 
-class Flow(BaseModel):
+class Flow(UUIDModel):
     workflow_specification = models.ForeignKey(
         WorkflowSpecification, related_name="flows"
     )
@@ -40,7 +40,7 @@ class Flow(BaseModel):
         unique_together = ("workflow_specification", "task_specification")
 
 
-class Workflow(BaseModel):
+class Workflow(UUIDModel):
     STATUS_RUNNING = "running"
     STATUS_COMPLETE = "complete"
 
@@ -57,7 +57,7 @@ class Workflow(BaseModel):
     meta = JSONField(default={})
 
 
-class Task(BaseModel):
+class Task(UUIDModel):
     STATUS_READY = "ready"
     STATUS_COMPLETE = "complete"
 

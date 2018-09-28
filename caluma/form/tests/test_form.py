@@ -15,13 +15,13 @@ from ...tests import extract_serializer_input_fields
         (Question.TYPE_CHECKBOX, ["somevalue", "anothervalue"]),
     ],
 )
-def test_query_all_documents(
-    db, snapshot, form_specification_question, form_specification, document, answer
+def test_query_all_forms(
+    db, snapshot, form_specification_question, form_specification, form, answer
 ):
 
     query = """
-        query AllDocumentsQuery($search: String) {
-          allDocuments(search: $search) {
+        query AllFormsQuery($search: String) {
+          allForms(search: $search) {
             edges {
               node {
                 answers {
@@ -59,11 +59,11 @@ def test_query_all_documents(
     snapshot.assert_match(result.data)
 
 
-def test_save_document(db, snapshot, document):
+def test_save_form(db, snapshot, form):
     query = """
-        mutation SaveDocument($input: SaveDocumentInput!) {
-          saveDocument(input: $input) {
-            document {
+        mutation SaveFOrm($input: SaveFormInput!) {
+          saveForm(input: $input) {
+            form {
                 formSpecification {
                     slug
                 }
@@ -73,11 +73,7 @@ def test_save_document(db, snapshot, document):
         }
     """
 
-    inp = {
-        "input": extract_serializer_input_fields(
-            serializers.DocumentSerializer, document
-        )
-    }
+    inp = {"input": extract_serializer_input_fields(serializers.FormSerializer, form)}
     result = schema.execute(query, variables=inp)
 
     assert not result.errors
@@ -88,56 +84,38 @@ def test_save_document(db, snapshot, document):
 @pytest.mark.parametrize(
     "question__type,question__configuration,answer__value,mutation,success",
     [
-        (Question.TYPE_INTEGER, {}, 1, "SaveDocumentIntegerAnswer", True),
-        (
-            Question.TYPE_INTEGER,
-            {"min_value": 100},
-            1,
-            "SaveDocumentIntegerAnswer",
-            False,
-        ),
-        (Question.TYPE_FLOAT, {}, 2.1, "SaveDocumentFloatAnswer", True),
-        (
-            Question.TYPE_FLOAT,
-            {"min_value": 100.0},
-            1,
-            "SaveDocumentFloatAnswer",
-            False,
-        ),
-        (Question.TYPE_TEXT, {}, "Test", "SaveDocumentStringAnswer", True),
+        (Question.TYPE_INTEGER, {}, 1, "SaveFormIntegerAnswer", True),
+        (Question.TYPE_INTEGER, {"min_value": 100}, 1, "SaveFormIntegerAnswer", False),
+        (Question.TYPE_FLOAT, {}, 2.1, "SaveFormFloatAnswer", True),
+        (Question.TYPE_FLOAT, {"min_value": 100.0}, 1, "SaveFormFloatAnswer", False),
+        (Question.TYPE_TEXT, {}, "Test", "SaveFormStringAnswer", True),
         (
             Question.TYPE_TEXT,
             {"max_length": 1},
             "toolong",
-            "SaveDocumentStringAnswer",
+            "SaveFormStringAnswer",
             False,
         ),
         (
             Question.TYPE_TEXTAREA,
             {"max_length": 1},
             "toolong",
-            "SaveDocumentStringAnswer",
+            "SaveFormStringAnswer",
             False,
         ),
-        (Question.TYPE_CHECKBOX, {}, ["option-slug"], "SaveDocumentListAnswer", True),
+        (Question.TYPE_CHECKBOX, {}, ["option-slug"], "SaveFormListAnswer", True),
         (
             Question.TYPE_CHECKBOX,
             {},
             ["option-slug", "option-invalid-slug"],
-            "SaveDocumentStringAnswer",
+            "SaveFormStringAnswer",
             False,
         ),
-        (Question.TYPE_RADIO, {}, "option-slug", "SaveDocumentStringAnswer", True),
-        (
-            Question.TYPE_RADIO,
-            {},
-            "invalid-option-slug",
-            "SaveDocumentStringAnswer",
-            False,
-        ),
+        (Question.TYPE_RADIO, {}, "option-slug", "SaveFormStringAnswer", True),
+        (Question.TYPE_RADIO, {}, "invalid-option-slug", "SaveFormStringAnswer", False),
     ],
 )
-def test_save_document_answer(db, snapshot, answer, mutation, question_option, success):
+def test_save_form_answer(db, snapshot, answer, mutation, question_option, success):
     mutation_func = mutation[0].lower() + mutation[1:]
     query = f"""
         mutation {mutation}($input: {mutation}Input!) {{
