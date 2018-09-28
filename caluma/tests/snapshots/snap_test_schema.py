@@ -2804,7 +2804,7 @@ value as specified by
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -2820,7 +2820,7 @@ value as specified by
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -2979,6 +2979,16 @@ value as specified by
                     {"kind": "OBJECT", "name": "FloatQuestion", "ofType": None},
                     {"kind": "OBJECT", "name": "IntegerQuestion", "ofType": None},
                 ],
+            },
+            {
+                "description": "Question jexl represents a jexl expression returning boolean.",
+                "enumValues": None,
+                "fields": None,
+                "inputFields": None,
+                "interfaces": None,
+                "kind": "SCALAR",
+                "name": "QuestionJexl",
+                "possibleTypes": None,
             },
             {
                 "description": None,
@@ -5795,13 +5805,21 @@ value as specified by
                         "defaultValue": None,
                         "description": None,
                         "name": "isRequired",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "QuestionJexl",
+                            "ofType": None,
+                        },
                     },
                     {
                         "defaultValue": None,
                         "description": None,
                         "name": "isHidden",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "QuestionJexl",
+                            "ofType": None,
+                        },
                     },
                     {
                         "defaultValue": None,
@@ -5899,13 +5917,21 @@ value as specified by
                         "defaultValue": None,
                         "description": None,
                         "name": "isRequired",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "QuestionJexl",
+                            "ofType": None,
+                        },
                     },
                     {
                         "defaultValue": None,
                         "description": None,
                         "name": "isHidden",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "QuestionJexl",
+                            "ofType": None,
+                        },
                     },
                     {
                         "defaultValue": None,
@@ -6003,13 +6029,21 @@ value as specified by
                         "defaultValue": None,
                         "description": None,
                         "name": "isRequired",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "QuestionJexl",
+                            "ofType": None,
+                        },
                     },
                     {
                         "defaultValue": None,
                         "description": None,
                         "name": "isHidden",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "QuestionJexl",
+                            "ofType": None,
+                        },
                     },
                     {
                         "defaultValue": None,
@@ -6119,13 +6153,21 @@ value as specified by
                         "defaultValue": None,
                         "description": None,
                         "name": "isRequired",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "QuestionJexl",
+                            "ofType": None,
+                        },
                     },
                     {
                         "defaultValue": None,
                         "description": None,
                         "name": "isHidden",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "QuestionJexl",
+                            "ofType": None,
+                        },
                     },
                     {
                         "defaultValue": None,
@@ -6235,13 +6277,21 @@ value as specified by
                         "defaultValue": None,
                         "description": None,
                         "name": "isRequired",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "QuestionJexl",
+                            "ofType": None,
+                        },
                     },
                     {
                         "defaultValue": None,
                         "description": None,
                         "name": "isHidden",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "QuestionJexl",
+                            "ofType": None,
+                        },
                     },
                     {
                         "defaultValue": None,
@@ -6345,13 +6395,21 @@ value as specified by
                         "defaultValue": None,
                         "description": None,
                         "name": "isRequired",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "QuestionJexl",
+                            "ofType": None,
+                        },
                     },
                     {
                         "defaultValue": None,
                         "description": None,
                         "name": "isHidden",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "QuestionJexl",
+                            "ofType": None,
+                        },
                     },
                     {
                         "defaultValue": None,
@@ -7330,7 +7388,7 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -7346,7 +7404,7 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -7601,7 +7659,7 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -7617,7 +7675,7 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -8029,7 +8087,7 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -8045,7 +8103,7 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -8375,7 +8433,7 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -8391,7 +8449,7 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -8646,7 +8704,7 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -8662,7 +8720,7 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -8925,7 +8983,7 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },
@@ -8941,7 +8999,7 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                             "name": None,
                             "ofType": {
                                 "kind": "SCALAR",
-                                "name": "String",
+                                "name": "QuestionJexl",
                                 "ofType": None,
                             },
                         },

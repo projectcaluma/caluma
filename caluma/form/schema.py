@@ -2,6 +2,7 @@ import graphene
 from graphene import relay
 from graphene.relay.mutation import ClientIDMutation
 from graphene_django.filter import DjangoFilterConnectionField
+from graphene_django.rest_framework import serializer_converter
 from graphene_django.types import DjangoObjectType
 
 from . import filters, models, serializers
@@ -10,14 +11,25 @@ from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
 from ..relay import extract_global_id
 
 
+class QuestionJexl(graphene.String):
+    """Question jexl represents a jexl expression returning boolean."""
+
+    pass
+
+
+serializer_converter.get_graphene_type_from_serializer_field.register(
+    serializers.QuestionJexlField, lambda field: QuestionJexl
+)
+
+
 class Question(graphene.Interface):
     id = graphene.ID(required=True)
     created = graphene.DateTime(required=True)
     modified = graphene.DateTime(required=True)
     slug = graphene.String(required=True)
     label = graphene.String(required=True)
-    is_required = graphene.String(required=True)
-    is_hidden = graphene.String(required=True)
+    is_required = QuestionJexl(required=True)
+    is_hidden = QuestionJexl(required=True)
     is_archived = graphene.Boolean(required=True)
     meta = graphene.JSONString()
     forms = DjangoFilterConnectionField(
