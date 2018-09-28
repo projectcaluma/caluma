@@ -10,6 +10,7 @@ from ...tests import extract_global_id_input_fields, extract_serializer_input_fi
     [
         (models.Question.TYPE_INTEGER, {"max_value": 10, "min_value": 0}),
         (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 0.0}),
+        (models.Question.TYPE_FLOAT, {}),
         (models.Question.TYPE_TEXT, {"max_length": 10}),
         (models.Question.TYPE_TEXTAREA, {"max_length": 10}),
         (models.Question.TYPE_RADIO, {}),
