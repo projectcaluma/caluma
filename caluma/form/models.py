@@ -1,5 +1,3 @@
-import sys
-
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 from localized_fields.fields import LocalizedField
@@ -60,8 +58,7 @@ class Question(SlugModel):
 
     @property
     def max_length(self):
-        max_length = self.configuration.get("max_length")
-        return max_length if max_length is not None else sys.maxsize
+        return self.configuration.get("max_length")
 
     @max_length.setter
     def max_length(self, value):
@@ -69,8 +66,7 @@ class Question(SlugModel):
 
     @property
     def max_value(self):
-        max_value = self.configuration.get("max_value")
-        return max_value if max_value is not None else float("inf")
+        return self.configuration.get("max_value")
 
     @max_value.setter
     def max_value(self, value):
@@ -78,8 +74,7 @@ class Question(SlugModel):
 
     @property
     def min_value(self):
-        min_value = self.configuration.get("min_value")
-        return min_value if min_value is not None else float("-inf")
+        return self.configuration.get("min_value")
 
     @min_value.setter
     def min_value(self, value):

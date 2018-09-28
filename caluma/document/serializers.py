@@ -1,3 +1,5 @@
+import sys
+
 from rest_framework import exceptions
 
 from . import models
@@ -12,7 +14,10 @@ class DocumentSerializer(serializers.ModelSerializer):
 
 class AnswerSerializer(serializers.ModelSerializer):
     def validate_question_text(self, question, value):
-        if not isinstance(value, str) or len(value) > question.max_length:
+        max_length = (
+            question.max_length if question.max_length is not None else sys.maxsize
+        )
+        if not isinstance(value, str) or len(value) > max_length:
             raise exceptions.ValidationError(
                 f"Invalid value {value}. "
                 f"Should be of type str and max length {question.max_length}"
@@ -22,11 +27,14 @@ class AnswerSerializer(serializers.ModelSerializer):
         self.validate_question_text(question, value)
 
     def validate_question_float(self, question, value):
-        if (
-            not isinstance(value, float)
-            or value < question.min_value
-            or value > question.max_value
-        ):
+        min_value = (
+            question.min_value if question.min_value is not None else float("-inf")
+        )
+        max_value = (
+            question.max_value if question.max_value is not None else float("inf")
+        )
+
+        if not isinstance(value, float) or value < min_value or value > max_value:
             raise exceptions.ValidationError(
                 f"Invalid value {value}. "
                 f"Should be of type float, not lower than {question.min_value} "
@@ -34,11 +42,14 @@ class AnswerSerializer(serializers.ModelSerializer):
             )
 
     def validate_question_integer(self, question, value):
-        if (
-            not isinstance(value, int)
-            or value < question.min_value
-            or value > question.max_value
-        ):
+        min_value = (
+            question.min_value if question.min_value is not None else float("-inf")
+        )
+        max_value = (
+            question.max_value if question.max_value is not None else float("inf")
+        )
+
+        if not isinstance(value, int) or value < min_value or value > max_value:
             raise exceptions.ValidationError(
                 f"Invalid value {value}. "
                 f"Should be of type int, not lower than {question.min_value} "
