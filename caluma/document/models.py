@@ -9,8 +9,8 @@ from caluma.models import BaseModel
 class Document(BaseModel):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     # TODO: add user field once authentication is implemented
-    form = models.ForeignKey(
-        "form.Form", on_delete=models.DO_NOTHING, related_name="documents"
+    form_specification = models.ForeignKey(
+        "form.FormSpecification", on_delete=models.DO_NOTHING, related_name="documents"
     )
     meta = JSONField(default={})
 

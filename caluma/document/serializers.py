@@ -9,7 +9,7 @@ from .. import serializers
 class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Document
-        fields = ("form", "meta")
+        fields = ("form_specification", "meta")
 
 
 class AnswerSerializer(serializers.ModelSerializer):

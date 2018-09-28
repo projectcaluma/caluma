@@ -12,13 +12,13 @@ class QuestionJexlField(serializers.JexlField):
         super().__init__(QuestionJexl(), **kwargs)
 
 
-class SaveFormSerializer(serializers.ModelSerializer):
+class SaveFormSpecificationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Form
+        model = models.FormSpecification
         fields = ("slug", "name", "description", "meta")
 
 
-class ArchiveFormSerializer(serializers.ModelSerializer):
+class ArchiveFormSpecificationSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField(source="slug")
 
     def update(self, instance, validated_data):
@@ -28,68 +28,68 @@ class ArchiveFormSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ("id",)
-        model = models.Form
+        model = models.FormSpecification
 
 
-class AddFormQuestionSerializer(serializers.ModelSerializer):
-    form = serializers.GlobalIDField(source="slug")
+class AddFormSpecificationQuestionSerializer(serializers.ModelSerializer):
+    form_specification = serializers.GlobalIDField(source="slug")
     question = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Question.objects
     )
 
     def update(self, instance, validated_data):
-        models.FormQuestion.objects.get_or_create(
-            form=self.instance, question=validated_data["question"]
+        models.FormSpecificationQuestion.objects.get_or_create(
+            form_specification=self.instance, question=validated_data["question"]
         )
         return instance
 
     class Meta:
-        fields = ("form", "question")
-        model = models.Form
+        fields = ("form_specification", "question")
+        model = models.FormSpecification
 
 
-class RemoveFormQuestionSerializer(serializers.ModelSerializer):
-    form = serializers.GlobalIDField(source="slug")
+class RemoveFormSpecificationQuestionSerializer(serializers.ModelSerializer):
+    form_specification = serializers.GlobalIDField(source="slug")
     question = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Question.objects
     )
 
     def update(self, instance, validated_data):
-        models.FormQuestion.objects.filter(
-            form=instance, question=validated_data["question"]
+        models.FormSpecificationQuestion.objects.filter(
+            form_specification=instance, question=validated_data["question"]
         ).delete()
         return instance
 
     class Meta:
-        fields = ("form", "question")
-        model = models.Form
+        fields = ("form_specification", "question")
+        model = models.FormSpecification
 
 
-class FormQuestionRelatedField(serializers.GlobalIDPrimaryKeyRelatedField):
+class FormSpecificationQuestionRelatedField(serializers.GlobalIDPrimaryKeyRelatedField):
     def get_queryset(self):
-        form = self.parent.parent.instance
-        return form.questions.all()
+        form_specification = self.parent.parent.instance
+        return form_specification.questions.all()
 
 
-class ReorderFormQuestionsSerializer(serializers.ModelSerializer):
-    form = serializers.GlobalIDField(source="slug")
-    questions = FormQuestionRelatedField(many=True)
+class ReorderFormSpecificationQuestionsSerializer(serializers.ModelSerializer):
+    form_specification = serializers.GlobalIDField(source="slug")
+    questions = FormSpecificationQuestionRelatedField(many=True)
 
     def update(self, instance, validated_data):
         questions = validated_data["questions"]
         for sort, question in enumerate(reversed(questions)):
-            models.FormQuestion.objects.filter(form=instance, question=question).update(
-                sort=sort
-            )
+            models.FormSpecificationQuestion.objects.filter(
+                form_specification=instance, question=question
+            ).update(sort=sort)
 
         return instance
 
     class Meta:
-        fields = ("form", "questions")
-        model = models.Form
+        fields = ("form_specification", "questions")
+        model = models.FormSpecification
 
 
-class PublishFormSerializer(serializers.ModelSerializer):
+class PublishFormSpecificationSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField(source="slug")
 
     def update(self, instance, validated_data):
@@ -99,7 +99,7 @@ class PublishFormSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ("id",)
-        model = models.Form
+        model = models.FormSpecification
 
 
 class SaveQuestionSerializer(serializers.ModelSerializer):

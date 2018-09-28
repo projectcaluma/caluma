@@ -32,8 +32,9 @@ class Question(graphene.Interface):
     is_hidden = QuestionJexl(required=True)
     is_archived = graphene.Boolean(required=True)
     meta = graphene.JSONString()
-    forms = DjangoFilterConnectionField(
-        "caluma.form.schema.Form", filterset_class=filters.FormFilterSet
+    form_specifications = DjangoFilterConnectionField(
+        "caluma.form.schema.FormSpecification",
+        filterset_class=filters.FormSpecificationFilterSet,
     )
 
     @classmethod
@@ -116,7 +117,7 @@ class FloatQuestion(graphene.ObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class Form(DjangoObjectType):
+class FormSpecification(DjangoObjectType):
     questions = DjangoFilterSetConnectionField(
         QuestionConnection, filterset_class=filters.QuestionFilterSet
     )
@@ -125,10 +126,12 @@ class Form(DjangoObjectType):
         # TODO: potential cause for query explosions.
         # https://github.com/graphql-python/graphene-django/pull/220
         # https://docs.djangoproject.com/en/2.1/ref/models/querysets/#django.db.models.Prefetch
-        return self.questions.order_by("-formquestion__sort", "formquestion__id")
+        return self.questions.order_by(
+            "-formspecificationquestion__sort", "formspecificationquestion__id"
+        )
 
     class Meta:
-        model = models.Form
+        model = models.FormSpecification
         interfaces = (relay.Node,)
         only_fields = (
             "created",
@@ -142,41 +145,41 @@ class Form(DjangoObjectType):
         )
 
 
-class SaveForm(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveFormSpecification(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
-        serializer_class = serializers.SaveFormSerializer
+        serializer_class = serializers.SaveFormSpecificationSerializer
 
 
-class ArchiveForm(SerializerMutation):
-    class Meta:
-        lookup_input_kwarg = "id"
-        serializer_class = serializers.ArchiveFormSerializer
-
-
-class AddFormQuestion(SerializerMutation):
-    """Add question at the end of form."""
-
-    class Meta:
-        lookup_input_kwarg = "form"
-        serializer_class = serializers.AddFormQuestionSerializer
-
-
-class RemoveFormQuestion(SerializerMutation):
-    class Meta:
-        lookup_input_kwarg = "form"
-        serializer_class = serializers.RemoveFormQuestionSerializer
-
-
-class ReorderFormQuestions(SerializerMutation):
-    class Meta:
-        lookup_input_kwarg = "form"
-        serializer_class = serializers.ReorderFormQuestionsSerializer
-
-
-class PublishForm(SerializerMutation):
+class ArchiveFormSpecification(SerializerMutation):
     class Meta:
         lookup_input_kwarg = "id"
-        serializer_class = serializers.PublishFormSerializer
+        serializer_class = serializers.ArchiveFormSpecificationSerializer
+
+
+class AddFormSpecificationQuestion(SerializerMutation):
+    """Add question at the end of form specification."""
+
+    class Meta:
+        lookup_input_kwarg = "form_specification"
+        serializer_class = serializers.AddFormSpecificationQuestionSerializer
+
+
+class RemoveFormSpecificationQuestion(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "form_specification"
+        serializer_class = serializers.RemoveFormSpecificationQuestionSerializer
+
+
+class ReorderFormSpecificationQuestions(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "form_specification"
+        serializer_class = serializers.ReorderFormSpecificationQuestionsSerializer
+
+
+class PublishFormSpecification(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "id"
+        serializer_class = serializers.PublishFormSpecificationSerializer
 
 
 class ArchiveQuestion(SerializerMutation):
@@ -239,12 +242,12 @@ class RemoveOption(ClientIDMutation):
 
 
 class Mutation(object):
-    save_form = SaveForm().Field()
-    archive_form = ArchiveForm().Field()
-    publish_form = PublishForm().Field()
-    add_form_question = AddFormQuestion().Field()
-    remove_form_question = RemoveFormQuestion().Field()
-    reorder_form_questions = ReorderFormQuestions().Field()
+    save_form_specification = SaveFormSpecification().Field()
+    archive_form_specification = ArchiveFormSpecification().Field()
+    publish_form_specification = PublishFormSpecification().Field()
+    add_form_specification_question = AddFormSpecificationQuestion().Field()
+    remove_form_specification_question = RemoveFormSpecificationQuestion().Field()
+    reorder_form_specification_questions = ReorderFormSpecificationQuestions().Field()
 
     save_option = SaveOption().Field()
     remove_option = RemoveOption().Field()
@@ -259,7 +262,9 @@ class Mutation(object):
 
 
 class Query(object):
-    all_forms = DjangoFilterConnectionField(Form, filterset_class=filters.FormFilterSet)
+    all_form_specifications = DjangoFilterConnectionField(
+        FormSpecification, filterset_class=filters.FormSpecificationFilterSet
+    )
     all_questions = DjangoFilterSetConnectionField(
         QuestionConnection, filterset_class=filters.QuestionFilterSet
     )

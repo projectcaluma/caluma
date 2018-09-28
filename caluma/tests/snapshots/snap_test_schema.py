@@ -488,7 +488,7 @@ snapshots["test_schema_introspect 1"] = {
                             {
                                 "defaultValue": None,
                                 "description": None,
-                                "name": "form",
+                                "name": "formSpecification",
                                 "type": {
                                     "kind": "SCALAR",
                                     "name": "ID",
@@ -622,10 +622,10 @@ snapshots["test_schema_introspect 1"] = {
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "allForms",
+                        "name": "allFormSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -724,7 +724,7 @@ snapshots["test_schema_introspect 1"] = {
                             {
                                 "defaultValue": None,
                                 "description": None,
-                                "name": "excludeForms",
+                                "name": "excludeFormSpecifications",
                                 "type": {
                                     "kind": "LIST",
                                     "name": None,
@@ -1201,7 +1201,7 @@ snapshots["test_schema_introspect 1"] = {
                     {"kind": "OBJECT", "name": "Workflow", "ofType": None},
                     {"kind": "OBJECT", "name": "Task", "ofType": None},
                     {"kind": "OBJECT", "name": "Document", "ofType": None},
-                    {"kind": "OBJECT", "name": "Form", "ofType": None},
+                    {"kind": "OBJECT", "name": "FormSpecification", "ofType": None},
                     {"kind": "OBJECT", "name": "Option", "ofType": None},
                     {"kind": "OBJECT", "name": "TextQuestion", "ofType": None},
                     {"kind": "OBJECT", "name": "RadioQuestion", "ofType": None},
@@ -2258,13 +2258,13 @@ value as specified by
                         "deprecationReason": None,
                         "description": "",
                         "isDeprecated": False,
-                        "name": "form",
+                        "name": "formSpecification",
                         "type": {
                             "kind": "NON_NULL",
                             "name": None,
                             "ofType": {
                                 "kind": "OBJECT",
-                                "name": "Form",
+                                "name": "FormSpecification",
                                 "ofType": None,
                             },
                         },
@@ -2588,7 +2588,7 @@ value as specified by
                             {
                                 "defaultValue": None,
                                 "description": None,
-                                "name": "excludeForms",
+                                "name": "excludeFormSpecifications",
                                 "type": {
                                     "kind": "LIST",
                                     "name": None,
@@ -2624,7 +2624,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [{"kind": "INTERFACE", "name": "Node", "ofType": None}],
                 "kind": "OBJECT",
-                "name": "Form",
+                "name": "FormSpecification",
                 "possibleTypes": None,
             },
             {
@@ -2959,10 +2959,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -3024,7 +3024,7 @@ value as specified by
                                 "name": None,
                                 "ofType": {
                                     "kind": "OBJECT",
-                                    "name": "FormEdge",
+                                    "name": "FormSpecificationEdge",
                                     "ofType": None,
                                 },
                             },
@@ -3034,7 +3034,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "FormConnection",
+                "name": "FormSpecificationConnection",
                 "possibleTypes": None,
             },
             {
@@ -3047,7 +3047,11 @@ value as specified by
                         "description": "The item at the end of the edge",
                         "isDeprecated": False,
                         "name": "node",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -3069,7 +3073,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "FormEdge",
+                "name": "FormSpecificationEdge",
                 "possibleTypes": None,
             },
             {
@@ -3631,7 +3635,7 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
-                                        "name": "SaveFormInput",
+                                        "name": "SaveFormSpecificationInput",
                                         "ofType": None,
                                     },
                                 },
@@ -3640,10 +3644,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "saveForm",
+                        "name": "saveFormSpecification",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "SaveFormPayload",
+                            "name": "SaveFormSpecificationPayload",
                             "ofType": None,
                         },
                     },
@@ -3658,7 +3662,7 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
-                                        "name": "ArchiveFormInput",
+                                        "name": "ArchiveFormSpecificationInput",
                                         "ofType": None,
                                     },
                                 },
@@ -3667,10 +3671,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "archiveForm",
+                        "name": "archiveFormSpecification",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "ArchiveFormPayload",
+                            "name": "ArchiveFormSpecificationPayload",
                             "ofType": None,
                         },
                     },
@@ -3685,7 +3689,7 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
-                                        "name": "PublishFormInput",
+                                        "name": "PublishFormSpecificationInput",
                                         "ofType": None,
                                     },
                                 },
@@ -3694,10 +3698,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "publishForm",
+                        "name": "publishFormSpecification",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "PublishFormPayload",
+                            "name": "PublishFormSpecificationPayload",
                             "ofType": None,
                         },
                     },
@@ -3712,7 +3716,7 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
-                                        "name": "AddFormQuestionInput",
+                                        "name": "AddFormSpecificationQuestionInput",
                                         "ofType": None,
                                     },
                                 },
@@ -3721,10 +3725,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "addFormQuestion",
+                        "name": "addFormSpecificationQuestion",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "AddFormQuestionPayload",
+                            "name": "AddFormSpecificationQuestionPayload",
                             "ofType": None,
                         },
                     },
@@ -3739,7 +3743,7 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
-                                        "name": "RemoveFormQuestionInput",
+                                        "name": "RemoveFormSpecificationQuestionInput",
                                         "ofType": None,
                                     },
                                 },
@@ -3748,10 +3752,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "removeFormQuestion",
+                        "name": "removeFormSpecificationQuestion",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "RemoveFormQuestionPayload",
+                            "name": "RemoveFormSpecificationQuestionPayload",
                             "ofType": None,
                         },
                     },
@@ -3766,7 +3770,7 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
-                                        "name": "ReorderFormQuestionsInput",
+                                        "name": "ReorderFormSpecificationQuestionsInput",
                                         "ofType": None,
                                     },
                                 },
@@ -3775,10 +3779,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "reorderFormQuestions",
+                        "name": "reorderFormSpecificationQuestions",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "ReorderFormQuestionsPayload",
+                            "name": "ReorderFormSpecificationQuestionsPayload",
                             "ofType": None,
                         },
                     },
@@ -4707,7 +4711,7 @@ value as specified by
                     {
                         "defaultValue": None,
                         "description": None,
-                        "name": "form",
+                        "name": "formSpecification",
                         "type": {
                             "kind": "NON_NULL",
                             "name": None,
@@ -5123,8 +5127,12 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "form",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -5138,7 +5146,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "SaveFormPayload",
+                "name": "SaveFormSpecificationPayload",
                 "possibleTypes": None,
             },
             {
@@ -5199,7 +5207,7 @@ value as specified by
                 ],
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
-                "name": "SaveFormInput",
+                "name": "SaveFormSpecificationInput",
                 "possibleTypes": None,
             },
             {
@@ -5211,8 +5219,12 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "form",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -5226,7 +5238,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "ArchiveFormPayload",
+                "name": "ArchiveFormSpecificationPayload",
                 "possibleTypes": None,
             },
             {
@@ -5253,7 +5265,7 @@ value as specified by
                 ],
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
-                "name": "ArchiveFormInput",
+                "name": "ArchiveFormSpecificationInput",
                 "possibleTypes": None,
             },
             {
@@ -5265,8 +5277,12 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "form",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -5280,7 +5296,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "PublishFormPayload",
+                "name": "PublishFormSpecificationPayload",
                 "possibleTypes": None,
             },
             {
@@ -5307,11 +5323,11 @@ value as specified by
                 ],
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
-                "name": "PublishFormInput",
+                "name": "PublishFormSpecificationInput",
                 "possibleTypes": None,
             },
             {
-                "description": "Add question at the end of form.",
+                "description": "Add question at the end of form specification.",
                 "enumValues": None,
                 "fields": [
                     {
@@ -5319,8 +5335,12 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "form",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -5334,7 +5354,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "AddFormQuestionPayload",
+                "name": "AddFormSpecificationQuestionPayload",
                 "possibleTypes": None,
             },
             {
@@ -5345,7 +5365,7 @@ value as specified by
                     {
                         "defaultValue": None,
                         "description": None,
-                        "name": "form",
+                        "name": "formSpecification",
                         "type": {
                             "kind": "NON_NULL",
                             "name": None,
@@ -5371,7 +5391,7 @@ value as specified by
                 ],
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
-                "name": "AddFormQuestionInput",
+                "name": "AddFormSpecificationQuestionInput",
                 "possibleTypes": None,
             },
             {
@@ -5383,8 +5403,12 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "form",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -5398,7 +5422,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "RemoveFormQuestionPayload",
+                "name": "RemoveFormSpecificationQuestionPayload",
                 "possibleTypes": None,
             },
             {
@@ -5409,7 +5433,7 @@ value as specified by
                     {
                         "defaultValue": None,
                         "description": None,
-                        "name": "form",
+                        "name": "formSpecification",
                         "type": {
                             "kind": "NON_NULL",
                             "name": None,
@@ -5435,7 +5459,7 @@ value as specified by
                 ],
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
-                "name": "RemoveFormQuestionInput",
+                "name": "RemoveFormSpecificationQuestionInput",
                 "possibleTypes": None,
             },
             {
@@ -5447,8 +5471,12 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "form",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -5462,7 +5490,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "ReorderFormQuestionsPayload",
+                "name": "ReorderFormSpecificationQuestionsPayload",
                 "possibleTypes": None,
             },
             {
@@ -5473,7 +5501,7 @@ value as specified by
                     {
                         "defaultValue": None,
                         "description": None,
-                        "name": "form",
+                        "name": "formSpecification",
                         "type": {
                             "kind": "NON_NULL",
                             "name": None,
@@ -5507,7 +5535,7 @@ value as specified by
                 ],
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
-                "name": "ReorderFormQuestionsInput",
+                "name": "ReorderFormSpecificationQuestionsInput",
                 "possibleTypes": None,
             },
             {
@@ -7543,10 +7571,10 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -7814,10 +7842,10 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -8242,10 +8270,10 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -8588,10 +8616,10 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -8859,10 +8887,10 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -9138,10 +9166,10 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },

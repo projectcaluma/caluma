@@ -2,11 +2,11 @@ from factory import Faker, SubFactory
 from factory.django import DjangoModelFactory
 
 from . import models
-from ..form.factories import FormFactory, QuestionFactory
+from ..form.factories import FormSpecificationFactory, QuestionFactory
 
 
 class DocumentFactory(DjangoModelFactory):
-    form = SubFactory(FormFactory)
+    form_specification = SubFactory(FormSpecificationFactory)
     meta = {}
 
     class Meta:

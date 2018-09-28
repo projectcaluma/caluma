@@ -5,25 +5,29 @@ from localized_fields.fields import LocalizedField
 from caluma.models import BaseModel, SlugModel
 
 
-class Form(SlugModel):
+class FormSpecification(SlugModel):
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
     meta = JSONField(default={})
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
     questions = models.ManyToManyField(
-        "Question", through="FormQuestion", related_name="forms"
+        "Question",
+        through="FormSpecificationQuestion",
+        related_name="form_specifications",
     )
 
 
-class FormQuestion(BaseModel):
-    form = models.ForeignKey("Form", on_delete=models.CASCADE)
+class FormSpecificationQuestion(BaseModel):
+    form_specification = models.ForeignKey(
+        "FormSpecification", on_delete=models.CASCADE
+    )
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
     sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
 
     class Meta:
         ordering = ("-sort", "id")
-        unique_together = ("form", "question")
+        unique_together = ("form_specification", "question")
 
 
 class Question(SlugModel):

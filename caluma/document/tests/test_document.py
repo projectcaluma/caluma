@@ -15,7 +15,9 @@ from ...tests import extract_serializer_input_fields
         (Question.TYPE_CHECKBOX, ["somevalue", "anothervalue"]),
     ],
 )
-def test_query_all_documents(db, snapshot, form_question, form, document, answer):
+def test_query_all_documents(
+    db, snapshot, form_specification_question, form_specification, document, answer
+):
 
     query = """
         query AllDocumentsQuery($search: String) {
@@ -62,7 +64,7 @@ def test_save_document(db, snapshot, document):
         mutation SaveDocument($input: SaveDocumentInput!) {
           saveDocument(input: $input) {
             document {
-                form {
+                formSpecification {
                     slug
                 }
             }

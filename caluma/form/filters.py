@@ -4,11 +4,11 @@ from . import models
 from ..filters import FilterSet, SearchFilter
 
 
-class FormFilterSet(FilterSet):
+class FormSpecificationFilterSet(FilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
 
     class Meta:
-        model = models.Form
+        model = models.FormSpecification
         fields = ("slug", "name", "description", "is_published", "is_archived")
 
 
@@ -21,7 +21,9 @@ class OptionFilterSet(FilterSet):
 
 
 class QuestionFilterSet(FilterSet):
-    exclude_forms = GlobalIDMultipleChoiceFilter(field_name="forms", exclude=True)
+    exclude_form_specifications = GlobalIDMultipleChoiceFilter(
+        field_name="form_specifications", exclude=True
+    )
     search = SearchFilter(fields=("slug", "label"))
 
     class Meta:

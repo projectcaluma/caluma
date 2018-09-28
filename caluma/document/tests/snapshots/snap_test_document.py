@@ -85,7 +85,7 @@ snapshots["test_query_all_documents[checkbox-answer__value3] 1"] = {
 snapshots["test_save_document 1"] = {
     "saveDocument": {
         "clientMutationId": "testid",
-        "document": {"form": {"slug": "mrs-shake-recent"}},
+        "document": {"formSpecification": {"slug": "mrs-shake-recent"}},
     }
 }
 

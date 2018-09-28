@@ -70,8 +70,8 @@ class Document(DjangoObjectType):
     class Meta:
         model = models.Document
         interfaces = (graphene.Node,)
-        only_fields = ("created", "modified", "form", "meta", "answers")
-        filter_fields = ("form",)
+        only_fields = ("created", "modified", "form_specification", "meta", "answers")
+        filter_fields = ("form_specification",)
 
 
 class SaveDocument(SerializerMutation):
