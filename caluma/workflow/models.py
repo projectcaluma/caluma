@@ -38,3 +38,40 @@ class Flow(BaseModel):
 
     class Meta:
         unique_together = ("workflow_specification", "task_specification")
+
+
+class Workflow(BaseModel):
+    STATUS_RUNNING = "running"
+    STATUS_COMPLETE = "complete"
+
+    STATUS_CHOICES = (STATUS_RUNNING, STATUS_COMPLETE)
+    STATUS_CHOICE_TUPLE = (
+        (STATUS_RUNNING, "Workflow is running and tasks need to be completed."),
+        (STATUS_COMPLETE, "Workflow is done."),
+    )
+
+    workflow_specification = models.ForeignKey(
+        WorkflowSpecification, related_name="workflows", on_delete=models.DO_NOTHING
+    )
+    status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
+    meta = JSONField(default={})
+
+
+class Task(BaseModel):
+    STATUS_READY = "ready"
+    STATUS_COMPLETE = "complete"
+
+    STATUS_CHOICES = (STATUS_READY, STATUS_COMPLETE)
+    STATUS_CHOICE_TUPLE = (
+        (STATUS_READY, "Task is ready to be processed."),
+        (STATUS_COMPLETE, "Task is done."),
+    )
+
+    task_specification = models.ForeignKey(
+        TaskSpecification, on_delete=models.DO_NOTHING, related_name="tasks"
+    )
+    workflow = models.ForeignKey(
+        Workflow, related_name="tasks", on_delete=models.CASCADE
+    )
+    status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
+    meta = JSONField(default={})
