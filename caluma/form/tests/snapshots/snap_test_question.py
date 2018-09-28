@@ -43,74 +43,6 @@ snapshots["test_query_all_questions[float-question__configuration1] 1"] = {
     }
 }
 
-snapshots["test_query_all_questions[text-question__configuration2] 1"] = {
-    "allQuestions": {
-        "edges": [
-            {
-                "node": {
-                    "__typename": "TextQuestion",
-                    "id": "VGV4dFF1ZXN0aW9uOk5vbmU=",
-                    "label": "Jordan Mccarthy",
-                    "maxLength": 10,
-                    "meta": "{}",
-                    "slug": "mrs-shake-recent",
-                }
-            }
-        ]
-    }
-}
-
-snapshots["test_query_all_questions[textarea-question__configuration3] 1"] = {
-    "allQuestions": {
-        "edges": [
-            {
-                "node": {
-                    "__typename": "TextareaQuestion",
-                    "id": "VGV4dGFyZWFRdWVzdGlvbjpOb25l",
-                    "label": "Jordan Mccarthy",
-                    "maxLength": 10,
-                    "meta": "{}",
-                    "slug": "mrs-shake-recent",
-                }
-            }
-        ]
-    }
-}
-
-snapshots["test_query_all_questions[radio-question__configuration4] 1"] = {
-    "allQuestions": {
-        "edges": [
-            {
-                "node": {
-                    "__typename": "RadioQuestion",
-                    "id": "UmFkaW9RdWVzdGlvbjpOb25l",
-                    "label": "Jordan Mccarthy",
-                    "meta": "{}",
-                    "options": {"edges": [{"node": {"slug": "enter-them-his-half"}}]},
-                    "slug": "mrs-shake-recent",
-                }
-            }
-        ]
-    }
-}
-
-snapshots["test_query_all_questions[checkbox-question__configuration5] 1"] = {
-    "allQuestions": {
-        "edges": [
-            {
-                "node": {
-                    "__typename": "CheckboxQuestion",
-                    "id": "Q2hlY2tib3hRdWVzdGlvbjpOb25l",
-                    "label": "Jordan Mccarthy",
-                    "meta": "{}",
-                    "options": {"edges": [{"node": {"slug": "enter-them-his-half"}}]},
-                    "slug": "mrs-shake-recent",
-                }
-            }
-        ]
-    }
-}
-
 snapshots["test_save_question[true-SaveTextQuestion] 1"] = {
     "data": {
         "saveTextQuestion": {
@@ -309,5 +241,91 @@ snapshots["test_save_radio_question[radio] 1"] = {
             },
             "slug": "mrs-shake-recent",
         },
+    }
+}
+
+snapshots["test_query_all_questions[float-question__configuration2] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "FloatQuestion",
+                    "floatMaxValue": None,
+                    "floatMinValue": None,
+                    "id": "RmxvYXRRdWVzdGlvbjpOb25l",
+                    "label": "Jordan Mccarthy",
+                    "meta": "{}",
+                    "slug": "mrs-shake-recent",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_questions[text-question__configuration3] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "TextQuestion",
+                    "id": "VGV4dFF1ZXN0aW9uOk5vbmU=",
+                    "label": "Jordan Mccarthy",
+                    "maxLength": 10,
+                    "meta": "{}",
+                    "slug": "mrs-shake-recent",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_questions[textarea-question__configuration4] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "TextareaQuestion",
+                    "id": "VGV4dGFyZWFRdWVzdGlvbjpOb25l",
+                    "label": "Jordan Mccarthy",
+                    "maxLength": 10,
+                    "meta": "{}",
+                    "slug": "mrs-shake-recent",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_questions[radio-question__configuration5] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "RadioQuestion",
+                    "id": "UmFkaW9RdWVzdGlvbjpOb25l",
+                    "label": "Jordan Mccarthy",
+                    "meta": "{}",
+                    "options": {"edges": [{"node": {"slug": "enter-them-his-half"}}]},
+                    "slug": "mrs-shake-recent",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_questions[checkbox-question__configuration6] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "CheckboxQuestion",
+                    "id": "Q2hlY2tib3hRdWVzdGlvbjpOb25l",
+                    "label": "Jordan Mccarthy",
+                    "meta": "{}",
+                    "options": {"edges": [{"node": {"slug": "enter-them-his-half"}}]},
+                    "slug": "mrs-shake-recent",
+                }
+            }
+        ]
     }
 }
