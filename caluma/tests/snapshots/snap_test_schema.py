@@ -488,79 +488,6 @@ snapshots["test_schema_introspect 1"] = {
                             {
                                 "defaultValue": None,
                                 "description": None,
-                                "name": "form",
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "ID",
-                                    "ofType": None,
-                                },
-                            },
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "search",
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "String",
-                                    "ofType": None,
-                                },
-                            },
-                        ],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "allDocuments",
-                        "type": {
-                            "kind": "OBJECT",
-                            "name": "DocumentConnection",
-                            "ofType": None,
-                        },
-                    },
-                    {
-                        "args": [
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "before",
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "String",
-                                    "ofType": None,
-                                },
-                            },
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "after",
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "String",
-                                    "ofType": None,
-                                },
-                            },
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "first",
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "Int",
-                                    "ofType": None,
-                                },
-                            },
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "last",
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "Int",
-                                    "ofType": None,
-                                },
-                            },
-                            {
-                                "defaultValue": None,
-                                "description": None,
                                 "name": "slug",
                                 "type": {
                                     "kind": "SCALAR",
@@ -622,10 +549,10 @@ snapshots["test_schema_introspect 1"] = {
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "allForms",
+                        "name": "allFormSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -724,7 +651,7 @@ snapshots["test_schema_introspect 1"] = {
                             {
                                 "defaultValue": None,
                                 "description": None,
-                                "name": "excludeForms",
+                                "name": "excludeFormSpecifications",
                                 "type": {
                                     "kind": "LIST",
                                     "name": None,
@@ -753,6 +680,79 @@ snapshots["test_schema_introspect 1"] = {
                         "type": {
                             "kind": "OBJECT",
                             "name": "QuestionConnection",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "before",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "after",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "first",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "last",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "formSpecification",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "ID",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "search",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                        ],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "allForms",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormConnection",
                             "ofType": None,
                         },
                     },
@@ -1200,7 +1200,7 @@ snapshots["test_schema_introspect 1"] = {
                     {"kind": "OBJECT", "name": "Flow", "ofType": None},
                     {"kind": "OBJECT", "name": "Workflow", "ofType": None},
                     {"kind": "OBJECT", "name": "Task", "ofType": None},
-                    {"kind": "OBJECT", "name": "Document", "ofType": None},
+                    {"kind": "OBJECT", "name": "FormSpecification", "ofType": None},
                     {"kind": "OBJECT", "name": "Form", "ofType": None},
                     {"kind": "OBJECT", "name": "Option", "ofType": None},
                     {"kind": "OBJECT", "name": "TextQuestion", "ofType": None},
@@ -2169,7 +2169,7 @@ value as specified by
                                 "name": None,
                                 "ofType": {
                                     "kind": "OBJECT",
-                                    "name": "DocumentEdge",
+                                    "name": "FormSpecificationEdge",
                                     "ofType": None,
                                 },
                             },
@@ -2179,7 +2179,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "DocumentConnection",
+                "name": "FormSpecificationConnection",
                 "possibleTypes": None,
             },
             {
@@ -2192,7 +2192,11 @@ value as specified by
                         "description": "The item at the end of the edge",
                         "isDeprecated": False,
                         "name": "node",
-                        "type": {"kind": "OBJECT", "name": "Document", "ofType": None},
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -2214,147 +2218,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "DocumentEdge",
-                "possibleTypes": None,
-            },
-            {
-                "description": None,
-                "enumValues": None,
-                "fields": [
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": "",
-                        "isDeprecated": False,
-                        "name": "created",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "DateTime",
-                                "ofType": None,
-                            },
-                        },
-                    },
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": "",
-                        "isDeprecated": False,
-                        "name": "modified",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "DateTime",
-                                "ofType": None,
-                            },
-                        },
-                    },
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": "",
-                        "isDeprecated": False,
-                        "name": "form",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {
-                                "kind": "OBJECT",
-                                "name": "Form",
-                                "ofType": None,
-                            },
-                        },
-                    },
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": "",
-                        "isDeprecated": False,
-                        "name": "meta",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "JSONString",
-                                "ofType": None,
-                            },
-                        },
-                    },
-                    {
-                        "args": [
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "before",
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "String",
-                                    "ofType": None,
-                                },
-                            },
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "after",
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "String",
-                                    "ofType": None,
-                                },
-                            },
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "first",
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "Int",
-                                    "ofType": None,
-                                },
-                            },
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "last",
-                                "type": {
-                                    "kind": "SCALAR",
-                                    "name": "Int",
-                                    "ofType": None,
-                                },
-                            },
-                        ],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "answers",
-                        "type": {
-                            "kind": "OBJECT",
-                            "name": "AnswerConnection",
-                            "ofType": None,
-                        },
-                    },
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": "The ID of the object.",
-                        "isDeprecated": False,
-                        "name": "id",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
-                        },
-                    },
-                ],
-                "inputFields": None,
-                "interfaces": [{"kind": "INTERFACE", "name": "Node", "ofType": None}],
-                "kind": "OBJECT",
-                "name": "Document",
+                "name": "FormSpecificationEdge",
                 "possibleTypes": None,
             },
             {
@@ -2588,7 +2452,7 @@ value as specified by
                             {
                                 "defaultValue": None,
                                 "description": None,
-                                "name": "excludeForms",
+                                "name": "excludeFormSpecifications",
                                 "type": {
                                     "kind": "LIST",
                                     "name": None,
@@ -2624,7 +2488,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [{"kind": "INTERFACE", "name": "Node", "ofType": None}],
                 "kind": "OBJECT",
-                "name": "Form",
+                "name": "FormSpecification",
                 "possibleTypes": None,
             },
             {
@@ -2959,10 +2823,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -3070,6 +2934,146 @@ value as specified by
                 "interfaces": [],
                 "kind": "OBJECT",
                 "name": "FormEdge",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": [
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "",
+                        "isDeprecated": False,
+                        "name": "created",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "DateTime",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "",
+                        "isDeprecated": False,
+                        "name": "modified",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "DateTime",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "",
+                        "isDeprecated": False,
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "OBJECT",
+                                "name": "FormSpecification",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "",
+                        "isDeprecated": False,
+                        "name": "meta",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "JSONString",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "args": [
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "before",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "after",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "first",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": None,
+                                },
+                            },
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "last",
+                                "type": {
+                                    "kind": "SCALAR",
+                                    "name": "Int",
+                                    "ofType": None,
+                                },
+                            },
+                        ],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "answers",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "AnswerConnection",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": "The ID of the object.",
+                        "isDeprecated": False,
+                        "name": "id",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                        },
+                    },
+                ],
+                "inputFields": None,
+                "interfaces": [{"kind": "INTERFACE", "name": "Node", "ofType": None}],
+                "kind": "OBJECT",
+                "name": "Form",
                 "possibleTypes": None,
             },
             {
@@ -3496,7 +3500,7 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
-                                        "name": "SaveDocumentInput",
+                                        "name": "SaveFormSpecificationInput",
                                         "ofType": None,
                                     },
                                 },
@@ -3505,10 +3509,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "saveDocument",
+                        "name": "saveFormSpecification",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "SaveDocumentPayload",
+                            "name": "SaveFormSpecificationPayload",
                             "ofType": None,
                         },
                     },
@@ -3523,7 +3527,7 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
-                                        "name": "SaveDocumentStringAnswerInput",
+                                        "name": "ArchiveFormSpecificationInput",
                                         "ofType": None,
                                     },
                                 },
@@ -3532,10 +3536,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "saveDocumentStringAnswer",
+                        "name": "archiveFormSpecification",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "SaveDocumentStringAnswerPayload",
+                            "name": "ArchiveFormSpecificationPayload",
                             "ofType": None,
                         },
                     },
@@ -3550,7 +3554,7 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
-                                        "name": "SaveDocumentIntegerAnswerInput",
+                                        "name": "PublishFormSpecificationInput",
                                         "ofType": None,
                                     },
                                 },
@@ -3559,10 +3563,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "saveDocumentIntegerAnswer",
+                        "name": "publishFormSpecification",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "SaveDocumentIntegerAnswerPayload",
+                            "name": "PublishFormSpecificationPayload",
                             "ofType": None,
                         },
                     },
@@ -3577,7 +3581,7 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
-                                        "name": "SaveDocumentFloatAnswerInput",
+                                        "name": "AddFormSpecificationQuestionInput",
                                         "ofType": None,
                                     },
                                 },
@@ -3586,10 +3590,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "saveDocumentFloatAnswer",
+                        "name": "addFormSpecificationQuestion",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "SaveDocumentFloatAnswerPayload",
+                            "name": "AddFormSpecificationQuestionPayload",
                             "ofType": None,
                         },
                     },
@@ -3604,7 +3608,7 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
-                                        "name": "SaveDocumentListAnswerInput",
+                                        "name": "RemoveFormSpecificationQuestionInput",
                                         "ofType": None,
                                     },
                                 },
@@ -3613,10 +3617,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "saveDocumentListAnswer",
+                        "name": "removeFormSpecificationQuestion",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "SaveDocumentListAnswerPayload",
+                            "name": "RemoveFormSpecificationQuestionPayload",
                             "ofType": None,
                         },
                     },
@@ -3631,7 +3635,7 @@ value as specified by
                                     "name": None,
                                     "ofType": {
                                         "kind": "INPUT_OBJECT",
-                                        "name": "SaveFormInput",
+                                        "name": "ReorderFormSpecificationQuestionsInput",
                                         "ofType": None,
                                     },
                                 },
@@ -3640,145 +3644,10 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "saveForm",
+                        "name": "reorderFormSpecificationQuestions",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "SaveFormPayload",
-                            "ofType": None,
-                        },
-                    },
-                    {
-                        "args": [
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "input",
-                                "type": {
-                                    "kind": "NON_NULL",
-                                    "name": None,
-                                    "ofType": {
-                                        "kind": "INPUT_OBJECT",
-                                        "name": "ArchiveFormInput",
-                                        "ofType": None,
-                                    },
-                                },
-                            }
-                        ],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "archiveForm",
-                        "type": {
-                            "kind": "OBJECT",
-                            "name": "ArchiveFormPayload",
-                            "ofType": None,
-                        },
-                    },
-                    {
-                        "args": [
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "input",
-                                "type": {
-                                    "kind": "NON_NULL",
-                                    "name": None,
-                                    "ofType": {
-                                        "kind": "INPUT_OBJECT",
-                                        "name": "PublishFormInput",
-                                        "ofType": None,
-                                    },
-                                },
-                            }
-                        ],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "publishForm",
-                        "type": {
-                            "kind": "OBJECT",
-                            "name": "PublishFormPayload",
-                            "ofType": None,
-                        },
-                    },
-                    {
-                        "args": [
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "input",
-                                "type": {
-                                    "kind": "NON_NULL",
-                                    "name": None,
-                                    "ofType": {
-                                        "kind": "INPUT_OBJECT",
-                                        "name": "AddFormQuestionInput",
-                                        "ofType": None,
-                                    },
-                                },
-                            }
-                        ],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "addFormQuestion",
-                        "type": {
-                            "kind": "OBJECT",
-                            "name": "AddFormQuestionPayload",
-                            "ofType": None,
-                        },
-                    },
-                    {
-                        "args": [
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "input",
-                                "type": {
-                                    "kind": "NON_NULL",
-                                    "name": None,
-                                    "ofType": {
-                                        "kind": "INPUT_OBJECT",
-                                        "name": "RemoveFormQuestionInput",
-                                        "ofType": None,
-                                    },
-                                },
-                            }
-                        ],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "removeFormQuestion",
-                        "type": {
-                            "kind": "OBJECT",
-                            "name": "RemoveFormQuestionPayload",
-                            "ofType": None,
-                        },
-                    },
-                    {
-                        "args": [
-                            {
-                                "defaultValue": None,
-                                "description": None,
-                                "name": "input",
-                                "type": {
-                                    "kind": "NON_NULL",
-                                    "name": None,
-                                    "ofType": {
-                                        "kind": "INPUT_OBJECT",
-                                        "name": "ReorderFormQuestionsInput",
-                                        "ofType": None,
-                                    },
-                                },
-                            }
-                        ],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "reorderFormQuestions",
-                        "type": {
-                            "kind": "OBJECT",
-                            "name": "ReorderFormQuestionsPayload",
+                            "name": "ReorderFormSpecificationQuestionsPayload",
                             "ofType": None,
                         },
                     },
@@ -4022,6 +3891,141 @@ value as specified by
                         "type": {
                             "kind": "OBJECT",
                             "name": "ArchiveQuestionPayload",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "input",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": None,
+                                    "ofType": {
+                                        "kind": "INPUT_OBJECT",
+                                        "name": "SaveFormInput",
+                                        "ofType": None,
+                                    },
+                                },
+                            }
+                        ],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "saveForm",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "SaveFormPayload",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "input",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": None,
+                                    "ofType": {
+                                        "kind": "INPUT_OBJECT",
+                                        "name": "SaveFormStringAnswerInput",
+                                        "ofType": None,
+                                    },
+                                },
+                            }
+                        ],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "saveFormStringAnswer",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "SaveFormStringAnswerPayload",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "input",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": None,
+                                    "ofType": {
+                                        "kind": "INPUT_OBJECT",
+                                        "name": "SaveFormIntegerAnswerInput",
+                                        "ofType": None,
+                                    },
+                                },
+                            }
+                        ],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "saveFormIntegerAnswer",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "SaveFormIntegerAnswerPayload",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "input",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": None,
+                                    "ofType": {
+                                        "kind": "INPUT_OBJECT",
+                                        "name": "SaveFormFloatAnswerInput",
+                                        "ofType": None,
+                                    },
+                                },
+                            }
+                        ],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "saveFormFloatAnswer",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "SaveFormFloatAnswerPayload",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "args": [
+                            {
+                                "defaultValue": None,
+                                "description": None,
+                                "name": "input",
+                                "type": {
+                                    "kind": "NON_NULL",
+                                    "name": None,
+                                    "ofType": {
+                                        "kind": "INPUT_OBJECT",
+                                        "name": "SaveFormListAnswerInput",
+                                        "ofType": None,
+                                    },
+                                },
+                            }
+                        ],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "saveFormListAnswer",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "SaveFormListAnswerPayload",
                             "ofType": None,
                         },
                     },
@@ -4681,74 +4685,14 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "document",
-                        "type": {"kind": "OBJECT", "name": "Document", "ofType": None},
-                    },
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "clientMutationId",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
-                    },
-                ],
-                "inputFields": None,
-                "interfaces": [],
-                "kind": "OBJECT",
-                "name": "SaveDocumentPayload",
-                "possibleTypes": None,
-            },
-            {
-                "description": None,
-                "enumValues": None,
-                "fields": None,
-                "inputFields": [
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "form",
+                        "name": "formSpecification",
                         "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "meta",
-                        "type": {
-                            "kind": "SCALAR",
-                            "name": "JSONString",
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
                             "ofType": None,
                         },
                     },
                     {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "clientMutationId",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
-                    },
-                ],
-                "interfaces": None,
-                "kind": "INPUT_OBJECT",
-                "name": "SaveDocumentInput",
-                "possibleTypes": None,
-            },
-            {
-                "description": None,
-                "enumValues": None,
-                "fields": [
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "answer",
-                        "type": {"kind": "INTERFACE", "name": "Answer", "ofType": None},
-                    },
-                    {
                         "args": [],
                         "deprecationReason": None,
                         "description": None,
@@ -4760,385 +4704,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "SaveDocumentStringAnswerPayload",
-                "possibleTypes": None,
-            },
-            {
-                "description": None,
-                "enumValues": None,
-                "fields": None,
-                "inputFields": [
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "question",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "document",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "meta",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "JSONString",
-                                "ofType": None,
-                            },
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "value",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "String",
-                                "ofType": None,
-                            },
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "clientMutationId",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
-                    },
-                ],
-                "interfaces": None,
-                "kind": "INPUT_OBJECT",
-                "name": "SaveDocumentStringAnswerInput",
-                "possibleTypes": None,
-            },
-            {
-                "description": None,
-                "enumValues": None,
-                "fields": [
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "answer",
-                        "type": {"kind": "INTERFACE", "name": "Answer", "ofType": None},
-                    },
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "clientMutationId",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
-                    },
-                ],
-                "inputFields": None,
-                "interfaces": [],
-                "kind": "OBJECT",
-                "name": "SaveDocumentIntegerAnswerPayload",
-                "possibleTypes": None,
-            },
-            {
-                "description": None,
-                "enumValues": None,
-                "fields": None,
-                "inputFields": [
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "question",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "document",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "meta",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "JSONString",
-                                "ofType": None,
-                            },
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "value",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {"kind": "SCALAR", "name": "Int", "ofType": None},
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "clientMutationId",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
-                    },
-                ],
-                "interfaces": None,
-                "kind": "INPUT_OBJECT",
-                "name": "SaveDocumentIntegerAnswerInput",
-                "possibleTypes": None,
-            },
-            {
-                "description": None,
-                "enumValues": None,
-                "fields": [
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "answer",
-                        "type": {"kind": "INTERFACE", "name": "Answer", "ofType": None},
-                    },
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "clientMutationId",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
-                    },
-                ],
-                "inputFields": None,
-                "interfaces": [],
-                "kind": "OBJECT",
-                "name": "SaveDocumentFloatAnswerPayload",
-                "possibleTypes": None,
-            },
-            {
-                "description": None,
-                "enumValues": None,
-                "fields": None,
-                "inputFields": [
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "question",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "document",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "meta",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "JSONString",
-                                "ofType": None,
-                            },
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "value",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "Float",
-                                "ofType": None,
-                            },
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "clientMutationId",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
-                    },
-                ],
-                "interfaces": None,
-                "kind": "INPUT_OBJECT",
-                "name": "SaveDocumentFloatAnswerInput",
-                "possibleTypes": None,
-            },
-            {
-                "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). ",
-                "enumValues": None,
-                "fields": None,
-                "inputFields": None,
-                "interfaces": None,
-                "kind": "SCALAR",
-                "name": "Float",
-                "possibleTypes": None,
-            },
-            {
-                "description": None,
-                "enumValues": None,
-                "fields": [
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "answer",
-                        "type": {"kind": "INTERFACE", "name": "Answer", "ofType": None},
-                    },
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "clientMutationId",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
-                    },
-                ],
-                "inputFields": None,
-                "interfaces": [],
-                "kind": "OBJECT",
-                "name": "SaveDocumentListAnswerPayload",
-                "possibleTypes": None,
-            },
-            {
-                "description": None,
-                "enumValues": None,
-                "fields": None,
-                "inputFields": [
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "question",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "document",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "meta",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {
-                                "kind": "SCALAR",
-                                "name": "JSONString",
-                                "ofType": None,
-                            },
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "value",
-                        "type": {
-                            "kind": "NON_NULL",
-                            "name": None,
-                            "ofType": {
-                                "kind": "LIST",
-                                "name": None,
-                                "ofType": {
-                                    "kind": "SCALAR",
-                                    "name": "String",
-                                    "ofType": None,
-                                },
-                            },
-                        },
-                    },
-                    {
-                        "defaultValue": None,
-                        "description": None,
-                        "name": "clientMutationId",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
-                    },
-                ],
-                "interfaces": None,
-                "kind": "INPUT_OBJECT",
-                "name": "SaveDocumentListAnswerInput",
-                "possibleTypes": None,
-            },
-            {
-                "description": None,
-                "enumValues": None,
-                "fields": [
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "form",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
-                    },
-                    {
-                        "args": [],
-                        "deprecationReason": None,
-                        "description": None,
-                        "isDeprecated": False,
-                        "name": "clientMutationId",
-                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
-                    },
-                ],
-                "inputFields": None,
-                "interfaces": [],
-                "kind": "OBJECT",
-                "name": "SaveFormPayload",
+                "name": "SaveFormSpecificationPayload",
                 "possibleTypes": None,
             },
             {
@@ -5199,7 +4765,7 @@ value as specified by
                 ],
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
-                "name": "SaveFormInput",
+                "name": "SaveFormSpecificationInput",
                 "possibleTypes": None,
             },
             {
@@ -5211,8 +4777,12 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "form",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -5226,7 +4796,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "ArchiveFormPayload",
+                "name": "ArchiveFormSpecificationPayload",
                 "possibleTypes": None,
             },
             {
@@ -5253,7 +4823,7 @@ value as specified by
                 ],
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
-                "name": "ArchiveFormInput",
+                "name": "ArchiveFormSpecificationInput",
                 "possibleTypes": None,
             },
             {
@@ -5265,8 +4835,12 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "form",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -5280,7 +4854,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "PublishFormPayload",
+                "name": "PublishFormSpecificationPayload",
                 "possibleTypes": None,
             },
             {
@@ -5307,11 +4881,11 @@ value as specified by
                 ],
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
-                "name": "PublishFormInput",
+                "name": "PublishFormSpecificationInput",
                 "possibleTypes": None,
             },
             {
-                "description": "Add question at the end of form.",
+                "description": "Add question at the end of form specification.",
                 "enumValues": None,
                 "fields": [
                     {
@@ -5319,8 +4893,12 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "form",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -5334,7 +4912,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "AddFormQuestionPayload",
+                "name": "AddFormSpecificationQuestionPayload",
                 "possibleTypes": None,
             },
             {
@@ -5345,7 +4923,7 @@ value as specified by
                     {
                         "defaultValue": None,
                         "description": None,
-                        "name": "form",
+                        "name": "formSpecification",
                         "type": {
                             "kind": "NON_NULL",
                             "name": None,
@@ -5371,7 +4949,7 @@ value as specified by
                 ],
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
-                "name": "AddFormQuestionInput",
+                "name": "AddFormSpecificationQuestionInput",
                 "possibleTypes": None,
             },
             {
@@ -5383,8 +4961,12 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "form",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -5398,7 +4980,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "RemoveFormQuestionPayload",
+                "name": "RemoveFormSpecificationQuestionPayload",
                 "possibleTypes": None,
             },
             {
@@ -5409,7 +4991,7 @@ value as specified by
                     {
                         "defaultValue": None,
                         "description": None,
-                        "name": "form",
+                        "name": "formSpecification",
                         "type": {
                             "kind": "NON_NULL",
                             "name": None,
@@ -5435,7 +5017,7 @@ value as specified by
                 ],
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
-                "name": "RemoveFormQuestionInput",
+                "name": "RemoveFormSpecificationQuestionInput",
                 "possibleTypes": None,
             },
             {
@@ -5447,8 +5029,12 @@ value as specified by
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "form",
-                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "OBJECT",
+                            "name": "FormSpecification",
+                            "ofType": None,
+                        },
                     },
                     {
                         "args": [],
@@ -5462,7 +5048,7 @@ value as specified by
                 "inputFields": None,
                 "interfaces": [],
                 "kind": "OBJECT",
-                "name": "ReorderFormQuestionsPayload",
+                "name": "ReorderFormSpecificationQuestionsPayload",
                 "possibleTypes": None,
             },
             {
@@ -5473,7 +5059,7 @@ value as specified by
                     {
                         "defaultValue": None,
                         "description": None,
-                        "name": "form",
+                        "name": "formSpecification",
                         "type": {
                             "kind": "NON_NULL",
                             "name": None,
@@ -5507,7 +5093,7 @@ value as specified by
                 ],
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
-                "name": "ReorderFormQuestionsInput",
+                "name": "ReorderFormSpecificationQuestionsInput",
                 "possibleTypes": None,
             },
             {
@@ -6328,6 +5914,16 @@ value as specified by
                 "possibleTypes": None,
             },
             {
+                "description": "The `Float` scalar type represents signed double-precision fractional values as specified by [IEEE 754](http://en.wikipedia.org/wiki/IEEE_floating_point). ",
+                "enumValues": None,
+                "fields": None,
+                "inputFields": None,
+                "interfaces": None,
+                "kind": "SCALAR",
+                "name": "Float",
+                "possibleTypes": None,
+            },
+            {
                 "description": None,
                 "enumValues": None,
                 "fields": [
@@ -6501,6 +6097,438 @@ value as specified by
                 "interfaces": None,
                 "kind": "INPUT_OBJECT",
                 "name": "ArchiveQuestionInput",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": [
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "form",
+                        "type": {"kind": "OBJECT", "name": "Form", "ofType": None},
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "inputFields": None,
+                "interfaces": [],
+                "kind": "OBJECT",
+                "name": "SaveFormPayload",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": None,
+                "inputFields": [
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "formSpecification",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "meta",
+                        "type": {
+                            "kind": "SCALAR",
+                            "name": "JSONString",
+                            "ofType": None,
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "interfaces": None,
+                "kind": "INPUT_OBJECT",
+                "name": "SaveFormInput",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": [
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "answer",
+                        "type": {"kind": "INTERFACE", "name": "Answer", "ofType": None},
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "inputFields": None,
+                "interfaces": [],
+                "kind": "OBJECT",
+                "name": "SaveFormStringAnswerPayload",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": None,
+                "inputFields": [
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "question",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "form",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "meta",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "JSONString",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "value",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "String",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "interfaces": None,
+                "kind": "INPUT_OBJECT",
+                "name": "SaveFormStringAnswerInput",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": [
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "answer",
+                        "type": {"kind": "INTERFACE", "name": "Answer", "ofType": None},
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "inputFields": None,
+                "interfaces": [],
+                "kind": "OBJECT",
+                "name": "SaveFormIntegerAnswerPayload",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": None,
+                "inputFields": [
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "question",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "form",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "meta",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "JSONString",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "value",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "Int", "ofType": None},
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "interfaces": None,
+                "kind": "INPUT_OBJECT",
+                "name": "SaveFormIntegerAnswerInput",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": [
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "answer",
+                        "type": {"kind": "INTERFACE", "name": "Answer", "ofType": None},
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "inputFields": None,
+                "interfaces": [],
+                "kind": "OBJECT",
+                "name": "SaveFormFloatAnswerPayload",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": None,
+                "inputFields": [
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "question",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "form",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "meta",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "JSONString",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "value",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "Float",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "interfaces": None,
+                "kind": "INPUT_OBJECT",
+                "name": "SaveFormFloatAnswerInput",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": [
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "answer",
+                        "type": {"kind": "INTERFACE", "name": "Answer", "ofType": None},
+                    },
+                    {
+                        "args": [],
+                        "deprecationReason": None,
+                        "description": None,
+                        "isDeprecated": False,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "inputFields": None,
+                "interfaces": [],
+                "kind": "OBJECT",
+                "name": "SaveFormListAnswerPayload",
+                "possibleTypes": None,
+            },
+            {
+                "description": None,
+                "enumValues": None,
+                "fields": None,
+                "inputFields": [
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "question",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "form",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {"kind": "SCALAR", "name": "ID", "ofType": None},
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "meta",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "SCALAR",
+                                "name": "JSONString",
+                                "ofType": None,
+                            },
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "value",
+                        "type": {
+                            "kind": "NON_NULL",
+                            "name": None,
+                            "ofType": {
+                                "kind": "LIST",
+                                "name": None,
+                                "ofType": {
+                                    "kind": "SCALAR",
+                                    "name": "String",
+                                    "ofType": None,
+                                },
+                            },
+                        },
+                    },
+                    {
+                        "defaultValue": None,
+                        "description": None,
+                        "name": "clientMutationId",
+                        "type": {"kind": "SCALAR", "name": "String", "ofType": None},
+                    },
+                ],
+                "interfaces": None,
+                "kind": "INPUT_OBJECT",
+                "name": "SaveFormListAnswerInput",
                 "possibleTypes": None,
             },
             {
@@ -7543,10 +7571,10 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -7814,10 +7842,10 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -8242,10 +8270,10 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -8588,10 +8616,10 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -8859,10 +8887,10 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },
@@ -9138,10 +9166,10 @@ In some cases, you need to provide options to alter GraphQL's execution behavior
                         "deprecationReason": None,
                         "description": None,
                         "isDeprecated": False,
-                        "name": "forms",
+                        "name": "formSpecifications",
                         "type": {
                             "kind": "OBJECT",
-                            "name": "FormConnection",
+                            "name": "FormSpecificationConnection",
                             "ofType": None,
                         },
                     },

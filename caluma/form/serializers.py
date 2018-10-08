@@ -1,3 +1,5 @@
+import sys
+
 from django.db import transaction
 from rest_framework import exceptions
 from rest_framework.serializers import FloatField, IntegerField
@@ -12,13 +14,13 @@ class QuestionJexlField(serializers.JexlField):
         super().__init__(QuestionJexl(), **kwargs)
 
 
-class SaveFormSerializer(serializers.ModelSerializer):
+class SaveFormSpecificationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.Form
+        model = models.FormSpecification
         fields = ("slug", "name", "description", "meta")
 
 
-class ArchiveFormSerializer(serializers.ModelSerializer):
+class ArchiveFormSpecificationSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField(source="slug")
 
     def update(self, instance, validated_data):
@@ -28,68 +30,68 @@ class ArchiveFormSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ("id",)
-        model = models.Form
+        model = models.FormSpecification
 
 
-class AddFormQuestionSerializer(serializers.ModelSerializer):
-    form = serializers.GlobalIDField(source="slug")
+class AddFormSpecificationQuestionSerializer(serializers.ModelSerializer):
+    form_specification = serializers.GlobalIDField(source="slug")
     question = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Question.objects
     )
 
     def update(self, instance, validated_data):
-        models.FormQuestion.objects.get_or_create(
-            form=self.instance, question=validated_data["question"]
+        models.FormSpecificationQuestion.objects.get_or_create(
+            form_specification=self.instance, question=validated_data["question"]
         )
         return instance
 
     class Meta:
-        fields = ("form", "question")
-        model = models.Form
+        fields = ("form_specification", "question")
+        model = models.FormSpecification
 
 
-class RemoveFormQuestionSerializer(serializers.ModelSerializer):
-    form = serializers.GlobalIDField(source="slug")
+class RemoveFormSpecificationQuestionSerializer(serializers.ModelSerializer):
+    form_specification = serializers.GlobalIDField(source="slug")
     question = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Question.objects
     )
 
     def update(self, instance, validated_data):
-        models.FormQuestion.objects.filter(
-            form=instance, question=validated_data["question"]
+        models.FormSpecificationQuestion.objects.filter(
+            form_specification=instance, question=validated_data["question"]
         ).delete()
         return instance
 
     class Meta:
-        fields = ("form", "question")
-        model = models.Form
+        fields = ("form_specification", "question")
+        model = models.FormSpecification
 
 
-class FormQuestionRelatedField(serializers.GlobalIDPrimaryKeyRelatedField):
+class FormSpecificationQuestionRelatedField(serializers.GlobalIDPrimaryKeyRelatedField):
     def get_queryset(self):
-        form = self.parent.parent.instance
-        return form.questions.all()
+        form_specification = self.parent.parent.instance
+        return form_specification.questions.all()
 
 
-class ReorderFormQuestionsSerializer(serializers.ModelSerializer):
-    form = serializers.GlobalIDField(source="slug")
-    questions = FormQuestionRelatedField(many=True)
+class ReorderFormSpecificationQuestionsSerializer(serializers.ModelSerializer):
+    form_specification = serializers.GlobalIDField(source="slug")
+    questions = FormSpecificationQuestionRelatedField(many=True)
 
     def update(self, instance, validated_data):
         questions = validated_data["questions"]
         for sort, question in enumerate(reversed(questions)):
-            models.FormQuestion.objects.filter(form=instance, question=question).update(
-                sort=sort
-            )
+            models.FormSpecificationQuestion.objects.filter(
+                form_specification=instance, question=question
+            ).update(sort=sort)
 
         return instance
 
     class Meta:
-        fields = ("form", "questions")
-        model = models.Form
+        fields = ("form_specification", "questions")
+        model = models.FormSpecification
 
 
-class PublishFormSerializer(serializers.ModelSerializer):
+class PublishFormSpecificationSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField(source="slug")
 
     def update(self, instance, validated_data):
@@ -99,7 +101,7 @@ class PublishFormSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ("id",)
-        model = models.Form
+        model = models.FormSpecification
 
 
 class SaveQuestionSerializer(serializers.ModelSerializer):
@@ -252,3 +254,82 @@ class ArchiveQuestionSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("id",)
         model = models.Question
+
+
+class FormSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Form
+        fields = ("form_specification", "meta")
+
+
+class AnswerSerializer(serializers.ModelSerializer):
+    def validate_question_text(self, question, value):
+        max_length = (
+            question.max_length if question.max_length is not None else sys.maxsize
+        )
+        if not isinstance(value, str) or len(value) > max_length:
+            raise exceptions.ValidationError(
+                f"Invalid value {value}. "
+                f"Should be of type str and max length {question.max_length}"
+            )
+
+    def validate_question_textarea(self, question, value):
+        self.validate_question_text(question, value)
+
+    def validate_question_float(self, question, value):
+        min_value = (
+            question.min_value if question.min_value is not None else float("-inf")
+        )
+        max_value = (
+            question.max_value if question.max_value is not None else float("inf")
+        )
+
+        if not isinstance(value, float) or value < min_value or value > max_value:
+            raise exceptions.ValidationError(
+                f"Invalid value {value}. "
+                f"Should be of type float, not lower than {question.min_value} "
+                f"and not greater than {question.max_value}"
+            )
+
+    def validate_question_integer(self, question, value):
+        min_value = (
+            question.min_value if question.min_value is not None else float("-inf")
+        )
+        max_value = (
+            question.max_value if question.max_value is not None else float("inf")
+        )
+
+        if not isinstance(value, int) or value < min_value or value > max_value:
+            raise exceptions.ValidationError(
+                f"Invalid value {value}. "
+                f"Should be of type int, not lower than {question.min_value} "
+                f"and not greater than {question.max_value}"
+            )
+
+    def validate_question_radio(self, question, value):
+        options = question.options.values_list("slug", flat=True)
+        if not isinstance(value, str) or value not in options:
+            raise exceptions.ValidationError(
+                f"Invalid value {value}. "
+                f"Should be of type str and one of the options {'.'.join(options)}"
+            )
+
+    def validate_question_checkbox(self, question, value):
+        options = question.options.values_list("slug", flat=True)
+        invalid_options = set(value) - set(options)
+        if not isinstance(value, list) or invalid_options:
+            raise exceptions.ValidationError(
+                f"Invalid options [{', '.join(invalid_options)}]. "
+                f"Should be one of the options [{', '.join(options)}]"
+            )
+
+    def validate(self, data):
+        question = data["question"]
+        value = data["value"]
+        getattr(self, f"validate_question_{question.type}")(question, value)
+
+        return data
+
+    class Meta:
+        model = models.Answer
+        fields = ("question", "meta", "form", "value")

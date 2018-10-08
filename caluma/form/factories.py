@@ -4,7 +4,7 @@ from factory.django import DjangoModelFactory
 from . import models
 
 
-class FormFactory(DjangoModelFactory):
+class FormSpecificationFactory(DjangoModelFactory):
     slug = Faker("slug")
     name = Faker("multilang", faker_provider="name")
     description = Faker("multilang", faker_provider="text")
@@ -13,7 +13,7 @@ class FormFactory(DjangoModelFactory):
     is_archived = False
 
     class Meta:
-        model = models.Form
+        model = models.FormSpecification
 
 
 class QuestionFactory(DjangoModelFactory):
@@ -48,10 +48,28 @@ class QuestionOptionFactory(DjangoModelFactory):
         model = models.QuestionOption
 
 
-class FormQuestionFactory(DjangoModelFactory):
-    form = SubFactory(FormFactory)
+class FormSpecificationQuestionFactory(DjangoModelFactory):
+    form_specification = SubFactory(FormSpecificationFactory)
     question = SubFactory(QuestionFactory)
     sort = 0
 
     class Meta:
-        model = models.FormQuestion
+        model = models.FormSpecificationQuestion
+
+
+class FormFactory(DjangoModelFactory):
+    form_specification = SubFactory(FormSpecificationFactory)
+    meta = {}
+
+    class Meta:
+        model = models.Form
+
+
+class AnswerFactory(DjangoModelFactory):
+    question = SubFactory(QuestionFactory)
+    form = SubFactory(FormFactory)
+    value = Faker("name")
+    meta = {}
+
+    class Meta:
+        model = models.Answer

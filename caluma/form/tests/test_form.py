@@ -1,29 +1,49 @@
 import pytest
-from graphql_relay import to_global_id
 
-from .. import models
+from .. import serializers
+from ...form.models import Question
 from ...schema import schema
-from ...tests import extract_global_id_input_fields, extract_serializer_input_fields
-from ..serializers import SaveFormSerializer
+from ...tests import extract_serializer_input_fields
 
 
-def test_query_all_forms(db, snapshot, form, form_question, question):
+@pytest.mark.parametrize(
+    "question__type,answer__value",
+    [
+        (Question.TYPE_INTEGER, 1),
+        (Question.TYPE_FLOAT, 2.1),
+        (Question.TYPE_TEXT, "somevalue"),
+        (Question.TYPE_CHECKBOX, ["somevalue", "anothervalue"]),
+    ],
+)
+def test_query_all_forms(
+    db, snapshot, form_specification_question, form_specification, form, answer
+):
+
     query = """
-        query AllFormsQuery($name: String!, $question: String!) {
-          allForms(name: $name) {
+        query AllFormsQuery($search: String) {
+          allForms(search: $search) {
             edges {
               node {
-                id
-                slug
-                name
-                description
-                meta
-                questions(search: $question) {
+                answers {
                   edges {
                     node {
-                      id
-                      slug
-                      label
+                      __typename
+                      question {
+                        slug
+                        label
+                      }
+                      ... on StringAnswer {
+                        string_value: value
+                      }
+                      ... on IntegerAnswer {
+                        integer_value: value
+                      }
+                      ... on ListAnswer {
+                        list_value: value
+                      }
+                      ... on FloatAnswer {
+                        float_value: value
+                      }
                     }
                   }
                 }
@@ -33,224 +53,100 @@ def test_query_all_forms(db, snapshot, form, form_question, question):
         }
     """
 
-    result = schema.execute(
-        query, variables={"name": form.name, "question": question.label}
-    )
-
+    search = isinstance(answer.value, list) and " ".join(answer.value) or answer.value
+    result = schema.execute(query, variables={"search": search})
     assert not result.errors
     snapshot.assert_match(result.data)
 
 
-@pytest.mark.parametrize("form__description", ("some description text", ""))
 def test_save_form(db, snapshot, form):
     query = """
-        mutation SaveForm($input: SaveFormInput!) {
+        mutation SaveFOrm($input: SaveFormInput!) {
           saveForm(input: $input) {
             form {
-              id
-              slug
-              name
-              meta
+                formSpecification {
+                    slug
+                }
             }
             clientMutationId
           }
         }
     """
 
-    inp = {"input": extract_serializer_input_fields(SaveFormSerializer, form)}
-    form.delete()  # test creation of form
+    inp = {"input": extract_serializer_input_fields(serializers.FormSerializer, form)}
     result = schema.execute(query, variables=inp)
 
     assert not result.errors
     snapshot.assert_match(result.data)
 
 
-def test_archive_form(db, form):
-    query = """
-        mutation ArchiveForm($input: ArchiveFormInput!) {
-          archiveForm(input: $input) {
-            form {
-              isArchived
-            }
+@pytest.mark.parametrize("option__slug", ["option-slug"])
+@pytest.mark.parametrize(
+    "question__type,question__configuration,answer__value,mutation,success",
+    [
+        (Question.TYPE_INTEGER, {}, 1, "SaveFormIntegerAnswer", True),
+        (Question.TYPE_INTEGER, {"min_value": 100}, 1, "SaveFormIntegerAnswer", False),
+        (Question.TYPE_FLOAT, {}, 2.1, "SaveFormFloatAnswer", True),
+        (Question.TYPE_FLOAT, {"min_value": 100.0}, 1, "SaveFormFloatAnswer", False),
+        (Question.TYPE_TEXT, {}, "Test", "SaveFormStringAnswer", True),
+        (
+            Question.TYPE_TEXT,
+            {"max_length": 1},
+            "toolong",
+            "SaveFormStringAnswer",
+            False,
+        ),
+        (
+            Question.TYPE_TEXTAREA,
+            {"max_length": 1},
+            "toolong",
+            "SaveFormStringAnswer",
+            False,
+        ),
+        (Question.TYPE_CHECKBOX, {}, ["option-slug"], "SaveFormListAnswer", True),
+        (
+            Question.TYPE_CHECKBOX,
+            {},
+            ["option-slug", "option-invalid-slug"],
+            "SaveFormStringAnswer",
+            False,
+        ),
+        (Question.TYPE_RADIO, {}, "option-slug", "SaveFormStringAnswer", True),
+        (Question.TYPE_RADIO, {}, "invalid-option-slug", "SaveFormStringAnswer", False),
+    ],
+)
+def test_save_form_answer(db, snapshot, answer, mutation, question_option, success):
+    mutation_func = mutation[0].lower() + mutation[1:]
+    query = f"""
+        mutation {mutation}($input: {mutation}Input!) {{
+          {mutation_func}(input: $input) {{
+            answer {{
+              ... on StringAnswer {{
+                stringValue: value
+              }}
+              ... on IntegerAnswer {{
+                integerValue: value
+              }}
+              ... on ListAnswer {{
+                listValue: value
+              }}
+              ... on FloatAnswer {{
+                floatValue: value
+              }}
+              ... on ListAnswer {{
+                listValue: value
+              }}
+            }}
             clientMutationId
-          }
-        }
+          }}
+        }}
     """
 
-    result = schema.execute(
-        query, variables={"input": extract_global_id_input_fields(form)}
-    )
+    inp = {
+        "input": extract_serializer_input_fields(serializers.AnswerSerializer, answer)
+    }
+    result = schema.execute(query, variables=inp)
 
-    assert not result.errors
-    assert result.data["archiveForm"]["form"]["isArchived"]
-
-    form.refresh_from_db()
-    assert form.is_archived
-
-
-def test_publish_form(db, form):
-    query = """
-        mutation PublishForm($input: PublishFormInput!) {
-          publishForm(input: $input) {
-            form {
-              isPublished
-            }
-            clientMutationId
-          }
-        }
-    """
-
-    result = schema.execute(
-        query, variables={"input": extract_global_id_input_fields(form)}
-    )
-
-    assert not result.errors
-    assert result.data["publishForm"]["form"]["isPublished"]
-
-    form.refresh_from_db()
-    assert form.is_published
-
-
-def test_add_form_question(db, form, question, snapshot):
-    query = """
-        mutation AddFormQuestion($input: AddFormQuestionInput!) {
-          addFormQuestion(input: $input) {
-            form {
-              questions {
-                edges {
-                  node {
-                    slug
-                  }
-                }
-              }
-            }
-            clientMutationId
-          }
-        }
-    """
-
-    result = schema.execute(
-        query,
-        variables={
-            "input": {
-                "form": to_global_id(type(form).__name__, form.pk),
-                "question": to_global_id(type(question).__name__, question.pk),
-            }
-        },
-    )
-
-    snapshot.assert_execution_result(result)
-
-
-def test_remove_form_question(db, form, form_question, question, snapshot):
-    query = """
-        mutation RemoveFormQuestion($input: RemoveFormQuestionInput!) {
-          removeFormQuestion(input: $input) {
-            form {
-              questions {
-                edges {
-                  node {
-                    slug
-                  }
-                }
-              }
-            }
-            clientMutationId
-          }
-        }
-    """
-
-    result = schema.execute(
-        query,
-        variables={
-            "input": {
-                "form": to_global_id(type(form).__name__, form.pk),
-                "question": to_global_id(type(question).__name__, question.pk),
-            }
-        },
-    )
-
-    snapshot.assert_execution_result(result)
-
-
-def test_reorder_form_questions(db, form, form_question_factory):
-    form_question_factory.create_batch(2, form=form)
-
-    query = """
-        mutation ReorderFormQuestions($input: ReorderFormQuestionsInput!) {
-          reorderFormQuestions(input: $input) {
-            form {
-              questions {
-                edges {
-                  node {
-                    slug
-                  }
-                }
-              }
-            }
-            clientMutationId
-          }
-        }
-    """
-
-    question_ids = (
-        form.questions.order_by("slug").reverse().values_list("slug", flat=True)
-    )
-    result = schema.execute(
-        query,
-        variables={
-            "input": {
-                "form": to_global_id(type(form).__name__, form.pk),
-                "questions": [
-                    to_global_id(type(models.Question).__name__, question_id)
-                    for question_id in question_ids
-                ],
-            }
-        },
-    )
-
-    assert not result.errors
-    result_questions = [
-        question["node"]["slug"]
-        for question in result.data["reorderFormQuestions"]["form"]["questions"][
-            "edges"
-        ]
-    ]
-
-    assert result_questions == list(question_ids)
-
-
-def test_reorder_form_questions_invalid_question(db, form, question_factory):
-
-    invalid_question = question_factory()
-
-    query = """
-        mutation ReorderFormQuestions($input: ReorderFormQuestionsInput!) {
-          reorderFormQuestions(input: $input) {
-            form {
-              questions {
-                edges {
-                  node {
-                    slug
-                  }
-                }
-              }
-            }
-            clientMutationId
-          }
-        }
-    """
-
-    result = schema.execute(
-        query,
-        variables={
-            "input": {
-                "form": to_global_id(type(form).__name__, form.pk),
-                "questions": [
-                    to_global_id(type(models.Question).__name__, invalid_question.slug)
-                ],
-            }
-        },
-    )
-
-    assert result.errors
+    assert not bool(result.errors) == success
+    if success:
+        snapshot.assert_match(result.data)
