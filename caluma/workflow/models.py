@@ -27,6 +27,13 @@ class WorkflowSpecification(SlugModel):
     start = models.ForeignKey(
         TaskSpecification, on_delete=models.CASCADE, related_name="+"
     )
+    form_specification = models.ForeignKey(
+        "form.FormSpecification",
+        on_delete=models.DO_NOTHING,
+        related_name="+",
+        blank=True,
+        null=True,
+    )
 
 
 class Flow(UUIDModel):
@@ -52,6 +59,13 @@ class Workflow(UUIDModel):
 
     workflow_specification = models.ForeignKey(
         WorkflowSpecification, related_name="workflows", on_delete=models.DO_NOTHING
+    )
+    form = models.ForeignKey(
+        "form.Form",
+        on_delete=models.DO_NOTHING,
+        related_name="workflows",
+        blank=True,
+        null=True,
     )
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default={})

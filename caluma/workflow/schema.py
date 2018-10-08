@@ -45,6 +45,7 @@ class WorkflowSpecification(DjangoObjectType):
             "is_published",
             "is_archived",
             "start",
+            "form_specification",
         )
         interfaces = (relay.Node,)
 
@@ -77,6 +78,7 @@ class Workflow(DjangoObjectType):
             "workflow_specification",
             "status",
             "tasks",
+            "form",
         )
 
 

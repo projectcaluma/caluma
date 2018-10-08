@@ -8,7 +8,7 @@ from snapshottest import Snapshot
 snapshots = Snapshot()
 
 snapshots["test_query_all_tasks 1"] = {
-    "allTasks": {"edges": [{"node": {"status": "COMPLETE"}}]}
+    "allTasks": {"edges": [{"node": {"status": "READY"}}]}
 }
 
 snapshots["test_complete_task_last[ready-True] 1"] = {
@@ -24,7 +24,7 @@ snapshots["test_complete_task_with_next[ready] 1"] = {
         "task": {
             "status": "COMPLETE",
             "workflow": {
-                "status": "COMPLETE",
+                "status": "RUNNING",
                 "tasks": {
                     "edges": [
                         {"node": {"status": "READY"}},
