@@ -23,12 +23,23 @@ make start
 
 And access GraphiQL at [http://localhost:8000/graphql](http://localhost:8000/graphql)
 
-## Testing
+## Development
+
+### Testing
 Run tests by executing:
 
 ```bash
 make install-dev
 make test
+```
+
+### Setup pre commit
+
+Pre commit hooks is an additional option instead of excuting checks in your editor of choice.
+
+```bash
+pip install pre-commit
+pre-commit install
 ```
 
 ## License
