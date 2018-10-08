@@ -32,8 +32,9 @@ class Question(graphene.Interface):
     is_hidden = QuestionJexl(required=True)
     is_archived = graphene.Boolean(required=True)
     meta = graphene.JSONString()
-    forms = DjangoFilterConnectionField(
-        "caluma.form.schema.Form", filterset_class=filters.FormFilterSet
+    form_specifications = DjangoFilterConnectionField(
+        "caluma.form.schema.FormSpecification",
+        filterset_class=filters.FormSpecificationFilterSet,
     )
 
     @classmethod
@@ -116,7 +117,7 @@ class FloatQuestion(graphene.ObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class Form(DjangoObjectType):
+class FormSpecification(DjangoObjectType):
     questions = DjangoFilterSetConnectionField(
         QuestionConnection, filterset_class=filters.QuestionFilterSet
     )
@@ -125,10 +126,12 @@ class Form(DjangoObjectType):
         # TODO: potential cause for query explosions.
         # https://github.com/graphql-python/graphene-django/pull/220
         # https://docs.djangoproject.com/en/2.1/ref/models/querysets/#django.db.models.Prefetch
-        return self.questions.order_by("-formquestion__sort", "formquestion__id")
+        return self.questions.order_by(
+            "-formspecificationquestion__sort", "formspecificationquestion__id"
+        )
 
     class Meta:
-        model = models.Form
+        model = models.FormSpecification
         interfaces = (relay.Node,)
         only_fields = (
             "created",
@@ -142,41 +145,41 @@ class Form(DjangoObjectType):
         )
 
 
-class SaveForm(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveFormSpecification(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
-        serializer_class = serializers.SaveFormSerializer
+        serializer_class = serializers.SaveFormSpecificationSerializer
 
 
-class ArchiveForm(SerializerMutation):
-    class Meta:
-        lookup_input_kwarg = "id"
-        serializer_class = serializers.ArchiveFormSerializer
-
-
-class AddFormQuestion(SerializerMutation):
-    """Add question at the end of form."""
-
-    class Meta:
-        lookup_input_kwarg = "form"
-        serializer_class = serializers.AddFormQuestionSerializer
-
-
-class RemoveFormQuestion(SerializerMutation):
-    class Meta:
-        lookup_input_kwarg = "form"
-        serializer_class = serializers.RemoveFormQuestionSerializer
-
-
-class ReorderFormQuestions(SerializerMutation):
-    class Meta:
-        lookup_input_kwarg = "form"
-        serializer_class = serializers.ReorderFormQuestionsSerializer
-
-
-class PublishForm(SerializerMutation):
+class ArchiveFormSpecification(SerializerMutation):
     class Meta:
         lookup_input_kwarg = "id"
-        serializer_class = serializers.PublishFormSerializer
+        serializer_class = serializers.ArchiveFormSpecificationSerializer
+
+
+class AddFormSpecificationQuestion(SerializerMutation):
+    """Add question at the end of form specification."""
+
+    class Meta:
+        lookup_input_kwarg = "form_specification"
+        serializer_class = serializers.AddFormSpecificationQuestionSerializer
+
+
+class RemoveFormSpecificationQuestion(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "form_specification"
+        serializer_class = serializers.RemoveFormSpecificationQuestionSerializer
+
+
+class ReorderFormSpecificationQuestions(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "form_specification"
+        serializer_class = serializers.ReorderFormSpecificationQuestionsSerializer
+
+
+class PublishFormSpecification(SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "id"
+        serializer_class = serializers.PublishFormSpecificationSerializer
 
 
 class ArchiveQuestion(SerializerMutation):
@@ -238,13 +241,138 @@ class RemoveOption(ClientIDMutation):
         return cls()
 
 
+class Answer(graphene.Interface):
+    id = graphene.ID()
+    created = graphene.DateTime(required=True)
+    modified = graphene.DateTime(required=True)
+    question = graphene.Field(Question, required=True)
+    meta = graphene.JSONString()
+
+    @classmethod
+    def resolve_type(cls, instance, info):
+        ANSWER_TYPE = {
+            list: ListAnswer,
+            str: StringAnswer,
+            float: FloatAnswer,
+            int: IntegerAnswer,
+        }
+
+        return ANSWER_TYPE[type(instance.value)]
+
+
+class IntegerAnswer(graphene.ObjectType):
+    value = graphene.Int(required=True)
+
+    class Meta:
+        interfaces = (Answer, graphene.Node)
+
+
+class FloatAnswer(graphene.ObjectType):
+    value = graphene.Float(required=True)
+
+    class Meta:
+        interfaces = (Answer, graphene.Node)
+
+
+class StringAnswer(graphene.ObjectType):
+    value = graphene.String(required=True)
+
+    class Meta:
+        interfaces = (Answer, graphene.Node)
+
+
+class ListAnswer(graphene.ObjectType):
+    value = graphene.List(graphene.String, required=True)
+
+    class Meta:
+        interfaces = (Answer, graphene.Node)
+
+
+class AnswerConnection(graphene.Connection):
+    class Meta:
+        node = Answer
+
+
+class Form(DjangoObjectType):
+    answers = graphene.ConnectionField(AnswerConnection)
+
+    def resolve_answers(self, info, **kwargs):
+        return self.answers.all()
+
+    class Meta:
+        model = models.Form
+        interfaces = (graphene.Node,)
+        only_fields = ("created", "modified", "form_specification", "meta", "answers")
+        filter_fields = ("form_specification",)
+
+
+class SaveForm(SerializerMutation):
+    class Meta:
+        serializer_class = serializers.FormSerializer
+
+
+class SaveFormAnswer(ClientIDMutation):
+    class Meta:
+        abstract = True
+
+    answer = graphene.Field(Answer)
+
+    @classmethod
+    def mutate_and_get_payload(cls, root, info, **input):
+        question_id = extract_global_id(input["question"])
+        form_id = extract_global_id(input["form"])
+        answer = models.Answer.objects.filter(
+            question=question_id, form=form_id
+        ).first()
+
+        serializer = serializers.AnswerSerializer(
+            data=input, instance=answer, context={"request": info.context}
+        )
+        serializer.is_valid(raise_exception=True)
+        answer = serializer.save()
+
+        return cls(answer=answer)
+
+
+class SaveFormStringAnswer(SaveFormAnswer):
+    class Input:
+        question = graphene.ID(required=True)
+        form = graphene.ID(required=True)
+        meta = graphene.JSONString(required=True)
+        value = graphene.String(required=True)
+
+
+class SaveFormListAnswer(SaveFormAnswer):
+    class Input:
+        question = graphene.ID(required=True)
+        form = graphene.ID(required=True)
+        meta = graphene.JSONString(required=True)
+        value = graphene.List(graphene.String, required=True)
+
+
+class SaveFormIntegerAnswer(SaveFormAnswer):
+    class Input:
+        question = graphene.ID(required=True)
+        form = graphene.ID(required=True)
+        meta = graphene.JSONString(required=True)
+        value = graphene.Int(required=True)
+
+
+class SaveFormFloatAnswer(SaveFormAnswer):
+    class Input:
+        question = graphene.ID(required=True)
+        form = graphene.ID(required=True)
+        meta = graphene.JSONString(required=True)
+        value = graphene.Float(required=True)
+
+
 class Mutation(object):
-    save_form = SaveForm().Field()
-    archive_form = ArchiveForm().Field()
-    publish_form = PublishForm().Field()
-    add_form_question = AddFormQuestion().Field()
-    remove_form_question = RemoveFormQuestion().Field()
-    reorder_form_questions = ReorderFormQuestions().Field()
+    save_form_specification = SaveFormSpecification().Field()
+    archive_form_specification = ArchiveFormSpecification().Field()
+    publish_form_specification = PublishFormSpecification().Field()
+    add_form_specification_question = AddFormSpecificationQuestion().Field()
+    remove_form_specification_question = RemoveFormSpecificationQuestion().Field()
+    reorder_form_specification_questions = ReorderFormSpecificationQuestions().Field()
 
     save_option = SaveOption().Field()
     remove_option = RemoveOption().Field()
@@ -257,9 +385,18 @@ class Mutation(object):
     save_integer_question = SaveIntegerQuestion().Field()
     archive_question = ArchiveQuestion().Field()
 
+    save_form = SaveForm().Field()
+    save_form_string_answer = SaveFormStringAnswer().Field()
+    save_form_integer_answer = SaveFormIntegerAnswer().Field()
+    save_form_float_answer = SaveFormFloatAnswer().Field()
+    save_form_list_answer = SaveFormListAnswer().Field()
+
 
 class Query(object):
-    all_forms = DjangoFilterConnectionField(Form, filterset_class=filters.FormFilterSet)
+    all_form_specifications = DjangoFilterConnectionField(
+        FormSpecification, filterset_class=filters.FormSpecificationFilterSet
+    )
     all_questions = DjangoFilterSetConnectionField(
         QuestionConnection, filterset_class=filters.QuestionFilterSet
     )
+    all_forms = DjangoFilterConnectionField(Form, filterset_class=filters.FormFilterSet)

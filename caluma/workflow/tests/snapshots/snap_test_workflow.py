@@ -8,13 +8,14 @@ from snapshottest import Snapshot
 snapshots = Snapshot()
 
 snapshots["test_query_all_workflows 1"] = {
-    "allWorkflows": {"edges": [{"node": {"status": "COMPLETE"}}]}
+    "allWorkflows": {"edges": [{"node": {"status": "RUNNING"}}]}
 }
 
 snapshots["test_start_workflow 1"] = {
     "startWorkflow": {
         "clientMutationId": None,
         "workflow": {
+            "form": {"formSpecification": {"slug": "star-check-record"}},
             "status": "RUNNING",
             "tasks": {"edges": [{"node": {"status": "READY"}}]},
         },

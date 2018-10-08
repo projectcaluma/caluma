@@ -7,75 +7,151 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots["test_add_form_question 1"] = {
-    "data": {
-        "addFormQuestion": {
-            "clientMutationId": None,
-            "form": {"questions": {"edges": [{"node": {"slug": "fly-even-yourself"}}]}},
-        }
-    },
-    "errors": [],
-}
-
-snapshots["test_remove_form_question 1"] = {
-    "data": {
-        "removeFormQuestion": {
-            "clientMutationId": None,
-            "form": {"questions": {"edges": []}},
-        }
-    },
-    "errors": [],
-}
-
-snapshots["test_save_form[some description text] 1"] = {
-    "saveForm": {
-        "clientMutationId": "testid",
-        "form": {
-            "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",
-            "meta": "{}",
-            "name": "Jordan Mccarthy",
-            "slug": "mrs-shake-recent",
-        },
-    }
-}
-
-snapshots["test_save_form[] 1"] = {
-    "saveForm": {
-        "clientMutationId": "testid",
-        "form": {
-            "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",
-            "meta": "{}",
-            "name": "Jordan Mccarthy",
-            "slug": "mrs-shake-recent",
-        },
-    }
-}
-
-snapshots["test_query_all_forms 1"] = {
+snapshots["test_query_all_forms[integer-1] 1"] = {
     "allForms": {
         "edges": [
             {
                 "node": {
-                    "description": """Story first where during teach.
-Across drop argue move. Anyone remember prove.
-Kid avoid player relationship to range whose. Draw free property consider.""",
-                    "id": "Rm9ybTptcnMtc2hha2UtcmVjZW50",
-                    "meta": "{}",
-                    "name": "Jordan Mccarthy",
-                    "questions": {
+                    "answers": {
                         "edges": [
                             {
                                 "node": {
-                                    "id": "UmFkaW9RdWVzdGlvbjpOb25l",
-                                    "label": "Amanda Boyd",
-                                    "slug": "fly-even-yourself",
+                                    "__typename": "IntegerAnswer",
+                                    "integer_value": 1,
+                                    "question": {
+                                        "label": "Amanda Boyd",
+                                        "slug": "fly-even-yourself",
+                                    },
                                 }
                             }
                         ]
-                    },
-                    "slug": "mrs-shake-recent",
+                    }
                 }
             }
         ]
+    }
+}
+
+snapshots["test_query_all_forms[float-2.1] 1"] = {
+    "allForms": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "FloatAnswer",
+                                    "float_value": 2.1,
+                                    "question": {
+                                        "label": "Amanda Boyd",
+                                        "slug": "fly-even-yourself",
+                                    },
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_forms[text-somevalue] 1"] = {
+    "allForms": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "StringAnswer",
+                                    "question": {
+                                        "label": "Amanda Boyd",
+                                        "slug": "fly-even-yourself",
+                                    },
+                                    "string_value": "somevalue",
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_forms[checkbox-answer__value3] 1"] = {
+    "allForms": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "ListAnswer",
+                                    "list_value": ["somevalue", "anothervalue"],
+                                    "question": {
+                                        "label": "Amanda Boyd",
+                                        "slug": "fly-even-yourself",
+                                    },
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_save_form 1"] = {
+    "saveForm": {
+        "clientMutationId": "testid",
+        "form": {"formSpecification": {"slug": "mrs-shake-recent"}},
+    }
+}
+
+snapshots[
+    "test_save_form_answer[integer-question__configuration0-1-SaveFormIntegerAnswer-True-option-slug] 1"
+] = {
+    "saveFormIntegerAnswer": {
+        "answer": {"integerValue": 1},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_form_answer[float-question__configuration2-2.1-SaveFormFloatAnswer-True-option-slug] 1"
+] = {
+    "saveFormFloatAnswer": {"answer": {"floatValue": 2.1}, "clientMutationId": "testid"}
+}
+
+snapshots[
+    "test_save_form_answer[text-question__configuration4-Test-SaveFormStringAnswer-True-option-slug] 1"
+] = {
+    "saveFormStringAnswer": {
+        "answer": {"stringValue": "Test"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_form_answer[checkbox-question__configuration7-answer__value7-SaveFormListAnswer-True-option-slug] 1"
+] = {
+    "saveFormListAnswer": {
+        "answer": {"listValue": ["option-slug"]},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_form_answer[radio-question__configuration9-option-slug-SaveFormStringAnswer-True-option-slug] 1"
+] = {
+    "saveFormStringAnswer": {
+        "answer": {"stringValue": "option-slug"},
+        "clientMutationId": "testid",
     }
 }

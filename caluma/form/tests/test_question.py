@@ -18,13 +18,18 @@ from ...tests import extract_global_id_input_fields, extract_serializer_input_fi
     ],
 )
 def test_query_all_questions(
-    db, snapshot, question, form, form_question_factory, question_option
+    db,
+    snapshot,
+    question,
+    form_specification,
+    form_specification_question_factory,
+    question_option,
 ):
-    form_question_factory.create(form=form)
+    form_specification_question_factory.create(form_specification=form_specification)
 
     query = """
-        query AllQuestionsQuery($search: String, $forms: [ID]) {
-          allQuestions(isArchived: false, search: $search, excludeForms: $forms) {
+        query AllQuestionsQuery($search: String, $formSpecifications: [ID]) {
+          allQuestions(isArchived: false, search: $search, excludeFormSpecifications: $formSpecifications) {
             edges {
               node {
                 id
@@ -74,7 +79,9 @@ def test_query_all_questions(
         query,
         variables={
             "search": question.label,
-            "forms": [extract_global_id_input_fields(form)["id"]],
+            "formSpecifications": [
+                extract_global_id_input_fields(form_specification)["id"]
+            ],
         },
     )
 

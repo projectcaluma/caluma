@@ -25,6 +25,11 @@ def test_start_workflow(db, snapshot, workflow_specification):
         mutation StartWorkflow($input: StartWorkflowInput!) {
           startWorkflow(input: $input) {
             workflow {
+              form {
+                formSpecification {
+                  slug
+                }
+              }
               status
               tasks {
                 edges {

@@ -2,7 +2,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from localized_fields.fields import LocalizedField
 
-from caluma.models import BaseModel, SlugModel
+from caluma.models import SlugModel, UUIDModel
 
 
 class TaskSpecification(SlugModel):
@@ -27,9 +27,16 @@ class WorkflowSpecification(SlugModel):
     start = models.ForeignKey(
         TaskSpecification, on_delete=models.CASCADE, related_name="+"
     )
+    form_specification = models.ForeignKey(
+        "form.FormSpecification",
+        on_delete=models.DO_NOTHING,
+        related_name="+",
+        blank=True,
+        null=True,
+    )
 
 
-class Flow(BaseModel):
+class Flow(UUIDModel):
     workflow_specification = models.ForeignKey(
         WorkflowSpecification, related_name="flows"
     )
@@ -40,7 +47,7 @@ class Flow(BaseModel):
         unique_together = ("workflow_specification", "task_specification")
 
 
-class Workflow(BaseModel):
+class Workflow(UUIDModel):
     STATUS_RUNNING = "running"
     STATUS_COMPLETE = "complete"
 
@@ -53,11 +60,18 @@ class Workflow(BaseModel):
     workflow_specification = models.ForeignKey(
         WorkflowSpecification, related_name="workflows", on_delete=models.DO_NOTHING
     )
+    form = models.ForeignKey(
+        "form.Form",
+        on_delete=models.DO_NOTHING,
+        related_name="workflows",
+        blank=True,
+        null=True,
+    )
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default={})
 
 
-class Task(BaseModel):
+class Task(UUIDModel):
     STATUS_READY = "ready"
     STATUS_COMPLETE = "complete"
 
