@@ -1,4 +1,4 @@
-django==1.11.15 # pyup: >=1.11,<1.12
+django==1.11.16 # pyup: >=1.11,<1.12
 django-environ==0.4.5
 django-filter==2.0.0
 # move back to PyPi version once following PRs are merged:
