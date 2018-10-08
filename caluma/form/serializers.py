@@ -1,10 +1,15 @@
 from django.db import transaction
-from pyjexl.jexl import JEXL
 from rest_framework import exceptions
 from rest_framework.serializers import FloatField, IntegerField
 
 from . import models
 from .. import serializers
+from .jexl import QuestionJexl
+
+
+class QuestionJexlField(serializers.JexlField):
+    def __init__(self, **kwargs):
+        super().__init__(QuestionJexl(), **kwargs)
 
 
 class SaveFormSerializer(serializers.ModelSerializer):
@@ -98,20 +103,8 @@ class PublishFormSerializer(serializers.ModelSerializer):
 
 
 class SaveQuestionSerializer(serializers.ModelSerializer):
-    def _validate_jexl_expression(self, expression):
-        jexl = JEXL()
-        # TODO: define transforms e.g. answer
-        errors = list(jexl.validate(expression))
-        if errors:
-            raise exceptions.ValidationError(errors)
-
-        return expression
-
-    def validate_is_required(self, value):
-        return self._validate_jexl_expression(value)
-
-    def validate_is_hidden(self, value):
-        return self._validate_jexl_expression(value)
+    is_hidden = QuestionJexlField(required=False)
+    is_required = QuestionJexlField(required=False)
 
     class Meta:
         model = models.Question
