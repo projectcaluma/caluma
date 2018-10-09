@@ -16,7 +16,7 @@ class TaskFactory(DjangoModelFactory):
         model = models.Task
 
 
-class WorkflowSpecificationFactory(DjangoModelFactory):
+class WorkflowFactory(DjangoModelFactory):
     slug = Faker("slug")
     name = Faker("multilang", faker_provider="name")
     description = Faker("multilang", faker_provider="text")
@@ -26,11 +26,11 @@ class WorkflowSpecificationFactory(DjangoModelFactory):
     start = SubFactory(TaskFactory)
 
     class Meta:
-        model = models.WorkflowSpecification
+        model = models.Workflow
 
 
 class FlowFactory(DjangoModelFactory):
-    workflow_specification = SubFactory(WorkflowSpecificationFactory)
+    workflow = SubFactory(WorkflowFactory)
     task = SubFactory(TaskFactory)
     next = Faker("slug")
 
@@ -39,7 +39,7 @@ class FlowFactory(DjangoModelFactory):
 
 
 class CaseFactory(DjangoModelFactory):
-    workflow_specification = SubFactory(WorkflowSpecificationFactory)
+    workflow = SubFactory(WorkflowFactory)
     status = Faker("word", ext_word_list=models.Case.STATUS_CHOICES)
     meta = {}
 

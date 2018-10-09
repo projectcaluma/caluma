@@ -20,7 +20,7 @@ def test_query_all_cases(db, snapshot, case, flow):
     snapshot.assert_match(result.data)
 
 
-def test_start_case(db, snapshot, workflow_specification):
+def test_start_case(db, snapshot, workflow):
     query = """
         mutation StartCase($input: StartCaseInput!) {
           startCase(input: $input) {
@@ -39,7 +39,7 @@ def test_start_case(db, snapshot, workflow_specification):
         }
     """
 
-    inp = {"input": {"workflowSpecification": workflow_specification.slug}}
+    inp = {"input": {"workflow": workflow.slug}}
     result = schema.execute(query, variables=inp)
 
     assert not result.errors

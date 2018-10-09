@@ -18,7 +18,7 @@ class Task(SlugModel):
     is_archived = models.BooleanField(default=False)
 
 
-class WorkflowSpecification(SlugModel):
+class Workflow(SlugModel):
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
     meta = JSONField(default={})
@@ -28,14 +28,12 @@ class WorkflowSpecification(SlugModel):
 
 
 class Flow(UUIDModel):
-    workflow_specification = models.ForeignKey(
-        WorkflowSpecification, related_name="flows"
-    )
+    workflow = models.ForeignKey(Workflow, related_name="flows")
     task = models.ForeignKey(Task, related_name="flows")
     next = models.TextField()
 
     class Meta:
-        unique_together = ("workflow_specification", "task")
+        unique_together = ("workflow", "task")
 
 
 class Case(UUIDModel):
@@ -48,8 +46,8 @@ class Case(UUIDModel):
         (STATUS_COMPLETE, "Case is done."),
     )
 
-    workflow_specification = models.ForeignKey(
-        WorkflowSpecification, related_name="cases", on_delete=models.DO_NOTHING
+    workflow = models.ForeignKey(
+        Workflow, related_name="cases", on_delete=models.DO_NOTHING
     )
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default={})

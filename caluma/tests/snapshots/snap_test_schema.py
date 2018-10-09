@@ -25,15 +25,15 @@ type AddFormQuestionPayload {
   clientMutationId: String
 }
 
-input AddWorkflowSpecificationFlowInput {
-  workflowSpecification: ID!
+input AddWorkflowFlowInput {
+  workflow: ID!
   task: ID!
   next: FlowJexl!
   clientMutationId: String
 }
 
-type AddWorkflowSpecificationFlowPayload {
-  workflowSpecification: WorkflowSpecification
+type AddWorkflowFlowPayload {
+  workflow: Workflow
   clientMutationId: String
 }
 
@@ -85,13 +85,13 @@ type ArchiveTaskPayload {
   clientMutationId: String
 }
 
-input ArchiveWorkflowSpecificationInput {
+input ArchiveWorkflowInput {
   id: ID!
   clientMutationId: String
 }
 
-type ArchiveWorkflowSpecificationPayload {
-  workflowSpecification: WorkflowSpecification
+type ArchiveWorkflowPayload {
+  workflow: Workflow
   clientMutationId: String
 }
 
@@ -99,7 +99,7 @@ type Case implements Node {
   created: DateTime!
   modified: DateTime!
   id: ID!
-  workflowSpecification: WorkflowSpecification!
+  workflow: Workflow!
   status: CaseStatus!
   meta: JSONString!
   workItems(before: String, after: String, first: Int, last: Int): WorkItemConnection
@@ -266,11 +266,11 @@ type ListAnswer implements Answer, Node {
 }
 
 type Mutation {
-  saveWorkflowSpecification(input: SaveWorkflowSpecificationInput!): SaveWorkflowSpecificationPayload
-  publishWorkflowSpecification(input: PublishWorkflowSpecificationInput!): PublishWorkflowSpecificationPayload
-  archiveWorkflowSpecification(input: ArchiveWorkflowSpecificationInput!): ArchiveWorkflowSpecificationPayload
-  addWorkflowSpecificationFlow(input: AddWorkflowSpecificationFlowInput!): AddWorkflowSpecificationFlowPayload
-  removeWorkflowSpecificationFlow(input: RemoveWorkflowSpecificationFlowInput!): RemoveWorkflowSpecificationFlowPayload
+  saveWorkflow(input: SaveWorkflowInput!): SaveWorkflowPayload
+  publishWorkflow(input: PublishWorkflowInput!): PublishWorkflowPayload
+  archiveWorkflow(input: ArchiveWorkflowInput!): ArchiveWorkflowPayload
+  addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
+  removeWorkflowFlow(input: RemoveWorkflowFlowInput!): RemoveWorkflowFlowPayload
   saveTask(input: SaveTaskInput!): SaveTaskPayload
   archiveTask(input: ArchiveTaskInput!): ArchiveTaskPayload
   startCase(input: StartCaseInput!): StartCasePayload
@@ -337,20 +337,20 @@ type PublishFormPayload {
   clientMutationId: String
 }
 
-input PublishWorkflowSpecificationInput {
+input PublishWorkflowInput {
   id: ID!
   clientMutationId: String
 }
 
-type PublishWorkflowSpecificationPayload {
-  workflowSpecification: WorkflowSpecification
+type PublishWorkflowPayload {
+  workflow: Workflow
   clientMutationId: String
 }
 
 type Query {
-  allWorkflowSpecifications(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): WorkflowSpecificationConnection
+  allWorkflows(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): WorkflowConnection
   allTasks(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: String, isArchived: Boolean, search: String): TaskConnection
-  allCases(before: String, after: String, first: Int, last: Int, workflowSpecification: ID, status: String): CaseConnection
+  allCases(before: String, after: String, first: Int, last: Int, workflow: ID, status: String): CaseConnection
   allWorkItems(before: String, after: String, first: Int, last: Int, status: String, task: ID, case: ID): WorkItemConnection
   allForms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   allQuestions(before: String, after: String, first: Int, last: Int, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String): QuestionConnection
@@ -417,14 +417,14 @@ type RemoveOptionPayload {
   clientMutationId: String
 }
 
-input RemoveWorkflowSpecificationFlowInput {
-  workflowSpecification: ID!
+input RemoveWorkflowFlowInput {
+  workflow: ID!
   task: ID!
   clientMutationId: String
 }
 
-type RemoveWorkflowSpecificationFlowPayload {
-  workflowSpecification: WorkflowSpecification
+type RemoveWorkflowFlowPayload {
+  workflow: Workflow
   clientMutationId: String
 }
 
@@ -632,7 +632,7 @@ type SaveTextareaQuestionPayload {
   clientMutationId: String
 }
 
-input SaveWorkflowSpecificationInput {
+input SaveWorkflowInput {
   slug: String!
   name: String!
   description: String
@@ -641,13 +641,13 @@ input SaveWorkflowSpecificationInput {
   clientMutationId: String
 }
 
-type SaveWorkflowSpecificationPayload {
-  workflowSpecification: WorkflowSpecification
+type SaveWorkflowPayload {
+  workflow: Workflow
   clientMutationId: String
 }
 
 input StartCaseInput {
-  workflowSpecification: ID!
+  workflow: ID!
   meta: JSONString
   clientMutationId: String
 }
@@ -745,7 +745,7 @@ enum WorkItemStatus {
   COMPLETE
 }
 
-type WorkflowSpecification implements Node {
+type Workflow implements Node {
   created: DateTime!
   modified: DateTime!
   slug: String!
@@ -759,13 +759,13 @@ type WorkflowSpecification implements Node {
   flows(before: String, after: String, first: Int, last: Int, task: ID): FlowConnection
 }
 
-type WorkflowSpecificationConnection {
+type WorkflowConnection {
   pageInfo: PageInfo!
-  edges: [WorkflowSpecificationEdge]!
+  edges: [WorkflowEdge]!
 }
 
-type WorkflowSpecificationEdge {
-  node: WorkflowSpecification
+type WorkflowEdge {
+  node: Workflow
   cursor: String!
 }
 """
