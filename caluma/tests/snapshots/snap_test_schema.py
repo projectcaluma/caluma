@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -24,15 +25,15 @@ type AddFormQuestionPayload {
   clientMutationId: String
 }
 
-input AddWorkflowSpecificationFlowInput {
-  workflowSpecification: ID!
-  taskSpecification: ID!
+input AddWorkflowFlowInput {
+  workflow: ID!
+  task: ID!
   next: FlowJexl!
   clientMutationId: String
 }
 
-type AddWorkflowSpecificationFlowPayload {
-  workflowSpecification: WorkflowSpecification
+type AddWorkflowFlowPayload {
+  workflow: Workflow
   clientMutationId: String
 }
 
@@ -74,24 +75,49 @@ type ArchiveQuestionPayload {
   clientMutationId: String
 }
 
-input ArchiveTaskSpecificationInput {
+input ArchiveTaskInput {
   id: ID!
   clientMutationId: String
 }
 
-type ArchiveTaskSpecificationPayload {
-  taskSpecification: TaskSpecification
+type ArchiveTaskPayload {
+  task: Task
   clientMutationId: String
 }
 
-input ArchiveWorkflowSpecificationInput {
+input ArchiveWorkflowInput {
   id: ID!
   clientMutationId: String
 }
 
-type ArchiveWorkflowSpecificationPayload {
-  workflowSpecification: WorkflowSpecification
+type ArchiveWorkflowPayload {
+  workflow: Workflow
   clientMutationId: String
+}
+
+type Case implements Node {
+  created: DateTime!
+  modified: DateTime!
+  id: ID!
+  workflow: Workflow!
+  status: CaseStatus!
+  meta: JSONString!
+  workItems(before: String, after: String, first: Int, last: Int): WorkItemConnection
+}
+
+type CaseConnection {
+  pageInfo: PageInfo!
+  edges: [CaseEdge]!
+}
+
+type CaseEdge {
+  node: Case
+  cursor: String!
+}
+
+enum CaseStatus {
+  RUNNING
+  COMPLETE
 }
 
 type CheckboxQuestion implements Question, Node {
@@ -108,13 +134,13 @@ type CheckboxQuestion implements Question, Node {
   options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String): OptionConnection
 }
 
-input CompleteTaskInput {
+input CompleteWorkItemInput {
   id: ID!
   clientMutationId: String
 }
 
-type CompleteTaskPayload {
-  task: Task
+type CompleteWorkItemPayload {
+  workItem: WorkItem
   clientMutationId: String
 }
 
@@ -164,7 +190,7 @@ type FloatQuestion implements Question, Node {
 }
 
 type Flow implements Node {
-  taskSpecification: TaskSpecification!
+  task: Task!
   next: FlowJexl!
   id: ID!
 }
@@ -240,15 +266,15 @@ type ListAnswer implements Answer, Node {
 }
 
 type Mutation {
-  saveWorkflowSpecification(input: SaveWorkflowSpecificationInput!): SaveWorkflowSpecificationPayload
-  publishWorkflowSpecification(input: PublishWorkflowSpecificationInput!): PublishWorkflowSpecificationPayload
-  archiveWorkflowSpecification(input: ArchiveWorkflowSpecificationInput!): ArchiveWorkflowSpecificationPayload
-  addWorkflowSpecificationFlow(input: AddWorkflowSpecificationFlowInput!): AddWorkflowSpecificationFlowPayload
-  removeWorkflowSpecificationFlow(input: RemoveWorkflowSpecificationFlowInput!): RemoveWorkflowSpecificationFlowPayload
-  saveTaskSpecification(input: SaveTaskSpecificationInput!): SaveTaskSpecificationPayload
-  archiveTaskSpecification(input: ArchiveTaskSpecificationInput!): ArchiveTaskSpecificationPayload
-  startWorkflow(input: StartWorkflowInput!): StartWorkflowPayload
-  completeTask(input: CompleteTaskInput!): CompleteTaskPayload
+  saveWorkflow(input: SaveWorkflowInput!): SaveWorkflowPayload
+  publishWorkflow(input: PublishWorkflowInput!): PublishWorkflowPayload
+  archiveWorkflow(input: ArchiveWorkflowInput!): ArchiveWorkflowPayload
+  addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
+  removeWorkflowFlow(input: RemoveWorkflowFlowInput!): RemoveWorkflowFlowPayload
+  saveTask(input: SaveTaskInput!): SaveTaskPayload
+  archiveTask(input: ArchiveTaskInput!): ArchiveTaskPayload
+  startCase(input: StartCaseInput!): StartCasePayload
+  completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
   saveForm(input: SaveFormInput!): SaveFormPayload
   archiveForm(input: ArchiveFormInput!): ArchiveFormPayload
   publishForm(input: PublishFormInput!): PublishFormPayload
@@ -311,21 +337,21 @@ type PublishFormPayload {
   clientMutationId: String
 }
 
-input PublishWorkflowSpecificationInput {
+input PublishWorkflowInput {
   id: ID!
   clientMutationId: String
 }
 
-type PublishWorkflowSpecificationPayload {
-  workflowSpecification: WorkflowSpecification
+type PublishWorkflowPayload {
+  workflow: Workflow
   clientMutationId: String
 }
 
 type Query {
-  allWorkflowSpecifications(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): WorkflowSpecificationConnection
-  allTaskSpecifications(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: String, isArchived: Boolean, search: String): TaskSpecificationConnection
-  allWorkflows(before: String, after: String, first: Int, last: Int, workflowSpecification: ID, status: String): WorkflowConnection
-  allTasks(before: String, after: String, first: Int, last: Int, status: String, taskSpecification: ID, workflow: ID): TaskConnection
+  allWorkflows(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): WorkflowConnection
+  allTasks(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: String, isArchived: Boolean, search: String): TaskConnection
+  allCases(before: String, after: String, first: Int, last: Int, workflow: ID, status: String): CaseConnection
+  allWorkItems(before: String, after: String, first: Int, last: Int, status: String, task: ID, case: ID): WorkItemConnection
   allForms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   allQuestions(before: String, after: String, first: Int, last: Int, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String): QuestionConnection
   allDocuments(before: String, after: String, first: Int, last: Int, form: ID, search: String): DocumentConnection
@@ -391,14 +417,14 @@ type RemoveOptionPayload {
   clientMutationId: String
 }
 
-input RemoveWorkflowSpecificationFlowInput {
-  workflowSpecification: ID!
-  taskSpecification: ID!
+input RemoveWorkflowFlowInput {
+  workflow: ID!
+  task: ID!
   clientMutationId: String
 }
 
-type RemoveWorkflowSpecificationFlowPayload {
-  workflowSpecification: WorkflowSpecification
+type RemoveWorkflowFlowPayload {
+  workflow: Workflow
   clientMutationId: String
 }
 
@@ -563,16 +589,16 @@ type SaveRadioQuestionPayload {
   clientMutationId: String
 }
 
-input SaveTaskSpecificationInput {
+input SaveTaskInput {
   slug: String!
   name: String!
   description: String
-  type: TaskSpecificationType!
+  type: TaskType!
   clientMutationId: String
 }
 
-type SaveTaskSpecificationPayload {
-  taskSpecification: TaskSpecification
+type SaveTaskPayload {
+  task: Task
   clientMutationId: String
 }
 
@@ -606,7 +632,7 @@ type SaveTextareaQuestionPayload {
   clientMutationId: String
 }
 
-input SaveWorkflowSpecificationInput {
+input SaveWorkflowInput {
   slug: String!
   name: String!
   description: String
@@ -615,19 +641,19 @@ input SaveWorkflowSpecificationInput {
   clientMutationId: String
 }
 
-type SaveWorkflowSpecificationPayload {
-  workflowSpecification: WorkflowSpecification
+type SaveWorkflowPayload {
+  workflow: Workflow
   clientMutationId: String
 }
 
-input StartWorkflowInput {
-  workflowSpecification: ID!
+input StartCaseInput {
+  workflow: ID!
   meta: JSONString
   clientMutationId: String
 }
 
-type StartWorkflowPayload {
-  workflow: Workflow
+type StartCasePayload {
+  case: Case
   clientMutationId: String
 }
 
@@ -643,11 +669,13 @@ type StringAnswer implements Answer, Node {
 type Task implements Node {
   created: DateTime!
   modified: DateTime!
-  id: ID!
-  taskSpecification: TaskSpecification!
-  workflow: Workflow!
-  status: TaskStatus!
+  slug: String!
+  name: String!
+  description: String
+  type: TaskType!
   meta: JSONString!
+  isArchived: Boolean!
+  id: ID!
 }
 
 type TaskConnection {
@@ -660,35 +688,8 @@ type TaskEdge {
   cursor: String!
 }
 
-type TaskSpecification implements Node {
-  created: DateTime!
-  modified: DateTime!
-  slug: String!
-  name: String!
-  description: String
-  type: TaskSpecificationType!
-  meta: JSONString!
-  isArchived: Boolean!
-  id: ID!
-}
-
-type TaskSpecificationConnection {
-  pageInfo: PageInfo!
-  edges: [TaskSpecificationEdge]!
-}
-
-type TaskSpecificationEdge {
-  node: TaskSpecification
-  cursor: String!
-}
-
-enum TaskSpecificationType {
+enum TaskType {
   SIMPLE
-}
-
-enum TaskStatus {
-  READY
-  COMPLETE
 }
 
 type TextQuestion implements Question, Node {
@@ -719,14 +720,43 @@ type TextareaQuestion implements Question, Node {
   maxLength: Int
 }
 
-type Workflow implements Node {
+type WorkItem implements Node {
   created: DateTime!
   modified: DateTime!
   id: ID!
-  workflowSpecification: WorkflowSpecification!
-  status: WorkflowStatus!
+  task: Task!
+  case: Case!
+  status: WorkItemStatus!
   meta: JSONString!
-  tasks(before: String, after: String, first: Int, last: Int): TaskConnection
+}
+
+type WorkItemConnection {
+  pageInfo: PageInfo!
+  edges: [WorkItemEdge]!
+}
+
+type WorkItemEdge {
+  node: WorkItem
+  cursor: String!
+}
+
+enum WorkItemStatus {
+  READY
+  COMPLETE
+}
+
+type Workflow implements Node {
+  created: DateTime!
+  modified: DateTime!
+  slug: String!
+  name: String!
+  description: String
+  meta: JSONString!
+  isPublished: Boolean!
+  isArchived: Boolean!
+  start: Task!
+  id: ID!
+  flows(before: String, after: String, first: Int, last: Int, task: ID): FlowConnection
 }
 
 type WorkflowConnection {
@@ -737,34 +767,5 @@ type WorkflowConnection {
 type WorkflowEdge {
   node: Workflow
   cursor: String!
-}
-
-type WorkflowSpecification implements Node {
-  created: DateTime!
-  modified: DateTime!
-  slug: String!
-  name: String!
-  description: String
-  meta: JSONString!
-  isPublished: Boolean!
-  isArchived: Boolean!
-  start: TaskSpecification!
-  id: ID!
-  flows(before: String, after: String, first: Int, last: Int, taskSpecification: ID): FlowConnection
-}
-
-type WorkflowSpecificationConnection {
-  pageInfo: PageInfo!
-  edges: [WorkflowSpecificationEdge]!
-}
-
-type WorkflowSpecificationEdge {
-  node: WorkflowSpecification
-  cursor: String!
-}
-
-enum WorkflowStatus {
-  RUNNING
-  COMPLETE
 }
 """

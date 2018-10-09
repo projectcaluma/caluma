@@ -5,7 +5,7 @@ from localized_fields.fields import LocalizedField
 from caluma.models import SlugModel, UUIDModel
 
 
-class TaskSpecification(SlugModel):
+class Task(SlugModel):
     TYPE_SIMPLE = "simple"
 
     TYPE_CHOICES = (TYPE_SIMPLE,)
@@ -18,46 +18,42 @@ class TaskSpecification(SlugModel):
     is_archived = models.BooleanField(default=False)
 
 
-class WorkflowSpecification(SlugModel):
+class Workflow(SlugModel):
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
     meta = JSONField(default={})
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
-    start = models.ForeignKey(
-        TaskSpecification, on_delete=models.CASCADE, related_name="+"
-    )
+    start = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="+")
 
 
 class Flow(UUIDModel):
-    workflow_specification = models.ForeignKey(
-        WorkflowSpecification, related_name="flows"
-    )
-    task_specification = models.ForeignKey(TaskSpecification, related_name="flows")
+    workflow = models.ForeignKey(Workflow, related_name="flows")
+    task = models.ForeignKey(Task, related_name="flows")
     next = models.TextField()
 
     class Meta:
-        unique_together = ("workflow_specification", "task_specification")
+        unique_together = ("workflow", "task")
 
 
-class Workflow(UUIDModel):
+class Case(UUIDModel):
     STATUS_RUNNING = "running"
     STATUS_COMPLETE = "complete"
 
     STATUS_CHOICES = (STATUS_RUNNING, STATUS_COMPLETE)
     STATUS_CHOICE_TUPLE = (
-        (STATUS_RUNNING, "Workflow is running and tasks need to be completed."),
-        (STATUS_COMPLETE, "Workflow is done."),
+        (STATUS_RUNNING, "Case is running and work items need to be completed."),
+        (STATUS_COMPLETE, "Case is done."),
     )
 
-    workflow_specification = models.ForeignKey(
-        WorkflowSpecification, related_name="workflows", on_delete=models.DO_NOTHING
+    workflow = models.ForeignKey(
+        Workflow, related_name="cases", on_delete=models.DO_NOTHING
     )
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default={})
 
 
-class Task(UUIDModel):
+class WorkItem(UUIDModel):
     STATUS_READY = "ready"
     STATUS_COMPLETE = "complete"
 
@@ -67,11 +63,9 @@ class Task(UUIDModel):
         (STATUS_COMPLETE, "Task is done."),
     )
 
-    task_specification = models.ForeignKey(
-        TaskSpecification, on_delete=models.DO_NOTHING, related_name="tasks"
+    task = models.ForeignKey(
+        Task, on_delete=models.DO_NOTHING, related_name="work_items"
     )
-    workflow = models.ForeignKey(
-        Workflow, related_name="tasks", on_delete=models.CASCADE
-    )
+    case = models.ForeignKey(Case, related_name="work_items", on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default={})

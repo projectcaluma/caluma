@@ -1,85 +1,72 @@
-import pytest
-
-from .. import models
+from .. import serializers
 from ...schema import schema
+from ...tests import extract_global_id_input_fields, extract_serializer_input_fields
 
 
 def test_query_all_tasks(db, snapshot, task):
     query = """
-        query AllTasks {
-          allTasks {
+        query AllTasks($name: String!) {
+          allTasks(name: $name) {
             edges {
               node {
-                status
+                type
+                slug
+                name
+                description
+                meta
               }
             }
           }
         }
     """
 
-    result = schema.execute(query)
+    result = schema.execute(query, variables={"name": task.name})
 
     assert not result.errors
     snapshot.assert_match(result.data)
 
 
-@pytest.mark.parametrize(
-    "task__status,success",
-    [(models.Task.STATUS_READY, True), (models.Task.STATUS_COMPLETE, False)],
-)
-def test_complete_task_last(db, snapshot, task, success):
+def test_save_task(db, snapshot, task):
     query = """
-        mutation CompleteTask($input: CompleteTaskInput!) {
-          completeTask(input: $input) {
+        mutation SaveTask($input: SaveTaskInput!) {
+          saveTask(input: $input) {
             task {
-              status
-              workflow {
-                status
-              }
+                slug
+                name
+                type
+                meta
             }
             clientMutationId
           }
         }
     """
 
-    inp = {"input": {"id": task.pk}}
+    inp = {
+        "input": extract_serializer_input_fields(serializers.SaveTaskSerializer, task)
+    }
     result = schema.execute(query, variables=inp)
-
-    assert not bool(result.errors) == success
-    if success:
-        snapshot.assert_match(result.data)
+    assert not result.errors
+    snapshot.assert_execution_result(result)
 
 
-@pytest.mark.parametrize("task__status", [models.Task.STATUS_READY])
-def test_complete_task_with_next(db, snapshot, task, flow, task_specification_factory):
-
-    task_specification_next = task_specification_factory()
-    flow.next = f"'{task_specification_next.slug}'|taskSpecification"
-    flow.save()
-
+def test_archive_task(db, task):
     query = """
-        mutation CompleteTask($input: CompleteTaskInput!) {
-          completeTask(input: $input) {
+        mutation ArchiveTask($input: ArchiveTaskInput!) {
+          archiveTask(input: $input) {
             task {
-              status
-              workflow {
-                status
-                tasks {
-                  edges {
-                    node {
-                      status
-                    }
-                  }
-                }
-              }
+              isArchived
             }
             clientMutationId
           }
         }
     """
 
-    inp = {"input": {"id": task.pk}}
-    result = schema.execute(query, variables=inp)
+    result = schema.execute(
+        query, variables={"input": extract_global_id_input_fields(task)}
+    )
 
     assert not result.errors
-    snapshot.assert_match(result.data)
+    assert result.data["archiveTask"]["task"]["isArchived"]
+
+    task.refresh_from_db()
+    assert task.is_archived

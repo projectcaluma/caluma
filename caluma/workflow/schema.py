@@ -9,7 +9,7 @@ from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
 
 
 class FlowJexl(graphene.String):
-    """Flow jexl represents a jexl expression returning a task_specification slug."""
+    """Flow jexl represents a jexl expression returning a task slug."""
 
     pass
 
@@ -24,16 +24,16 @@ class Flow(DjangoObjectType):
 
     class Meta:
         model = models.Flow
-        filter_fields = ("task_specification",)
-        only_fields = ("task_specification", "next")
+        filter_fields = ("task",)
+        only_fields = ("task", "next")
         interfaces = (relay.Node,)
 
 
-class WorkflowSpecification(DjangoObjectType):
+class Workflow(DjangoObjectType):
     flows = DjangoFilterConnectionField(Flow)
 
     class Meta:
-        model = models.WorkflowSpecification
+        model = models.Workflow
         filter_fields = ("slug", "name", "description", "is_published", "is_archived")
         only_fields = (
             "created",
@@ -49,9 +49,9 @@ class WorkflowSpecification(DjangoObjectType):
         interfaces = (relay.Node,)
 
 
-class TaskSpecification(DjangoObjectType):
+class Task(DjangoObjectType):
     class Meta:
-        model = models.TaskSpecification
+        model = models.Task
         interfaces = (relay.Node,)
         only_fields = (
             "created",
@@ -65,110 +65,100 @@ class TaskSpecification(DjangoObjectType):
         )
 
 
-class Workflow(DjangoObjectType):
+class Case(DjangoObjectType):
     class Meta:
-        model = models.Workflow
+        model = models.Case
         interfaces = (relay.Node,)
         only_fields = (
             "id",
             "created",
             "modified",
             "meta",
-            "workflow_specification",
-            "status",
-            "tasks",
-        )
-
-
-class Task(DjangoObjectType):
-    class Meta:
-        model = models.Task
-        interfaces = (relay.Node,)
-        only_fields = (
-            "id",
-            "created",
-            "modified",
-            "meta",
-            "task_specification",
-            "status",
             "workflow",
+            "status",
+            "work_items",
         )
 
 
-class SaveWorkflowSpecification(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class WorkItem(DjangoObjectType):
     class Meta:
-        serializer_class = serializers.SaveWorkflowSpecificationSerializer
+        model = models.WorkItem
+        interfaces = (relay.Node,)
+        only_fields = ("id", "created", "modified", "meta", "task", "status", "case")
 
 
-class PublishWorkflowSpecification(SerializerMutation):
+class SaveWorkflow(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
-        serializer_class = serializers.PublishWorkflowSpecificationSerializer
+        serializer_class = serializers.SaveWorkflowSerializer
+
+
+class PublishWorkflow(SerializerMutation):
+    class Meta:
+        serializer_class = serializers.PublishWorkflowSerializer
         lookup_input_kwarg = "id"
 
 
-class ArchiveWorkflowSpecification(SerializerMutation):
+class ArchiveWorkflow(SerializerMutation):
     class Meta:
-        serializer_class = serializers.ArchiveWorkflowSpecificationSerializer
+        serializer_class = serializers.ArchiveWorkflowSerializer
         lookup_input_kwarg = "id"
 
 
-class AddWorkflowSpecificationFlow(SerializerMutation):
+class AddWorkflowFlow(SerializerMutation):
     class Meta:
-        serializer_class = serializers.AddWorkflowSpecificationFlowSerializer
-        lookup_input_kwarg = "workflow_specification"
+        serializer_class = serializers.AddWorkflowFlowSerializer
+        lookup_input_kwarg = "workflow"
 
 
-class RemoveWorkflowSpecificationFlow(SerializerMutation):
+class RemoveWorkflowFlow(SerializerMutation):
     class Meta:
-        serializer_class = serializers.RemoveWorkflowSpecificationFlowSerializer
-        lookup_input_kwarg = "workflow_specification"
+        serializer_class = serializers.RemoveWorkflowFlowSerializer
+        lookup_input_kwarg = "workflow"
 
 
-class SaveTaskSpecification(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveTask(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
-        serializer_class = serializers.SaveTaskSpecificationSerializer
+        serializer_class = serializers.SaveTaskSerializer
 
 
-class ArchiveTaskSpecification(SerializerMutation):
+class ArchiveTask(SerializerMutation):
     class Meta:
-        serializer_class = serializers.ArchiveTaskSpecificationSerializer
+        serializer_class = serializers.ArchiveTaskSerializer
         lookup_input_kwarg = "id"
 
 
-class StartWorkflow(SerializerMutation):
+class StartCase(SerializerMutation):
     class Meta:
-        serializer_class = serializers.StartWorkflowSerializer
+        serializer_class = serializers.StartCaseSerializer
         model_operations = ["create"]
 
 
-class CompleteTask(SerializerMutation):
+class CompleteWorkItem(SerializerMutation):
     class Meta:
-        serializer_class = serializers.CompleteTaskSerializer
+        serializer_class = serializers.CompleteWorkItemSerializer
         model_operations = ["update"]
 
 
 class Mutation(object):
-    save_workflow_specification = SaveWorkflowSpecification().Field()
-    publish_workflow_specification = PublishWorkflowSpecification().Field()
-    archive_workflow_specification = ArchiveWorkflowSpecification().Field()
-    add_workflow_specification_flow = AddWorkflowSpecificationFlow().Field()
-    remove_workflow_specification_flow = RemoveWorkflowSpecificationFlow().Field()
+    save_workflow = SaveWorkflow().Field()
+    publish_workflow = PublishWorkflow().Field()
+    archive_workflow = ArchiveWorkflow().Field()
+    add_workflow_flow = AddWorkflowFlow().Field()
+    remove_workflow_flow = RemoveWorkflowFlow().Field()
 
-    save_task_specification = SaveTaskSpecification().Field()
-    archive_task_specification = ArchiveTaskSpecification().Field()
+    save_task = SaveTask().Field()
+    archive_task = ArchiveTask().Field()
 
-    start_workflow = StartWorkflow().Field()
-    complete_task = CompleteTask().Field()
+    start_case = StartCase().Field()
+    complete_work_item = CompleteWorkItem().Field()
 
 
 class Query(object):
-    all_workflow_specifications = DjangoFilterConnectionField(
-        WorkflowSpecification, filterset_class=filters.WorkflowSpecificationFilterSet
-    )
-    all_task_specifications = DjangoFilterConnectionField(
-        TaskSpecification, filterset_class=filters.TaskSpecificationFilterSet
-    )
     all_workflows = DjangoFilterConnectionField(
         Workflow, filterset_class=filters.WorkflowFilterSet
     )
     all_tasks = DjangoFilterConnectionField(Task, filterset_class=filters.TaskFilterSet)
+    all_cases = DjangoFilterConnectionField(Case, filterset_class=filters.CaseFilterSet)
+    all_work_items = DjangoFilterConnectionField(
+        WorkItem, filterset_class=filters.WorkItemFilterSet
+    )
