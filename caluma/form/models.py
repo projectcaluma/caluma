@@ -2,7 +2,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from localized_fields.fields import LocalizedField
 
-from caluma.models import BaseModel, SlugModel
+from caluma.models import SlugModel, UUIDModel
 
 
 class Form(SlugModel):
@@ -16,7 +16,7 @@ class Form(SlugModel):
     )
 
 
-class FormQuestion(BaseModel):
+class FormQuestion(UUIDModel):
     form = models.ForeignKey("Form", on_delete=models.CASCADE)
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
     sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
@@ -81,7 +81,7 @@ class Question(SlugModel):
         self.configuration["min_value"] = value
 
 
-class QuestionOption(BaseModel):
+class QuestionOption(UUIDModel):
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
     option = models.ForeignKey("Option", on_delete=models.CASCADE)
     sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
