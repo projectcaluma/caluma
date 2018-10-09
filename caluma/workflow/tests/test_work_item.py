@@ -33,7 +33,7 @@ def test_complete_work_item_last(db, snapshot, work_item, success):
           completeWorkItem(input: $input) {
             workItem {
               status
-              workflow {
+              case {
                 status
               }
             }
@@ -62,7 +62,7 @@ def test_complete_work_item_with_next(db, snapshot, work_item, flow, task_factor
           completeWorkItem(input: $input) {
             workItem {
               status
-              workflow {
+              case {
                 status
                 workItems {
                   edges {

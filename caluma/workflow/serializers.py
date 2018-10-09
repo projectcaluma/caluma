@@ -117,20 +117,20 @@ class ArchiveTaskSerializer(serializers.ModelSerializer):
         model = models.Task
 
 
-class StartWorkflowSerializer(serializers.ModelSerializer):
+class StartCaseSerializer(serializers.ModelSerializer):
     workflow_specification = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.WorkflowSpecification.objects.select_related("start")
     )
 
     @transaction.atomic
     def create(self, validated_data):
-        validated_data["status"] = models.Workflow.STATUS_RUNNING
+        validated_data["status"] = models.Case.STATUS_RUNNING
         instance = super().create(validated_data)
 
         workflow_specification = instance.workflow_specification
 
         models.WorkItem.objects.create(
-            workflow=instance,
+            case=instance,
             task=workflow_specification.start,
             status=models.WorkItem.STATUS_READY,
         )
@@ -138,7 +138,7 @@ class StartWorkflowSerializer(serializers.ModelSerializer):
         return instance
 
     class Meta:
-        model = models.Workflow
+        model = models.Case
         fields = ("workflow_specification", "meta")
 
 
@@ -156,23 +156,22 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
-        workflow = instance.workflow
+        case = instance.case
 
         flow = models.Flow.objects.filter(
-            workflow_specification=workflow.workflow_specification_id,
-            task=instance.task_id,
+            workflow_specification=case.workflow_specification_id, task=instance.task_id
         ).first()
 
         if flow:
             jexl = FlowJexl()
             task = jexl.evaluate(flow.next)
             models.WorkItem.objects.create(
-                task_id=task, workflow=workflow, status=models.WorkItem.STATUS_READY
+                task_id=task, case=case, status=models.WorkItem.STATUS_READY
             )
         else:
-            # no more tasks, mark workflow as complete
-            workflow.status = models.Workflow.STATUS_COMPLETE
-            workflow.save()
+            # no more tasks, mark case as complete
+            case.status = models.Case.STATUS_COMPLETE
+            case.save(update_fields=["status"])
 
         return instance
 

@@ -10,9 +10,9 @@ class WorkflowSpecificationFilterSet(FilterSet):
         fields = ("slug", "name", "description", "is_published", "is_archived")
 
 
-class WorkflowFilterSet(FilterSet):
+class CaseFilterSet(FilterSet):
     class Meta:
-        model = models.Workflow
+        model = models.Case
         fields = ("workflow_specification", "status")
 
 
@@ -27,4 +27,4 @@ class TaskFilterSet(FilterSet):
 class WorkItemFilterSet(FilterSet):
     class Meta:
         model = models.WorkItem
-        fields = ("status", "task", "workflow")
+        fields = ("status", "task", "case")

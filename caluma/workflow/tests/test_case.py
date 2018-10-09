@@ -1,10 +1,10 @@
 from ...schema import schema
 
 
-def test_query_all_workflows(db, snapshot, workflow, flow):
+def test_query_all_cases(db, snapshot, case, flow):
     query = """
-        query AllWorkflows {
-          allWorkflows {
+        query AllCases {
+          allCases {
             edges {
               node {
                 status
@@ -20,11 +20,11 @@ def test_query_all_workflows(db, snapshot, workflow, flow):
     snapshot.assert_match(result.data)
 
 
-def test_start_workflow(db, snapshot, workflow_specification):
+def test_start_case(db, snapshot, workflow_specification):
     query = """
-        mutation StartWorkflow($input: StartWorkflowInput!) {
-          startWorkflow(input: $input) {
-            workflow {
+        mutation StartCase($input: StartCaseInput!) {
+          startCase(input: $input) {
+            case {
               status
               workItems {
                 edges {

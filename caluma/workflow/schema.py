@@ -65,9 +65,9 @@ class Task(DjangoObjectType):
         )
 
 
-class Workflow(DjangoObjectType):
+class Case(DjangoObjectType):
     class Meta:
-        model = models.Workflow
+        model = models.Case
         interfaces = (relay.Node,)
         only_fields = (
             "id",
@@ -84,15 +84,7 @@ class WorkItem(DjangoObjectType):
     class Meta:
         model = models.WorkItem
         interfaces = (relay.Node,)
-        only_fields = (
-            "id",
-            "created",
-            "modified",
-            "meta",
-            "task",
-            "status",
-            "workflow",
-        )
+        only_fields = ("id", "created", "modified", "meta", "task", "status", "case")
 
 
 class SaveWorkflowSpecification(UserDefinedPrimaryKeyMixin, SerializerMutation):
@@ -135,9 +127,9 @@ class ArchiveTask(SerializerMutation):
         lookup_input_kwarg = "id"
 
 
-class StartWorkflow(SerializerMutation):
+class StartCase(SerializerMutation):
     class Meta:
-        serializer_class = serializers.StartWorkflowSerializer
+        serializer_class = serializers.StartCaseSerializer
         model_operations = ["create"]
 
 
@@ -157,7 +149,7 @@ class Mutation(object):
     save_task = SaveTask().Field()
     archive_task = ArchiveTask().Field()
 
-    start_workflow = StartWorkflow().Field()
+    start_case = StartCase().Field()
     complete_work_item = CompleteWorkItem().Field()
 
 
@@ -166,9 +158,7 @@ class Query(object):
         WorkflowSpecification, filterset_class=filters.WorkflowSpecificationFilterSet
     )
     all_tasks = DjangoFilterConnectionField(Task, filterset_class=filters.TaskFilterSet)
-    all_workflows = DjangoFilterConnectionField(
-        Workflow, filterset_class=filters.WorkflowFilterSet
-    )
+    all_cases = DjangoFilterConnectionField(Case, filterset_class=filters.CaseFilterSet)
     all_work_items = DjangoFilterConnectionField(
         WorkItem, filterset_class=filters.WorkItemFilterSet
     )

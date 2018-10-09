@@ -38,18 +38,18 @@ class Flow(UUIDModel):
         unique_together = ("workflow_specification", "task")
 
 
-class Workflow(UUIDModel):
+class Case(UUIDModel):
     STATUS_RUNNING = "running"
     STATUS_COMPLETE = "complete"
 
     STATUS_CHOICES = (STATUS_RUNNING, STATUS_COMPLETE)
     STATUS_CHOICE_TUPLE = (
-        (STATUS_RUNNING, "Workflow is running and work items need to be completed."),
-        (STATUS_COMPLETE, "Workflow is done."),
+        (STATUS_RUNNING, "Case is running and work items need to be completed."),
+        (STATUS_COMPLETE, "Case is done."),
     )
 
     workflow_specification = models.ForeignKey(
-        WorkflowSpecification, related_name="workflows", on_delete=models.DO_NOTHING
+        WorkflowSpecification, related_name="cases", on_delete=models.DO_NOTHING
     )
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default={})
@@ -68,8 +68,6 @@ class WorkItem(UUIDModel):
     task = models.ForeignKey(
         Task, on_delete=models.DO_NOTHING, related_name="work_items"
     )
-    workflow = models.ForeignKey(
-        Workflow, related_name="work_items", on_delete=models.CASCADE
-    )
+    case = models.ForeignKey(Case, related_name="work_items", on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default={})
