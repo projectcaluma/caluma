@@ -38,4 +38,4 @@ def test_schema_node(db, snapshot, request, node_type):
 
 
 def test_schema_introspect(snapshot):
-    snapshot.assert_match(schema.introspect())
+    snapshot.assert_match(str(schema))
