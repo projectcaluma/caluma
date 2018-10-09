@@ -1,13 +1,10 @@
-import uuid
-
 from django.contrib.postgres.fields import JSONField
 from django.db import models
 
-from caluma.models import BaseModel
+from caluma.models import UUIDModel
 
 
-class Document(BaseModel):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+class Document(UUIDModel):
     # TODO: add user field once authentication is implemented
     form = models.ForeignKey(
         "form.Form", on_delete=models.DO_NOTHING, related_name="documents"
@@ -15,8 +12,7 @@ class Document(BaseModel):
     meta = JSONField(default={})
 
 
-class Answer(BaseModel):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+class Answer(UUIDModel):
     question = models.ForeignKey(
         "form.Question", on_delete=models.DO_NOTHING, related_name="answers"
     )
