@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -108,13 +109,13 @@ type CheckboxQuestion implements Question, Node {
   options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String): OptionConnection
 }
 
-input CompleteTaskInput {
+input CompleteWorkItemInput {
   id: ID!
   clientMutationId: String
 }
 
-type CompleteTaskPayload {
-  task: Task
+type CompleteWorkItemPayload {
+  workItem: WorkItem
   clientMutationId: String
 }
 
@@ -248,7 +249,7 @@ type Mutation {
   saveTaskSpecification(input: SaveTaskSpecificationInput!): SaveTaskSpecificationPayload
   archiveTaskSpecification(input: ArchiveTaskSpecificationInput!): ArchiveTaskSpecificationPayload
   startWorkflow(input: StartWorkflowInput!): StartWorkflowPayload
-  completeTask(input: CompleteTaskInput!): CompleteTaskPayload
+  completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
   saveForm(input: SaveFormInput!): SaveFormPayload
   archiveForm(input: ArchiveFormInput!): ArchiveFormPayload
   publishForm(input: PublishFormInput!): PublishFormPayload
@@ -325,7 +326,7 @@ type Query {
   allWorkflowSpecifications(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): WorkflowSpecificationConnection
   allTaskSpecifications(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: String, isArchived: Boolean, search: String): TaskSpecificationConnection
   allWorkflows(before: String, after: String, first: Int, last: Int, workflowSpecification: ID, status: String): WorkflowConnection
-  allTasks(before: String, after: String, first: Int, last: Int, status: String, taskSpecification: ID, workflow: ID): TaskConnection
+  allWorkItems(before: String, after: String, first: Int, last: Int, status: String, taskSpecification: ID, workflow: ID): WorkItemConnection
   allForms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   allQuestions(before: String, after: String, first: Int, last: Int, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String): QuestionConnection
   allDocuments(before: String, after: String, first: Int, last: Int, form: ID, search: String): DocumentConnection
@@ -640,26 +641,6 @@ type StringAnswer implements Answer, Node {
   value: String!
 }
 
-type Task implements Node {
-  created: DateTime!
-  modified: DateTime!
-  id: ID!
-  taskSpecification: TaskSpecification!
-  workflow: Workflow!
-  status: TaskStatus!
-  meta: JSONString!
-}
-
-type TaskConnection {
-  pageInfo: PageInfo!
-  edges: [TaskEdge]!
-}
-
-type TaskEdge {
-  node: Task
-  cursor: String!
-}
-
 type TaskSpecification implements Node {
   created: DateTime!
   modified: DateTime!
@@ -684,11 +665,6 @@ type TaskSpecificationEdge {
 
 enum TaskSpecificationType {
   SIMPLE
-}
-
-enum TaskStatus {
-  READY
-  COMPLETE
 }
 
 type TextQuestion implements Question, Node {
@@ -719,6 +695,31 @@ type TextareaQuestion implements Question, Node {
   maxLength: Int
 }
 
+type WorkItem implements Node {
+  created: DateTime!
+  modified: DateTime!
+  id: ID!
+  taskSpecification: TaskSpecification!
+  workflow: Workflow!
+  status: WorkItemStatus!
+  meta: JSONString!
+}
+
+type WorkItemConnection {
+  pageInfo: PageInfo!
+  edges: [WorkItemEdge]!
+}
+
+type WorkItemEdge {
+  node: WorkItem
+  cursor: String!
+}
+
+enum WorkItemStatus {
+  READY
+  COMPLETE
+}
+
 type Workflow implements Node {
   created: DateTime!
   modified: DateTime!
@@ -726,7 +727,7 @@ type Workflow implements Node {
   workflowSpecification: WorkflowSpecification!
   status: WorkflowStatus!
   meta: JSONString!
-  tasks(before: String, after: String, first: Int, last: Int): TaskConnection
+  workItems(before: String, after: String, first: Int, last: Int): WorkItemConnection
 }
 
 type WorkflowConnection {

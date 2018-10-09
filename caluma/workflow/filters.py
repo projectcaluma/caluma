@@ -24,7 +24,7 @@ class TaskSpecificationFilterSet(FilterSet):
         fields = ("slug", "name", "description", "type", "is_archived")
 
 
-class TaskFilterSet(FilterSet):
+class WorkItemFilterSet(FilterSet):
     class Meta:
-        model = models.Task
+        model = models.WorkItem
         fields = ("status", "task_specification", "workflow")

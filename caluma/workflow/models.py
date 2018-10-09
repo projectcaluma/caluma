@@ -46,7 +46,7 @@ class Workflow(UUIDModel):
 
     STATUS_CHOICES = (STATUS_RUNNING, STATUS_COMPLETE)
     STATUS_CHOICE_TUPLE = (
-        (STATUS_RUNNING, "Workflow is running and tasks need to be completed."),
+        (STATUS_RUNNING, "Workflow is running and work items need to be completed."),
         (STATUS_COMPLETE, "Workflow is done."),
     )
 
@@ -57,7 +57,7 @@ class Workflow(UUIDModel):
     meta = JSONField(default={})
 
 
-class Task(UUIDModel):
+class WorkItem(UUIDModel):
     STATUS_READY = "ready"
     STATUS_COMPLETE = "complete"
 
@@ -68,10 +68,10 @@ class Task(UUIDModel):
     )
 
     task_specification = models.ForeignKey(
-        TaskSpecification, on_delete=models.DO_NOTHING, related_name="tasks"
+        TaskSpecification, on_delete=models.DO_NOTHING, related_name="work_items"
     )
     workflow = models.ForeignKey(
-        Workflow, related_name="tasks", on_delete=models.CASCADE
+        Workflow, related_name="work_items", on_delete=models.CASCADE
     )
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default={})

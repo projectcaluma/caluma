@@ -76,13 +76,13 @@ class Workflow(DjangoObjectType):
             "meta",
             "workflow_specification",
             "status",
-            "tasks",
+            "work_items",
         )
 
 
-class Task(DjangoObjectType):
+class WorkItem(DjangoObjectType):
     class Meta:
-        model = models.Task
+        model = models.WorkItem
         interfaces = (relay.Node,)
         only_fields = (
             "id",
@@ -141,9 +141,9 @@ class StartWorkflow(SerializerMutation):
         model_operations = ["create"]
 
 
-class CompleteTask(SerializerMutation):
+class CompleteWorkItem(SerializerMutation):
     class Meta:
-        serializer_class = serializers.CompleteTaskSerializer
+        serializer_class = serializers.CompleteWorkItemSerializer
         model_operations = ["update"]
 
 
@@ -158,7 +158,7 @@ class Mutation(object):
     archive_task_specification = ArchiveTaskSpecification().Field()
 
     start_workflow = StartWorkflow().Field()
-    complete_task = CompleteTask().Field()
+    complete_work_item = CompleteWorkItem().Field()
 
 
 class Query(object):
@@ -171,4 +171,6 @@ class Query(object):
     all_workflows = DjangoFilterConnectionField(
         Workflow, filterset_class=filters.WorkflowFilterSet
     )
-    all_tasks = DjangoFilterConnectionField(Task, filterset_class=filters.TaskFilterSet)
+    all_work_items = DjangoFilterConnectionField(
+        WorkItem, filterset_class=filters.WorkItemFilterSet
+    )

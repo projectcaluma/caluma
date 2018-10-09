@@ -26,7 +26,7 @@ def test_start_workflow(db, snapshot, workflow_specification):
           startWorkflow(input: $input) {
             workflow {
               status
-              tasks {
+              workItems {
                 edges {
                   node {
                     status

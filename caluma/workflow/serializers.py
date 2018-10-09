@@ -138,10 +138,10 @@ class StartWorkflowSerializer(serializers.ModelSerializer):
 
         workflow_specification = instance.workflow_specification
 
-        models.Task.objects.create(
+        models.WorkItem.objects.create(
             workflow=instance,
             task_specification=workflow_specification.start,
-            status=models.Task.STATUS_READY,
+            status=models.WorkItem.STATUS_READY,
         )
 
         return instance
@@ -151,16 +151,16 @@ class StartWorkflowSerializer(serializers.ModelSerializer):
         fields = ("workflow_specification", "meta")
 
 
-class CompleteTaskSerializer(serializers.ModelSerializer):
+class CompleteWorkItemSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField()
 
     def validate(self, data):
-        if self.instance.status == models.Task.STATUS_COMPLETE:
+        if self.instance.status == models.WorkItem.STATUS_COMPLETE:
             raise exceptions.ValidationError("Task has already been completed.")
 
         # TODO: add validation according to task specification type
 
-        data["status"] = models.Task.STATUS_COMPLETE
+        data["status"] = models.WorkItem.STATUS_COMPLETE
         return data
 
     def update(self, instance, validated_data):
@@ -175,10 +175,10 @@ class CompleteTaskSerializer(serializers.ModelSerializer):
         if flow:
             jexl = FlowJexl()
             task_specification = jexl.evaluate(flow.next)
-            models.Task.objects.create(
+            models.WorkItem.objects.create(
                 task_specification_id=task_specification,
                 workflow=workflow,
-                status=models.Task.STATUS_READY,
+                status=models.WorkItem.STATUS_READY,
             )
         else:
             # no more tasks, mark workflow as complete
@@ -188,5 +188,5 @@ class CompleteTaskSerializer(serializers.ModelSerializer):
         return instance
 
     class Meta:
-        model = models.Task
+        model = models.WorkItem
         fields = ("id",)

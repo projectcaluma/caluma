@@ -16,7 +16,7 @@ snapshots["test_start_workflow 1"] = {
         "clientMutationId": None,
         "workflow": {
             "status": "RUNNING",
-            "tasks": {"edges": [{"node": {"status": "READY"}}]},
+            "workItems": {"edges": [{"node": {"status": "READY"}}]},
         },
     }
 }

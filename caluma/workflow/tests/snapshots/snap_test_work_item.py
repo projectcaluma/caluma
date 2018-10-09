@@ -7,25 +7,25 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots["test_query_all_tasks 1"] = {
-    "allTasks": {"edges": [{"node": {"status": "COMPLETE"}}]}
+snapshots["test_query_all_work_items 1"] = {
+    "allWorkItems": {"edges": [{"node": {"status": "COMPLETE"}}]}
 }
 
-snapshots["test_complete_task_last[ready-True] 1"] = {
-    "completeTask": {
+snapshots["test_complete_work_item_last[ready-True] 1"] = {
+    "completeWorkItem": {
         "clientMutationId": None,
-        "task": {"status": "COMPLETE", "workflow": {"status": "COMPLETE"}},
+        "workItem": {"status": "COMPLETE", "workflow": {"status": "COMPLETE"}},
     }
 }
 
-snapshots["test_complete_task_with_next[ready] 1"] = {
-    "completeTask": {
+snapshots["test_complete_work_item_with_next[ready] 1"] = {
+    "completeWorkItem": {
         "clientMutationId": None,
-        "task": {
+        "workItem": {
             "status": "COMPLETE",
             "workflow": {
                 "status": "COMPLETE",
-                "tasks": {
+                "workItems": {
                     "edges": [
                         {"node": {"status": "READY"}},
                         {"node": {"status": "COMPLETE"}},
