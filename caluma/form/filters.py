@@ -27,3 +27,13 @@ class QuestionFilterSet(FilterSet):
     class Meta:
         model = models.Question
         fields = ("slug", "label", "is_required", "is_hidden", "is_archived")
+
+
+class DocumentFilterSet(FilterSet):
+    search = SearchFilter(
+        fields=("form__slug", "form__name", "form__description", "answers__value")
+    )
+
+    class Meta:
+        model = models.Document
+        fields = ("form", "search")

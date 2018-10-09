@@ -55,3 +55,21 @@ class FormQuestionFactory(DjangoModelFactory):
 
     class Meta:
         model = models.FormQuestion
+
+
+class DocumentFactory(DjangoModelFactory):
+    form = SubFactory(FormFactory)
+    meta = {}
+
+    class Meta:
+        model = models.Document
+
+
+class AnswerFactory(DjangoModelFactory):
+    question = SubFactory(QuestionFactory)
+    document = SubFactory(DocumentFactory)
+    value = Faker("name")
+    meta = {}
+
+    class Meta:
+        model = models.Answer

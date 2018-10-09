@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots["test_query_all_documents[integer-1] 1"] = {
@@ -57,6 +56,31 @@ snapshots["test_query_all_documents[float-2.1] 1"] = {
     }
 }
 
+snapshots["test_query_all_documents[text-somevalue] 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "StringAnswer",
+                                    "question": {
+                                        "label": "Amanda Boyd",
+                                        "slug": "fly-even-yourself",
+                                    },
+                                    "string_value": "somevalue",
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}
+
 snapshots["test_query_all_documents[checkbox-answer__value3] 1"] = {
     "allDocuments": {
         "edges": [
@@ -86,31 +110,6 @@ snapshots["test_save_document 1"] = {
     "saveDocument": {
         "clientMutationId": "testid",
         "document": {"form": {"slug": "mrs-shake-recent"}},
-    }
-}
-
-snapshots["test_query_all_documents[text-somevalue] 1"] = {
-    "allDocuments": {
-        "edges": [
-            {
-                "node": {
-                    "answers": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "__typename": "StringAnswer",
-                                    "question": {
-                                        "label": "Amanda Boyd",
-                                        "slug": "fly-even-yourself",
-                                    },
-                                    "string_value": "somevalue",
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
-        ]
     }
 }
 

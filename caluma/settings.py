@@ -34,7 +34,6 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "graphene_django",
     "caluma.form.apps.DefaultConfig",
-    "caluma.document.apps.DefaultConfig",
     "caluma.workflow.apps.DefaultConfig",
 ]
 
