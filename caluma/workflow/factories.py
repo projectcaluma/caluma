@@ -2,6 +2,7 @@ from factory import Faker, SubFactory
 from factory.django import DjangoModelFactory
 
 from . import models
+from ..form.factories import DocumentFactory, FormFactory
 
 
 class TaskFactory(DjangoModelFactory):
@@ -24,6 +25,7 @@ class WorkflowFactory(DjangoModelFactory):
     is_published = False
     is_archived = False
     start = SubFactory(TaskFactory)
+    form = SubFactory(FormFactory)
 
     class Meta:
         model = models.Workflow
@@ -40,8 +42,9 @@ class FlowFactory(DjangoModelFactory):
 
 class CaseFactory(DjangoModelFactory):
     workflow = SubFactory(WorkflowFactory)
-    status = Faker("word", ext_word_list=models.Case.STATUS_CHOICES)
+    status = models.Case.STATUS_RUNNING
     meta = {}
+    document = SubFactory(DocumentFactory)
 
     class Meta:
         model = models.Case
@@ -50,7 +53,7 @@ class CaseFactory(DjangoModelFactory):
 class WorkItemFactory(DjangoModelFactory):
     case = SubFactory(CaseFactory)
     task = SubFactory(TaskFactory)
-    status = Faker("word", ext_word_list=models.WorkItem.STATUS_CHOICES)
+    status = models.WorkItem.STATUS_READY
     meta = {}
 
     class Meta:

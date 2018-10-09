@@ -25,6 +25,13 @@ class Workflow(SlugModel):
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
     start = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="+")
+    form = models.ForeignKey(
+        "form.Form",
+        on_delete=models.DO_NOTHING,
+        related_name="workflows",
+        blank=True,
+        null=True,
+    )
 
 
 class Flow(UUIDModel):
@@ -51,6 +58,13 @@ class Case(UUIDModel):
     )
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default={})
+    document = models.ForeignKey(
+        "form.Document",
+        on_delete=models.DO_NOTHING,
+        related_name="cases",
+        blank=True,
+        null=True,
+    )
 
 
 class WorkItem(UUIDModel):

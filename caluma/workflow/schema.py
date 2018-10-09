@@ -45,6 +45,7 @@ class Workflow(DjangoObjectType):
             "is_published",
             "is_archived",
             "start",
+            "form",
         )
         interfaces = (relay.Node,)
 
@@ -77,6 +78,7 @@ class Case(DjangoObjectType):
             "workflow",
             "status",
             "work_items",
+            "document",
         )
 
 
