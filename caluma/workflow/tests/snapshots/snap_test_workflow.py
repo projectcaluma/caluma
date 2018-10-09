@@ -12,20 +12,20 @@ snapshots["test_query_all_workflows 1"] = {
         "edges": [
             {
                 "node": {
-                    "description": "Street hair local kind debate. Half long will third treat better note. Risk tonight miss south speak. Since region participant report us computer.",
+                    "description": "Single fly material many role include money. Store natural represent traditional.",
                     "flows": {
                         "edges": [
                             {
                                 "node": {
-                                    "next": "value-still-back",
+                                    "next": "himself-prepare",
                                     "task": {"slug": "mrs-shake-recent"},
                                 }
                             }
                         ]
                     },
                     "meta": "{}",
-                    "name": "Melanie Madden",
-                    "slug": "star-check-record",
+                    "name": "John Mathews",
+                    "slug": "value-still-back",
                 }
             }
         ]
@@ -35,11 +35,7 @@ snapshots["test_query_all_workflows 1"] = {
 snapshots["test_save_workflow 1"] = {
     "saveWorkflow": {
         "clientMutationId": "testid",
-        "workflow": {
-            "meta": "{}",
-            "name": "Melanie Madden",
-            "slug": "star-check-record",
-        },
+        "workflow": {"meta": "{}", "name": "John Mathews", "slug": "value-still-back"},
     }
 }
 

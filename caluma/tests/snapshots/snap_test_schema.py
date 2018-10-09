@@ -102,6 +102,7 @@ type Case implements Node {
   workflow: Workflow!
   status: CaseStatus!
   meta: JSONString!
+  document: Document
   workItems(before: String, after: String, first: Int, last: Int): WorkItemConnection
 }
 
@@ -638,6 +639,7 @@ input SaveWorkflowInput {
   description: String
   meta: JSONString
   start: ID!
+  form: ID
   clientMutationId: String
 }
 
@@ -755,6 +757,7 @@ type Workflow implements Node {
   isPublished: Boolean!
   isArchived: Boolean!
   start: Task!
+  form: Form
   id: ID!
   flows(before: String, after: String, first: Int, last: Int, task: ID): FlowConnection
 }

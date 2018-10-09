@@ -25,6 +25,11 @@ def test_start_case(db, snapshot, workflow):
         mutation StartCase($input: StartCaseInput!) {
           startCase(input: $input) {
             case {
+              document {
+                form {
+                  slug
+                }
+              }
               status
               workItems {
                 edges {

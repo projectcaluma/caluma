@@ -3,6 +3,7 @@ from rest_framework import exceptions
 
 from . import models
 from .. import serializers
+from ..form.models import Document
 from .jexl import FlowJexl
 
 
@@ -14,7 +15,7 @@ class FlowJexlField(serializers.JexlField):
 class SaveWorkflowSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Workflow
-        fields = ("slug", "name", "description", "meta", "start")
+        fields = ("slug", "name", "description", "meta", "start", "form")
 
 
 class ArchiveWorkflowSerializer(serializers.ModelSerializer):
@@ -124,7 +125,9 @@ class StartCaseSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
+        workflow = validated_data["workflow"]
         validated_data["status"] = models.Case.STATUS_RUNNING
+        validated_data["document"] = Document.objects.create(form_id=workflow.form_id)
         instance = super().create(validated_data)
 
         workflow = instance.workflow
