@@ -9,7 +9,7 @@ from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
 
 
 class FlowJexl(graphene.String):
-    """Flow jexl represents a jexl expression returning a task_specification slug."""
+    """Flow jexl represents a jexl expression returning a task slug."""
 
     pass
 
@@ -24,8 +24,8 @@ class Flow(DjangoObjectType):
 
     class Meta:
         model = models.Flow
-        filter_fields = ("task_specification",)
-        only_fields = ("task_specification", "next")
+        filter_fields = ("task",)
+        only_fields = ("task", "next")
         interfaces = (relay.Node,)
 
 
@@ -49,9 +49,9 @@ class WorkflowSpecification(DjangoObjectType):
         interfaces = (relay.Node,)
 
 
-class TaskSpecification(DjangoObjectType):
+class Task(DjangoObjectType):
     class Meta:
-        model = models.TaskSpecification
+        model = models.Task
         interfaces = (relay.Node,)
         only_fields = (
             "created",
@@ -89,7 +89,7 @@ class WorkItem(DjangoObjectType):
             "created",
             "modified",
             "meta",
-            "task_specification",
+            "task",
             "status",
             "workflow",
         )
@@ -124,14 +124,14 @@ class RemoveWorkflowSpecificationFlow(SerializerMutation):
         lookup_input_kwarg = "workflow_specification"
 
 
-class SaveTaskSpecification(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveTask(UserDefinedPrimaryKeyMixin, SerializerMutation):
     class Meta:
-        serializer_class = serializers.SaveTaskSpecificationSerializer
+        serializer_class = serializers.SaveTaskSerializer
 
 
-class ArchiveTaskSpecification(SerializerMutation):
+class ArchiveTask(SerializerMutation):
     class Meta:
-        serializer_class = serializers.ArchiveTaskSpecificationSerializer
+        serializer_class = serializers.ArchiveTaskSerializer
         lookup_input_kwarg = "id"
 
 
@@ -154,8 +154,8 @@ class Mutation(object):
     add_workflow_specification_flow = AddWorkflowSpecificationFlow().Field()
     remove_workflow_specification_flow = RemoveWorkflowSpecificationFlow().Field()
 
-    save_task_specification = SaveTaskSpecification().Field()
-    archive_task_specification = ArchiveTaskSpecification().Field()
+    save_task = SaveTask().Field()
+    archive_task = ArchiveTask().Field()
 
     start_workflow = StartWorkflow().Field()
     complete_work_item = CompleteWorkItem().Field()
@@ -165,9 +165,7 @@ class Query(object):
     all_workflow_specifications = DjangoFilterConnectionField(
         WorkflowSpecification, filterset_class=filters.WorkflowSpecificationFilterSet
     )
-    all_task_specifications = DjangoFilterConnectionField(
-        TaskSpecification, filterset_class=filters.TaskSpecificationFilterSet
-    )
+    all_tasks = DjangoFilterConnectionField(Task, filterset_class=filters.TaskFilterSet)
     all_workflows = DjangoFilterConnectionField(
         Workflow, filterset_class=filters.WorkflowFilterSet
     )

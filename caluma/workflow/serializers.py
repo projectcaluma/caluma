@@ -45,31 +45,26 @@ class PublishWorkflowSpecificationSerializer(serializers.ModelSerializer):
 
 class AddWorkflowSpecificationFlowSerializer(serializers.ModelSerializer):
     workflow_specification = serializers.GlobalIDField(source="slug")
-    task_specification = serializers.GlobalIDPrimaryKeyRelatedField(
-        queryset=models.TaskSpecification.objects
-    )
+    task = serializers.GlobalIDPrimaryKeyRelatedField(queryset=models.Task.objects)
     next = FlowJexlField(required=True)
 
     def validate_next(self, value):
         jexl = FlowJexl()
-        task_specs = set(jexl.extract_task_specifications(value))
+        tasks = set(jexl.extract_tasks(value))
 
-        if not task_specs:
+        if not tasks:
             raise exceptions.ValidationError(
-                f"jexl `{value}` does not contain any task specification as return value"
+                f"jexl `{value}` does not contain any tasks as return value"
             )
 
-        available_task_specs = set(
-            models.TaskSpecification.objects.filter(slug__in=task_specs).values_list(
-                "slug", flat=True
-            )
+        available_tasks = set(
+            models.Task.objects.filter(slug__in=tasks).values_list("slug", flat=True)
         )
 
-        not_found_task_specs = task_specs - available_task_specs
-        if not_found_task_specs:
+        not_found_tasks = tasks - available_tasks
+        if not_found_tasks:
             raise exceptions.ValidationError(
-                f"jexl `{value}` contains invalid task specification: "
-                f"[{', '.join(not_found_task_specs)}]"
+                f"jexl `{value}` contains invalid tasks [{', '.join(not_found_tasks)}]"
             )
 
         return value
@@ -77,43 +72,39 @@ class AddWorkflowSpecificationFlowSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         models.Flow.objects.update_or_create(
             workflow_specification=instance,
-            task_specification=validated_data["task_specification"],
+            task=validated_data["task"],
             defaults={"next": validated_data["next"]},
         )
 
         return instance
 
     class Meta:
-        fields = ("workflow_specification", "task_specification", "next")
+        fields = ("workflow_specification", "task", "next")
         model = models.WorkflowSpecification
 
 
 class RemoveWorkflowSpecificationFlowSerializer(serializers.ModelSerializer):
     workflow_specification = serializers.GlobalIDField(source="slug")
-    task_specification = serializers.GlobalIDPrimaryKeyRelatedField(
-        queryset=models.TaskSpecification.objects
-    )
+    task = serializers.GlobalIDPrimaryKeyRelatedField(queryset=models.Task.objects)
 
     def update(self, instance, validated_data):
-        task_specification = validated_data["task_specification"]
-        models.Flow.objects.filter(
-            task_specification=task_specification, workflow_specification=instance
-        ).delete()
+        task = validated_data["task"]
+        models.Flow.objects.filter(task=task, workflow_specification=instance).delete()
 
         return instance
 
     class Meta:
-        fields = ("workflow_specification", "task_specification")
+        fields = ("workflow_specification", "task")
         model = models.WorkflowSpecification
 
 
-class SaveTaskSpecificationSerializer(serializers.ModelSerializer):
+class SaveTaskSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.TaskSpecification
+        model = models.Task
         fields = ("slug", "name", "description", "type")
 
 
-class ArchiveTaskSpecificationSerializer(serializers.ModelSerializer):
+class ArchiveTaskSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField(source="slug")
 
     def update(self, instance, validated_data):
@@ -123,7 +114,7 @@ class ArchiveTaskSpecificationSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ("id",)
-        model = models.TaskSpecification
+        model = models.Task
 
 
 class StartWorkflowSerializer(serializers.ModelSerializer):
@@ -140,7 +131,7 @@ class StartWorkflowSerializer(serializers.ModelSerializer):
 
         models.WorkItem.objects.create(
             workflow=instance,
-            task_specification=workflow_specification.start,
+            task=workflow_specification.start,
             status=models.WorkItem.STATUS_READY,
         )
 
@@ -169,16 +160,14 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
 
         flow = models.Flow.objects.filter(
             workflow_specification=workflow.workflow_specification_id,
-            task_specification=instance.task_specification_id,
+            task=instance.task_id,
         ).first()
 
         if flow:
             jexl = FlowJexl()
-            task_specification = jexl.evaluate(flow.next)
+            task = jexl.evaluate(flow.next)
             models.WorkItem.objects.create(
-                task_specification_id=task_specification,
-                workflow=workflow,
-                status=models.WorkItem.STATUS_READY,
+                task_id=task, workflow=workflow, status=models.WorkItem.STATUS_READY
             )
         else:
             # no more tasks, mark workflow as complete

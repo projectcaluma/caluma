@@ -16,15 +16,15 @@ class WorkflowFilterSet(FilterSet):
         fields = ("workflow_specification", "status")
 
 
-class TaskSpecificationFilterSet(FilterSet):
+class TaskFilterSet(FilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
 
     class Meta:
-        model = models.TaskSpecification
+        model = models.Task
         fields = ("slug", "name", "description", "type", "is_archived")
 
 
 class WorkItemFilterSet(FilterSet):
     class Meta:
         model = models.WorkItem
-        fields = ("status", "task_specification", "workflow")
+        fields = ("status", "task", "workflow")

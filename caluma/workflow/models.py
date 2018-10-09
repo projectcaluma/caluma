@@ -5,7 +5,7 @@ from localized_fields.fields import LocalizedField
 from caluma.models import SlugModel, UUIDModel
 
 
-class TaskSpecification(SlugModel):
+class Task(SlugModel):
     TYPE_SIMPLE = "simple"
 
     TYPE_CHOICES = (TYPE_SIMPLE,)
@@ -24,20 +24,18 @@ class WorkflowSpecification(SlugModel):
     meta = JSONField(default={})
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
-    start = models.ForeignKey(
-        TaskSpecification, on_delete=models.CASCADE, related_name="+"
-    )
+    start = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="+")
 
 
 class Flow(UUIDModel):
     workflow_specification = models.ForeignKey(
         WorkflowSpecification, related_name="flows"
     )
-    task_specification = models.ForeignKey(TaskSpecification, related_name="flows")
+    task = models.ForeignKey(Task, related_name="flows")
     next = models.TextField()
 
     class Meta:
-        unique_together = ("workflow_specification", "task_specification")
+        unique_together = ("workflow_specification", "task")
 
 
 class Workflow(UUIDModel):
@@ -67,8 +65,8 @@ class WorkItem(UUIDModel):
         (STATUS_COMPLETE, "Task is done."),
     )
 
-    task_specification = models.ForeignKey(
-        TaskSpecification, on_delete=models.DO_NOTHING, related_name="work_items"
+    task = models.ForeignKey(
+        Task, on_delete=models.DO_NOTHING, related_name="work_items"
     )
     workflow = models.ForeignKey(
         Workflow, related_name="work_items", on_delete=models.CASCADE

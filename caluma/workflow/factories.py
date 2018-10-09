@@ -4,16 +4,16 @@ from factory.django import DjangoModelFactory
 from . import models
 
 
-class TaskSpecificationFactory(DjangoModelFactory):
+class TaskFactory(DjangoModelFactory):
     slug = Faker("slug")
     name = Faker("multilang", faker_provider="name")
-    type = Faker("word", ext_word_list=models.TaskSpecification.TYPE_CHOICES)
+    type = Faker("word", ext_word_list=models.Task.TYPE_CHOICES)
     description = Faker("multilang", faker_provider="text")
     meta = {}
     is_archived = False
 
     class Meta:
-        model = models.TaskSpecification
+        model = models.Task
 
 
 class WorkflowSpecificationFactory(DjangoModelFactory):
@@ -23,7 +23,7 @@ class WorkflowSpecificationFactory(DjangoModelFactory):
     meta = {}
     is_published = False
     is_archived = False
-    start = SubFactory(TaskSpecificationFactory)
+    start = SubFactory(TaskFactory)
 
     class Meta:
         model = models.WorkflowSpecification
@@ -31,7 +31,7 @@ class WorkflowSpecificationFactory(DjangoModelFactory):
 
 class FlowFactory(DjangoModelFactory):
     workflow_specification = SubFactory(WorkflowSpecificationFactory)
-    task_specification = SubFactory(TaskSpecificationFactory)
+    task = SubFactory(TaskFactory)
     next = Faker("slug")
 
     class Meta:
@@ -49,7 +49,7 @@ class WorkflowFactory(DjangoModelFactory):
 
 class WorkItemFactory(DjangoModelFactory):
     workflow = SubFactory(WorkflowFactory)
-    task_specification = SubFactory(TaskSpecificationFactory)
+    task = SubFactory(TaskFactory)
     status = Faker("word", ext_word_list=models.WorkItem.STATUS_CHOICES)
     meta = {}
 

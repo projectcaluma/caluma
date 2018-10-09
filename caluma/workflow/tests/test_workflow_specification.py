@@ -19,7 +19,7 @@ def test_query_all_workflow_specifications(db, snapshot, workflow_specification,
                 flows {
                   edges {
                     node {
-                      taskSpecification {
+                      task {
                         slug
                       }
                       next
@@ -116,16 +116,16 @@ def test_archive_workflow_specification(db, workflow_specification):
 
 
 @pytest.mark.parametrize(
-    "task_specification__slug,next",
+    "task__slug,next",
     [
-        ("task-slug", '"task-slug"|taskSpecification'),
-        ("task-slug", '"not-av-task-slug"|taskSpecification'),
+        ("task-slug", '"task-slug"|task'),
+        ("task-slug", '"not-av-task-slug"|task'),
         ("task-slug", '"not-av-task-slug"|invalid'),
         ("task-slug", '""'),
     ],
 )
 def test_add_workflow_specification_flow(
-    db, workflow_specification, task_specification, snapshot, next
+    db, workflow_specification, task, snapshot, next
 ):
     query = """
         mutation AddWorkflowSpecificationFlow($input: AddWorkflowSpecificationFlowInput!) {
@@ -135,7 +135,7 @@ def test_add_workflow_specification_flow(
                 edges {
                   node {
                     next
-                    taskSpecification {
+                    task {
                       slug
                     }
                   }
@@ -154,9 +154,7 @@ def test_add_workflow_specification_flow(
                 "workflowSpecification": to_global_id(
                     type(workflow_specification).__name__, workflow_specification.pk
                 ),
-                "taskSpecification": to_global_id(
-                    type(task_specification).__name__, task_specification.pk
-                ),
+                "task": to_global_id(type(task).__name__, task.pk),
                 "next": next,
             }
         },
@@ -165,7 +163,7 @@ def test_add_workflow_specification_flow(
 
 
 def test_remove_workflow_specification_flow(
-    db, workflow_specification, task_specification, flow, snapshot
+    db, workflow_specification, task, flow, snapshot
 ):
     query = """
         mutation RemoveWorkflowSpecificationFlow($input: RemoveWorkflowSpecificationFlowInput!) {
@@ -174,7 +172,7 @@ def test_remove_workflow_specification_flow(
               flows {
                 edges {
                   node {
-                    taskSpecification {
+                    task {
                       slug
                     }
                   }
@@ -193,9 +191,7 @@ def test_remove_workflow_specification_flow(
                 "workflowSpecification": to_global_id(
                     type(workflow_specification).__name__, workflow_specification.pk
                 ),
-                "taskSpecification": to_global_id(
-                    type(task_specification).__name__, task_specification.pk
-                ),
+                "task": to_global_id(type(task).__name__, task.pk),
             }
         },
     )

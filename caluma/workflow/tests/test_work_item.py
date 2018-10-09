@@ -51,12 +51,10 @@ def test_complete_work_item_last(db, snapshot, work_item, success):
 
 
 @pytest.mark.parametrize("work_item__status", [models.WorkItem.STATUS_READY])
-def test_complete_work_item_with_next(
-    db, snapshot, work_item, flow, task_specification_factory
-):
+def test_complete_work_item_with_next(db, snapshot, work_item, flow, task_factory):
 
-    task_specification_next = task_specification_factory()
-    flow.next = f"'{task_specification_next.slug}'|taskSpecification"
+    task_next = task_factory()
+    flow.next = f"'{task_next.slug}'|task"
     flow.save()
 
     query = """

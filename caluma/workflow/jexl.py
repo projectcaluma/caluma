@@ -8,10 +8,9 @@ from ..jexl import ExtractTransformSubjectAnalyzer
 class FlowJexl(JEXL):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.add_transform("taskSpecification", lambda spec: spec)
+        self.add_transform("task", lambda spec: spec)
 
-    def extract_task_specifications(self, expr):
+    def extract_tasks(self, expr):
         return self.analyze(
-            expr,
-            partial(ExtractTransformSubjectAnalyzer, transforms=["taskSpecification"]),
+            expr, partial(ExtractTransformSubjectAnalyzer, transforms=["task"])
         )

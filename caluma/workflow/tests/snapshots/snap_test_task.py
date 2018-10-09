@@ -7,8 +7,8 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots["test_query_all_task_specifications 1"] = {
-    "allTaskSpecifications": {
+snapshots["test_query_all_tasks 1"] = {
+    "allTasks": {
         "edges": [
             {
                 "node": {
@@ -24,11 +24,11 @@ Material minute ago get. Range whose scientist draw free property consider. Have
     }
 }
 
-snapshots["test_save_task_specification 1"] = {
+snapshots["test_save_task 1"] = {
     "data": {
-        "saveTaskSpecification": {
+        "saveTask": {
             "clientMutationId": "testid",
-            "taskSpecification": {
+            "task": {
                 "meta": "{}",
                 "name": "Jordan Mccarthy",
                 "slug": "mrs-shake-recent",

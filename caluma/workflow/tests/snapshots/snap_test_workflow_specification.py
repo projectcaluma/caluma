@@ -18,7 +18,7 @@ snapshots["test_query_all_workflow_specifications 1"] = {
                             {
                                 "node": {
                                     "next": "value-still-back",
-                                    "taskSpecification": {"slug": "mrs-shake-recent"},
+                                    "task": {"slug": "mrs-shake-recent"},
                                 }
                             }
                         ]
@@ -43,48 +43,12 @@ snapshots["test_save_workflow_specification 1"] = {
     }
 }
 
-snapshots[
-    'test_add_workflow_specification_flow[task-slug-"task-slug"|taskSpecification] 1'
-] = {
-    "data": {
-        "addWorkflowSpecificationFlow": {
-            "clientMutationId": None,
-            "workflowSpecification": {
-                "flows": {
-                    "edges": [
-                        {
-                            "node": {
-                                "next": '"task-slug"|taskSpecification',
-                                "taskSpecification": {"slug": "task-slug"},
-                            }
-                        }
-                    ]
-                }
-            },
-        }
-    },
-    "errors": [],
-}
-
-snapshots[
-    'test_add_workflow_specification_flow[task-slug-"not-av-task-slug"|taskSpecification] 1'
-] = {
-    "data": {"addWorkflowSpecificationFlow": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "{'next': [ErrorDetail(string='jexl `\"not-av-task-slug\"|taskSpecification` contains invalid task specification: [not-av-task-slug]', code='invalid')]}",
-            "path": ["addWorkflowSpecificationFlow"],
-        }
-    ],
-}
-
 snapshots['test_add_workflow_specification_flow[task-slug-""] 1'] = {
     "data": {"addWorkflowSpecificationFlow": None},
     "errors": [
         {
             "locations": [{"column": 11, "line": 3}],
-            "message": "{'next': [ErrorDetail(string='jexl `\"\"` does not contain any task specification as return value', code='invalid')]}",
+            "message": "{'next': [ErrorDetail(string='jexl `\"\"` does not contain any tasks as return value', code='invalid')]}",
             "path": ["addWorkflowSpecificationFlow"],
         }
     ],
@@ -98,6 +62,40 @@ snapshots[
         {
             "locations": [{"column": 11, "line": 3}],
             "message": "{'next': [ErrorDetail(string='The `invalid` transform is undefined.', code='invalid')]}",
+            "path": ["addWorkflowSpecificationFlow"],
+        }
+    ],
+}
+
+snapshots['test_add_workflow_specification_flow[task-slug-"task-slug"|task] 1'] = {
+    "data": {
+        "addWorkflowSpecificationFlow": {
+            "clientMutationId": None,
+            "workflowSpecification": {
+                "flows": {
+                    "edges": [
+                        {
+                            "node": {
+                                "next": '"task-slug"|task',
+                                "task": {"slug": "task-slug"},
+                            }
+                        }
+                    ]
+                }
+            },
+        }
+    },
+    "errors": [],
+}
+
+snapshots[
+    'test_add_workflow_specification_flow[task-slug-"not-av-task-slug"|task] 1'
+] = {
+    "data": {"addWorkflowSpecificationFlow": None},
+    "errors": [
+        {
+            "locations": [{"column": 11, "line": 3}],
+            "message": "{'next': [ErrorDetail(string='jexl `\"not-av-task-slug\"|task` contains invalid tasks [not-av-task-slug]', code='invalid')]}",
             "path": ["addWorkflowSpecificationFlow"],
         }
     ],
