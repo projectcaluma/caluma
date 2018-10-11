@@ -13,7 +13,7 @@ snapshots["test_query_all_questions[integer-question__configuration0] 1"] = {
             {
                 "node": {
                     "__typename": "IntegerQuestion",
-                    "id": "SW50ZWdlclF1ZXN0aW9uOk5vbmU=",
+                    "id": "SW50ZWdlclF1ZXN0aW9uOm1ycy1zaGFrZS1yZWNlbnQ=",
                     "integerMaxValue": 10,
                     "integerMinValue": 0,
                     "label": "Jordan Mccarthy",
@@ -33,7 +33,7 @@ snapshots["test_query_all_questions[float-question__configuration1] 1"] = {
                     "__typename": "FloatQuestion",
                     "floatMaxValue": 1.0,
                     "floatMinValue": 0.0,
-                    "id": "RmxvYXRRdWVzdGlvbjpOb25l",
+                    "id": "RmxvYXRRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
                     "label": "Jordan Mccarthy",
                     "meta": "{}",
                     "slug": "mrs-shake-recent",
@@ -49,7 +49,7 @@ snapshots["test_save_question[true-SaveTextQuestion] 1"] = {
             "clientMutationId": "testid",
             "question": {
                 "__typename": "TextQuestion",
-                "id": "VGV4dFF1ZXN0aW9uOk5vbmU=",
+                "id": "VGV4dFF1ZXN0aW9uOm1ycy1zaGFrZS1yZWNlbnQ=",
                 "label": "Jordan Mccarthy",
                 "meta": "{}",
                 "slug": "mrs-shake-recent",
@@ -65,7 +65,7 @@ snapshots["test_save_question[true-SaveTextareaQuestion] 1"] = {
             "clientMutationId": "testid",
             "question": {
                 "__typename": "TextareaQuestion",
-                "id": "VGV4dGFyZWFRdWVzdGlvbjpOb25l",
+                "id": "VGV4dGFyZWFRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
                 "label": "Jordan Mccarthy",
                 "meta": "{}",
                 "slug": "mrs-shake-recent",
@@ -81,7 +81,7 @@ snapshots["test_save_question[true-SaveIntegerQuestion] 1"] = {
             "clientMutationId": "testid",
             "question": {
                 "__typename": "IntegerQuestion",
-                "id": "SW50ZWdlclF1ZXN0aW9uOk5vbmU=",
+                "id": "SW50ZWdlclF1ZXN0aW9uOm1ycy1zaGFrZS1yZWNlbnQ=",
                 "label": "Jordan Mccarthy",
                 "meta": "{}",
                 "slug": "mrs-shake-recent",
@@ -97,7 +97,7 @@ snapshots["test_save_question[true-SaveFloatQuestion] 1"] = {
             "clientMutationId": "testid",
             "question": {
                 "__typename": "FloatQuestion",
-                "id": "RmxvYXRRdWVzdGlvbjpOb25l",
+                "id": "RmxvYXRRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
                 "label": "Jordan Mccarthy",
                 "meta": "{}",
                 "slug": "mrs-shake-recent",
@@ -157,7 +157,7 @@ snapshots["test_save_float_question[float-question__configuration0] 1"] = {
             "clientMutationId": "testid",
             "question": {
                 "__typename": "FloatQuestion",
-                "id": "RmxvYXRRdWVzdGlvbjpOb25l",
+                "id": "RmxvYXRRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
                 "label": "Jordan Mccarthy",
                 "maxValue": 10.0,
                 "meta": "{}",
@@ -186,7 +186,7 @@ snapshots["test_save_integer_question[integer-question__configuration0] 1"] = {
             "clientMutationId": "testid",
             "question": {
                 "__typename": "IntegerQuestion",
-                "id": "SW50ZWdlclF1ZXN0aW9uOk5vbmU=",
+                "id": "SW50ZWdlclF1ZXN0aW9uOm1ycy1zaGFrZS1yZWNlbnQ=",
                 "label": "Jordan Mccarthy",
                 "meta": "{}",
                 "slug": "mrs-shake-recent",
@@ -212,7 +212,7 @@ snapshots["test_save_checkbox_question[checkbox] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "CheckboxQuestion",
-            "id": "Q2hlY2tib3hRdWVzdGlvbjpOb25l",
+            "id": "Q2hlY2tib3hRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
             "label": "Jordan Mccarthy",
             "meta": "{}",
             "options": {
@@ -231,7 +231,7 @@ snapshots["test_save_radio_question[radio] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "RadioQuestion",
-            "id": "UmFkaW9RdWVzdGlvbjpOb25l",
+            "id": "UmFkaW9RdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
             "label": "Jordan Mccarthy",
             "meta": "{}",
             "options": {
@@ -252,7 +252,7 @@ snapshots["test_query_all_questions[float-question__configuration2] 1"] = {
                     "__typename": "FloatQuestion",
                     "floatMaxValue": None,
                     "floatMinValue": None,
-                    "id": "RmxvYXRRdWVzdGlvbjpOb25l",
+                    "id": "RmxvYXRRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
                     "label": "Jordan Mccarthy",
                     "meta": "{}",
                     "slug": "mrs-shake-recent",
@@ -268,7 +268,7 @@ snapshots["test_query_all_questions[text-question__configuration3] 1"] = {
             {
                 "node": {
                     "__typename": "TextQuestion",
-                    "id": "VGV4dFF1ZXN0aW9uOk5vbmU=",
+                    "id": "VGV4dFF1ZXN0aW9uOm1ycy1zaGFrZS1yZWNlbnQ=",
                     "label": "Jordan Mccarthy",
                     "maxLength": 10,
                     "meta": "{}",
@@ -285,7 +285,7 @@ snapshots["test_query_all_questions[textarea-question__configuration4] 1"] = {
             {
                 "node": {
                     "__typename": "TextareaQuestion",
-                    "id": "VGV4dGFyZWFRdWVzdGlvbjpOb25l",
+                    "id": "VGV4dGFyZWFRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
                     "label": "Jordan Mccarthy",
                     "maxLength": 10,
                     "meta": "{}",
@@ -302,7 +302,7 @@ snapshots["test_query_all_questions[radio-question__configuration5] 1"] = {
             {
                 "node": {
                     "__typename": "RadioQuestion",
-                    "id": "UmFkaW9RdWVzdGlvbjpOb25l",
+                    "id": "UmFkaW9RdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
                     "label": "Jordan Mccarthy",
                     "meta": "{}",
                     "options": {"edges": [{"node": {"slug": "enter-them-his-half"}}]},
@@ -319,7 +319,7 @@ snapshots["test_query_all_questions[checkbox-question__configuration6] 1"] = {
             {
                 "node": {
                     "__typename": "CheckboxQuestion",
-                    "id": "Q2hlY2tib3hRdWVzdGlvbjpOb25l",
+                    "id": "Q2hlY2tib3hRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
                     "label": "Jordan Mccarthy",
                     "meta": "{}",
                     "options": {"edges": [{"node": {"slug": "enter-them-his-half"}}]},

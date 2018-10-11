@@ -122,7 +122,6 @@ enum CaseStatus {
 }
 
 type CheckboxQuestion implements Question, Node {
-  id: ID!
   created: DateTime!
   modified: DateTime!
   slug: String!
@@ -133,6 +132,7 @@ type CheckboxQuestion implements Question, Node {
   meta: JSONString
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String): OptionConnection
+  id: ID!
 }
 
 input CompleteWorkItemInput {
@@ -152,7 +152,7 @@ type Document implements Node {
   modified: DateTime!
   form: Form!
   meta: JSONString!
-  answers(before: String, after: String, first: Int, last: Int): AnswerConnection
+  answers(before: String, after: String, first: Int, last: Int, question: ID, search: String): AnswerConnection
   id: ID!
 }
 
@@ -167,16 +167,15 @@ type DocumentEdge {
 }
 
 type FloatAnswer implements Answer, Node {
-  id: ID!
   created: DateTime!
   modified: DateTime!
+  id: ID!
   question: Question!
-  meta: JSONString
   value: Float!
+  meta: JSONString
 }
 
 type FloatQuestion implements Question, Node {
-  id: ID!
   created: DateTime!
   modified: DateTime!
   slug: String!
@@ -186,6 +185,7 @@ type FloatQuestion implements Question, Node {
   isArchived: Boolean!
   meta: JSONString
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  id: ID!
   minValue: Float
   maxValue: Float
 }
@@ -217,8 +217,8 @@ type Form implements Node {
   meta: JSONString!
   isPublished: Boolean!
   isArchived: Boolean!
-  id: ID!
   questions(before: String, after: String, first: Int, last: Int, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String): QuestionConnection
+  id: ID!
 }
 
 type FormConnection {
@@ -232,16 +232,15 @@ type FormEdge {
 }
 
 type IntegerAnswer implements Answer, Node {
-  id: ID!
   created: DateTime!
   modified: DateTime!
+  id: ID!
   question: Question!
-  meta: JSONString
   value: Int!
+  meta: JSONString
 }
 
 type IntegerQuestion implements Question, Node {
-  id: ID!
   created: DateTime!
   modified: DateTime!
   slug: String!
@@ -251,6 +250,7 @@ type IntegerQuestion implements Question, Node {
   isArchived: Boolean!
   meta: JSONString
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  id: ID!
   maxValue: Int
   minValue: Int
 }
@@ -258,12 +258,12 @@ type IntegerQuestion implements Question, Node {
 scalar JSONString
 
 type ListAnswer implements Answer, Node {
-  id: ID!
   created: DateTime!
   modified: DateTime!
+  id: ID!
   question: Question!
-  meta: JSONString
   value: [String]!
+  meta: JSONString
 }
 
 type Mutation {
@@ -385,7 +385,6 @@ type QuestionEdge {
 scalar QuestionJexl
 
 type RadioQuestion implements Question, Node {
-  id: ID!
   created: DateTime!
   modified: DateTime!
   slug: String!
@@ -396,6 +395,7 @@ type RadioQuestion implements Question, Node {
   meta: JSONString
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String): OptionConnection
+  id: ID!
 }
 
 input RemoveFormQuestionInput {
@@ -660,12 +660,12 @@ type StartCasePayload {
 }
 
 type StringAnswer implements Answer, Node {
-  id: ID!
   created: DateTime!
   modified: DateTime!
+  id: ID!
   question: Question!
-  meta: JSONString
   value: String!
+  meta: JSONString
 }
 
 type Task implements Node {
@@ -695,7 +695,6 @@ enum TaskType {
 }
 
 type TextQuestion implements Question, Node {
-  id: ID!
   created: DateTime!
   modified: DateTime!
   slug: String!
@@ -705,11 +704,11 @@ type TextQuestion implements Question, Node {
   isArchived: Boolean!
   meta: JSONString
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  id: ID!
   maxLength: Int
 }
 
 type TextareaQuestion implements Question, Node {
-  id: ID!
   created: DateTime!
   modified: DateTime!
   slug: String!
@@ -719,6 +718,7 @@ type TextareaQuestion implements Question, Node {
   isArchived: Boolean!
   meta: JSONString
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  id: ID!
   maxLength: Int
 }
 

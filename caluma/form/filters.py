@@ -37,3 +37,11 @@ class DocumentFilterSet(FilterSet):
     class Meta:
         model = models.Document
         fields = ("form", "search")
+
+
+class AnswerFilterSet(FilterSet):
+    search = SearchFilter(fields=("value",))
+
+    class Meta:
+        model = models.Answer
+        fields = ("question",)

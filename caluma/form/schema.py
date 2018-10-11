@@ -36,6 +36,10 @@ class Question(graphene.Interface):
     )
 
     @classmethod
+    def get_queryset(cls, queryset, info):
+        return queryset.order_by("-formquestion__sort", "formquestion__id")
+
+    @classmethod
     def resolve_type(cls, instance, info):
         QUESTION_OBJECT_TYPE = {
             models.Question.TYPE_TEXT: TextQuestion,
@@ -53,7 +57,11 @@ class Option(DjangoObjectType):
     class Meta:
         model = models.Option
         interfaces = (relay.Node,)
-        only_fields = ("created", "modified", "label", "slug", "meta")
+        exclude_fields = ("questions",)
+
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        return queryset.order_by("-questionoption__sort", "questionoption__id")
 
 
 class QuestionConnection(graphene.Connection):
@@ -61,57 +69,69 @@ class QuestionConnection(graphene.Connection):
         node = Question
 
 
-class TextQuestion(graphene.ObjectType):
+class TextQuestion(DjangoObjectType):
     max_length = graphene.Int()
 
     class Meta:
+        model = models.Question
+        exclude_fields = ("type", "configuration", "options", "answers")
+        use_connection = False
         interfaces = (Question, graphene.Node)
 
 
-class TextareaQuestion(graphene.ObjectType):
+class TextareaQuestion(DjangoObjectType):
     max_length = graphene.Int()
 
     class Meta:
+        model = models.Question
+        exclude_fields = ("type", "configuration", "options", "answers")
+        use_connection = False
         interfaces = (Question, graphene.Node)
 
 
-class RadioQuestion(graphene.ObjectType):
+class RadioQuestion(DjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
 
-    def resolve_options(self, info, **kwargs):
-        return self.options.order_by("-questionoption__sort", "questionoption__id")
-
     class Meta:
+        model = models.Question
+        exclude_fields = ("type", "configuration", "answers")
+        use_connection = False
         interfaces = (Question, graphene.Node)
 
 
-class CheckboxQuestion(graphene.ObjectType):
+class CheckboxQuestion(DjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
 
-    def resolve_options(self, info, **kwargs):
-        return self.options.order_by("-questionoption__sort", "questionoption__id")
-
     class Meta:
+        model = models.Question
+        exclude_fields = ("type", "configuration", "answers")
+        use_connection = False
         interfaces = (Question, graphene.Node)
 
 
-class IntegerQuestion(graphene.ObjectType):
+class IntegerQuestion(DjangoObjectType):
     max_value = graphene.Int()
     min_value = graphene.Int()
 
     class Meta:
+        model = models.Question
+        exclude_fields = ("type", "configuration", "options", "answers")
+        use_connection = False
         interfaces = (Question, graphene.Node)
 
 
-class FloatQuestion(graphene.ObjectType):
+class FloatQuestion(DjangoObjectType):
     min_value = graphene.Float()
     max_value = graphene.Float()
 
     class Meta:
+        model = models.Question
+        exclude_fields = ("type", "configuration", "options", "answers")
+        use_connection = False
         interfaces = (Question, graphene.Node)
 
 
@@ -120,25 +140,10 @@ class Form(DjangoObjectType):
         QuestionConnection, filterset_class=filters.QuestionFilterSet
     )
 
-    def resolve_questions(self, info, **kwargs):
-        # TODO: potential cause for query explosions.
-        # https://github.com/graphql-python/graphene-django/pull/220
-        # https://docs.djangoproject.com/en/2.1/ref/models/querysets/#django.db.models.Prefetch
-        return self.questions.order_by("-formquestion__sort", "formquestion__id")
-
     class Meta:
         model = models.Form
         interfaces = (relay.Node,)
-        only_fields = (
-            "created",
-            "modified",
-            "slug",
-            "name",
-            "description",
-            "meta",
-            "is_published",
-            "is_archived",
-        )
+        exclude_fields = ("documents", "workflows")
 
 
 class SaveForm(UserDefinedPrimaryKeyMixin, SerializerMutation):
@@ -245,6 +250,10 @@ class Answer(graphene.Interface):
     meta = graphene.JSONString()
 
     @classmethod
+    def get_queryset(cls, queryset, info):
+        return queryset
+
+    @classmethod
     def resolve_type(cls, instance, info):
         ANSWER_TYPE = {
             list: ListAnswer,
@@ -256,31 +265,43 @@ class Answer(graphene.Interface):
         return ANSWER_TYPE[type(instance.value)]
 
 
-class IntegerAnswer(graphene.ObjectType):
+class IntegerAnswer(DjangoObjectType):
     value = graphene.Int(required=True)
 
     class Meta:
+        model = models.Answer
+        exclude_fields = ("document",)
+        use_connection = False
         interfaces = (Answer, graphene.Node)
 
 
-class FloatAnswer(graphene.ObjectType):
+class FloatAnswer(DjangoObjectType):
     value = graphene.Float(required=True)
 
     class Meta:
+        model = models.Answer
+        exclude_fields = ("document",)
+        use_connection = False
         interfaces = (Answer, graphene.Node)
 
 
-class StringAnswer(graphene.ObjectType):
+class StringAnswer(DjangoObjectType):
     value = graphene.String(required=True)
 
     class Meta:
+        model = models.Answer
+        exclude_fields = ("document",)
+        use_connection = False
         interfaces = (Answer, graphene.Node)
 
 
-class ListAnswer(graphene.ObjectType):
+class ListAnswer(DjangoObjectType):
     value = graphene.List(graphene.String, required=True)
 
     class Meta:
+        model = models.Answer
+        exclude_fields = ("document",)
+        use_connection = False
         interfaces = (Answer, graphene.Node)
 
 
@@ -290,10 +311,9 @@ class AnswerConnection(graphene.Connection):
 
 
 class Document(DjangoObjectType):
-    answers = graphene.ConnectionField(AnswerConnection)
-
-    def resolve_answers(self, info, **kwargs):
-        return self.answers.all()
+    answers = DjangoFilterSetConnectionField(
+        AnswerConnection, filterset_class=filters.AnswerFilterSet
+    )
 
     class Meta:
         model = models.Document
