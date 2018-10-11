@@ -1,14 +1,13 @@
 import graphene
 from graphene import relay
 from graphene.relay.mutation import ClientIDMutation
-from graphene_django.filter import DjangoFilterConnectionField
 from graphene_django.rest_framework import serializer_converter
-from graphene_django.types import DjangoObjectType
 
 from . import filters, models, serializers
-from ..filters import DjangoFilterSetConnectionField
+from ..filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
 from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
 from ..relay import extract_global_id
+from ..types import DjangoObjectType
 
 
 class QuestionJexl(graphene.String):

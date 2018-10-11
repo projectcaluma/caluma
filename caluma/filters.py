@@ -10,7 +10,7 @@ from django.utils import translation
 from django_filters import Filter, FilterSet
 from django_filters.constants import EMPTY_VALUES
 from graphene.types.utils import get_type
-from graphene_django.filter import DjangoFilterConnectionField
+from graphene_django import filter
 from graphene_django.filter.filterset import GrapheneFilterSetMixin
 from localized_fields.fields import LocalizedField
 
@@ -76,6 +76,52 @@ class SearchFilter(Filter):
 
 class FilterSet(GrapheneFilterSetMixin, FilterSet):
     pass
+
+
+class DjangoFilterConnectionField(filter.DjangoFilterConnectionField):
+    """
+    Django connection filter field with object type get_queryset support.
+
+    Inspired by https://github.com/graphql-python/graphene-django/pull/528/files
+    and might be removed once merged.
+    """
+
+    @classmethod
+    def resolve_queryset(cls, connection, queryset, info, **args):
+        return connection._meta.node.get_queryset(queryset, info)
+
+    @classmethod
+    def connection_resolver(
+        cls,
+        resolver,
+        connection,
+        default_manager,
+        max_limit,
+        enforce_first_or_last,
+        filterset_class,
+        filtering_args,
+        root,
+        info,
+        **args
+    ):
+        class QuerysetManager(object):
+            def get_queryset(self):
+                return cls.resolve_queryset(
+                    connection, default_manager.get_queryset(), info, **args
+                )
+
+        return super().connection_resolver(
+            resolver,
+            connection,
+            QuerysetManager(),
+            max_limit,
+            enforce_first_or_last,
+            filterset_class,
+            filtering_args,
+            root,
+            info,
+            **args
+        )
 
 
 class DjangoFilterSetConnectionField(DjangoFilterConnectionField):
