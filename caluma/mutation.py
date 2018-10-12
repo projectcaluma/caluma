@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 import graphene
+from django.http import Http404
 from django.shortcuts import get_object_or_404
 from graphene.relay.mutation import ClientIDMutation
 from graphene.types import Field, InputField
@@ -77,12 +78,10 @@ class SerializerMutation(ClientIDMutation):
         return_field_type=None,
         **options
     ):
-        if not serializer_class:  # pragma: todo cover
+        if not serializer_class:
             raise Exception("serializer_class is required for the SerializerMutation")
 
-        if (
-            "update" not in model_operations and "create" not in model_operations
-        ):  # pragma: todo cover
+        if "update" not in model_operations and "create" not in model_operations:
             raise Exception('model_operations must contain "create" and/or "update"')
 
         serializer = serializer_class()
@@ -127,15 +126,16 @@ class SerializerMutation(ClientIDMutation):
         )
 
     @classmethod
-    def get_serializer_kwargs(cls, root, info, **input):  # pragma: todo cover
+    def get_serializer_kwargs(cls, root, info, **input):
         lookup_field = cls._meta.lookup_field
         lookup_input_kwarg = cls._meta.lookup_input_kwarg
         model_class = cls._meta.model_class
+        return_field_type = cls._meta.return_field_type
 
         if model_class:
             if "update" in cls._meta.model_operations and lookup_input_kwarg in input:
                 instance = get_object_or_404(
-                    model_class,
+                    return_field_type.get_queryset(model_class.objects, info),
                     **{lookup_field: extract_global_id(input[lookup_input_kwarg])}
                 )
             elif "create" in cls._meta.model_operations:
@@ -187,10 +187,17 @@ class UserDefinedPrimaryKeyMixin(object):
     def get_serializer_kwargs(cls, root, info, **input):
         lookup_field = cls._meta.lookup_field
         model_class = cls._meta.model_class
+        return_field_type = cls._meta.return_field_type
 
-        instance = model_class.objects.filter(
-            **{lookup_field: input[lookup_field]}
-        ).first()
+        queryset = return_field_type.get_queryset(model_class.objects, info)
+        filter_kwargs = {lookup_field: input[lookup_field]}
+        instance = queryset.filter(**filter_kwargs).first()
+
+        if instance is None and model_class.objects.filter(**filter_kwargs).exists():
+            # disallow editing of instances which are not visible by current user
+            raise Http404(
+                "No %s matches the given query." % queryset.model._meta.object_name
+            )
 
         return {
             "instance": instance,
