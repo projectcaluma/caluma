@@ -261,9 +261,7 @@ def test_save_integer_question(db, snapshot, question):
 def test_save_checkbox_question(db, snapshot, question, question_option_factory):
     question_option_factory.create_batch(2, question=question)
 
-    option_ids = (
-        question.options.order_by("slug").reverse().values_list("slug", flat=True)
-    )
+    option_ids = question.options.order_by("-slug").values_list("slug", flat=True)
 
     query = """
         mutation SaveCheckboxQuestion($input: SaveCheckboxQuestionInput!) {
@@ -295,7 +293,7 @@ def test_save_checkbox_question(db, snapshot, question, question_option_factory)
             serializers.SaveCheckboxQuestionSerializer, question
         )
     }
-    inp["input"]["options"] == option_ids
+    inp["input"]["options"] = option_ids
     result = schema.execute(query, variables=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
