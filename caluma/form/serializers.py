@@ -79,6 +79,15 @@ class ReorderFormQuestionsSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         questions = validated_data["questions"]
+        curr_questions = set(instance.questions.all())
+
+        if len(questions) != len(curr_questions) or set(questions) - set(
+            instance.questions.all()
+        ):
+            raise exceptions.ValidationError(
+                "Input questions are not the same as current form questions"
+            )
+
         for sort, question in enumerate(reversed(questions)):
             models.FormQuestion.objects.filter(form=instance, question=question).update(
                 sort=sort

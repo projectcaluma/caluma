@@ -254,3 +254,35 @@ def test_reorder_form_questions_invalid_question(db, form, question_factory):
     )
 
     assert result.errors
+
+
+def test_reorder_form_questions_duplicated_question(db, form, question, form_question):
+
+    query = """
+        mutation ReorderFormQuestions($input: ReorderFormQuestionsInput!) {
+          reorderFormQuestions(input: $input) {
+            form {
+              questions {
+                edges {
+                  node {
+                    slug
+                  }
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    result = schema.execute(
+        query,
+        variables={
+            "input": {
+                "form": to_global_id(type(form).__name__, form.pk),
+                "questions": [question.slug, question.slug],
+            }
+        },
+    )
+
+    assert result.errors
