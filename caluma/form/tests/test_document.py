@@ -163,7 +163,9 @@ def test_save_document_answer(db, snapshot, answer, mutation, question_option, s
     """
 
     inp = {
-        "input": extract_serializer_input_fields(serializers.AnswerSerializer, answer)
+        "input": extract_serializer_input_fields(
+            serializers.SaveAnswerSerializer, answer
+        )
     }
     result = schema.execute(query, variables=inp)
 

@@ -2,7 +2,7 @@ import sys
 
 from django.db import transaction
 from rest_framework import exceptions
-from rest_framework.serializers import FloatField, IntegerField
+from rest_framework.serializers import CharField, FloatField, IntegerField, ListField
 
 from . import models
 from .. import serializers
@@ -274,7 +274,7 @@ class DocumentSerializer(serializers.ModelSerializer):
         fields = ("form", "meta")
 
 
-class AnswerSerializer(serializers.ModelSerializer):
+class SaveAnswerSerializer(serializers.ModelSerializer):
     def validate_question_text(self, question, value):
         max_length = (
             question.max_length if question.max_length is not None else sys.maxsize
@@ -344,4 +344,32 @@ class AnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Answer
-        fields = ("question", "meta", "document", "value")
+        fields = ("question", "document", "value", "meta")
+
+
+class SaveDocumentStringAnswerSerializer(SaveAnswerSerializer):
+    value = CharField()
+
+    class Meta(SaveAnswerSerializer.Meta):
+        pass
+
+
+class SaveDocumentListAnswerSerializer(SaveAnswerSerializer):
+    value = ListField(child=CharField())
+
+    class Meta(SaveAnswerSerializer.Meta):
+        pass
+
+
+class SaveDocumentIntegerAnswerSerializer(SaveAnswerSerializer):
+    value = IntegerField()
+
+    class Meta(SaveAnswerSerializer.Meta):
+        pass
+
+
+class SaveDocumentFloatAnswerSerializer(SaveAnswerSerializer):
+    value = FloatField()
+
+    class Meta(SaveAnswerSerializer.Meta):
+        pass

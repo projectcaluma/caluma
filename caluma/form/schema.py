@@ -1,6 +1,5 @@
 import graphene
 from graphene import relay
-from graphene.relay.mutation import ClientIDMutation
 from graphene_django.rest_framework import serializer_converter
 
 from . import filters, models, serializers
@@ -30,7 +29,7 @@ class Question(graphene.Interface):
     is_required = QuestionJexl(required=True)
     is_hidden = QuestionJexl(required=True)
     is_archived = graphene.Boolean(required=True)
-    meta = graphene.JSONString()
+    meta = graphene.JSONString(required=True)
     forms = DjangoFilterConnectionField(
         "caluma.form.schema.Form", filterset_class=filters.FormFilterSet
     )
@@ -243,7 +242,7 @@ class Answer(graphene.Interface):
     created = graphene.DateTime(required=True)
     modified = graphene.DateTime(required=True)
     question = graphene.Field(Question, required=True)
-    meta = graphene.JSONString()
+    meta = graphene.JSONString(required=True)
 
     @classmethod
     def get_queryset(cls, queryset, info):
@@ -323,61 +322,42 @@ class SaveDocument(SerializerMutation):
         serializer_class = serializers.DocumentSerializer
 
 
-class SaveDocumentAnswer(ClientIDMutation):
-    # TODO: could be simplified once following issue is addressed:
-    # https://github.com/graphql-python/graphene-django/issues/121
+class SaveDocumentAnswer(SerializerMutation):
+    @classmethod
+    def get_object(cls, root, info, queryset, **input):
+        question_id = extract_global_id(input["question"])
+        document_id = extract_global_id(input["document"])
+        instance = models.Answer.objects.filter(
+            question=question_id, document=document_id
+        ).first()
+        return instance
+
     class Meta:
         abstract = True
 
-    answer = graphene.Field(Answer)
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        question_id = extract_global_id(input["question"])
-        document_id = extract_global_id(input["document"])
-        answer = models.Answer.objects.filter(
-            question=question_id, document=document_id
-        ).first()
-
-        serializer = serializers.AnswerSerializer(
-            data=input, instance=answer, context={"request": info.context}
-        )
-        serializer.is_valid(raise_exception=True)
-        answer = serializer.save()
-
-        return cls(answer=answer)
-
 
 class SaveDocumentStringAnswer(SaveDocumentAnswer):
-    class Input:
-        question = graphene.ID(required=True)
-        document = graphene.ID(required=True)
-        meta = graphene.JSONString(required=True)
-        value = graphene.String(required=True)
+    class Meta:
+        serializer_class = serializers.SaveDocumentStringAnswerSerializer
+        return_field_type = Answer
 
 
 class SaveDocumentListAnswer(SaveDocumentAnswer):
-    class Input:
-        question = graphene.ID(required=True)
-        document = graphene.ID(required=True)
-        meta = graphene.JSONString(required=True)
-        value = graphene.List(graphene.String, required=True)
+    class Meta:
+        serializer_class = serializers.SaveDocumentListAnswerSerializer
+        return_field_type = Answer
 
 
 class SaveDocumentIntegerAnswer(SaveDocumentAnswer):
-    class Input:
-        question = graphene.ID(required=True)
-        document = graphene.ID(required=True)
-        meta = graphene.JSONString(required=True)
-        value = graphene.Int(required=True)
+    class Meta:
+        serializer_class = serializers.SaveDocumentIntegerAnswerSerializer
+        return_field_type = Answer
 
 
 class SaveDocumentFloatAnswer(SaveDocumentAnswer):
-    class Input:
-        question = graphene.ID(required=True)
-        document = graphene.ID(required=True)
-        meta = graphene.JSONString(required=True)
-        value = graphene.Float(required=True)
+    class Meta:
+        serializer_class = serializers.SaveDocumentFloatAnswerSerializer
+        return_field_type = Answer
 
 
 class Mutation(object):

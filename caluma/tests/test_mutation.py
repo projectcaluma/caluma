@@ -49,6 +49,17 @@ def test_invalid_serializer_mutation_model_operations(db):
 
 
 def test_invalid_serializer_mutation_update_mutate_and_get_payload(db, mock_info):
+    FakeModel = get_fake_model(model_base=models.UUIDModel)
+
+    class FakeModelObjectType(types.DjangoObjectType):
+        class Meta:
+            model = FakeModel
+
+        @classmethod
+        def get_queryset(cls, queryset, info):
+            # enforce that nothing is visible
+            return queryset.none()
+
     class MySerializer(serializers.ModelSerializer):
         class Meta:
             model = get_fake_model()
@@ -57,6 +68,7 @@ def test_invalid_serializer_mutation_update_mutate_and_get_payload(db, mock_info
     class InvalidModelMutation(mutation.SerializerMutation):
         class Meta:
             serializer_class = MySerializer
+            return_field_type = FakeModelObjectType
             model_operations = ["update"]
 
     with pytest.raises(Exception) as exc:

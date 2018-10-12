@@ -129,26 +129,16 @@ class SerializerMutation(ClientIDMutation):
 
     @classmethod
     def get_serializer_kwargs(cls, root, info, **input):
-        lookup_field = cls._meta.lookup_field
-        lookup_input_kwarg = cls._meta.lookup_input_kwarg
         model_class = cls._meta.model_class
         return_field_type = cls._meta.return_field_type
 
         if model_class:
-            if "update" in cls._meta.model_operations and lookup_input_kwarg in input:
-                instance = get_object_or_404(
-                    return_field_type.get_queryset(model_class.objects, info),
-                    **{lookup_field: extract_global_id(input[lookup_input_kwarg])}
-                )
-            elif "create" in cls._meta.model_operations:
-                instance = None
-            else:
-                raise Exception(
-                    'Invalid update operation. Input parameter "{0}" required.'.format(
-                        lookup_field
-                    )
-                )
-
+            instance = cls.get_object(
+                root,
+                info,
+                return_field_type.get_queryset(model_class.objects, info),
+                **input
+            )
             return {
                 "instance": instance,
                 "data": input,
@@ -156,6 +146,26 @@ class SerializerMutation(ClientIDMutation):
             }
 
         return {"data": input, "context": {"request": info.context, "info": info}}
+
+    @classmethod
+    def get_object(cls, root, info, queryset, **input):
+        lookup_field = cls._meta.lookup_field
+        lookup_input_kwarg = cls._meta.lookup_input_kwarg
+
+        if "update" in cls._meta.model_operations and lookup_input_kwarg in input:
+            instance = get_object_or_404(
+                queryset, **{lookup_field: extract_global_id(input[lookup_input_kwarg])}
+            )
+        elif "create" in cls._meta.model_operations:
+            instance = None
+        else:
+            raise Exception(
+                'Invalid update operation. Input parameter "{0}" required.'.format(
+                    lookup_field
+                )
+            )
+
+        return instance
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
@@ -188,13 +198,11 @@ class UserDefinedPrimaryKeyMixin(object):
         abstract = True
 
     @classmethod
-    def get_serializer_kwargs(cls, root, info, **input):
+    def get_object(cls, root, info, queryset, **input):
         lookup_field = cls._meta.lookup_field
         lookup_input_kwarg = cls._meta.lookup_input_kwarg
         model_class = cls._meta.model_class
-        return_field_type = cls._meta.return_field_type
 
-        queryset = return_field_type.get_queryset(model_class.objects, info)
         filter_kwargs = {lookup_field: input[lookup_input_kwarg]}
         instance = queryset.filter(**filter_kwargs).first()
 
@@ -204,8 +212,4 @@ class UserDefinedPrimaryKeyMixin(object):
                 "No %s matches the given query." % queryset.model._meta.object_name
             )
 
-        return {
-            "instance": instance,
-            "data": input,
-            "context": {"request": info.context, "info": info},
-        }
+        return instance

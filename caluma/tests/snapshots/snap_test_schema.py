@@ -42,7 +42,7 @@ interface Answer {
   created: DateTime!
   modified: DateTime!
   question: Question!
-  meta: JSONString
+  meta: JSONString!
 }
 
 type AnswerConnection {
@@ -129,7 +129,7 @@ type CheckboxQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
-  meta: JSONString
+  meta: JSONString!
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String): OptionConnection
   id: ID!
@@ -172,7 +172,7 @@ type FloatAnswer implements Answer, Node {
   id: ID!
   question: Question!
   value: Float!
-  meta: JSONString
+  meta: JSONString!
 }
 
 type FloatQuestion implements Question, Node {
@@ -183,7 +183,7 @@ type FloatQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
-  meta: JSONString
+  meta: JSONString!
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   id: ID!
   minValue: Float
@@ -237,7 +237,7 @@ type IntegerAnswer implements Answer, Node {
   id: ID!
   question: Question!
   value: Int!
-  meta: JSONString
+  meta: JSONString!
 }
 
 type IntegerQuestion implements Question, Node {
@@ -248,7 +248,7 @@ type IntegerQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
-  meta: JSONString
+  meta: JSONString!
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   id: ID!
   maxValue: Int
@@ -263,7 +263,7 @@ type ListAnswer implements Answer, Node {
   id: ID!
   question: Question!
   value: [String]!
-  meta: JSONString
+  meta: JSONString!
 }
 
 type Mutation {
@@ -368,7 +368,7 @@ interface Question {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
-  meta: JSONString
+  meta: JSONString!
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
 }
 
@@ -392,7 +392,7 @@ type RadioQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
-  meta: JSONString
+  meta: JSONString!
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String): OptionConnection
   id: ID!
@@ -458,8 +458,8 @@ type SaveCheckboxQuestionPayload {
 input SaveDocumentFloatAnswerInput {
   question: ID!
   document: ID!
-  meta: JSONString!
   value: Float!
+  meta: JSONString
   clientMutationId: String
 }
 
@@ -477,8 +477,8 @@ input SaveDocumentInput {
 input SaveDocumentIntegerAnswerInput {
   question: ID!
   document: ID!
-  meta: JSONString!
   value: Int!
+  meta: JSONString
   clientMutationId: String
 }
 
@@ -490,8 +490,8 @@ type SaveDocumentIntegerAnswerPayload {
 input SaveDocumentListAnswerInput {
   question: ID!
   document: ID!
-  meta: JSONString!
   value: [String]!
+  meta: JSONString
   clientMutationId: String
 }
 
@@ -508,8 +508,8 @@ type SaveDocumentPayload {
 input SaveDocumentStringAnswerInput {
   question: ID!
   document: ID!
-  meta: JSONString!
   value: String!
+  meta: JSONString
   clientMutationId: String
 }
 
@@ -665,7 +665,7 @@ type StringAnswer implements Answer, Node {
   id: ID!
   question: Question!
   value: String!
-  meta: JSONString
+  meta: JSONString!
 }
 
 type Task implements Node {
@@ -702,7 +702,7 @@ type TextQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
-  meta: JSONString
+  meta: JSONString!
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   id: ID!
   maxLength: Int
@@ -716,7 +716,7 @@ type TextareaQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
-  meta: JSONString
+  meta: JSONString!
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   id: ID!
   maxLength: Int
