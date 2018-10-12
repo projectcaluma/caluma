@@ -150,10 +150,10 @@ class SerializerMutation(ClientIDMutation):
             return {
                 "instance": instance,
                 "data": input,
-                "context": {"request": info.context},
+                "context": {"request": info.context, "info": info},
             }
 
-        return {"data": input, "context": {"request": info.context}}
+        return {"data": input, "context": {"request": info.context, "info": info}}
 
     @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
@@ -202,5 +202,5 @@ class UserDefinedPrimaryKeyMixin(object):
         return {
             "instance": instance,
             "data": input,
-            "context": {"request": info.context},
+            "context": {"request": info.context, "info": info},
         }
