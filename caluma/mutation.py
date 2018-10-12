@@ -57,7 +57,8 @@ class SerializerMutation(ClientIDMutation):
     * `model_operations`: Define which operations are allowed. Defaults to `['create', 'update'].
     * `only_fields`: Restrict input fields. Defaults to serializer fields.
     * `exclude_fields`: Exclude input fields. Defaults to serializer fields.
-    * `return_field_name`: Name of return graph. Defaults to camel cased model class name
+    * `return_field_name`: Name of return graph. Defaults to camel cased model class name.
+                           Maybe set to False to not return a field at all.
     * `return_field_type`: Type of return graph. Defaults to object type of given model_class.
     """
 
@@ -99,7 +100,7 @@ class SerializerMutation(ClientIDMutation):
             serializer, only_fields, exclude_fields, is_input=True
         )
 
-        if not return_field_name:
+        if return_field_name is None:
             model_name = model_class.__name__
             return_field_name = model_name[:1].lower() + model_name[1:]
 
@@ -108,7 +109,8 @@ class SerializerMutation(ClientIDMutation):
             return_field_type = registry.get_type_for_model(model_class)
 
         output_fields = OrderedDict()
-        output_fields[return_field_name] = graphene.Field(return_field_type)
+        if return_field_name:
+            output_fields[return_field_name] = graphene.Field(return_field_type)
 
         _meta = SerializerMutationOptions(cls)
         _meta.lookup_field = lookup_field
@@ -169,7 +171,9 @@ class SerializerMutation(ClientIDMutation):
     @classmethod
     def perform_mutate(cls, serializer, info):
         obj = serializer.save()
-        kwargs = {cls._meta.return_field_name: obj}
+        kwargs = {}
+        if cls._meta.return_field_name:
+            kwargs[cls._meta.return_field_name] = obj
         return cls(**kwargs)
 
 
@@ -186,11 +190,12 @@ class UserDefinedPrimaryKeyMixin(object):
     @classmethod
     def get_serializer_kwargs(cls, root, info, **input):
         lookup_field = cls._meta.lookup_field
+        lookup_input_kwarg = cls._meta.lookup_input_kwarg
         model_class = cls._meta.model_class
         return_field_type = cls._meta.return_field_type
 
         queryset = return_field_type.get_queryset(model_class.objects, info)
-        filter_kwargs = {lookup_field: input[lookup_field]}
+        filter_kwargs = {lookup_field: input[lookup_input_kwarg]}
         instance = queryset.filter(**filter_kwargs).first()
 
         if instance is None and model_class.objects.filter(**filter_kwargs).exists():

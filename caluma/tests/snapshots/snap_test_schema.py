@@ -410,7 +410,7 @@ type RemoveFormQuestionPayload {
 }
 
 input RemoveOptionInput {
-  option: ID
+  option: ID!
   clientMutationId: String
 }
 

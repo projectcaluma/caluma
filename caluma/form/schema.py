@@ -231,15 +231,11 @@ class SaveOption(UserDefinedPrimaryKeyMixin, SerializerMutation):
         serializer_class = serializers.SaveOptionSerializer
 
 
-class RemoveOption(ClientIDMutation):
-    class Input:
-        option = graphene.ID()
-
-    @classmethod
-    def mutate_and_get_payload(cls, root, info, **input):
-        option_id = extract_global_id(input["option"])
-        models.Option.objects.filter(pk=option_id).delete()
-        return cls()
+class RemoveOption(UserDefinedPrimaryKeyMixin, SerializerMutation):
+    class Meta:
+        lookup_input_kwarg = "option"
+        serializer_class = serializers.RemoveOptionSerializer
+        return_field_name = False
 
 
 class Answer(graphene.Interface):

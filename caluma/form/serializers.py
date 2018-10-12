@@ -243,6 +243,18 @@ class SaveOptionSerializer(serializers.ModelSerializer):
         model = models.Option
 
 
+class RemoveOptionSerializer(serializers.ModelSerializer):
+    option = serializers.GlobalIDField(source="slug")
+
+    def update(self, instance, validated_data):
+        models.Option.objects.filter(pk=instance).delete()
+        return instance
+
+    class Meta:
+        fields = ("option",)
+        model = models.Option
+
+
 class ArchiveQuestionSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField(source="slug")
 
