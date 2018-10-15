@@ -112,7 +112,7 @@ ADMINS = parse_admins(env.list("ADMINS", default=[]))
 
 GRAPHENE = {
     "SCHEMA": "caluma.schema.schema",
-    "MIDDLEWARE": ["caluma.middleware.OIDCAuthenticationMiddleware"],
+    "MIDDLEWARE": ["caluma.user.middleware.OIDCAuthenticationMiddleware"],
 }
 
 # OpenID connect
