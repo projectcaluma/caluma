@@ -6,7 +6,7 @@ from . import filters, models, serializers
 from ..filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
 from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
 from ..relay import extract_global_id
-from ..types import DjangoObjectType
+from ..types import DjangoObjectType, QuerysetMixin
 
 
 class QuestionJexl(graphene.String):
@@ -20,7 +20,7 @@ serializer_converter.get_graphene_type_from_serializer_field.register(
 )
 
 
-class Question(graphene.Interface):
+class Question(QuerysetMixin, graphene.Interface):
     id = graphene.ID(required=True)
     created = graphene.DateTime(required=True)
     modified = graphene.DateTime(required=True)
@@ -36,6 +36,7 @@ class Question(graphene.Interface):
 
     @classmethod
     def get_queryset(cls, queryset, info):
+        queryset = super().get_queryset(queryset, info)
         return queryset.order_by("-formquestion__sort", "formquestion__id")
 
     @classmethod
@@ -60,6 +61,7 @@ class Option(DjangoObjectType):
 
     @classmethod
     def get_queryset(cls, queryset, info):
+        queryset = super().get_queryset(queryset, info)
         return queryset.order_by("-questionoption__sort", "questionoption__id")
 
 
@@ -68,7 +70,15 @@ class QuestionConnection(graphene.Connection):
         node = Question
 
 
-class TextQuestion(DjangoObjectType):
+class QuestionQuerysetMixin(object):
+    """Mixin to combine all different question types into one queryset."""
+
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        return Question.get_queryset(queryset, info)
+
+
+class TextQuestion(QuestionQuerysetMixin, DjangoObjectType):
     max_length = graphene.Int()
 
     class Meta:
@@ -78,7 +88,7 @@ class TextQuestion(DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class TextareaQuestion(DjangoObjectType):
+class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
     max_length = graphene.Int()
 
     class Meta:
@@ -88,7 +98,7 @@ class TextareaQuestion(DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class RadioQuestion(DjangoObjectType):
+class RadioQuestion(QuestionQuerysetMixin, DjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
@@ -100,7 +110,7 @@ class RadioQuestion(DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class CheckboxQuestion(DjangoObjectType):
+class CheckboxQuestion(QuestionQuerysetMixin, DjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
@@ -112,7 +122,7 @@ class CheckboxQuestion(DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class IntegerQuestion(DjangoObjectType):
+class IntegerQuestion(QuestionQuerysetMixin, DjangoObjectType):
     max_value = graphene.Int()
     min_value = graphene.Int()
 
@@ -123,7 +133,7 @@ class IntegerQuestion(DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class FloatQuestion(DjangoObjectType):
+class FloatQuestion(QuestionQuerysetMixin, DjangoObjectType):
     min_value = graphene.Float()
     max_value = graphene.Float()
 
@@ -237,16 +247,12 @@ class RemoveOption(UserDefinedPrimaryKeyMixin, SerializerMutation):
         return_field_name = False
 
 
-class Answer(graphene.Interface):
+class Answer(QuerysetMixin, graphene.Interface):
     id = graphene.ID()
     created = graphene.DateTime(required=True)
     modified = graphene.DateTime(required=True)
     question = graphene.Field(Question, required=True)
     meta = graphene.JSONString(required=True)
-
-    @classmethod
-    def get_queryset(cls, queryset, info):
-        return queryset
 
     @classmethod
     def resolve_type(cls, instance, info):
@@ -260,7 +266,15 @@ class Answer(graphene.Interface):
         return ANSWER_TYPE[type(instance.value)]
 
 
-class IntegerAnswer(DjangoObjectType):
+class AnswerQuerysetMixin(object):
+    """Mixin to combine all different answer types into one queryset."""
+
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        return Answer.get_queryset(queryset, info)
+
+
+class IntegerAnswer(AnswerQuerysetMixin, DjangoObjectType):
     value = graphene.Int(required=True)
 
     class Meta:
@@ -270,7 +284,7 @@ class IntegerAnswer(DjangoObjectType):
         interfaces = (Answer, graphene.Node)
 
 
-class FloatAnswer(DjangoObjectType):
+class FloatAnswer(AnswerQuerysetMixin, DjangoObjectType):
     value = graphene.Float(required=True)
 
     class Meta:
@@ -280,7 +294,7 @@ class FloatAnswer(DjangoObjectType):
         interfaces = (Answer, graphene.Node)
 
 
-class StringAnswer(DjangoObjectType):
+class StringAnswer(AnswerQuerysetMixin, DjangoObjectType):
     value = graphene.String(required=True)
 
     class Meta:
@@ -290,7 +304,7 @@ class StringAnswer(DjangoObjectType):
         interfaces = (Answer, graphene.Node)
 
 
-class ListAnswer(DjangoObjectType):
+class ListAnswer(AnswerQuerysetMixin, DjangoObjectType):
     value = graphene.List(graphene.String, required=True)
 
     class Meta:

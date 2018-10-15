@@ -1,4 +1,5 @@
 import pytest
+from graphql_relay import to_global_id
 
 from .. import serializers
 from ...form.models import Question
@@ -172,3 +173,21 @@ def test_save_document_answer(db, snapshot, answer, mutation, question_option, s
     assert not bool(result.errors) == success
     if success:
         snapshot.assert_match(result.data)
+
+
+@pytest.mark.parametrize("answer__value", [1.1])
+def test_query_answer_node(db, answer):
+    global_id = to_global_id("FloatAnswer", answer.pk)
+
+    node_query = """
+    query AnswerNode($id: ID!) {
+      node(id: $id) {
+        ... on FloatAnswer {
+            value
+        }
+      }
+    }
+    """
+
+    result = schema.execute(node_query, variables={"id": global_id})
+    assert not result.errors

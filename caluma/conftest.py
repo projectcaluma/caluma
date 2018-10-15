@@ -3,12 +3,14 @@ import inspect
 import pytest
 from factory import Faker
 from factory.base import FactoryMetaClass
+from graphene import ResolveInfo
 from graphql.error import format_error
 from pytest_factoryboy import register
 from snapshottest.pytest import PyTestSnapshotTest
 
 from .faker import MultilangProvider
 from .form import factories as form_factories
+from .user.models import AnonymousUser, OIDCUser
 from .workflow import factories as workflow_factories
 
 Faker.add_provider(MultilangProvider)
@@ -37,3 +39,41 @@ def snapshot(request):
 
     with GraphQlSnapshotTest(request) as snapshot_test:
         yield snapshot_test
+
+
+@pytest.fixture
+def info(rf):
+    request = rf.get("/graphql")
+    request.user = AnonymousUser()
+
+    return ResolveInfo(
+        None,
+        None,
+        None,
+        None,
+        schema=None,
+        fragments=None,
+        root_value=None,
+        operation=None,
+        variable_values=None,
+        context=request,
+    )
+
+
+@pytest.fixture
+def admin_info(rf):
+    request = rf.get("/graphql")
+    request.user = OIDCUser({"sub": "admin"})
+
+    return ResolveInfo(
+        None,
+        None,
+        None,
+        None,
+        schema=None,
+        fragments=None,
+        root_value=None,
+        operation=None,
+        variable_values=None,
+        context=request,
+    )
