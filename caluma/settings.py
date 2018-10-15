@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "psqlextra",
     "django.contrib.contenttypes",
     "graphene_django",
+    "caluma.user.apps.DefaultConfig",
     "caluma.form.apps.DefaultConfig",
     "caluma.workflow.apps.DefaultConfig",
 ]
@@ -48,7 +49,7 @@ WSGI_APPLICATION = "caluma.wsgi.application"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [django_root("caluma", "templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -109,4 +110,18 @@ ADMINS = parse_admins(env.list("ADMINS", default=[]))
 
 # GraphQL
 
-GRAPHENE = {"SCHEMA": "caluma.schema.schema"}
+GRAPHENE = {
+    "SCHEMA": "caluma.schema.schema",
+    "MIDDLEWARE": ["caluma.middleware.OIDCAuthenticationMiddleware"],
+}
+
+# OpenID connect
+
+OIDC_VERIFY_ALGORITHM = env.list("OIDC_VERIFY_ALGORITHM", default="HS256")
+OIDC_CLIENT = env.str("OIDC_CLIENT", default=None)
+OIDC_JWKS_ENDPOINT = env.str("OIDC_JWKS_ENDPOINT", default=None)
+OIDC_SECRET_KEY = env.str("OIDC_SECRET_KEY", default=SECRET_KEY)
+OIDC_VERIFY_SSL = env.bool("OIDC_VERIFY_SSL", default=True)
+OIDC_VALIDATE_CLAIMS_OPTIONS = env.dict(
+    "OIDC_VALIDATE_CLAIMS_OPTIONS", cast={"value": bool}, default=None
+)
