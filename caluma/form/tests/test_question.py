@@ -295,7 +295,7 @@ def test_save_checkbox_question(db, snapshot, question, question_option_factory)
             serializers.SaveCheckboxQuestionSerializer, question
         )
     }
-    inp["input"]["options"] == option_ids
+    inp["input"]["options"] = option_ids
     result = schema.execute(query, variables=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
