@@ -1,10 +1,10 @@
-from graphene_django.filter.filterset import (
+from . import models
+from ..filters import (
+    FilterSet,
     GlobalIDFilter,
     GlobalIDMultipleChoiceFilter,
+    SearchFilter,
 )
-
-from . import models
-from ..filters import FilterSet, SearchFilter
 
 
 class FormFilterSet(FilterSet):
@@ -48,4 +48,4 @@ class AnswerFilterSet(FilterSet):
 
     class Meta:
         model = models.Answer
-        fields = ("question",)
+        fields = ("question", "search")
