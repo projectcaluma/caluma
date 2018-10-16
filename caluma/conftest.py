@@ -43,6 +43,7 @@ def snapshot(request):
 
 @pytest.fixture
 def info(rf):
+    """Mock for GraphQL resolve info embedding django request as context."""
     request = rf.get("/graphql")
     request.user = AnonymousUser()
 
@@ -62,6 +63,7 @@ def info(rf):
 
 @pytest.fixture
 def admin_info(rf):
+    """Mock for GraphQL resolve info embedding authenticated django request as context."""
     request = rf.get("/graphql")
     request.user = OIDCUser({"sub": "admin"})
 
