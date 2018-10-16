@@ -1,4 +1,7 @@
-from graphene_django.filter.filterset import GlobalIDMultipleChoiceFilter
+from graphene_django.filter.filterset import (
+    GlobalIDFilter,
+    GlobalIDMultipleChoiceFilter,
+)
 
 from . import models
 from ..filters import FilterSet, SearchFilter
@@ -30,13 +33,14 @@ class QuestionFilterSet(FilterSet):
 
 
 class DocumentFilterSet(FilterSet):
+    id = GlobalIDFilter()
     search = SearchFilter(
         fields=("form__slug", "form__name", "form__description", "answers__value")
     )
 
     class Meta:
         model = models.Document
-        fields = ("form", "search")
+        fields = ("form", "search", "id")
 
 
 class AnswerFilterSet(FilterSet):

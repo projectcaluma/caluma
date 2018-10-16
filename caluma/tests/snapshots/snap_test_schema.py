@@ -355,7 +355,7 @@ type Query {
   allWorkItems(before: String, after: String, first: Int, last: Int, status: String, task: ID, case: ID): WorkItemConnection
   allForms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   allQuestions(before: String, after: String, first: Int, last: Int, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String): QuestionConnection
-  allDocuments(before: String, after: String, first: Int, last: Int, form: ID, search: String): DocumentConnection
+  allDocuments(before: String, after: String, first: Int, last: Int, form: ID, search: String, id: ID): DocumentConnection
   node(id: ID!): Node
 }
 
