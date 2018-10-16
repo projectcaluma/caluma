@@ -12,6 +12,19 @@ from .relay import extract_global_id
 
 
 class GlobalIDPrimaryKeyRelatedField(relations.PrimaryKeyRelatedField):
+    """
+    References a global id primary key.
+
+    This class ensures that only primary keys may be looked up which are visible
+    by corresponding DjangoObjectType.
+    """
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        registry = get_global_registry()
+        node_type = registry.get_type_for_model(queryset.model)
+        return node_type.get_queryset(queryset, self.context.get("info"))
+
     def to_internal_value(self, data):
         data = extract_global_id(data)
         return super().to_internal_value(data)
