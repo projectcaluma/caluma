@@ -8,7 +8,7 @@ class QuerysetMixin(object):
     @classmethod
     def get_queryset(cls, queryset, info):
         for visibility_class in settings.VISIBILITY_CLASSES:
-            queryset = visibility_class.get_queryset(cls, queryset, info)
+            queryset = visibility_class().get_queryset(cls, queryset, info)
 
         return queryset
 

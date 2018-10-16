@@ -130,7 +130,7 @@ OIDC_VALIDATE_CLAIMS_OPTIONS = env.dict(
 # Extensions
 
 VISIBILITY_CLASSES = [
-    import_string(cls)()
+    import_string(cls)
     for cls in env.list(
         "VISIBILITY_CLASSES", default=default(["caluma.visibilities.Any"])
     )
