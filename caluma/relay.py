@@ -6,8 +6,7 @@ def extract_global_id(id):
     Extract id from global id throwing away type.
 
     In case it is not a base64 encoded value it will return id as is.
-    This simplifies usage of. This way it can be used as input type
-    by simply defining id without its specific type.
+    This way it can be used as input type by simply defining id without its specific type.
     """
 
     try:

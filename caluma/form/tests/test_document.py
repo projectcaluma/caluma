@@ -2,6 +2,7 @@ import pytest
 
 from .. import serializers
 from ...form.models import Question
+from ...relay import extract_global_id
 from ...schema import schema
 from ...tests import extract_serializer_input_fields
 
@@ -55,6 +56,38 @@ def test_query_all_documents(db, snapshot, form_question, form, document, answer
     result = schema.execute(query, variables={"search": search})
     assert not result.errors
     snapshot.assert_match(result.data)
+
+
+def test_query_all_documents_filter_answers_by_question(
+    db, snapshot, document, answer, question, answer_factory
+):
+    answer_factory(document=document)
+
+    query = """
+        query AllDocumentsQuery($question: ID!) {
+          allDocuments {
+            edges {
+              node {
+                answers(question: $question) {
+                  edges {
+                    node {
+                      id
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    result = schema.execute(query, variables={"question": question.slug})
+    assert not result.errors
+    assert len(result.data["allDocuments"]["edges"]) == 1
+    result_document = result.data["allDocuments"]["edges"][0]["node"]
+    assert len(result_document["answers"]["edges"]) == 1
+    result_answer = result_document["answers"]["edges"][0]["node"]
+    assert extract_global_id(result_answer["id"]) == str(answer.id)
 
 
 def test_save_document(db, snapshot, document):
