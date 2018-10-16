@@ -1,26 +1,9 @@
 import pytest
 from django.http import Http404
-from graphene import ResolveInfo
 from rest_framework import serializers
 
 from .. import models, mutation, types
 from .fake_model import get_fake_model
-
-
-@pytest.fixture
-def mock_info():
-    return ResolveInfo(
-        None,
-        None,
-        None,
-        None,
-        schema=None,
-        fragments=None,
-        root_value=None,
-        operation=None,
-        variable_values=None,
-        context=None,
-    )
 
 
 def test_missing_serializer_mutation_serializer_class():
@@ -48,7 +31,7 @@ def test_invalid_serializer_mutation_model_operations(db):
     assert "model_operations" in str(exc.value)
 
 
-def test_invalid_serializer_mutation_update_mutate_and_get_payload(db, mock_info):
+def test_invalid_serializer_mutation_update_mutate_and_get_payload(db, info):
     FakeModel = get_fake_model(model_base=models.UUIDModel)
 
     class FakeModelObjectType(types.DjangoObjectType):
@@ -72,12 +55,12 @@ def test_invalid_serializer_mutation_update_mutate_and_get_payload(db, mock_info
             model_operations = ["update"]
 
     with pytest.raises(Exception) as exc:
-        InvalidModelMutation.mutate_and_get_payload(None, mock_info)
+        InvalidModelMutation.mutate_and_get_payload(None, info)
 
     assert '"id" required' in str(exc.value)
 
 
-def test_serializer_mutation_mutate_and_get_payload_without_model(mock_info):
+def test_serializer_mutation_mutate_and_get_payload_without_model(info):
     class MySerializer(serializers.Serializer):
         name = serializers.CharField()
 
@@ -89,11 +72,11 @@ def test_serializer_mutation_mutate_and_get_payload_without_model(mock_info):
             return_field_name = "test"
             serializer_class = MySerializer
 
-    result = NoModelMutation.mutate_and_get_payload(None, mock_info, name="test")
+    result = NoModelMutation.mutate_and_get_payload(None, info, name="test")
     assert type(result) == NoModelMutation
 
 
-def test_user_defined_primary_key_get_serializer_kwargs_not_allowed(db, mock_info):
+def test_user_defined_primary_key_get_serializer_kwargs_not_allowed(db, info):
     """Test that user may not overwrite existing instance which is not visible."""
     FakeModel = get_fake_model(model_base=models.SlugModel)
 
@@ -119,4 +102,4 @@ def test_user_defined_primary_key_get_serializer_kwargs_not_allowed(db, mock_inf
     FakeModel.objects.create(slug="test")
 
     with pytest.raises(Http404):
-        MyMutation.get_serializer_kwargs(None, mock_info, slug="test")
+        MyMutation.get_serializer_kwargs(None, info, slug="test")

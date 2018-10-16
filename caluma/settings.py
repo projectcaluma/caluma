@@ -2,6 +2,7 @@ import os
 import re
 
 import environ
+from django.utils.module_loading import import_string
 
 env = environ.Env()
 django_root = environ.Path(__file__) - 2
@@ -125,3 +126,12 @@ OIDC_VERIFY_SSL = env.bool("OIDC_VERIFY_SSL", default=True)
 OIDC_VALIDATE_CLAIMS_OPTIONS = env.dict(
     "OIDC_VALIDATE_CLAIMS_OPTIONS", cast={"value": bool}, default=None
 )
+
+# Extensions
+
+VISIBILITY_CLASSES = [
+    import_string(cls)
+    for cls in env.list(
+        "VISIBILITY_CLASSES", default=default(["caluma.visibilities.Any"])
+    )
+]

@@ -12,7 +12,7 @@ class AnonymousUser(object):
 
 class OIDCUser(object):
     def __init__(self, jwt_token):
-        self.username = jwt_token.get("sub", "")
+        self.username = jwt_token["sub"]
 
     @property
     def is_authenticated(self):
