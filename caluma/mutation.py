@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 import graphene
+from django.conf import settings
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from graphene.relay.mutation import ClientIDMutation
@@ -11,6 +12,7 @@ from graphene_django.converter import convert_django_field, convert_field_to_str
 from graphene_django.registry import get_global_registry
 from graphene_django.rest_framework.mutation import fields_for_serializer
 from localized_fields.fields import LocalizedField
+from rest_framework import exceptions
 
 from .relay import extract_global_id
 
@@ -168,8 +170,25 @@ class SerializerMutation(ClientIDMutation):
         return instance
 
     @classmethod
+    def check_permissions(cls, root, info):
+        for permission_class in settings.PERMISSION_CLASSES:
+            if not permission_class().has_permission(cls, info):
+                raise exceptions.PermissionDenied()
+
+    @classmethod
+    def check_object_permissions(cls, root, info, instance):
+        for permission_class in settings.PERMISSION_CLASSES:
+            if not permission_class().has_object_permission(cls, info, instance):
+                raise exceptions.PermissionDenied()
+
+    @classmethod
     def mutate_and_get_payload(cls, root, info, **input):
+        cls.check_permissions(root, info)
         kwargs = cls.get_serializer_kwargs(root, info, **input)
+        instance = kwargs.get("instance")
+        if instance is not None:
+            cls.check_object_permissions(root, info, kwargs.get("instance"))
+
         serializer = cls._meta.serializer_class(**kwargs)
 
         # TODO: use extensions of error to define what went wrong in validation

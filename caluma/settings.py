@@ -135,3 +135,11 @@ VISIBILITY_CLASSES = [
         "VISIBILITY_CLASSES", default=default(["caluma.visibilities.Any"])
     )
 ]
+
+
+PERMISSION_CLASSES = [
+    import_string(cls)
+    for cls in env.list(
+        "PERMISSION_CLASSES", default=default(["caluma.permissions.AllowAny"])
+    )
+]
