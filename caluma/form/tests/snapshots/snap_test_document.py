@@ -4,112 +4,13 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
-
-snapshots["test_query_all_documents[integer-1] 1"] = {
-    "allDocuments": {
-        "edges": [
-            {
-                "node": {
-                    "answers": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "__typename": "IntegerAnswer",
-                                    "integer_value": 1,
-                                    "question": {
-                                        "label": "Amanda Boyd",
-                                        "slug": "fly-even-yourself",
-                                    },
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
-        ]
-    }
-}
-
-snapshots["test_query_all_documents[float-2.1] 1"] = {
-    "allDocuments": {
-        "edges": [
-            {
-                "node": {
-                    "answers": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "__typename": "FloatAnswer",
-                                    "float_value": 2.1,
-                                    "question": {
-                                        "label": "Amanda Boyd",
-                                        "slug": "fly-even-yourself",
-                                    },
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
-        ]
-    }
-}
-
-snapshots["test_query_all_documents[text-somevalue] 1"] = {
-    "allDocuments": {
-        "edges": [
-            {
-                "node": {
-                    "answers": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "__typename": "StringAnswer",
-                                    "question": {
-                                        "label": "Amanda Boyd",
-                                        "slug": "fly-even-yourself",
-                                    },
-                                    "string_value": "somevalue",
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
-        ]
-    }
-}
-
-snapshots["test_query_all_documents[checkbox-answer__value3] 1"] = {
-    "allDocuments": {
-        "edges": [
-            {
-                "node": {
-                    "answers": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "__typename": "ListAnswer",
-                                    "list_value": ["somevalue", "anothervalue"],
-                                    "question": {
-                                        "label": "Amanda Boyd",
-                                        "slug": "fly-even-yourself",
-                                    },
-                                }
-                            }
-                        ]
-                    }
-                }
-            }
-        ]
-    }
-}
 
 snapshots["test_save_document 1"] = {
     "saveDocument": {
         "clientMutationId": "testid",
-        "document": {"form": {"slug": "mrs-shake-recent"}},
+        "document": {"form": {"slug": "effort-meet"}},
     }
 }
 
@@ -128,6 +29,110 @@ snapshots[
     "saveDocumentFloatAnswer": {
         "answer": {"floatValue": 2.1},
         "clientMutationId": "testid",
+    }
+}
+
+snapshots["test_query_all_documents[integer-1] 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "IntegerAnswer",
+                                    "integer_value": 1,
+                                    "question": {
+                                        "label": "Thomas Johnson",
+                                        "slug": "sound-air-mission",
+                                    },
+                                }
+                            }
+                        ]
+                    },
+                    "createdByUser": "4602cffe-6aa8-9ae7-ba6b-2cf34839ef47",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_documents[float-2.1] 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "FloatAnswer",
+                                    "float_value": 2.1,
+                                    "question": {
+                                        "label": "Thomas Johnson",
+                                        "slug": "sound-air-mission",
+                                    },
+                                }
+                            }
+                        ]
+                    },
+                    "createdByUser": "4602cffe-6aa8-9ae7-ba6b-2cf34839ef47",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_documents[text-somevalue] 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "StringAnswer",
+                                    "question": {
+                                        "label": "Thomas Johnson",
+                                        "slug": "sound-air-mission",
+                                    },
+                                    "string_value": "somevalue",
+                                }
+                            }
+                        ]
+                    },
+                    "createdByUser": "4602cffe-6aa8-9ae7-ba6b-2cf34839ef47",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_documents[checkbox-answer__value3] 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "ListAnswer",
+                                    "list_value": ["somevalue", "anothervalue"],
+                                    "question": {
+                                        "label": "Thomas Johnson",
+                                        "slug": "sound-air-mission",
+                                    },
+                                }
+                            }
+                        ]
+                    },
+                    "createdByUser": "4602cffe-6aa8-9ae7-ba6b-2cf34839ef47",
+                }
+            }
+        ]
     }
 }
 

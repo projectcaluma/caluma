@@ -39,8 +39,8 @@ type AddWorkflowFlowPayload {
 
 interface Answer {
   id: ID
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
   question: Question!
   meta: JSONString!
 }
@@ -96,8 +96,10 @@ type ArchiveWorkflowPayload {
 }
 
 type Case implements Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   id: ID!
   workflow: Workflow!
   status: CaseStatus!
@@ -122,8 +124,10 @@ enum CaseStatus {
 }
 
 type CheckboxQuestion implements Question, Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   slug: String!
   label: String!
   isRequired: QuestionJexl!
@@ -148,12 +152,14 @@ type CompleteWorkItemPayload {
 scalar DateTime
 
 type Document implements Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
   form: Form!
   meta: JSONString!
   answers(before: String, after: String, first: Int, last: Int, question: ID, search: String): AnswerConnection
-  id: ID!
 }
 
 type DocumentConnection {
@@ -167,8 +173,10 @@ type DocumentEdge {
 }
 
 type FloatAnswer implements Answer, Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   id: ID!
   question: Question!
   value: Float!
@@ -176,8 +184,10 @@ type FloatAnswer implements Answer, Node {
 }
 
 type FloatQuestion implements Question, Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   slug: String!
   label: String!
   isRequired: QuestionJexl!
@@ -209,8 +219,10 @@ type FlowEdge {
 scalar FlowJexl
 
 type Form implements Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   slug: String!
   name: String!
   description: String
@@ -232,8 +244,10 @@ type FormEdge {
 }
 
 type IntegerAnswer implements Answer, Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   id: ID!
   question: Question!
   value: Int!
@@ -241,8 +255,10 @@ type IntegerAnswer implements Answer, Node {
 }
 
 type IntegerQuestion implements Question, Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   slug: String!
   label: String!
   isRequired: QuestionJexl!
@@ -258,8 +274,10 @@ type IntegerQuestion implements Question, Node {
 scalar JSONString
 
 type ListAnswer implements Answer, Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   id: ID!
   question: Question!
   value: [String]!
@@ -303,8 +321,10 @@ interface Node {
 }
 
 type Option implements Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   slug: String!
   label: String!
   meta: JSONString!
@@ -361,8 +381,8 @@ type Query {
 
 interface Question {
   id: ID!
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
   slug: String!
   label: String!
   isRequired: QuestionJexl!
@@ -385,8 +405,10 @@ type QuestionEdge {
 scalar QuestionJexl
 
 type RadioQuestion implements Question, Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   slug: String!
   label: String!
   isRequired: QuestionJexl!
@@ -660,8 +682,10 @@ type StartCasePayload {
 }
 
 type StringAnswer implements Answer, Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   id: ID!
   question: Question!
   value: String!
@@ -669,8 +693,10 @@ type StringAnswer implements Answer, Node {
 }
 
 type Task implements Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   slug: String!
   name: String!
   description: String
@@ -695,8 +721,10 @@ enum TaskType {
 }
 
 type TextQuestion implements Question, Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   slug: String!
   label: String!
   isRequired: QuestionJexl!
@@ -709,8 +737,10 @@ type TextQuestion implements Question, Node {
 }
 
 type TextareaQuestion implements Question, Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   slug: String!
   label: String!
   isRequired: QuestionJexl!
@@ -723,8 +753,10 @@ type TextareaQuestion implements Question, Node {
 }
 
 type WorkItem implements Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   id: ID!
   task: Task!
   case: Case!
@@ -748,8 +780,10 @@ enum WorkItemStatus {
 }
 
 type Workflow implements Node {
-  created: DateTime!
-  modified: DateTime!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   slug: String!
   name: String!
   description: String
@@ -758,8 +792,8 @@ type Workflow implements Node {
   isArchived: Boolean!
   start: Task!
   form: Form
-  id: ID!
   flows(before: String, after: String, first: Int, last: Int, task: ID): FlowConnection
+  id: ID!
 }
 
 type WorkflowConnection {

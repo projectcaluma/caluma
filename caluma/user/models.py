@@ -1,6 +1,11 @@
+from django.conf import settings
+
+
 class AnonymousUser(object):
     def __init__(self):
-        self.username = ""
+        self.username = None
+        self.groups = []
+        self.group = None
 
     @property
     def is_authenticated(self):
@@ -13,6 +18,11 @@ class AnonymousUser(object):
 class OIDCUser(object):
     def __init__(self, jwt_token):
         self.username = jwt_token["sub"]
+        self.groups = jwt_token.get(settings.OIDC_GROUPS_CLAIM) or []
+
+    @property
+    def group(self):
+        return self.groups and self.groups[0]
 
     @property
     def is_authenticated(self):

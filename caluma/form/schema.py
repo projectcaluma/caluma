@@ -22,8 +22,8 @@ serializer_converter.get_graphene_type_from_serializer_field.register(
 
 class Question(QuerysetMixin, graphene.Interface):
     id = graphene.ID(required=True)
-    created = graphene.DateTime(required=True)
-    modified = graphene.DateTime(required=True)
+    created_at = graphene.DateTime(required=True)
+    modified_at = graphene.DateTime(required=True)
     slug = graphene.String(required=True)
     label = graphene.String(required=True)
     is_required = QuestionJexl(required=True)
@@ -249,8 +249,8 @@ class RemoveOption(UserDefinedPrimaryKeyMixin, SerializerMutation):
 
 class Answer(QuerysetMixin, graphene.Interface):
     id = graphene.ID()
-    created = graphene.DateTime(required=True)
-    modified = graphene.DateTime(required=True)
+    created_at = graphene.DateTime(required=True)
+    modified_at = graphene.DateTime(required=True)
     question = graphene.Field(Question, required=True)
     meta = graphene.JSONString(required=True)
 
@@ -327,7 +327,7 @@ class Document(DjangoObjectType):
     class Meta:
         model = models.Document
         interfaces = (graphene.Node,)
-        only_fields = ("created", "modified", "form", "meta", "answers")
+        exclude_fields = ("cases",)
         filter_fields = ("form",)
 
 

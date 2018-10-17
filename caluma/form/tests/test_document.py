@@ -4,7 +4,6 @@ from graphql_relay import to_global_id
 from .. import serializers
 from ...form.models import Question
 from ...relay import extract_global_id
-from ...schema import schema
 from ...tests import extract_serializer_input_fields
 
 
@@ -17,13 +16,16 @@ from ...tests import extract_serializer_input_fields
         (Question.TYPE_CHECKBOX, ["somevalue", "anothervalue"]),
     ],
 )
-def test_query_all_documents(db, snapshot, form_question, form, document, answer):
+def test_query_all_documents(
+    db, snapshot, form_question, form, document, answer, schema_executor
+):
 
     query = """
         query AllDocumentsQuery($search: String) {
           allDocuments(search: $search) {
             edges {
               node {
+                createdByUser
                 answers {
                   edges {
                     node {
@@ -54,13 +56,13 @@ def test_query_all_documents(db, snapshot, form_question, form, document, answer
     """
 
     search = isinstance(answer.value, list) and " ".join(answer.value) or answer.value
-    result = schema.execute(query, variables={"search": search})
+    result = schema_executor(query, variables={"search": search})
     assert not result.errors
     snapshot.assert_match(result.data)
 
 
 def test_query_all_documents_filter_answers_by_question(
-    db, snapshot, document, answer, question, answer_factory
+    db, snapshot, document, answer, question, answer_factory, schema_executor
 ):
     answer_factory(document=document)
 
@@ -82,7 +84,7 @@ def test_query_all_documents_filter_answers_by_question(
         }
     """
 
-    result = schema.execute(query, variables={"question": question.slug})
+    result = schema_executor(query, variables={"question": question.slug})
     assert not result.errors
     assert len(result.data["allDocuments"]["edges"]) == 1
     result_document = result.data["allDocuments"]["edges"][0]["node"]
@@ -91,7 +93,7 @@ def test_query_all_documents_filter_answers_by_question(
     assert extract_global_id(result_answer["id"]) == str(answer.id)
 
 
-def test_save_document(db, snapshot, document):
+def test_save_document(db, snapshot, document, schema_executor):
     query = """
         mutation SaveDocument($input: SaveDocumentInput!) {
           saveDocument(input: $input) {
@@ -110,7 +112,7 @@ def test_save_document(db, snapshot, document):
             serializers.DocumentSerializer, document
         )
     }
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
 
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -169,7 +171,9 @@ def test_save_document(db, snapshot, document):
         ),
     ],
 )
-def test_save_document_answer(db, snapshot, answer, mutation, question_option, success):
+def test_save_document_answer(
+    db, snapshot, answer, mutation, question_option, success, schema_executor
+):
     mutation_func = mutation[0].lower() + mutation[1:]
     query = f"""
         mutation {mutation}($input: {mutation}Input!) {{
@@ -201,7 +205,7 @@ def test_save_document_answer(db, snapshot, answer, mutation, question_option, s
             serializers.SaveAnswerSerializer, answer
         )
     }
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
 
     assert not bool(result.errors) == success
     if success:
@@ -209,7 +213,7 @@ def test_save_document_answer(db, snapshot, answer, mutation, question_option, s
 
 
 @pytest.mark.parametrize("answer__value", [1.1])
-def test_query_answer_node(db, answer):
+def test_query_answer_node(db, answer, schema_executor):
     global_id = to_global_id("FloatAnswer", answer.pk)
 
     node_query = """
@@ -222,5 +226,5 @@ def test_query_answer_node(db, answer):
     }
     """
 
-    result = schema.execute(node_query, variables={"id": global_id})
+    result = schema_executor(node_query, variables={"id": global_id})
     assert not result.errors

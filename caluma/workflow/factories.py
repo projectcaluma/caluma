@@ -1,7 +1,7 @@
 from factory import Faker, SubFactory
-from factory.django import DjangoModelFactory
 
 from . import models
+from ..factories import DjangoModelFactory
 from ..form.factories import DocumentFactory, FormFactory
 
 

@@ -13,12 +13,12 @@ snapshots["test_query_all_questions[integer-question__configuration0] 1"] = {
             {
                 "node": {
                     "__typename": "IntegerQuestion",
-                    "id": "SW50ZWdlclF1ZXN0aW9uOm1ycy1zaGFrZS1yZWNlbnQ=",
+                    "id": "SW50ZWdlclF1ZXN0aW9uOmVmZm9ydC1tZWV0",
                     "integerMaxValue": 10,
                     "integerMinValue": 0,
-                    "label": "Jordan Mccarthy",
+                    "label": "Brian Williams",
                     "meta": "{}",
-                    "slug": "mrs-shake-recent",
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -33,10 +33,10 @@ snapshots["test_query_all_questions[float-question__configuration1] 1"] = {
                     "__typename": "FloatQuestion",
                     "floatMaxValue": 1.0,
                     "floatMinValue": 0.0,
-                    "id": "RmxvYXRRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
-                    "label": "Jordan Mccarthy",
+                    "id": "RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==",
+                    "label": "Brian Williams",
                     "meta": "{}",
-                    "slug": "mrs-shake-recent",
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -49,10 +49,10 @@ snapshots["test_save_question[true-SaveTextQuestion] 1"] = {
             "clientMutationId": "testid",
             "question": {
                 "__typename": "TextQuestion",
-                "id": "VGV4dFF1ZXN0aW9uOm1ycy1zaGFrZS1yZWNlbnQ=",
-                "label": "Jordan Mccarthy",
+                "id": "VGV4dFF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+                "label": "Brian Williams",
                 "meta": "{}",
-                "slug": "mrs-shake-recent",
+                "slug": "effort-meet",
             },
         }
     },
@@ -65,10 +65,10 @@ snapshots["test_save_question[true-SaveTextareaQuestion] 1"] = {
             "clientMutationId": "testid",
             "question": {
                 "__typename": "TextareaQuestion",
-                "id": "VGV4dGFyZWFRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
-                "label": "Jordan Mccarthy",
+                "id": "VGV4dGFyZWFRdWVzdGlvbjplZmZvcnQtbWVldA==",
+                "label": "Brian Williams",
                 "meta": "{}",
-                "slug": "mrs-shake-recent",
+                "slug": "effort-meet",
             },
         }
     },
@@ -81,10 +81,10 @@ snapshots["test_save_question[true-SaveIntegerQuestion] 1"] = {
             "clientMutationId": "testid",
             "question": {
                 "__typename": "IntegerQuestion",
-                "id": "SW50ZWdlclF1ZXN0aW9uOm1ycy1zaGFrZS1yZWNlbnQ=",
-                "label": "Jordan Mccarthy",
+                "id": "SW50ZWdlclF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+                "label": "Brian Williams",
                 "meta": "{}",
-                "slug": "mrs-shake-recent",
+                "slug": "effort-meet",
             },
         }
     },
@@ -97,10 +97,10 @@ snapshots["test_save_question[true-SaveFloatQuestion] 1"] = {
             "clientMutationId": "testid",
             "question": {
                 "__typename": "FloatQuestion",
-                "id": "RmxvYXRRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
-                "label": "Jordan Mccarthy",
+                "id": "RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==",
+                "label": "Brian Williams",
                 "meta": "{}",
-                "slug": "mrs-shake-recent",
+                "slug": "effort-meet",
             },
         }
     },
@@ -157,12 +157,12 @@ snapshots["test_save_float_question[float-question__configuration0] 1"] = {
             "clientMutationId": "testid",
             "question": {
                 "__typename": "FloatQuestion",
-                "id": "RmxvYXRRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
-                "label": "Jordan Mccarthy",
+                "id": "RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==",
+                "label": "Brian Williams",
                 "maxValue": 10.0,
                 "meta": "{}",
                 "minValue": 0.0,
-                "slug": "mrs-shake-recent",
+                "slug": "effort-meet",
             },
         }
     },
@@ -186,10 +186,10 @@ snapshots["test_save_integer_question[integer-question__configuration0] 1"] = {
             "clientMutationId": "testid",
             "question": {
                 "__typename": "IntegerQuestion",
-                "id": "SW50ZWdlclF1ZXN0aW9uOm1ycy1zaGFrZS1yZWNlbnQ=",
-                "label": "Jordan Mccarthy",
+                "id": "SW50ZWdlclF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+                "label": "Brian Williams",
                 "meta": "{}",
-                "slug": "mrs-shake-recent",
+                "slug": "effort-meet",
             },
         }
     },
@@ -212,16 +212,21 @@ snapshots["test_save_checkbox_question[checkbox] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "CheckboxQuestion",
-            "id": "Q2hlY2tib3hRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
-            "label": "Jordan Mccarthy",
+            "id": "Q2hlY2tib3hRdWVzdGlvbjplZmZvcnQtbWVldA==",
+            "label": "Brian Williams",
             "meta": "{}",
             "options": {
                 "edges": [
-                    {"node": {"label": "Nicole Dyer", "slug": "writer-kitchen"}},
-                    {"node": {"label": "Angela Brown", "slug": "reason-son-current"}},
+                    {
+                        "node": {
+                            "label": "Mariah Reynolds",
+                            "slug": "provide-beyond-seek",
+                        }
+                    },
+                    {"node": {"label": "Daniel Mann", "slug": "live-by-itself"}},
                 ]
             },
-            "slug": "mrs-shake-recent",
+            "slug": "effort-meet",
         },
     }
 }
@@ -231,15 +236,15 @@ snapshots["test_save_radio_question[radio] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "RadioQuestion",
-            "id": "UmFkaW9RdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
-            "label": "Jordan Mccarthy",
+            "id": "UmFkaW9RdWVzdGlvbjplZmZvcnQtbWVldA==",
+            "label": "Brian Williams",
             "meta": "{}",
             "options": {
                 "edges": [
-                    {"node": {"label": "Tyler Valencia", "slug": "across-environment"}}
+                    {"node": {"label": "John Thomas", "slug": "suggest-traditional"}}
                 ]
             },
-            "slug": "mrs-shake-recent",
+            "slug": "effort-meet",
         },
     }
 }
@@ -252,10 +257,10 @@ snapshots["test_query_all_questions[float-question__configuration2] 1"] = {
                     "__typename": "FloatQuestion",
                     "floatMaxValue": None,
                     "floatMinValue": None,
-                    "id": "RmxvYXRRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
-                    "label": "Jordan Mccarthy",
+                    "id": "RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==",
+                    "label": "Brian Williams",
                     "meta": "{}",
-                    "slug": "mrs-shake-recent",
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -268,11 +273,11 @@ snapshots["test_query_all_questions[text-question__configuration3] 1"] = {
             {
                 "node": {
                     "__typename": "TextQuestion",
-                    "id": "VGV4dFF1ZXN0aW9uOm1ycy1zaGFrZS1yZWNlbnQ=",
-                    "label": "Jordan Mccarthy",
+                    "id": "VGV4dFF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+                    "label": "Brian Williams",
                     "maxLength": 10,
                     "meta": "{}",
-                    "slug": "mrs-shake-recent",
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -285,11 +290,11 @@ snapshots["test_query_all_questions[textarea-question__configuration4] 1"] = {
             {
                 "node": {
                     "__typename": "TextareaQuestion",
-                    "id": "VGV4dGFyZWFRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
-                    "label": "Jordan Mccarthy",
+                    "id": "VGV4dGFyZWFRdWVzdGlvbjplZmZvcnQtbWVldA==",
+                    "label": "Brian Williams",
                     "maxLength": 10,
                     "meta": "{}",
-                    "slug": "mrs-shake-recent",
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -302,11 +307,11 @@ snapshots["test_query_all_questions[radio-question__configuration5] 1"] = {
             {
                 "node": {
                     "__typename": "RadioQuestion",
-                    "id": "UmFkaW9RdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
-                    "label": "Jordan Mccarthy",
+                    "id": "UmFkaW9RdWVzdGlvbjplZmZvcnQtbWVldA==",
+                    "label": "Brian Williams",
                     "meta": "{}",
-                    "options": {"edges": [{"node": {"slug": "enter-them-his-half"}}]},
-                    "slug": "mrs-shake-recent",
+                    "options": {"edges": [{"node": {"slug": "treatment-radio"}}]},
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -319,11 +324,11 @@ snapshots["test_query_all_questions[checkbox-question__configuration6] 1"] = {
             {
                 "node": {
                     "__typename": "CheckboxQuestion",
-                    "id": "Q2hlY2tib3hRdWVzdGlvbjptcnMtc2hha2UtcmVjZW50",
-                    "label": "Jordan Mccarthy",
+                    "id": "Q2hlY2tib3hRdWVzdGlvbjplZmZvcnQtbWVldA==",
+                    "label": "Brian Williams",
                     "meta": "{}",
-                    "options": {"edges": [{"node": {"slug": "enter-them-his-half"}}]},
-                    "slug": "mrs-shake-recent",
+                    "options": {"edges": [{"node": {"slug": "treatment-radio"}}]},
+                    "slug": "effort-meet",
                 }
             }
         ]

@@ -48,6 +48,13 @@ class JexlField(serializers.CharField):
 class ModelSerializer(serializers.ModelSerializer):
     serializer_related_field = GlobalIDPrimaryKeyRelatedField
 
+    def create(self, validated_data):
+        user = self.context["request"].user
+        validated_data["created_by_user"] = user.username
+        validated_data["created_by_group"] = user.group
+
+        return super().create(validated_data)
+
     def build_standard_field(self, field_name, model_field):
         field_class, field_kwargs = super().build_standard_field(
             field_name, model_field

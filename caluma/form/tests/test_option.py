@@ -1,11 +1,10 @@
 import pytest
 
 from .. import models, serializers
-from ...schema import schema
 from ...tests import extract_serializer_input_fields
 
 
-def test_save_option(db, option, snapshot):
+def test_save_option(db, option, snapshot, schema_executor):
     query = """
         mutation SaveOption($input: SaveOptionInput!) {
           saveOption(input: $input) {
@@ -23,12 +22,12 @@ def test_save_option(db, option, snapshot):
         )
     }
 
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
 
 
-def test_remove_option(db, option):
+def test_remove_option(db, option, schema_executor):
     query = """
         mutation RemoveOption($input: RemoveOptionInput!) {
           removeOption(input: $input) {
@@ -37,7 +36,7 @@ def test_remove_option(db, option):
         }
     """
 
-    result = schema.execute(query, variables={"input": {"option": option.pk}})
+    result = schema_executor(query, variables={"input": {"option": option.pk}})
     assert not result.errors
     with pytest.raises(models.Option.DoesNotExist):
         option.refresh_from_db()

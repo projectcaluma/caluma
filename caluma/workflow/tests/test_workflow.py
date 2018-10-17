@@ -2,11 +2,10 @@ import pytest
 from graphql_relay import to_global_id
 
 from .. import serializers
-from ...schema import schema
 from ...tests import extract_global_id_input_fields, extract_serializer_input_fields
 
 
-def test_query_all_workflows(db, snapshot, workflow, flow):
+def test_query_all_workflows(db, snapshot, workflow, flow, schema_executor):
     query = """
         query AllWorkflows($name: String!) {
           allWorkflows(name: $name) {
@@ -32,13 +31,13 @@ def test_query_all_workflows(db, snapshot, workflow, flow):
         }
     """
 
-    result = schema.execute(query, variables={"name": workflow.name})
+    result = schema_executor(query, variables={"name": workflow.name})
 
     assert not result.errors
     snapshot.assert_match(result.data)
 
 
-def test_save_workflow(db, snapshot, workflow):
+def test_save_workflow(db, snapshot, workflow, schema_executor):
     query = """
         mutation SaveWorkflow($input: SaveWorkflowInput!) {
           saveWorkflow(input: $input) {
@@ -58,13 +57,13 @@ def test_save_workflow(db, snapshot, workflow):
         )
     }
     workflow.delete()  # test creation
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
 
     assert not result.errors
     snapshot.assert_match(result.data)
 
 
-def test_publish_workflow(db, workflow, snapshot, flow):
+def test_publish_workflow(db, workflow, snapshot, flow, schema_executor):
     query = """
         mutation PublishWorkflow($input: PublishWorkflowInput!) {
           publishWorkflow(input: $input) {
@@ -76,7 +75,7 @@ def test_publish_workflow(db, workflow, snapshot, flow):
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query, variables={"input": extract_global_id_input_fields(workflow)}
     )
 
@@ -86,7 +85,7 @@ def test_publish_workflow(db, workflow, snapshot, flow):
     assert workflow.is_published
 
 
-def test_archive_workflow(db, workflow):
+def test_archive_workflow(db, workflow, schema_executor):
     query = """
         mutation ArchiveWorkflow($input: ArchiveWorkflowInput!) {
           archiveWorkflow(input: $input) {
@@ -98,7 +97,7 @@ def test_archive_workflow(db, workflow):
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query, variables={"input": extract_global_id_input_fields(workflow)}
     )
 
@@ -118,7 +117,7 @@ def test_archive_workflow(db, workflow):
         ("task-slug", '""'),
     ],
 )
-def test_add_workflow_flow(db, workflow, task, snapshot, next):
+def test_add_workflow_flow(db, workflow, task, snapshot, next, schema_executor):
     query = """
         mutation AddWorkflowFlow($input: AddWorkflowFlowInput!) {
           addWorkflowFlow(input: $input) {
@@ -139,7 +138,7 @@ def test_add_workflow_flow(db, workflow, task, snapshot, next):
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query,
         variables={
             "input": {
@@ -152,7 +151,7 @@ def test_add_workflow_flow(db, workflow, task, snapshot, next):
     snapshot.assert_execution_result(result)
 
 
-def test_remove_workflow_flow(db, workflow, task, flow, snapshot):
+def test_remove_workflow_flow(db, workflow, task, flow, snapshot, schema_executor):
     query = """
         mutation RemoveWorkflowFlow($input: RemoveWorkflowFlowInput!) {
           removeWorkflowFlow(input: $input) {
@@ -172,7 +171,7 @@ def test_remove_workflow_flow(db, workflow, task, flow, snapshot):
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query,
         variables={
             "input": {

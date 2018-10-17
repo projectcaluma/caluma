@@ -127,6 +127,8 @@ OIDC_VALIDATE_CLAIMS_OPTIONS = env.dict(
     "OIDC_VALIDATE_CLAIMS_OPTIONS", cast={"value": bool}, default=None
 )
 
+OIDC_GROUPS_CLAIM = env.str("OIDC_GROUPS_CLAIM", default="caluma_groups")
+
 # Extensions
 
 VISIBILITY_CLASSES = [

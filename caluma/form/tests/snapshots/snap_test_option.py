@@ -8,5 +8,5 @@ from snapshottest import Snapshot
 snapshots = Snapshot()
 
 snapshots["test_save_option 1"] = {
-    "saveOption": {"option": {"label": "Jordan Mccarthy", "slug": "mrs-shake-recent"}}
+    "saveOption": {"option": {"label": "Brian Williams", "slug": "effort-meet"}}
 }
