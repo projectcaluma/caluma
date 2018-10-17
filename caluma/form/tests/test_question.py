@@ -1,7 +1,6 @@
 import pytest
 
 from .. import models, serializers
-from ...schema import schema
 from ...tests import extract_global_id_input_fields, extract_serializer_input_fields
 
 
@@ -18,7 +17,13 @@ from ...tests import extract_global_id_input_fields, extract_serializer_input_fi
     ],
 )
 def test_query_all_questions(
-    db, snapshot, question, form, form_question_factory, question_option
+    schema_executor,
+    db,
+    snapshot,
+    question,
+    form,
+    form_question_factory,
+    question_option,
 ):
     form_question_factory.create(form=form)
 
@@ -70,7 +75,7 @@ def test_query_all_questions(
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query,
         variables={
             "search": question.label,
@@ -92,7 +97,7 @@ def test_query_all_questions(
     ],
 )
 @pytest.mark.parametrize("question__is_required", ("true", "true|invalid"))
-def test_save_question(db, snapshot, question, mutation):
+def test_save_question(db, snapshot, question, mutation, schema_executor):
     mutation_func = mutation[0].lower() + mutation[1:]
     query = f"""
         mutation {mutation}($input: {mutation}Input!) {{
@@ -114,7 +119,7 @@ def test_save_question(db, snapshot, question, mutation):
             serializers.SaveQuestionSerializer, question
         )
     }
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
 
     snapshot.assert_execution_result(result)
 
@@ -123,7 +128,7 @@ def test_save_question(db, snapshot, question, mutation):
     "question__type,question__configuration",
     [(models.Question.TYPE_TEXT, {"max_length": 10})],
 )
-def test_save_text_question(db, snapshot, question):
+def test_save_text_question(db, snapshot, question, schema_executor):
     query = """
         mutation SaveTextQuestion($input: SaveTextQuestionInput!) {
           saveTextQuestion(input: $input) {
@@ -147,7 +152,7 @@ def test_save_text_question(db, snapshot, question):
             serializers.SaveTextQuestionSerializer, question
         )
     }
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
     assert not result.errors
     assert result.data["saveTextQuestion"]["question"]["maxLength"] == 10
 
@@ -156,7 +161,7 @@ def test_save_text_question(db, snapshot, question):
     "question__type,question__configuration",
     [(models.Question.TYPE_TEXTAREA, {"max_length": 10})],
 )
-def test_save_textarea_question(db, snapshot, question):
+def test_save_textarea_question(db, snapshot, question, schema_executor):
     query = """
         mutation SaveTextareaQuestion($input: SaveTextareaQuestionInput!) {
           saveTextareaQuestion(input: $input) {
@@ -180,7 +185,7 @@ def test_save_textarea_question(db, snapshot, question):
             serializers.SaveTextareaQuestionSerializer, question
         )
     }
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
     assert not result.errors
     assert result.data["saveTextareaQuestion"]["question"]["maxLength"] == 10
 
@@ -192,7 +197,7 @@ def test_save_textarea_question(db, snapshot, question):
         (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 10.0}),
     ],
 )
-def test_save_float_question(db, snapshot, question):
+def test_save_float_question(db, snapshot, question, schema_executor):
     query = """
         mutation SaveFloatQuestion($input: SaveFloatQuestionInput!) {
           saveFloatQuestion(input: $input) {
@@ -217,7 +222,7 @@ def test_save_float_question(db, snapshot, question):
             serializers.SaveFloatQuestionSerializer, question
         )
     }
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
     snapshot.assert_execution_result(result)
 
 
@@ -228,7 +233,7 @@ def test_save_float_question(db, snapshot, question):
         (models.Question.TYPE_INTEGER, {"max_value": 1, "min_value": 10}),
     ],
 )
-def test_save_integer_question(db, snapshot, question):
+def test_save_integer_question(db, snapshot, question, schema_executor):
     query = """
         mutation SaveIntegerQuestion($input: SaveIntegerQuestionInput!) {
           saveIntegerQuestion(input: $input) {
@@ -253,12 +258,14 @@ def test_save_integer_question(db, snapshot, question):
             serializers.SaveIntegerQuestionSerializer, question
         )
     }
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
     snapshot.assert_execution_result(result)
 
 
 @pytest.mark.parametrize("question__type", [models.Question.TYPE_CHECKBOX])
-def test_save_checkbox_question(db, snapshot, question, question_option_factory):
+def test_save_checkbox_question(
+    db, snapshot, question, question_option_factory, schema_executor
+):
     question_option_factory.create_batch(2, question=question)
 
     option_ids = question.options.order_by("-slug").values_list("slug", flat=True)
@@ -294,13 +301,13 @@ def test_save_checkbox_question(db, snapshot, question, question_option_factory)
         )
     }
     inp["input"]["options"] = option_ids
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
 
 
 @pytest.mark.parametrize("question__type", [models.Question.TYPE_RADIO])
-def test_save_radio_question(db, snapshot, question, question_option):
+def test_save_radio_question(db, snapshot, question, question_option, schema_executor):
     query = """
         mutation SaveRadioQuestion($input: SaveRadioQuestionInput!) {
           saveRadioQuestion(input: $input) {
@@ -332,12 +339,12 @@ def test_save_radio_question(db, snapshot, question, question_option):
         )
     }
     question.delete()  # test creation
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
 
 
-def test_archive_question(db, question):
+def test_archive_question(db, question, schema_executor):
     query = """
         mutation ArchiveQuestion($input: ArchiveQuestionInput!) {
           archiveQuestion(input: $input) {
@@ -349,7 +356,7 @@ def test_archive_question(db, question):
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query, variables={"input": extract_global_id_input_fields(question)}
     )
 

@@ -12,11 +12,10 @@ snapshots["test_query_all_tasks 1"] = {
         "edges": [
             {
                 "node": {
-                    "description": """First where during teach country talk across. Little central meeting anyone remember.
-Material minute ago get. Range whose scientist draw free property consider. Have director true force.""",
+                    "description": "Team suggest traditional boy above. Argue move appear catch toward help wind. Material minute ago get.",
                     "meta": "{}",
-                    "name": "Jordan Mccarthy",
-                    "slug": "mrs-shake-recent",
+                    "name": "Brian Williams",
+                    "slug": "effort-meet",
                     "type": "SIMPLE",
                 }
             }
@@ -30,8 +29,8 @@ snapshots["test_save_task 1"] = {
             "clientMutationId": "testid",
             "task": {
                 "meta": "{}",
-                "name": "Jordan Mccarthy",
-                "slug": "mrs-shake-recent",
+                "name": "Brian Williams",
+                "slug": "effort-meet",
                 "type": "SIMPLE",
             },
         }

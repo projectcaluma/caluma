@@ -12,20 +12,21 @@ snapshots["test_query_all_workflows 1"] = {
         "edges": [
             {
                 "node": {
-                    "description": "Single fly material many role include money. Store natural represent traditional.",
+                    "description": """Role include money center of yes. Land subject another government animal pressure. Game respond mouth despite culture be magazine.
+Hot morning future throughout guess language drive.""",
                     "flows": {
                         "edges": [
                             {
                                 "node": {
-                                    "next": "himself-prepare",
-                                    "task": {"slug": "mrs-shake-recent"},
+                                    "next": "mrs-positive",
+                                    "task": {"slug": "effort-meet"},
                                 }
                             }
                         ]
                     },
                     "meta": "{}",
-                    "name": "John Mathews",
-                    "slug": "value-still-back",
+                    "name": "Renee Ayala",
+                    "slug": "few-list-tax",
                 }
             }
         ]
@@ -35,7 +36,7 @@ snapshots["test_query_all_workflows 1"] = {
 snapshots["test_save_workflow 1"] = {
     "saveWorkflow": {
         "clientMutationId": "testid",
-        "workflow": {"meta": "{}", "name": "John Mathews", "slug": "value-still-back"},
+        "workflow": {"meta": "{}", "name": "Renee Ayala", "slug": "few-list-tax"},
     }
 }
 

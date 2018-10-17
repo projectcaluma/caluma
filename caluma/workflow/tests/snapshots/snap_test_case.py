@@ -14,7 +14,7 @@ snapshots["test_query_all_cases 1"] = {
 snapshots["test_start_case 1"] = {
     "startCase": {
         "case": {
-            "document": {"form": {"slug": "star-check-record"}},
+            "document": {"form": {"slug": "sound-air-mission"}},
             "status": "RUNNING",
             "workItems": {"edges": [{"node": {"status": "READY"}}]},
         },

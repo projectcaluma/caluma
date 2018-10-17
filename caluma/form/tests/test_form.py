@@ -2,12 +2,11 @@ import pytest
 from graphql_relay import to_global_id
 
 from .. import models
-from ...schema import schema
 from ...tests import extract_global_id_input_fields, extract_serializer_input_fields
 from ..serializers import SaveFormSerializer
 
 
-def test_query_all_forms(db, snapshot, form, form_question, question):
+def test_query_all_forms(db, snapshot, form, form_question, question, schema_executor):
     query = """
         query AllFormsQuery($name: String!, $question: String!) {
           allForms(name: $name) {
@@ -33,7 +32,7 @@ def test_query_all_forms(db, snapshot, form, form_question, question):
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query, variables={"name": form.name, "question": question.label}
     )
 
@@ -42,7 +41,7 @@ def test_query_all_forms(db, snapshot, form, form_question, question):
 
 
 @pytest.mark.parametrize("form__description", ("some description text", ""))
-def test_save_form(db, snapshot, form):
+def test_save_form(db, snapshot, form, schema_executor):
     query = """
         mutation SaveForm($input: SaveFormInput!) {
           saveForm(input: $input) {
@@ -58,14 +57,34 @@ def test_save_form(db, snapshot, form):
     """
 
     inp = {"input": extract_serializer_input_fields(SaveFormSerializer, form)}
-    form.delete()  # test creation of form
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
 
     assert not result.errors
     snapshot.assert_match(result.data)
 
 
-def test_archive_form(db, form):
+def test_save_form_created_as_admin_user(
+    db, snapshot, form, admin_schema_executor, admin_user
+):
+    query = """
+        mutation SaveForm($input: SaveFormInput!) {
+          saveForm(input: $input) {
+            form {
+              createdByUser
+            }
+          }
+        }
+    """
+
+    inp = {"input": extract_serializer_input_fields(SaveFormSerializer, form)}
+    form.delete()  # test creation of form
+    result = admin_schema_executor(query, variables=inp)
+
+    assert not result.errors
+    assert result.data["saveForm"]["form"]["createdByUser"] == admin_user.username
+
+
+def test_archive_form(db, form, schema_executor):
     query = """
         mutation ArchiveForm($input: ArchiveFormInput!) {
           archiveForm(input: $input) {
@@ -77,7 +96,7 @@ def test_archive_form(db, form):
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query, variables={"input": extract_global_id_input_fields(form)}
     )
 
@@ -88,7 +107,7 @@ def test_archive_form(db, form):
     assert form.is_archived
 
 
-def test_publish_form(db, form):
+def test_publish_form(db, form, schema_executor):
     query = """
         mutation PublishForm($input: PublishFormInput!) {
           publishForm(input: $input) {
@@ -100,7 +119,7 @@ def test_publish_form(db, form):
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query, variables={"input": extract_global_id_input_fields(form)}
     )
 
@@ -111,7 +130,7 @@ def test_publish_form(db, form):
     assert form.is_published
 
 
-def test_add_form_question(db, form, question, snapshot):
+def test_add_form_question(db, form, question, snapshot, schema_executor):
     query = """
         mutation AddFormQuestion($input: AddFormQuestionInput!) {
           addFormQuestion(input: $input) {
@@ -129,7 +148,7 @@ def test_add_form_question(db, form, question, snapshot):
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query,
         variables={
             "input": {
@@ -142,7 +161,9 @@ def test_add_form_question(db, form, question, snapshot):
     snapshot.assert_execution_result(result)
 
 
-def test_remove_form_question(db, form, form_question, question, snapshot):
+def test_remove_form_question(
+    db, form, form_question, question, snapshot, schema_executor
+):
     query = """
         mutation RemoveFormQuestion($input: RemoveFormQuestionInput!) {
           removeFormQuestion(input: $input) {
@@ -160,7 +181,7 @@ def test_remove_form_question(db, form, form_question, question, snapshot):
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query,
         variables={
             "input": {
@@ -173,7 +194,7 @@ def test_remove_form_question(db, form, form_question, question, snapshot):
     snapshot.assert_execution_result(result)
 
 
-def test_reorder_form_questions(db, form, form_question_factory):
+def test_reorder_form_questions(db, form, form_question_factory, schema_executor):
     form_question_factory.create_batch(2, form=form)
 
     query = """
@@ -196,7 +217,7 @@ def test_reorder_form_questions(db, form, form_question_factory):
     question_ids = (
         form.questions.order_by("slug").reverse().values_list("slug", flat=True)
     )
-    result = schema.execute(
+    result = schema_executor(
         query,
         variables={
             "input": {
@@ -220,7 +241,9 @@ def test_reorder_form_questions(db, form, form_question_factory):
     assert result_questions == list(question_ids)
 
 
-def test_reorder_form_questions_invalid_question(db, form, question_factory):
+def test_reorder_form_questions_invalid_question(
+    db, form, question_factory, schema_executor
+):
 
     invalid_question = question_factory()
 
@@ -241,7 +264,7 @@ def test_reorder_form_questions_invalid_question(db, form, question_factory):
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query,
         variables={
             "input": {
@@ -256,7 +279,9 @@ def test_reorder_form_questions_invalid_question(db, form, question_factory):
     assert result.errors
 
 
-def test_reorder_form_questions_duplicated_question(db, form, question, form_question):
+def test_reorder_form_questions_duplicated_question(
+    db, form, question, form_question, schema_executor
+):
 
     query = """
         mutation ReorderFormQuestions($input: ReorderFormQuestionsInput!) {
@@ -275,7 +300,7 @@ def test_reorder_form_questions_duplicated_question(db, form, question, form_que
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query,
         variables={
             "input": {

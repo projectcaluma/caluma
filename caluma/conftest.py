@@ -1,3 +1,4 @@
+import functools
 import inspect
 
 import pytest
@@ -10,6 +11,7 @@ from snapshottest.pytest import PyTestSnapshotTest
 
 from .faker import MultilangProvider
 from .form import factories as form_factories
+from .schema import schema
 from .user.models import AnonymousUser, OIDCUser
 from .workflow import factories as workflow_factories
 
@@ -42,11 +44,27 @@ def snapshot(request):
 
 
 @pytest.fixture
-def info(rf):
-    """Mock for GraphQL resolve info embedding django request as context."""
+def admin_user():
+    return OIDCUser({"sub": "admin"})
+
+
+@pytest.fixture
+def admin_request(rf, admin_user):
+    request = rf.get("/graphql")
+    request.user = admin_user
+    return request
+
+
+@pytest.fixture
+def anonymous_request(rf):
     request = rf.get("/graphql")
     request.user = AnonymousUser()
+    return request
 
+
+@pytest.fixture
+def info(anonymous_request):
+    """Mock for GraphQL resolve info embedding django request as context."""
     return ResolveInfo(
         None,
         None,
@@ -57,16 +75,13 @@ def info(rf):
         root_value=None,
         operation=None,
         variable_values=None,
-        context=request,
+        context=anonymous_request,
     )
 
 
 @pytest.fixture
-def admin_info(rf):
+def admin_info(admin_request):
     """Mock for GraphQL resolve info embedding authenticated django request as context."""
-    request = rf.get("/graphql")
-    request.user = OIDCUser({"sub": "admin"})
-
     return ResolveInfo(
         None,
         None,
@@ -77,5 +92,15 @@ def admin_info(rf):
         root_value=None,
         operation=None,
         variable_values=None,
-        context=request,
+        context=admin_request,
     )
+
+
+@pytest.fixture
+def schema_executor(anonymous_request):
+    return functools.partial(schema.execute, context=anonymous_request)
+
+
+@pytest.fixture
+def admin_schema_executor(admin_request):
+    return functools.partial(schema.execute, context=admin_request)

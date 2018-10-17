@@ -35,58 +35,27 @@ class Workflow(DjangoObjectType):
     class Meta:
         model = models.Workflow
         filter_fields = ("slug", "name", "description", "is_published", "is_archived")
-        only_fields = (
-            "created",
-            "modified",
-            "slug",
-            "name",
-            "description",
-            "meta",
-            "is_published",
-            "is_archived",
-            "start",
-            "form",
-        )
+        exclude_fields = ("cases",)
         interfaces = (relay.Node,)
 
 
 class Task(DjangoObjectType):
     class Meta:
         model = models.Task
+        exclude_fields = ("flows", "work_items")
         interfaces = (relay.Node,)
-        only_fields = (
-            "created",
-            "modified",
-            "slug",
-            "name",
-            "description",
-            "type",
-            "meta",
-            "is_archived",
-        )
 
 
 class Case(DjangoObjectType):
     class Meta:
         model = models.Case
         interfaces = (relay.Node,)
-        only_fields = (
-            "id",
-            "created",
-            "modified",
-            "meta",
-            "workflow",
-            "status",
-            "work_items",
-            "document",
-        )
 
 
 class WorkItem(DjangoObjectType):
     class Meta:
         model = models.WorkItem
         interfaces = (relay.Node,)
-        only_fields = ("id", "created", "modified", "meta", "task", "status", "case")
 
 
 class SaveWorkflow(UserDefinedPrimaryKeyMixin, SerializerMutation):

@@ -1,9 +1,8 @@
 from .. import serializers
-from ...schema import schema
 from ...tests import extract_global_id_input_fields, extract_serializer_input_fields
 
 
-def test_query_all_tasks(db, snapshot, task):
+def test_query_all_tasks(db, snapshot, task, schema_executor):
     query = """
         query AllTasks($name: String!) {
           allTasks(name: $name) {
@@ -20,13 +19,13 @@ def test_query_all_tasks(db, snapshot, task):
         }
     """
 
-    result = schema.execute(query, variables={"name": task.name})
+    result = schema_executor(query, variables={"name": task.name})
 
     assert not result.errors
     snapshot.assert_match(result.data)
 
 
-def test_save_task(db, snapshot, task):
+def test_save_task(db, snapshot, task, schema_executor):
     query = """
         mutation SaveTask($input: SaveTaskInput!) {
           saveTask(input: $input) {
@@ -44,12 +43,12 @@ def test_save_task(db, snapshot, task):
     inp = {
         "input": extract_serializer_input_fields(serializers.SaveTaskSerializer, task)
     }
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
     assert not result.errors
     snapshot.assert_execution_result(result)
 
 
-def test_archive_task(db, task):
+def test_archive_task(db, task, schema_executor):
     query = """
         mutation ArchiveTask($input: ArchiveTaskInput!) {
           archiveTask(input: $input) {
@@ -61,7 +60,7 @@ def test_archive_task(db, task):
         }
     """
 
-    result = schema.execute(
+    result = schema_executor(
         query, variables={"input": extract_global_id_input_fields(task)}
     )
 

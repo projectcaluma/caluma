@@ -1,10 +1,9 @@
 import pytest
 
 from .. import models
-from ...schema import schema
 
 
-def test_query_all_work_items(db, snapshot, work_item):
+def test_query_all_work_items(db, snapshot, work_item, schema_executor):
     query = """
         query WorkItems {
           allWorkItems {
@@ -17,7 +16,7 @@ def test_query_all_work_items(db, snapshot, work_item):
         }
     """
 
-    result = schema.execute(query)
+    result = schema_executor(query)
 
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -27,7 +26,7 @@ def test_query_all_work_items(db, snapshot, work_item):
     "work_item__status,success",
     [(models.WorkItem.STATUS_READY, True), (models.WorkItem.STATUS_COMPLETE, False)],
 )
-def test_complete_work_item_last(db, snapshot, work_item, success):
+def test_complete_work_item_last(db, snapshot, work_item, success, schema_executor):
     query = """
         mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
           completeWorkItem(input: $input) {
@@ -43,7 +42,7 @@ def test_complete_work_item_last(db, snapshot, work_item, success):
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
 
     assert not bool(result.errors) == success
     if success:
@@ -51,7 +50,9 @@ def test_complete_work_item_last(db, snapshot, work_item, success):
 
 
 @pytest.mark.parametrize("work_item__status", [models.WorkItem.STATUS_READY])
-def test_complete_work_item_with_next(db, snapshot, work_item, flow, task_factory):
+def test_complete_work_item_with_next(
+    db, snapshot, work_item, flow, task_factory, schema_executor
+):
 
     task_next = task_factory()
     flow.next = f"'{task_next.slug}'|task"
@@ -79,7 +80,7 @@ def test_complete_work_item_with_next(db, snapshot, work_item, flow, task_factor
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = schema.execute(query, variables=inp)
+    result = schema_executor(query, variables=inp)
 
     assert not result.errors
     snapshot.assert_match(result.data)
