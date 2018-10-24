@@ -96,7 +96,7 @@ def parse_admins(admins):  # pragma: no cover
     """
     result = []
     for admin in admins:
-        match = re.search("(.+) \<(.+@.+)\>", admin)
+        match = re.search(r"(.+) \<(.+@.+)\>", admin)
         if not match:
             raise environ.ImproperlyConfigured(
                 'In ADMINS admin "{0}" is not in correct '
