@@ -24,6 +24,8 @@ class Question(QuerysetMixin, graphene.Interface):
     id = graphene.ID(required=True)
     created_at = graphene.DateTime(required=True)
     modified_at = graphene.DateTime(required=True)
+    created_by_user = graphene.String()
+    created_by_group = graphene.String()
     slug = graphene.String(required=True)
     label = graphene.String(required=True)
     is_required = QuestionJexl(required=True)
@@ -250,6 +252,8 @@ class RemoveOption(UserDefinedPrimaryKeyMixin, SerializerMutation):
 class Answer(QuerysetMixin, graphene.Interface):
     id = graphene.ID()
     created_at = graphene.DateTime(required=True)
+    created_by_user = graphene.String()
+    created_by_group = graphene.String()
     modified_at = graphene.DateTime(required=True)
     question = graphene.Field(Question, required=True)
     meta = graphene.JSONString(required=True)
