@@ -40,6 +40,8 @@ type AddWorkflowFlowPayload {
 interface Answer {
   id: ID
   createdAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   modifiedAt: DateTime!
   question: Question!
   meta: JSONString!
@@ -383,6 +385,8 @@ interface Question {
   id: ID!
   createdAt: DateTime!
   modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   slug: String!
   label: String!
   isRequired: QuestionJexl!
