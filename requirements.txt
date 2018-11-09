@@ -17,5 +17,5 @@ psycopg2-binary==2.7.5
 pyjexl==0.2.3
 python-jose==3.0.1
 python-jose[cryptography]==3.0.1
-requests==2.20.0
+requests==2.20.1
 uwsgi==2.0.17.1
