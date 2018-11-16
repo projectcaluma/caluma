@@ -51,7 +51,7 @@ snapshots["test_query_all_documents[integer-1] 1"] = {
                             }
                         ]
                     },
-                    "createdByUser": "4602cffe-6aa8-9ae7-ba6b-2cf34839ef47",
+                    "createdByUser": "4602cffe-6aa8-4ae7-ba6b-2cf34839ef47",
                 }
             }
         ]
@@ -77,7 +77,7 @@ snapshots["test_query_all_documents[float-2.1] 1"] = {
                             }
                         ]
                     },
-                    "createdByUser": "4602cffe-6aa8-9ae7-ba6b-2cf34839ef47",
+                    "createdByUser": "4602cffe-6aa8-4ae7-ba6b-2cf34839ef47",
                 }
             }
         ]
@@ -103,7 +103,7 @@ snapshots["test_query_all_documents[text-somevalue] 1"] = {
                             }
                         ]
                     },
-                    "createdByUser": "4602cffe-6aa8-9ae7-ba6b-2cf34839ef47",
+                    "createdByUser": "4602cffe-6aa8-4ae7-ba6b-2cf34839ef47",
                 }
             }
         ]
@@ -129,7 +129,7 @@ snapshots["test_query_all_documents[checkbox-answer__value3] 1"] = {
                             }
                         ]
                     },
-                    "createdByUser": "4602cffe-6aa8-9ae7-ba6b-2cf34839ef47",
+                    "createdByUser": "4602cffe-6aa8-4ae7-ba6b-2cf34839ef47",
                 }
             }
         ]
