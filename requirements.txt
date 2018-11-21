@@ -1,4 +1,4 @@
-cryptography==2.4.1
+cryptography==2.4.2
 django==1.11.16 # pyup: >=1.11,<1.12
 django-environ==0.4.5
 django-filter==2.0.0
