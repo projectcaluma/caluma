@@ -72,13 +72,13 @@ class OIDCAuthenticationMiddleware(object):
         # TODO: status code of jwt error should be 401
         # https://github.com/graphql-python/graphene-django/issues/252
         try:
-            token = self.decode_token(jwt_value, self.keys())
+            decoded_token = self.decode_token(jwt_value, self.keys())
         except ExpiredSignatureError:
             raise
         except JWTError:
             # try again with refreshed keys
             self._keys = None
-            token = self.decode_token(jwt_value, self.keys())
+            decoded_token = self.decode_token(jwt_value, self.keys())
 
-        request.user = models.OIDCUser(token)
+        request.user = models.OIDCUser(jwt_value, decoded_token)
         return next(root, info, **args)
