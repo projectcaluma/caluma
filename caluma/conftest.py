@@ -45,7 +45,7 @@ def snapshot(request):
 
 @pytest.fixture
 def admin_user():
-    return OIDCUser({"sub": "admin"})
+    return OIDCUser("sometoken", {"sub": "admin"})
 
 
 @pytest.fixture
