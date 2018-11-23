@@ -4,6 +4,15 @@ from graphene.utils.str_converters import to_snake_case
 class BasePermission(object):
     """Basic permission class to be extended by any permission implementation."""
 
+    def has_base_permission(self, mutation, info):
+        """
+        Check base permission.
+
+        Override to implement default permission for all nodes.
+        Defaults to True.
+        """
+        return True
+
     def has_permission(self, mutation, info):
         """
         Check permission of specific mutation or otherwise return True.
@@ -17,6 +26,16 @@ class BasePermission(object):
         if has_permission_for_mutation is not None:
             return has_permission_for_mutation(mutation, info)
 
+        return self.has_base_permission(mutation, info)
+
+    def has_base_object_permission(self, mutation, info, instance):
+        """
+        Check base object permission.
+
+        Override to implement default permission for all nodes and objects.
+
+        Defaults to True.
+        """
         return True
 
     def has_object_permission(self, mutation, info, instance):
@@ -32,7 +51,7 @@ class BasePermission(object):
         if has_object_permission_for_mutation is not None:
             return has_object_permission_for_mutation(mutation, info, instance)
 
-        return True
+        return self.has_base_object_permission(mutation, info, instance)
 
 
 class AllowAny(BasePermission):
