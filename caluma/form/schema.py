@@ -4,7 +4,7 @@ from graphene_django.rest_framework import serializer_converter
 
 from . import filters, models, serializers
 from ..filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
-from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
+from ..mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..relay import extract_global_id
 from ..types import DjangoObjectType, QuerysetMixin
 
@@ -157,18 +157,18 @@ class Form(DjangoObjectType):
         exclude_fields = ("documents", "workflows")
 
 
-class SaveForm(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveForm(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveFormSerializer
 
 
-class ArchiveForm(SerializerMutation):
+class ArchiveForm(Mutation):
     class Meta:
         lookup_input_kwarg = "id"
         serializer_class = serializers.ArchiveFormSerializer
 
 
-class AddFormQuestion(SerializerMutation):
+class AddFormQuestion(Mutation):
     """Add question at the end of form."""
 
     class Meta:
@@ -176,73 +176,73 @@ class AddFormQuestion(SerializerMutation):
         serializer_class = serializers.AddFormQuestionSerializer
 
 
-class RemoveFormQuestion(SerializerMutation):
+class RemoveFormQuestion(Mutation):
     class Meta:
         lookup_input_kwarg = "form"
         serializer_class = serializers.RemoveFormQuestionSerializer
 
 
-class ReorderFormQuestions(SerializerMutation):
+class ReorderFormQuestions(Mutation):
     class Meta:
         lookup_input_kwarg = "form"
         serializer_class = serializers.ReorderFormQuestionsSerializer
 
 
-class PublishForm(SerializerMutation):
+class PublishForm(Mutation):
     class Meta:
         lookup_input_kwarg = "id"
         serializer_class = serializers.PublishFormSerializer
 
 
-class ArchiveQuestion(SerializerMutation):
+class ArchiveQuestion(Mutation):
     class Meta:
         lookup_input_kwarg = "id"
         serializer_class = serializers.ArchiveQuestionSerializer
         return_field_type = Question
 
 
-class SaveTextQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveTextQuestion(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveTextQuestionSerializer
         return_field_type = Question
 
 
-class SaveTextareaQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveTextareaQuestion(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveTextareaQuestionSerializer
         return_field_type = Question
 
 
-class SaveRadioQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveRadioQuestion(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveRadioQuestionSerializer
         return_field_type = Question
 
 
-class SaveCheckboxQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveCheckboxQuestion(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveCheckboxQuestionSerializer
         return_field_type = Question
 
 
-class SaveIntegerQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveIntegerQuestion(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveIntegerQuestionSerializer
         return_field_type = Question
 
 
-class SaveFloatQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveFloatQuestion(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveFloatQuestionSerializer
         return_field_type = Question
 
 
-class SaveOption(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveOption(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveOptionSerializer
 
 
-class RemoveOption(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class RemoveOption(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         lookup_input_kwarg = "option"
         serializer_class = serializers.RemoveOptionSerializer
@@ -335,12 +335,12 @@ class Document(DjangoObjectType):
         filter_fields = ("form",)
 
 
-class SaveDocument(SerializerMutation):
+class SaveDocument(Mutation):
     class Meta:
         serializer_class = serializers.DocumentSerializer
 
 
-class SaveDocumentAnswer(SerializerMutation):
+class SaveDocumentAnswer(Mutation):
     @classmethod
     def get_object(cls, root, info, queryset, **input):
         question_id = extract_global_id(input["question"])

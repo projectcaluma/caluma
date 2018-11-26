@@ -4,7 +4,7 @@ from graphene_django.rest_framework import serializer_converter
 
 from . import filters, models, serializers
 from ..filters import DjangoFilterConnectionField
-from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
+from ..mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..types import DjangoObjectType
 
 
@@ -58,53 +58,53 @@ class WorkItem(DjangoObjectType):
         interfaces = (relay.Node,)
 
 
-class SaveWorkflow(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveWorkflow(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveWorkflowSerializer
 
 
-class PublishWorkflow(SerializerMutation):
+class PublishWorkflow(Mutation):
     class Meta:
         serializer_class = serializers.PublishWorkflowSerializer
         lookup_input_kwarg = "id"
 
 
-class ArchiveWorkflow(SerializerMutation):
+class ArchiveWorkflow(Mutation):
     class Meta:
         serializer_class = serializers.ArchiveWorkflowSerializer
         lookup_input_kwarg = "id"
 
 
-class AddWorkflowFlow(SerializerMutation):
+class AddWorkflowFlow(Mutation):
     class Meta:
         serializer_class = serializers.AddWorkflowFlowSerializer
         lookup_input_kwarg = "workflow"
 
 
-class RemoveWorkflowFlow(SerializerMutation):
+class RemoveWorkflowFlow(Mutation):
     class Meta:
         serializer_class = serializers.RemoveWorkflowFlowSerializer
         lookup_input_kwarg = "workflow"
 
 
-class SaveTask(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveTask(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveTaskSerializer
 
 
-class ArchiveTask(SerializerMutation):
+class ArchiveTask(Mutation):
     class Meta:
         serializer_class = serializers.ArchiveTaskSerializer
         lookup_input_kwarg = "id"
 
 
-class StartCase(SerializerMutation):
+class StartCase(Mutation):
     class Meta:
         serializer_class = serializers.StartCaseSerializer
         model_operations = ["create"]
 
 
-class CompleteWorkItem(SerializerMutation):
+class CompleteWorkItem(Mutation):
     class Meta:
         serializer_class = serializers.CompleteWorkItemSerializer
         model_operations = ["update"]

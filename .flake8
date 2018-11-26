@@ -24,3 +24,4 @@ ignore =
 max-line-length = 80
 exclude = migrations snapshots
 max-complexity = 10
+doctests = True

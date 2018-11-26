@@ -19,7 +19,7 @@ from .relay import extract_global_id
 convert_django_field.register(LocalizedField, convert_field_to_string)
 
 
-class SerializerMutationOptions(MutationOptions):
+class MutationOptions(MutationOptions):
     lookup_field = None
     lookup_input_kwarg = None
     model_class = None
@@ -29,9 +29,9 @@ class SerializerMutationOptions(MutationOptions):
     return_field_type = None
 
 
-class SerializerMutation(ClientIDMutation):
+class Mutation(ClientIDMutation):
     """
-    Caluma specific SerializerMutation solving following upstream issues.
+    Caluma specific Mutation solving following upstream issues.
 
     1. Expose node instead of attributes directly.
 
@@ -82,7 +82,7 @@ class SerializerMutation(ClientIDMutation):
         **options
     ):
         if not serializer_class:
-            raise Exception("serializer_class is required for the SerializerMutation")
+            raise Exception("serializer_class is required for the Mutation")
 
         if "update" not in model_operations and "create" not in model_operations:
             raise Exception('model_operations must contain "create" and/or "update"')
@@ -114,7 +114,7 @@ class SerializerMutation(ClientIDMutation):
         if return_field_name:
             output_fields[return_field_name] = graphene.Field(return_field_type)
 
-        _meta = SerializerMutationOptions(cls)
+        _meta = MutationOptions(cls)
         _meta.lookup_field = lookup_field
         _meta.lookup_input_kwarg = lookup_input_kwarg
         _meta.model_operations = model_operations
@@ -125,7 +125,7 @@ class SerializerMutation(ClientIDMutation):
         _meta.return_field_type = return_field_type
 
         input_fields = yank_fields_from_attrs(input_fields, _as=InputField)
-        super(SerializerMutation, cls).__init_subclass_with_meta__(
+        super(Mutation, cls).__init_subclass_with_meta__(
             _meta=_meta, input_fields=input_fields, **options
         )
 
