@@ -201,37 +201,51 @@ class ArchiveQuestion(Mutation):
         return_field_type = Question
 
 
-class SaveTextQuestion(UserDefinedPrimaryKeyMixin, Mutation):
+class SaveQuestion(UserDefinedPrimaryKeyMixin, Mutation):
+    """
+    Base class of all save question mutations.
+
+    Defined so it is easy to set a permission for all different types
+    of questions.
+
+    See `caluma.permissions.BasePermission` for more details.
+    """
+
+    class Meta:
+        abstract = True
+
+
+class SaveTextQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveTextQuestionSerializer
         return_field_type = Question
 
 
-class SaveTextareaQuestion(UserDefinedPrimaryKeyMixin, Mutation):
+class SaveTextareaQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveTextareaQuestionSerializer
         return_field_type = Question
 
 
-class SaveRadioQuestion(UserDefinedPrimaryKeyMixin, Mutation):
+class SaveRadioQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveRadioQuestionSerializer
         return_field_type = Question
 
 
-class SaveCheckboxQuestion(UserDefinedPrimaryKeyMixin, Mutation):
+class SaveCheckboxQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveCheckboxQuestionSerializer
         return_field_type = Question
 
 
-class SaveIntegerQuestion(UserDefinedPrimaryKeyMixin, Mutation):
+class SaveIntegerQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveIntegerQuestionSerializer
         return_field_type = Question
 
 
-class SaveFloatQuestion(UserDefinedPrimaryKeyMixin, Mutation):
+class SaveFloatQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveFloatQuestionSerializer
         return_field_type = Question
