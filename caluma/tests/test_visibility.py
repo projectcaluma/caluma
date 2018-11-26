@@ -1,6 +1,6 @@
 from .. import models
 from ..types import DjangoObjectType
-from ..visibilities import BaseVisibility
+from ..visibilities import BaseVisibility, filter_queryset_for
 from .fake_model import get_fake_model
 
 
@@ -13,7 +13,8 @@ def test_custom_visibility_override_get_queryset_for_custom_node(db):
             model = FakeModel
 
     class CustomVisibility(BaseVisibility):
-        def get_queryset_for_custom_node(self, node, queryset, info):
+        @filter_queryset_for(CustomNode)
+        def filter_queryset_for_custom_node(self, node, queryset, info):
             return queryset.none()
 
     queryset = FakeModel.objects

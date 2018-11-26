@@ -6,7 +6,7 @@ from . import filters, models, serializers
 from ..filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
 from ..mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..relay import extract_global_id
-from ..types import DjangoObjectType, QuerysetMixin
+from ..types import DjangoObjectType, Node
 
 
 class QuestionJexl(graphene.String):
@@ -20,7 +20,7 @@ serializer_converter.get_graphene_type_from_serializer_field.register(
 )
 
 
-class Question(QuerysetMixin, graphene.Interface):
+class Question(Node, graphene.Interface):
     id = graphene.ID(required=True)
     created_at = graphene.DateTime(required=True)
     modified_at = graphene.DateTime(required=True)
@@ -263,7 +263,7 @@ class RemoveOption(UserDefinedPrimaryKeyMixin, Mutation):
         return_field_name = False
 
 
-class Answer(QuerysetMixin, graphene.Interface):
+class Answer(Node, graphene.Interface):
     id = graphene.ID()
     created_at = graphene.DateTime(required=True)
     created_by_user = graphene.String()

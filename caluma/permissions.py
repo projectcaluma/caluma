@@ -62,11 +62,15 @@ class BasePermission(object):
     """
 
     def __init__(self):
-        perms = inspect.getmembers(self, lambda m: hasattr(m, "_permission"))
-        self._permissions = {fn._permission: fn for _, fn in perms}
+        perm_fns = inspect.getmembers(self, lambda m: hasattr(m, "_permission"))
+        self._permissions = {fn._permission: fn for _, fn in perm_fns}
 
-        perms = inspect.getmembers(self, lambda m: hasattr(m, "_object_permission"))
-        self._object_permissions = {fn._object_permission: fn for _, fn in perms}
+        object_perm_fns = inspect.getmembers(
+            self, lambda m: hasattr(m, "_object_permission")
+        )
+        self._object_permissions = {
+            fn._object_permission: fn for _, fn in object_perm_fns
+        }
 
     def has_permission(self, mutation, info):
         for cls in mutation.mro():

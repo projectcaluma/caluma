@@ -1,10 +1,12 @@
-from ..visibilities import BaseVisibility
+from ..types import Node
+from ..visibilities import BaseVisibility, filter_queryset_for
 
 
 class Authenticated(BaseVisibility):
     """Only allow authenticated users to read nodes."""
 
-    def get_base_queryset(self, node, queryset, info):
+    @filter_queryset_for(Node)
+    def filter_queryset_for_all(self, node, queryset, info):
         if info.context.user.is_authenticated:
             return queryset
         return queryset.none()
@@ -13,6 +15,7 @@ class Authenticated(BaseVisibility):
 class CreatedByGroup(BaseVisibility):
     """User may only read nodes of created by group it belongs to."""
 
-    def get_base_queryset(self, node, queryset, info):
+    @filter_queryset_for(Node)
+    def filter_queryset_for_all(self, node, queryset, info):
         groups = info.context.user.groups
         return queryset.filter(created_by_group__in=groups)

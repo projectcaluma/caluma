@@ -2,7 +2,13 @@ from django.conf import settings
 from graphene_django import types
 
 
-class QuerysetMixin(object):
+class Node(object):
+    """Base class to define queryset filters for all nodes."""
+
+    pass
+
+
+class QuerysetMixin(Node):
     """Filter queryset by configured visibility classes."""
 
     @classmethod
