@@ -3,10 +3,10 @@ from graphene import relay
 from graphene_django.rest_framework import serializer_converter
 
 from . import filters, models, serializers
-from ..filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
-from ..mutation import Mutation, UserDefinedPrimaryKeyMixin
-from ..relay import extract_global_id
-from ..types import DjangoObjectType, Node
+from ..core.filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
+from ..core.mutation import Mutation, UserDefinedPrimaryKeyMixin
+from ..core.relay import extract_global_id
+from ..core.types import DjangoObjectType, Node
 
 
 class QuestionJexl(graphene.String):

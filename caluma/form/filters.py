@@ -1,5 +1,5 @@
 from . import models
-from ..filters import (
+from ..core.filters import (
     FilterSet,
     GlobalIDFilter,
     GlobalIDMultipleChoiceFilter,

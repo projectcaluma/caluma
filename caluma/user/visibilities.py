@@ -1,5 +1,5 @@
-from ..types import Node
-from ..visibilities import BaseVisibility, filter_queryset_for
+from ..core.types import Node
+from ..core.visibilities import BaseVisibility, filter_queryset_for
 
 
 class Authenticated(BaseVisibility):

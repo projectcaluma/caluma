@@ -1,5 +1,5 @@
 from . import models
-from ..filters import FilterSet, SearchFilter
+from ..core.filters import FilterSet, SearchFilter
 
 
 class WorkflowFilterSet(FilterSet):
