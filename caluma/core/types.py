@@ -1,12 +1,12 @@
-from django.conf import settings
-from django.utils.module_loading import import_string
 from graphene_django import types
 
 
 class Node(object):
     """Base class to define queryset filters for all nodes."""
 
-    visibility_classes = [import_string(cls) for cls in settings.VISIBILITY_CLASSES]
+    # will be set in core.AppConfig.ready hook, see apps.py
+    # to avoid recursive import error
+    visibility_classes = None
 
     @classmethod
     def get_queryset(cls, queryset, info):
