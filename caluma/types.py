@@ -1,25 +1,22 @@
 from django.conf import settings
+from django.utils.module_loading import import_string
 from graphene_django import types
 
 
 class Node(object):
     """Base class to define queryset filters for all nodes."""
 
-    pass
-
-
-class QuerysetMixin(Node):
-    """Filter queryset by configured visibility classes."""
+    visibility_classes = [import_string(cls) for cls in settings.VISIBILITY_CLASSES]
 
     @classmethod
     def get_queryset(cls, queryset, info):
-        for visibility_class in settings.VISIBILITY_CLASSES:
+        for visibility_class in cls.visibility_classes:
             queryset = visibility_class().get_queryset(cls, queryset, info)
 
         return queryset
 
 
-class DjangoObjectType(QuerysetMixin, types.DjangoObjectType):
+class DjangoObjectType(Node, types.DjangoObjectType):
     """
     Django object type with overwriting get_queryset support.
 

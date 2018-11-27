@@ -1,8 +1,6 @@
 import inspect
 from functools import wraps
 
-from .mutation import Mutation
-
 
 def permission_for(mutation):
     """Decorate function to overwriting permission of specific mutation."""
@@ -44,6 +42,7 @@ class BasePermission(object):
     A custom permission class could look like this:
     ```
     >>> from caluma.form.schema import SaveForm
+    ... from caluma.mutation import Mutation
     ...
     ... class CustomPermission(BasePermission):
     ...     @permission_for(Mutation)
@@ -88,6 +87,4 @@ class BasePermission(object):
 
 
 class AllowAny(BasePermission):
-    @permission_for(Mutation)
-    def has_permission_default(self, mutation, info):
-        return True
+    pass

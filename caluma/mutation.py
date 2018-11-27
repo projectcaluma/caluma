@@ -4,6 +4,7 @@ import graphene
 from django.conf import settings
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django.utils.module_loading import import_string
 from graphene.relay.mutation import ClientIDMutation
 from graphene.types import Field, InputField
 from graphene.types.mutation import MutationOptions
@@ -66,6 +67,8 @@ class Mutation(ClientIDMutation):
 
     class Meta:
         abstract = True
+
+    permission_classes = [import_string(cls) for cls in settings.PERMISSION_CLASSES]
 
     @classmethod
     def __init_subclass_with_meta__(
@@ -171,13 +174,13 @@ class Mutation(ClientIDMutation):
 
     @classmethod
     def check_permissions(cls, root, info):
-        for permission_class in settings.PERMISSION_CLASSES:
+        for permission_class in cls.permission_classes:
             if not permission_class().has_permission(cls, info):
                 raise exceptions.PermissionDenied()
 
     @classmethod
     def check_object_permissions(cls, root, info, instance):
-        for permission_class in settings.PERMISSION_CLASSES:
+        for permission_class in cls.permission_classes:
             if not permission_class().has_object_permission(cls, info, instance):
                 raise exceptions.PermissionDenied()
 

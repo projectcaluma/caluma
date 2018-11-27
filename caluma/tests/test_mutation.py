@@ -76,31 +76,27 @@ def test_serializer_mutation_mutate_and_get_payload_without_model(info):
     assert type(result) == NoModelMutation
 
 
-def test_serializer_mutation_mutate_and_get_payload_without_permission(
-    db, settings, info
-):
+def test_serializer_mutation_mutate_and_get_payload_without_permission(db, info):
     class MySerializer(serializers.ModelSerializer):
         class Meta:
             model = get_fake_model()
             fields = "__all__"
 
-    class MyMutation(mutation.Mutation):
-        class Meta:
-            serializer_class = MySerializer
-
     class NoPermission(permissions.BasePermission):
         def has_permission(self, mutation, info):
             return False
 
-    settings.PERMISSION_CLASSES = [NoPermission]
+    class MyMutation(mutation.Mutation):
+        permission_classes = [NoPermission]
+
+        class Meta:
+            serializer_class = MySerializer
 
     with pytest.raises(exceptions.PermissionDenied):
         MyMutation.mutate_and_get_payload(None, info)
 
 
-def test_serializer_mutation_mutate_and_get_payload_without_object_permission(
-    db, settings, info
-):
+def test_serializer_mutation_mutate_and_get_payload_without_object_permission(db, info):
     FakeModel = get_fake_model()
     instance = FakeModel.objects.create()
 
@@ -113,16 +109,16 @@ def test_serializer_mutation_mutate_and_get_payload_without_object_permission(
             model = FakeModel
             fields = "__all__"
 
-    class MyMutation(mutation.Mutation):
-        class Meta:
-            serializer_class = MySerializer
-            return_field_type = FakeModelObjectType
-
     class NoObjectPermission(permissions.BasePermission):
         def has_object_permission(self, mutation, info, instance):
             return False
 
-    settings.PERMISSION_CLASSES = [NoObjectPermission]
+    class MyMutation(mutation.Mutation):
+        permission_classes = [NoObjectPermission]
+
+        class Meta:
+            serializer_class = MySerializer
+            return_field_type = FakeModelObjectType
 
     with pytest.raises(exceptions.PermissionDenied):
         MyMutation.mutate_and_get_payload(None, info, id=str(instance.pk))
