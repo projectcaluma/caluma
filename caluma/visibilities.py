@@ -21,7 +21,7 @@ def filter_queryset_for(node):
 class BaseVisibility(object):
     """Basic visibility classes to be extended by any visibility implementation.
 
-    In combination with the decorator `@queryset_for` a custom visibility class
+    In combination with the decorator `@filter_queryset_for` a custom visibility class
     can define filtering on basis of nodes and its subclasses.
 
     A custom visibility class could look like this:
