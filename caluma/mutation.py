@@ -128,7 +128,7 @@ class Mutation(ClientIDMutation):
         _meta.return_field_type = return_field_type
 
         input_fields = yank_fields_from_attrs(input_fields, _as=InputField)
-        super(Mutation, cls).__init_subclass_with_meta__(
+        super().__init_subclass_with_meta__(
             _meta=_meta, input_fields=input_fields, **options
         )
 
