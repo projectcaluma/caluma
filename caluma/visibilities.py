@@ -1,6 +1,8 @@
 import inspect
 from functools import wraps
 
+from .collections import list_duplicates
+
 
 def filter_queryset_for(node):
     """Decorate function to define filtering of queryset of specific node."""
@@ -40,6 +42,12 @@ class BaseVisibility(object):
     def __init__(self):
         queryset_fns = inspect.getmembers(
             self, lambda m: hasattr(m, "_filter_queryset_for")
+        )
+        queryset_nodes = [str(fn._filter_queryset_for) for _, fn in queryset_fns]
+        queryset_nodes_dups = list_duplicates(queryset_nodes)
+        assert not queryset_nodes_dups, (
+            f"`filter_queryset_for` defined multiple times for "
+            f"{', '.join(queryset_nodes_dups)} in {str(self)}"
         )
         self._filter_querysets_for = {
             fn._filter_queryset_for: fn for _, fn in queryset_fns

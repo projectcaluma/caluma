@@ -1,6 +1,8 @@
 import inspect
 from functools import wraps
 
+from .collections import list_duplicates
+
 
 def permission_for(mutation):
     """Decorate function to overwriting permission of specific mutation."""
@@ -62,14 +64,24 @@ class BasePermission(object):
 
     def __init__(self):
         perm_fns = inspect.getmembers(self, lambda m: hasattr(m, "_permission"))
+        perm_muts = [str(fn._permission) for _, fn in perm_fns]
+        perm_muts_dups = list_duplicates(perm_muts)
+        assert not perm_muts_dups, (
+            f"`permission_for` defined multiple times for "
+            f"{', '.join(perm_muts_dups)} in {str(self)}"
+        )
         self._permissions = {fn._permission: fn for _, fn in perm_fns}
 
-        object_perm_fns = inspect.getmembers(
+        obj_perm_fns = inspect.getmembers(
             self, lambda m: hasattr(m, "_object_permission")
         )
-        self._object_permissions = {
-            fn._object_permission: fn for _, fn in object_perm_fns
-        }
+        obj_perm_muts = [str(fn._object_permission) for _, fn in obj_perm_fns]
+        obj_perm_muts_dups = list_duplicates(obj_perm_muts)
+        assert not obj_perm_muts_dups, (
+            f"`object_permission_for` defined multiple times for "
+            f"{', '.join(obj_perm_muts_dups)} in {str(self)}"
+        )
+        self._object_permissions = {fn._object_permission: fn for _, fn in obj_perm_fns}
 
     def has_permission(self, mutation, info):
         for cls in mutation.mro():
