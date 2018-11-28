@@ -4,9 +4,9 @@ from graphene_django.rest_framework import serializer_converter
 
 from . import filters, models, serializers
 from ..filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
-from ..mutation import SerializerMutation, UserDefinedPrimaryKeyMixin
+from ..mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..relay import extract_global_id
-from ..types import DjangoObjectType, QuerysetMixin
+from ..types import DjangoObjectType, Node
 
 
 class QuestionJexl(graphene.String):
@@ -20,7 +20,7 @@ serializer_converter.get_graphene_type_from_serializer_field.register(
 )
 
 
-class Question(QuerysetMixin, graphene.Interface):
+class Question(Node, graphene.Interface):
     id = graphene.ID(required=True)
     created_at = graphene.DateTime(required=True)
     modified_at = graphene.DateTime(required=True)
@@ -157,18 +157,18 @@ class Form(DjangoObjectType):
         exclude_fields = ("documents", "workflows")
 
 
-class SaveForm(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveForm(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveFormSerializer
 
 
-class ArchiveForm(SerializerMutation):
+class ArchiveForm(Mutation):
     class Meta:
         lookup_input_kwarg = "id"
         serializer_class = serializers.ArchiveFormSerializer
 
 
-class AddFormQuestion(SerializerMutation):
+class AddFormQuestion(Mutation):
     """Add question at the end of form."""
 
     class Meta:
@@ -176,80 +176,94 @@ class AddFormQuestion(SerializerMutation):
         serializer_class = serializers.AddFormQuestionSerializer
 
 
-class RemoveFormQuestion(SerializerMutation):
+class RemoveFormQuestion(Mutation):
     class Meta:
         lookup_input_kwarg = "form"
         serializer_class = serializers.RemoveFormQuestionSerializer
 
 
-class ReorderFormQuestions(SerializerMutation):
+class ReorderFormQuestions(Mutation):
     class Meta:
         lookup_input_kwarg = "form"
         serializer_class = serializers.ReorderFormQuestionsSerializer
 
 
-class PublishForm(SerializerMutation):
+class PublishForm(Mutation):
     class Meta:
         lookup_input_kwarg = "id"
         serializer_class = serializers.PublishFormSerializer
 
 
-class ArchiveQuestion(SerializerMutation):
+class ArchiveQuestion(Mutation):
     class Meta:
         lookup_input_kwarg = "id"
         serializer_class = serializers.ArchiveQuestionSerializer
         return_field_type = Question
 
 
-class SaveTextQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveQuestion(UserDefinedPrimaryKeyMixin, Mutation):
+    """
+    Base class of all save question mutations.
+
+    Defined so it is easy to set a permission for all different types
+    of questions.
+
+    See `caluma.permissions.BasePermission` for more details.
+    """
+
+    class Meta:
+        abstract = True
+
+
+class SaveTextQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveTextQuestionSerializer
         return_field_type = Question
 
 
-class SaveTextareaQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveTextareaQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveTextareaQuestionSerializer
         return_field_type = Question
 
 
-class SaveRadioQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveRadioQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveRadioQuestionSerializer
         return_field_type = Question
 
 
-class SaveCheckboxQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveCheckboxQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveCheckboxQuestionSerializer
         return_field_type = Question
 
 
-class SaveIntegerQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveIntegerQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveIntegerQuestionSerializer
         return_field_type = Question
 
 
-class SaveFloatQuestion(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveFloatQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveFloatQuestionSerializer
         return_field_type = Question
 
 
-class SaveOption(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class SaveOption(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveOptionSerializer
 
 
-class RemoveOption(UserDefinedPrimaryKeyMixin, SerializerMutation):
+class RemoveOption(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         lookup_input_kwarg = "option"
         serializer_class = serializers.RemoveOptionSerializer
         return_field_name = False
 
 
-class Answer(QuerysetMixin, graphene.Interface):
+class Answer(Node, graphene.Interface):
     id = graphene.ID()
     created_at = graphene.DateTime(required=True)
     created_by_user = graphene.String()
@@ -335,12 +349,12 @@ class Document(DjangoObjectType):
         filter_fields = ("form",)
 
 
-class SaveDocument(SerializerMutation):
+class SaveDocument(Mutation):
     class Meta:
         serializer_class = serializers.DocumentSerializer
 
 
-class SaveDocumentAnswer(SerializerMutation):
+class SaveDocumentAnswer(Mutation):
     @classmethod
     def get_object(cls, root, info, queryset, **input):
         question_id = extract_global_id(input["question"])

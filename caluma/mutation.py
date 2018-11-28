@@ -4,6 +4,7 @@ import graphene
 from django.conf import settings
 from django.http import Http404
 from django.shortcuts import get_object_or_404
+from django.utils.module_loading import import_string
 from graphene.relay.mutation import ClientIDMutation
 from graphene.types import Field, InputField
 from graphene.types.mutation import MutationOptions
@@ -19,7 +20,7 @@ from .relay import extract_global_id
 convert_django_field.register(LocalizedField, convert_field_to_string)
 
 
-class SerializerMutationOptions(MutationOptions):
+class MutationOptions(MutationOptions):
     lookup_field = None
     lookup_input_kwarg = None
     model_class = None
@@ -29,9 +30,9 @@ class SerializerMutationOptions(MutationOptions):
     return_field_type = None
 
 
-class SerializerMutation(ClientIDMutation):
+class Mutation(ClientIDMutation):
     """
-    Caluma specific SerializerMutation solving following upstream issues.
+    Caluma specific Mutation solving following upstream issues.
 
     1. Expose node instead of attributes directly.
 
@@ -67,6 +68,8 @@ class SerializerMutation(ClientIDMutation):
     class Meta:
         abstract = True
 
+    permission_classes = [import_string(cls) for cls in settings.PERMISSION_CLASSES]
+
     @classmethod
     def __init_subclass_with_meta__(
         cls,
@@ -82,7 +85,7 @@ class SerializerMutation(ClientIDMutation):
         **options
     ):
         if not serializer_class:
-            raise Exception("serializer_class is required for the SerializerMutation")
+            raise Exception("serializer_class is required for the Mutation")
 
         if "update" not in model_operations and "create" not in model_operations:
             raise Exception('model_operations must contain "create" and/or "update"')
@@ -114,7 +117,7 @@ class SerializerMutation(ClientIDMutation):
         if return_field_name:
             output_fields[return_field_name] = graphene.Field(return_field_type)
 
-        _meta = SerializerMutationOptions(cls)
+        _meta = MutationOptions(cls)
         _meta.lookup_field = lookup_field
         _meta.lookup_input_kwarg = lookup_input_kwarg
         _meta.model_operations = model_operations
@@ -125,7 +128,7 @@ class SerializerMutation(ClientIDMutation):
         _meta.return_field_type = return_field_type
 
         input_fields = yank_fields_from_attrs(input_fields, _as=InputField)
-        super(SerializerMutation, cls).__init_subclass_with_meta__(
+        super().__init_subclass_with_meta__(
             _meta=_meta, input_fields=input_fields, **options
         )
 
@@ -171,13 +174,13 @@ class SerializerMutation(ClientIDMutation):
 
     @classmethod
     def check_permissions(cls, root, info):
-        for permission_class in settings.PERMISSION_CLASSES:
+        for permission_class in cls.permission_classes:
             if not permission_class().has_permission(cls, info):
                 raise exceptions.PermissionDenied()
 
     @classmethod
     def check_object_permissions(cls, root, info, instance):
-        for permission_class in settings.PERMISSION_CLASSES:
+        for permission_class in cls.permission_classes:
             if not permission_class().has_object_permission(cls, info, instance):
                 raise exceptions.PermissionDenied()
 

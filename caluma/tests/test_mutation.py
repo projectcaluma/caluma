@@ -9,10 +9,10 @@ from .fake_model import get_fake_model
 def test_missing_serializer_mutation_serializer_class():
     with pytest.raises(Exception) as exc:
 
-        class MyMutation(mutation.SerializerMutation):
+        class MyMutation(mutation.Mutation):
             pass
 
-    assert str(exc.value) == "serializer_class is required for the SerializerMutation"
+    assert str(exc.value) == "serializer_class is required for the Mutation"
 
 
 def test_invalid_serializer_mutation_model_operations(db):
@@ -23,7 +23,7 @@ def test_invalid_serializer_mutation_model_operations(db):
 
     with pytest.raises(Exception) as exc:
 
-        class MyMutation(mutation.SerializerMutation):
+        class MyMutation(mutation.Mutation):
             class Meta:
                 serializer_class = MySerializer
                 model_operations = ["Add"]
@@ -48,7 +48,7 @@ def test_invalid_serializer_mutation_update_mutate_and_get_payload(db, info):
             model = get_fake_model()
             fields = "__all__"
 
-    class InvalidModelMutation(mutation.SerializerMutation):
+    class InvalidModelMutation(mutation.Mutation):
         class Meta:
             serializer_class = MySerializer
             return_field_type = FakeModelObjectType
@@ -67,7 +67,7 @@ def test_serializer_mutation_mutate_and_get_payload_without_model(info):
         def create(self, validated_data):
             return validated_data
 
-    class NoModelMutation(mutation.SerializerMutation):
+    class NoModelMutation(mutation.Mutation):
         class Meta:
             return_field_name = "test"
             serializer_class = MySerializer
@@ -76,31 +76,27 @@ def test_serializer_mutation_mutate_and_get_payload_without_model(info):
     assert type(result) == NoModelMutation
 
 
-def test_serializer_mutation_mutate_and_get_payload_without_permission(
-    db, settings, info
-):
+def test_serializer_mutation_mutate_and_get_payload_without_permission(db, info):
     class MySerializer(serializers.ModelSerializer):
         class Meta:
             model = get_fake_model()
             fields = "__all__"
 
-    class MyMutation(mutation.SerializerMutation):
-        class Meta:
-            serializer_class = MySerializer
-
     class NoPermission(permissions.BasePermission):
         def has_permission(self, mutation, info):
             return False
 
-    settings.PERMISSION_CLASSES = [NoPermission]
+    class MyMutation(mutation.Mutation):
+        permission_classes = [NoPermission]
+
+        class Meta:
+            serializer_class = MySerializer
 
     with pytest.raises(exceptions.PermissionDenied):
         MyMutation.mutate_and_get_payload(None, info)
 
 
-def test_serializer_mutation_mutate_and_get_payload_without_object_permission(
-    db, settings, info
-):
+def test_serializer_mutation_mutate_and_get_payload_without_object_permission(db, info):
     FakeModel = get_fake_model()
     instance = FakeModel.objects.create()
 
@@ -113,16 +109,16 @@ def test_serializer_mutation_mutate_and_get_payload_without_object_permission(
             model = FakeModel
             fields = "__all__"
 
-    class MyMutation(mutation.SerializerMutation):
-        class Meta:
-            serializer_class = MySerializer
-            return_field_type = FakeModelObjectType
-
     class NoObjectPermission(permissions.BasePermission):
         def has_object_permission(self, mutation, info, instance):
             return False
 
-    settings.PERMISSION_CLASSES = [NoObjectPermission]
+    class MyMutation(mutation.Mutation):
+        permission_classes = [NoObjectPermission]
+
+        class Meta:
+            serializer_class = MySerializer
+            return_field_type = FakeModelObjectType
 
     with pytest.raises(exceptions.PermissionDenied):
         MyMutation.mutate_and_get_payload(None, info, id=str(instance.pk))
@@ -146,7 +142,7 @@ def test_user_defined_primary_key_get_serializer_kwargs_not_allowed(db, info):
             model = FakeModel
             fields = "__all__"
 
-    class MyMutation(mutation.UserDefinedPrimaryKeyMixin, mutation.SerializerMutation):
+    class MyMutation(mutation.UserDefinedPrimaryKeyMixin, mutation.Mutation):
         class Meta:
             serializer_class = MySerializer
             return_field_type = FakeModelObjectType

@@ -2,7 +2,6 @@ import os
 import re
 
 import environ
-from django.utils.module_loading import import_string
 
 env = environ.Env()
 django_root = environ.Path(__file__) - 2
@@ -131,17 +130,11 @@ OIDC_GROUPS_CLAIM = env.str("OIDC_GROUPS_CLAIM", default="caluma_groups")
 
 # Extensions
 
-VISIBILITY_CLASSES = [
-    import_string(cls)
-    for cls in env.list(
-        "VISIBILITY_CLASSES", default=default(["caluma.visibilities.Any"])
-    )
-]
+VISIBILITY_CLASSES = env.list(
+    "VISIBILITY_CLASSES", default=default(["caluma.visibilities.Any"])
+)
 
 
-PERMISSION_CLASSES = [
-    import_string(cls)
-    for cls in env.list(
-        "PERMISSION_CLASSES", default=default(["caluma.permissions.AllowAny"])
-    )
-]
+PERMISSION_CLASSES = env.list(
+    "PERMISSION_CLASSES", default=default(["caluma.permissions.AllowAny"])
+)
