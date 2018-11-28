@@ -1,18 +1,21 @@
-version: '3'
+version: "3.4"
 services:
   db:
     image: postgres:9.6
-    ports:
-      - '5432:5432'
     environment:
       - POSTGRES_USER=caluma
       - POSTGRES_PASSWORD=caluma
+    volumes:
+      - dbdata:/var/lib/postgresq
   caluma:
-    build: .
+    image: projectcaluma/caluma:latest
     ports:
-      - '8000:80'
+      - "8000:8000"
     depends_on:
       - db
     environment:
       - DATABASE_HOST=db
       - ENV=docker
+
+volumes:
+  dbdata:
