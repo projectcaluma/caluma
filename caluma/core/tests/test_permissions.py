@@ -1,4 +1,5 @@
 import pytest
+from django.core.exceptions import ImproperlyConfigured
 from rest_framework import serializers
 
 from .. import models
@@ -58,7 +59,7 @@ def test_custom_permission_override_has_permission_with_duplicates(db, info):
         ):  # pragma: no cover
             return False
 
-    with pytest.raises(AssertionError):
+    with pytest.raises(ImproperlyConfigured):
         CustomPermission()
 
 
@@ -87,5 +88,5 @@ def test_custom_permission_override_has_object_permission_with_duplicates(db, in
         ):  # pragma: no cover
             return False
 
-    with pytest.raises(AssertionError):
+    with pytest.raises(ImproperlyConfigured):
         CustomPermission()

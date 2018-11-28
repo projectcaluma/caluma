@@ -1,4 +1,5 @@
 import pytest
+from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404
 from rest_framework import exceptions, serializers
 
@@ -6,7 +7,7 @@ from .. import models, mutation, permissions, types
 from .fake_model import get_fake_model
 
 
-def test_missing_serializer_mutation_serializer_class():
+def test_missing_mutation_serializer_class():
     with pytest.raises(Exception) as exc:
 
         class MyMutation(mutation.Mutation):
@@ -15,7 +16,7 @@ def test_missing_serializer_mutation_serializer_class():
     assert str(exc.value) == "serializer_class is required for the Mutation"
 
 
-def test_invalid_serializer_mutation_model_operations(db):
+def test_invalid_mutation_model_operations(db):
     class MySerializer(serializers.ModelSerializer):
         class Meta:
             model = get_fake_model()
@@ -31,7 +32,7 @@ def test_invalid_serializer_mutation_model_operations(db):
     assert "model_operations" in str(exc.value)
 
 
-def test_invalid_serializer_mutation_update_mutate_and_get_payload(db, info):
+def test_invalid_mutation_update_mutate_and_get_payload(db, info):
     FakeModel = get_fake_model(model_base=models.UUIDModel)
 
     class FakeModelObjectType(types.DjangoObjectType):
@@ -60,7 +61,7 @@ def test_invalid_serializer_mutation_update_mutate_and_get_payload(db, info):
     assert '"id" required' in str(exc.value)
 
 
-def test_serializer_mutation_mutate_and_get_payload_without_model(info):
+def test_mutation_mutate_and_get_payload_without_model(info):
     class MySerializer(serializers.Serializer):
         name = serializers.CharField()
 
@@ -76,7 +77,7 @@ def test_serializer_mutation_mutate_and_get_payload_without_model(info):
     assert type(result) == NoModelMutation
 
 
-def test_serializer_mutation_mutate_and_get_payload_without_permission(db, info):
+def test_mutation_mutate_and_get_payload_without_permission(db, info):
     class MySerializer(serializers.ModelSerializer):
         class Meta:
             model = get_fake_model()
@@ -96,7 +97,7 @@ def test_serializer_mutation_mutate_and_get_payload_without_permission(db, info)
         MyMutation.mutate_and_get_payload(None, info)
 
 
-def test_serializer_mutation_mutate_and_get_payload_without_object_permission(db, info):
+def test_mutation_mutate_and_get_payload_without_object_permission(db, info):
     FakeModel = get_fake_model()
     instance = FakeModel.objects.create()
 
@@ -122,6 +123,24 @@ def test_serializer_mutation_mutate_and_get_payload_without_object_permission(db
 
     with pytest.raises(exceptions.PermissionDenied):
         MyMutation.mutate_and_get_payload(None, info, id=str(instance.pk))
+
+
+def test_mutation_mutate_and_get_payload_permission_classes_improperly_configured(
+    db, info
+):
+    class MySerializer(serializers.ModelSerializer):
+        class Meta:
+            model = get_fake_model()
+            fields = "__all__"
+
+    class MyMutation(mutation.Mutation):
+        permission_classes = None
+
+        class Meta:
+            serializer_class = MySerializer
+
+    with pytest.raises(ImproperlyConfigured):
+        MyMutation.mutate_and_get_payload(None, info)
 
 
 def test_user_defined_primary_key_get_serializer_kwargs_not_allowed(db, info):

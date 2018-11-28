@@ -1,6 +1,7 @@
 from collections import OrderedDict
 
 import graphene
+from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404
 from django.shortcuts import get_object_or_404
 from graphene.relay.mutation import ClientIDMutation
@@ -174,9 +175,12 @@ class Mutation(ClientIDMutation):
 
     @classmethod
     def check_permissions(cls, root, info):
-        assert (
-            cls.permission_classes is not None
-        ), "check that app `caluma.core` is part of your `INSTALLED_APPS`"
+        if cls.permission_classes is None:
+            raise ImproperlyConfigured(
+                "check that app `caluma.core` is part of your `INSTALLED_APPS` "
+                "or custom mutation has `permission_classes` properly assigned."
+            )
+
         for permission_class in cls.permission_classes:
             if not permission_class().has_permission(cls, info):
                 raise exceptions.PermissionDenied()

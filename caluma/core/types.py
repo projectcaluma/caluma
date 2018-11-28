@@ -1,3 +1,4 @@
+from django.core.exceptions import ImproperlyConfigured
 from graphene_django import types
 
 
@@ -10,6 +11,12 @@ class Node(object):
 
     @classmethod
     def get_queryset(cls, queryset, info):
+        if cls.visibility_classes is None:
+            raise ImproperlyConfigured(
+                "check that app `caluma.core` is part of your `INSTALLED_APPS` "
+                "or custom node has `visibility_classes` properly assigned."
+            )
+
         for visibility_class in cls.visibility_classes:
             queryset = visibility_class().get_queryset(cls, queryset, info)
 

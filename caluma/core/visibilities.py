@@ -1,6 +1,8 @@
 import inspect
 from functools import wraps
 
+from django.core.exceptions import ImproperlyConfigured
+
 from .collections import list_duplicates
 
 
@@ -45,10 +47,11 @@ class BaseVisibility(object):
         )
         queryset_nodes = [str(fn._filter_queryset_for) for _, fn in queryset_fns]
         queryset_nodes_dups = list_duplicates(queryset_nodes)
-        assert not queryset_nodes_dups, (
-            f"`filter_queryset_for` defined multiple times for "
-            f"{', '.join(queryset_nodes_dups)} in {str(self)}"
-        )
+        if queryset_nodes_dups:
+            raise ImproperlyConfigured(
+                f"`filter_queryset_for` defined multiple times for "
+                f"{', '.join(queryset_nodes_dups)} in {str(self)}"
+            )
         self._filter_querysets_for = {
             fn._filter_queryset_for: fn for _, fn in queryset_fns
         }
