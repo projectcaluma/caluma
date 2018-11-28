@@ -1,8 +1,11 @@
-version: "3"
+version: "3.4"
 services:
   caluma:
-    environment:
-      - PYTHONDONTWRITEBYTECODE=1
+    build:
+      context: .
+      args:
+        REQUIREMENTS: requirements-dev.txt
+    user: "${UID:?Set UID env variable to your user id}"
     volumes:
       - ./:/app
-    command: /bin/sh -c "wait-for-it.sh db:3306 -- ./manage.py migrate && ./manage.py runserver 0.0.0.0:80"
+    command: /bin/sh -c "wait-for-it.sh db:5432 -- ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000"

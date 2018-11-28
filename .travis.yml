@@ -16,7 +16,7 @@ env:
 
 install:
   - echo "ENV=travis" > .env
-  - pip install -r requirements.txt -r requirements-dev.txt --upgrade
+  - pip install -r requirements-dev.txt --upgrade
 
 before_script:
   - psql -c "CREATE DATABASE caluma;" -U postgres
