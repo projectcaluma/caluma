@@ -1,8 +1,8 @@
 import pytest
 
-from ...models import UUIDModel
-from ...tests.fake_model import get_fake_model
-from ...types import DjangoObjectType
+from ...core.models import UUIDModel
+from ...core.tests.fake_model import get_fake_model
+from ...core.types import DjangoObjectType
 from ..visibilities import Authenticated, CreatedByGroup
 
 

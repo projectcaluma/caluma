@@ -3,9 +3,9 @@ from graphene import relay
 from graphene_django.rest_framework import serializer_converter
 
 from . import filters, models, serializers
-from ..filters import DjangoFilterConnectionField
-from ..mutation import Mutation, UserDefinedPrimaryKeyMixin
-from ..types import DjangoObjectType
+from ..core.filters import DjangoFilterConnectionField
+from ..core.mutation import Mutation, UserDefinedPrimaryKeyMixin
+from ..core.types import DjangoObjectType
 
 
 class FlowJexl(graphene.String):

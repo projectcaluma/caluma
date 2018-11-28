@@ -1,15 +1,22 @@
-from django.conf import settings
-from django.utils.module_loading import import_string
+from django.core.exceptions import ImproperlyConfigured
 from graphene_django import types
 
 
 class Node(object):
     """Base class to define queryset filters for all nodes."""
 
-    visibility_classes = [import_string(cls) for cls in settings.VISIBILITY_CLASSES]
+    # will be set in core.AppConfig.ready hook, see apps.py
+    # to avoid recursive import error
+    visibility_classes = None
 
     @classmethod
     def get_queryset(cls, queryset, info):
+        if cls.visibility_classes is None:
+            raise ImproperlyConfigured(
+                "check that app `caluma.core` is part of your `INSTALLED_APPS` "
+                "or custom node has `visibility_classes` properly assigned."
+            )
+
         for visibility_class in cls.visibility_classes:
             queryset = visibility_class().get_queryset(cls, queryset, info)
 

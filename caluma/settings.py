@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "psqlextra",
     "django.contrib.contenttypes",
     "graphene_django",
+    "caluma.core.apps.DefaultConfig",
     "caluma.user.apps.DefaultConfig",
     "caluma.form.apps.DefaultConfig",
     "caluma.workflow.apps.DefaultConfig",
@@ -131,10 +132,10 @@ OIDC_GROUPS_CLAIM = env.str("OIDC_GROUPS_CLAIM", default="caluma_groups")
 # Extensions
 
 VISIBILITY_CLASSES = env.list(
-    "VISIBILITY_CLASSES", default=default(["caluma.visibilities.Any"])
+    "VISIBILITY_CLASSES", default=default(["caluma.core.visibilities.Any"])
 )
 
 
 PERMISSION_CLASSES = env.list(
-    "PERMISSION_CLASSES", default=default(["caluma.permissions.AllowAny"])
+    "PERMISSION_CLASSES", default=default(["caluma.core.permissions.AllowAny"])
 )

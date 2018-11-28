@@ -2,7 +2,7 @@ from django.db import transaction
 from rest_framework import exceptions
 
 from . import models
-from .. import serializers
+from ..core import serializers
 from ..form.models import Document
 from .jexl import FlowJexl
 

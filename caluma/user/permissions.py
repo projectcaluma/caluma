@@ -1,4 +1,4 @@
-from ..permissions import BasePermission
+from ..core.permissions import BasePermission
 
 
 class IsAuthenticated(BasePermission):

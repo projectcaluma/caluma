@@ -2,7 +2,7 @@ from functools import partial
 
 from pyjexl import JEXL
 
-from ..jexl import ExtractTransformSubjectAnalyzer
+from ..core.jexl import ExtractTransformSubjectAnalyzer
 
 
 class FlowJexl(JEXL):

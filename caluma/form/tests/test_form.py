@@ -2,7 +2,10 @@ import pytest
 from graphql_relay import to_global_id
 
 from .. import models
-from ...tests import extract_global_id_input_fields, extract_serializer_input_fields
+from ...core.tests import (
+    extract_global_id_input_fields,
+    extract_serializer_input_fields,
+)
 from ..serializers import SaveFormSerializer
 
 

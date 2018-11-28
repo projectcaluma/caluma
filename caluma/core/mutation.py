@@ -1,10 +1,9 @@
 from collections import OrderedDict
 
 import graphene
-from django.conf import settings
+from django.core.exceptions import ImproperlyConfigured
 from django.http import Http404
 from django.shortcuts import get_object_or_404
-from django.utils.module_loading import import_string
 from graphene.relay.mutation import ClientIDMutation
 from graphene.types import Field, InputField
 from graphene.types.mutation import MutationOptions
@@ -68,7 +67,9 @@ class Mutation(ClientIDMutation):
     class Meta:
         abstract = True
 
-    permission_classes = [import_string(cls) for cls in settings.PERMISSION_CLASSES]
+    # will be set in core.AppConfig.ready hook, see apps.py
+    # to avoid recursive import error
+    permission_classes = None
 
     @classmethod
     def __init_subclass_with_meta__(
@@ -174,6 +175,12 @@ class Mutation(ClientIDMutation):
 
     @classmethod
     def check_permissions(cls, root, info):
+        if cls.permission_classes is None:
+            raise ImproperlyConfigured(
+                "check that app `caluma.core` is part of your `INSTALLED_APPS` "
+                "or custom mutation has `permission_classes` properly assigned."
+            )
+
         for permission_class in cls.permission_classes:
             if not permission_class().has_permission(cls, info):
                 raise exceptions.PermissionDenied()

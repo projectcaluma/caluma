@@ -5,7 +5,7 @@ from rest_framework import exceptions
 from rest_framework.serializers import CharField, FloatField, IntegerField, ListField
 
 from . import models
-from .. import serializers
+from ..core import serializers
 from .jexl import QuestionJexl
 
 

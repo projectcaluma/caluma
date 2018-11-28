@@ -1,4 +1,5 @@
 import pytest
+from django.core.exceptions import ImproperlyConfigured
 
 from .. import models
 from ..types import DjangoObjectType
@@ -46,5 +47,19 @@ def test_custom_visibility_override_get_queryset_with_duplicates(db):
         ):  # pragma: no cover
             return queryset.none()
 
-    with pytest.raises(AssertionError):
+    with pytest.raises(ImproperlyConfigured):
         CustomVisibility()
+
+
+def test_custom_node_get_queryset_improperly_configured(db):
+    FakeModel = get_fake_model(model_base=models.UUIDModel)
+    FakeModel.objects.create()
+
+    class CustomNode(DjangoObjectType):
+        visibility_classes = None
+
+        class Meta:
+            model = FakeModel
+
+    with pytest.raises(ImproperlyConfigured):
+        CustomNode.get_queryset(None, None)

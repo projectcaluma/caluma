@@ -8,8 +8,7 @@ from django.db.migrations.executor import MigrationExecutor
 def define_fake_model(fields={}, model_base=models.Model, options={}):
     name = str(uuid.uuid4()).replace("-", "")[:8]
 
-    # app label needs to be any installed app name e.g. user
-    meta_options = {"app_label": "user"}
+    meta_options = {"app_label": "core"}
     meta_options.update(options)
 
     attributes = {
@@ -39,9 +38,7 @@ def get_fake_model(fields={}, model_base=models.Model, options={}):
     with connection.schema_editor() as schema_editor:
         migration_executor = MigrationExecutor(schema_editor.connection)
         migration_executor.apply_migration(
-            TestProject(),
-            # app label needs to be any installed app name e.g. user
-            TestMigration("caluma_extra", "user"),
+            TestProject(), TestMigration("caluma_extra", "core")
         )
 
         schema_editor.create_model(model)

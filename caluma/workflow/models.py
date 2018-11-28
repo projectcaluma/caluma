@@ -2,7 +2,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models
 from localized_fields.fields import LocalizedField
 
-from caluma.models import SlugModel, UUIDModel
+from ..core.models import SlugModel, UUIDModel
 
 
 class Task(SlugModel):

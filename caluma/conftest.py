@@ -9,7 +9,7 @@ from graphql.error import format_error
 from pytest_factoryboy import register
 from snapshottest.pytest import PyTestSnapshotTest
 
-from .faker import MultilangProvider
+from .core.faker import MultilangProvider
 from .form import factories as form_factories
 from .schema import schema
 from .user.models import AnonymousUser, OIDCUser
