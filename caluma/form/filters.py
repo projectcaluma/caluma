@@ -3,12 +3,14 @@ from ..core.filters import (
     FilterSet,
     GlobalIDFilter,
     GlobalIDMultipleChoiceFilter,
+    OrderingFilter,
     SearchFilter,
 )
 
 
 class FormFilterSet(FilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
+    order_by = OrderingFilter(label="FormOrdering", fields=("name",))
 
     class Meta:
         model = models.Form
@@ -17,6 +19,7 @@ class FormFilterSet(FilterSet):
 
 class OptionFilterSet(FilterSet):
     search = SearchFilter(fields=("slug", "label"))
+    order_by = OrderingFilter(label="OptionOrdering", fields=("label",))
 
     class Meta:
         model = models.Option
@@ -26,6 +29,7 @@ class OptionFilterSet(FilterSet):
 class QuestionFilterSet(FilterSet):
     exclude_forms = GlobalIDMultipleChoiceFilter(field_name="forms", exclude=True)
     search = SearchFilter(fields=("slug", "label"))
+    order_by = OrderingFilter(label="QuestionOrdering", fields=("label",))
 
     class Meta:
         model = models.Question
@@ -37,6 +41,7 @@ class DocumentFilterSet(FilterSet):
     search = SearchFilter(
         fields=("form__slug", "form__name", "form__description", "answers__value")
     )
+    order_by = OrderingFilter(label="DocumentOrdering")
 
     class Meta:
         model = models.Document
@@ -45,6 +50,7 @@ class DocumentFilterSet(FilterSet):
 
 class AnswerFilterSet(FilterSet):
     search = SearchFilter(fields=("value",))
+    order_by = OrderingFilter(label="AnswerOrdering")
 
     class Meta:
         model = models.Answer

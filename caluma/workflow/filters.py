@@ -1,9 +1,10 @@
 from . import models
-from ..core.filters import FilterSet, SearchFilter
+from ..core.filters import FilterSet, OrderingFilter, SearchFilter
 
 
 class WorkflowFilterSet(FilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
+    order_by = OrderingFilter(label="WorkflowOrdering", fields=("name", "description"))
 
     class Meta:
         model = models.Workflow
@@ -11,6 +12,8 @@ class WorkflowFilterSet(FilterSet):
 
 
 class CaseFilterSet(FilterSet):
+    order_by = OrderingFilter(label="CaseOrdering", fields=("status",))
+
     class Meta:
         model = models.Case
         fields = ("workflow", "status")
@@ -18,6 +21,9 @@ class CaseFilterSet(FilterSet):
 
 class TaskFilterSet(FilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
+    order_by = OrderingFilter(
+        label="TaskOrdering", fields=("name", "description", "type")
+    )
 
     class Meta:
         model = models.Task
@@ -25,6 +31,8 @@ class TaskFilterSet(FilterSet):
 
 
 class WorkItemFilterSet(FilterSet):
+    order_by = OrderingFilter(label="WorkItemOrdering", fields=("status",))
+
     class Meta:
         model = models.WorkItem
         fields = ("status", "task", "case")
