@@ -51,13 +51,12 @@ snapshots["test_save_form[] 1"] = {
     }
 }
 
-snapshots["test_query_all_forms 1"] = {
+snapshots["test_query_all_forms[First result] 1"] = {
     "allForms": {
         "edges": [
             {
                 "node": {
-                    "description": """Line whatever team suggest traditional boy. Drop argue move. Anyone remember prove.
-Kid avoid player relationship to range whose. Draw free property consider.""",
+                    "description": "First result",
                     "id": "Rm9ybTplZmZvcnQtbWVldA==",
                     "meta": "{}",
                     "name": "Brian Williams",
@@ -65,16 +64,26 @@ Kid avoid player relationship to range whose. Draw free property consider.""",
                         "edges": [
                             {
                                 "node": {
-                                    "id": "VGV4dFF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
-                                    "label": "Thomas Johnson",
-                                    "slug": "sound-air-mission",
+                                    "id": "VGV4dGFyZWFRdWVzdGlvbjpzdWdnZXN0LXRyYWRpdGlvbmFs",
+                                    "label": "John Thomas",
+                                    "slug": "suggest-traditional",
                                 }
                             }
                         ]
                     },
                     "slug": "effort-meet",
                 }
-            }
+            },
+            {
+                "node": {
+                    "description": "Seconds result",
+                    "id": "Rm9ybTpzZXJ2aWNlLWJhbmstYXJt",
+                    "meta": "{}",
+                    "name": "Brian Williams",
+                    "questions": {"edges": []},
+                    "slug": "service-bank-arm",
+                }
+            },
         ]
     }
 }

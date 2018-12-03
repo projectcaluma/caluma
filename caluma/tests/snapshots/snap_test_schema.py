@@ -57,6 +57,17 @@ type AnswerEdge {
   cursor: String!
 }
 
+enum AnswerOrdering {
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  MODIFIED_AT_ASC
+  MODIFIED_AT_DESC
+  CREATED_BY_USER_ASC
+  CREATED_BY_USER_DESC
+  CREATED_BY_GROUP_ASC
+  CREATED_BY_GROUP_DESC
+}
+
 input ArchiveFormInput {
   id: ID!
   clientMutationId: String
@@ -120,6 +131,19 @@ type CaseEdge {
   cursor: String!
 }
 
+enum CaseOrdering {
+  STATUS_ASC
+  STATUS_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  MODIFIED_AT_ASC
+  MODIFIED_AT_DESC
+  CREATED_BY_USER_ASC
+  CREATED_BY_USER_DESC
+  CREATED_BY_GROUP_ASC
+  CREATED_BY_GROUP_DESC
+}
+
 enum CaseStatus {
   RUNNING
   COMPLETE
@@ -136,8 +160,8 @@ type CheckboxQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
-  forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
-  options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String): OptionConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  options(before: String, after: String, first: Int, last: Int, orderBy: [OptionOrdering], slug: String, label: String, search: String): OptionConnection
   id: ID!
 }
 
@@ -161,7 +185,7 @@ type Document implements Node {
   id: ID!
   form: Form!
   meta: JSONString!
-  answers(before: String, after: String, first: Int, last: Int, question: ID, search: String): AnswerConnection
+  answers(before: String, after: String, first: Int, last: Int, question: ID, search: String, orderBy: [AnswerOrdering]): AnswerConnection
 }
 
 type DocumentConnection {
@@ -172,6 +196,17 @@ type DocumentConnection {
 type DocumentEdge {
   node: Document
   cursor: String!
+}
+
+enum DocumentOrdering {
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  MODIFIED_AT_ASC
+  MODIFIED_AT_DESC
+  CREATED_BY_USER_ASC
+  CREATED_BY_USER_DESC
+  CREATED_BY_GROUP_ASC
+  CREATED_BY_GROUP_DESC
 }
 
 type FloatAnswer implements Answer, Node {
@@ -196,7 +231,7 @@ type FloatQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
-  forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   id: ID!
   minValue: Float
   maxValue: Float
@@ -231,7 +266,7 @@ type Form implements Node {
   meta: JSONString!
   isPublished: Boolean!
   isArchived: Boolean!
-  questions(before: String, after: String, first: Int, last: Int, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String): QuestionConnection
+  questions(before: String, after: String, first: Int, last: Int, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String, orderBy: [QuestionOrdering]): QuestionConnection
   id: ID!
 }
 
@@ -243,6 +278,19 @@ type FormConnection {
 type FormEdge {
   node: Form
   cursor: String!
+}
+
+enum FormOrdering {
+  NAME_ASC
+  NAME_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  MODIFIED_AT_ASC
+  MODIFIED_AT_DESC
+  CREATED_BY_USER_ASC
+  CREATED_BY_USER_DESC
+  CREATED_BY_GROUP_ASC
+  CREATED_BY_GROUP_DESC
 }
 
 type IntegerAnswer implements Answer, Node {
@@ -267,7 +315,7 @@ type IntegerQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
-  forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   id: ID!
   maxValue: Int
   minValue: Int
@@ -343,6 +391,19 @@ type OptionEdge {
   cursor: String!
 }
 
+enum OptionOrdering {
+  LABEL_ASC
+  LABEL_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  MODIFIED_AT_ASC
+  MODIFIED_AT_DESC
+  CREATED_BY_USER_ASC
+  CREATED_BY_USER_DESC
+  CREATED_BY_GROUP_ASC
+  CREATED_BY_GROUP_DESC
+}
+
 type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
@@ -371,13 +432,13 @@ type PublishWorkflowPayload {
 }
 
 type Query {
-  allWorkflows(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): WorkflowConnection
-  allTasks(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: String, isArchived: Boolean, search: String): TaskConnection
-  allCases(before: String, after: String, first: Int, last: Int, workflow: ID, status: String): CaseConnection
-  allWorkItems(before: String, after: String, first: Int, last: Int, status: String, task: ID, case: ID): WorkItemConnection
-  allForms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
-  allQuestions(before: String, after: String, first: Int, last: Int, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String): QuestionConnection
-  allDocuments(before: String, after: String, first: Int, last: Int, form: ID, search: String, id: ID): DocumentConnection
+  allWorkflows(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String, orderBy: [WorkflowOrdering]): WorkflowConnection
+  allTasks(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: String, isArchived: Boolean, search: String, orderBy: [TaskOrdering]): TaskConnection
+  allCases(before: String, after: String, first: Int, last: Int, workflow: ID, status: String, orderBy: [CaseOrdering]): CaseConnection
+  allWorkItems(before: String, after: String, first: Int, last: Int, status: String, task: ID, case: ID, orderBy: [WorkItemOrdering]): WorkItemConnection
+  allForms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  allQuestions(before: String, after: String, first: Int, last: Int, orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String): QuestionConnection
+  allDocuments(before: String, after: String, first: Int, last: Int, form: ID, search: String, id: ID, orderBy: [DocumentOrdering]): DocumentConnection
   node(id: ID!): Node
 }
 
@@ -393,7 +454,7 @@ interface Question {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
-  forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String, orderBy: [FormOrdering]): FormConnection
 }
 
 type QuestionConnection {
@@ -408,6 +469,19 @@ type QuestionEdge {
 
 scalar QuestionJexl
 
+enum QuestionOrdering {
+  LABEL_ASC
+  LABEL_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  MODIFIED_AT_ASC
+  MODIFIED_AT_DESC
+  CREATED_BY_USER_ASC
+  CREATED_BY_USER_DESC
+  CREATED_BY_GROUP_ASC
+  CREATED_BY_GROUP_DESC
+}
+
 type RadioQuestion implements Question, Node {
   createdAt: DateTime!
   modifiedAt: DateTime!
@@ -419,8 +493,8 @@ type RadioQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
-  forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
-  options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String): OptionConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String, orderBy: [OptionOrdering]): OptionConnection
   id: ID!
 }
 
@@ -720,6 +794,23 @@ type TaskEdge {
   cursor: String!
 }
 
+enum TaskOrdering {
+  NAME_ASC
+  NAME_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  TYPE_ASC
+  TYPE_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  MODIFIED_AT_ASC
+  MODIFIED_AT_DESC
+  CREATED_BY_USER_ASC
+  CREATED_BY_USER_DESC
+  CREATED_BY_GROUP_ASC
+  CREATED_BY_GROUP_DESC
+}
+
 enum TaskType {
   SIMPLE
 }
@@ -735,7 +826,7 @@ type TextQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
-  forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   id: ID!
   maxLength: Int
 }
@@ -751,7 +842,7 @@ type TextareaQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
-  forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   id: ID!
   maxLength: Int
 }
@@ -776,6 +867,19 @@ type WorkItemConnection {
 type WorkItemEdge {
   node: WorkItem
   cursor: String!
+}
+
+enum WorkItemOrdering {
+  STATUS_ASC
+  STATUS_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  MODIFIED_AT_ASC
+  MODIFIED_AT_DESC
+  CREATED_BY_USER_ASC
+  CREATED_BY_USER_DESC
+  CREATED_BY_GROUP_ASC
+  CREATED_BY_GROUP_DESC
 }
 
 enum WorkItemStatus {
@@ -808,5 +912,20 @@ type WorkflowConnection {
 type WorkflowEdge {
   node: Workflow
   cursor: String!
+}
+
+enum WorkflowOrdering {
+  NAME_ASC
+  NAME_DESC
+  DESCRIPTION_ASC
+  DESCRIPTION_DESC
+  CREATED_AT_ASC
+  CREATED_AT_DESC
+  MODIFIED_AT_ASC
+  MODIFIED_AT_DESC
+  CREATED_BY_USER_ASC
+  CREATED_BY_USER_DESC
+  CREATED_BY_GROUP_ASC
+  CREATED_BY_GROUP_DESC
 }
 """
