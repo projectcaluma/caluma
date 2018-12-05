@@ -21,3 +21,25 @@ snapshots["test_start_case 1"] = {
         "clientMutationId": None,
     }
 }
+
+snapshots["test_cancel_case[running-True-completed] 1"] = {
+    "cancelCase": {
+        "case": {
+            "document": {"form": {"slug": "sound-air-mission"}},
+            "status": "CANCELED",
+            "workItems": {"edges": [{"node": {"status": "COMPLETED"}}]},
+        },
+        "clientMutationId": None,
+    }
+}
+
+snapshots["test_cancel_case[running-True-ready] 1"] = {
+    "cancelCase": {
+        "case": {
+            "document": {"form": {"slug": "sound-air-mission"}},
+            "status": "CANCELED",
+            "workItems": {"edges": [{"node": {"status": "CANCELED"}}]},
+        },
+        "clientMutationId": None,
+    }
+}

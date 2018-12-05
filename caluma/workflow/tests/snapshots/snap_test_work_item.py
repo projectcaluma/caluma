@@ -14,7 +14,7 @@ snapshots["test_query_all_work_items 1"] = {
 snapshots["test_complete_work_item_last[ready-True] 1"] = {
     "completeWorkItem": {
         "clientMutationId": None,
-        "workItem": {"case": {"status": "COMPLETE"}, "status": "COMPLETE"},
+        "workItem": {"case": {"status": "COMPLETED"}, "status": "COMPLETED"},
     }
 }
 
@@ -27,11 +27,11 @@ snapshots["test_complete_work_item_with_next[ready] 1"] = {
                 "workItems": {
                     "edges": [
                         {"node": {"status": "READY"}},
-                        {"node": {"status": "COMPLETE"}},
+                        {"node": {"status": "COMPLETED"}},
                     ]
                 },
             },
-            "status": "COMPLETE",
+            "status": "COMPLETED",
         },
     }
 }

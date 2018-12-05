@@ -24,7 +24,7 @@ def test_query_all_work_items(db, snapshot, work_item, schema_executor):
 
 @pytest.mark.parametrize(
     "work_item__status,success",
-    [(models.WorkItem.STATUS_READY, True), (models.WorkItem.STATUS_COMPLETE, False)],
+    [(models.WorkItem.STATUS_READY, True), (models.WorkItem.STATUS_COMPLETED, False)],
 )
 def test_complete_work_item_last(db, snapshot, work_item, success, schema_executor):
     query = """

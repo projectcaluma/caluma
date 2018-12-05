@@ -108,6 +108,16 @@ type ArchiveWorkflowPayload {
   clientMutationId: String
 }
 
+input CancelCaseInput {
+  id: ID!
+  clientMutationId: String
+}
+
+type CancelCasePayload {
+  case: Case
+  clientMutationId: String
+}
+
 type Case implements Node {
   createdAt: DateTime!
   modifiedAt: DateTime!
@@ -146,7 +156,8 @@ enum CaseOrdering {
 
 enum CaseStatus {
   RUNNING
-  COMPLETE
+  COMPLETED
+  CANCELED
 }
 
 type CheckboxQuestion implements Question, Node {
@@ -343,6 +354,7 @@ type Mutation {
   saveTask(input: SaveTaskInput!): SaveTaskPayload
   archiveTask(input: ArchiveTaskInput!): ArchiveTaskPayload
   startCase(input: StartCaseInput!): StartCasePayload
+  cancelCase(input: CancelCaseInput!): CancelCasePayload
   completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
   saveForm(input: SaveFormInput!): SaveFormPayload
   archiveForm(input: ArchiveFormInput!): ArchiveFormPayload
@@ -884,7 +896,8 @@ enum WorkItemOrdering {
 
 enum WorkItemStatus {
   READY
-  COMPLETE
+  COMPLETED
+  CANCELED
 }
 
 type Workflow implements Node {
