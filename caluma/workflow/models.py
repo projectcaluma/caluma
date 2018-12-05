@@ -45,12 +45,14 @@ class Flow(UUIDModel):
 
 class Case(UUIDModel):
     STATUS_RUNNING = "running"
-    STATUS_COMPLETE = "complete"
+    STATUS_COMPLETED = "completed"
+    STATUS_CANCELED = "canceled"
 
-    STATUS_CHOICES = (STATUS_RUNNING, STATUS_COMPLETE)
+    STATUS_CHOICES = (STATUS_RUNNING, STATUS_COMPLETED, STATUS_CANCELED)
     STATUS_CHOICE_TUPLE = (
         (STATUS_RUNNING, "Case is running and work items need to be completed."),
-        (STATUS_COMPLETE, "Case is done."),
+        (STATUS_COMPLETED, "Case is done."),
+        (STATUS_CANCELED, "Case is cancelled."),
     )
 
     workflow = models.ForeignKey(
@@ -69,12 +71,14 @@ class Case(UUIDModel):
 
 class WorkItem(UUIDModel):
     STATUS_READY = "ready"
-    STATUS_COMPLETE = "complete"
+    STATUS_COMPLETED = "completed"
+    STATUS_CANCELED = "canceled"
 
-    STATUS_CHOICES = (STATUS_READY, STATUS_COMPLETE)
+    STATUS_CHOICES = (STATUS_READY, STATUS_COMPLETED, STATUS_CANCELED)
     STATUS_CHOICE_TUPLE = (
         (STATUS_READY, "Task is ready to be processed."),
-        (STATUS_COMPLETE, "Task is done."),
+        (STATUS_COMPLETED, "Task is done."),
+        (STATUS_CANCELED, "Task is cancelled."),
     )
 
     task = models.ForeignKey(

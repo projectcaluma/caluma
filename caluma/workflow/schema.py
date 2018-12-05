@@ -104,6 +104,12 @@ class StartCase(Mutation):
         model_operations = ["create"]
 
 
+class CancelCase(Mutation):
+    class Meta:
+        serializer_class = serializers.CancelCaseSerializer
+        model_operations = ["update"]
+
+
 class CompleteWorkItem(Mutation):
     class Meta:
         serializer_class = serializers.CompleteWorkItemSerializer
@@ -121,6 +127,7 @@ class Mutation(object):
     archive_task = ArchiveTask().Field()
 
     start_case = StartCase().Field()
+    cancel_case = CancelCase().Field()
     complete_work_item = CompleteWorkItem().Field()
 
 

@@ -143,18 +143,42 @@ class StartCaseSerializer(serializers.ModelSerializer):
         fields = ("workflow", "meta")
 
 
+class CancelCaseSerializer(serializers.ModelSerializer):
+    id = serializers.GlobalIDField()
+
+    class Meta:
+        model = models.Case
+        fields = ("id",)
+
+    def validate(self, data):
+        if self.instance.status != models.Case.STATUS_RUNNING:
+            raise exceptions.ValidationError("Only running cases can be canceled.")
+
+        data["status"] = models.Case.STATUS_CANCELED
+        return data
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        instance.work_items.exclude(status=models.WorkItem.STATUS_COMPLETED).update(
+            status=models.WorkItem.STATUS_CANCELED
+        )
+        return instance
+
+
 class CompleteWorkItemSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField()
 
     def validate(self, data):
-        if self.instance.status == models.WorkItem.STATUS_COMPLETE:
-            raise exceptions.ValidationError("Task has already been completed.")
+        if self.instance.status != models.WorkItem.STATUS_READY:
+            raise exceptions.ValidationError("Only ready tasks can be completed.")
 
         # TODO: add validation according to task type
 
-        data["status"] = models.WorkItem.STATUS_COMPLETE
+        data["status"] = models.WorkItem.STATUS_COMPLETED
         return data
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
         case = instance.case
@@ -171,7 +195,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
             )
         else:
             # no more tasks, mark case as complete
-            case.status = models.Case.STATUS_COMPLETE
+            case.status = models.Case.STATUS_COMPLETED
             case.save(update_fields=["status"])
 
         return instance
