@@ -15,6 +15,7 @@ snapshots["test_start_case 1"] = {
     "startCase": {
         "case": {
             "document": {"form": {"slug": "sound-air-mission"}},
+            "parentWorkItem": {"status": "READY"},
             "status": "RUNNING",
             "workItems": {"edges": [{"node": {"status": "READY"}}]},
         },

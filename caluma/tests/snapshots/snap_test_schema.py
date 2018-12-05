@@ -129,6 +129,7 @@ type Case implements Node {
   meta: JSONString!
   document: Document
   workItems(before: String, after: String, first: Int, last: Int): WorkItemConnection
+  parentWorkItem: WorkItem
 }
 
 type CaseConnection {
@@ -763,6 +764,7 @@ type SaveWorkflowPayload {
 input StartCaseInput {
   workflow: ID!
   meta: JSONString
+  parentWorkItem: ID
   clientMutationId: String
 }
 
@@ -866,9 +868,10 @@ type WorkItem implements Node {
   createdByGroup: String
   id: ID!
   task: Task!
-  case: Case!
   status: WorkItemStatus!
   meta: JSONString!
+  case: Case!
+  childCase: Case
 }
 
 type WorkItemConnection {

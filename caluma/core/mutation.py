@@ -142,7 +142,9 @@ class Mutation(ClientIDMutation):
             instance = cls.get_object(
                 root,
                 info,
-                return_field_type.get_queryset(model_class.objects, info),
+                return_field_type.get_queryset(
+                    model_class.objects.select_related(), info
+                ),
                 **input
             )
             return {

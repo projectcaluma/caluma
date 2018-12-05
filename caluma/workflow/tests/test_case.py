@@ -22,7 +22,7 @@ def test_query_all_cases(db, snapshot, case, flow, schema_executor):
     snapshot.assert_match(result.data)
 
 
-def test_start_case(db, snapshot, workflow, schema_executor):
+def test_start_case(db, snapshot, workflow, work_item, schema_executor):
     query = """
         mutation StartCase($input: StartCaseInput!) {
           startCase(input: $input) {
@@ -33,6 +33,9 @@ def test_start_case(db, snapshot, workflow, schema_executor):
                 }
               }
               status
+              parentWorkItem {
+                status
+              }
               workItems {
                 edges {
                   node {
@@ -46,7 +49,7 @@ def test_start_case(db, snapshot, workflow, schema_executor):
         }
     """
 
-    inp = {"input": {"workflow": workflow.slug}}
+    inp = {"input": {"workflow": workflow.slug, "parentWorkItem": str(work_item.pk)}}
     result = schema_executor(query, variables=inp)
 
     assert not result.errors
