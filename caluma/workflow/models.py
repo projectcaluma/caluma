@@ -91,7 +91,7 @@ class WorkItem(UUIDModel):
     child_case = models.OneToOneField(
         Case,
         related_name="parent_work_item",
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
         null=True,
         blank=True,
     )
