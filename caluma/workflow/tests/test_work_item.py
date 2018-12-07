@@ -23,8 +23,12 @@ def test_query_all_work_items(db, snapshot, work_item, schema_executor):
 
 
 @pytest.mark.parametrize(
-    "work_item__status,success",
-    [(models.WorkItem.STATUS_READY, True), (models.WorkItem.STATUS_COMPLETED, False)],
+    "work_item__status,case__status,success",
+    [
+        (models.WorkItem.STATUS_READY, models.Case.STATUS_COMPLETED, True),
+        (models.WorkItem.STATUS_COMPLETED, models.Case.STATUS_COMPLETED, False),
+        (models.WorkItem.STATUS_READY, models.Case.STATUS_RUNNING, False),
+    ],
 )
 def test_complete_work_item_last(db, snapshot, work_item, success, schema_executor):
     query = """
@@ -49,7 +53,9 @@ def test_complete_work_item_last(db, snapshot, work_item, success, schema_execut
         snapshot.assert_match(result.data)
 
 
-@pytest.mark.parametrize("work_item__status", [models.WorkItem.STATUS_READY])
+@pytest.mark.parametrize(
+    "work_item__status,work_item__child_case", [(models.WorkItem.STATUS_READY, None)]
+)
 def test_complete_work_item_with_next(
     db, snapshot, work_item, flow, task_factory, schema_executor
 ):

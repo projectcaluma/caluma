@@ -52,6 +52,7 @@ class CaseFactory(DjangoModelFactory):
 
 class WorkItemFactory(DjangoModelFactory):
     case = SubFactory(CaseFactory)
+    child_case = SubFactory(CaseFactory)
     task = SubFactory(TaskFactory)
     status = models.WorkItem.STATUS_READY
     meta = {}

@@ -122,6 +122,9 @@ class StartCaseSerializer(serializers.ModelSerializer):
     workflow = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Workflow.objects.select_related("start")
     )
+    parent_work_item = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.WorkItem.objects, required=False
+    )
 
     @transaction.atomic
     def create(self, validated_data):
@@ -140,7 +143,7 @@ class StartCaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Case
-        fields = ("workflow", "meta")
+        fields = ("workflow", "meta", "parent_work_item")
 
 
 class CancelCaseSerializer(serializers.ModelSerializer):
@@ -171,7 +174,13 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
         if self.instance.status != models.WorkItem.STATUS_READY:
-            raise exceptions.ValidationError("Only ready tasks can be completed.")
+            raise exceptions.ValidationError("Only ready work items can be completed.")
+
+        if self.instance.child_case_id:
+            if self.instance.child_case.status == models.Case.STATUS_RUNNING:
+                raise exceptions.ValidationError(
+                    "Work item can only be completed when child case is in a finish state."
+                )
 
         # TODO: add validation according to task type
 

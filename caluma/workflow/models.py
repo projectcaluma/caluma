@@ -84,6 +84,17 @@ class WorkItem(UUIDModel):
     task = models.ForeignKey(
         Task, on_delete=models.DO_NOTHING, related_name="work_items"
     )
-    case = models.ForeignKey(Case, related_name="work_items", on_delete=models.CASCADE)
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default={})
+
+    case = models.ForeignKey(Case, related_name="work_items", on_delete=models.CASCADE)
+    child_case = models.OneToOneField(
+        Case,
+        related_name="parent_work_item",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+    )
+    """
+    Defines case of a sub-workflow
+    """
