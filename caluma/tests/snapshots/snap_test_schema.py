@@ -827,6 +827,7 @@ enum TaskOrdering {
 
 enum TaskType {
   SIMPLE
+  COMPLETE_WORKFLOW_FORM
 }
 
 type TextQuestion implements Question, Node {

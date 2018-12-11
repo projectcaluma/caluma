@@ -1,7 +1,7 @@
 from django.db import transaction
 from rest_framework import exceptions
 
-from . import models
+from . import models, validators
 from ..core import serializers
 from ..form.models import Document
 from .jexl import FlowJexl
@@ -174,17 +174,12 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField()
 
     def validate(self, data):
-        if self.instance.status != models.WorkItem.STATUS_READY:
-            raise exceptions.ValidationError("Only ready work items can be completed.")
-
-        if self.instance.child_case_id:
-            if self.instance.child_case.status == models.Case.STATUS_RUNNING:
-                raise exceptions.ValidationError(
-                    "Work item can only be completed when child case is in a finish state."
-                )
-
-        # TODO: add validation according to task type
-
+        validators.WorkItemValidator().validate(
+            status=self.instance.status,
+            child_case=self.instance.child_case,
+            task=self.instance.task,
+            case=self.instance.case,
+        )
         data["status"] = models.WorkItem.STATUS_COMPLETED
         return data
 

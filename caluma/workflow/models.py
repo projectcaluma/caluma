@@ -7,9 +7,13 @@ from ..core.models import SlugModel, UUIDModel
 
 class Task(SlugModel):
     TYPE_SIMPLE = "simple"
+    TYPE_COMPLETE_WORKFLOW_FORM = "complete_workflow_form"
 
-    TYPE_CHOICES = (TYPE_SIMPLE,)
-    TYPE_CHOICES_TUPLE = ((TYPE_SIMPLE, "Task which can only be marked as completed."),)
+    TYPE_CHOICES = (TYPE_SIMPLE, TYPE_COMPLETE_WORKFLOW_FORM)
+    TYPE_CHOICES_TUPLE = (
+        (TYPE_SIMPLE, "Task which can only be marked as completed."),
+        (TYPE_COMPLETE_WORKFLOW_FORM, "Task completing defined workflow form."),
+    )
 
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
