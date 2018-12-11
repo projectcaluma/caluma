@@ -169,16 +169,20 @@ def test_complete_work_item_with_merge(
     workflow,
     schema_executor,
 ):
-
+    # create two work items which can be processed in parallel
     work_item_1, work_item_2 = work_item_factory.create_batch(
         2, status=models.WorkItem.STATUS_READY, child_case=None, case=case
     )
-    task_next = task_factory()
+    ready_workitems = case.work_items.filter(status=models.WorkItem.STATUS_READY)
+    assert ready_workitems.count() == 2
 
-    flow = flow_factory(next=f"'{task_next.slug}'|task")
+    # both work item's tasks reference the same merge task
+    task_merge = task_factory()
+    flow = flow_factory(next=f"'{task_merge.slug}'|task")
     task_flow_factory(task=work_item_1.task, workflow=workflow, flow=flow)
     task_flow_factory(task=work_item_2.task, workflow=workflow, flow=flow)
 
+    # complete one of the work item
     query = """
         mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
           completeWorkItem(input: $input) {
@@ -188,19 +192,20 @@ def test_complete_work_item_with_merge(
           }
         }
     """
-
     inp = {"input": {"id": work_item_1.pk}}
     result = schema_executor(query, variables=inp)
-
     assert not result.errors
-    assert case.work_items.filter(status=models.WorkItem.STATUS_READY).count() == 1
-    assert (
-        case.work_items.filter(status=models.WorkItem.STATUS_READY).first().pk
-        == work_item_2.pk
-    )
 
+    # one parallel work item is left, no new one created as both preceding
+    # work items need to be completed first
+    assert ready_workitems.count() == 1
+    assert ready_workitems.first().pk == work_item_2.pk
+
+    # complete second work item
     inp = {"input": {"id": work_item_2.pk}}
     result = schema_executor(query, variables=inp)
-    ready_workitems = case.work_items.filter(status=models.WorkItem.STATUS_READY)
+    assert not result.errors
+
+    # new work item is created of merge task
     assert ready_workitems.count() == 1
-    assert ready_workitems.first().task == task_next
+    assert ready_workitems.first().task == task_merge
