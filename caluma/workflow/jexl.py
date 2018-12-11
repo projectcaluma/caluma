@@ -18,11 +18,11 @@ class FlowJexl(JEXL):
         )
 
         # tasks transforms return a list of literals
-        yield from [
+        yield from (
             literal.value
             for literal in chain(
                 *self.analyze(
                     expr, partial(ExtractTransformSubjectAnalyzer, transforms=["tasks"])
                 )
             )
-        ]
+        )
