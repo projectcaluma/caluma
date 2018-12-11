@@ -18,7 +18,7 @@ class Node(object):
             )
 
         for visibility_class in cls.visibility_classes:
-            queryset = visibility_class().get_queryset(cls, queryset, info)
+            queryset = visibility_class().filter_queryset(cls, queryset, info)
 
         return queryset
 

@@ -56,7 +56,7 @@ class BaseVisibility(object):
             fn._filter_queryset_for: fn for _, fn in queryset_fns
         }
 
-    def get_queryset(self, node, queryset, info):
+    def filter_queryset(self, node, queryset, info):
         for cls in node.mro():
             if cls in self._filter_querysets_for:
                 queryset = self._filter_querysets_for[cls](node, queryset, info)

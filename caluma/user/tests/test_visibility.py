@@ -17,7 +17,7 @@ def test_authenticated_visibility(db, info_fixture, size, request):
 
     FakeModel.objects.create()
 
-    queryset = Authenticated().get_queryset(CustomNode, FakeModel.objects, info)
+    queryset = Authenticated().filter_queryset(CustomNode, FakeModel.objects, info)
     assert queryset.count() == size
 
 
@@ -32,5 +32,7 @@ def test_created_by_group_visibility(db, admin_info, group, admin_user, size, re
 
     FakeModel.objects.create(created_by_group="group")
 
-    queryset = CreatedByGroup().get_queryset(CustomNode, FakeModel.objects, admin_info)
+    queryset = CreatedByGroup().filter_queryset(
+        CustomNode, FakeModel.objects, admin_info
+    )
     assert queryset.count() == size
