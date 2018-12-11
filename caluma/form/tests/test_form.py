@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 import pytest
+from django.utils import translation
 from graphql_relay import to_global_id
 
 from .. import models
@@ -59,8 +60,9 @@ def test_query_all_forms(
     snapshot.assert_match(result.data)
 
 
+@pytest.mark.parametrize("language_code", ("en", "de"))
 @pytest.mark.parametrize("form__description", ("some description text", ""))
-def test_save_form(db, snapshot, form, schema_executor):
+def test_save_form(db, snapshot, form, settings, schema_executor, language_code):
     query = """
         mutation SaveForm($input: SaveFormInput!) {
           saveForm(input: $input) {
@@ -76,7 +78,8 @@ def test_save_form(db, snapshot, form, schema_executor):
     """
 
     inp = {"input": extract_serializer_input_fields(SaveFormSerializer, form)}
-    result = schema_executor(query, variables=inp)
+    with translation.override(language_code):
+        result = schema_executor(query, variables=inp)
 
     assert not result.errors
     snapshot.assert_match(result.data)

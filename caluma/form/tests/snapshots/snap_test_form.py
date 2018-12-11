@@ -27,30 +27,6 @@ snapshots["test_remove_form_question 1"] = {
     "errors": [],
 }
 
-snapshots["test_save_form[some description text] 1"] = {
-    "saveForm": {
-        "clientMutationId": "testid",
-        "form": {
-            "id": "Rm9ybTplZmZvcnQtbWVldA==",
-            "meta": "{}",
-            "name": "Brian Williams",
-            "slug": "effort-meet",
-        },
-    }
-}
-
-snapshots["test_save_form[] 1"] = {
-    "saveForm": {
-        "clientMutationId": "testid",
-        "form": {
-            "id": "Rm9ybTplZmZvcnQtbWVldA==",
-            "meta": "{}",
-            "name": "Brian Williams",
-            "slug": "effort-meet",
-        },
-    }
-}
-
 snapshots["test_query_all_forms[First result] 1"] = {
     "allForms": {
         "edges": [
@@ -85,5 +61,53 @@ snapshots["test_query_all_forms[First result] 1"] = {
                 }
             },
         ]
+    }
+}
+
+snapshots["test_save_form[some description text-en] 1"] = {
+    "saveForm": {
+        "clientMutationId": "testid",
+        "form": {
+            "id": "Rm9ybTplZmZvcnQtbWVldA==",
+            "meta": "{}",
+            "name": "Brian Williams",
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots["test_save_form[some description text-de] 1"] = {
+    "saveForm": {
+        "clientMutationId": "testid",
+        "form": {
+            "id": "Rm9ybTplZmZvcnQtbWVldA==",
+            "meta": "{}",
+            "name": "Brian Williams",
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots["test_save_form[en] 1"] = {
+    "saveForm": {
+        "clientMutationId": "testid",
+        "form": {
+            "id": "Rm9ybTplZmZvcnQtbWVldA==",
+            "meta": "{}",
+            "name": "Brian Williams",
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots["test_save_form[de] 1"] = {
+    "saveForm": {
+        "clientMutationId": "testid",
+        "form": {
+            "id": "Rm9ybTplZmZvcnQtbWVldA==",
+            "meta": "{}",
+            "name": "Brian Williams",
+            "slug": "effort-meet",
+        },
     }
 }
