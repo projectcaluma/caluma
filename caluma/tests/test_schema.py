@@ -8,7 +8,7 @@ from ..schema import schema
 DIR_NAME = os.path.dirname(__file__)
 
 
-@pytest.mark.parametrize("node_type", ["form", "workflow", "flow", "task"])
+@pytest.mark.parametrize("node_type", ["form", "workflow", "task"])
 def test_schema_node(db, snapshot, request, node_type):
     """
     Add your model to parametrize for automatic global node testing.
