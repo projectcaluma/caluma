@@ -27,7 +27,7 @@ type AddFormQuestionPayload {
 
 input AddWorkflowFlowInput {
   workflow: ID!
-  task: ID!
+  tasks: [ID]!
   next: FlowJexl!
   clientMutationId: String
 }
@@ -250,9 +250,9 @@ type FloatQuestion implements Question, Node {
 }
 
 type Flow implements Node {
-  task: Task!
   next: FlowJexl!
   id: ID!
+  tasks: [Task]!
 }
 
 type FlowConnection {
@@ -351,7 +351,7 @@ type Mutation {
   publishWorkflow(input: PublishWorkflowInput!): PublishWorkflowPayload
   archiveWorkflow(input: ArchiveWorkflowInput!): ArchiveWorkflowPayload
   addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
-  removeWorkflowFlow(input: RemoveWorkflowFlowInput!): RemoveWorkflowFlowPayload
+  removeFlow(input: RemoveFlowInput!): RemoveFlowPayload
   saveTask(input: SaveTaskInput!): SaveTaskPayload
   archiveTask(input: ArchiveTaskInput!): ArchiveTaskPayload
   startCase(input: StartCaseInput!): StartCasePayload
@@ -511,6 +511,16 @@ type RadioQuestion implements Question, Node {
   id: ID!
 }
 
+input RemoveFlowInput {
+  flow: ID!
+  clientMutationId: String
+}
+
+type RemoveFlowPayload {
+  flow: Flow
+  clientMutationId: String
+}
+
 input RemoveFormQuestionInput {
   form: ID!
   question: ID!
@@ -528,17 +538,6 @@ input RemoveOptionInput {
 }
 
 type RemoveOptionPayload {
-  clientMutationId: String
-}
-
-input RemoveWorkflowFlowInput {
-  workflow: ID!
-  task: ID!
-  clientMutationId: String
-}
-
-type RemoveWorkflowFlowPayload {
-  workflow: Workflow
   clientMutationId: String
 }
 
@@ -916,8 +915,8 @@ type Workflow implements Node {
   isArchived: Boolean!
   start: Task!
   form: Form
-  flows(before: String, after: String, first: Int, last: Int, task: ID): FlowConnection
   id: ID!
+  flows(before: String, after: String, first: Int, last: Int, task: ID): FlowConnection
 }
 
 type WorkflowConnection {

@@ -261,6 +261,7 @@ class RemoveOption(UserDefinedPrimaryKeyMixin, Mutation):
         lookup_input_kwarg = "option"
         serializer_class = serializers.RemoveOptionSerializer
         return_field_name = False
+        model_operations = ["update"]
 
 
 class Answer(Node, graphene.Interface):

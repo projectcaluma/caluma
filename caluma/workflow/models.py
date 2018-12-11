@@ -35,9 +35,15 @@ class Workflow(SlugModel):
 
 
 class Flow(UUIDModel):
-    workflow = models.ForeignKey(Workflow, related_name="flows")
-    task = models.ForeignKey(Task, related_name="flows")
     next = models.TextField()
+
+
+class TaskFlow(UUIDModel):
+    workflow = models.ForeignKey(
+        Workflow, on_delete=models.CASCADE, related_name="task_flows"
+    )
+    task = models.ForeignKey(Task, related_name="task_flows", on_delete=models.CASCADE)
+    flow = models.ForeignKey(Flow, related_name="task_flows", on_delete=models.CASCADE)
 
     class Meta:
         unique_together = ("workflow", "task")

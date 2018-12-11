@@ -19,30 +19,36 @@ serializer_converter.get_graphene_type_from_serializer_field.register(
 )
 
 
+class Task(DjangoObjectType):
+    class Meta:
+        model = models.Task
+        exclude_fields = ("task_flows", "work_items")
+        interfaces = (relay.Node,)
+
+
 class Flow(DjangoObjectType):
     next = FlowJexl(required=True)
+    tasks = graphene.List(Task, required=True)
+
+    def resolve_tasks(self, info, **args):
+        return models.Task.objects.filter(pk__in=self.task_flows.values("task"))
 
     class Meta:
         model = models.Flow
-        filter_fields = ("task",)
-        only_fields = ("task", "next")
+        only_fields = ("tasks", "next")
         interfaces = (relay.Node,)
 
 
 class Workflow(DjangoObjectType):
-    flows = DjangoFilterConnectionField(Flow)
+    flows = DjangoFilterConnectionField(Flow, filterset_class=filters.FlowFilterSet)
+
+    def resolve_flows(self, info, **args):
+        return models.Flow.objects.filter(pk__in=self.task_flows.values("flow"))
 
     class Meta:
         model = models.Workflow
         filter_fields = ("slug", "name", "description", "is_published", "is_archived")
-        exclude_fields = ("cases",)
-        interfaces = (relay.Node,)
-
-
-class Task(DjangoObjectType):
-    class Meta:
-        model = models.Task
-        exclude_fields = ("flows", "work_items")
+        exclude_fields = ("cases", "task_flows")
         interfaces = (relay.Node,)
 
 
@@ -81,10 +87,11 @@ class AddWorkflowFlow(Mutation):
         lookup_input_kwarg = "workflow"
 
 
-class RemoveWorkflowFlow(Mutation):
+class RemoveFlow(Mutation):
     class Meta:
-        serializer_class = serializers.RemoveWorkflowFlowSerializer
-        lookup_input_kwarg = "workflow"
+        lookup_input_kwarg = "flow"
+        serializer_class = serializers.RemoveFlowSerializer
+        model_operations = ["update"]
 
 
 class SaveTask(UserDefinedPrimaryKeyMixin, Mutation):
@@ -121,7 +128,7 @@ class Mutation(object):
     publish_workflow = PublishWorkflow().Field()
     archive_workflow = ArchiveWorkflow().Field()
     add_workflow_flow = AddWorkflowFlow().Field()
-    remove_workflow_flow = RemoveWorkflowFlow().Field()
+    remove_flow = RemoveFlow().Field()
 
     save_task = SaveTask().Field()
     archive_task = ArchiveTask().Field()

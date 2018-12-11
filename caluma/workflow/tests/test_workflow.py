@@ -8,7 +8,7 @@ from ...core.tests import (
 )
 
 
-def test_query_all_workflows(db, snapshot, workflow, flow, schema_executor):
+def test_query_all_workflows(db, snapshot, workflow, task_flow, flow, schema_executor):
     query = """
         query AllWorkflows($name: String!) {
           allWorkflows(name: $name) {
@@ -21,7 +21,7 @@ def test_query_all_workflows(db, snapshot, workflow, flow, schema_executor):
                 flows {
                   edges {
                     node {
-                      task {
+                      tasks {
                         slug
                       }
                       next
@@ -129,7 +129,7 @@ def test_add_workflow_flow(db, workflow, task, snapshot, next, schema_executor):
                 edges {
                   node {
                     next
-                    task {
+                    tasks {
                       slug
                     }
                   }
@@ -146,7 +146,7 @@ def test_add_workflow_flow(db, workflow, task, snapshot, next, schema_executor):
         variables={
             "input": {
                 "workflow": to_global_id(type(workflow).__name__, workflow.pk),
-                "task": to_global_id(type(task).__name__, task.pk),
+                "tasks": [to_global_id(type(task).__name__, task.pk)],
                 "next": next,
             }
         },
@@ -154,34 +154,18 @@ def test_add_workflow_flow(db, workflow, task, snapshot, next, schema_executor):
     snapshot.assert_execution_result(result)
 
 
-def test_remove_workflow_flow(db, workflow, task, flow, snapshot, schema_executor):
+def test_remove_flow(db, workflow, task_flow, flow, snapshot, schema_executor):
     query = """
-        mutation RemoveWorkflowFlow($input: RemoveWorkflowFlowInput!) {
-          removeWorkflowFlow(input: $input) {
-            workflow {
-              flows {
-                edges {
-                  node {
-                    task {
-                      slug
-                    }
-                  }
-                }
-              }
+        mutation RemoveFlow($input: RemoveFlowInput!) {
+          removeFlow(input: $input) {
+            flow {
+              next
             }
             clientMutationId
           }
         }
     """
 
-    result = schema_executor(
-        query,
-        variables={
-            "input": {
-                "workflow": to_global_id(type(workflow).__name__, workflow.pk),
-                "task": to_global_id(type(task).__name__, task.pk),
-            }
-        },
-    )
+    result = schema_executor(query, variables={"input": {"flow": str(flow.pk)}})
     assert not result.errors
-    assert workflow.flows.count() == 0
+    assert workflow.task_flows.count() == 0

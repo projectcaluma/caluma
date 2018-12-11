@@ -46,7 +46,9 @@ class PublishWorkflowSerializer(serializers.ModelSerializer):
 
 class AddWorkflowFlowSerializer(serializers.ModelSerializer):
     workflow = serializers.GlobalIDField(source="slug")
-    task = serializers.GlobalIDPrimaryKeyRelatedField(queryset=models.Task.objects)
+    tasks = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.Task.objects, many=True
+    )
     next = FlowJexlField(required=True)
 
     def validate_next(self, value):
@@ -70,33 +72,33 @@ class AddWorkflowFlowSerializer(serializers.ModelSerializer):
 
         return value
 
+    @transaction.atomic
     def update(self, instance, validated_data):
-        models.Flow.objects.update_or_create(
-            workflow=instance,
-            task=validated_data["task"],
-            defaults={"next": validated_data["next"]},
-        )
+        tasks = validated_data["tasks"]
+        models.Flow.objects.filter(task_flows__task__in=tasks).delete()
+        flow = models.Flow.objects.create(next=validated_data["next"])
+        task_flows = [
+            models.TaskFlow(task=task, workflow=instance, flow=flow) for task in tasks
+        ]
+        models.TaskFlow.objects.bulk_create(task_flows)
 
         return instance
 
     class Meta:
-        fields = ("workflow", "task", "next")
+        fields = ("workflow", "tasks", "next")
         model = models.Workflow
 
 
-class RemoveWorkflowFlowSerializer(serializers.ModelSerializer):
-    workflow = serializers.GlobalIDField(source="slug")
-    task = serializers.GlobalIDPrimaryKeyRelatedField(queryset=models.Task.objects)
+class RemoveFlowSerializer(serializers.ModelSerializer):
+    flow = serializers.GlobalIDField(source="id")
 
     def update(self, instance, validated_data):
-        task = validated_data["task"]
-        models.Flow.objects.filter(task=task, workflow=instance).delete()
-
+        models.Flow.objects.filter(pk=instance.pk).delete()
         return instance
 
     class Meta:
-        fields = ("workflow", "task")
-        model = models.Workflow
+        fields = ("flow",)
+        model = models.Flow
 
 
 class SaveTaskSerializer(serializers.ModelSerializer):
@@ -134,7 +136,6 @@ class StartCaseSerializer(serializers.ModelSerializer):
         instance = super().create(validated_data)
 
         workflow = instance.workflow
-
         models.WorkItem.objects.create(
             case=instance, task=workflow.start, status=models.WorkItem.STATUS_READY
         )
@@ -192,16 +193,25 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
         instance = super().update(instance, validated_data)
         case = instance.case
 
-        flow = models.Flow.objects.filter(
-            workflow=case.workflow_id, task=instance.task_id
-        ).first()
+        flow = models.Flow.objects.filter(task_flows__task=instance.task_id).first()
+        flow_referenced_tasks = models.Task.objects.filter(task_flows__flow=flow)
+        completed_flow_work_items = case.work_items.filter(
+            task__in=flow_referenced_tasks
+        ).exclude(status=models.WorkItem.STATUS_READY)
 
-        if flow:
+        if flow and flow_referenced_tasks.count() == completed_flow_work_items.count():
             jexl = FlowJexl()
-            task = jexl.evaluate(flow.next)
-            models.WorkItem.objects.create(
-                task_id=task, case=case, status=models.WorkItem.STATUS_READY
-            )
+            result = jexl.evaluate(flow.next)
+            if not isinstance(result, list):
+                result = [result]
+
+            work_items = [
+                models.WorkItem(
+                    task_id=task, case=case, status=models.WorkItem.STATUS_READY
+                )
+                for task in result
+            ]
+            models.WorkItem.objects.bulk_create(work_items)
         else:
             # no more tasks, mark case as complete
             case.status = models.Case.STATUS_COMPLETED

@@ -32,12 +32,19 @@ class WorkflowFactory(DjangoModelFactory):
 
 
 class FlowFactory(DjangoModelFactory):
-    workflow = SubFactory(WorkflowFactory)
-    task = SubFactory(TaskFactory)
     next = Faker("slug")
 
     class Meta:
         model = models.Flow
+
+
+class TaskFlowFactory(DjangoModelFactory):
+    workflow = SubFactory(WorkflowFactory)
+    task = SubFactory(TaskFactory)
+    flow = SubFactory(FlowFactory)
+
+    class Meta:
+        model = models.TaskFlow
 
 
 class CaseFactory(DjangoModelFactory):

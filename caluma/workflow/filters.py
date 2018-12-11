@@ -1,5 +1,5 @@
 from . import models
-from ..core.filters import FilterSet, OrderingFilter, SearchFilter
+from ..core.filters import FilterSet, GlobalIDFilter, OrderingFilter, SearchFilter
 
 
 class WorkflowFilterSet(FilterSet):
@@ -9,6 +9,14 @@ class WorkflowFilterSet(FilterSet):
     class Meta:
         model = models.Workflow
         fields = ("slug", "name", "description", "is_published", "is_archived")
+
+
+class FlowFilterSet(FilterSet):
+    task = GlobalIDFilter(field_name="task_flows__task")
+
+    class Meta:
+        model = models.Flow
+        fields = ("task",)
 
 
 class CaseFilterSet(FilterSet):
