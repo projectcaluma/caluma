@@ -51,7 +51,7 @@ class BasePermission(object):
     ... class CustomPermission(BasePermission):
     ...     @permission_for(Mutation)
     ...     def has_permission_default(self, mutation, info):
-    ...         # change default permission to False when no more specifc
+    ...         # change default permission to False when no more specific
     ...         # permission is defined.
     ...         return False
     ...
