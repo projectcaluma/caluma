@@ -346,7 +346,6 @@ class Document(DjangoObjectType):
     class Meta:
         model = models.Document
         interfaces = (graphene.Node,)
-        exclude_fields = ("cases",)
         filter_fields = ("form",)
 
 

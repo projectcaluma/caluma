@@ -66,10 +66,10 @@ class Case(UUIDModel):
     )
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default={})
-    document = models.ForeignKey(
+    document = models.OneToOneField(
         "form.Document",
-        on_delete=models.DO_NOTHING,
-        related_name="cases",
+        on_delete=models.PROTECT,
+        related_name="case",
         blank=True,
         null=True,
     )
