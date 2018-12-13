@@ -15,6 +15,10 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    # Example to include custom extensions
+    # volumes:
+    #   - ./visibilities.py:/app/caluma/extensions/visibility.py
+    #   - ./permissions.py:/app/caluma/extensions/permissions.py
     environment:
       - DATABASE_HOST=db
       - ENV=docker
