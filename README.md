@@ -32,17 +32,17 @@ query and mutate form and workflow entities which are described below.
 
 ### Entities
 
-Caluma is split into two parts, form and workflow. The form can be used without a workflow and visa versa, but the full power of Caluma comes when combining the two.
+Caluma is split into two parts, form and workflow. The form can be used without a workflow and vice versa, but the full power of Caluma comes when combining the two.
 
-Each part consists of different entities, whereas an entity usually comes in pairs, a blueprint and a specific instance.
+Each part is based on several entities, which usually come in pairs: One defines a "blueprint" and is instance-independent, while the other one represents the blueprint in relation to a specific instance. The two entities are usually connected by a one-to-many relationship, e.g. there can be many concrete `cases` (instance-specific) following a certain `workflow` (global blueprint).
 
 #### Form entities
 
 **Form** defines the structure of a document, basically a container of questions.
 
-**Question** defines a single input of a form whereas a question has different implementation types defining how a question should be represented and validated.
+**Question** defines a single input of a form, such as a text input, checkbox or similar. A question has different implementation types defining how a question should be represented and validated.
 
-**Document** is a specific instance of a form being a container of answers.
+**Document** is a specific instance of a form. Since a form is a container of questions, a document can be visualized as a container of answers.
 
 **Answer** containing user input of a specific question. There are different implementations of answer covering different data types.
 
@@ -54,7 +54,7 @@ Naming and concept of workflow follows concept of [Workflow Patterns Initiative]
 
 **Task** is a definition of work being part of a workflow.
 
-**Flow** is a definition on what task resp. tasks follows another.
+**Flow** defines the ordering and dependencies between tasks.
 
 **Case** is a specific instance of a workflow.
 
@@ -70,7 +70,7 @@ Different environment variable types are explained at [django-environ](https://g
 
 A list of configuration options which you might need to configure to get Caluma started in your environment.
 
-* `SECRET_KEY`: A secret key used for cryptography. See [more](https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-SECRET_KEY)
+* `SECRET_KEY`: A secret key used for cryptography. This needs to be a random string of a certain length. See [more](https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-SECRET_KEY)
 * `ALLOWED_HOSTS`: A comma separated list of strings representing host/domans Caluma will be served on. See [more](https://docs.djangoproject.com/en/2.1/ref/settings/#allowed-hosts)
 * `DATABASE_NAME`: Name of database to use (default: caluma)
 * `DATABASE_USER`: username to use when connecting to the database (default: caluma)
@@ -79,9 +79,9 @@ A list of configuration options which you might need to configure to get Caluma 
 * `DATABASE_PORT`: port to use when connecting to Postgres database (default: 5432)
 * `LANGUAGE_CODE`: default language defined as fall back (default: en)
 
-#### OpenID Connect
+#### Authentication and authorization
 
-When you want to connect Caluma to your [IAM](https://en.wikipedia.org/wiki/Identity_management) supporting OpenID connect you need following settings.
+If you want connect Caluma you need a [IAM](https://en.wikipedia.org/wiki/Identity_management) supporting OpenID Connect. If not available you might want to consider using [Keycloak](https://www.keycloak.org/).
 
 * `OIDC_VERIFY_ALGORITHM`: Token verification algorithm (default: HS256)
 * `OIDC_CLIENT`: Client name
@@ -98,12 +98,14 @@ where no extension point is defined, best [open an issue](https://github.com/pro
 
 ##### Visibility classes
 
-Visibility classes define what user can read per node. Such can be be configured as `VISIBILITY_CLASSES`.
+The visibility part defines what you can see at all. Anything you cannot see, you're implicitly also not allowed to modify. The visibility classes define what you see depending on your roles, permissions, etc. Building on top of this follow the permission classes (see below) that define what you can do with the data you see.
+
+Visibility classes are configured as `VISIBILITY_CLASSES`.
 
 Following pre-defined classes are available:
 * `caluma.core.visibilities.Any`: Allow any user without any filtering
-* `caluma.user.visibilities.Authenticated`: Filter results to none for not authenticated users
-* `caluma.user.visibilities.CreatedByGroup`: Filter to group node has been created for
+* `caluma.user.visibilities.Authenticated`: Only show data to authenticated users
+* `caluma.user.visibilities.CreatedByGroup`: Only show data that belongs to the same group as the current user
 
 In case this default classes do not cover your use case, it is also possible to create your custom
 visibility class defining per node how to filter.

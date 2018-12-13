@@ -2,7 +2,7 @@
 
 Contributions to Caluma Service are very welcome! Best have a look at the open [issues](https://github.com/projectcaluma/caluma/issues)
 and open a [GitHub pull request](https://github.com/projectcaluma/caluma/compare). See instructions below how to setup development
-environment.
+environment. Before writing any code, best discuss your proposed change in a GitHub issue to see if the proposed change makes sense for the project.
 
 ## Setup development environment
 
@@ -45,9 +45,11 @@ pytest
 ./manage.py makemigrations
 ```
 
+Writing of code can still happen outside the docker container of course.
+
 ### Install new requirements
 
-In case you needed to add new requirements you simply need to build the docker container
+In case you're adding new requirements you simply need to build the docker container
 again for those to be installed and re-open shell.
 
 ```bash
@@ -58,8 +60,9 @@ docker-compose build --pull
 
 Pre commit hooks is an additional option instead of executing checks in your editor of choice.
 
+First create a virtualenv with the tool of your choice before running below commands:
+
 ```bash
-# create virtualenv with tool of your choice
 pip install pre-commit
 pip install -r requiements-dev.txt -U
 pre-commit install
