@@ -198,6 +198,7 @@ type Document implements Node {
   form: Form!
   meta: JSONString!
   answers(before: String, after: String, first: Int, last: Int, question: ID, search: String, orderBy: [AnswerOrdering]): AnswerConnection
+  case: Case
 }
 
 type DocumentConnection {
