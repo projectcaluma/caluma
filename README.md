@@ -141,6 +141,7 @@ Permission classes define who may perform which mutation. Such can be configured
 Following pre-defined classes are available:
 * `caluma.user.permissions.IsAuthenticated`: only allow authenticated users
 * `caluma.core.permissions.AllowAny`: allow any users to perform any mutation.
+* `caluma.user.permissions.CreatedByGroup`: Only allow mutating data that belongs to same group as current user
 
 In case this default classes do not cover your use case, it is also possible to create your custom
 permission class defining per mutation and mutation object what is allowed.

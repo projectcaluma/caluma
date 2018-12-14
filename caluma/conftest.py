@@ -44,8 +44,15 @@ def snapshot(request):
 
 
 @pytest.fixture
-def admin_user():
-    return OIDCUser("sometoken", {"sub": "admin"})
+def admin_groups():
+    return ["admin"]
+
+
+@pytest.fixture
+def admin_user(settings, admin_groups):
+    return OIDCUser(
+        "sometoken", {"sub": "admin", settings.OIDC_GROUPS_CLAIM: admin_groups}
+    )
 
 
 @pytest.fixture
