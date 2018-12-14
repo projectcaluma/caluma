@@ -12,26 +12,41 @@ snapshots["test_query_all_tasks 1"] = {
         "edges": [
             {
                 "node": {
+                    "__typename": "SimpleTask",
                     "description": "Team suggest traditional boy above. Argue move appear catch toward help wind. Material minute ago get.",
                     "meta": "{}",
                     "name": "Brian Williams",
                     "slug": "effort-meet",
-                    "type": "SIMPLE",
                 }
             }
         ]
     }
 }
 
-snapshots["test_save_task 1"] = {
+snapshots["test_save_task[SaveSimpleTask] 1"] = {
     "data": {
-        "saveTask": {
+        "saveSimpleTask": {
             "clientMutationId": "testid",
             "task": {
+                "__typename": "SimpleTask",
                 "meta": "{}",
                 "name": "Brian Williams",
                 "slug": "effort-meet",
-                "type": "SIMPLE",
+            },
+        }
+    },
+    "errors": [],
+}
+
+snapshots["test_save_task[SaveCompleteWorkflowFormTask] 1"] = {
+    "data": {
+        "saveCompleteWorkflowFormTask": {
+            "clientMutationId": "testid",
+            "task": {
+                "__typename": "SimpleTask",
+                "meta": "{}",
+                "name": "Brian Williams",
+                "slug": "effort-meet",
             },
         }
     },
