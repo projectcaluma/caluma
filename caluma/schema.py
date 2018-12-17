@@ -32,5 +32,7 @@ schema = graphene.Schema(
         form_schema.ListAnswer,
         form_schema.IntegerAnswer,
         form_schema.FloatAnswer,
+        workflow_schema.SimpleTask,
+        workflow_schema.CompleteWorkflowFormTask,
     ],
 )

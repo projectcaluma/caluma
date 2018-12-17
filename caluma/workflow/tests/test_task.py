@@ -1,3 +1,5 @@
+import pytest
+
 from .. import serializers
 from ...core.tests import (
     extract_global_id_input_fields,
@@ -11,7 +13,7 @@ def test_query_all_tasks(db, snapshot, task, schema_executor):
           allTasks(name: $name) {
             edges {
               node {
-                type
+                __typename
                 slug
                 name
                 description
@@ -28,19 +30,21 @@ def test_query_all_tasks(db, snapshot, task, schema_executor):
     snapshot.assert_match(result.data)
 
 
-def test_save_task(db, snapshot, task, schema_executor):
-    query = """
-        mutation SaveTask($input: SaveTaskInput!) {
-          saveTask(input: $input) {
-            task {
+@pytest.mark.parametrize("mutation", ["SaveSimpleTask", "SaveCompleteWorkflowFormTask"])
+def test_save_task(db, snapshot, task, mutation, schema_executor):
+    mutation_func = mutation[0].lower() + mutation[1:]
+    query = f"""
+        mutation {mutation}($input: {mutation}Input!) {{
+          {mutation_func}(input: $input) {{
+            task {{
                 slug
                 name
-                type
+                __typename
                 meta
-            }
+            }}
             clientMutationId
-          }
-        }
+          }}
+        }}
     """
 
     inp = {

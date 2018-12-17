@@ -187,6 +187,20 @@ type CompleteWorkItemPayload {
   clientMutationId: String
 }
 
+type CompleteWorkflowFormTask implements Task, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  name: String!
+  description: String
+  type: TaskType!
+  meta: JSONString!
+  isArchived: Boolean!
+  id: ID!
+}
+
 scalar DateTime
 
 type Document implements Node {
@@ -353,7 +367,8 @@ type Mutation {
   archiveWorkflow(input: ArchiveWorkflowInput!): ArchiveWorkflowPayload
   addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
   removeFlow(input: RemoveFlowInput!): RemoveFlowPayload
-  saveTask(input: SaveTaskInput!): SaveTaskPayload
+  saveSimpleTask(input: SaveSimpleTaskInput!): SaveSimpleTaskPayload
+  saveCompleteWorkflowFormTask(input: SaveCompleteWorkflowFormTaskInput!): SaveCompleteWorkflowFormTaskPayload
   archiveTask(input: ArchiveTaskInput!): ArchiveTaskPayload
   startCase(input: StartCaseInput!): StartCasePayload
   cancelCase(input: CancelCaseInput!): CancelCasePayload
@@ -568,6 +583,18 @@ type SaveCheckboxQuestionPayload {
   clientMutationId: String
 }
 
+input SaveCompleteWorkflowFormTaskInput {
+  slug: String!
+  name: String!
+  description: String
+  clientMutationId: String
+}
+
+type SaveCompleteWorkflowFormTaskPayload {
+  task: Task
+  clientMutationId: String
+}
+
 input SaveDocumentFloatAnswerInput {
   question: ID!
   document: ID!
@@ -703,15 +730,14 @@ type SaveRadioQuestionPayload {
   clientMutationId: String
 }
 
-input SaveTaskInput {
+input SaveSimpleTaskInput {
   slug: String!
   name: String!
   description: String
-  type: TaskType!
   clientMutationId: String
 }
 
-type SaveTaskPayload {
+type SaveSimpleTaskPayload {
   task: Task
   clientMutationId: String
 }
@@ -761,6 +787,20 @@ type SaveWorkflowPayload {
   clientMutationId: String
 }
 
+type SimpleTask implements Task, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  name: String!
+  description: String
+  type: TaskType!
+  meta: JSONString!
+  isArchived: Boolean!
+  id: ID!
+}
+
 input StartCaseInput {
   workflow: ID!
   meta: JSONString
@@ -784,7 +824,8 @@ type StringAnswer implements Answer, Node {
   meta: JSONString!
 }
 
-type Task implements Node {
+interface Task {
+  id: ID!
   createdAt: DateTime!
   modifiedAt: DateTime!
   createdByUser: String
@@ -792,10 +833,8 @@ type Task implements Node {
   slug: String!
   name: String!
   description: String
-  type: TaskType!
-  meta: JSONString!
   isArchived: Boolean!
-  id: ID!
+  meta: JSONString!
 }
 
 type TaskConnection {

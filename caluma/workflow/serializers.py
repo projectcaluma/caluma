@@ -104,7 +104,25 @@ class RemoveFlowSerializer(serializers.ModelSerializer):
 class SaveTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Task
-        fields = ("slug", "name", "description", "type")
+        fields = ("slug", "name", "description")
+
+
+class SaveSimpleTaskSerializer(SaveTaskSerializer):
+    def validate(self, data):
+        data["type"] = models.Task.TYPE_SIMPLE
+        return data
+
+    class Meta(SaveTaskSerializer.Meta):
+        pass
+
+
+class SaveCompleteWorkflowFormTaskSerializer(SaveTaskSerializer):
+    def validate(self, data):
+        data["type"] = models.Task.TYPE_COMPLETE_WORKFLOW_FORM
+        return data
+
+    class Meta(SaveTaskSerializer.Meta):
+        pass
 
 
 class ArchiveTaskSerializer(serializers.ModelSerializer):

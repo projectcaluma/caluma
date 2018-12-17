@@ -1,6 +1,5 @@
 import graphene
 from django.utils import translation
-from graphene_django.converter import convert_django_field_with_choices
 from graphene_django.registry import get_global_registry
 from graphene_django.rest_framework import serializer_converter
 from graphql_relay import to_global_id
@@ -86,21 +85,3 @@ def convert_serializer_relation_to_id(field):
     # TODO: could be removed once following issue is fixed
     # https://github.com/graphql-python/graphene-django/issues/389
     return graphene.ID
-
-
-@serializer_converter.get_graphene_type_from_serializer_field.register(
-    serializers.ChoiceField
-)
-def convert_serializer_field_to_enum(field):
-    # TODO: could be removed once following issue is fixed
-    # https://github.com/graphql-python/graphene-django/issues/517
-    model_class = None
-    serializer_meta = getattr(field.parent, "Meta", None)
-    if serializer_meta:
-        model_class = getattr(serializer_meta, "model", None)
-
-    if model_class:
-        registry = get_global_registry()
-        model_field = model_class._meta.get_field(field.source)
-        return type(convert_django_field_with_choices(model_field, registry))
-    return graphene.String

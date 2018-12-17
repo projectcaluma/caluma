@@ -3,9 +3,9 @@ from graphene import relay
 from graphene_django.rest_framework import serializer_converter
 
 from . import filters, models, serializers
-from ..core.filters import DjangoFilterConnectionField
+from ..core.filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
 from ..core.mutation import Mutation, UserDefinedPrimaryKeyMixin
-from ..core.types import DjangoObjectType
+from ..core.types import DjangoObjectType, Node
 
 
 class FlowJexl(graphene.String):
@@ -19,11 +19,55 @@ serializer_converter.get_graphene_type_from_serializer_field.register(
 )
 
 
-class Task(DjangoObjectType):
+class Task(Node, graphene.Interface):
+    id = graphene.ID(required=True)
+    created_at = graphene.DateTime(required=True)
+    modified_at = graphene.DateTime(required=True)
+    created_by_user = graphene.String()
+    created_by_group = graphene.String()
+    slug = graphene.String(required=True)
+    name = graphene.String(required=True)
+    description = graphene.String()
+    is_archived = graphene.Boolean(required=True)
+    meta = graphene.JSONString(required=True)
+
+    @classmethod
+    def resolve_type(cls, instance, info):
+        TASK_TYPE = {
+            models.Task.TYPE_SIMPLE: SimpleTask,
+            models.Task.TYPE_COMPLETE_WORKFLOW_FORM: CompleteWorkflowFormTask,
+        }
+
+        return TASK_TYPE[instance.type]
+
+
+class TaskConnection(graphene.Connection):
+    class Meta:
+        node = Task
+
+
+class TaskQuerysetMixin(object):
+    """Mixin to combine all different task types into one queryset."""
+
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        return Task.get_queryset(queryset, info)
+
+
+class SimpleTask(TaskQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Task
         exclude_fields = ("task_flows", "work_items")
-        interfaces = (relay.Node,)
+        use_connection = False
+        interfaces = (Task, relay.Node)
+
+
+class CompleteWorkflowFormTask(TaskQuerysetMixin, DjangoObjectType):
+    class Meta:
+        model = models.Task
+        exclude_fields = ("task_flows", "work_items")
+        use_connection = False
+        interfaces = (Task, relay.Node)
 
 
 class Flow(DjangoObjectType):
@@ -40,6 +84,7 @@ class Flow(DjangoObjectType):
 
 
 class Workflow(DjangoObjectType):
+    start = graphene.Field(Task, required=True)
     flows = DjangoFilterConnectionField(Flow, filterset_class=filters.FlowFilterSet)
 
     def resolve_flows(self, info, **args):
@@ -59,6 +104,8 @@ class Case(DjangoObjectType):
 
 
 class WorkItem(DjangoObjectType):
+    task = graphene.Field(Task, required=True)
+
     class Meta:
         model = models.WorkItem
         interfaces = (relay.Node,)
@@ -95,14 +142,36 @@ class RemoveFlow(Mutation):
 
 
 class SaveTask(UserDefinedPrimaryKeyMixin, Mutation):
+    """
+    Base class of all save task mutations.
+
+    Defined so it is easy to set a permission for all different types
+    of tasks.
+
+    See `caluma.permissions.BasePermission` for more details.
+    """
+
     class Meta:
-        serializer_class = serializers.SaveTaskSerializer
+        abstract = True
+
+
+class SaveSimpleTask(SaveTask):
+    class Meta:
+        serializer_class = serializers.SaveSimpleTaskSerializer
+        return_field_type = Task
+
+
+class SaveCompleteWorkflowFormTask(SaveTask):
+    class Meta:
+        serializer_class = serializers.SaveCompleteWorkflowFormTaskSerializer
+        return_field_type = Task
 
 
 class ArchiveTask(Mutation):
     class Meta:
         serializer_class = serializers.ArchiveTaskSerializer
         lookup_input_kwarg = "id"
+        return_field_type = Task
 
 
 class StartCase(Mutation):
@@ -130,7 +199,8 @@ class Mutation(object):
     add_workflow_flow = AddWorkflowFlow().Field()
     remove_flow = RemoveFlow().Field()
 
-    save_task = SaveTask().Field()
+    save_simple_task = SaveSimpleTask().Field()
+    save_complete_workflow_form_task = SaveCompleteWorkflowFormTask().Field()
     archive_task = ArchiveTask().Field()
 
     start_case = StartCase().Field()
@@ -142,7 +212,9 @@ class Query(object):
     all_workflows = DjangoFilterConnectionField(
         Workflow, filterset_class=filters.WorkflowFilterSet
     )
-    all_tasks = DjangoFilterConnectionField(Task, filterset_class=filters.TaskFilterSet)
+    all_tasks = DjangoFilterSetConnectionField(
+        TaskConnection, filterset_class=filters.TaskFilterSet
+    )
     all_cases = DjangoFilterConnectionField(Case, filterset_class=filters.CaseFilterSet)
     all_work_items = DjangoFilterConnectionField(
         WorkItem, filterset_class=filters.WorkItemFilterSet
