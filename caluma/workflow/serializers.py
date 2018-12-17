@@ -118,7 +118,7 @@ class SaveSimpleTaskSerializer(SaveTaskSerializer):
 
 class SaveCompleteWorkflowFormTaskSerializer(SaveTaskSerializer):
     def validate(self, data):
-        data["type"] = models.Task.TYPE_SIMPLE
+        data["type"] = models.Task.TYPE_COMPLETE_WORKFLOW_FORM
         return data
 
     class Meta(SaveTaskSerializer.Meta):

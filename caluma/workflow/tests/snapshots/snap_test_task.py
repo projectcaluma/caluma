@@ -43,7 +43,7 @@ snapshots["test_save_task[SaveCompleteWorkflowFormTask] 1"] = {
         "saveCompleteWorkflowFormTask": {
             "clientMutationId": "testid",
             "task": {
-                "__typename": "SimpleTask",
+                "__typename": "CompleteWorkflowFormTask",
                 "meta": "{}",
                 "name": "Brian Williams",
                 "slug": "effort-meet",
