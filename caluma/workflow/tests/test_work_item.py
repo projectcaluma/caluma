@@ -1,6 +1,8 @@
 import pytest
+from graphene.utils.str_converters import to_const
 
 from .. import models
+from ...form.models import Question
 
 
 def test_query_all_work_items(db, snapshot, work_item, schema_executor):
@@ -54,7 +56,61 @@ def test_complete_work_item_last(db, snapshot, work_item, success, schema_execut
 
 
 @pytest.mark.parametrize(
-    "work_item__status,work_item__child_case", [(models.WorkItem.STATUS_READY, None)]
+    "work_item__status,work_item__child_case,case__status,task__type,question__type,answer__value,success",
+    [
+        (
+            models.WorkItem.STATUS_READY,
+            None,
+            models.Case.STATUS_RUNNING,
+            models.Task.TYPE_COMPLETE_WORKFLOW_FORM,
+            Question.TYPE_FLOAT,
+            1.0,
+            True,
+        ),
+        (
+            models.WorkItem.STATUS_READY,
+            None,
+            models.Case.STATUS_RUNNING,
+            models.Task.TYPE_COMPLETE_WORKFLOW_FORM,
+            Question.TYPE_TEXT,
+            "",
+            False,
+        ),
+    ],
+)
+def test_complete_workflow_form_work_item(
+    db, snapshot, work_item, answer, form_question, success, schema_executor
+):
+    query = """
+        mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
+          completeWorkItem(input: $input) {
+            workItem {
+              status
+              case {
+                status
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {"input": {"id": work_item.pk}}
+    result = schema_executor(query, variables=inp)
+
+    assert not bool(result.errors) == success
+    if success:
+        assert result.data["completeWorkItem"]["workItem"]["status"] == to_const(
+            models.WorkItem.STATUS_COMPLETED
+        )
+        assert result.data["completeWorkItem"]["workItem"]["case"][
+            "status"
+        ] == to_const(models.Case.STATUS_COMPLETED)
+
+
+@pytest.mark.parametrize(
+    "work_item__status,work_item__child_case,task__type",
+    [(models.WorkItem.STATUS_READY, None, models.Task.TYPE_SIMPLE)],
 )
 def test_complete_work_item_with_next(
     db,
@@ -101,7 +157,8 @@ def test_complete_work_item_with_next(
 
 
 @pytest.mark.parametrize(
-    "work_item__status,work_item__child_case", [(models.WorkItem.STATUS_READY, None)]
+    "work_item__status,work_item__child_case,task__type",
+    [(models.WorkItem.STATUS_READY, None, models.Task.TYPE_SIMPLE)],
 )
 def test_complete_work_item_with_next_multiple_tasks(
     db,

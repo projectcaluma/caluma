@@ -18,7 +18,7 @@ snapshots["test_complete_work_item_last[ready-completed-True] 1"] = {
     }
 }
 
-snapshots["test_complete_work_item_with_next[ready-None] 1"] = {
+snapshots["test_complete_work_item_with_next[ready-None-simple] 1"] = {
     "completeWorkItem": {
         "clientMutationId": None,
         "workItem": {

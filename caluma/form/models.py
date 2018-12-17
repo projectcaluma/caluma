@@ -97,7 +97,6 @@ class Option(SlugModel):
 
 
 class Document(UUIDModel):
-    # TODO: add user field once authentication is implemented
     form = models.ForeignKey(
         "form.Form", on_delete=models.DO_NOTHING, related_name="documents"
     )
