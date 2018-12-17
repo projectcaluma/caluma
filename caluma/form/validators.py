@@ -81,7 +81,7 @@ class DocumentValidator:
         answer_by_question = {answer.question.slug: answer.value for answer in answers}
         required_but_empty = []
         for question in form.questions.all():
-            if jexl.QuestionJexl().evaluate(question.is_required):
+            if jexl.QuestionJexl(answer_by_question).evaluate(question.is_required):
                 if not answer_by_question.get(question.slug, None):
                     required_but_empty.append(question.slug)
 

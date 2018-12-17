@@ -10,7 +10,14 @@ from ..core.types import DjangoObjectType, Node
 
 
 class QuestionJexl(graphene.String):
-    """Question jexl represents a jexl expression returning boolean."""
+    """Question jexl expression returning boolean.
+
+    Following transform can be used:
+    * answer - access answer of document by question slug
+
+    Example:
+    'question-slug'|answer
+    """
 
     pass
 
