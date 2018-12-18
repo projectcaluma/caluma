@@ -8,11 +8,13 @@ from ..core.models import SlugModel, UUIDModel
 class Task(SlugModel):
     TYPE_SIMPLE = "simple"
     TYPE_COMPLETE_WORKFLOW_FORM = "complete_workflow_form"
+    TYPE_COMPLETE_TASK_FORM = "complete_task_form"
 
-    TYPE_CHOICES = (TYPE_SIMPLE, TYPE_COMPLETE_WORKFLOW_FORM)
+    TYPE_CHOICES = (TYPE_SIMPLE, TYPE_COMPLETE_WORKFLOW_FORM, TYPE_COMPLETE_TASK_FORM)
     TYPE_CHOICES_TUPLE = (
         (TYPE_SIMPLE, "Task which can only be marked as completed."),
         (TYPE_COMPLETE_WORKFLOW_FORM, "Task completing defined workflow form."),
+        (TYPE_COMPLETE_TASK_FORM, "Task completing defined task form."),
     )
 
     name = LocalizedField(blank=False, null=False, required=False)
@@ -20,6 +22,13 @@ class Task(SlugModel):
     type = models.CharField(choices=TYPE_CHOICES_TUPLE, max_length=50)
     meta = JSONField(default={})
     is_archived = models.BooleanField(default=False)
+    form = models.ForeignKey(
+        "form.Form",
+        on_delete=models.DO_NOTHING,
+        related_name="tasks",
+        blank=True,
+        null=True,
+    )
 
 
 class Workflow(SlugModel):
@@ -108,3 +117,11 @@ class WorkItem(UUIDModel):
     """
     Defines case of a sub-workflow
     """
+
+    document = models.OneToOneField(
+        "form.Document",
+        on_delete=models.PROTECT,
+        related_name="work_item",
+        blank=True,
+        null=True,
+    )

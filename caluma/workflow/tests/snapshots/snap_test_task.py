@@ -7,22 +7,6 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots["test_query_all_tasks 1"] = {
-    "allTasks": {
-        "edges": [
-            {
-                "node": {
-                    "__typename": "SimpleTask",
-                    "description": "Team suggest traditional boy above. Argue move appear catch toward help wind. Material minute ago get.",
-                    "meta": "{}",
-                    "name": "Brian Williams",
-                    "slug": "effort-meet",
-                }
-            }
-        ]
-    }
-}
-
 snapshots["test_save_task[SaveSimpleTask] 1"] = {
     "data": {
         "saveSimpleTask": {
@@ -30,8 +14,8 @@ snapshots["test_save_task[SaveSimpleTask] 1"] = {
             "task": {
                 "__typename": "SimpleTask",
                 "meta": "{}",
-                "name": "Brian Williams",
-                "slug": "effort-meet",
+                "name": "Thomas Johnson",
+                "slug": "sound-air-mission",
             },
         }
     },
@@ -45,8 +29,39 @@ snapshots["test_save_task[SaveCompleteWorkflowFormTask] 1"] = {
             "task": {
                 "__typename": "CompleteWorkflowFormTask",
                 "meta": "{}",
-                "name": "Brian Williams",
-                "slug": "effort-meet",
+                "name": "Thomas Johnson",
+                "slug": "sound-air-mission",
+            },
+        }
+    },
+    "errors": [],
+}
+
+snapshots["test_query_all_tasks[simple] 1"] = {
+    "allTasks": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "SimpleTask",
+                    "description": "State section rock event recent. Final activity hope star check record well. Radio with Mr letter eye.",
+                    "meta": "{}",
+                    "name": "Thomas Johnson",
+                    "slug": "sound-air-mission",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_save_comlete_task_form_task 1"] = {
+    "data": {
+        "saveCompleteTaskFormTask": {
+            "clientMutationId": "testid",
+            "task": {
+                "__typename": "CompleteTaskFormTask",
+                "meta": "{}",
+                "name": "Thomas Johnson",
+                "slug": "sound-air-mission",
             },
         }
     },
