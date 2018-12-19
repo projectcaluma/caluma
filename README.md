@@ -60,6 +60,13 @@ The naming and concept of workflow entities is inspired by the [Workflow Pattern
 
 **WorkItem** is a single unit of work that needs to be completed in a specific stage of a case.
 
+### Technical components
+
+#### Javascript Expression Language
+
+Caluma relies on Javascript Expression Language alias [JEXL](https://github.com/TomFrost/Jexl) for defining powerful yet simple expressions for complex validation and flow definitions.
+Reason for using JEXL over other languages is that it can be simply introspected in the backend and frontend as of its defined small scope.
+
 ### Configuration
 
 Caluma is a [12factor app](https://12factor.net/) which means that configuration is stored in environment variables.
