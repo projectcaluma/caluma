@@ -1,12 +1,13 @@
 import pytest
 
-from .. import serializers
+from .. import models, serializers
 from ...core.tests import (
     extract_global_id_input_fields,
     extract_serializer_input_fields,
 )
 
 
+@pytest.mark.parametrize("task__type", [models.Task.TYPE_SIMPLE])
 def test_query_all_tasks(db, snapshot, task, schema_executor):
     query = """
         query AllTasks($name: String!) {
@@ -49,6 +50,31 @@ def test_save_task(db, snapshot, task, mutation, schema_executor):
 
     inp = {
         "input": extract_serializer_input_fields(serializers.SaveTaskSerializer, task)
+    }
+    result = schema_executor(query, variables=inp)
+    assert not result.errors
+    snapshot.assert_execution_result(result)
+
+
+def test_save_comlete_task_form_task(db, snapshot, task, schema_executor):
+    query = """
+        mutation SaveCompleteTaskFormTask($input: SaveCompleteTaskFormTaskInput!) {
+          saveCompleteTaskFormTask(input: $input) {
+            task {
+                slug
+                name
+                __typename
+                meta
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveCompleteTaskFormTaskSerializer, task
+        )
     }
     result = schema_executor(query, variables=inp)
     assert not result.errors

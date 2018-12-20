@@ -24,6 +24,7 @@ def test_query_all_work_items(db, snapshot, work_item, schema_executor):
     snapshot.assert_match(result.data)
 
 
+@pytest.mark.parametrize("task__type,task__form", [(models.Task.TYPE_SIMPLE, None)])
 @pytest.mark.parametrize(
     "work_item__status,case__status,success",
     [
@@ -109,6 +110,51 @@ def test_complete_workflow_form_work_item(
 
 
 @pytest.mark.parametrize(
+    "work_item__status,work_item__child_case,case__status,task__type",
+    [
+        (
+            models.WorkItem.STATUS_READY,
+            None,
+            models.Case.STATUS_RUNNING,
+            models.Task.TYPE_COMPLETE_TASK_FORM,
+        )
+    ],
+)
+@pytest.mark.parametrize(
+    "question__type,answer__value,success",
+    [(Question.TYPE_INTEGER, 1, True), (Question.TYPE_RADIO, "", False)],
+)
+def test_complete_task_form_work_item(
+    db, snapshot, work_item, answer, form_question, success, schema_executor
+):
+    query = """
+        mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
+          completeWorkItem(input: $input) {
+            workItem {
+              status
+              case {
+                status
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {"input": {"id": work_item.pk}}
+    result = schema_executor(query, variables=inp)
+
+    assert not bool(result.errors) == success
+    if success:
+        assert result.data["completeWorkItem"]["workItem"]["status"] == to_const(
+            models.WorkItem.STATUS_COMPLETED
+        )
+        assert result.data["completeWorkItem"]["workItem"]["case"][
+            "status"
+        ] == to_const(models.Case.STATUS_COMPLETED)
+
+
+@pytest.mark.parametrize(
     "work_item__status,work_item__child_case,task__type",
     [(models.WorkItem.STATUS_READY, None, models.Task.TYPE_SIMPLE)],
 )
@@ -123,7 +169,7 @@ def test_complete_work_item_with_next(
     schema_executor,
 ):
 
-    task_next = task_factory()
+    task_next = task_factory(type=models.Task.TYPE_SIMPLE, form=None)
     task_flow = task_flow_factory(task=task, workflow=workflow)
     task_flow.flow.next = f"'{task_next.slug}'|task"
     task_flow.flow.save()
@@ -135,7 +181,7 @@ def test_complete_work_item_with_next(
               status
               case {
                 status
-                workItems {
+                workItems(orderBy: CREATED_AT_ASC) {
                   edges {
                     node {
                       status
@@ -210,8 +256,8 @@ def test_complete_work_item_with_next_multiple_tasks(
 
 
 @pytest.mark.parametrize(
-    "work_item__status,work_item__child_case",
-    [(models.WorkItem.STATUS_COMPLETED, None)],
+    "work_item__status,work_item__child_case,task__type",
+    [(models.WorkItem.STATUS_COMPLETED, None, models.Task.TYPE_SIMPLE)],
 )
 def test_complete_work_item_with_merge(
     db,
@@ -227,14 +273,18 @@ def test_complete_work_item_with_merge(
     schema_executor,
 ):
     # create two work items which can be processed in parallel
-    work_item_1, work_item_2 = work_item_factory.create_batch(
-        2, status=models.WorkItem.STATUS_READY, child_case=None, case=case
+    task_1, task_2 = task_factory.create_batch(2, type=models.Task.TYPE_SIMPLE)
+    work_item_1 = work_item_factory(
+        task=task_1, status=models.WorkItem.STATUS_READY, child_case=None, case=case
+    )
+    work_item_2 = work_item_factory(
+        task=task_2, status=models.WorkItem.STATUS_READY, child_case=None, case=case
     )
     ready_workitems = case.work_items.filter(status=models.WorkItem.STATUS_READY)
     assert ready_workitems.count() == 2
 
     # both work item's tasks reference the same merge task
-    task_merge = task_factory()
+    task_merge = task_factory(type=models.Task.TYPE_COMPLETE_TASK_FORM)
     flow = flow_factory(next=f"'{task_merge.slug}'|task")
     task_flow_factory(task=work_item_1.task, workflow=workflow, flow=flow)
     task_flow_factory(task=work_item_2.task, workflow=workflow, flow=flow)
@@ -265,4 +315,6 @@ def test_complete_work_item_with_merge(
 
     # new work item is created of merge task
     assert ready_workitems.count() == 1
-    assert ready_workitems.first().task == task_merge
+    ready_workitem = ready_workitems.first()
+    assert ready_workitem.task == task_merge
+    assert ready_workitem.document_id is not None

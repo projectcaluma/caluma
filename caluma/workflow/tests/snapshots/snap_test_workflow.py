@@ -19,7 +19,7 @@ Hot morning future throughout guess language drive.""",
                             {
                                 "node": {
                                     "next": "mrs-positive",
-                                    "tasks": [{"slug": "effort-meet"}],
+                                    "tasks": [{"slug": "sound-air-mission"}],
                                 }
                             }
                         ]

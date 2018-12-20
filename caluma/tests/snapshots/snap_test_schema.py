@@ -128,7 +128,7 @@ type Case implements Node {
   status: CaseStatus!
   meta: JSONString!
   document: Document
-  workItems(before: String, after: String, first: Int, last: Int): WorkItemConnection
+  workItems(before: String, after: String, first: Int, last: Int, status: String, task: ID, case: ID, orderBy: [WorkItemOrdering]): WorkItemConnection
   parentWorkItem: WorkItem
 }
 
@@ -177,6 +177,21 @@ type CheckboxQuestion implements Question, Node {
   id: ID!
 }
 
+type CompleteTaskFormTask implements Task, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  name: String!
+  description: String
+  type: TaskType!
+  meta: JSONString!
+  isArchived: Boolean!
+  form: Form!
+  id: ID!
+}
+
 input CompleteWorkItemInput {
   id: ID!
   clientMutationId: String
@@ -213,6 +228,7 @@ type Document implements Node {
   meta: JSONString!
   answers(before: String, after: String, first: Int, last: Int, question: ID, search: String, orderBy: [AnswerOrdering]): AnswerConnection
   case: Case
+  workItem: WorkItem
 }
 
 type DocumentConnection {
@@ -369,6 +385,7 @@ type Mutation {
   removeFlow(input: RemoveFlowInput!): RemoveFlowPayload
   saveSimpleTask(input: SaveSimpleTaskInput!): SaveSimpleTaskPayload
   saveCompleteWorkflowFormTask(input: SaveCompleteWorkflowFormTaskInput!): SaveCompleteWorkflowFormTaskPayload
+  saveCompleteTaskFormTask(input: SaveCompleteTaskFormTaskInput!): SaveCompleteTaskFormTaskPayload
   archiveTask(input: ArchiveTaskInput!): ArchiveTaskPayload
   startCase(input: StartCaseInput!): StartCasePayload
   cancelCase(input: CancelCaseInput!): CancelCasePayload
@@ -464,7 +481,7 @@ type Query {
   allWorkflows(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String, orderBy: [WorkflowOrdering]): WorkflowConnection
   allTasks(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: String, isArchived: Boolean, search: String, orderBy: [TaskOrdering]): TaskConnection
   allCases(before: String, after: String, first: Int, last: Int, workflow: ID, status: String, orderBy: [CaseOrdering]): CaseConnection
-  allWorkItems(before: String, after: String, first: Int, last: Int, status: String, task: ID, case: ID, orderBy: [WorkItemOrdering]): WorkItemConnection
+  allWorkItems(before: String, after: String, first: Int, last: Int, orderBy: [WorkItemOrdering], status: String, task: ID, case: ID): WorkItemConnection
   allForms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   allQuestions(before: String, after: String, first: Int, last: Int, orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String): QuestionConnection
   allDocuments(before: String, after: String, first: Int, last: Int, form: ID, search: String, id: ID, orderBy: [DocumentOrdering]): DocumentConnection
@@ -580,6 +597,19 @@ input SaveCheckboxQuestionInput {
 
 type SaveCheckboxQuestionPayload {
   question: Question
+  clientMutationId: String
+}
+
+input SaveCompleteTaskFormTaskInput {
+  slug: String!
+  name: String!
+  description: String
+  form: ID!
+  clientMutationId: String
+}
+
+type SaveCompleteTaskFormTaskPayload {
+  task: Task
   clientMutationId: String
 }
 
@@ -867,6 +897,7 @@ enum TaskOrdering {
 enum TaskType {
   SIMPLE
   COMPLETE_WORKFLOW_FORM
+  COMPLETE_TASK_FORM
 }
 
 type TextQuestion implements Question, Node {
@@ -912,6 +943,7 @@ type WorkItem implements Node {
   meta: JSONString!
   case: Case!
   childCase: Case
+  document: Document
 }
 
 type WorkItemConnection {

@@ -12,6 +12,7 @@ class TaskFactory(DjangoModelFactory):
     description = Faker("multilang", faker_provider="text")
     meta = {}
     is_archived = False
+    form = SubFactory(FormFactory)
 
     class Meta:
         model = models.Task
@@ -62,6 +63,7 @@ class WorkItemFactory(DjangoModelFactory):
     child_case = SubFactory(CaseFactory)
     task = SubFactory(TaskFactory)
     status = models.WorkItem.STATUS_READY
+    document = SubFactory(DocumentFactory)
     meta = {}
 
     class Meta:

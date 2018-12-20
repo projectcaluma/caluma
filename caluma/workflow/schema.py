@@ -36,6 +36,7 @@ class Task(Node, graphene.Interface):
         TASK_TYPE = {
             models.Task.TYPE_SIMPLE: SimpleTask,
             models.Task.TYPE_COMPLETE_WORKFLOW_FORM: CompleteWorkflowFormTask,
+            models.Task.TYPE_COMPLETE_TASK_FORM: CompleteTaskFormTask,
         }
 
         return TASK_TYPE[instance.type]
@@ -57,12 +58,22 @@ class TaskQuerysetMixin(object):
 class SimpleTask(TaskQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Task
-        exclude_fields = ("task_flows", "work_items")
+        exclude_fields = ("task_flows", "work_items", "task", "form")
         use_connection = False
         interfaces = (Task, relay.Node)
 
 
 class CompleteWorkflowFormTask(TaskQuerysetMixin, DjangoObjectType):
+    class Meta:
+        model = models.Task
+        exclude_fields = ("task_flows", "work_items", "task", "form")
+        use_connection = False
+        interfaces = (Task, relay.Node)
+
+
+class CompleteTaskFormTask(TaskQuerysetMixin, DjangoObjectType):
+    form = graphene.Field("caluma.form.schema.Form", required=True)
+
     class Meta:
         model = models.Task
         exclude_fields = ("task_flows", "work_items")
@@ -97,17 +108,21 @@ class Workflow(DjangoObjectType):
         interfaces = (relay.Node,)
 
 
-class Case(DjangoObjectType):
-    class Meta:
-        model = models.Case
-        interfaces = (relay.Node,)
-
-
 class WorkItem(DjangoObjectType):
     task = graphene.Field(Task, required=True)
 
     class Meta:
         model = models.WorkItem
+        interfaces = (relay.Node,)
+
+
+class Case(DjangoObjectType):
+    work_items = DjangoFilterConnectionField(
+        WorkItem, filterset_class=filters.WorkItemFilterSet
+    )
+
+    class Meta:
+        model = models.Case
         interfaces = (relay.Node,)
 
 
@@ -167,6 +182,12 @@ class SaveCompleteWorkflowFormTask(SaveTask):
         return_field_type = Task
 
 
+class SaveCompleteTaskFormTask(SaveTask):
+    class Meta:
+        serializer_class = serializers.SaveCompleteTaskFormTaskSerializer
+        return_field_type = Task
+
+
 class ArchiveTask(Mutation):
     class Meta:
         serializer_class = serializers.ArchiveTaskSerializer
@@ -201,6 +222,7 @@ class Mutation(object):
 
     save_simple_task = SaveSimpleTask().Field()
     save_complete_workflow_form_task = SaveCompleteWorkflowFormTask().Field()
+    save_complete_task_form_task = SaveCompleteTaskFormTask().Field()
     archive_task = ArchiveTask().Field()
 
     start_case = StartCase().Field()

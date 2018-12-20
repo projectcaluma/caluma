@@ -14,7 +14,7 @@ snapshots["test_query_all_cases 1"] = {
 snapshots["test_start_case 1"] = {
     "startCase": {
         "case": {
-            "document": {"form": {"slug": "sound-air-mission"}},
+            "document": {"form": {"slug": "effort-meet"}},
             "parentWorkItem": {"status": "READY"},
             "status": "RUNNING",
             "workItems": {"edges": [{"node": {"status": "READY"}}]},
@@ -26,7 +26,7 @@ snapshots["test_start_case 1"] = {
 snapshots["test_cancel_case[running-True-completed] 1"] = {
     "cancelCase": {
         "case": {
-            "document": {"form": {"slug": "sound-air-mission"}},
+            "document": {"form": {"slug": "effort-meet"}},
             "status": "CANCELED",
             "workItems": {"edges": [{"node": {"status": "COMPLETED"}}]},
         },
@@ -37,7 +37,7 @@ snapshots["test_cancel_case[running-True-completed] 1"] = {
 snapshots["test_cancel_case[running-True-ready] 1"] = {
     "cancelCase": {
         "case": {
-            "document": {"form": {"slug": "sound-air-mission"}},
+            "document": {"form": {"slug": "effort-meet"}},
             "status": "CANCELED",
             "workItems": {"edges": [{"node": {"status": "CANCELED"}}]},
         },

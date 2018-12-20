@@ -3,7 +3,7 @@ from rest_framework import exceptions
 
 from . import models, validators
 from ..core import serializers
-from ..form.models import Document
+from ..form.models import Document, Form
 from .jexl import FlowJexl
 
 
@@ -125,6 +125,19 @@ class SaveCompleteWorkflowFormTaskSerializer(SaveTaskSerializer):
         pass
 
 
+class SaveCompleteTaskFormTaskSerializer(SaveTaskSerializer):
+    form = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=Form.objects, required=True
+    )
+
+    def validate(self, data):
+        data["type"] = models.Task.TYPE_COMPLETE_TASK_FORM
+        return data
+
+    class Meta(SaveTaskSerializer.Meta):
+        fields = SaveTaskSerializer.Meta.fields + ("form",)
+
+
 class ArchiveTaskSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField(source="slug")
 
@@ -150,7 +163,10 @@ class StartCaseSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         workflow = validated_data["workflow"]
         validated_data["status"] = models.Case.STATUS_RUNNING
-        validated_data["document"] = Document.objects.create(form_id=workflow.form_id)
+        if workflow.form_id:
+            validated_data["document"] = Document.objects.create(
+                form_id=workflow.form_id
+            )
         instance = super().create(validated_data)
 
         workflow = instance.workflow
@@ -197,6 +213,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
             child_case=self.instance.child_case,
             task=self.instance.task,
             case=self.instance.case,
+            document=self.instance.document,
         )
         data["status"] = models.WorkItem.STATUS_COMPLETED
         return data
@@ -218,11 +235,20 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
             if not isinstance(result, list):
                 result = [result]
 
+            def create_document(task):
+                if task.form_id is not None:
+                    return Document.objects.create(form_id=task.form_id)
+                return None
+
+            tasks = models.Task.objects.filter(pk__in=result)
             work_items = [
                 models.WorkItem(
-                    task_id=task, case=case, status=models.WorkItem.STATUS_READY
+                    task_id=task.pk,
+                    document=create_document(task),
+                    case=case,
+                    status=models.WorkItem.STATUS_READY,
                 )
-                for task in result
+                for task in tasks
             ]
             models.WorkItem.objects.bulk_create(work_items)
         else:
