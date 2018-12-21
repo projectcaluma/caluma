@@ -104,7 +104,7 @@ class RemoveFlowSerializer(serializers.ModelSerializer):
 class SaveTaskSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Task
-        fields = ("slug", "name", "description")
+        fields = ("slug", "name", "description", "meta")
 
 
 class SaveSimpleTaskSerializer(SaveTaskSerializer):
