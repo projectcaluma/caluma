@@ -604,6 +604,7 @@ input SaveCompleteTaskFormTaskInput {
   slug: String!
   name: String!
   description: String
+  meta: JSONString
   form: ID!
   clientMutationId: String
 }
@@ -617,6 +618,7 @@ input SaveCompleteWorkflowFormTaskInput {
   slug: String!
   name: String!
   description: String
+  meta: JSONString
   clientMutationId: String
 }
 
@@ -764,6 +766,7 @@ input SaveSimpleTaskInput {
   slug: String!
   name: String!
   description: String
+  meta: JSONString
   clientMutationId: String
 }
 
