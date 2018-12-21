@@ -11,13 +11,31 @@ snapshots["test_query_all_cases 1"] = {
     "allCases": {"edges": [{"node": {"status": "RUNNING"}}]}
 }
 
-snapshots["test_start_case 1"] = {
+snapshots['test_start_case[["group-name"]|groups] 1'] = {
     "startCase": {
         "case": {
             "document": {"form": {"slug": "effort-meet"}},
             "parentWorkItem": {"status": "READY"},
             "status": "RUNNING",
-            "workItems": {"edges": [{"node": {"status": "READY"}}]},
+            "workItems": {
+                "edges": [
+                    {"node": {"addressedGroups": ["group-name"], "status": "READY"}}
+                ]
+            },
+        },
+        "clientMutationId": None,
+    }
+}
+
+snapshots["test_start_case[None] 1"] = {
+    "startCase": {
+        "case": {
+            "document": {"form": {"slug": "effort-meet"}},
+            "parentWorkItem": {"status": "READY"},
+            "status": "RUNNING",
+            "workItems": {
+                "edges": [{"node": {"addressedGroups": [], "status": "READY"}}]
+            },
         },
         "clientMutationId": None,
     }

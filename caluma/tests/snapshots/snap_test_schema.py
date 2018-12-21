@@ -187,6 +187,7 @@ type CompleteTaskFormTask implements Task, Node {
   description: String
   type: TaskType!
   meta: JSONString!
+  addressGroups: GroupJexl
   isArchived: Boolean!
   form: Form!
   id: ID!
@@ -212,6 +213,7 @@ type CompleteWorkflowFormTask implements Task, Node {
   description: String
   type: TaskType!
   meta: JSONString!
+  addressGroups: GroupJexl
   isArchived: Boolean!
   id: ID!
 }
@@ -336,6 +338,8 @@ enum FormOrdering {
   CREATED_BY_GROUP_DESC
 }
 
+scalar GroupJexl
+
 type IntegerAnswer implements Answer, Node {
   createdAt: DateTime!
   modifiedAt: DateTime!
@@ -390,6 +394,7 @@ type Mutation {
   startCase(input: StartCaseInput!): StartCasePayload
   cancelCase(input: CancelCaseInput!): CancelCasePayload
   completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
+  setWorkItemAssignedUsers(input: SetWorkItemAssignedUsersInput!): SetWorkItemAssignedUsersPayload
   saveForm(input: SaveFormInput!): SaveFormPayload
   archiveForm(input: ArchiveFormInput!): ArchiveFormPayload
   publishForm(input: PublishFormInput!): PublishFormPayload
@@ -605,6 +610,7 @@ input SaveCompleteTaskFormTaskInput {
   name: String!
   description: String
   meta: JSONString
+  addressGroups: String
   form: ID!
   clientMutationId: String
 }
@@ -619,6 +625,7 @@ input SaveCompleteWorkflowFormTaskInput {
   name: String!
   description: String
   meta: JSONString
+  addressGroups: String
   clientMutationId: String
 }
 
@@ -767,6 +774,7 @@ input SaveSimpleTaskInput {
   name: String!
   description: String
   meta: JSONString
+  addressGroups: String
   clientMutationId: String
 }
 
@@ -820,6 +828,17 @@ type SaveWorkflowPayload {
   clientMutationId: String
 }
 
+input SetWorkItemAssignedUsersInput {
+  workItem: ID!
+  assignedUsers: [String]!
+  clientMutationId: String
+}
+
+type SetWorkItemAssignedUsersPayload {
+  workItem: WorkItem
+  clientMutationId: String
+}
+
 type SimpleTask implements Task, Node {
   createdAt: DateTime!
   modifiedAt: DateTime!
@@ -830,6 +849,7 @@ type SimpleTask implements Task, Node {
   description: String
   type: TaskType!
   meta: JSONString!
+  addressGroups: GroupJexl
   isArchived: Boolean!
   id: ID!
 }
@@ -867,6 +887,7 @@ interface Task {
   name: String!
   description: String
   isArchived: Boolean!
+  addressGroups: GroupJexl
   meta: JSONString!
 }
 
@@ -944,6 +965,8 @@ type WorkItem implements Node {
   task: Task!
   status: WorkItemStatus!
   meta: JSONString!
+  addressedGroups: [String]!
+  assignedUsers: [String]!
   case: Case!
   childCase: Case
   document: Document

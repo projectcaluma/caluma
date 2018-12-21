@@ -1,15 +1,21 @@
 from django.db import transaction
 from rest_framework import exceptions
+from rest_framework.serializers import ListField
 
 from . import models, validators
 from ..core import serializers
 from ..form.models import Document, Form
-from .jexl import FlowJexl
+from .jexl import FlowJexl, GroupJexl
 
 
 class FlowJexlField(serializers.JexlField):
     def __init__(self, **kwargs):
         super().__init__(FlowJexl(), **kwargs)
+
+
+class GroupJexlField(serializers.JexlField):
+    def __init__(self, **kwargs):
+        super().__init__(GroupJexl(), **kwargs)
 
 
 class SaveWorkflowSerializer(serializers.ModelSerializer):
@@ -102,9 +108,11 @@ class RemoveFlowSerializer(serializers.ModelSerializer):
 
 
 class SaveTaskSerializer(serializers.ModelSerializer):
+    address_groups = GroupJexlField(required=False, allow_null=True)
+
     class Meta:
         model = models.Task
-        fields = ("slug", "name", "description", "meta")
+        fields = ("slug", "name", "description", "meta", "address_groups")
 
 
 class SaveSimpleTaskSerializer(SaveTaskSerializer):
@@ -170,8 +178,14 @@ class StartCaseSerializer(serializers.ModelSerializer):
         instance = super().create(validated_data)
 
         workflow = instance.workflow
+        addressed_groups = []
+        if workflow.start.address_groups:
+            addressed_groups = GroupJexl().evaluate(workflow.start.address_groups)
         models.WorkItem.objects.create(
-            case=instance, task=workflow.start, status=models.WorkItem.STATUS_READY
+            addressed_groups=addressed_groups,
+            case=instance,
+            task=workflow.start,
+            status=models.WorkItem.STATUS_READY,
         )
 
         return instance
@@ -240,9 +254,16 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
                     return Document.objects.create(form_id=task.form_id)
                 return None
 
+            def evaluate_assigned_groups(task):
+                if task.address_groups:
+                    return GroupJexl().evaluate(task.address_groups)
+
+                return []
+
             tasks = models.Task.objects.filter(pk__in=result)
             work_items = [
                 models.WorkItem(
+                    addressed_groups=evaluate_assigned_groups(task),
                     task_id=task.pk,
                     document=create_document(task),
                     case=case,
@@ -261,3 +282,12 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.WorkItem
         fields = ("id",)
+
+
+class SetWorkItemAssignedUsersSerializer(serializers.ModelSerializer):
+    work_item = serializers.GlobalIDField(source="id")
+    assigned_users = ListField(required=True)
+
+    class Meta:
+        model = models.WorkItem
+        fields = ("work_item", "assigned_users")

@@ -22,7 +22,7 @@ def test_authenticated_visibility(db, info_fixture, size, request):
 
 
 @pytest.mark.parametrize("group,size", [("unknown", 0), ("group", 1)])
-def test_created_by_group_visibility(db, admin_info, group, admin_user, size, request):
+def test_created_by_group_visibility(db, admin_info, group, admin_user, size):
     admin_user.groups = [group]
     FakeModel = get_fake_model(model_base=UUIDModel)
 

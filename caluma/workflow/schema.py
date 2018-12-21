@@ -9,7 +9,31 @@ from ..core.types import DjangoObjectType, Node
 
 
 class FlowJexl(graphene.String):
-    """Flow jexl represents a jexl expression returning a task slug."""
+    """Flow jexl represents a jexl expression returning task slugs.
+
+    Following transforms can be used:
+    * task - return single task
+    * tasks - return multiple tasks
+
+    Examples:
+    'task-slug'|task
+    ['task-slug1', 'task-slug2']|tasks
+
+    """
+
+    pass
+
+
+class GroupJexl(graphene.String):
+    """Group jexl represents a jexl expression returning group names.
+
+    Following transforms can be used:
+    * groups - return list of group names
+
+    Examples:
+    ['group-name1', 'group-name2']|groups
+
+    """
 
     pass
 
@@ -29,6 +53,7 @@ class Task(Node, graphene.Interface):
     name = graphene.String(required=True)
     description = graphene.String()
     is_archived = graphene.Boolean(required=True)
+    address_groups = GroupJexl()
     meta = graphene.JSONString(required=True)
 
     @classmethod
@@ -213,6 +238,13 @@ class CompleteWorkItem(Mutation):
         model_operations = ["update"]
 
 
+class SetWorkItemAssignedUsers(Mutation):
+    class Meta:
+        serializer_class = serializers.SetWorkItemAssignedUsersSerializer
+        lookup_input_kwarg = "work_item"
+        model_operations = ["update"]
+
+
 class Mutation(object):
     save_workflow = SaveWorkflow().Field()
     publish_workflow = PublishWorkflow().Field()
@@ -228,6 +260,7 @@ class Mutation(object):
     start_case = StartCase().Field()
     cancel_case = CancelCase().Field()
     complete_work_item = CompleteWorkItem().Field()
+    set_work_item_assigned_users = SetWorkItemAssignedUsers().Field()
 
 
 class Query(object):

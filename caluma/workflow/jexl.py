@@ -6,6 +6,12 @@ from pyjexl import JEXL
 from ..core.jexl import ExtractTransformSubjectAnalyzer
 
 
+class GroupJexl(JEXL):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.add_transform("groups", lambda spec: spec)
+
+
 class FlowJexl(JEXL):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

@@ -60,6 +60,14 @@ The naming and concept of workflow entities is inspired by the [Workflow Pattern
 
 **WorkItem** is a single unit of work that needs to be completed in a specific stage of a case.
 
+#### User entities
+
+User entities are not actual entities on Caluma but provided through authentication token of an OpenID connect provider (see configuration below).
+
+**User** is a human resource which can be part of one or several groups.
+
+**Group** is a collection of users typically a organization.
+
 ### Technical components
 
 #### Javascript Expression Language
@@ -112,6 +120,7 @@ Following pre-defined classes are available:
 * `caluma.core.visibilities.Any`: Allow any user without any filtering
 * `caluma.user.visibilities.Authenticated`: Only show data to authenticated users
 * `caluma.user.visibilities.CreatedByGroup`: Only show data that belongs to the same group as the current user
+* `caluma.workflow.visibilities.AddressedGroups`: Only show case, work item and document to addressed users through group
 
 In case this default classes do not cover your use case, it is also possible to create your custom
 visibility class defining per node how to filter.

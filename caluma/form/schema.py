@@ -15,8 +15,10 @@ class QuestionJexl(graphene.String):
     Following transform can be used:
     * answer - access answer of document by question slug
 
-    Example:
-    'question-slug'|answer
+    Examples:
+    'answer' == 'question-slug'|answer
+    'answer' in 'list-question-slug'|answer
+
     """
 
     pass

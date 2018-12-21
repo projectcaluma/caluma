@@ -11,6 +11,13 @@ snapshots["test_query_all_work_items 1"] = {
     "allWorkItems": {"edges": [{"node": {"status": "READY"}}]}
 }
 
+snapshots["test_complete_work_item_last[ready-completed-True-simple-None] 1"] = {
+    "completeWorkItem": {
+        "clientMutationId": None,
+        "workItem": {"case": {"status": "COMPLETED"}, "status": "COMPLETED"},
+    }
+}
+
 snapshots["test_complete_work_item_with_next[ready-None-simple] 1"] = {
     "completeWorkItem": {
         "clientMutationId": None,
@@ -19,19 +26,17 @@ snapshots["test_complete_work_item_with_next[ready-None-simple] 1"] = {
                 "status": "RUNNING",
                 "workItems": {
                     "edges": [
-                        {"node": {"status": "READY"}},
-                        {"node": {"status": "COMPLETED"}},
+                        {
+                            "node": {
+                                "addressedGroups": ["group-name"],
+                                "status": "READY",
+                            }
+                        },
+                        {"node": {"addressedGroups": [], "status": "COMPLETED"}},
                     ]
                 },
             },
             "status": "COMPLETED",
         },
-    }
-}
-
-snapshots["test_complete_work_item_last[ready-completed-True-simple-None] 1"] = {
-    "completeWorkItem": {
-        "clientMutationId": None,
-        "workItem": {"case": {"status": "COMPLETED"}, "status": "COMPLETED"},
     }
 }
