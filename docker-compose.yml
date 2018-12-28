@@ -8,7 +8,7 @@ services:
       # https://hub.docker.com/_/postgres
       # - POSTGRES_PASSWORD=
     volumes:
-      - dbdata:/var/lib/postgresq
+      - dbdata:/var/lib/postgresql/data
   caluma:
     image: projectcaluma/caluma:latest
     ports:
