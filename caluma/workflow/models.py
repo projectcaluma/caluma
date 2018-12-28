@@ -108,16 +108,20 @@ class WorkItem(UUIDModel):
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default=dict)
 
-    addressed_groups = ArrayField(models.CharField(max_length=150), default=list)
-    """
-    Offer work item to be processed by a group of users, such are not committed to process
-    it though.
-    """
+    addressed_groups = ArrayField(
+        models.CharField(max_length=150),
+        default=list,
+        help_text=(
+            "Offer work item to be processed by a group of users, "
+            "such are not committed to process it though."
+        ),
+    )
 
-    assigned_users = ArrayField(models.CharField(max_length=150), default=list)
-    """
-    User(s) responsible to undertake given work item.
-    """
+    assigned_users = ArrayField(
+        models.CharField(max_length=150),
+        default=list,
+        help_text="Users responsible to undertake given work item.",
+    )
 
     case = models.ForeignKey(Case, related_name="work_items", on_delete=models.CASCADE)
     child_case = models.OneToOneField(
@@ -126,10 +130,8 @@ class WorkItem(UUIDModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        help_text="Defines case of a sub-workflow",
     )
-    """
-    Defines case of a sub-workflow
-    """
 
     document = models.OneToOneField(
         "form.Document",
