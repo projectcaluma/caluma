@@ -1,4 +1,15 @@
+import pyjexl
 from pyjexl.analysis import ValidatingAnalyzer
+from pyjexl.exceptions import ParseError
+
+
+class JEXL(pyjexl.JEXL):
+    def validate(self, expression, ValidatingAnalyzerClass=ValidatingAnalyzer):
+        try:
+            for res in self.analyze(expression, ValidatingAnalyzerClass):
+                yield res
+        except ParseError as err:
+            yield str(err)
 
 
 class ExtractTransformSubjectAnalyzer(ValidatingAnalyzer):
