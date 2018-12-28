@@ -7,7 +7,9 @@ class BaseModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
     created_by_user = models.CharField(max_length=150, blank=True, null=True)
-    created_by_group = models.CharField(max_length=150, blank=True, null=True)
+    created_by_group = models.CharField(
+        max_length=150, blank=True, null=True, db_index=True
+    )
 
     class Meta:
         abstract = True

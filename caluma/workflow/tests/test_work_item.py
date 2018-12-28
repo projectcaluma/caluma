@@ -169,7 +169,9 @@ def test_complete_work_item_with_next(
     schema_executor,
 ):
 
-    task_next = task_factory(type=models.Task.TYPE_SIMPLE, form=None)
+    task_next = task_factory(
+        type=models.Task.TYPE_SIMPLE, form=None, address_groups='["group-name"]|groups'
+    )
     task_flow = task_flow_factory(task=task, workflow=workflow)
     task_flow.flow.next = f"'{task_next.slug}'|task"
     task_flow.flow.save()
@@ -181,10 +183,11 @@ def test_complete_work_item_with_next(
               status
               case {
                 status
-                workItems(orderBy: CREATED_AT_ASC) {
+                workItems(orderBy: STATUS_DESC) {
                   edges {
                     node {
                       status
+                      addressedGroups
                     }
                   }
                 }
@@ -318,3 +321,21 @@ def test_complete_work_item_with_merge(
     ready_workitem = ready_workitems.first()
     assert ready_workitem.task == task_merge
     assert ready_workitem.document_id is not None
+
+
+def test_set_work_item_assigned_users(db, snapshot, work_item, schema_executor):
+    query = """
+        mutation SetWorkItemAssignedUsers($input: SetWorkItemAssignedUsersInput!) {
+          setWorkItemAssignedUsers(input: $input) {
+            clientMutationId
+          }
+        }
+    """
+
+    assigned_users = ["user1", "user2"]
+    inp = {"input": {"workItem": str(work_item.pk), "assignedUsers": assigned_users}}
+    result = schema_executor(query, variables=inp)
+
+    assert not result.errors
+    work_item.refresh_from_db()
+    assert work_item.assigned_users == assigned_users

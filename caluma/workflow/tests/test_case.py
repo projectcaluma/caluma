@@ -22,6 +22,7 @@ def test_query_all_cases(db, snapshot, case, flow, schema_executor):
     snapshot.assert_match(result.data)
 
 
+@pytest.mark.parametrize("task__address_groups", ['["group-name"]|groups', None])
 def test_start_case(db, snapshot, workflow, work_item, schema_executor):
     query = """
         mutation StartCase($input: StartCaseInput!) {
@@ -40,6 +41,7 @@ def test_start_case(db, snapshot, workflow, work_item, schema_executor):
                 edges {
                   node {
                     status
+                    addressedGroups
                   }
                 }
               }

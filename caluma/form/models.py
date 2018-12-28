@@ -8,7 +8,7 @@ from ..core.models import SlugModel, UUIDModel
 class Form(SlugModel):
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
-    meta = JSONField(default={})
+    meta = JSONField(default=dict)
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
     questions = models.ManyToManyField(
@@ -50,8 +50,8 @@ class Question(SlugModel):
     is_required = models.TextField(default="false")
     is_hidden = models.TextField(default="false")
     is_archived = models.BooleanField(default=False)
-    configuration = JSONField(default={})
-    meta = JSONField(default={})
+    configuration = JSONField(default=dict)
+    meta = JSONField(default=dict)
     options = models.ManyToManyField(
         "Option", through="QuestionOption", related_name="questions"
     )
@@ -93,14 +93,14 @@ class QuestionOption(UUIDModel):
 
 class Option(SlugModel):
     label = LocalizedField(blank=False, null=False, required=False)
-    meta = JSONField(default={})
+    meta = JSONField(default=dict)
 
 
 class Document(UUIDModel):
     form = models.ForeignKey(
         "form.Form", on_delete=models.DO_NOTHING, related_name="documents"
     )
-    meta = JSONField(default={})
+    meta = JSONField(default=dict)
 
 
 class Answer(UUIDModel):
@@ -108,7 +108,7 @@ class Answer(UUIDModel):
         "form.Question", on_delete=models.DO_NOTHING, related_name="answers"
     )
     value = JSONField()
-    meta = JSONField(default={})
+    meta = JSONField(default=dict)
     document = models.ForeignKey(
         Document, on_delete=models.CASCADE, related_name="answers"
     )

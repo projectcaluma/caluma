@@ -1,4 +1,5 @@
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 from localized_fields.fields import LocalizedField
 
@@ -20,7 +21,8 @@ class Task(SlugModel):
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
     type = models.CharField(choices=TYPE_CHOICES_TUPLE, max_length=50)
-    meta = JSONField(default={})
+    meta = JSONField(default=dict)
+    address_groups = models.TextField(blank=True, null=True)
     is_archived = models.BooleanField(default=False)
     form = models.ForeignKey(
         "form.Form",
@@ -34,7 +36,7 @@ class Task(SlugModel):
 class Workflow(SlugModel):
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
-    meta = JSONField(default={})
+    meta = JSONField(default=dict)
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
     start = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="+")
@@ -78,7 +80,7 @@ class Case(UUIDModel):
         Workflow, related_name="cases", on_delete=models.DO_NOTHING
     )
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
-    meta = JSONField(default={})
+    meta = JSONField(default=dict)
     document = models.OneToOneField(
         "form.Document",
         on_delete=models.PROTECT,
@@ -104,7 +106,22 @@ class WorkItem(UUIDModel):
         Task, on_delete=models.DO_NOTHING, related_name="work_items"
     )
     status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
-    meta = JSONField(default={})
+    meta = JSONField(default=dict)
+
+    addressed_groups = ArrayField(
+        models.CharField(max_length=150),
+        default=list,
+        help_text=(
+            "Offer work item to be processed by a group of users, "
+            "such are not committed to process it though."
+        ),
+    )
+
+    assigned_users = ArrayField(
+        models.CharField(max_length=150),
+        default=list,
+        help_text="Users responsible to undertake given work item.",
+    )
 
     case = models.ForeignKey(Case, related_name="work_items", on_delete=models.CASCADE)
     child_case = models.OneToOneField(
@@ -113,10 +130,8 @@ class WorkItem(UUIDModel):
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
+        help_text="Defines case of a sub-workflow",
     )
-    """
-    Defines case of a sub-workflow
-    """
 
     document = models.OneToOneField(
         "form.Document",
@@ -125,3 +140,9 @@ class WorkItem(UUIDModel):
         blank=True,
         null=True,
     )
+
+    class Meta:
+        indexes = [
+            GinIndex(fields=["addressed_groups"]),
+            GinIndex(fields=["assigned_users"]),
+        ]
