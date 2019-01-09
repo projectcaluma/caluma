@@ -6,7 +6,7 @@ class AnonymousUser(object):
         self.username = None
         self.groups = []
         self.token = None
-        self.decoded_token = {}
+        self.userinfo = {}
         self.group = None
 
     @property
@@ -18,11 +18,11 @@ class AnonymousUser(object):
 
 
 class OIDCUser(object):
-    def __init__(self, token, decoded_token):
+    def __init__(self, token, userinfo):
         self.token = token
-        self.username = decoded_token["sub"]
-        self.decoded_token = decoded_token
-        self.groups = decoded_token.get(settings.OIDC_GROUPS_CLAIM) or []
+        self.username = userinfo["sub"]
+        self.userinfo = userinfo
+        self.groups = userinfo.get(settings.OIDC_GROUPS_CLAIM) or []
 
     @property
     def group(self):
