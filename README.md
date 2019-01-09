@@ -95,14 +95,18 @@ A list of configuration options which you might need to configure to get Caluma 
 
 #### Authentication and authorization
 
-If you want connect Caluma you need a [IAM](https://en.wikipedia.org/wiki/Identity_management) supporting OpenID Connect. If not available you might want to consider using [Keycloak](https://www.keycloak.org/).
+If you want to connect to Caluma you need an [IAM](https://en.wikipedia.org/wiki/Identity_management) supporting OpenID Connect. If not available you might want to consider using [Keycloak](https://www.keycloak.org/).
 
-* `OIDC_VERIFY_ALGORITHM`: Token verification algorithm (default: HS256)
-* `OIDC_CLIENT`: Client name
-* `OIDC_JWKS_ENDPOINT`: End point of JWKS in case a asymentric algorithm is used.
-* `OIDC_SECRET_KEY`: Secret key when symmetric algorithm is used (defaults to `SECRET_KEY`)
-* `OIDC_VALIDATE_CLAIMS_OPTIONS` dict of verify signature options. See [options parameter](https://python-jose.readthedocs.io/en/latest/jwt/api.html?highlight=decode_token#jose.jwt.decode) for details.
+Caluma expects a bearer token to be passed on as [Authorization Request Header Field](https://tools.ietf.org/html/rfc6750#section-2.1)
+
+* `OIDC_USERINFO_ENDPOINT`: Url of userinfo endpoint as [described](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
 * `OIDC_GROUPS_CLAIM`: Name of claim to be used to represent groups (default: caluma_groups)
+
+#### Cache
+
+* `CACHE_BACKEND`: [cache backend](https://docs.djangoproject.com/en/1.11/ref/settings/#backend) to use (default: django.core.cache.backends.locmem.LocMemCache)
+* `CACHE_LOCATION`: [location](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-CACHES-LOCATION) of cache to use
+* `CACHE_TIMEOUT`: number of seconds before a cache entry is considered stale. (default: 300)
 
 #### Extension points
 

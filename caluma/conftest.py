@@ -2,6 +2,7 @@ import functools
 import inspect
 
 import pytest
+from django.core.cache import cache
 from factory import Faker
 from factory.base import FactoryMetaClass
 from graphene import ResolveInfo
@@ -26,6 +27,11 @@ def register_module(module):
 
 register_module(form_factories)
 register_module(workflow_factories)
+
+
+@pytest.fixture(scope="function", autouse=True)
+def _autoclear_cache():
+    cache.clear()
 
 
 @pytest.fixture
