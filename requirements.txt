@@ -17,5 +17,6 @@ graphql-relay==0.4.5
 idna==2.8
 psycopg2-binary==2.7.6.1
 pyjexl==0.2.3
+python-memcached==1.59
 requests==2.21.0
 uwsgi==2.0.17.1
