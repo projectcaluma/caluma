@@ -62,7 +62,9 @@ class OIDCAuthenticationMiddleware(object):
 
         userinfo_method = functools.partial(self.get_userinfo, token=token)
         userinfo = cache.get_or_set(
-            f"authentication.userinfo.{smart_text(token)}", userinfo_method
+            f"authentication.userinfo.{smart_text(token)}",
+            userinfo_method,
+            timeout=settings.OIDC_BEARER_TOKEN_REVALIDATION_TIME,
         )
         request.user = models.OIDCUser(token, userinfo)
         return next(root, info, **args)

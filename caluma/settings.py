@@ -86,7 +86,6 @@ CACHES = {
             "CACHE_BACKEND", default="django.core.cache.backends.locmem.LocMemCache"
         ),
         "LOCATION": env.str("CACHE_LOCATION", ""),
-        "TIMEOUT": env.int("CACHE_TIMEOUT", 300),
     }
 }
 
@@ -134,6 +133,9 @@ GRAPHENE = {
 OIDC_USERINFO_ENDPOINT = env.str("OIDC_USERINFO_ENDPOINT", default=None)
 OIDC_VERIFY_SSL = env.bool("OIDC_VERIFY_SSL", default=True)
 OIDC_GROUPS_CLAIM = env.str("OIDC_GROUPS_CLAIM", default="caluma_groups")
+OIDC_BEARER_TOKEN_REVALIDATION_TIME = env.int(
+    "OIDC_BEARER_TOKEN_REVALIDATION_TIME", default=0
+)
 
 # Extensions
 
