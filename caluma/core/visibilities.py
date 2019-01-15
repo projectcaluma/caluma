@@ -45,7 +45,7 @@ class BaseVisibility(object):
         queryset_fns = inspect.getmembers(
             self, lambda m: hasattr(m, "_filter_queryset_for")
         )
-        queryset_nodes = [str(fn._filter_queryset_for) for _, fn in queryset_fns]
+        queryset_nodes = [fn._filter_queryset_for.__name__ for _, fn in queryset_fns]
         queryset_nodes_dups = list_duplicates(queryset_nodes)
         if queryset_nodes_dups:
             raise ImproperlyConfigured(
