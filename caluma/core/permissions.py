@@ -66,7 +66,7 @@ class BasePermission(object):
 
     def __init__(self):
         perm_fns = inspect.getmembers(self, lambda m: hasattr(m, "_permission"))
-        perm_muts = [str(fn._permission) for _, fn in perm_fns]
+        perm_muts = [fn._permission.__name__ for _, fn in perm_fns]
         perm_muts_dups = list_duplicates(perm_muts)
         if perm_muts_dups:
             raise ImproperlyConfigured(
@@ -78,7 +78,7 @@ class BasePermission(object):
         obj_perm_fns = inspect.getmembers(
             self, lambda m: hasattr(m, "_object_permission")
         )
-        obj_perm_muts = [str(fn._object_permission) for _, fn in obj_perm_fns]
+        obj_perm_muts = [fn._object_permission.__name__ for _, fn in obj_perm_fns]
         obj_perm_muts_dups = list_duplicates(obj_perm_muts)
         if obj_perm_muts_dups:
             raise ImproperlyConfigured(
