@@ -108,6 +108,13 @@ Caluma expects a bearer token to be passed on as [Authorization Request Header F
 * `CACHE_BACKEND`: [cache backend](https://docs.djangoproject.com/en/1.11/ref/settings/#backend) to use (default: django.core.cache.backends.locmem.LocMemCache)
 * `CACHE_LOCATION`: [location](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-CACHES-LOCATION) of cache to use
 
+#### CORS headers
+
+Per default no CORS headers are set but can be configured with following options.
+
+* `CORS_ORIGIN_ALLOW_ALL`: If True, the whitelist will not be used and all origins will be accepted. (default: False)
+* `CORS_ORIGIN_WHITELIST`: A list of origin hostnames that are authorized to make cross-site HTTP requests.
+
 #### Extension points
 
 Caluma is meant to be used as a service with a clean API hence it doesn't provide a Django app.

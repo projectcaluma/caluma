@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.locale.LocaleMiddleware",
 ]
@@ -147,3 +148,9 @@ VISIBILITY_CLASSES = env.list(
 PERMISSION_CLASSES = env.list(
     "PERMISSION_CLASSES", default=default(["caluma.core.permissions.AllowAny"])
 )
+
+
+# Cors headers
+
+CORS_ORIGIN_ALLOW_ALL = env.bool("CORS_ORIGIN_ALLOW_ALL", default=False)
+CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default=[])
