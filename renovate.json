@@ -3,6 +3,10 @@
     "config:base"
   ],
   "pip_requirements": {
-    "fileMatch": ["requirements.*txt$"]
+    "fileMatch": ["requirements.*txt$"],
+    "packageRules": [{
+      "packageNames": ["django"],
+      "allowedVersions": "<1.12"
+    }]
   }
 }
