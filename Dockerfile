@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.7
 
 RUN wget -q https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -P /usr/local/bin \
   && chmod +x /usr/local/bin/wait-for-it.sh \
