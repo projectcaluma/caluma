@@ -1,0 +1,18 @@
+{
+  "extends": [
+    "config:base"
+  ],
+  "pip_requirements": {
+    "fileMatch": ["requirements.*txt$"],
+    "packageRules": [{
+      "packageNames": ["django"],
+      "allowedVersions": "<1.12"
+    }]
+  },
+  "dockerfile": {
+    "packageRules": [{
+      "packageNames": ["python"],
+      "allowedVersions": "<3.7"
+    }]
+  }
+}
