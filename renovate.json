@@ -9,7 +9,10 @@
       "allowedVersions": "<1.12"
     }]
   },
-  "dockerfile": {
+  "docker": {
+    "digest": {
+      "enabled": false
+    },
     "packageRules": [{
       "packageNames": ["python"],
       "allowedVersions": "<3.7"
