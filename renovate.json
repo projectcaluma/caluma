@@ -1,0 +1,30 @@
+{
+  "extends": ["config:base"],
+  "pip_requirements": {
+    "fileMatch": ["requirements.*txt$"],
+    "packageRules": [
+      {
+        "packageNames": ["django"],
+        "allowedVersions": "<1.12"
+      }
+    ]
+  },
+  "docker": {
+    "packageRules": [
+      {
+        "packageNames": ["python"],
+        "allowedVersions": "3.6"
+      },
+      {
+        "packageNames": ["projectcaluma/caluma"],
+        "allowedVersions": "latest",
+        "pinDigests": false
+      },
+      {
+        "packageNames": ["postgres"],
+        "allowedVersions": "9.6-alpine"
+      }
+    ],
+    "pinDigests": true
+  }
+}
