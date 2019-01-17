@@ -19,6 +19,10 @@
         "packageNames": ["projectcaluma/caluma"],
         "allowedVersions": "latest",
         "pinDigests": false
+      },
+      {
+        "packageNames": ["postgres"],
+        "allowedVersions": "9.6-alpine"
       }
     ],
     "pinDigests": true
