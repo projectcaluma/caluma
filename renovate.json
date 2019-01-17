@@ -11,7 +11,7 @@
   },
   "docker": {
     "digest": {
-      "enabled": false
+      "enabled": true
     },
     "packageRules": [{
       "packageNames": ["python"],
