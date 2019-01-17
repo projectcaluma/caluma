@@ -1,4 +1,4 @@
-FROM python:3.6
+FROM python:3.6@sha256:a01b318f4768a20a679da7d901de1676de0079bf85a01179611dd3fec67d5d66
 
 RUN wget -q https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -P /usr/local/bin \
   && chmod +x /usr/local/bin/wait-for-it.sh \
