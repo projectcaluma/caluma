@@ -10,12 +10,9 @@
     }]
   },
   "docker": {
-    "digest": {
-      "enabled": true
-    },
     "packageRules": [{
       "packageNames": ["python"],
-      "allowedVersions": "<3.7"
+      "allowedVersions": "3.6"
     }]
   }
 }
