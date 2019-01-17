@@ -43,6 +43,8 @@ black .
 pytest
 # create migrations
 ./manage.py makemigrations
+# install debugger or other temporary dependencies
+pip install --user pdbpp
 ```
 
 Writing of code can still happen outside the docker container of course.
