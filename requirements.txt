@@ -1,7 +1,7 @@
 django==1.11.18 # pyup: >=1.11,<1.12
 django-cors-headers==2.4.0
 django-environ==0.4.5
-django-filter==2.0.0
+django-filter==2.1.0
 # move back to PyPi version once following PRs are merged:
 # https://github.com/SectorLabs/django-postgres-extra/pull/73
 git+https://github.com/adfinis-forks/django-postgres-extra.git@v1.21a12+adsy1#egg=django-postgres-extra
