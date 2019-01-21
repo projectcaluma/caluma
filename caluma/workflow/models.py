@@ -22,7 +22,11 @@ class Task(SlugModel):
     description = LocalizedField(blank=True, null=True, required=False)
     type = models.CharField(choices=TYPE_CHOICES_TUPLE, max_length=50)
     meta = JSONField(default=dict)
-    address_groups = models.TextField(blank=True, null=True)
+    address_groups = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Group jexl returning what group(s) derived work items will be addressed to.",
+    )
     is_archived = models.BooleanField(default=False)
     form = models.ForeignKey(
         "form.Form",
@@ -39,7 +43,12 @@ class Workflow(SlugModel):
     meta = JSONField(default=dict)
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
-    start = models.ForeignKey(Task, on_delete=models.CASCADE, related_name="+")
+    start = models.ForeignKey(
+        Task,
+        on_delete=models.CASCADE,
+        related_name="+",
+        help_text="Task workflow will be started with.",
+    )
     form = models.ForeignKey(
         "form.Form",
         on_delete=models.DO_NOTHING,

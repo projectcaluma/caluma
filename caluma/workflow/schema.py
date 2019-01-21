@@ -41,6 +41,9 @@ class GroupJexl(graphene.String):
 serializer_converter.get_graphene_type_from_serializer_field.register(
     serializers.FlowJexlField, lambda field: FlowJexl
 )
+serializer_converter.get_graphene_type_from_serializer_field.register(
+    serializers.GroupJexlField, lambda field: GroupJexl
+)
 
 
 class Task(Node, graphene.Interface):
