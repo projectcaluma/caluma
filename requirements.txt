@@ -5,7 +5,7 @@ django-filter==2.1.0
 # move back to PyPi version once following PRs are merged:
 # https://github.com/SectorLabs/django-postgres-extra/pull/73
 git+https://github.com/adfinis-forks/django-postgres-extra.git@v1.21a12+adsy1#egg=django-postgres-extra
-django-localized-fields==v5.0a6
+django-localized-fields==5.0a7
 djangorestframework==3.9.1
 graphene==2.1.3
 graphene-django==2.2.0
