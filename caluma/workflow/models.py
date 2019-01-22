@@ -47,7 +47,7 @@ class Workflow(SlugModel):
         Task,
         on_delete=models.CASCADE,
         related_name="+",
-        help_text="Task workflow will be started with.",
+        help_text="First task of the workflow.",
     )
     form = models.ForeignKey(
         "form.Form",
