@@ -16,8 +16,8 @@ class QuestionJexl(graphene.String):
     * answer - access answer of document by question slug
 
     Examples:
-    'answer' == 'question-slug'|answer
-    'answer' in 'list-question-slug'|answer
+    * 'answer' == 'question-slug'|answer
+    * 'answer' in 'list-question-slug'|answer
 
     """
 

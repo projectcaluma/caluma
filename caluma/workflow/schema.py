@@ -16,8 +16,8 @@ class FlowJexl(graphene.String):
     * tasks - return multiple tasks
 
     Examples:
-    'task-slug'|task
-    ['task-slug1', 'task-slug2']|tasks
+    * 'task-slug'|task
+    * ['task-slug1', 'task-slug2']|tasks
 
     """
 
@@ -31,7 +31,7 @@ class GroupJexl(graphene.String):
     * groups - return list of group names
 
     Examples:
-    ['group-name1', 'group-name2']|groups
+    * ['group-name1', 'group-name2']|groups
 
     """
 
