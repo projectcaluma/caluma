@@ -91,6 +91,7 @@ A list of configuration options which you might need to configure to get Caluma 
 * `DATABASE_USER`: Username to use when connecting to the database (default: caluma)
 * `DATABASE_PASSWORD`: Password to use when connecting to database
 * `LANGUAGE_CODE`: Default language defined as fallback (default: en)
+* `LANGUAGES`: List of supported language codes (default: all available)
 
 #### Authentication and authorization
 

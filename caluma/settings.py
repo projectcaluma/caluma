@@ -2,6 +2,7 @@ import os
 import re
 
 import environ
+from django.conf import global_settings
 
 env = environ.Env()
 django_root = environ.Path(__file__) - 2
@@ -93,7 +94,16 @@ CACHES = {
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
+
+def parse_languages(languages):
+    return [(language, language) for language in languages]
+
+
 LANGUAGE_CODE = env.str("LANGUAGE_CODE", "en")
+LANGUAGES = (
+    parse_languages(env.list("LANGUAGES", default=[])) or global_settings.LANGUAGES
+)
+
 TIME_ZONE = env.str("TIME_ZONE", "UTC")
 USE_I18N = True
 USE_L10N = True
