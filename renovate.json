@@ -1,5 +1,12 @@
 {
-  "extends": [
-    "github>projectcaluma/renovate-config"
-  ]
+  "extends": ["github>projectcaluma/renovate-config"],
+  "docker": {
+    "packageRules": [
+      {
+        "packageNames": ["projectcaluma/caluma"],
+        "allowedVersions": "latest",
+        "pinDigests": false
+      }
+    ]
+  }
 }
