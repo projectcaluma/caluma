@@ -610,7 +610,7 @@ input SaveCompleteTaskFormTaskInput {
   name: String!
   description: String
   meta: JSONString
-  addressGroups: String
+  addressGroups: GroupJexl
   form: ID!
   clientMutationId: String
 }
@@ -625,7 +625,7 @@ input SaveCompleteWorkflowFormTaskInput {
   name: String!
   description: String
   meta: JSONString
-  addressGroups: String
+  addressGroups: GroupJexl
   clientMutationId: String
 }
 
@@ -774,7 +774,7 @@ input SaveSimpleTaskInput {
   name: String!
   description: String
   meta: JSONString
-  addressGroups: String
+  addressGroups: GroupJexl
   clientMutationId: String
 }
 

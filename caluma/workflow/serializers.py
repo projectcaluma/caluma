@@ -108,7 +108,11 @@ class RemoveFlowSerializer(serializers.ModelSerializer):
 
 
 class SaveTaskSerializer(serializers.ModelSerializer):
-    address_groups = GroupJexlField(required=False, allow_null=True)
+    address_groups = GroupJexlField(
+        required=False,
+        allow_null=True,
+        help_text=models.Task._meta.get_field("address_groups").help_text,
+    )
 
     class Meta:
         model = models.Task
