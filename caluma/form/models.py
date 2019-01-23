@@ -96,7 +96,15 @@ class Option(SlugModel):
     meta = JSONField(default=dict)
 
 
+class DocumentManager(models.Manager):
+    def create_document_for_task(self, task):
+        if task.form_id is not None:
+            return Document.objects.create(form_id=task.form_id)
+        return None
+
+
 class Document(UUIDModel):
+    objects = DocumentManager()
     form = models.ForeignKey(
         "form.Form", on_delete=models.DO_NOTHING, related_name="documents"
     )
