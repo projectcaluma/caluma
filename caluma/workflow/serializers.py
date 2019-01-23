@@ -188,6 +188,7 @@ class StartCaseSerializer(serializers.ModelSerializer):
         models.WorkItem.objects.create(
             addressed_groups=addressed_groups,
             case=instance,
+            document=Document.objects.create_document_for_task(workflow.start),
             task=workflow.start,
             status=models.WorkItem.STATUS_READY,
         )
@@ -253,11 +254,6 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
             if not isinstance(result, list):
                 result = [result]
 
-            def create_document(task):
-                if task.form_id is not None:
-                    return Document.objects.create(form_id=task.form_id)
-                return None
-
             def evaluate_assigned_groups(task):
                 if task.address_groups:
                     return GroupJexl().evaluate(task.address_groups)
@@ -269,7 +265,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
                 models.WorkItem(
                     addressed_groups=evaluate_assigned_groups(task),
                     task_id=task.pk,
-                    document=create_document(task),
+                    document=Document.objects.create_document_for_task(task),
                     case=case,
                     status=models.WorkItem.STATUS_READY,
                 )

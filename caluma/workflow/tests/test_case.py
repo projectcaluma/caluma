@@ -42,6 +42,11 @@ def test_start_case(db, snapshot, workflow, work_item, schema_executor):
                   node {
                     status
                     addressedGroups
+                    document {
+                      form {
+                        slug
+                      }
+                    }
                   }
                 }
               }
