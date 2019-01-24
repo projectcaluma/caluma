@@ -122,7 +122,12 @@ class OrderingField(ChoiceField):
     See `convert_ordering_field_to_enum`
     """
 
-    pass
+    def validate(self, value):
+        invalid = set(value or []) - {choice[0] for choice in self.choices}
+        return not bool(invalid)
+
+    def to_python(self, value):
+        return value
 
 
 class ListField(forms.Field):

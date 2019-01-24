@@ -27,43 +27,6 @@ snapshots["test_remove_form_question 1"] = {
     "errors": [],
 }
 
-snapshots["test_query_all_forms[First result] 1"] = {
-    "allForms": {
-        "edges": [
-            {
-                "node": {
-                    "description": "First result",
-                    "id": "Rm9ybTplZmZvcnQtbWVldA==",
-                    "meta": "{}",
-                    "name": "Brian Williams",
-                    "questions": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "id": "VGV4dGFyZWFRdWVzdGlvbjpzdWdnZXN0LXRyYWRpdGlvbmFs",
-                                    "label": "John Thomas",
-                                    "slug": "suggest-traditional",
-                                }
-                            }
-                        ]
-                    },
-                    "slug": "effort-meet",
-                }
-            },
-            {
-                "node": {
-                    "description": "Seconds result",
-                    "id": "Rm9ybTpzZXJ2aWNlLWJhbmstYXJt",
-                    "meta": "{}",
-                    "name": "Brian Williams",
-                    "questions": {"edges": []},
-                    "slug": "service-bank-arm",
-                }
-            },
-        ]
-    }
-}
-
 snapshots["test_save_form[some description text-en] 1"] = {
     "saveForm": {
         "clientMutationId": "testid",
@@ -109,5 +72,52 @@ snapshots["test_save_form[de] 1"] = {
             "name": "Brian Williams",
             "slug": "effort-meet",
         },
+    }
+}
+
+snapshots["test_query_all_forms[First result-1st] 1"] = {
+    "allForms": {
+        "edges": [
+            {
+                "node": {
+                    "description": "First result",
+                    "id": "Rm9ybTplZmZvcnQtbWVldA==",
+                    "meta": "{}",
+                    "name": "1st",
+                    "questions": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "id": "RmxvYXRRdWVzdGlvbjphY3Jvc3MtZW52aXJvbm1lbnQ=",
+                                    "label": "Tyler Valencia",
+                                    "slug": "across-environment",
+                                }
+                            }
+                        ]
+                    },
+                    "slug": "effort-meet",
+                }
+            },
+            {
+                "node": {
+                    "description": "Second result",
+                    "id": "Rm9ybTpraXRjaGVuLWRldmVsb3A=",
+                    "meta": "{}",
+                    "name": "2nd",
+                    "questions": {"edges": []},
+                    "slug": "kitchen-develop",
+                }
+            },
+            {
+                "node": {
+                    "description": "Second result",
+                    "id": "Rm9ybTpzZXJ2aWNlLWJhbmstYXJt",
+                    "meta": "{}",
+                    "name": "3rd",
+                    "questions": {"edges": []},
+                    "slug": "service-bank-arm",
+                }
+            },
+        ]
     }
 }

@@ -1,5 +1,3 @@
-from datetime import datetime, timedelta
-
 import pytest
 from django.utils import translation
 from graphql_relay import to_global_id
@@ -12,15 +10,12 @@ from ...core.tests import (
 from ..serializers import SaveFormSerializer
 
 
-@pytest.mark.parametrize("form__description", ["First result"])
+@pytest.mark.parametrize("form__description,form__name", [("First result", "1st")])
 def test_query_all_forms(
     db, snapshot, form, form_factory, form_question, question, schema_executor
 ):
-    form_factory(
-        name=form.name,
-        description="Seconds result",
-        created_at=datetime.now() + timedelta(2),
-    )
+    form_factory(name="3rd", description="Second result")
+    form_factory(name="2nd", description="Second result")
 
     query = """
         query AllFormsQuery($name: String, $question: String, $orderBy: [FormOrdering]) {
@@ -50,7 +45,6 @@ def test_query_all_forms(
     result = schema_executor(
         query,
         variables={
-            "name": form.name,
             "question": question.label,
             "orderBy": ["NAME_ASC", "CREATED_AT_ASC"],
         },
