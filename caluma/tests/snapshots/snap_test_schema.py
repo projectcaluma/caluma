@@ -413,12 +413,14 @@ type Mutation {
   saveCheckboxQuestion(input: SaveCheckboxQuestionInput!): SaveCheckboxQuestionPayload
   saveFloatQuestion(input: SaveFloatQuestionInput!): SaveFloatQuestionPayload
   saveIntegerQuestion(input: SaveIntegerQuestionInput!): SaveIntegerQuestionPayload
+  saveTableQuestion(input: SaveTableQuestionInput!): SaveTableQuestionPayload
   archiveQuestion(input: ArchiveQuestionInput!): ArchiveQuestionPayload
   saveDocument(input: SaveDocumentInput!): SaveDocumentPayload
   saveDocumentStringAnswer(input: SaveDocumentStringAnswerInput!): SaveDocumentStringAnswerPayload
   saveDocumentIntegerAnswer(input: SaveDocumentIntegerAnswerInput!): SaveDocumentIntegerAnswerPayload
   saveDocumentFloatAnswer(input: SaveDocumentFloatAnswerInput!): SaveDocumentFloatAnswerPayload
   saveDocumentListAnswer(input: SaveDocumentListAnswerInput!): SaveDocumentListAnswerPayload
+  saveDocumentTableAnswer(input: SaveDocumentTableAnswerInput!): SaveDocumentTableAnswerPayload
 }
 
 interface Node {
@@ -641,8 +643,8 @@ type SaveCompleteWorkflowFormTaskPayload {
 input SaveDocumentFloatAnswerInput {
   question: ID!
   document: ID!
-  value: Float!
   meta: JSONString
+  value: Float!
   clientMutationId: String
 }
 
@@ -660,8 +662,8 @@ input SaveDocumentInput {
 input SaveDocumentIntegerAnswerInput {
   question: ID!
   document: ID!
-  value: Int!
   meta: JSONString
+  value: Int!
   clientMutationId: String
 }
 
@@ -673,8 +675,8 @@ type SaveDocumentIntegerAnswerPayload {
 input SaveDocumentListAnswerInput {
   question: ID!
   document: ID!
-  value: [String]!
   meta: JSONString
+  value: [String]!
   clientMutationId: String
 }
 
@@ -691,12 +693,25 @@ type SaveDocumentPayload {
 input SaveDocumentStringAnswerInput {
   question: ID!
   document: ID!
-  value: String!
   meta: JSONString
+  value: String!
   clientMutationId: String
 }
 
 type SaveDocumentStringAnswerPayload {
+  answer: Answer
+  clientMutationId: String
+}
+
+input SaveDocumentTableAnswerInput {
+  question: ID!
+  document: ID!
+  meta: JSONString
+  value: [ID]!
+  clientMutationId: String
+}
+
+type SaveDocumentTableAnswerPayload {
   answer: Answer
   clientMutationId: String
 }
@@ -784,6 +799,21 @@ input SaveSimpleTaskInput {
 
 type SaveSimpleTaskPayload {
   task: Task
+  clientMutationId: String
+}
+
+input SaveTableQuestionInput {
+  slug: String!
+  label: String!
+  isRequired: QuestionJexl
+  isHidden: QuestionJexl
+  meta: JSONString
+  rowForm: ID!
+  clientMutationId: String
+}
+
+type SaveTableQuestionPayload {
+  question: Question
   clientMutationId: String
 }
 
@@ -879,6 +909,34 @@ type StringAnswer implements Answer, Node {
   question: Question!
   value: String!
   meta: JSONString!
+}
+
+type TableAnswer implements Answer, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  question: Question!
+  value: [Document]!
+  meta: JSONString!
+  document: Document!
+}
+
+type TableQuestion implements Question, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  label: String!
+  isRequired: QuestionJexl!
+  isHidden: QuestionJexl!
+  isArchived: Boolean!
+  meta: JSONString!
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  rowForm: Form
+  id: ID!
 }
 
 interface Task {

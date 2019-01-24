@@ -7,7 +7,7 @@ from ..jexl import QuestionJexl
     "expression,num_errors",
     [
         # correct case
-        ('"question-slug"|answer', 0),
+        ('"question-slug"|answer|mapby', 0),
         # invalid subject type
         ("100|answer", 1),
         # two invalid subject types

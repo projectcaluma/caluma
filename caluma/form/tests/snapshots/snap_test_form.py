@@ -75,7 +75,7 @@ snapshots["test_save_form[de] 1"] = {
     }
 }
 
-snapshots["test_query_all_forms[First result-1st] 1"] = {
+snapshots["test_query_all_forms[First result-1st-float] 1"] = {
     "allForms": {
         "edges": [
             {

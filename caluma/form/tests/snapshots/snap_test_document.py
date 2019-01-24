@@ -7,31 +7,6 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots["test_save_document 1"] = {
-    "saveDocument": {
-        "clientMutationId": "testid",
-        "document": {"form": {"slug": "effort-meet"}},
-    }
-}
-
-snapshots[
-    "test_save_document_answer[integer-question__configuration0-1-SaveDocumentIntegerAnswer-True-option-slug] 1"
-] = {
-    "saveDocumentIntegerAnswer": {
-        "answer": {"integerValue": 1},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[float-question__configuration2-2.1-SaveDocumentFloatAnswer-True-option-slug] 1"
-] = {
-    "saveDocumentFloatAnswer": {
-        "answer": {"floatValue": 2.1},
-        "clientMutationId": "testid",
-    }
-}
-
 snapshots["test_query_all_documents[integer-1] 1"] = {
     "allDocuments": {
         "edges": [
@@ -136,8 +111,77 @@ snapshots["test_query_all_documents[checkbox-answer__value3] 1"] = {
     }
 }
 
+snapshots["test_query_all_documents[table-None] 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "TableAnswer",
+                                    "question": {
+                                        "label": "Thomas Johnson",
+                                        "slug": "sound-air-mission",
+                                    },
+                                    "table_value": [{"form": {"slug": "effort-meet"}}],
+                                }
+                            }
+                        ]
+                    },
+                    "createdByUser": "4602cffe-6aa8-4ae7-ba6b-2cf34839ef47",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_save_document 1"] = {
+    "saveDocument": {
+        "clientMutationId": "testid",
+        "document": {"form": {"slug": "effort-meet"}},
+    }
+}
+
 snapshots[
-    "test_save_document_answer[text-question__configuration4-Test-SaveDocumentStringAnswer-True-option-slug] 1"
+    "test_save_document_answer[integer-question__configuration0-1-SaveDocumentIntegerAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentIntegerAnswer": {
+        "answer": {"integerValue": 1},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[integer-question__configuration0-1-SaveDocumentIntegerAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentIntegerAnswer": {
+        "answer": {"integerValue": 1},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[float-question__configuration2-2.1-SaveDocumentFloatAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentFloatAnswer": {
+        "answer": {"floatValue": 2.1},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[float-question__configuration2-2.1-SaveDocumentFloatAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentFloatAnswer": {
+        "answer": {"floatValue": 2.1},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[text-question__configuration4-Test-SaveDocumentStringAnswer-True-option-slug-True] 1"
 ] = {
     "saveDocumentStringAnswer": {
         "answer": {"stringValue": "Test"},
@@ -146,7 +190,62 @@ snapshots[
 }
 
 snapshots[
-    "test_save_document_answer[checkbox-question__configuration8-answer__value8-SaveDocumentListAnswer-True-option-slug] 1"
+    "test_save_document_answer[text-question__configuration4-Test-SaveDocumentStringAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "Test"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[table-question__configuration6-None-SaveDocumentTableAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentTableAnswer": {
+        "answer": {
+            "table_value": [
+                {"form": {"slug": "effort-meet"}},
+                {"form": {"slug": "effort-meet"}},
+            ]
+        },
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[table-question__configuration6-None-SaveDocumentTableAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentTableAnswer": {
+        "answer": {
+            "table_value": [
+                {"form": {"slug": "effort-meet"}},
+                {"form": {"slug": "effort-meet"}},
+            ]
+        },
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[textarea-question__configuration7-Test-SaveDocumentStringAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "Test"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[textarea-question__configuration7-Test-SaveDocumentStringAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "Test"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[checkbox-question__configuration9-answer__value9-SaveDocumentListAnswer-True-option-slug-True] 1"
 ] = {
     "saveDocumentListAnswer": {
         "answer": {"listValue": ["option-slug"]},
@@ -155,7 +254,16 @@ snapshots[
 }
 
 snapshots[
-    "test_save_document_answer[radio-question__configuration10-option-slug-SaveDocumentStringAnswer-True-option-slug] 1"
+    "test_save_document_answer[checkbox-question__configuration9-answer__value9-SaveDocumentListAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentListAnswer": {
+        "answer": {"listValue": ["option-slug"]},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[radio-question__configuration11-option-slug-SaveDocumentStringAnswer-True-option-slug-True] 1"
 ] = {
     "saveDocumentStringAnswer": {
         "answer": {"stringValue": "option-slug"},
@@ -164,10 +272,10 @@ snapshots[
 }
 
 snapshots[
-    "test_save_document_answer[textarea-question__configuration6-Test-SaveDocumentStringAnswer-True-option-slug] 1"
+    "test_save_document_answer[radio-question__configuration11-option-slug-SaveDocumentStringAnswer-True-option-slug-False] 1"
 ] = {
     "saveDocumentStringAnswer": {
-        "answer": {"stringValue": "Test"},
+        "answer": {"stringValue": "option-slug"},
         "clientMutationId": "testid",
     }
 }

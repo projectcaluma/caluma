@@ -16,6 +16,7 @@ class QuestionJexl(JEXL):
         super().__init__(**kwargs)
 
         self.add_transform("answer", lambda question: answer_by_question.get(question))
+        self.add_transform("mapby", lambda arr, key: [obj[key] for obj in arr])
 
     def validate(self, expression):
         return super().validate(expression, QuestionValidatingAnalyzer)
