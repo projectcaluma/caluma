@@ -146,6 +146,7 @@ def test_save_document(db, snapshot, document, schema_executor):
             "SaveDocumentStringAnswer",
             False,
         ),
+        (Question.TYPE_TEXTAREA, {}, "Test", "SaveDocumentStringAnswer", True),
         (
             Question.TYPE_TEXTAREA,
             {"max_length": 1},

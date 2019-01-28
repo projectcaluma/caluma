@@ -17,7 +17,7 @@ class AnswerValidator:
             )
 
     def _validate_question_textarea(self, question, value):
-        self.validate_question_text(question, value)
+        self._validate_question_text(question, value)
 
     def _validate_question_float(self, question, value):
         min_value = (
