@@ -146,7 +146,7 @@ snapshots[
 }
 
 snapshots[
-    "test_save_document_answer[checkbox-question__configuration7-answer__value7-SaveDocumentListAnswer-True-option-slug] 1"
+    "test_save_document_answer[checkbox-question__configuration8-answer__value8-SaveDocumentListAnswer-True-option-slug] 1"
 ] = {
     "saveDocumentListAnswer": {
         "answer": {"listValue": ["option-slug"]},
@@ -155,10 +155,19 @@ snapshots[
 }
 
 snapshots[
-    "test_save_document_answer[radio-question__configuration9-option-slug-SaveDocumentStringAnswer-True-option-slug] 1"
+    "test_save_document_answer[radio-question__configuration10-option-slug-SaveDocumentStringAnswer-True-option-slug] 1"
 ] = {
     "saveDocumentStringAnswer": {
         "answer": {"stringValue": "option-slug"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[textarea-question__configuration6-Test-SaveDocumentStringAnswer-True-option-slug] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "Test"},
         "clientMutationId": "testid",
     }
 }
