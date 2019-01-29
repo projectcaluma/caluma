@@ -80,9 +80,14 @@ class AddWorkflowFlowSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
+        user = self.context["request"].user
         tasks = validated_data["tasks"]
         models.Flow.objects.filter(task_flows__task__in=tasks).delete()
-        flow = models.Flow.objects.create(next=validated_data["next"])
+        flow = models.Flow.objects.create(
+            next=validated_data["next"],
+            created_by_user=user.username,
+            created_by_group=user.group,
+        )
         task_flows = [
             models.TaskFlow(task=task, workflow=instance, flow=flow) for task in tasks
         ]
@@ -173,11 +178,14 @@ class StartCaseSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
+        user = self.context["request"].user
         workflow = validated_data["workflow"]
         validated_data["status"] = models.Case.STATUS_RUNNING
         if workflow.form_id:
             validated_data["document"] = Document.objects.create(
-                form_id=workflow.form_id
+                form_id=workflow.form_id,
+                created_by_user=user.username,
+                created_by_group=user.group,
             )
         instance = super().create(validated_data)
 
@@ -188,9 +196,11 @@ class StartCaseSerializer(serializers.ModelSerializer):
         models.WorkItem.objects.create(
             addressed_groups=addressed_groups,
             case=instance,
-            document=Document.objects.create_document_for_task(workflow.start),
+            document=Document.objects.create_document_for_task(workflow.start, user),
             task=workflow.start,
             status=models.WorkItem.STATUS_READY,
+            created_by_user=user.username,
+            created_by_group=user.group,
         )
 
         return instance
@@ -240,6 +250,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
+        user = self.context["request"].user
         case = instance.case
 
         flow = models.Flow.objects.filter(task_flows__task=instance.task_id).first()
@@ -265,9 +276,11 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
                 models.WorkItem(
                     addressed_groups=evaluate_assigned_groups(task),
                     task_id=task.pk,
-                    document=Document.objects.create_document_for_task(task),
+                    document=Document.objects.create_document_for_task(task, user),
                     case=case,
                     status=models.WorkItem.STATUS_READY,
+                    created_by_user=user.username,
+                    created_by_group=user.group,
                 )
                 for task in tasks
             ]

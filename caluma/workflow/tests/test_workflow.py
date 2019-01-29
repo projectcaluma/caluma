@@ -120,7 +120,7 @@ def test_archive_workflow(db, workflow, schema_executor):
         ("task-slug", '""'),
     ],
 )
-def test_add_workflow_flow(db, workflow, task, snapshot, next, schema_executor):
+def test_add_workflow_flow(db, workflow, task, snapshot, next, admin_schema_executor):
     query = """
         mutation AddWorkflowFlow($input: AddWorkflowFlowInput!) {
           addWorkflowFlow(input: $input) {
@@ -128,6 +128,8 @@ def test_add_workflow_flow(db, workflow, task, snapshot, next, schema_executor):
               flows {
                 edges {
                   node {
+                    createdByUser
+                    createdByGroup
                     next
                     tasks {
                       slug
@@ -141,7 +143,7 @@ def test_add_workflow_flow(db, workflow, task, snapshot, next, schema_executor):
         }
     """
 
-    result = schema_executor(
+    result = admin_schema_executor(
         query,
         variables={
             "input": {

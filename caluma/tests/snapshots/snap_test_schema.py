@@ -283,8 +283,12 @@ type FloatQuestion implements Question, Node {
 }
 
 type Flow implements Node {
-  next: FlowJexl!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   id: ID!
+  next: FlowJexl!
   tasks: [Task]!
 }
 

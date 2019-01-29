@@ -144,8 +144,15 @@ class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
 
 class SaveQuestionOptionsMixin(object):
     def create_question_options(self, question, options):
+        user = self.context["request"].user
         question_option = [
-            models.QuestionOption(sort=sort, question=question, option=option)
+            models.QuestionOption(
+                sort=sort,
+                question=question,
+                option=option,
+                created_by_user=user.username,
+                created_by_group=user.group,
+            )
             for sort, option in enumerate(reversed(options))
         ]
         models.QuestionOption.objects.bulk_create(question_option)

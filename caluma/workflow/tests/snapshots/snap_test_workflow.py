@@ -33,6 +33,13 @@ Hot morning future throughout guess language drive.""",
     }
 }
 
+snapshots["test_save_workflow 1"] = {
+    "saveWorkflow": {
+        "clientMutationId": "testid",
+        "workflow": {"meta": "{}", "name": "Renee Ayala", "slug": "few-list-tax"},
+    }
+}
+
 snapshots['test_add_workflow_flow[task-slug-"task-slug"|task] 1'] = {
     "data": {
         "addWorkflowFlow": {
@@ -42,6 +49,8 @@ snapshots['test_add_workflow_flow[task-slug-"task-slug"|task] 1'] = {
                     "edges": [
                         {
                             "node": {
+                                "createdByGroup": "admin",
+                                "createdByUser": "admin",
                                 "next": '"task-slug"|task',
                                 "tasks": [{"slug": "task-slug"}],
                             }
@@ -85,11 +94,4 @@ snapshots['test_add_workflow_flow[task-slug-""] 1'] = {
             "path": ["addWorkflowFlow"],
         }
     ],
-}
-
-snapshots["test_save_workflow 1"] = {
-    "saveWorkflow": {
-        "clientMutationId": "testid",
-        "workflow": {"meta": "{}", "name": "Renee Ayala", "slug": "few-list-tax"},
-    }
 }
