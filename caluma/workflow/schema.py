@@ -118,7 +118,6 @@ class Flow(DjangoObjectType):
 
     class Meta:
         model = models.Flow
-        only_fields = ("tasks", "next")
         interfaces = (relay.Node,)
 
 

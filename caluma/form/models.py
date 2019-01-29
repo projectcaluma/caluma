@@ -97,9 +97,14 @@ class Option(SlugModel):
 
 
 class DocumentManager(models.Manager):
-    def create_document_for_task(self, task):
+    def create_document_for_task(self, task, user):
         if task.form_id is not None:
-            return Document.objects.create(form_id=task.form_id)
+            return Document.objects.create(
+                form_id=task.form_id,
+                created_by_user=user.username,
+                created_by_group=user.group,
+            )
+
         return None
 
 
