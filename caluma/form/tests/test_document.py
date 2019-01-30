@@ -4,7 +4,7 @@ from graphql_relay import to_global_id
 from .. import serializers
 from ...core.relay import extract_global_id
 from ...core.tests import extract_serializer_input_fields
-from ...form.models import Question
+from ...form.models import Answer, Question
 
 
 @pytest.mark.parametrize(
@@ -14,12 +14,20 @@ from ...form.models import Question
         (Question.TYPE_FLOAT, 2.1),
         (Question.TYPE_TEXT, "somevalue"),
         (Question.TYPE_CHECKBOX, ["somevalue", "anothervalue"]),
+        (Question.TYPE_TABLE, None),
     ],
 )
 def test_query_all_documents(
-    db, snapshot, form_question, form, document, answer, schema_executor
+    db,
+    snapshot,
+    form_question,
+    form,
+    document,
+    document_factory,
+    answer_document,
+    answer,
+    schema_executor,
 ):
-
     query = """
         query AllDocumentsQuery($search: String) {
           allDocuments(search: $search) {
@@ -45,6 +53,13 @@ def test_query_all_documents(
                       }
                       ... on FloatAnswer {
                         float_value: value
+                      }
+                      ... on TableAnswer {
+                        table_value: value {
+                          form {
+                            slug
+                          }
+                        }
                       }
                     }
                   }
@@ -118,6 +133,7 @@ def test_save_document(db, snapshot, document, schema_executor):
     snapshot.assert_match(result.data)
 
 
+@pytest.mark.parametrize("delete_answer", [True, False])
 @pytest.mark.parametrize("option__slug", ["option-slug"])
 @pytest.mark.parametrize(
     "question__type,question__configuration,answer__value,mutation,success",
@@ -146,6 +162,7 @@ def test_save_document(db, snapshot, document, schema_executor):
             "SaveDocumentStringAnswer",
             False,
         ),
+        (Question.TYPE_TABLE, {}, None, "SaveDocumentTableAnswer", True),
         (Question.TYPE_TEXTAREA, {}, "Test", "SaveDocumentStringAnswer", True),
         (
             Question.TYPE_TEXTAREA,
@@ -173,7 +190,18 @@ def test_save_document(db, snapshot, document, schema_executor):
     ],
 )
 def test_save_document_answer(
-    db, snapshot, answer, mutation, question_option, success, schema_executor
+    db,
+    snapshot,
+    question,
+    answer,
+    mutation,
+    question_option,
+    document_factory,
+    answer_factory,
+    answer_document_factory,
+    success,
+    schema_executor,
+    delete_answer,
 ):
     mutation_func = mutation[0].lower() + mutation[1:]
     query = f"""
@@ -195,6 +223,13 @@ def test_save_document_answer(
               ... on ListAnswer {{
                 listValue: value
               }}
+              ... on TableAnswer {{
+                table_value: value {{
+                  form {{
+                    slug
+                  }}
+                }}
+              }}
             }}
             clientMutationId
           }}
@@ -206,11 +241,47 @@ def test_save_document_answer(
             serializers.SaveAnswerSerializer, answer
         )
     }
+    if question.type == Question.TYPE_TABLE:
+        documents = document_factory.create_batch(2, form=question.row_form)
+        # create a subtree
+        document_answer = answer_factory()
+        documents[0].answers.add(document_answer)
+        answer_document_factory(answer=answer, document=documents[0])
+
+        inp["input"]["value"] = [str(document.pk) for document in documents]
+
+    if delete_answer:
+        # delete answer to force create test instead of update
+        Answer.objects.filter(pk=answer.pk).delete()
+
     result = schema_executor(query, variables=inp)
 
     assert not bool(result.errors) == success
     if success:
         snapshot.assert_match(result.data)
+
+
+def test_save_document_table_answer_invalid_row_form(
+    db, schema_executor, answer, document_factory
+):
+    query = """
+        mutation SaveDocumentTableAnswer($input: SaveDocumentTableAnswerInput!) {
+            saveDocumentTableAnswer(input: $input) {
+                clientMutationId
+            }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveAnswerSerializer, answer
+        )
+    }
+    inp["input"]["value"] = [
+        str(document.pk) for document in document_factory.create_batch(1)
+    ]
+    result = schema_executor(query, variables=inp)
+    assert result.errors
 
 
 @pytest.mark.parametrize("answer__value", [1.1])

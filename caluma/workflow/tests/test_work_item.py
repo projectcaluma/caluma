@@ -80,8 +80,24 @@ def test_complete_work_item_last(db, snapshot, work_item, success, schema_execut
     ],
 )
 def test_complete_workflow_form_work_item(
-    db, snapshot, work_item, answer, form_question, success, schema_executor
+    db,
+    snapshot,
+    work_item,
+    answer,
+    question_factory,
+    answer_factory,
+    answer_document_factory,
+    form_question,
+    success,
+    schema_executor,
 ):
+    table_question = question_factory(type=Question.TYPE_TABLE)
+    table_answer = answer_factory(
+        question=table_question, document=answer.document, value=None
+    )
+    answer_document = answer_document_factory(answer=table_answer)
+    answer_document.document.answers.add(answer_factory())
+
     query = """
         mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
           completeWorkItem(input: $input) {

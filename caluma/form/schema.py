@@ -14,10 +14,13 @@ class QuestionJexl(graphene.String):
 
     Following transform can be used:
     * answer - access answer of document by question slug
+    * mapby - map list by key. Helpful to work with table answers
+      whereas an answer is a list of dicts.
 
     Examples:
     * 'answer' == 'question-slug'|answer
     * 'answer' in 'list-question-slug'|answer
+    * 'answer' in 'table-question-slug'|answer|mapby('column-question')
 
     """
 
@@ -59,6 +62,7 @@ class Question(Node, graphene.Interface):
             models.Question.TYPE_INTEGER: IntegerQuestion,
             models.Question.TYPE_CHECKBOX: CheckboxQuestion,
             models.Question.TYPE_TEXTAREA: TextareaQuestion,
+            models.Question.TYPE_TABLE: TableQuestion,
         }
 
         return QUESTION_OBJECT_TYPE[instance.type]
@@ -94,7 +98,7 @@ class TextQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers")
+        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -104,7 +108,7 @@ class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers")
+        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -116,7 +120,7 @@ class RadioQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "answers")
+        exclude_fields = ("type", "configuration", "answers", "row_form")
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -128,7 +132,7 @@ class CheckboxQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "answers")
+        exclude_fields = ("type", "configuration", "answers", "row_form")
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -139,7 +143,7 @@ class IntegerQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers")
+        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -148,6 +152,14 @@ class FloatQuestion(QuestionQuerysetMixin, DjangoObjectType):
     min_value = graphene.Float()
     max_value = graphene.Float()
 
+    class Meta:
+        model = models.Question
+        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
+        use_connection = False
+        interfaces = (Question, graphene.Node)
+
+
+class TableQuestion(QuestionQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Question
         exclude_fields = ("type", "configuration", "options", "answers")
@@ -260,6 +272,12 @@ class SaveFloatQuestion(SaveQuestion):
         return_field_type = Question
 
 
+class SaveTableQuestion(SaveQuestion):
+    class Meta:
+        serializer_class = serializers.SaveTableQuestionSerializer
+        return_field_type = Question
+
+
 class SaveOption(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveOptionSerializer
@@ -289,6 +307,7 @@ class Answer(Node, graphene.Interface):
             str: StringAnswer,
             float: FloatAnswer,
             int: IntegerAnswer,
+            type(None): TableAnswer,
         }
 
         return ANSWER_TYPE[type(instance.value)]
@@ -307,7 +326,7 @@ class IntegerAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document",)
+        exclude_fields = ("document", "documents")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -317,7 +336,7 @@ class FloatAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document",)
+        exclude_fields = ("document", "documents")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -327,7 +346,7 @@ class StringAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document",)
+        exclude_fields = ("document", "documents")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -337,7 +356,7 @@ class ListAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document",)
+        exclude_fields = ("document", "documents")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -354,8 +373,22 @@ class Document(DjangoObjectType):
 
     class Meta:
         model = models.Document
+        exclude_fields = ("family",)
         interfaces = (graphene.Node,)
         filter_fields = ("form",)
+
+
+class TableAnswer(AnswerQuerysetMixin, DjangoObjectType):
+    value = graphene.List(Document, required=True)
+
+    def resolve_value(self, info, **args):
+        return self.documents.order_by("-answerdocument__sort", "answerdocument__id")
+
+    class Meta:
+        model = models.Answer
+        exclude_fields = ("documents",)
+        use_connection = False
+        interfaces = (Answer, graphene.Node)
 
 
 class SaveDocument(Mutation):
@@ -401,6 +434,12 @@ class SaveDocumentFloatAnswer(SaveDocumentAnswer):
         return_field_type = Answer
 
 
+class SaveDocumentTableAnswer(SaveDocumentAnswer):
+    class Meta:
+        serializer_class = serializers.SaveDocumentTableAnswerSerializer
+        return_field_type = Answer
+
+
 class Mutation(object):
     save_form = SaveForm().Field()
     archive_form = ArchiveForm().Field()
@@ -418,6 +457,7 @@ class Mutation(object):
     save_checkbox_question = SaveCheckboxQuestion().Field()
     save_float_question = SaveFloatQuestion().Field()
     save_integer_question = SaveIntegerQuestion().Field()
+    save_table_question = SaveTableQuestion().Field()
     archive_question = ArchiveQuestion().Field()
 
     save_document = SaveDocument().Field()
@@ -425,6 +465,7 @@ class Mutation(object):
     save_document_integer_answer = SaveDocumentIntegerAnswer().Field()
     save_document_float_answer = SaveDocumentFloatAnswer().Field()
     save_document_list_answer = SaveDocumentListAnswer().Field()
+    save_document_table_answer = SaveDocumentTableAnswer().Field()
 
 
 class Query(object):

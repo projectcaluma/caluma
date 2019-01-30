@@ -66,7 +66,13 @@ class AnswerValidator:
                 f"Should be one of the options [{', '.join(options)}]"
             )
 
-    def validate(self, *, question, value, **kwargs):
+    def _validate_question_table(self, question, value):
+        for document in value:
+            DocumentValidator().validate(form=document.form, answers=document.answers)
+
+    def validate(self, *, question, **kwargs):
+        value = kwargs.get("documents", kwargs.get("value"))
+
         # empty values are allowed
         # required check will be done in DocumentValidator
         if value:
@@ -75,10 +81,28 @@ class AnswerValidator:
 
 class DocumentValidator:
     def validate(self, *, form, answers, **kwargs):
+        def get_document_answers(document):
+            return {
+                answer.question.pk: get_answer_value(answer)
+                for answer in document.answers.all()
+            }
+
+        def get_answer_value(answer):
+            if answer.value is None:
+                # table type maps to list of dicts
+                return [
+                    get_document_answers(document)
+                    for document in answer.documents.all()
+                ]
+
+            return answer.value
+
         answers = answers.select_related("question").prefetch_related(
             "question__options"
         )
-        answer_by_question = {answer.question.slug: answer.value for answer in answers}
+        answer_by_question = {
+            answer.question.slug: get_answer_value(answer) for answer in answers
+        }
         required_but_empty = []
         for question in form.questions.all():
             if jexl.QuestionJexl(answer_by_question).evaluate(question.is_required):

@@ -10,7 +10,10 @@ from ...core.tests import (
 from ..serializers import SaveFormSerializer
 
 
-@pytest.mark.parametrize("form__description,form__name", [("First result", "1st")])
+@pytest.mark.parametrize(
+    "form__description,form__name,question__type",
+    [("First result", "1st", models.Question.TYPE_FLOAT)],
+)
 def test_query_all_forms(
     db, snapshot, form, form_factory, form_question, question, schema_executor
 ):

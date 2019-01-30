@@ -251,6 +251,15 @@ class SaveIntegerQuestionSerializer(SaveQuestionSerializer):
         fields = SaveQuestionSerializer.Meta.fields + ("min_value", "max_value")
 
 
+class SaveTableQuestionSerializer(SaveQuestionSerializer):
+    row_form = serializers.GlobalIDPrimaryKeyRelatedField(
+        required=True, help_text=models.Question._meta.get_field("row_form").help_text
+    )
+
+    class Meta(SaveQuestionSerializer.Meta):
+        fields = SaveQuestionSerializer.Meta.fields + ("row_form",)
+
+
 class SaveOptionSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("slug", "label", "meta")
@@ -295,7 +304,7 @@ class SaveAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Answer
-        fields = ("question", "document", "value", "meta")
+        fields = ("question", "document", "meta", "value")
 
 
 class SaveDocumentStringAnswerSerializer(SaveAnswerSerializer):
@@ -321,6 +330,86 @@ class SaveDocumentIntegerAnswerSerializer(SaveAnswerSerializer):
 
 class SaveDocumentFloatAnswerSerializer(SaveAnswerSerializer):
     value = FloatField()
+
+    class Meta(SaveAnswerSerializer.Meta):
+        pass
+
+
+class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
+    value = serializers.GlobalIDPrimaryKeyRelatedField(
+        source="documents",
+        queryset=models.Document.objects,
+        many=True,
+        required=True,
+        help_text="List of document IDs representing the rows in the table.",
+    )
+
+    def validate(self, data):
+        documents = (
+            data.get("documents") or self.instance and self.instance.documents or []
+        )
+        question = data.get("question") or self.instance and self.instance.question
+
+        for document in documents:
+            if document.form_id != question.row_form_id:
+                raise exceptions.ValidationError(
+                    f"Document {document.pk} is not of form type {question.form.pk}."
+                )
+
+        return super().validate(data)
+
+    def create_answer_documents(self, answer, documents):
+        family = answer.document.family
+        document_ids = [document.pk for document in documents]
+
+        for sort, document_id in enumerate(reversed(document_ids)):
+            models.AnswerDocument.objects.create(
+                answer=answer, document_id=document_id, sort=sort
+            )
+
+        # attach document answers to root document family
+        models.Document.objects.filter(
+            family__in=models.Document.objects.filter(pk__in=document_ids).values(
+                "family"
+            )
+        ).update(family=family)
+
+    @transaction.atomic
+    def create(self, validated_data):
+        documents = validated_data.pop("documents")
+        instance = super().create(validated_data)
+        self.create_answer_documents(instance, documents)
+        return instance
+
+    def _get_document_tree(self, document_id):
+        answers = models.AnswerDocument.objects.filter(document_id=document_id).values(
+            "answer"
+        )
+        child_documents = models.Document.objects.filter(answers=answers).distinct()
+
+        for child_document in child_documents:
+            yield from self._get_document_tree(child_document.pk)
+
+        yield document_id
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        documents = validated_data.pop("documents")
+
+        # detach answers to its own family tree
+        answer_documents = models.AnswerDocument.objects.filter(answer=instance)
+        for answer_document in models.Document.objects.filter(
+            pk__in=answer_documents.values("document")
+        ):
+            children = self._get_document_tree(answer_document.pk)
+            models.Document.objects.filter(pk__in=children).update(
+                family=answer_document.pk
+            )
+        answer_documents.delete()
+
+        instance = super().update(instance, validated_data)
+        self.create_answer_documents(instance, documents)
+        return instance
 
     class Meta(SaveAnswerSerializer.Meta):
         pass

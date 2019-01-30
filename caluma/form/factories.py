@@ -25,6 +25,7 @@ class QuestionFactory(DjangoModelFactory):
     configuration = {}
     meta = {}
     is_archived = False
+    row_form = SubFactory(FormFactory)
 
     class Meta:
         model = models.Question
@@ -59,6 +60,7 @@ class FormQuestionFactory(DjangoModelFactory):
 
 class DocumentFactory(DjangoModelFactory):
     form = SubFactory(FormFactory)
+    family = None
     meta = {}
 
     class Meta:
@@ -73,3 +75,12 @@ class AnswerFactory(DjangoModelFactory):
 
     class Meta:
         model = models.Answer
+
+
+class AnswerDocumentFactory(DjangoModelFactory):
+    answer = SubFactory(AnswerFactory)
+    document = SubFactory(DocumentFactory)
+    sort = 0
+
+    class Meta:
+        model = models.AnswerDocument

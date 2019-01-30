@@ -1,5 +1,7 @@
 from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models.signals import post_init
+from django.dispatch import receiver
 from localized_fields.fields import LocalizedField
 
 from ..core.models import SlugModel, UUIDModel
@@ -27,13 +29,13 @@ class FormQuestion(UUIDModel):
 
 
 class Question(SlugModel):
-    # TODO: add descriptions
     TYPE_CHECKBOX = "checkbox"
     TYPE_INTEGER = "integer"
     TYPE_FLOAT = "float"
     TYPE_RADIO = "radio"
     TYPE_TEXTAREA = "textarea"
     TYPE_TEXT = "text"
+    TYPE_TABLE = "table"
 
     TYPE_CHOICES = (
         TYPE_CHECKBOX,
@@ -42,6 +44,7 @@ class Question(SlugModel):
         TYPE_RADIO,
         TYPE_TEXTAREA,
         TYPE_TEXT,
+        TYPE_TABLE,
     )
     TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
 
@@ -54,6 +57,13 @@ class Question(SlugModel):
     meta = JSONField(default=dict)
     options = models.ManyToManyField(
         "Option", through="QuestionOption", related_name="questions"
+    )
+    row_form = models.ForeignKey(
+        Form,
+        blank=True,
+        null=True,
+        related_name="+",
+        help_text="One row of table is represented by this form",
     )
 
     @property
@@ -110,6 +120,10 @@ class DocumentManager(models.Manager):
 
 class Document(UUIDModel):
     objects = DocumentManager()
+
+    family = models.UUIDField(
+        help_text="Family id which document belongs too.", db_index=True
+    )
     form = models.ForeignKey(
         "form.Form", on_delete=models.DO_NOTHING, related_name="documents"
     )
@@ -120,12 +134,37 @@ class Answer(UUIDModel):
     question = models.ForeignKey(
         "form.Question", on_delete=models.DO_NOTHING, related_name="answers"
     )
-    value = JSONField()
+    value = JSONField(null=True, blank=True)
     meta = JSONField(default=dict)
     document = models.ForeignKey(
         Document, on_delete=models.CASCADE, related_name="answers"
+    )
+    documents = models.ManyToManyField(
+        Document, through="AnswerDocument", related_name="+"
     )
 
     class Meta:
         # a question may only be answerd once per document
         unique_together = ("document", "question")
+
+
+@receiver(post_init, sender=Document)
+def set_document_family(sender, instance, **kwargs):
+    """
+    Family id is inherited from document id.
+
+    Family will be manually set on mutation where a tree structure
+    is created.
+    """
+    if instance.family is None:
+        instance.family = instance.pk
+
+
+class AnswerDocument(UUIDModel):
+    answer = models.ForeignKey("Answer", on_delete=models.CASCADE)
+    document = models.ForeignKey("Document", on_delete=models.CASCADE)
+    sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
+
+    class Meta:
+        ordering = ("-sort", "id")
+        unique_together = ("answer", "document")
