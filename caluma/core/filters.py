@@ -11,6 +11,7 @@ from django.utils import translation
 from django_filters.constants import EMPTY_VALUES
 from django_filters.fields import ChoiceField
 from django_filters.rest_framework import (
+    ChoiceFilter,
     Filter,
     FilterSet,
     MultipleChoiceFilter,
@@ -164,7 +165,16 @@ class OrderingFilter(OrderingFilter):
 
 
 class FilterSet(GrapheneFilterSetMixin, FilterSet):
-    pass
+    @classmethod
+    def filter_for_lookup(cls, field, lookup_type):
+        filter_class, params = super().filter_for_lookup(field, lookup_type)
+        if issubclass(filter_class, ChoiceFilter):
+            meta = field.model._meta
+            # Postfixing newly created filter with Argument to avoid conflicts
+            # with query nodes
+            name = to_camel_case(f"{meta.object_name}_{field.name}_argument")
+            params["label"] = name
+        return filter_class, params
 
 
 class DjangoFilterConnectionField(filter.DjangoFilterConnectionField):
@@ -174,6 +184,10 @@ class DjangoFilterConnectionField(filter.DjangoFilterConnectionField):
     Inspired by https://github.com/graphql-python/graphene-django/pull/528/files
     and might be removed once merged.
     """
+
+    @property
+    def filterset_class(self):
+        return self._provided_filterset_class
 
     @classmethod
     def resolve_queryset(cls, connection, queryset, info, **args):
@@ -214,10 +228,6 @@ class DjangoFilterConnectionField(filter.DjangoFilterConnectionField):
 
 
 class DjangoFilterSetConnectionField(DjangoFilterConnectionField):
-    @property
-    def filterset_class(self):
-        return self._provided_filterset_class
-
     @property
     def model(self):
         return self.filterset_class._meta.model
@@ -260,6 +270,43 @@ def convert_ordering_field_to_enum(field):
 
     enum = Enum(name, list(named_choices), type=EnumWithDescriptionsType)
     converted = List(enum, description=field.help_text, required=field.required)
+
+    registry.register_converted_field(field, converted)
+    return converted
+
+
+@convert_form_field.register(ChoiceField)
+def convert_choice_field_to_enum(field):
+    """
+    Add support to convert ordering choices to Graphql enum.
+
+    Label is used as enum name.
+    """
+
+    registry = get_global_registry()
+    converted = registry.get_converted_field(field)
+    if converted:
+        return converted
+
+    def get_choices(choices):
+        for value, help_text in choices:
+            if value:
+                name = convert_choice_name(value)
+                description = help_text
+                yield name, value, description
+
+    name = to_camel_case(field.label)
+    choices = list(get_choices(field.choices))
+    named_choices = [(c[0], c[1]) for c in choices]
+    named_choices_descriptions = {c[0]: c[2] for c in choices}
+
+    class EnumWithDescriptionsType(object):
+        @property
+        def description(self):
+            return named_choices_descriptions[self.name]
+
+    enum = Enum(name, list(named_choices), type=EnumWithDescriptionsType)
+    converted = enum(description=field.help_text, required=field.required)
 
     registry.register_converted_field(field, converted)
     return converted
