@@ -1,9 +1,10 @@
 import pytest
 from django.core.exceptions import ImproperlyConfigured
+from django.db.models import CharField
 
 from .. import models
 from ..types import DjangoObjectType
-from ..visibilities import BaseVisibility, filter_queryset_for
+from ..visibilities import BaseVisibility, Union, filter_queryset_for
 from .fake_model import get_fake_model
 
 
@@ -63,3 +64,36 @@ def test_custom_node_filter_queryset_improperly_configured(db):
 
     with pytest.raises(ImproperlyConfigured):
         CustomNode.get_queryset(None, None)
+
+
+def test_union_visibility(db):
+    FakeModel = get_fake_model(
+        dict(name=CharField(max_length=255)), model_base=models.UUIDModel
+    )
+    FakeModel.objects.create(name="Name1")
+    FakeModel.objects.create(name="Name2")
+
+    class CustomNode(DjangoObjectType):
+        class Meta:
+            model = FakeModel
+
+    class Name1Visibility(BaseVisibility):
+        @filter_queryset_for(CustomNode)
+        def filter_queryset_for_custom_node(self, node, queryset, info):
+            return queryset.filter(name="Name1")
+
+    class Name2Visibility(BaseVisibility):
+        @filter_queryset_for(CustomNode)
+        def filter_queryset_for_custom_node(self, node, queryset, info):
+            return queryset.filter(name="Name2")
+
+    class ConfiguredUnion(Union):
+        visibility_classes = [Name1Visibility, Name2Visibility]
+
+    queryset = FakeModel.objects
+    result = Name1Visibility().filter_queryset(CustomNode, queryset, None)
+    assert result.count() == 1
+    result = Name2Visibility().filter_queryset(CustomNode, queryset, None)
+    assert result.count() == 1
+    queryset = ConfiguredUnion().filter_queryset(CustomNode, queryset, None)
+    assert queryset.count() == 2

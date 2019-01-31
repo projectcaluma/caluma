@@ -129,6 +129,7 @@ Visibility classes are configured as `VISIBILITY_CLASSES`.
 
 Following pre-defined classes are available:
 * `caluma.core.visibilities.Any`: Allow any user without any filtering
+* `caluma.core.visibilities.Union`: Union result of a list of configured visibility classes. May only be used as base class.
 * `caluma.user.visibilities.Authenticated`: Only show data to authenticated users
 * `caluma.user.visibilities.CreatedByGroup`: Only show data that belongs to the same group as the current user
 * `caluma.workflow.visibilities.AddressedGroups`: Only show case, work item and document to addressed users through group
