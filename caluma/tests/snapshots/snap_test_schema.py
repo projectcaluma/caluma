@@ -128,7 +128,7 @@ type Case implements Node {
   status: CaseStatus!
   meta: JSONString!
   document: Document
-  workItems(before: String, after: String, first: Int, last: Int, status: String, task: ID, case: ID, orderBy: [WorkItemOrdering]): WorkItemConnection
+  workItems(before: String, after: String, first: Int, last: Int, status: WorkItemStatusArgument, task: ID, case: ID, orderBy: [WorkItemOrdering]): WorkItemConnection
   parentWorkItem: WorkItem
 }
 
@@ -156,6 +156,12 @@ enum CaseOrdering {
 }
 
 enum CaseStatus {
+  RUNNING
+  COMPLETED
+  CANCELED
+}
+
+enum CaseStatusArgument {
   RUNNING
   COMPLETED
   CANCELED
@@ -490,9 +496,9 @@ type PublishWorkflowPayload {
 
 type Query {
   allWorkflows(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String, orderBy: [WorkflowOrdering]): WorkflowConnection
-  allTasks(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: String, isArchived: Boolean, search: String, orderBy: [TaskOrdering]): TaskConnection
-  allCases(before: String, after: String, first: Int, last: Int, workflow: ID, status: String, orderBy: [CaseOrdering]): CaseConnection
-  allWorkItems(before: String, after: String, first: Int, last: Int, orderBy: [WorkItemOrdering], status: String, task: ID, case: ID): WorkItemConnection
+  allTasks(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, search: String, orderBy: [TaskOrdering]): TaskConnection
+  allCases(before: String, after: String, first: Int, last: Int, workflow: ID, status: CaseStatusArgument, orderBy: [CaseOrdering]): CaseConnection
+  allWorkItems(before: String, after: String, first: Int, last: Int, status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], task: ID, case: ID): WorkItemConnection
   allForms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   allQuestions(before: String, after: String, first: Int, last: Int, orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String): QuestionConnection
   allDocuments(before: String, after: String, first: Int, last: Int, form: ID, search: String, id: ID, orderBy: [DocumentOrdering]): DocumentConnection
@@ -986,6 +992,12 @@ enum TaskType {
   COMPLETE_TASK_FORM
 }
 
+enum TaskTypeArgument {
+  SIMPLE
+  COMPLETE_WORKFLOW_FORM
+  COMPLETE_TASK_FORM
+}
+
 type TextQuestion implements Question, Node {
   createdAt: DateTime!
   modifiedAt: DateTime!
@@ -1058,6 +1070,12 @@ enum WorkItemOrdering {
 }
 
 enum WorkItemStatus {
+  READY
+  COMPLETED
+  CANCELED
+}
+
+enum WorkItemStatusArgument {
   READY
   COMPLETED
   CANCELED

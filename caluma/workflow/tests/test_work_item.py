@@ -5,10 +5,13 @@ from .. import models
 from ...form.models import Question
 
 
-def test_query_all_work_items(db, snapshot, work_item, schema_executor):
+def test_query_all_work_items_filter_status(db, work_item_factory, schema_executor):
+    work_item_factory(status=models.WorkItem.STATUS_READY)
+    work_item_factory(status=models.WorkItem.STATUS_COMPLETED)
+
     query = """
-        query WorkItems {
-          allWorkItems {
+        query WorkItems($status: WorkItemStatusArgument!) {
+          allWorkItems(status: $status) {
             edges {
               node {
                 status
@@ -18,10 +21,15 @@ def test_query_all_work_items(db, snapshot, work_item, schema_executor):
         }
     """
 
-    result = schema_executor(query)
+    result = schema_executor(
+        query, variables={"status": to_const(models.WorkItem.STATUS_READY)}
+    )
 
     assert not result.errors
-    snapshot.assert_match(result.data)
+    assert len(result.data["allWorkItems"]["edges"]) == 1
+    assert result.data["allWorkItems"]["edges"][0]["node"]["status"] == to_const(
+        models.WorkItem.STATUS_READY
+    )
 
 
 @pytest.mark.parametrize("task__type,task__form", [(models.Task.TYPE_SIMPLE, None)])
