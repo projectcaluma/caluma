@@ -68,3 +68,20 @@ class Any(BaseVisibility):
     """No restrictions, all nodes are exposed."""
 
     pass
+
+
+class Union(BaseVisibility):
+    """Union result of a list of configured visibility classes."""
+
+    visibility_classes = []
+
+    def filter_queryset(self, node, queryset, info):
+        result_queryset = None
+        for visibility_class in self.visibility_classes:
+            class_result = visibility_class().filter_queryset(node, queryset, info)
+            if result_queryset is None:
+                result_queryset = class_result
+            else:
+                result_queryset = result_queryset.union(class_result)
+
+        return result_queryset or queryset
