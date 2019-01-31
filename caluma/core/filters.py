@@ -170,7 +170,7 @@ class FilterSet(GrapheneFilterSetMixin, FilterSet):
         filter_class, params = super().filter_for_lookup(field, lookup_type)
         if issubclass(filter_class, ChoiceFilter):
             meta = field.model._meta
-            # Prefixing newly created filter with Argument to avoid conflicts
+            # Postfixing newly created filter with Argument to avoid conflicts
             # with query nodes
             name = to_camel_case(f"{meta.object_name}_{field.name}_argument")
             params["label"] = name
