@@ -255,9 +255,29 @@ class DjangoFilterConnectionField(filter.DjangoFilterConnectionField):
     ):
         class QuerysetManager(object):
             def get_queryset(self):
-                return cls.resolve_queryset(
+                queryset = cls.resolve_queryset(
                     connection, default_manager.get_queryset(), info, **args
                 )
+
+                filter_kwargs = {k: v for k, v in args.items() if k in filtering_args}
+                if filter_kwargs:
+                    # building form within filterset class is a performance hit
+                    # and should only be done if there are actual filter arguments
+                    queryset = filterset_class(
+                        data=filter_kwargs, queryset=queryset, request=info.context
+                    ).qs
+                return queryset
+
+        class DummyFilterSetClass(object):
+            """
+            Dummy filter set class which simply returns queryset.
+
+            Needed as base class calls filter_class which we want to avoid because
+            of performance hit (see above).
+            """
+
+            def __init__(self, queryset, **kwargs):
+                self.qs = queryset
 
         return super().connection_resolver(
             resolver,
@@ -265,7 +285,7 @@ class DjangoFilterConnectionField(filter.DjangoFilterConnectionField):
             QuerysetManager(),
             max_limit,
             enforce_first_or_last,
-            filterset_class,
+            DummyFilterSetClass,
             filtering_args,
             root,
             info,
