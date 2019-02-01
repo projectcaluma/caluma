@@ -11,7 +11,7 @@ from ...core.tests import (
 def test_query_all_workflows(db, snapshot, workflow, task_flow, flow, schema_executor):
     query = """
         query AllWorkflows($name: String!) {
-          allWorkflows(name: $name) {
+          allWorkflows(first: 1, name: $name) {
             edges {
               node {
                 slug

@@ -7,6 +7,7 @@ from django.contrib.postgres.search import SearchVector
 from django.db import models
 from django.db.models.constants import LOOKUP_SEP
 from django.db.models.functions import Cast
+from django.db.models.query import QuerySet
 from django.utils import translation
 from django_filters.constants import EMPTY_VALUES
 from django_filters.fields import ChoiceField
@@ -18,6 +19,7 @@ from django_filters.rest_framework import (
     OrderingFilter,
 )
 from graphene import Enum, List
+from graphene.relay import PageInfo
 from graphene.types.utils import get_type
 from graphene.utils.str_converters import to_camel_case
 from graphene_django import filter
@@ -25,6 +27,8 @@ from graphene_django.converter import convert_choice_name
 from graphene_django.filter.filterset import GrapheneFilterSetMixin
 from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
+from graphene_django.utils import maybe_queryset
+from graphql_relay.connection.arrayconnection import connection_from_list_slice
 from localized_fields.fields import LocalizedField
 
 from .forms import GlobalIDFormField, GlobalIDMultipleChoiceField
@@ -184,6 +188,40 @@ class DjangoFilterConnectionField(filter.DjangoFilterConnectionField):
     Inspired by https://github.com/graphql-python/graphene-django/pull/528/files
     and might be removed once merged.
     """
+
+    @classmethod
+    def resolve_connection(cls, connection, default_manager, args, iterable):
+        if iterable is None:
+            iterable = default_manager
+        iterable = maybe_queryset(iterable)
+        if isinstance(iterable, QuerySet):
+            if iterable is not default_manager:
+                default_queryset = maybe_queryset(default_manager)
+                iterable = cls.merge_querysets(default_queryset, iterable)
+
+            # only query count on database when pagination is needed
+            # resolve_connection may be removed again once following issue is fixed:
+            # https://github.com/graphql-python/graphene-django/issues/177
+            if "before" in args or "after" in args or "first" in args or "last" in args:
+                _len = iterable.count()
+            else:
+                _len = len(iterable)
+        else:  # pragma: no cover
+            _len = len(iterable)
+
+        connection = connection_from_list_slice(
+            iterable,
+            args,
+            slice_start=0,
+            list_length=_len,
+            list_slice_length=_len,
+            connection_type=connection,
+            edge_type=connection.Edge,
+            pageinfo_type=PageInfo,
+        )
+        connection.iterable = iterable
+        connection.length = _len
+        return connection
 
     @property
     def filterset_class(self):
