@@ -20,7 +20,7 @@ class Node(object):
         for visibility_class in cls.visibility_classes:
             queryset = visibility_class().filter_queryset(cls, queryset, info)
 
-        return queryset
+        return queryset.select_related()
 
 
 class DjangoObjectType(Node, types.DjangoObjectType):
