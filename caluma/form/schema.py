@@ -375,7 +375,6 @@ class Document(DjangoObjectType):
         model = models.Document
         exclude_fields = ("family",)
         interfaces = (graphene.Node,)
-        filter_fields = ("form",)
 
 
 class TableAnswer(AnswerQuerysetMixin, DjangoObjectType):

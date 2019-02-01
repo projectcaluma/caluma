@@ -130,7 +130,6 @@ class Workflow(DjangoObjectType):
 
     class Meta:
         model = models.Workflow
-        filter_fields = ("slug", "name", "description", "is_published", "is_archived")
         exclude_fields = ("cases", "task_flows")
         interfaces = (relay.Node,)
 
