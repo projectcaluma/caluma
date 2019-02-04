@@ -29,7 +29,6 @@ def test_start_case(db, snapshot, workflow, work_item, schema_executor):
         mutation StartCase($input: StartCaseInput!) {
           startCase(input: $input) {
             case {
-              id
               document {
                 form {
                   slug
@@ -52,6 +51,25 @@ def test_start_case(db, snapshot, workflow, work_item, schema_executor):
                   }
                 }
               }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {"input": {"workflow": workflow.slug}}
+    result = schema_executor(query, variables=inp)
+
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
+def test_start_sub_case(db, snapshot, workflow, work_item, schema_executor):
+    query = """
+        mutation StartCase($input: StartCaseInput!) {
+          startCase(input: $input) {
+            case {
+              id
             }
             clientMutationId
           }

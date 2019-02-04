@@ -32,3 +32,47 @@ snapshots["test_cancel_case[running-True-ready] 1"] = {
         "clientMutationId": None,
     }
 }
+
+snapshots['test_start_case[["group-name"]|groups] 1'] = {
+    "startCase": {
+        "case": {
+            "document": {"form": {"slug": "effort-meet"}},
+            "parentWorkItem": None,
+            "status": "RUNNING",
+            "workItems": {
+                "edges": [
+                    {
+                        "node": {
+                            "addressedGroups": ["group-name"],
+                            "document": {"form": {"slug": "effort-meet"}},
+                            "status": "READY",
+                        }
+                    }
+                ]
+            },
+        },
+        "clientMutationId": None,
+    }
+}
+
+snapshots["test_start_case[None] 1"] = {
+    "startCase": {
+        "case": {
+            "document": {"form": {"slug": "effort-meet"}},
+            "parentWorkItem": None,
+            "status": "RUNNING",
+            "workItems": {
+                "edges": [
+                    {
+                        "node": {
+                            "addressedGroups": [],
+                            "document": {"form": {"slug": "effort-meet"}},
+                            "status": "READY",
+                        }
+                    }
+                ]
+            },
+        },
+        "clientMutationId": None,
+    }
+}
