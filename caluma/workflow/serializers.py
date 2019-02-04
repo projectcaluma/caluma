@@ -180,6 +180,7 @@ class StartCaseSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
         workflow = validated_data["workflow"]
+        parent_work_item = validated_data["parent_work_item"]
         validated_data["status"] = models.Case.STATUS_RUNNING
         if workflow.form_id:
             validated_data["document"] = Document.objects.create(
@@ -188,6 +189,8 @@ class StartCaseSerializer(serializers.ModelSerializer):
                 created_by_group=user.group,
             )
         instance = super().create(validated_data)
+        parent_work_item.child_case = instance
+        parent_work_item.save()
 
         workflow = instance.workflow
         addressed_groups = []

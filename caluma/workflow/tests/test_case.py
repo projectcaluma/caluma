@@ -1,6 +1,7 @@
 import pytest
 
 from .. import models
+from ...core.relay import extract_global_id
 
 
 def test_query_all_cases(db, snapshot, case, flow, schema_executor):
@@ -28,6 +29,7 @@ def test_start_case(db, snapshot, workflow, work_item, schema_executor):
         mutation StartCase($input: StartCaseInput!) {
           startCase(input: $input) {
             case {
+              id
               document {
                 form {
                   slug
@@ -60,7 +62,10 @@ def test_start_case(db, snapshot, workflow, work_item, schema_executor):
     result = schema_executor(query, variables=inp)
 
     assert not result.errors
-    snapshot.assert_match(result.data)
+
+    case_id = result.data["startCase"]["case"]["id"]
+    case = models.Case.objects.get(pk=extract_global_id(case_id))
+    assert case.parent_work_item.pk == work_item.pk
 
 
 @pytest.mark.parametrize(
