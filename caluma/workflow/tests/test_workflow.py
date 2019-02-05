@@ -2,10 +2,7 @@ import pytest
 from graphql_relay import to_global_id
 
 from .. import serializers
-from ...core.tests import (
-    extract_global_id_input_fields,
-    extract_serializer_input_fields,
-)
+from ...core.tests import extract_serializer_input_fields
 
 
 def test_query_all_workflows(
@@ -82,51 +79,6 @@ def test_save_workflow(db, snapshot, workflow, workflow_allow_forms, schema_exec
 
     assert not result.errors
     snapshot.assert_match(result.data)
-
-
-def test_publish_workflow(db, workflow, snapshot, flow, schema_executor):
-    query = """
-        mutation PublishWorkflow($input: PublishWorkflowInput!) {
-          publishWorkflow(input: $input) {
-            workflow {
-              isPublished
-            }
-            clientMutationId
-          }
-        }
-    """
-
-    result = schema_executor(
-        query, variables={"input": extract_global_id_input_fields(workflow)}
-    )
-
-    assert result.data["publishWorkflow"]["workflow"]["isPublished"]
-
-    workflow.refresh_from_db()
-    assert workflow.is_published
-
-
-def test_archive_workflow(db, workflow, schema_executor):
-    query = """
-        mutation ArchiveWorkflow($input: ArchiveWorkflowInput!) {
-          archiveWorkflow(input: $input) {
-            workflow {
-              isArchived
-            }
-            clientMutationId
-          }
-        }
-    """
-
-    result = schema_executor(
-        query, variables={"input": extract_global_id_input_fields(workflow)}
-    )
-
-    assert not result.errors
-    assert result.data["archiveWorkflow"]["workflow"]["isArchived"]
-
-    workflow.refresh_from_db()
-    assert workflow.is_archived
 
 
 @pytest.mark.parametrize(

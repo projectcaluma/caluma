@@ -158,18 +158,6 @@ class SaveWorkflow(UserDefinedPrimaryKeyMixin, Mutation):
         serializer_class = serializers.SaveWorkflowSerializer
 
 
-class PublishWorkflow(Mutation):
-    class Meta:
-        serializer_class = serializers.PublishWorkflowSerializer
-        lookup_input_kwarg = "id"
-
-
-class ArchiveWorkflow(Mutation):
-    class Meta:
-        serializer_class = serializers.ArchiveWorkflowSerializer
-        lookup_input_kwarg = "id"
-
-
 class AddWorkflowFlow(Mutation):
     class Meta:
         serializer_class = serializers.AddWorkflowFlowSerializer
@@ -215,13 +203,6 @@ class SaveCompleteTaskFormTask(SaveTask):
         return_field_type = Task
 
 
-class ArchiveTask(Mutation):
-    class Meta:
-        serializer_class = serializers.ArchiveTaskSerializer
-        lookup_input_kwarg = "id"
-        return_field_type = Task
-
-
 class StartCase(Mutation):
     class Meta:
         serializer_class = serializers.StartCaseSerializer
@@ -249,15 +230,12 @@ class SetWorkItemAssignedUsers(Mutation):
 
 class Mutation(object):
     save_workflow = SaveWorkflow().Field()
-    publish_workflow = PublishWorkflow().Field()
-    archive_workflow = ArchiveWorkflow().Field()
     add_workflow_flow = AddWorkflowFlow().Field()
     remove_flow = RemoveFlow().Field()
 
     save_simple_task = SaveSimpleTask().Field()
     save_complete_workflow_form_task = SaveCompleteWorkflowFormTask().Field()
     save_complete_task_form_task = SaveCompleteTaskFormTask().Field()
-    archive_task = ArchiveTask().Field()
 
     start_case = StartCase().Field()
     cancel_case = CancelCase().Field()

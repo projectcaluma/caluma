@@ -68,46 +68,6 @@ enum AnswerOrdering {
   CREATED_BY_GROUP_DESC
 }
 
-input ArchiveFormInput {
-  id: ID!
-  clientMutationId: String
-}
-
-type ArchiveFormPayload {
-  form: Form
-  clientMutationId: String
-}
-
-input ArchiveQuestionInput {
-  id: ID!
-  clientMutationId: String
-}
-
-type ArchiveQuestionPayload {
-  question: Question
-  clientMutationId: String
-}
-
-input ArchiveTaskInput {
-  id: ID!
-  clientMutationId: String
-}
-
-type ArchiveTaskPayload {
-  task: Task
-  clientMutationId: String
-}
-
-input ArchiveWorkflowInput {
-  id: ID!
-  clientMutationId: String
-}
-
-type ArchiveWorkflowPayload {
-  workflow: Workflow
-  clientMutationId: String
-}
-
 input CancelCaseInput {
   id: ID!
   clientMutationId: String
@@ -393,21 +353,16 @@ type ListAnswer implements Answer, Node {
 
 type Mutation {
   saveWorkflow(input: SaveWorkflowInput!): SaveWorkflowPayload
-  publishWorkflow(input: PublishWorkflowInput!): PublishWorkflowPayload
-  archiveWorkflow(input: ArchiveWorkflowInput!): ArchiveWorkflowPayload
   addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
   removeFlow(input: RemoveFlowInput!): RemoveFlowPayload
   saveSimpleTask(input: SaveSimpleTaskInput!): SaveSimpleTaskPayload
   saveCompleteWorkflowFormTask(input: SaveCompleteWorkflowFormTaskInput!): SaveCompleteWorkflowFormTaskPayload
   saveCompleteTaskFormTask(input: SaveCompleteTaskFormTaskInput!): SaveCompleteTaskFormTaskPayload
-  archiveTask(input: ArchiveTaskInput!): ArchiveTaskPayload
   startCase(input: StartCaseInput!): StartCasePayload
   cancelCase(input: CancelCaseInput!): CancelCasePayload
   completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
   setWorkItemAssignedUsers(input: SetWorkItemAssignedUsersInput!): SetWorkItemAssignedUsersPayload
   saveForm(input: SaveFormInput!): SaveFormPayload
-  archiveForm(input: ArchiveFormInput!): ArchiveFormPayload
-  publishForm(input: PublishFormInput!): PublishFormPayload
   addFormQuestion(input: AddFormQuestionInput!): AddFormQuestionPayload
   removeFormQuestion(input: RemoveFormQuestionInput!): RemoveFormQuestionPayload
   reorderFormQuestions(input: ReorderFormQuestionsInput!): ReorderFormQuestionsPayload
@@ -420,7 +375,6 @@ type Mutation {
   saveFloatQuestion(input: SaveFloatQuestionInput!): SaveFloatQuestionPayload
   saveIntegerQuestion(input: SaveIntegerQuestionInput!): SaveIntegerQuestionPayload
   saveTableQuestion(input: SaveTableQuestionInput!): SaveTableQuestionPayload
-  archiveQuestion(input: ArchiveQuestionInput!): ArchiveQuestionPayload
   saveDocument(input: SaveDocumentInput!): SaveDocumentPayload
   saveDocumentStringAnswer(input: SaveDocumentStringAnswerInput!): SaveDocumentStringAnswerPayload
   saveDocumentIntegerAnswer(input: SaveDocumentIntegerAnswerInput!): SaveDocumentIntegerAnswerPayload
@@ -472,26 +426,6 @@ type PageInfo {
   hasPreviousPage: Boolean!
   startCursor: String
   endCursor: String
-}
-
-input PublishFormInput {
-  id: ID!
-  clientMutationId: String
-}
-
-type PublishFormPayload {
-  form: Form
-  clientMutationId: String
-}
-
-input PublishWorkflowInput {
-  id: ID!
-  clientMutationId: String
-}
-
-type PublishWorkflowPayload {
-  workflow: Workflow
-  clientMutationId: String
 }
 
 type Query {
@@ -608,6 +542,7 @@ input SaveCheckboxQuestionInput {
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
+  isArchived: Boolean
   options: [ID]!
   clientMutationId: String
 }
@@ -623,6 +558,7 @@ input SaveCompleteTaskFormTaskInput {
   description: String
   meta: JSONString
   addressGroups: GroupJexl
+  isArchived: Boolean
   form: ID!
   clientMutationId: String
 }
@@ -638,6 +574,7 @@ input SaveCompleteWorkflowFormTaskInput {
   description: String
   meta: JSONString
   addressGroups: GroupJexl
+  isArchived: Boolean
   clientMutationId: String
 }
 
@@ -728,6 +665,7 @@ input SaveFloatQuestionInput {
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
+  isArchived: Boolean
   minValue: Float
   maxValue: Float
   clientMutationId: String
@@ -743,6 +681,8 @@ input SaveFormInput {
   name: String!
   description: String
   meta: JSONString
+  isArchived: Boolean
+  isPublished: Boolean
   clientMutationId: String
 }
 
@@ -757,6 +697,7 @@ input SaveIntegerQuestionInput {
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
+  isArchived: Boolean
   minValue: Int
   maxValue: Int
   clientMutationId: String
@@ -785,6 +726,7 @@ input SaveRadioQuestionInput {
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
+  isArchived: Boolean
   options: [ID]!
   clientMutationId: String
 }
@@ -800,6 +742,7 @@ input SaveSimpleTaskInput {
   description: String
   meta: JSONString
   addressGroups: GroupJexl
+  isArchived: Boolean
   clientMutationId: String
 }
 
@@ -814,6 +757,7 @@ input SaveTableQuestionInput {
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
+  isArchived: Boolean
   rowForm: ID!
   clientMutationId: String
 }
@@ -829,6 +773,7 @@ input SaveTextQuestionInput {
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
+  isArchived: Boolean
   maxLength: Int
   clientMutationId: String
 }
@@ -844,6 +789,7 @@ input SaveTextareaQuestionInput {
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
+  isArchived: Boolean
   maxLength: Int
   clientMutationId: String
 }
@@ -861,6 +807,8 @@ input SaveWorkflowInput {
   start: ID!
   allowAllForms: Boolean
   allowForms: [ID]
+  isArchived: Boolean
+  isPublished: Boolean
   clientMutationId: String
 }
 
