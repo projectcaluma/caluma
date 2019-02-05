@@ -1,9 +1,10 @@
 import functools
+import hashlib
 
 import requests
 from django.conf import settings
 from django.core.cache import cache
-from django.utils.encoding import smart_text
+from django.utils.encoding import force_bytes, smart_text
 from rest_framework import exceptions
 from rest_framework.authentication import get_authorization_header
 
@@ -61,8 +62,10 @@ class OIDCAuthenticationMiddleware(object):
             return next(root, info, **args)
 
         userinfo_method = functools.partial(self.get_userinfo, token=token)
+        # token might be too long for key so we use hash sum instead.
+        hashsum_token = hashlib.sha256(force_bytes(token)).hexdigest()
         userinfo = cache.get_or_set(
-            f"authentication.userinfo.{smart_text(token)}",
+            f"authentication.userinfo.{hashsum_token}",
             userinfo_method,
             timeout=settings.OIDC_BEARER_TOKEN_REVALIDATION_TIME,
         )

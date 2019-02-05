@@ -1,3 +1,4 @@
+import hashlib
 import json
 
 import pytest
@@ -42,4 +43,9 @@ def test_oidc_authentication_middleware(
     if not error:
         assert request.user.is_authenticated == authenticated
         if authenticated:
-            assert cache.get("authentication.userinfo.Token") == userinfo
+            assert (
+                cache.get(
+                    f"authentication.userinfo.{hashlib.sha256(b'Token').hexdigest()}"
+                )
+                == userinfo
+            )
