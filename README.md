@@ -16,13 +16,14 @@ Caluma Service is the core part of the Caluma project providing a [GraphQL API](
 ### Installation
 
 **Requirements**
-* docker
-* docker-compose
 
-After installing and configuring those, download [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) and run the following command:
+- docker
+- docker-compose
 
+After installing and configuring those, download [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) and run the following commands:
 
 ```bash
+echo "UID="$UID >> .env
 docker-compose up -d
 ```
 
@@ -83,15 +84,15 @@ Different environment variable types are explained at [django-environ](https://g
 
 A list of configuration options which you might need to configure to get Caluma started in your environment.
 
-* `SECRET_KEY`: A secret key used for cryptography. This needs to be a random string of a certain length. See [more](https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-SECRET_KEY).
-* `ALLOWED_HOSTS`: A list of hosts/domains your service will be served from. See [more](https://docs.djangoproject.com/en/2.1/ref/settings/#allowed-hosts).
-* `DATABASE_HOST`: Host to use when connecting to database (default: localhost)
-* `DATABASE_PORT`: Port to use when connecting to database (default: 5432)
-* `DATABASE_NAME`: Name of database to use (default: caluma)
-* `DATABASE_USER`: Username to use when connecting to the database (default: caluma)
-* `DATABASE_PASSWORD`: Password to use when connecting to database
-* `LANGUAGE_CODE`: Default language defined as fallback (default: en)
-* `LANGUAGES`: List of supported language codes (default: all available)
+- `SECRET_KEY`: A secret key used for cryptography. This needs to be a random string of a certain length. See [more](https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-SECRET_KEY).
+- `ALLOWED_HOSTS`: A list of hosts/domains your service will be served from. See [more](https://docs.djangoproject.com/en/2.1/ref/settings/#allowed-hosts).
+- `DATABASE_HOST`: Host to use when connecting to database (default: localhost)
+- `DATABASE_PORT`: Port to use when connecting to database (default: 5432)
+- `DATABASE_NAME`: Name of database to use (default: caluma)
+- `DATABASE_USER`: Username to use when connecting to the database (default: caluma)
+- `DATABASE_PASSWORD`: Password to use when connecting to database
+- `LANGUAGE_CODE`: Default language defined as fallback (default: en)
+- `LANGUAGES`: List of supported language codes (default: all available)
 
 #### Authentication and authorization
 
@@ -99,21 +100,21 @@ If you want to connect to Caluma you need an [IAM](https://en.wikipedia.org/wiki
 
 Caluma expects a bearer token to be passed on as [Authorization Request Header Field](https://tools.ietf.org/html/rfc6750#section-2.1)
 
-* `OIDC_USERINFO_ENDPOINT`: Url of userinfo endpoint as [described](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
-* `OIDC_GROUPS_CLAIM`: Name of claim to be used to represent groups (default: caluma_groups)
-* `OIDC_BEARER_TOKEN_REVALIDATION_TIME`: Time in seconds before bearer token validity is verified again. For best security token is validated on each request per default. It might be helpful though in case of slow Open ID Connect provider to cache it. It uses [cache](#cache) mechanism for memorizing userinfo result. Number has to be lower than access token expiration time. (default: 0)
+- `OIDC_USERINFO_ENDPOINT`: Url of userinfo endpoint as [described](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
+- `OIDC_GROUPS_CLAIM`: Name of claim to be used to represent groups (default: caluma_groups)
+- `OIDC_BEARER_TOKEN_REVALIDATION_TIME`: Time in seconds before bearer token validity is verified again. For best security token is validated on each request per default. It might be helpful though in case of slow Open ID Connect provider to cache it. It uses [cache](#cache) mechanism for memorizing userinfo result. Number has to be lower than access token expiration time. (default: 0)
 
 #### Cache
 
-* `CACHE_BACKEND`: [cache backend](https://docs.djangoproject.com/en/1.11/ref/settings/#backend) to use (default: django.core.cache.backends.locmem.LocMemCache)
-* `CACHE_LOCATION`: [location](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-CACHES-LOCATION) of cache to use
+- `CACHE_BACKEND`: [cache backend](https://docs.djangoproject.com/en/1.11/ref/settings/#backend) to use (default: django.core.cache.backends.locmem.LocMemCache)
+- `CACHE_LOCATION`: [location](https://docs.djangoproject.com/en/1.11/ref/settings/#std:setting-CACHES-LOCATION) of cache to use
 
 #### CORS headers
 
 Per default no CORS headers are set but can be configured with following options.
 
-* `CORS_ORIGIN_ALLOW_ALL`: If True, the whitelist will not be used and all origins will be accepted. (default: False)
-* `CORS_ORIGIN_WHITELIST`: A list of origin hostnames that are authorized to make cross-site HTTP requests.
+- `CORS_ORIGIN_ALLOW_ALL`: If True, the whitelist will not be used and all origins will be accepted. (default: False)
+- `CORS_ORIGIN_WHITELIST`: A list of origin hostnames that are authorized to make cross-site HTTP requests.
 
 #### Extension points
 
@@ -128,16 +129,18 @@ The visibility part defines what you can see at all. Anything you cannot see, yo
 Visibility classes are configured as `VISIBILITY_CLASSES`.
 
 Following pre-defined classes are available:
-* `caluma.core.visibilities.Any`: Allow any user without any filtering
-* `caluma.core.visibilities.Union`: Union result of a list of configured visibility classes. May only be used as base class.
-* `caluma.user.visibilities.Authenticated`: Only show data to authenticated users
-* `caluma.user.visibilities.CreatedByGroup`: Only show data that belongs to the same group as the current user
-* `caluma.workflow.visibilities.AddressedGroups`: Only show case, work item and document to addressed users through group
+
+- `caluma.core.visibilities.Any`: Allow any user without any filtering
+- `caluma.core.visibilities.Union`: Union result of a list of configured visibility classes. May only be used as base class.
+- `caluma.user.visibilities.Authenticated`: Only show data to authenticated users
+- `caluma.user.visibilities.CreatedByGroup`: Only show data that belongs to the same group as the current user
+- `caluma.workflow.visibilities.AddressedGroups`: Only show case, work item and document to addressed users through group
 
 In case this default classes do not cover your use case, it is also possible to create your custom
 visibility class defining per node how to filter.
 
 Example:
+
 ```python
 from caluma.types import Node
 from caluma.form.schema import Form
@@ -153,9 +156,10 @@ class CustomVisibility(BaseVisibility):
 ```
 
 Arguments:
-* `node`: GraphQL node filtering queryset for
-* `queryset`: [Queryset](https://docs.djangoproject.com/en/2.1/ref/models/querysets/) of specific node type
-* `info`: Resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/2.1/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
+
+- `node`: GraphQL node filtering queryset for
+- `queryset`: [Queryset](https://docs.djangoproject.com/en/2.1/ref/models/querysets/) of specific node type
+- `info`: Resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/2.1/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
 
 Save your visibility module as `visibility.py` and inject it as Docker volume to path `/app/caluma/extensions/visibility.py`,
 see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) for an example.
@@ -167,14 +171,16 @@ Afterwards you can configure it in `VISIBILITY_CLASSES` as `caluma.extensions.vi
 Permission classes define who may perform which mutation. Such can be configured as `PERMISSION_CLASSES`.
 
 Following pre-defined classes are available:
-* `caluma.user.permissions.IsAuthenticated`: only allow authenticated users
-* `caluma.core.permissions.AllowAny`: allow any users to perform any mutation.
-* `caluma.user.permissions.CreatedByGroup`: Only allow mutating data that belongs to same group as current user
+
+- `caluma.user.permissions.IsAuthenticated`: only allow authenticated users
+- `caluma.core.permissions.AllowAny`: allow any users to perform any mutation.
+- `caluma.user.permissions.CreatedByGroup`: Only allow mutating data that belongs to same group as current user
 
 In case this default classes do not cover your use case, it is also possible to create your custom
 permission class defining per mutation and mutation object what is allowed.
 
 Example:
+
 ```python
 from caluma.form.schema import SaveForm
 from caluma.mutation import Mutation
@@ -196,9 +202,10 @@ class CustomPermission(BasePermission):
 ```
 
 Arguments:
-* `mutation`: mutation class
-* `info`: resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/2.1/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
-* `instance`: instance being edited by specific mutation
+
+- `mutation`: mutation class
+- `info`: resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/2.1/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
+- `instance`: instance being edited by specific mutation
 
 Save your permission module as `permissions.py` and inject it as Docker volume to path `/app/caluma/extensions/permissions.py`,
 see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) for an example.
@@ -210,4 +217,5 @@ Afterwards you can configure it in `PERMISSION_CLASSES` as `caluma.extensions.pe
 Look at our [contributing guidelines](CONTRIBUTION.md) to start with your first contribution.
 
 ## License
+
 Code released under the [MIT license](LICENSE).
