@@ -497,7 +497,7 @@ type PublishWorkflowPayload {
 type Query {
   allWorkflows(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String, orderBy: [WorkflowOrdering]): WorkflowConnection
   allTasks(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, search: String, orderBy: [TaskOrdering]): TaskConnection
-  allCases(before: String, after: String, first: Int, last: Int, workflow: ID, status: CaseStatusArgument, orderBy: [CaseOrdering]): CaseConnection
+  allCases(before: String, after: String, first: Int, last: Int, workflow: ID, status: CaseStatusArgument, parentWorkItem: ID, orderBy: [CaseOrdering]): CaseConnection
   allWorkItems(before: String, after: String, first: Int, last: Int, status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], task: ID, case: ID): WorkItemConnection
   allForms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   allQuestions(before: String, after: String, first: Int, last: Int, orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String): QuestionConnection

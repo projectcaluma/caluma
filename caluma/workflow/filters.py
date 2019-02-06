@@ -24,7 +24,7 @@ class CaseFilterSet(FilterSet):
 
     class Meta:
         model = models.Case
-        fields = ("workflow", "status")
+        fields = ("workflow", "status", "parent_work_item")
 
 
 class TaskFilterSet(FilterSet):
