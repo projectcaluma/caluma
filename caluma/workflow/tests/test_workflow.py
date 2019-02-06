@@ -8,7 +8,9 @@ from ...core.tests import (
 )
 
 
-def test_query_all_workflows(db, snapshot, workflow, task_flow, flow, schema_executor):
+def test_query_all_workflows(
+    db, snapshot, workflow, task_flow, workflow_allow_forms, flow, schema_executor
+):
     query = """
         query AllWorkflows($name: String!) {
           allWorkflows(name: $name) {
@@ -28,6 +30,14 @@ def test_query_all_workflows(db, snapshot, workflow, task_flow, flow, schema_exe
                     }
                   }
                 }
+                allowAllForms
+                allowForms {
+                  edges {
+                    node {
+                      slug
+                    }
+                  }
+                }
               }
             }
           }
@@ -40,11 +50,19 @@ def test_query_all_workflows(db, snapshot, workflow, task_flow, flow, schema_exe
     snapshot.assert_match(result.data)
 
 
-def test_save_workflow(db, snapshot, workflow, schema_executor):
+def test_save_workflow(db, snapshot, workflow, workflow_allow_forms, schema_executor):
     query = """
         mutation SaveWorkflow($input: SaveWorkflowInput!) {
           saveWorkflow(input: $input) {
             workflow {
+              allowAllForms
+              allowForms {
+                edges {
+                  node {
+                    slug
+                  }
+                }
+              }
               slug
               name
               meta

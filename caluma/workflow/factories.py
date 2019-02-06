@@ -1,4 +1,4 @@
-from factory import Faker, SubFactory
+from factory import DjangoModelFactory as FactoryDjangoModelFactory, Faker, SubFactory
 
 from . import models
 from ..core.factories import DjangoModelFactory
@@ -27,10 +27,18 @@ class WorkflowFactory(DjangoModelFactory):
     is_published = False
     is_archived = False
     start = SubFactory(TaskFactory)
-    form = SubFactory(FormFactory)
+    allow_all_forms = False
 
     class Meta:
         model = models.Workflow
+
+
+class WorkflowAllowFormsFactory(FactoryDjangoModelFactory):
+    form = SubFactory(FormFactory)
+    workflow = SubFactory(WorkflowFactory)
+
+    class Meta:
+        model = models.Workflow.allow_forms.through
 
 
 class FlowFactory(DjangoModelFactory):

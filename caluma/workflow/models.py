@@ -49,12 +49,14 @@ class Workflow(SlugModel):
         related_name="+",
         help_text="First task of the workflow.",
     )
-    form = models.ForeignKey(
+    allow_all_forms = models.BooleanField(
+        default=False, help_text="Allow workflow to be started with any form"
+    )
+    allow_forms = models.ManyToManyField(
         "form.Form",
-        on_delete=models.DO_NOTHING,
+        help_text="List of forms which are allowed to start workflow with",
         related_name="workflows",
         blank=True,
-        null=True,
     )
 
 

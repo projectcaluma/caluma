@@ -859,7 +859,8 @@ input SaveWorkflowInput {
   description: String
   meta: JSONString
   start: ID!
-  form: ID
+  allowAllForms: Boolean
+  allowForms: [ID]
   clientMutationId: String
 }
 
@@ -898,6 +899,7 @@ input StartCaseInput {
   workflow: ID!
   meta: JSONString
   parentWorkItem: ID
+  form: ID
   clientMutationId: String
 }
 
@@ -1093,7 +1095,8 @@ type Workflow implements Node {
   isPublished: Boolean!
   isArchived: Boolean!
   start: Task!
-  form: Form
+  allowAllForms: Boolean!
+  allowForms(before: String, after: String, first: Int, last: Int): FormConnection
   id: ID!
   flows(before: String, after: String, first: Int, last: Int, task: ID): FlowConnection
 }
