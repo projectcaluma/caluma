@@ -243,4 +243,10 @@ class UserDefinedPrimaryKeyMixin(object):
                 "No %s matches the given query." % queryset.model._meta.object_name
             )
 
+        if instance is None and "create" not in cls._meta.model_operations:
+            raise exceptions.ValidationError("Create model operation not allowed.")
+
+        if instance is not None and "update" not in cls._meta.model_operations:
+            raise exceptions.ValidationError("Update model operation not allowed.")
+
         return instance

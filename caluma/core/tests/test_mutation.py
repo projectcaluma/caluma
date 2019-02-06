@@ -170,3 +170,49 @@ def test_user_defined_primary_key_get_serializer_kwargs_not_allowed(db, info):
 
     with pytest.raises(Http404):
         MyMutation.get_serializer_kwargs(None, info, slug="test")
+
+
+def test_user_defined_primary_key_get_serializer_kwargs_update_not_allowed(db, info):
+    FakeModel = get_fake_model(model_base=models.SlugModel)
+
+    class FakeModelObjectType(types.DjangoObjectType):
+        class Meta:
+            model = FakeModel
+
+    class MySerializer(serializers.ModelSerializer):
+        class Meta:
+            model = FakeModel
+            fields = "__all__"
+
+    class MyMutation(mutation.UserDefinedPrimaryKeyMixin, mutation.Mutation):
+        class Meta:
+            serializer_class = MySerializer
+            return_field_type = FakeModelObjectType
+            model_operations = ["create"]
+
+    FakeModel.objects.create(slug="test")
+
+    with pytest.raises(exceptions.ValidationError):
+        MyMutation.get_serializer_kwargs(None, info, slug="test")
+
+
+def test_user_defined_primary_key_get_serializer_kwargs_create_not_allowed(db, info):
+    FakeModel = get_fake_model(model_base=models.SlugModel)
+
+    class FakeModelObjectType(types.DjangoObjectType):
+        class Meta:
+            model = FakeModel
+
+    class MySerializer(serializers.ModelSerializer):
+        class Meta:
+            model = FakeModel
+            fields = "__all__"
+
+    class MyMutation(mutation.UserDefinedPrimaryKeyMixin, mutation.Mutation):
+        class Meta:
+            serializer_class = MySerializer
+            return_field_type = FakeModelObjectType
+            model_operations = ["update"]
+
+    with pytest.raises(exceptions.ValidationError):
+        MyMutation.get_serializer_kwargs(None, info, slug="test")
