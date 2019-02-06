@@ -29,33 +29,9 @@ class SaveWorkflowSerializer(serializers.ModelSerializer):
             "start",
             "allow_all_forms",
             "allow_forms",
+            "is_archived",
+            "is_published",
         )
-
-
-class ArchiveWorkflowSerializer(serializers.ModelSerializer):
-    id = serializers.GlobalIDField(source="slug")
-
-    def update(self, instance, validated_data):
-        instance.is_archived = True
-        instance.save(update_fields=["is_archived"])
-        return instance
-
-    class Meta:
-        fields = ("id",)
-        model = models.Workflow
-
-
-class PublishWorkflowSerializer(serializers.ModelSerializer):
-    id = serializers.GlobalIDField(source="slug")
-
-    def update(self, instance, validated_data):
-        instance.is_published = True
-        instance.save(update_fields=["is_published"])
-        return instance
-
-    class Meta:
-        fields = ("id",)
-        model = models.Workflow
 
 
 class AddWorkflowFlowSerializer(serializers.ModelSerializer):
@@ -129,7 +105,14 @@ class SaveTaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Task
-        fields = ("slug", "name", "description", "meta", "address_groups")
+        fields = (
+            "slug",
+            "name",
+            "description",
+            "meta",
+            "address_groups",
+            "is_archived",
+        )
 
 
 class SaveSimpleTaskSerializer(SaveTaskSerializer):
@@ -161,19 +144,6 @@ class SaveCompleteTaskFormTaskSerializer(SaveTaskSerializer):
 
     class Meta(SaveTaskSerializer.Meta):
         fields = SaveTaskSerializer.Meta.fields + ("form",)
-
-
-class ArchiveTaskSerializer(serializers.ModelSerializer):
-    id = serializers.GlobalIDField(source="slug")
-
-    def update(self, instance, validated_data):
-        instance.is_archived = True
-        instance.save(update_fields=["is_archived"])
-        return instance
-
-    class Meta:
-        fields = ("id",)
-        model = models.Task
 
 
 class StartCaseSerializer(serializers.ModelSerializer):

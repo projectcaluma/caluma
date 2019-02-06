@@ -183,12 +183,6 @@ class SaveForm(UserDefinedPrimaryKeyMixin, Mutation):
         serializer_class = serializers.SaveFormSerializer
 
 
-class ArchiveForm(Mutation):
-    class Meta:
-        lookup_input_kwarg = "id"
-        serializer_class = serializers.ArchiveFormSerializer
-
-
 class AddFormQuestion(Mutation):
     """Add question at the end of form."""
 
@@ -207,19 +201,6 @@ class ReorderFormQuestions(Mutation):
     class Meta:
         lookup_input_kwarg = "form"
         serializer_class = serializers.ReorderFormQuestionsSerializer
-
-
-class PublishForm(Mutation):
-    class Meta:
-        lookup_input_kwarg = "id"
-        serializer_class = serializers.PublishFormSerializer
-
-
-class ArchiveQuestion(Mutation):
-    class Meta:
-        lookup_input_kwarg = "id"
-        serializer_class = serializers.ArchiveQuestionSerializer
-        return_field_type = Question
 
 
 class SaveQuestion(UserDefinedPrimaryKeyMixin, Mutation):
@@ -442,8 +423,6 @@ class SaveDocumentTableAnswer(SaveDocumentAnswer):
 
 class Mutation(object):
     save_form = SaveForm().Field()
-    archive_form = ArchiveForm().Field()
-    publish_form = PublishForm().Field()
     add_form_question = AddFormQuestion().Field()
     remove_form_question = RemoveFormQuestion().Field()
     reorder_form_questions = ReorderFormQuestions().Field()
@@ -458,7 +437,6 @@ class Mutation(object):
     save_float_question = SaveFloatQuestion().Field()
     save_integer_question = SaveIntegerQuestion().Field()
     save_table_question = SaveTableQuestion().Field()
-    archive_question = ArchiveQuestion().Field()
 
     save_document = SaveDocument().Field()
     save_document_string_answer = SaveDocumentStringAnswer().Field()

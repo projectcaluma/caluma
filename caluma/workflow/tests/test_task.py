@@ -1,10 +1,7 @@
 import pytest
 
 from .. import models, serializers
-from ...core.tests import (
-    extract_global_id_input_fields,
-    extract_serializer_input_fields,
-)
+from ...core.tests import extract_serializer_input_fields
 
 
 @pytest.mark.parametrize("task__type", [models.Task.TYPE_SIMPLE])
@@ -79,26 +76,3 @@ def test_save_comlete_task_form_task(db, snapshot, task, schema_executor):
     result = schema_executor(query, variables=inp)
     assert not result.errors
     snapshot.assert_execution_result(result)
-
-
-def test_archive_task(db, task, schema_executor):
-    query = """
-        mutation ArchiveTask($input: ArchiveTaskInput!) {
-          archiveTask(input: $input) {
-            task {
-              isArchived
-            }
-            clientMutationId
-          }
-        }
-    """
-
-    result = schema_executor(
-        query, variables={"input": extract_global_id_input_fields(task)}
-    )
-
-    assert not result.errors
-    assert result.data["archiveTask"]["task"]["isArchived"]
-
-    task.refresh_from_db()
-    assert task.is_archived

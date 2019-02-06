@@ -15,20 +15,7 @@ class QuestionJexlField(serializers.JexlField):
 class SaveFormSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Form
-        fields = ("slug", "name", "description", "meta")
-
-
-class ArchiveFormSerializer(serializers.ModelSerializer):
-    id = serializers.GlobalIDField(source="slug")
-
-    def update(self, instance, validated_data):
-        instance.is_archived = True
-        instance.save(update_fields=["is_archived"])
-        return instance
-
-    class Meta:
-        fields = ("id",)
-        model = models.Form
+        fields = ("slug", "name", "description", "meta", "is_archived", "is_published")
 
 
 class AddFormQuestionSerializer(serializers.ModelSerializer):
@@ -98,26 +85,13 @@ class ReorderFormQuestionsSerializer(serializers.ModelSerializer):
         model = models.Form
 
 
-class PublishFormSerializer(serializers.ModelSerializer):
-    id = serializers.GlobalIDField(source="slug")
-
-    def update(self, instance, validated_data):
-        instance.is_published = True
-        instance.save(update_fields=["is_published"])
-        return instance
-
-    class Meta:
-        fields = ("id",)
-        model = models.Form
-
-
 class SaveQuestionSerializer(serializers.ModelSerializer):
     is_hidden = QuestionJexlField(required=False)
     is_required = QuestionJexlField(required=False)
 
     class Meta:
         model = models.Question
-        fields = ("slug", "label", "is_required", "is_hidden", "meta")
+        fields = ("slug", "label", "is_required", "is_hidden", "meta", "is_archived")
 
 
 class SaveTextQuestionSerializer(SaveQuestionSerializer):
@@ -276,19 +250,6 @@ class RemoveOptionSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("option",)
         model = models.Option
-
-
-class ArchiveQuestionSerializer(serializers.ModelSerializer):
-    id = serializers.GlobalIDField(source="slug")
-
-    def update(self, instance, validated_data):
-        instance.is_archived = True
-        instance.save(update_fields=["is_archived"])
-        return instance
-
-    class Meta:
-        fields = ("id",)
-        model = models.Question
 
 
 class DocumentSerializer(serializers.ModelSerializer):

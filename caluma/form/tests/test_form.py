@@ -3,10 +3,7 @@ from django.utils import translation
 from graphql_relay import to_global_id
 
 from .. import models
-from ...core.tests import (
-    extract_global_id_input_fields,
-    extract_serializer_input_fields,
-)
+from ...core.tests import extract_serializer_input_fields
 from ..serializers import SaveFormSerializer
 
 
@@ -101,52 +98,6 @@ def test_save_form_created_as_admin_user(
 
     assert not result.errors
     assert result.data["saveForm"]["form"]["createdByUser"] == admin_user.username
-
-
-def test_archive_form(db, form, schema_executor):
-    query = """
-        mutation ArchiveForm($input: ArchiveFormInput!) {
-          archiveForm(input: $input) {
-            form {
-              isArchived
-            }
-            clientMutationId
-          }
-        }
-    """
-
-    result = schema_executor(
-        query, variables={"input": extract_global_id_input_fields(form)}
-    )
-
-    assert not result.errors
-    assert result.data["archiveForm"]["form"]["isArchived"]
-
-    form.refresh_from_db()
-    assert form.is_archived
-
-
-def test_publish_form(db, form, schema_executor):
-    query = """
-        mutation PublishForm($input: PublishFormInput!) {
-          publishForm(input: $input) {
-            form {
-              isPublished
-            }
-            clientMutationId
-          }
-        }
-    """
-
-    result = schema_executor(
-        query, variables={"input": extract_global_id_input_fields(form)}
-    )
-
-    assert not result.errors
-    assert result.data["publishForm"]["form"]["isPublished"]
-
-    form.refresh_from_db()
-    assert form.is_published
 
 
 def test_add_form_question(db, form, question, snapshot, schema_executor):

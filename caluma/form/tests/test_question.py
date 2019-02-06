@@ -345,26 +345,3 @@ def test_save_radio_question(db, snapshot, question, question_option, schema_exe
     result = schema_executor(query, variables=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
-
-
-def test_archive_question(db, question, schema_executor):
-    query = """
-        mutation ArchiveQuestion($input: ArchiveQuestionInput!) {
-          archiveQuestion(input: $input) {
-            question {
-              isArchived
-            }
-            clientMutationId
-          }
-        }
-    """
-
-    result = schema_executor(
-        query, variables={"input": extract_global_id_input_fields(question)}
-    )
-
-    assert not result.errors
-    assert result.data["archiveQuestion"]["question"]["isArchived"]
-
-    question.refresh_from_db()
-    assert question.is_archived
