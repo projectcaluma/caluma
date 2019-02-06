@@ -21,7 +21,15 @@ class GroupJexlField(serializers.JexlField):
 class SaveWorkflowSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Workflow
-        fields = ("slug", "name", "description", "meta", "start", "form")
+        fields = (
+            "slug",
+            "name",
+            "description",
+            "meta",
+            "start",
+            "allow_all_forms",
+            "allow_forms",
+        )
 
 
 class ArchiveWorkflowSerializer(serializers.ModelSerializer):
@@ -175,6 +183,24 @@ class StartCaseSerializer(serializers.ModelSerializer):
     parent_work_item = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.WorkItem.objects, required=False
     )
+    form = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=Form.objects, required=False
+    )
+
+    def validate(self, data):
+        form = data.get("form")
+        workflow = data["workflow"]
+
+        if form:
+            if (
+                not workflow.allow_all_forms
+                and not workflow.allow_forms.filter(pk=form.pk).exists()
+            ):
+                raise exceptions.ValidationError(
+                    f"Workflow {workflow.pk} does not allow to start case with form {form.pk}"
+                )
+
+        return data
 
     @transaction.atomic
     def create(self, validated_data):
@@ -182,11 +208,11 @@ class StartCaseSerializer(serializers.ModelSerializer):
         workflow = validated_data["workflow"]
         parent_work_item = validated_data.get("parent_work_item")
         validated_data["status"] = models.Case.STATUS_RUNNING
-        if workflow.form_id:
+
+        form = validated_data.pop("form", None)
+        if form:
             validated_data["document"] = Document.objects.create(
-                form_id=workflow.form_id,
-                created_by_user=user.username,
-                created_by_group=user.group,
+                form=form, created_by_user=user.username, created_by_group=user.group
             )
         instance = super().create(validated_data)
         if parent_work_item:
@@ -211,7 +237,7 @@ class StartCaseSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Case
-        fields = ("workflow", "meta", "parent_work_item")
+        fields = ("workflow", "meta", "parent_work_item", "form")
 
 
 class CancelCaseSerializer(serializers.ModelSerializer):

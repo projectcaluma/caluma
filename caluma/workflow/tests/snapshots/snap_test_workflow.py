@@ -12,6 +12,8 @@ snapshots["test_query_all_workflows 1"] = {
         "edges": [
             {
                 "node": {
+                    "allowAllForms": False,
+                    "allowForms": {"edges": [{"node": {"slug": "effort-meet"}}]},
                     "description": """Role include money center of yes. Land subject another government animal pressure. Game respond mouth despite culture be magazine.
 Hot morning future throughout guess language drive.""",
                     "flows": {
@@ -36,7 +38,13 @@ Hot morning future throughout guess language drive.""",
 snapshots["test_save_workflow 1"] = {
     "saveWorkflow": {
         "clientMutationId": "testid",
-        "workflow": {"meta": "{}", "name": "Renee Ayala", "slug": "few-list-tax"},
+        "workflow": {
+            "allowAllForms": False,
+            "allowForms": {"edges": [{"node": {"slug": "effort-meet"}}]},
+            "meta": "{}",
+            "name": "Renee Ayala",
+            "slug": "few-list-tax",
+        },
     }
 }
 
