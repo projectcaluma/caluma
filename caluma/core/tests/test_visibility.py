@@ -3,7 +3,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db.models import CharField
 
 from .. import models
-from ..types import DjangoObjectType
+from ..types import DjangoObjectType, Node
 from ..visibilities import BaseVisibility, Union, filter_queryset_for
 from .fake_model import get_fake_model
 
@@ -64,6 +64,34 @@ def test_custom_node_filter_queryset_improperly_configured(db):
 
     with pytest.raises(ImproperlyConfigured):
         CustomNode.get_queryset(None, None)
+
+
+def test_custom_visibility_override_specificity(db):
+    """The first matching filter 'wins'."""
+    FakeModel = get_fake_model(
+        dict(name=CharField(max_length=255)), model_base=models.UUIDModel
+    )
+    FakeModel.objects.create(name="Name1")
+    FakeModel.objects.create(name="Name2")
+
+    class CustomNode(DjangoObjectType):
+        class Meta:
+            model = FakeModel
+
+    class CustomVisibility(BaseVisibility):
+        @filter_queryset_for(Node)
+        def filter_queryset_for_all(self, node, queryset, info):
+            return queryset.none()
+
+        @filter_queryset_for(CustomNode)
+        def filter_queryset_for_custom_node(self, node, queryset, info):
+            return queryset.filter(name="Name1")
+
+    assert FakeModel.objects.count() == 2
+    queryset = CustomVisibility().filter_queryset(Node, FakeModel.objects, None)
+    assert queryset.count() == 0
+    queryset = CustomVisibility().filter_queryset(CustomNode, FakeModel.objects, None)
+    assert queryset.count() == 1
 
 
 def test_union_visibility(db):
