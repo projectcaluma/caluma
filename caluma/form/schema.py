@@ -47,6 +47,7 @@ class Question(Node, graphene.Interface):
     forms = DjangoFilterConnectionField(
         "caluma.form.schema.Form", filterset_class=filters.FormFilterSet
     )
+    source = graphene.Field("caluma.form.schema.Question")
 
     @classmethod
     def get_queryset(cls, queryset, info):
@@ -183,6 +184,12 @@ class SaveForm(UserDefinedPrimaryKeyMixin, Mutation):
         serializer_class = serializers.SaveFormSerializer
 
 
+class CopyForm(UserDefinedPrimaryKeyMixin, Mutation):
+    class Meta:
+        serializer_class = serializers.CopyFormSerializer
+        model_operations = ["create"]
+
+
 class AddFormQuestion(Mutation):
     """Add question at the end of form."""
 
@@ -201,6 +208,13 @@ class ReorderFormQuestions(Mutation):
     class Meta:
         lookup_input_kwarg = "form"
         serializer_class = serializers.ReorderFormQuestionsSerializer
+
+
+class CopyQuestion(UserDefinedPrimaryKeyMixin, Mutation):
+    class Meta:
+        serializer_class = serializers.CopyQuestionSerializer
+        return_field_type = Question
+        model_operations = ["create"]
 
 
 class SaveQuestion(UserDefinedPrimaryKeyMixin, Mutation):
@@ -262,6 +276,12 @@ class SaveTableQuestion(SaveQuestion):
 class SaveOption(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveOptionSerializer
+
+
+class CopyOption(UserDefinedPrimaryKeyMixin, Mutation):
+    class Meta:
+        serializer_class = serializers.CopyOptionSerializer
+        model_operations = ["create"]
 
 
 class RemoveOption(UserDefinedPrimaryKeyMixin, Mutation):
@@ -423,13 +443,16 @@ class SaveDocumentTableAnswer(SaveDocumentAnswer):
 
 class Mutation(object):
     save_form = SaveForm().Field()
+    copy_form = CopyForm().Field()
     add_form_question = AddFormQuestion().Field()
     remove_form_question = RemoveFormQuestion().Field()
     reorder_form_questions = ReorderFormQuestions().Field()
 
     save_option = SaveOption().Field()
     remove_option = RemoveOption().Field()
+    copy_option = CopyOption().Field()
 
+    copy_question = CopyQuestion().Field()
     save_text_question = SaveTextQuestion().Field()
     save_textarea_question = SaveTextareaQuestion().Field()
     save_radio_question = SaveRadioQuestion().Field()

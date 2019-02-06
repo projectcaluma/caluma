@@ -18,6 +18,40 @@ class SaveFormSerializer(serializers.ModelSerializer):
         fields = ("slug", "name", "description", "meta", "is_archived", "is_published")
 
 
+class CopyFormSerializer(serializers.ModelSerializer):
+    source = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.Form.objects, required=True
+    )
+
+    @transaction.atomic
+    def create(self, validated_data):
+        user = self.context["request"].user
+        source = validated_data["source"]
+        validated_data["meta"] = dict(source.meta)
+
+        form = super().create(validated_data)
+
+        new_form_questions = [
+            models.FormQuestion(
+                sort=sort,
+                form=form,
+                question=form_question.question,
+                created_by_user=user.username,
+                created_by_group=user.group,
+            )
+            for sort, form_question in enumerate(
+                reversed(models.FormQuestion.objects.filter(form=source))
+            )
+        ]
+        models.FormQuestion.objects.bulk_create(new_form_questions)
+
+        return form
+
+    class Meta:
+        model = models.Form
+        fields = ("slug", "name", "description", "source")
+
+
 class AddFormQuestionSerializer(serializers.ModelSerializer):
     form = serializers.GlobalIDField(source="slug")
     question = serializers.GlobalIDPrimaryKeyRelatedField(
@@ -83,6 +117,45 @@ class ReorderFormQuestionsSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("form", "questions")
         model = models.Form
+
+
+class CopyQuestionSerializer(serializers.ModelSerializer):
+    source = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.Question.objects, required=True
+    )
+
+    @transaction.atomic
+    def create(self, validated_data):
+        user = self.context["request"].user
+        source = validated_data["source"]
+        validated_data["type"] = source.type
+        validated_data["is_required"] = source.is_required
+        validated_data["is_hidden"] = source.is_hidden
+        validated_data["configuration"] = dict(source.configuration)
+        validated_data["meta"] = dict(source.meta)
+        validated_data["row_form"] = source.row_form
+
+        question = super().create(validated_data)
+
+        new_question_options = [
+            models.QuestionOption(
+                sort=sort,
+                question=question,
+                option=question_option.option,
+                created_by_user=user.username,
+                created_by_group=user.group,
+            )
+            for sort, question_option in enumerate(
+                reversed(models.QuestionOption.objects.filter(question=source))
+            )
+        ]
+        models.QuestionOption.objects.bulk_create(new_question_options)
+
+        return question
+
+    class Meta:
+        model = models.Question
+        fields = ("slug", "label", "source")
 
 
 class SaveQuestionSerializer(serializers.ModelSerializer):
@@ -237,6 +310,21 @@ class SaveTableQuestionSerializer(SaveQuestionSerializer):
 class SaveOptionSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("slug", "label", "meta")
+        model = models.Option
+
+
+class CopyOptionSerializer(serializers.ModelSerializer):
+    source = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.Option.objects, required=True
+    )
+
+    def create(self, validated_data):
+        source = validated_data["source"]
+        validated_data["meta"] = dict(source.meta)
+        return super().create(validated_data)
+
+    class Meta:
+        fields = ("slug", "label", "source")
         model = models.Option
 
 
