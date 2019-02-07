@@ -90,6 +90,49 @@ def test_query_all_questions(
     snapshot.assert_match(result.data)
 
 
+@pytest.mark.parametrize("question__meta", [{"meta": "set"}])
+def test_copy_question(
+    db, snapshot, question, question_option_factory, schema_executor
+):
+    question_option_factory.create_batch(5, question=question)
+    query = """
+        mutation CopyQuestion($input: CopyQuestionInput!) {
+          copyQuestion(input: $input) {
+            question {
+              slug
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": {
+            "source": question.pk,
+            "slug": "new-question",
+            "label": "Test Question",
+        }
+    }
+    result = schema_executor(query, variables=inp)
+
+    assert not result.errors
+
+    question_slug = result.data["copyQuestion"]["question"]["slug"]
+    assert question_slug == "new-question"
+    new_question = models.Question.objects.get(pk=question_slug)
+    assert new_question.label == "Test Question"
+    assert new_question.meta == question.meta
+    assert new_question.type == question.type
+    assert new_question.configuration == question.configuration
+    assert new_question.row_form == question.row_form
+    assert new_question.is_hidden == question.is_hidden
+    assert new_question.is_required == question.is_required
+    assert new_question.source == question
+    assert list(
+        models.QuestionOption.objects.filter(question=new_question).values("option")
+    ) == list(models.QuestionOption.objects.filter(question=question).values("option"))
+
+
 @pytest.mark.parametrize(
     "mutation",
     [

@@ -40,3 +40,28 @@ def test_remove_option(db, option, schema_executor):
     assert not result.errors
     with pytest.raises(models.Option.DoesNotExist):
         option.refresh_from_db()
+
+
+@pytest.mark.parametrize("option__meta", [{"meta": "set"}])
+def test_copy_option(db, option, snapshot, schema_executor):
+    query = """
+        mutation CopyOption($input: CopyOptionInput!) {
+          copyOption(input: $input) {
+            option {
+              slug
+            }
+          }
+        }
+    """
+
+    inp = {"input": {"source": option.pk, "slug": "new-option", "label": "Test Option"}}
+    result = schema_executor(query, variables=inp)
+
+    assert not result.errors
+
+    option_slug = result.data["copyOption"]["option"]["slug"]
+    assert option_slug == "new-option"
+    new_option = models.Option.objects.get(pk=option_slug)
+    assert new_option.label == "Test Option"
+    assert new_option.meta == option.meta
+    assert new_option.source == option

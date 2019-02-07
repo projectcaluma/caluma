@@ -16,6 +16,13 @@ class Form(SlugModel):
     questions = models.ManyToManyField(
         "Question", through="FormQuestion", related_name="forms"
     )
+    source = models.ForeignKey(
+        "self",
+        blank=True,
+        null=True,
+        help_text="Reference this form has been copied from",
+        related_name="+",
+    )
 
 
 class FormQuestion(UUIDModel):
@@ -66,6 +73,14 @@ class Question(SlugModel):
         help_text="One row of table is represented by this form",
     )
 
+    source = models.ForeignKey(
+        "self",
+        blank=True,
+        null=True,
+        related_name="+",
+        help_text="Reference this question has been copied from",
+    )
+
     @property
     def max_length(self):
         return self.configuration.get("max_length")
@@ -104,6 +119,13 @@ class QuestionOption(UUIDModel):
 class Option(SlugModel):
     label = LocalizedField(blank=False, null=False, required=False)
     meta = JSONField(default=dict)
+    source = models.ForeignKey(
+        "self",
+        blank=True,
+        null=True,
+        related_name="+",
+        help_text="Reference this option has been copied from",
+    )
 
 
 class DocumentManager(models.Manager):
