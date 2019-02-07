@@ -4,30 +4,33 @@ python:
   - "3.6"
 
 services:
-  - postgresql
-
-cache:
-  - pip
+  - docker
 
 env:
   global:
-    - DATABASE_USER=postgres
-    - DATABASE_PASSWORD=
+    - DOCKER_COMPOSE_VERSION=1.21.0
+
+before_install:
+  # install newer compose version
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+
+  # Workaround for https://github.com/travis-ci/travis-ci/issues/4842
+  # Let's stop postgresql
+  - sudo service postgresql stop
+  # wait for postgresql to shutdown
+  - while sudo lsof -Pi :5432 -sTCP:LISTEN -t; do sleep 1; done
+
+  # set UID to run docker service with
+  - echo "UID=$(id --user)" > .env
 
 install:
-  - echo "ENV=travis" > .env
-  - pip install -r requirements-dev.txt --upgrade
-
-before_script:
-  - psql -c "CREATE DATABASE caluma;" -U postgres
+  - docker-compose up -d --build
 
 script:
-  - black --check .
-  - flake8
-  - pytest --no-cov-on-fail --cov --create-db
-
-after_success:
-- bash <(curl -s https://codecov.io/bash)
-
-addons:
-  postgresql: "9.6"
+  - docker-compose exec caluma black --check .
+  - docker-compose exec caluma flake8
+  - docker-compose exec caluma pytest --no-cov-on-fail --cov --create-db
+  - bash <(curl -s https://codecov.io/bash)
