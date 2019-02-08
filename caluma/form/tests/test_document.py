@@ -76,6 +76,123 @@ def test_query_all_documents(
     snapshot.assert_match(result.data)
 
 
+def test_complex_document_query_performance(
+    db,
+    schema_executor,
+    document,
+    form,
+    form_question_factory,
+    question_factory,
+    answer_factory,
+    question_option_factory,
+    django_assert_num_queries,
+):
+    answers = answer_factory.create_batch(5, document=document)
+    for answer in answers:
+        form_question_factory(question=answer.question, form=form)
+    checkbox_question = question_factory(type=Question.TYPE_CHECKBOX)
+    form_question_factory(question=checkbox_question, form=form)
+    question_option_factory.create_batch(10, question=checkbox_question)
+    answer_factory(question=checkbox_question)
+
+    query = """
+        query ($id: ID!) {
+          allDocuments(id: $id) {
+            edges {
+              node {
+                ...FormDocument
+              }
+            }
+          }
+        }
+
+        fragment FormDocument on Document {
+          id
+          answers {
+            edges {
+              node {
+                ...FieldAnswer
+              }
+            }
+          }
+          form {
+            slug
+            questions {
+              edges {
+                node {
+                  ...FieldQuestion
+                }
+              }
+            }
+          }
+        }
+
+        fragment FieldAnswer on Answer {
+          id
+          question {
+            slug
+          }
+          ... on StringAnswer {
+            stringValue: value
+          }
+          ... on IntegerAnswer {
+            integerValue: value
+          }
+          ... on FloatAnswer {
+            floatValue: value
+          }
+          ... on ListAnswer {
+            listValue: value
+          }
+        }
+
+        fragment FieldQuestion on Question {
+          slug
+          label
+          isRequired
+          isHidden
+          ... on TextQuestion {
+            textMaxLength: maxLength
+          }
+          ... on TextareaQuestion {
+            textareaMaxLength: maxLength
+          }
+          ... on IntegerQuestion {
+            integerMinValue: minValue
+            integerMaxValue: maxValue
+          }
+          ... on FloatQuestion {
+            floatMinValue: minValue
+            floatMaxValue: maxValue
+          }
+          ... on RadioQuestion {
+            radioOptions: options {
+              edges {
+                node {
+                  slug
+                  label
+                }
+              }
+            }
+          }
+          ... on CheckboxQuestion {
+            checkboxOptions: options {
+              edges {
+                node {
+                  slug
+                  label
+                }
+              }
+            }
+          }
+        }
+    """
+
+    with django_assert_num_queries(10):
+        result = schema_executor(query, variables={"id": str(document.pk)})
+    assert not result.errors
+
+
 def test_query_all_documents_filter_answers_by_question(
     db, snapshot, document, answer, question, answer_factory, schema_executor
 ):

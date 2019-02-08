@@ -84,7 +84,7 @@ class Union(BaseVisibility):
             else:
                 result_queryset = result_queryset.union(class_result)
 
-        if result_queryset:
+        if result_queryset is not None:
             queryset = queryset.filter(pk__in=result_queryset)
 
         return queryset

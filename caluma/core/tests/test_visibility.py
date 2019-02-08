@@ -135,3 +135,33 @@ def test_union_visibility(db):
     queryset = ConfiguredUnion().filter_queryset(CustomNode, queryset, None)
     assert queryset.count() == 3
     assert queryset.get(name="Name2")
+
+
+def test_union_visibility_none(db):
+    FakeModel = get_fake_model(model_base=models.UUIDModel)
+    FakeModel.objects.create()
+
+    class CustomNode(DjangoObjectType):
+        class Meta:
+            model = FakeModel
+
+    class CustomVisibility(BaseVisibility):
+        @filter_queryset_for(CustomNode)
+        def filter_queryset_for_custom_node(self, node, queryset, info):
+            return queryset.none()
+
+    class CustomVisibility2(BaseVisibility):
+        @filter_queryset_for(CustomNode)
+        def filter_queryset_for_custom_node(self, node, queryset, info):
+            return queryset.none()
+
+    class ConfiguredUnion(Union):
+        visibility_classes = [CustomVisibility2, CustomVisibility]
+
+    queryset = FakeModel.objects
+    result = CustomVisibility().filter_queryset(CustomNode, queryset, None)
+    assert result.count() == 0
+    result = CustomVisibility2().filter_queryset(CustomNode, queryset, None)
+    assert result.count() == 0
+    queryset = ConfiguredUnion().filter_queryset(CustomNode, queryset, None)
+    assert queryset.count() == 0

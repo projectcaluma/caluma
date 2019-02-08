@@ -138,6 +138,7 @@ type CheckboxQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
+  source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   options(before: String, after: String, first: Int, last: Int, orderBy: [OptionOrdering], slug: String, label: String, search: String): OptionConnection
   id: ID!
@@ -182,6 +183,43 @@ type CompleteWorkflowFormTask implements Task, Node {
   addressGroups: GroupJexl
   isArchived: Boolean!
   id: ID!
+}
+
+input CopyFormInput {
+  slug: String!
+  name: String!
+  description: String
+  source: ID!
+  clientMutationId: String
+}
+
+type CopyFormPayload {
+  form: Form
+  clientMutationId: String
+}
+
+input CopyOptionInput {
+  slug: String!
+  label: String!
+  source: ID!
+  clientMutationId: String
+}
+
+type CopyOptionPayload {
+  option: Option
+  clientMutationId: String
+}
+
+input CopyQuestionInput {
+  slug: String!
+  label: String!
+  source: ID!
+  clientMutationId: String
+}
+
+type CopyQuestionPayload {
+  question: Question
+  clientMutationId: String
 }
 
 scalar DateTime
@@ -242,6 +280,7 @@ type FloatQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
+  source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   id: ID!
   minValue: Float
@@ -282,6 +321,7 @@ type Form implements Node {
   isPublished: Boolean!
   isArchived: Boolean!
   questions(before: String, after: String, first: Int, last: Int, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String, orderBy: [QuestionOrdering]): QuestionConnection
+  source: Form
   id: ID!
 }
 
@@ -332,6 +372,7 @@ type IntegerQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
+  source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   id: ID!
   maxValue: Int
@@ -363,11 +404,14 @@ type Mutation {
   completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
   setWorkItemAssignedUsers(input: SetWorkItemAssignedUsersInput!): SetWorkItemAssignedUsersPayload
   saveForm(input: SaveFormInput!): SaveFormPayload
+  copyForm(input: CopyFormInput!): CopyFormPayload
   addFormQuestion(input: AddFormQuestionInput!): AddFormQuestionPayload
   removeFormQuestion(input: RemoveFormQuestionInput!): RemoveFormQuestionPayload
   reorderFormQuestions(input: ReorderFormQuestionsInput!): ReorderFormQuestionsPayload
   saveOption(input: SaveOptionInput!): SaveOptionPayload
   removeOption(input: RemoveOptionInput!): RemoveOptionPayload
+  copyOption(input: CopyOptionInput!): CopyOptionPayload
+  copyQuestion(input: CopyQuestionInput!): CopyQuestionPayload
   saveTextQuestion(input: SaveTextQuestionInput!): SaveTextQuestionPayload
   saveTextareaQuestion(input: SaveTextareaQuestionInput!): SaveTextareaQuestionPayload
   saveRadioQuestion(input: SaveRadioQuestionInput!): SaveRadioQuestionPayload
@@ -395,6 +439,7 @@ type Option implements Node {
   slug: String!
   label: String!
   meta: JSONString!
+  source: Option
   id: ID!
 }
 
@@ -452,6 +497,7 @@ interface Question {
   isArchived: Boolean!
   meta: JSONString!
   forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String, orderBy: [FormOrdering]): FormConnection
+  source: Question
 }
 
 type QuestionConnection {
@@ -490,6 +536,7 @@ type RadioQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
+  source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String, orderBy: [OptionOrdering]): OptionConnection
   id: ID!
@@ -890,6 +937,7 @@ type TableQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
+  source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   rowForm: Form
   id: ID!
@@ -959,6 +1007,7 @@ type TextQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
+  source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   id: ID!
   maxLength: Int
@@ -975,6 +1024,7 @@ type TextareaQuestion implements Question, Node {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
+  source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
   id: ID!
   maxLength: Int

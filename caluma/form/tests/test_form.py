@@ -100,6 +100,36 @@ def test_save_form_created_as_admin_user(
     assert result.data["saveForm"]["form"]["createdByUser"] == admin_user.username
 
 
+@pytest.mark.parametrize("form__meta", [{"meta": "set"}])
+def test_copy_form(db, snapshot, form, form_question_factory, schema_executor):
+    form_question_factory.create_batch(5, form=form)
+    query = """
+        mutation CopyForm($input: CopyFormInput!) {
+          copyForm(input: $input) {
+            form {
+              slug
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {"input": {"source": form.pk, "slug": "new-form", "name": "Test Form"}}
+    result = schema_executor(query, variables=inp)
+
+    assert not result.errors
+
+    form_slug = result.data["copyForm"]["form"]["slug"]
+    assert form_slug == "new-form"
+    new_form = models.Form.objects.get(pk=form_slug)
+    assert new_form.name == "Test Form"
+    assert new_form.meta == form.meta
+    assert new_form.source == form
+    assert list(
+        models.FormQuestion.objects.filter(form=new_form).values("question")
+    ) == list(models.FormQuestion.objects.filter(form=form).values("question"))
+
+
 def test_add_form_question(db, form, question, snapshot, schema_executor):
     query = """
         mutation AddFormQuestion($input: AddFormQuestionInput!) {
