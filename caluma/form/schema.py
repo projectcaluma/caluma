@@ -59,9 +59,9 @@ class Question(Node, graphene.Interface):
         QUESTION_OBJECT_TYPE = {
             models.Question.TYPE_TEXT: TextQuestion,
             models.Question.TYPE_FLOAT: FloatQuestion,
-            models.Question.TYPE_RADIO: RadioQuestion,
+            models.Question.TYPE_CHOICE: ChoiceQuestion,
             models.Question.TYPE_INTEGER: IntegerQuestion,
-            models.Question.TYPE_CHECKBOX: CheckboxQuestion,
+            models.Question.TYPE_MULTIPLE_CHOICE: MultipleChoiceQuestion,
             models.Question.TYPE_TEXTAREA: TextareaQuestion,
             models.Question.TYPE_TABLE: TableQuestion,
         }
@@ -114,7 +114,7 @@ class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class RadioQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class ChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
@@ -126,7 +126,7 @@ class RadioQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class CheckboxQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class MultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
@@ -243,15 +243,15 @@ class SaveTextareaQuestion(SaveQuestion):
         return_field_type = Question
 
 
-class SaveRadioQuestion(SaveQuestion):
+class SaveChoiceQuestion(SaveQuestion):
     class Meta:
-        serializer_class = serializers.SaveRadioQuestionSerializer
+        serializer_class = serializers.SaveChoiceQuestionSerializer
         return_field_type = Question
 
 
-class SaveCheckboxQuestion(SaveQuestion):
+class SaveMultipleChoiceQuestion(SaveQuestion):
     class Meta:
-        serializer_class = serializers.SaveCheckboxQuestionSerializer
+        serializer_class = serializers.SaveMultipleChoiceQuestionSerializer
         return_field_type = Question
 
 
@@ -454,8 +454,8 @@ class Mutation(object):
     copy_question = CopyQuestion().Field()
     save_text_question = SaveTextQuestion().Field()
     save_textarea_question = SaveTextareaQuestion().Field()
-    save_radio_question = SaveRadioQuestion().Field()
-    save_checkbox_question = SaveCheckboxQuestion().Field()
+    save_choice_question = SaveChoiceQuestion().Field()
+    save_multiple_choice_question = SaveMultipleChoiceQuestion().Field()
     save_float_question = SaveFloatQuestion().Field()
     save_integer_question = SaveIntegerQuestion().Field()
     save_table_question = SaveTableQuestion().Field()

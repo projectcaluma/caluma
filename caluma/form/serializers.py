@@ -220,26 +220,28 @@ class SaveQuestionOptionsMixin(object):
         return instance
 
 
-class SaveCheckboxQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSerializer):
+class SaveMultipleChoiceQuestionSerializer(
+    SaveQuestionOptionsMixin, SaveQuestionSerializer
+):
     options = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Option.objects.all(), many=True, required=True
     )
 
     def validate(self, data):
-        data["type"] = models.Question.TYPE_CHECKBOX
+        data["type"] = models.Question.TYPE_MULTIPLE_CHOICE
         return data
 
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + ("options",)
 
 
-class SaveRadioQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSerializer):
+class SaveChoiceQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSerializer):
     options = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Option.objects.all(), many=True, required=True
     )
 
     def validate(self, data):
-        data["type"] = models.Question.TYPE_RADIO
+        data["type"] = models.Question.TYPE_CHOICE
         return data
 
     class Meta(SaveQuestionSerializer.Meta):

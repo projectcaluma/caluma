@@ -13,7 +13,7 @@ from ...form.models import Answer, Question
         (Question.TYPE_INTEGER, 1),
         (Question.TYPE_FLOAT, 2.1),
         (Question.TYPE_TEXT, "somevalue"),
-        (Question.TYPE_CHECKBOX, ["somevalue", "anothervalue"]),
+        (Question.TYPE_MULTIPLE_CHOICE, ["somevalue", "anothervalue"]),
         (Question.TYPE_TABLE, None),
     ],
 )
@@ -90,10 +90,10 @@ def test_complex_document_query_performance(
     answers = answer_factory.create_batch(5, document=document)
     for answer in answers:
         form_question_factory(question=answer.question, form=form)
-    checkbox_question = question_factory(type=Question.TYPE_CHECKBOX)
-    form_question_factory(question=checkbox_question, form=form)
-    question_option_factory.create_batch(10, question=checkbox_question)
-    answer_factory(question=checkbox_question)
+    multiple_choice_question = question_factory(type=Question.TYPE_MULTIPLE_CHOICE)
+    form_question_factory(question=multiple_choice_question, form=form)
+    question_option_factory.create_batch(10, question=multiple_choice_question)
+    answer_factory(question=multiple_choice_question)
 
     query = """
         query ($id: ID!) {
@@ -165,8 +165,8 @@ def test_complex_document_query_performance(
             floatMinValue: minValue
             floatMaxValue: maxValue
           }
-          ... on RadioQuestion {
-            radioOptions: options {
+          ... on ChoiceQuestion {
+            choiceOptions: options {
               edges {
                 node {
                   slug
@@ -175,8 +175,8 @@ def test_complex_document_query_performance(
               }
             }
           }
-          ... on CheckboxQuestion {
-            checkboxOptions: options {
+          ... on MultipleChoiceQuestion {
+            multipleChoiceOptions: options {
               edges {
                 node {
                   slug
@@ -288,17 +288,23 @@ def test_save_document(db, snapshot, document, schema_executor):
             "SaveDocumentStringAnswer",
             False,
         ),
-        (Question.TYPE_CHECKBOX, {}, ["option-slug"], "SaveDocumentListAnswer", True),
         (
-            Question.TYPE_CHECKBOX,
+            Question.TYPE_MULTIPLE_CHOICE,
+            {},
+            ["option-slug"],
+            "SaveDocumentListAnswer",
+            True,
+        ),
+        (
+            Question.TYPE_MULTIPLE_CHOICE,
             {},
             ["option-slug", "option-invalid-slug"],
             "SaveDocumentStringAnswer",
             False,
         ),
-        (Question.TYPE_RADIO, {}, "option-slug", "SaveDocumentStringAnswer", True),
+        (Question.TYPE_CHOICE, {}, "option-slug", "SaveDocumentStringAnswer", True),
         (
-            Question.TYPE_RADIO,
+            Question.TYPE_CHOICE,
             {},
             "invalid-option-slug",
             "SaveDocumentStringAnswer",

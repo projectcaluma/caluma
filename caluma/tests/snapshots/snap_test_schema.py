@@ -127,7 +127,7 @@ enum CaseStatusArgument {
   CANCELED
 }
 
-type CheckboxQuestion implements Question, Node {
+type ChoiceQuestion implements Question, Node {
   createdAt: DateTime!
   modifiedAt: DateTime!
   createdByUser: String
@@ -140,7 +140,7 @@ type CheckboxQuestion implements Question, Node {
   meta: JSONString!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
-  options(before: String, after: String, first: Int, last: Int, orderBy: [OptionOrdering], slug: String, label: String, search: String): OptionConnection
+  options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String, orderBy: [OptionOrdering]): OptionConnection
   id: ID!
 }
 
@@ -392,6 +392,23 @@ type ListAnswer implements Answer, Node {
   meta: JSONString!
 }
 
+type MultipleChoiceQuestion implements Question, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  label: String!
+  isRequired: QuestionJexl!
+  isHidden: QuestionJexl!
+  isArchived: Boolean!
+  meta: JSONString!
+  source: Question
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  options(before: String, after: String, first: Int, last: Int, orderBy: [OptionOrdering], slug: String, label: String, search: String): OptionConnection
+  id: ID!
+}
+
 type Mutation {
   saveWorkflow(input: SaveWorkflowInput!): SaveWorkflowPayload
   addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
@@ -414,8 +431,8 @@ type Mutation {
   copyQuestion(input: CopyQuestionInput!): CopyQuestionPayload
   saveTextQuestion(input: SaveTextQuestionInput!): SaveTextQuestionPayload
   saveTextareaQuestion(input: SaveTextareaQuestionInput!): SaveTextareaQuestionPayload
-  saveRadioQuestion(input: SaveRadioQuestionInput!): SaveRadioQuestionPayload
-  saveCheckboxQuestion(input: SaveCheckboxQuestionInput!): SaveCheckboxQuestionPayload
+  saveChoiceQuestion(input: SaveChoiceQuestionInput!): SaveChoiceQuestionPayload
+  saveMultipleChoiceQuestion(input: SaveMultipleChoiceQuestionInput!): SaveMultipleChoiceQuestionPayload
   saveFloatQuestion(input: SaveFloatQuestionInput!): SaveFloatQuestionPayload
   saveIntegerQuestion(input: SaveIntegerQuestionInput!): SaveIntegerQuestionPayload
   saveTableQuestion(input: SaveTableQuestionInput!): SaveTableQuestionPayload
@@ -525,23 +542,6 @@ enum QuestionOrdering {
   CREATED_BY_GROUP_DESC
 }
 
-type RadioQuestion implements Question, Node {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  createdByUser: String
-  createdByGroup: String
-  slug: String!
-  label: String!
-  isRequired: QuestionJexl!
-  isHidden: QuestionJexl!
-  isArchived: Boolean!
-  meta: JSONString!
-  source: Question
-  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
-  options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String, orderBy: [OptionOrdering]): OptionConnection
-  id: ID!
-}
-
 input RemoveFlowInput {
   flow: ID!
   clientMutationId: String
@@ -583,7 +583,7 @@ type ReorderFormQuestionsPayload {
   clientMutationId: String
 }
 
-input SaveCheckboxQuestionInput {
+input SaveChoiceQuestionInput {
   slug: String!
   label: String!
   isRequired: QuestionJexl
@@ -594,7 +594,7 @@ input SaveCheckboxQuestionInput {
   clientMutationId: String
 }
 
-type SaveCheckboxQuestionPayload {
+type SaveChoiceQuestionPayload {
   question: Question
   clientMutationId: String
 }
@@ -755,19 +755,7 @@ type SaveIntegerQuestionPayload {
   clientMutationId: String
 }
 
-input SaveOptionInput {
-  slug: String!
-  label: String!
-  meta: JSONString
-  clientMutationId: String
-}
-
-type SaveOptionPayload {
-  option: Option
-  clientMutationId: String
-}
-
-input SaveRadioQuestionInput {
+input SaveMultipleChoiceQuestionInput {
   slug: String!
   label: String!
   isRequired: QuestionJexl
@@ -778,8 +766,20 @@ input SaveRadioQuestionInput {
   clientMutationId: String
 }
 
-type SaveRadioQuestionPayload {
+type SaveMultipleChoiceQuestionPayload {
   question: Question
+  clientMutationId: String
+}
+
+input SaveOptionInput {
+  slug: String!
+  label: String!
+  meta: JSONString
+  clientMutationId: String
+}
+
+type SaveOptionPayload {
+  option: Option
   clientMutationId: String
 }
 

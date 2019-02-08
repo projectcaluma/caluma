@@ -15,8 +15,8 @@ from ...core.tests import (
         (models.Question.TYPE_FLOAT, {}),
         (models.Question.TYPE_TEXT, {"max_length": 10}),
         (models.Question.TYPE_TEXTAREA, {"max_length": 10}),
-        (models.Question.TYPE_RADIO, {}),
-        (models.Question.TYPE_CHECKBOX, {}),
+        (models.Question.TYPE_CHOICE, {}),
+        (models.Question.TYPE_MULTIPLE_CHOICE, {}),
     ],
 )
 def test_query_all_questions(
@@ -54,7 +54,7 @@ def test_query_all_questions(
                   integerMinValue: minValue
                   integerMaxValue: maxValue
                 }
-                ... on CheckboxQuestion {
+                ... on MultipleChoiceQuestion {
                   options {
                     edges {
                       node {
@@ -63,7 +63,7 @@ def test_query_all_questions(
                     }
                   }
                 }
-                ... on RadioQuestion {
+                ... on ChoiceQuestion {
                   options {
                     edges {
                       node {
@@ -308,8 +308,8 @@ def test_save_integer_question(db, snapshot, question, schema_executor):
     snapshot.assert_execution_result(result)
 
 
-@pytest.mark.parametrize("question__type", [models.Question.TYPE_CHECKBOX])
-def test_save_checkbox_question(
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_MULTIPLE_CHOICE])
+def test_save_multiple_choice_question(
     db, snapshot, question, question_option_factory, schema_executor
 ):
     question_option_factory.create_batch(2, question=question)
@@ -317,15 +317,15 @@ def test_save_checkbox_question(
     option_ids = question.options.order_by("-slug").values_list("slug", flat=True)
 
     query = """
-        mutation SaveCheckboxQuestion($input: SaveCheckboxQuestionInput!) {
-          saveCheckboxQuestion(input: $input) {
+        mutation SaveMultipleChoiceQuestion($input: SaveMultipleChoiceQuestionInput!) {
+          saveMultipleChoiceQuestion(input: $input) {
             question {
               id
               slug
               label
               meta
               __typename
-              ... on CheckboxQuestion {
+              ... on MultipleChoiceQuestion {
                 options {
                   edges {
                     node {
@@ -343,7 +343,7 @@ def test_save_checkbox_question(
 
     inp = {
         "input": extract_serializer_input_fields(
-            serializers.SaveCheckboxQuestionSerializer, question
+            serializers.SaveMultipleChoiceQuestionSerializer, question
         )
     }
     inp["input"]["options"] = option_ids
@@ -352,18 +352,18 @@ def test_save_checkbox_question(
     snapshot.assert_match(result.data)
 
 
-@pytest.mark.parametrize("question__type", [models.Question.TYPE_RADIO])
-def test_save_radio_question(db, snapshot, question, question_option, schema_executor):
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_CHOICE])
+def test_save_choice_question(db, snapshot, question, question_option, schema_executor):
     query = """
-        mutation SaveRadioQuestion($input: SaveRadioQuestionInput!) {
-          saveRadioQuestion(input: $input) {
+        mutation SaveChoiceQuestion($input: SaveChoiceQuestionInput!) {
+          saveChoiceQuestion(input: $input) {
             question {
               id
               slug
               label
               meta
               __typename
-              ... on RadioQuestion {
+              ... on ChoiceQuestion {
                 options {
                   edges {
                     node {
@@ -381,7 +381,7 @@ def test_save_radio_question(db, snapshot, question, question_option, schema_exe
 
     inp = {
         "input": extract_serializer_input_fields(
-            serializers.SaveRadioQuestionSerializer, question
+            serializers.SaveChoiceQuestionSerializer, question
         )
     }
     question.delete()  # test creation

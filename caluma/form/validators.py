@@ -49,7 +49,7 @@ class AnswerValidator:
                 f"and not greater than {max_value}"
             )
 
-    def _validate_question_radio(self, question, value):
+    def _validate_question_choice(self, question, value):
         options = question.options.values_list("slug", flat=True)
         if not isinstance(value, str) or value not in options:
             raise exceptions.ValidationError(
@@ -57,7 +57,7 @@ class AnswerValidator:
                 f"Should be of type str and one of the options {'.'.join(options)}"
             )
 
-    def _validate_question_checkbox(self, question, value):
+    def _validate_question_multiple_choice(self, question, value):
         options = question.options.values_list("slug", flat=True)
         invalid_options = set(value) - set(options)
         if not isinstance(value, list) or invalid_options:

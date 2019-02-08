@@ -207,48 +207,6 @@ snapshots["test_save_integer_question[integer-question__configuration1] 1"] = {
     ],
 }
 
-snapshots["test_save_checkbox_question[checkbox] 1"] = {
-    "saveCheckboxQuestion": {
-        "clientMutationId": "testid",
-        "question": {
-            "__typename": "CheckboxQuestion",
-            "id": "Q2hlY2tib3hRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-            "label": "Thomas Johnson",
-            "meta": "{}",
-            "options": {
-                "edges": [
-                    {
-                        "node": {
-                            "label": "Mariah Reynolds",
-                            "slug": "provide-beyond-seek",
-                        }
-                    },
-                    {"node": {"label": "Daniel Mann", "slug": "live-by-itself"}},
-                ]
-            },
-            "slug": "sound-air-mission",
-        },
-    }
-}
-
-snapshots["test_save_radio_question[radio] 1"] = {
-    "saveRadioQuestion": {
-        "clientMutationId": "testid",
-        "question": {
-            "__typename": "RadioQuestion",
-            "id": "UmFkaW9RdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-            "label": "Thomas Johnson",
-            "meta": "{}",
-            "options": {
-                "edges": [
-                    {"node": {"label": "Kelly Brock", "slug": "example-indicate"}}
-                ]
-            },
-            "slug": "sound-air-mission",
-        },
-    }
-}
-
 snapshots["test_query_all_questions[float-question__configuration2] 1"] = {
     "allQuestions": {
         "edges": [
@@ -301,13 +259,13 @@ snapshots["test_query_all_questions[textarea-question__configuration4] 1"] = {
     }
 }
 
-snapshots["test_query_all_questions[radio-question__configuration5] 1"] = {
+snapshots["test_query_all_questions[choice-question__configuration5] 1"] = {
     "allQuestions": {
         "edges": [
             {
                 "node": {
-                    "__typename": "RadioQuestion",
-                    "id": "UmFkaW9RdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
+                    "__typename": "ChoiceQuestion",
+                    "id": "Q2hvaWNlUXVlc3Rpb246c291bmQtYWlyLW1pc3Npb24=",
                     "label": "Thomas Johnson",
                     "meta": "{}",
                     "options": {"edges": [{"node": {"slug": "example-indicate"}}]},
@@ -318,13 +276,31 @@ snapshots["test_query_all_questions[radio-question__configuration5] 1"] = {
     }
 }
 
-snapshots["test_query_all_questions[checkbox-question__configuration6] 1"] = {
+snapshots["test_save_choice_question[choice] 1"] = {
+    "saveChoiceQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "ChoiceQuestion",
+            "id": "Q2hvaWNlUXVlc3Rpb246c291bmQtYWlyLW1pc3Npb24=",
+            "label": "Thomas Johnson",
+            "meta": "{}",
+            "options": {
+                "edges": [
+                    {"node": {"label": "Kelly Brock", "slug": "example-indicate"}}
+                ]
+            },
+            "slug": "sound-air-mission",
+        },
+    }
+}
+
+snapshots["test_query_all_questions[multiple_choice-question__configuration6] 1"] = {
     "allQuestions": {
         "edges": [
             {
                 "node": {
-                    "__typename": "CheckboxQuestion",
-                    "id": "Q2hlY2tib3hRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
+                    "__typename": "MultipleChoiceQuestion",
+                    "id": "TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
                     "label": "Thomas Johnson",
                     "meta": "{}",
                     "options": {"edges": [{"node": {"slug": "example-indicate"}}]},
@@ -332,5 +308,29 @@ snapshots["test_query_all_questions[checkbox-question__configuration6] 1"] = {
                 }
             }
         ]
+    }
+}
+
+snapshots["test_save_multiple_choice_question[multiple_choice] 1"] = {
+    "saveMultipleChoiceQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "MultipleChoiceQuestion",
+            "id": "TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
+            "label": "Thomas Johnson",
+            "meta": "{}",
+            "options": {
+                "edges": [
+                    {
+                        "node": {
+                            "label": "Mariah Reynolds",
+                            "slug": "provide-beyond-seek",
+                        }
+                    },
+                    {"node": {"label": "Daniel Mann", "slug": "live-by-itself"}},
+                ]
+            },
+            "slug": "sound-air-mission",
+        },
     }
 }
