@@ -40,7 +40,7 @@ class CopyFormSerializer(serializers.ModelSerializer):
                 created_by_group=user.group,
             )
             for sort, form_question in enumerate(
-                reversed(models.FormQuestion.objects.filter(form=source))
+                reversed(models.FormQuestion.objects.filter(form=source)), start=1
             )
         ]
         models.FormQuestion.objects.bulk_create(new_form_questions)
@@ -59,9 +59,22 @@ class AddFormQuestionSerializer(serializers.ModelSerializer):
     )
 
     def update(self, instance, validated_data):
-        models.FormQuestion.objects.get_or_create(
+        # default sort is 0, as per default form question are sorted
+        # in descending order this will be at the end
+        _, created = models.FormQuestion.objects.get_or_create(
             form=self.instance, question=validated_data["question"]
         )
+
+        if created:
+            # reassign sort from start 1 so a newly added item with sort 0 will
+            # be at the end again
+            for sort, question in enumerate(
+                reversed(self.instance.questions.all()), start=1
+            ):
+                models.FormQuestion.objects.filter(
+                    form=instance, question=question
+                ).update(sort=sort)
+
         return instance
 
     class Meta:
@@ -107,7 +120,7 @@ class ReorderFormQuestionsSerializer(serializers.ModelSerializer):
                 "Input questions are not the same as current form questions"
             )
 
-        for sort, question in enumerate(reversed(questions)):
+        for sort, question in enumerate(reversed(questions), start=1):
             models.FormQuestion.objects.filter(form=instance, question=question).update(
                 sort=sort
             )
@@ -146,7 +159,7 @@ class CopyQuestionSerializer(serializers.ModelSerializer):
                 created_by_group=user.group,
             )
             for sort, question_option in enumerate(
-                reversed(models.QuestionOption.objects.filter(question=source))
+                reversed(models.QuestionOption.objects.filter(question=source)), start=1
             )
         ]
         models.QuestionOption.objects.bulk_create(new_question_options)
@@ -200,7 +213,7 @@ class SaveQuestionOptionsMixin(object):
                 created_by_user=user.username,
                 created_by_group=user.group,
             )
-            for sort, option in enumerate(reversed(options))
+            for sort, option in enumerate(reversed(options), start=1)
         ]
         models.QuestionOption.objects.bulk_create(question_option)
 
@@ -413,7 +426,7 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         family = answer.document.family
         document_ids = [document.pk for document in documents]
 
-        for sort, document_id in enumerate(reversed(document_ids)):
+        for sort, document_id in enumerate(reversed(document_ids), start=1):
             models.AnswerDocument.objects.create(
                 answer=answer, document_id=document_id, sort=sort
             )

@@ -52,7 +52,7 @@ class Question(Node, graphene.Interface):
     @classmethod
     def get_queryset(cls, queryset, info):
         queryset = super().get_queryset(queryset, info)
-        return queryset.order_by("-formquestion__sort", "formquestion__id")
+        return queryset.order_by("-formquestion__sort")
 
     @classmethod
     def resolve_type(cls, instance, info):
@@ -78,7 +78,7 @@ class Option(DjangoObjectType):
     @classmethod
     def get_queryset(cls, queryset, info):
         queryset = super().get_queryset(queryset, info)
-        return queryset.order_by("-questionoption__sort", "questionoption__id")
+        return queryset.order_by("-questionoption__sort")
 
 
 class QuestionConnection(graphene.Connection):
@@ -382,7 +382,7 @@ class TableAnswer(AnswerQuerysetMixin, DjangoObjectType):
     value = graphene.List(Document, required=True)
 
     def resolve_value(self, info, **args):
-        return self.documents.order_by("-answerdocument__sort", "answerdocument__id")
+        return self.documents.order_by("-answerdocument__sort")
 
     class Meta:
         model = models.Answer

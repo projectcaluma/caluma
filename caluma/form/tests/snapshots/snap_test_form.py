@@ -7,16 +7,6 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots["test_add_form_question 1"] = {
-    "data": {
-        "addFormQuestion": {
-            "clientMutationId": None,
-            "form": {"questions": {"edges": [{"node": {"slug": "sound-air-mission"}}]}},
-        }
-    },
-    "errors": [],
-}
-
 snapshots["test_remove_form_question 1"] = {
     "data": {
         "removeFormQuestion": {
