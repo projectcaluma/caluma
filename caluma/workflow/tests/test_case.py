@@ -25,7 +25,14 @@ def test_query_all_cases(db, snapshot, case, flow, schema_executor):
 
 @pytest.mark.parametrize("task__address_groups", ['["group-name"]|groups', None])
 def test_start_case(
-    db, snapshot, workflow, workflow_allow_forms, work_item, form, schema_executor
+    db,
+    snapshot,
+    workflow,
+    workflow_allow_forms,
+    workflow_start_tasks,
+    work_item,
+    form,
+    schema_executor,
 ):
     query = """
         mutation StartCase($input: StartCaseInput!) {

@@ -6,7 +6,14 @@ from ...core.tests import extract_serializer_input_fields
 
 
 def test_query_all_workflows(
-    db, snapshot, workflow, task_flow, workflow_allow_forms, flow, schema_executor
+    db,
+    snapshot,
+    workflow,
+    task_flow,
+    workflow_start_tasks,
+    workflow_allow_forms,
+    flow,
+    schema_executor,
 ):
     query = """
         query AllWorkflows($name: String!) {
@@ -26,6 +33,9 @@ def test_query_all_workflows(
                       next
                     }
                   }
+                }
+                startTasks {
+                    slug
                 }
                 allowAllForms
                 allowForms {
@@ -47,7 +57,9 @@ def test_query_all_workflows(
     snapshot.assert_match(result.data)
 
 
-def test_save_workflow(db, snapshot, workflow, workflow_allow_forms, schema_executor):
+def test_save_workflow(
+    db, snapshot, workflow, workflow_start_tasks, workflow_allow_forms, schema_executor
+):
     query = """
         mutation SaveWorkflow($input: SaveWorkflowInput!) {
           saveWorkflow(input: $input) {
