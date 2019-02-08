@@ -36,19 +36,19 @@ class FormQuestion(UUIDModel):
 
 
 class Question(SlugModel):
-    TYPE_CHECKBOX = "checkbox"
+    TYPE_MULTIPLE_CHOICE = "multiple_choice"
     TYPE_INTEGER = "integer"
     TYPE_FLOAT = "float"
-    TYPE_RADIO = "radio"
+    TYPE_CHOICE = "choice"
     TYPE_TEXTAREA = "textarea"
     TYPE_TEXT = "text"
     TYPE_TABLE = "table"
 
     TYPE_CHOICES = (
-        TYPE_CHECKBOX,
+        TYPE_MULTIPLE_CHOICE,
         TYPE_INTEGER,
         TYPE_FLOAT,
-        TYPE_RADIO,
+        TYPE_CHOICE,
         TYPE_TEXTAREA,
         TYPE_TEXT,
         TYPE_TABLE,
@@ -56,7 +56,7 @@ class Question(SlugModel):
     TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
 
     label = LocalizedField(blank=False, null=False, required=False)
-    type = models.CharField(choices=TYPE_CHOICES_TUPLE, max_length=10)
+    type = models.CharField(choices=TYPE_CHOICES_TUPLE, max_length=15)
     is_required = models.TextField(default="false")
     is_hidden = models.TextField(default="false")
     is_archived = models.BooleanField(default=False)

@@ -85,32 +85,6 @@ snapshots["test_query_all_documents[text-somevalue] 1"] = {
     }
 }
 
-snapshots["test_query_all_documents[checkbox-answer__value3] 1"] = {
-    "allDocuments": {
-        "edges": [
-            {
-                "node": {
-                    "answers": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "__typename": "ListAnswer",
-                                    "list_value": ["somevalue", "anothervalue"],
-                                    "question": {
-                                        "label": "Thomas Johnson",
-                                        "slug": "sound-air-mission",
-                                    },
-                                }
-                            }
-                        ]
-                    },
-                    "createdByUser": "4602cffe-6aa8-4ae7-ba6b-2cf34839ef47",
-                }
-            }
-        ]
-    }
-}
-
 snapshots["test_query_all_documents[table-None] 1"] = {
     "allDocuments": {
         "edges": [
@@ -245,25 +219,7 @@ snapshots[
 }
 
 snapshots[
-    "test_save_document_answer[checkbox-question__configuration9-answer__value9-SaveDocumentListAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentListAnswer": {
-        "answer": {"listValue": ["option-slug"]},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[checkbox-question__configuration9-answer__value9-SaveDocumentListAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentListAnswer": {
-        "answer": {"listValue": ["option-slug"]},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[radio-question__configuration11-option-slug-SaveDocumentStringAnswer-True-option-slug-True] 1"
+    "test_save_document_answer[choice-question__configuration11-option-slug-SaveDocumentStringAnswer-True-option-slug-True] 1"
 ] = {
     "saveDocumentStringAnswer": {
         "answer": {"stringValue": "option-slug"},
@@ -272,10 +228,54 @@ snapshots[
 }
 
 snapshots[
-    "test_save_document_answer[radio-question__configuration11-option-slug-SaveDocumentStringAnswer-True-option-slug-False] 1"
+    "test_save_document_answer[choice-question__configuration11-option-slug-SaveDocumentStringAnswer-True-option-slug-False] 1"
 ] = {
     "saveDocumentStringAnswer": {
         "answer": {"stringValue": "option-slug"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots["test_query_all_documents[multiple_choice-answer__value3] 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "ListAnswer",
+                                    "list_value": ["somevalue", "anothervalue"],
+                                    "question": {
+                                        "label": "Thomas Johnson",
+                                        "slug": "sound-air-mission",
+                                    },
+                                }
+                            }
+                        ]
+                    },
+                    "createdByUser": "4602cffe-6aa8-4ae7-ba6b-2cf34839ef47",
+                }
+            }
+        ]
+    }
+}
+
+snapshots[
+    "test_save_document_answer[multiple_choice-question__configuration9-answer__value9-SaveDocumentListAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentListAnswer": {
+        "answer": {"listValue": ["option-slug"]},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[multiple_choice-question__configuration9-answer__value9-SaveDocumentListAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentListAnswer": {
+        "answer": {"listValue": ["option-slug"]},
         "clientMutationId": "testid",
     }
 }

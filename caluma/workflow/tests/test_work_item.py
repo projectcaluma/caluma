@@ -146,7 +146,7 @@ def test_complete_workflow_form_work_item(
 )
 @pytest.mark.parametrize(
     "question__type,answer__value,success",
-    [(Question.TYPE_INTEGER, 1, True), (Question.TYPE_RADIO, "", False)],
+    [(Question.TYPE_INTEGER, 1, True), (Question.TYPE_CHOICE, "", False)],
 )
 def test_complete_task_form_work_item(
     db, snapshot, work_item, answer, form_question, success, schema_executor

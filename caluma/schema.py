@@ -23,8 +23,8 @@ schema = graphene.Schema(
     # TODO: define what app exposes what types
     types=[
         form_schema.TextQuestion,
-        form_schema.RadioQuestion,
-        form_schema.CheckboxQuestion,
+        form_schema.ChoiceQuestion,
+        form_schema.MultipleChoiceQuestion,
         form_schema.TextareaQuestion,
         form_schema.FloatQuestion,
         form_schema.IntegerQuestion,
