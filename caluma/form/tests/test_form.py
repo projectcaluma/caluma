@@ -130,7 +130,11 @@ def test_copy_form(db, snapshot, form, form_question_factory, schema_executor):
     ) == list(models.FormQuestion.objects.filter(form=form).values("question"))
 
 
-def test_add_form_question(db, form, question, snapshot, schema_executor):
+def test_add_form_question(
+    db, form, question, form_question_factory, snapshot, schema_executor
+):
+    form_question_factory.create_batch(5, form=form)
+
     query = """
         mutation AddFormQuestion($input: AddFormQuestionInput!) {
           addFormQuestion(input: $input) {
@@ -158,7 +162,10 @@ def test_add_form_question(db, form, question, snapshot, schema_executor):
         },
     )
 
-    snapshot.assert_execution_result(result)
+    assert not result.errors
+    questions = result.data["addFormQuestion"]["form"]["questions"]["edges"]
+    assert len(questions) == 6
+    assert questions[-1]["node"]["slug"] == question.slug
 
 
 def test_remove_form_question(

@@ -31,7 +31,7 @@ class FormQuestion(UUIDModel):
     sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
 
     class Meta:
-        ordering = ("-sort", "id")
+        ordering = ("-sort",)
         unique_together = ("form", "question")
 
 
@@ -112,7 +112,7 @@ class QuestionOption(UUIDModel):
     sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
 
     class Meta:
-        ordering = ("-sort", "id")
+        ordering = ("-sort",)
         unique_together = ("option", "question")
 
 
@@ -188,5 +188,5 @@ class AnswerDocument(UUIDModel):
     sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
 
     class Meta:
-        ordering = ("-sort", "id")
+        ordering = ("-sort",)
         unique_together = ("answer", "document")
