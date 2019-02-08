@@ -50,7 +50,7 @@ def test_save_task(db, snapshot, task, mutation, schema_executor):
     }
     result = schema_executor(query, variables=inp)
     assert not result.errors
-    snapshot.assert_execution_result(result)
+    snapshot.assert_match(result.data)
 
 
 def test_save_comlete_task_form_task(db, snapshot, task, schema_executor):
@@ -75,4 +75,4 @@ def test_save_comlete_task_form_task(db, snapshot, task, schema_executor):
     }
     result = schema_executor(query, variables=inp)
     assert not result.errors
-    snapshot.assert_execution_result(result)
+    snapshot.assert_match(result.data)

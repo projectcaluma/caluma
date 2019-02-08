@@ -94,15 +94,17 @@ def test_save_workflow(
 
 
 @pytest.mark.parametrize(
-    "task__slug,next",
+    "task__slug,next,success",
     [
-        ("task-slug", '"task-slug"|task'),
-        ("task-slug", '"not-av-task-slug"|task'),
-        ("task-slug", '"not-av-task-slug"|invalid'),
-        ("task-slug", '""'),
+        ("task-slug", '"task-slug"|task', True),
+        ("task-slug", '"not-av-task-slug"|task', False),
+        ("task-slug", '"not-av-task-slug"|invalid', False),
+        ("task-slug", '""', False),
     ],
 )
-def test_add_workflow_flow(db, workflow, task, snapshot, next, admin_schema_executor):
+def test_add_workflow_flow(
+    db, workflow, task, snapshot, success, next, admin_schema_executor
+):
     query = """
         mutation AddWorkflowFlow($input: AddWorkflowFlowInput!) {
           addWorkflowFlow(input: $input) {
@@ -135,10 +137,12 @@ def test_add_workflow_flow(db, workflow, task, snapshot, next, admin_schema_exec
             }
         },
     )
-    snapshot.assert_execution_result(result)
+    assert not bool(result.errors) == success
+    if success:
+        snapshot.assert_match(result.data)
 
 
-def test_remove_flow(db, workflow, task_flow, flow, snapshot, schema_executor):
+def test_remove_flow(db, workflow, task_flow, flow, schema_executor):
     query = """
         mutation RemoveFlow($input: RemoveFlowInput!) {
           removeFlow(input: $input) {

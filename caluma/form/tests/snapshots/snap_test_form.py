@@ -8,13 +8,10 @@ from snapshottest import Snapshot
 snapshots = Snapshot()
 
 snapshots["test_remove_form_question 1"] = {
-    "data": {
-        "removeFormQuestion": {
-            "clientMutationId": None,
-            "form": {"questions": {"edges": []}},
-        }
-    },
-    "errors": [],
+    "removeFormQuestion": {
+        "clientMutationId": None,
+        "form": {"questions": {"edges": []}},
+    }
 }
 
 snapshots["test_save_form[some description text-en] 1"] = {

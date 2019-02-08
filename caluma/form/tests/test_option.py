@@ -43,7 +43,7 @@ def test_remove_option(db, option, schema_executor):
 
 
 @pytest.mark.parametrize("option__meta", [{"meta": "set"}])
-def test_copy_option(db, option, snapshot, schema_executor):
+def test_copy_option(db, option, schema_executor):
     query = """
         mutation CopyOption($input: CopyOptionInput!) {
           copyOption(input: $input) {

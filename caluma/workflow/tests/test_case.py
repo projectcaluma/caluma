@@ -73,7 +73,7 @@ def test_start_case(
     snapshot.assert_match(result.data)
 
 
-def test_start_sub_case(db, snapshot, workflow, work_item, schema_executor):
+def test_start_sub_case(db, workflow, work_item, schema_executor):
     query = """
         mutation StartCase($input: StartCaseInput!) {
           startCase(input: $input) {
@@ -95,7 +95,7 @@ def test_start_sub_case(db, snapshot, workflow, work_item, schema_executor):
     assert case.parent_work_item.pk == work_item.pk
 
 
-def test_start_case_invalid_form(db, snapshot, workflow, form, schema_executor):
+def test_start_case_invalid_form(db, workflow, form, schema_executor):
     query = """
         mutation StartCase($input: StartCaseInput!) {
           startCase(input: $input) {

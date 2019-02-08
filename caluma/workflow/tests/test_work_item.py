@@ -89,7 +89,6 @@ def test_complete_work_item_last(db, snapshot, work_item, success, schema_execut
 )
 def test_complete_workflow_form_work_item(
     db,
-    snapshot,
     work_item,
     answer,
     question_factory,
@@ -149,7 +148,7 @@ def test_complete_workflow_form_work_item(
     [(Question.TYPE_INTEGER, 1, True), (Question.TYPE_CHOICE, "", False)],
 )
 def test_complete_task_form_work_item(
-    db, snapshot, work_item, answer, form_question, success, schema_executor
+    db, work_item, answer, form_question, success, schema_executor
 ):
     query = """
         mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
@@ -235,7 +234,6 @@ def test_complete_work_item_with_next(
 )
 def test_complete_work_item_with_next_multiple_tasks(
     db,
-    snapshot,
     case,
     work_item,
     task,
@@ -288,7 +286,6 @@ def test_complete_work_item_with_next_multiple_tasks(
 )
 def test_complete_work_item_with_merge(
     db,
-    snapshot,
     case,
     work_item,
     work_item_factory,
@@ -347,7 +344,7 @@ def test_complete_work_item_with_merge(
     assert ready_workitem.document_id is not None
 
 
-def test_set_work_item_assigned_users(db, snapshot, work_item, schema_executor):
+def test_set_work_item_assigned_users(db, work_item, schema_executor):
     query = """
         mutation SetWorkItemAssignedUsers($input: SetWorkItemAssignedUsersInput!) {
           setWorkItemAssignedUsers(input: $input) {
