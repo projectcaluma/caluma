@@ -32,4 +32,5 @@ install:
 script:
   - docker-compose exec caluma black --check .
   - docker-compose exec caluma flake8
+  - docker-compose exec caluma ./manage.py makemigrations --check --dry-run --no-input
   - docker-compose exec caluma pytest --no-cov-on-fail --cov --create-db
