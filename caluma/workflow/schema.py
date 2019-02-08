@@ -122,7 +122,11 @@ class Flow(DjangoObjectType):
 
 
 class Workflow(DjangoObjectType):
-    start = graphene.Field(Task, required=True)
+    start_tasks = graphene.List(Task, required=True)
+
+    def resolve_start_tasks(self, info, **args):
+        return self.start_tasks.all()
+
     flows = DjangoFilterConnectionField(Flow, filterset_class=filters.FlowFilterSet)
 
     def resolve_flows(self, info, **args):

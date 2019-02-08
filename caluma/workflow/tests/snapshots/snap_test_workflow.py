@@ -7,47 +7,6 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots["test_query_all_workflows 1"] = {
-    "allWorkflows": {
-        "edges": [
-            {
-                "node": {
-                    "allowAllForms": False,
-                    "allowForms": {"edges": [{"node": {"slug": "effort-meet"}}]},
-                    "description": """Role include money center of yes. Land subject another government animal pressure. Game respond mouth despite culture be magazine.
-Hot morning future throughout guess language drive.""",
-                    "flows": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "next": "mrs-positive",
-                                    "tasks": [{"slug": "sound-air-mission"}],
-                                }
-                            }
-                        ]
-                    },
-                    "meta": "{}",
-                    "name": "Renee Ayala",
-                    "slug": "few-list-tax",
-                }
-            }
-        ]
-    }
-}
-
-snapshots["test_save_workflow 1"] = {
-    "saveWorkflow": {
-        "clientMutationId": "testid",
-        "workflow": {
-            "allowAllForms": False,
-            "allowForms": {"edges": [{"node": {"slug": "effort-meet"}}]},
-            "meta": "{}",
-            "name": "Renee Ayala",
-            "slug": "few-list-tax",
-        },
-    }
-}
-
 snapshots['test_add_workflow_flow[task-slug-"task-slug"|task] 1'] = {
     "data": {
         "addWorkflowFlow": {
@@ -102,4 +61,46 @@ snapshots['test_add_workflow_flow[task-slug-""] 1'] = {
             "path": ["addWorkflowFlow"],
         }
     ],
+}
+
+snapshots["test_save_workflow 1"] = {
+    "saveWorkflow": {
+        "clientMutationId": "testid",
+        "workflow": {
+            "allowAllForms": False,
+            "allowForms": {"edges": [{"node": {"slug": "sound-air-mission"}}]},
+            "meta": "{}",
+            "name": "Brian Williams",
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots["test_query_all_workflows 1"] = {
+    "allWorkflows": {
+        "edges": [
+            {
+                "node": {
+                    "allowAllForms": False,
+                    "allowForms": {"edges": [{"node": {"slug": "sound-air-mission"}}]},
+                    "description": """Line whatever team suggest traditional boy. Drop argue move. Anyone remember prove.
+Kid avoid player relationship to range whose. Draw free property consider.""",
+                    "flows": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "next": "mrs-positive",
+                                    "tasks": [{"slug": "few-list-tax"}],
+                                }
+                            }
+                        ]
+                    },
+                    "meta": "{}",
+                    "name": "Brian Williams",
+                    "slug": "effort-meet",
+                    "startTasks": [{"slug": "few-list-tax"}],
+                }
+            }
+        ]
+    }
 }

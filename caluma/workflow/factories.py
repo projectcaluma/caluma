@@ -26,11 +26,18 @@ class WorkflowFactory(DjangoModelFactory):
     meta = {}
     is_published = False
     is_archived = False
-    start = SubFactory(TaskFactory)
     allow_all_forms = False
 
     class Meta:
         model = models.Workflow
+
+
+class WorkflowStartTasksFactory(FactoryDjangoModelFactory):
+    workflow = SubFactory(WorkflowFactory)
+    task = SubFactory(TaskFactory)
+
+    class Meta:
+        model = models.Workflow.start_tasks.through
 
 
 class WorkflowAllowFormsFactory(FactoryDjangoModelFactory):

@@ -851,7 +851,7 @@ input SaveWorkflowInput {
   name: String!
   description: String
   meta: JSONString
-  start: ID!
+  startTasks: [ID]!
   allowAllForms: Boolean
   allowForms: [ID]
   isArchived: Boolean
@@ -1092,7 +1092,7 @@ type Workflow implements Node {
   meta: JSONString!
   isPublished: Boolean!
   isArchived: Boolean!
-  start: Task!
+  startTasks: [Task]!
   allowAllForms: Boolean!
   allowForms(before: String, after: String, first: Int, last: Int): FormConnection
   id: ID!

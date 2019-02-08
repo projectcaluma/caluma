@@ -26,7 +26,7 @@ class SaveWorkflowSerializer(serializers.ModelSerializer):
             "name",
             "description",
             "meta",
-            "start",
+            "start_tasks",
             "allow_all_forms",
             "allow_forms",
             "is_archived",
@@ -148,7 +148,7 @@ class SaveCompleteTaskFormTaskSerializer(SaveTaskSerializer):
 
 class StartCaseSerializer(serializers.ModelSerializer):
     workflow = serializers.GlobalIDPrimaryKeyRelatedField(
-        queryset=models.Workflow.objects.select_related("start")
+        queryset=models.Workflow.objects.prefetch_related("start_tasks")
     )
     parent_work_item = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.WorkItem.objects, required=False
@@ -190,19 +190,27 @@ class StartCaseSerializer(serializers.ModelSerializer):
             parent_work_item.save()
 
         workflow = instance.workflow
-        addressed_groups = []
-        if workflow.start.address_groups:
-            addressed_groups = GroupJexl().evaluate(workflow.start.address_groups)
-        models.WorkItem.objects.create(
-            addressed_groups=addressed_groups,
-            case=instance,
-            document=Document.objects.create_document_for_task(workflow.start, user),
-            task=workflow.start,
-            status=models.WorkItem.STATUS_READY,
-            created_by_user=user.username,
-            created_by_group=user.group,
-        )
+        work_items = []
+        for start_task in workflow.start_tasks.all():
+            addressed_groups = []
+            if start_task.address_groups:
+                addressed_groups = GroupJexl().evaluate(start_task.address_groups)
 
+            work_items.append(
+                models.WorkItem(
+                    addressed_groups=addressed_groups,
+                    case=instance,
+                    document=Document.objects.create_document_for_task(
+                        start_task, user
+                    ),
+                    task=start_task,
+                    status=models.WorkItem.STATUS_READY,
+                    created_by_user=user.username,
+                    created_by_group=user.group,
+                )
+            )
+
+        models.WorkItem.objects.bulk_create(work_items)
         return instance
 
     class Meta:

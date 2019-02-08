@@ -14,7 +14,7 @@ snapshots["test_query_all_cases 1"] = {
 snapshots["test_cancel_case[running-True-completed] 1"] = {
     "cancelCase": {
         "case": {
-            "document": {"form": {"slug": "effort-meet"}},
+            "document": {"form": {"slug": "sound-air-mission"}},
             "status": "CANCELED",
             "workItems": {"edges": [{"node": {"status": "COMPLETED"}}]},
         },
@@ -25,7 +25,7 @@ snapshots["test_cancel_case[running-True-completed] 1"] = {
 snapshots["test_cancel_case[running-True-ready] 1"] = {
     "cancelCase": {
         "case": {
-            "document": {"form": {"slug": "effort-meet"}},
+            "document": {"form": {"slug": "sound-air-mission"}},
             "status": "CANCELED",
             "workItems": {"edges": [{"node": {"status": "CANCELED"}}]},
         },
@@ -36,7 +36,7 @@ snapshots["test_cancel_case[running-True-ready] 1"] = {
 snapshots['test_start_case[["group-name"]|groups] 1'] = {
     "startCase": {
         "case": {
-            "document": {"form": {"slug": "effort-meet"}},
+            "document": {"form": {"slug": "sound-air-mission"}},
             "parentWorkItem": None,
             "status": "RUNNING",
             "workItems": {
@@ -44,7 +44,7 @@ snapshots['test_start_case[["group-name"]|groups] 1'] = {
                     {
                         "node": {
                             "addressedGroups": ["group-name"],
-                            "document": {"form": {"slug": "effort-meet"}},
+                            "document": {"form": {"slug": "sound-air-mission"}},
                             "status": "READY",
                         }
                     }
@@ -58,7 +58,7 @@ snapshots['test_start_case[["group-name"]|groups] 1'] = {
 snapshots["test_start_case[None] 1"] = {
     "startCase": {
         "case": {
-            "document": {"form": {"slug": "effort-meet"}},
+            "document": {"form": {"slug": "sound-air-mission"}},
             "parentWorkItem": None,
             "status": "RUNNING",
             "workItems": {
@@ -66,7 +66,7 @@ snapshots["test_start_case[None] 1"] = {
                     {
                         "node": {
                             "addressedGroups": [],
-                            "document": {"form": {"slug": "effort-meet"}},
+                            "document": {"form": {"slug": "sound-air-mission"}},
                             "status": "READY",
                         }
                     }

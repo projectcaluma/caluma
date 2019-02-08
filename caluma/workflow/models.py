@@ -43,11 +43,8 @@ class Workflow(SlugModel):
     meta = JSONField(default=dict)
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
-    start = models.ForeignKey(
-        Task,
-        on_delete=models.CASCADE,
-        related_name="+",
-        help_text="First task of the workflow.",
+    start_tasks = models.ManyToManyField(
+        Task, related_name="+", help_text="Starting task(s) of the workflow."
     )
     allow_all_forms = models.BooleanField(
         default=False, help_text="Allow workflow to be started with any form"
