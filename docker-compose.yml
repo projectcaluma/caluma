@@ -17,8 +17,9 @@ services:
       - db
     # Example to include custom extensions
     # volumes:
-    #   - ./visibilities.py:/app/caluma/extensions/visibility.py
+    #   - ./visibilities.py:/app/caluma/extensions/visibilities.py
     #   - ./permissions.py:/app/caluma/extensions/permissions.py
+    #   - ./validations.py:/app/caluma/extensions/validations.py
     environment:
       - DATABASE_HOST=db
       # following options are a must to configure on production system:

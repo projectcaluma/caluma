@@ -9,11 +9,15 @@ class DefaultConfig(AppConfig):
     def ready(self):
         from .mutation import Mutation
         from .types import Node
+        from .serializers import ModelSerializer
 
         # to avoid recursive import error, load extension classes
         # only once the app is ready
         Mutation.permission_classes = [
             import_string(cls) for cls in settings.PERMISSION_CLASSES
+        ]
+        ModelSerializer.validation_classes = [
+            import_string(cls) for cls in settings.VALIDATION_CLASSES
         ]
         Node.visibility_classes = [
             import_string(cls) for cls in settings.VISIBILITY_CLASSES

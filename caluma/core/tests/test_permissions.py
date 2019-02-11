@@ -1,8 +1,7 @@
 import pytest
 from django.core.exceptions import ImproperlyConfigured
-from rest_framework import serializers
 
-from .. import models
+from .. import models, serializers
 from ..mutation import Mutation
 from ..permissions import BasePermission, object_permission_for, permission_for
 from .fake_model import get_fake_model

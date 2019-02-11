@@ -150,7 +150,7 @@ class Mutation(ClientIDMutation):
             return {
                 "instance": instance,
                 "data": input,
-                "context": {"request": info.context, "info": info},
+                "context": {"request": info.context, "info": info, "mutation": cls},
             }
 
         return {"data": input, "context": {"request": info.context, "info": info}}
