@@ -6,9 +6,7 @@ from django.core.cache import cache
 from factory import Faker
 from factory.base import FactoryMetaClass
 from graphene import ResolveInfo
-from graphql.error import format_error
 from pytest_factoryboy import register
-from snapshottest.pytest import PyTestSnapshotTest
 
 from .core.faker import MultilangProvider
 from .form import factories as form_factories
@@ -32,21 +30,6 @@ register_module(workflow_factories)
 @pytest.fixture(scope="function", autouse=True)
 def _autoclear_cache():
     cache.clear()
-
-
-@pytest.fixture
-def snapshot(request):
-    class GraphQlSnapshotTest(PyTestSnapshotTest):
-        def assert_execution_result(self, result):
-            self.assert_match(
-                {
-                    "data": result.data,
-                    "errors": [format_error(e) for e in result.errors or []],
-                }
-            )
-
-    with GraphQlSnapshotTest(request) as snapshot_test:
-        yield snapshot_test
 
 
 @pytest.fixture

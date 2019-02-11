@@ -142,8 +142,10 @@ def test_copy_question(
         "SaveFloatQuestion",
     ],
 )
-@pytest.mark.parametrize("question__is_required", ("true", "true|invalid"))
-def test_save_question(db, snapshot, question, mutation, schema_executor):
+@pytest.mark.parametrize(
+    "question__is_required,success", (("true", True), ("true|invalid", False))
+)
+def test_save_question(db, snapshot, question, mutation, schema_executor, success):
     mutation_func = mutation[0].lower() + mutation[1:]
     query = f"""
         mutation {mutation}($input: {mutation}Input!) {{
@@ -167,14 +169,16 @@ def test_save_question(db, snapshot, question, mutation, schema_executor):
     }
     result = schema_executor(query, variables=inp)
 
-    snapshot.assert_execution_result(result)
+    assert not bool(result.errors) == success
+    if success:
+        snapshot.assert_match(result.data)
 
 
 @pytest.mark.parametrize(
     "question__type,question__configuration",
     [(models.Question.TYPE_TEXT, {"max_length": 10})],
 )
-def test_save_text_question(db, snapshot, question, schema_executor):
+def test_save_text_question(db, question, schema_executor):
     query = """
         mutation SaveTextQuestion($input: SaveTextQuestionInput!) {
           saveTextQuestion(input: $input) {
@@ -207,7 +211,7 @@ def test_save_text_question(db, snapshot, question, schema_executor):
     "question__type,question__configuration",
     [(models.Question.TYPE_TEXTAREA, {"max_length": 10})],
 )
-def test_save_textarea_question(db, snapshot, question, schema_executor):
+def test_save_textarea_question(db, question, schema_executor):
     query = """
         mutation SaveTextareaQuestion($input: SaveTextareaQuestionInput!) {
           saveTextareaQuestion(input: $input) {
@@ -237,13 +241,13 @@ def test_save_textarea_question(db, snapshot, question, schema_executor):
 
 
 @pytest.mark.parametrize(
-    "question__type,question__configuration",
+    "question__type,question__configuration,success",
     [
-        (models.Question.TYPE_FLOAT, {"max_value": 10.0, "min_value": 0.0}),
-        (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 10.0}),
+        (models.Question.TYPE_FLOAT, {"max_value": 10.0, "min_value": 0.0}, True),
+        (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 10.0}, False),
     ],
 )
-def test_save_float_question(db, snapshot, question, schema_executor):
+def test_save_float_question(db, snapshot, question, schema_executor, success):
     query = """
         mutation SaveFloatQuestion($input: SaveFloatQuestionInput!) {
           saveFloatQuestion(input: $input) {
@@ -269,17 +273,19 @@ def test_save_float_question(db, snapshot, question, schema_executor):
         )
     }
     result = schema_executor(query, variables=inp)
-    snapshot.assert_execution_result(result)
+    assert not bool(result.errors) == success
+    if success:
+        snapshot.assert_match(result.data)
 
 
 @pytest.mark.parametrize(
-    "question__type,question__configuration",
+    "question__type,question__configuration,success",
     [
-        (models.Question.TYPE_INTEGER, {"max_value": 10, "min_value": 0}),
-        (models.Question.TYPE_INTEGER, {"max_value": 1, "min_value": 10}),
+        (models.Question.TYPE_INTEGER, {"max_value": 10, "min_value": 0}, True),
+        (models.Question.TYPE_INTEGER, {"max_value": 1, "min_value": 10}, False),
     ],
 )
-def test_save_integer_question(db, snapshot, question, schema_executor):
+def test_save_integer_question(db, snapshot, question, success, schema_executor):
     query = """
         mutation SaveIntegerQuestion($input: SaveIntegerQuestionInput!) {
           saveIntegerQuestion(input: $input) {
@@ -305,7 +311,9 @@ def test_save_integer_question(db, snapshot, question, schema_executor):
         )
     }
     result = schema_executor(query, variables=inp)
-    snapshot.assert_execution_result(result)
+    assert not bool(result.errors) == success
+    if success:
+        snapshot.assert_match(result.data)
 
 
 @pytest.mark.parametrize("question__type", [models.Question.TYPE_MULTIPLE_CHOICE])

@@ -7,62 +7,6 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots['test_add_workflow_flow[task-slug-"task-slug"|task] 1'] = {
-    "data": {
-        "addWorkflowFlow": {
-            "clientMutationId": None,
-            "workflow": {
-                "flows": {
-                    "edges": [
-                        {
-                            "node": {
-                                "createdByGroup": "admin",
-                                "createdByUser": "admin",
-                                "next": '"task-slug"|task',
-                                "tasks": [{"slug": "task-slug"}],
-                            }
-                        }
-                    ]
-                }
-            },
-        }
-    },
-    "errors": [],
-}
-
-snapshots['test_add_workflow_flow[task-slug-"not-av-task-slug"|task] 1'] = {
-    "data": {"addWorkflowFlow": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "{'next': [ErrorDetail(string='jexl `\"not-av-task-slug\"|task` contains invalid tasks [not-av-task-slug]', code='invalid')]}",
-            "path": ["addWorkflowFlow"],
-        }
-    ],
-}
-
-snapshots['test_add_workflow_flow[task-slug-"not-av-task-slug"|invalid] 1'] = {
-    "data": {"addWorkflowFlow": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "{'next': [ErrorDetail(string='The `invalid` transform is undefined.', code='invalid')]}",
-            "path": ["addWorkflowFlow"],
-        }
-    ],
-}
-
-snapshots['test_add_workflow_flow[task-slug-""] 1'] = {
-    "data": {"addWorkflowFlow": None},
-    "errors": [
-        {
-            "locations": [{"column": 11, "line": 3}],
-            "message": "{'next': [ErrorDetail(string='jexl `\"\"` does not contain any tasks as return value', code='invalid')]}",
-            "path": ["addWorkflowFlow"],
-        }
-    ],
-}
-
 snapshots["test_save_workflow 1"] = {
     "saveWorkflow": {
         "clientMutationId": "testid",
@@ -102,5 +46,25 @@ Kid avoid player relationship to range whose. Draw free property consider.""",
                 }
             }
         ]
+    }
+}
+
+snapshots['test_add_workflow_flow[task-slug-"task-slug"|task-True] 1'] = {
+    "addWorkflowFlow": {
+        "clientMutationId": None,
+        "workflow": {
+            "flows": {
+                "edges": [
+                    {
+                        "node": {
+                            "createdByGroup": "admin",
+                            "createdByUser": "admin",
+                            "next": '"task-slug"|task',
+                            "tasks": [{"slug": "task-slug"}],
+                        }
+                    }
+                ]
+            }
+        },
     }
 }

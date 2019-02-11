@@ -79,9 +79,7 @@ def test_save_form(db, snapshot, form, settings, schema_executor, language_code)
     snapshot.assert_match(result.data)
 
 
-def test_save_form_created_as_admin_user(
-    db, snapshot, form, admin_schema_executor, admin_user
-):
+def test_save_form_created_as_admin_user(db, form, admin_schema_executor, admin_user):
     query = """
         mutation SaveForm($input: SaveFormInput!) {
           saveForm(input: $input) {
@@ -101,7 +99,7 @@ def test_save_form_created_as_admin_user(
 
 
 @pytest.mark.parametrize("form__meta", [{"meta": "set"}])
-def test_copy_form(db, snapshot, form, form_question_factory, schema_executor):
+def test_copy_form(db, form, form_question_factory, schema_executor):
     form_question_factory.create_batch(5, form=form)
     query = """
         mutation CopyForm($input: CopyFormInput!) {
@@ -130,9 +128,7 @@ def test_copy_form(db, snapshot, form, form_question_factory, schema_executor):
     ) == list(models.FormQuestion.objects.filter(form=form).values("question"))
 
 
-def test_add_form_question(
-    db, form, question, form_question_factory, snapshot, schema_executor
-):
+def test_add_form_question(db, form, question, form_question_factory, schema_executor):
     form_question_factory.create_batch(5, form=form)
 
     query = """
@@ -198,7 +194,8 @@ def test_remove_form_question(
         },
     )
 
-    snapshot.assert_execution_result(result)
+    assert not result.errors
+    snapshot.assert_match(result.data)
 
 
 def test_reorder_form_questions(db, form, form_question_factory, schema_executor):

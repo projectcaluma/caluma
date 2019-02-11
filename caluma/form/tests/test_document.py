@@ -194,7 +194,7 @@ def test_complex_document_query_performance(
 
 
 def test_query_all_documents_filter_answers_by_question(
-    db, snapshot, document, answer, question, answer_factory, schema_executor
+    db, document, answer, question, answer_factory, schema_executor
 ):
     answer_factory(document=document)
 
@@ -225,13 +225,13 @@ def test_query_all_documents_filter_answers_by_question(
     assert extract_global_id(result_answer["id"]) == str(answer.id)
 
 
-def test_save_document(db, snapshot, document, schema_executor):
+def test_save_document(db, document, schema_executor):
     query = """
         mutation SaveDocument($input: SaveDocumentInput!) {
           saveDocument(input: $input) {
             document {
                 form {
-                    slug
+                  slug
                 }
             }
             clientMutationId
@@ -247,7 +247,7 @@ def test_save_document(db, snapshot, document, schema_executor):
     result = schema_executor(query, variables=inp)
 
     assert not result.errors
-    snapshot.assert_match(result.data)
+    assert result.data["saveDocument"]["document"]["form"]["slug"] == document.form.slug
 
 
 @pytest.mark.parametrize("delete_answer", [True, False])
