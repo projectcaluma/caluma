@@ -224,9 +224,9 @@ class CompleteWorkItem(Mutation):
         model_operations = ["update"]
 
 
-class SetWorkItemAssignedUsers(Mutation):
+class SaveWorkItem(Mutation):
     class Meta:
-        serializer_class = serializers.SetWorkItemAssignedUsersSerializer
+        serializer_class = serializers.SaveWorkItemSerializer
         lookup_input_kwarg = "work_item"
         model_operations = ["update"]
 
@@ -243,7 +243,7 @@ class Mutation(object):
     start_case = StartCase().Field()
     cancel_case = CancelCase().Field()
     complete_work_item = CompleteWorkItem().Field()
-    set_work_item_assigned_users = SetWorkItemAssignedUsers().Field()
+    save_work_item = SaveWorkItem().Field()
 
 
 class Query(object):
