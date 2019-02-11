@@ -6,7 +6,7 @@ from graphql_relay import to_global_id
 from localized_fields.fields import LocalizedField
 from rest_framework import relations, serializers
 
-from . import validators
+from .jexl import JexlValidator
 from .relay import extract_global_id
 
 
@@ -41,7 +41,7 @@ class GlobalIDField(serializers.Field):
 class JexlField(serializers.CharField):
     def __init__(self, jexl, **kwargs):
         super().__init__(**kwargs)
-        self.validators.append(validators.JexlValidator(jexl))
+        self.validators.append(JexlValidator(jexl))
 
 
 class ModelSerializer(serializers.ModelSerializer):
