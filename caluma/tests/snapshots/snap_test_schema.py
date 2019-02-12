@@ -84,6 +84,9 @@ type Case implements Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
+  closedAt: DateTime
+  closedByUser: String
+  closedByGroup: String
   workflow: Workflow!
   status: CaseStatus!
   meta: JSONString!
@@ -1037,6 +1040,9 @@ type WorkItem implements Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
+  closedAt: DateTime
+  closedByUser: String
+  closedByGroup: String
   task: Task!
   status: WorkItemStatus!
   meta: JSONString!

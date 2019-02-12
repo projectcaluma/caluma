@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils import timezone
 from rest_framework import exceptions
 
 from . import models, validators
@@ -228,14 +229,27 @@ class CancelCaseSerializer(serializers.ModelSerializer):
         if self.instance.status != models.Case.STATUS_RUNNING:
             raise exceptions.ValidationError("Only running cases can be canceled.")
 
+        user = self.context["request"].user
         data["status"] = models.Case.STATUS_CANCELED
+        data["closed_at"] = timezone.now()
+        data["closed_by_user"] = user.username
+        data["closed_by_group"] = user.group
         return data
 
     @transaction.atomic
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
-        instance.work_items.exclude(status=models.WorkItem.STATUS_COMPLETED).update(
-            status=models.WorkItem.STATUS_CANCELED
+        user = self.context["request"].user
+        instance.work_items.exclude(
+            status__in=[
+                models.WorkItem.STATUS_COMPLETED,
+                models.WorkItem.STATUS_CANCELED,
+            ]
+        ).update(
+            status=models.WorkItem.STATUS_CANCELED,
+            closed_at=timezone.now(),
+            closed_by_user=user.username,
+            closed_by_group=user.group,
         )
         return instance
 
@@ -244,6 +258,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField()
 
     def validate(self, data):
+        user = self.context["request"].user
         validators.WorkItemValidator().validate(
             status=self.instance.status,
             child_case=self.instance.child_case,
@@ -252,6 +267,9 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
             document=self.instance.document,
         )
         data["status"] = models.WorkItem.STATUS_COMPLETED
+        data["closed_at"] = timezone.now()
+        data["closed_by_user"] = user.username
+        data["closed_by_group"] = user.group
         return data
 
     @transaction.atomic
@@ -295,7 +313,10 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
         else:
             # no more tasks, mark case as complete
             case.status = models.Case.STATUS_COMPLETED
-            case.save(update_fields=["status"])
+            case.closed_at = timezone.now()
+            case.closed_by_user = user.username
+            case.closed_by_group = user.group
+            case.save()
 
         return instance
 

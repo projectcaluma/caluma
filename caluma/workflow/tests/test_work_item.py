@@ -43,14 +43,19 @@ def test_query_all_work_items_filter_status(db, work_item_factory, schema_execut
         (models.WorkItem.STATUS_READY, models.Case.STATUS_RUNNING, False),
     ],
 )
-def test_complete_work_item_last(db, snapshot, work_item, success, schema_executor):
+def test_complete_work_item_last(
+    db, snapshot, work_item, success, admin_schema_executor
+):
     query = """
         mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
           completeWorkItem(input: $input) {
             workItem {
+              closedByUser
               status
               case {
+                closedByUser
                 status
+
               }
             }
             clientMutationId
@@ -59,7 +64,7 @@ def test_complete_work_item_last(db, snapshot, work_item, success, schema_execut
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = schema_executor(query, variables=inp)
+    result = admin_schema_executor(query, variables=inp)
 
     assert not bool(result.errors) == success
     if success:
