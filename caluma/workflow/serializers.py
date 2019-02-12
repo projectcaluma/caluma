@@ -112,6 +112,7 @@ class SaveTaskSerializer(serializers.ModelSerializer):
             "meta",
             "address_groups",
             "is_archived",
+            "lead_time",
         )
 
 
@@ -204,6 +205,7 @@ class StartCaseSerializer(serializers.ModelSerializer):
                         start_task, user
                     ),
                     task=start_task,
+                    deadline=start_task.calculate_deadline(),
                     status=models.WorkItem.STATUS_READY,
                     created_by_user=user.username,
                     created_by_group=user.group,
@@ -301,6 +303,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
                 models.WorkItem(
                     addressed_groups=evaluate_assigned_groups(task),
                     task_id=task.pk,
+                    deadline=task.calculate_deadline(),
                     document=Document.objects.create_document_for_task(task, user),
                     case=case,
                     status=models.WorkItem.STATUS_READY,
@@ -330,4 +333,4 @@ class SaveWorkItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.WorkItem
-        fields = ("work_item", "assigned_users", "meta")
+        fields = ("work_item", "assigned_users", "deadline", "meta")

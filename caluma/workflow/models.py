@@ -1,6 +1,9 @@
+from datetime import timedelta
+
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
+from django.utils import timezone
 from localized_fields.fields import LocalizedField
 
 from ..core.models import SlugModel, UUIDModel
@@ -35,6 +38,16 @@ class Task(SlugModel):
         blank=True,
         null=True,
     )
+    lead_time = models.PositiveIntegerField(
+        blank=True,
+        null=True,
+        help_text="Time in seconds task may take to be processed.",
+    )
+
+    def calculate_deadline(self):
+        if self.lead_time is not None:
+            return timezone.now() + timedelta(seconds=self.lead_time)
+        return None
 
 
 class Workflow(SlugModel):
@@ -125,6 +138,7 @@ class WorkItem(UUIDModel):
     )
     closed_by_user = models.CharField(max_length=150, blank=True, null=True)
     closed_by_group = models.CharField(max_length=150, blank=True, null=True)
+    deadline = models.DateTimeField(blank=True, null=True)
 
     task = models.ForeignKey(
         Task, on_delete=models.DO_NOTHING, related_name="work_items"

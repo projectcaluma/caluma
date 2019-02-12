@@ -159,6 +159,7 @@ type CompleteTaskFormTask implements Task, Node {
   meta: JSONString!
   addressGroups: GroupJexl
   isArchived: Boolean!
+  leadTime: Int
   form: Form!
   id: ID!
 }
@@ -185,6 +186,7 @@ type CompleteWorkflowFormTask implements Task, Node {
   meta: JSONString!
   addressGroups: GroupJexl
   isArchived: Boolean!
+  leadTime: Int
   id: ID!
 }
 
@@ -609,6 +611,7 @@ input SaveCompleteTaskFormTaskInput {
   meta: JSONString
   addressGroups: GroupJexl
   isArchived: Boolean
+  leadTime: Int
   form: ID!
   clientMutationId: String
 }
@@ -625,6 +628,7 @@ input SaveCompleteWorkflowFormTaskInput {
   meta: JSONString
   addressGroups: GroupJexl
   isArchived: Boolean
+  leadTime: Int
   clientMutationId: String
 }
 
@@ -793,6 +797,7 @@ input SaveSimpleTaskInput {
   meta: JSONString
   addressGroups: GroupJexl
   isArchived: Boolean
+  leadTime: Int
   clientMutationId: String
 }
 
@@ -852,6 +857,7 @@ type SaveTextareaQuestionPayload {
 input SaveWorkItemInput {
   workItem: ID!
   assignedUsers: [String]
+  deadline: DateTime
   meta: JSONString
   clientMutationId: String
 }
@@ -891,6 +897,7 @@ type SimpleTask implements Task, Node {
   meta: JSONString!
   addressGroups: GroupJexl
   isArchived: Boolean!
+  leadTime: Int
   id: ID!
 }
 
@@ -1043,6 +1050,7 @@ type WorkItem implements Node {
   closedAt: DateTime
   closedByUser: String
   closedByGroup: String
+  deadline: DateTime
   task: Task!
   status: WorkItemStatus!
   meta: JSONString!

@@ -33,7 +33,7 @@ snapshots["test_cancel_case[running-True-ready] 1"] = {
     }
 }
 
-snapshots['test_start_case[["group-name"]|groups] 1'] = {
+snapshots['test_start_case[["group-name"]|groups-100] 1'] = {
     "startCase": {
         "case": {
             "document": {"form": {"slug": "sound-air-mission"}},
@@ -55,7 +55,51 @@ snapshots['test_start_case[["group-name"]|groups] 1'] = {
     }
 }
 
-snapshots["test_start_case[None] 1"] = {
+snapshots['test_start_case[["group-name"]|groups-None] 1'] = {
+    "startCase": {
+        "case": {
+            "document": {"form": {"slug": "sound-air-mission"}},
+            "parentWorkItem": None,
+            "status": "RUNNING",
+            "workItems": {
+                "edges": [
+                    {
+                        "node": {
+                            "addressedGroups": ["group-name"],
+                            "document": {"form": {"slug": "sound-air-mission"}},
+                            "status": "READY",
+                        }
+                    }
+                ]
+            },
+        },
+        "clientMutationId": None,
+    }
+}
+
+snapshots["test_start_case[None-100] 1"] = {
+    "startCase": {
+        "case": {
+            "document": {"form": {"slug": "sound-air-mission"}},
+            "parentWorkItem": None,
+            "status": "RUNNING",
+            "workItems": {
+                "edges": [
+                    {
+                        "node": {
+                            "addressedGroups": [],
+                            "document": {"form": {"slug": "sound-air-mission"}},
+                            "status": "READY",
+                        }
+                    }
+                ]
+            },
+        },
+        "clientMutationId": None,
+    }
+}
+
+snapshots["test_start_case[None-None] 1"] = {
     "startCase": {
         "case": {
             "document": {"form": {"slug": "sound-air-mission"}},
