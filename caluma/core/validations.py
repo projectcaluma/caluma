@@ -24,10 +24,9 @@ class BaseValidation(object):
     """Basic validation class to be extended by any validation implementation.
 
     In combination with the decorators `@validation_for` a custom validation class
-    can define validation on basis of mutations and its subclasses.
-
-    Per default it doesn't do any validation but default can be overwritten to define
-    a validation for `Mutation`.
+    can define validations for specific mutations.
+    It is also possible to execute the same validation logic for all mutations
+    using the base class `Mutation`.
 
     A custom validation class could look like this:
     ```

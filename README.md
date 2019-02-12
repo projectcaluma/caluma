@@ -209,8 +209,10 @@ Afterwards you can configure it in `PERMISSION_CLASSES` as `caluma.extensions.pe
 
 ##### Validation classes
 
-Validation classes validate or amend input data of any mutation. It completes permission classes which allow execution of mutations based on updating object whereas validation classes
-process input data.
+Validation classes can validate or amend input data of any mutation. Each mutation is processed in two steps:
+
+1. Permission classes check if a given mutation is allowed based on the object being mutated, and
+2. Validation classes process (and potentially amend) input data of a given mutation
 
 A custom validation class defining validations for various mutations looks like this:
 
@@ -235,7 +237,7 @@ class CustomValidation(BaseValidation):
 
 Arguments:
 * `mutation`: mutation class
-* `data`: input data whereas relation are resolved (e.g. a form ID is represented as actual form object)
+* `data`: input data with resolved relationships (e.g. a form ID is represented as actual form object)
 * `info`: resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/1.11/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
 
 Save your validation module as `validations.py` and inject it as Docker volume to path `/app/caluma/extensions/validations.py`,
