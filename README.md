@@ -212,7 +212,7 @@ Afterwards you can configure it in `PERMISSION_CLASSES` as `caluma.extensions.pe
 Validation classes validate or amend input data of any mutation. It completes permission classes which allow execution of mutations based on updating object whereas validation classes
 process input data.
 
-A custom validation class defining validation per mutation can be defined like the following:
+A custom validation class defining validations for various mutations looks like this:
 
 ```python
 from caluma.core.validations import BaseValidation, validation_for
