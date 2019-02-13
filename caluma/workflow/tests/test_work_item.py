@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from graphene.utils.str_converters import to_const
 
@@ -344,19 +346,26 @@ def test_complete_work_item_with_merge(
     assert ready_workitem.document_id is not None
 
 
-def test_set_work_item_assigned_users(db, work_item, schema_executor):
+def test_save_work_item(db, work_item, schema_executor):
     query = """
-        mutation SetWorkItemAssignedUsers($input: SetWorkItemAssignedUsersInput!) {
-          setWorkItemAssignedUsers(input: $input) {
+        mutation SaveWorkItem($input: SaveWorkItemInput!) {
+          saveWorkItem(input: $input) {
             clientMutationId
           }
         }
     """
 
     assigned_users = ["user1", "user2"]
-    inp = {"input": {"workItem": str(work_item.pk), "assignedUsers": assigned_users}}
+    inp = {
+        "input": {
+            "workItem": str(work_item.pk),
+            "assignedUsers": assigned_users,
+            "meta": json.dumps({"test": "test"}),
+        }
+    }
     result = schema_executor(query, variables=inp)
 
     assert not result.errors
     work_item.refresh_from_db()
     assert work_item.assigned_users == assigned_users
+    assert work_item.meta == {"test": "test"}

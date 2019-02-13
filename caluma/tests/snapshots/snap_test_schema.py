@@ -419,7 +419,7 @@ type Mutation {
   startCase(input: StartCaseInput!): StartCasePayload
   cancelCase(input: CancelCaseInput!): CancelCasePayload
   completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
-  setWorkItemAssignedUsers(input: SetWorkItemAssignedUsersInput!): SetWorkItemAssignedUsersPayload
+  saveWorkItem(input: SaveWorkItemInput!): SaveWorkItemPayload
   saveForm(input: SaveFormInput!): SaveFormPayload
   copyForm(input: CopyFormInput!): CopyFormPayload
   addFormQuestion(input: AddFormQuestionInput!): AddFormQuestionPayload
@@ -846,6 +846,18 @@ type SaveTextareaQuestionPayload {
   clientMutationId: String
 }
 
+input SaveWorkItemInput {
+  workItem: ID!
+  assignedUsers: [String]
+  meta: JSONString
+  clientMutationId: String
+}
+
+type SaveWorkItemPayload {
+  workItem: WorkItem
+  clientMutationId: String
+}
+
 input SaveWorkflowInput {
   slug: String!
   name: String!
@@ -861,17 +873,6 @@ input SaveWorkflowInput {
 
 type SaveWorkflowPayload {
   workflow: Workflow
-  clientMutationId: String
-}
-
-input SetWorkItemAssignedUsersInput {
-  workItem: ID!
-  assignedUsers: [String]!
-  clientMutationId: String
-}
-
-type SetWorkItemAssignedUsersPayload {
-  workItem: WorkItem
   clientMutationId: String
 }
 

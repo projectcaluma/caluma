@@ -1,6 +1,5 @@
 from django.db import transaction
 from rest_framework import exceptions
-from rest_framework.serializers import ListField
 
 from . import models, validators
 from ..core import serializers
@@ -305,10 +304,9 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
         fields = ("id",)
 
 
-class SetWorkItemAssignedUsersSerializer(serializers.ModelSerializer):
+class SaveWorkItemSerializer(serializers.ModelSerializer):
     work_item = serializers.GlobalIDField(source="id")
-    assigned_users = ListField(required=True)
 
     class Meta:
         model = models.WorkItem
-        fields = ("work_item", "assigned_users")
+        fields = ("work_item", "assigned_users", "meta")
