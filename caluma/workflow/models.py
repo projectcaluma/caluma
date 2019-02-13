@@ -84,6 +84,14 @@ class Case(UUIDModel):
         (STATUS_CANCELED, "Case is cancelled."),
     )
 
+    closed_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text="Time when case has either been canceled or completed",
+    )
+    closed_by_user = models.CharField(max_length=150, blank=True, null=True)
+    closed_by_group = models.CharField(max_length=150, blank=True, null=True)
+
     workflow = models.ForeignKey(
         Workflow, related_name="cases", on_delete=models.DO_NOTHING
     )
@@ -109,6 +117,14 @@ class WorkItem(UUIDModel):
         (STATUS_COMPLETED, "Task is done."),
         (STATUS_CANCELED, "Task is cancelled."),
     )
+
+    closed_at = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text="Time when work item has either been canceled or completed",
+    )
+    closed_by_user = models.CharField(max_length=150, blank=True, null=True)
+    closed_by_group = models.CharField(max_length=150, blank=True, null=True)
 
     task = models.ForeignKey(
         Task, on_delete=models.DO_NOTHING, related_name="work_items"

@@ -10,7 +10,11 @@ snapshots = Snapshot()
 snapshots["test_complete_work_item_last[ready-completed-True-simple-None] 1"] = {
     "completeWorkItem": {
         "clientMutationId": None,
-        "workItem": {"case": {"status": "COMPLETED"}, "status": "COMPLETED"},
+        "workItem": {
+            "case": {"closedByUser": "admin", "status": "COMPLETED"},
+            "closedByUser": "admin",
+            "status": "COMPLETED",
+        },
     }
 }
 
