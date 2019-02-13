@@ -139,6 +139,7 @@ visibility class defining per node how to filter.
 
 Example:
 ```python
+from caluma.core.visibilities import BaseVisibility, filter_queryset_for
 from caluma.types import Node
 from caluma.form.schema import Form
 
@@ -155,9 +156,9 @@ class CustomVisibility(BaseVisibility):
 Arguments:
 * `node`: GraphQL node filtering queryset for
 * `queryset`: [Queryset](https://docs.djangoproject.com/en/2.1/ref/models/querysets/) of specific node type
-* `info`: Resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/2.1/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
+* `info`: Resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/1.11/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
 
-Save your visibility module as `visibility.py` and inject it as Docker volume to path `/app/caluma/extensions/visibility.py`,
+Save your visibility module as `visibilities.py` and inject it as Docker volume to path `/app/caluma/extensions/visibilities.py`,
 see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) for an example.
 
 Afterwards you can configure it in `VISIBILITY_CLASSES` as `caluma.extensions.visibilities.CustomVisibility`.
@@ -176,6 +177,7 @@ permission class defining per mutation and mutation object what is allowed.
 
 Example:
 ```python
+from caluma.core.permissions import BasePermission, permission_for, object_permission_for
 from caluma.form.schema import SaveForm
 from caluma.mutation import Mutation
 
@@ -197,13 +199,52 @@ class CustomPermission(BasePermission):
 
 Arguments:
 * `mutation`: mutation class
-* `info`: resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/2.1/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
+* `info`: resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/1.11/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
 * `instance`: instance being edited by specific mutation
 
 Save your permission module as `permissions.py` and inject it as Docker volume to path `/app/caluma/extensions/permissions.py`,
 see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) for an example.
 
 Afterwards you can configure it in `PERMISSION_CLASSES` as `caluma.extensions.permissions.CustomPermission`.
+
+##### Validation classes
+
+Validation classes can validate or amend input data of any mutation. Each mutation is processed in two steps:
+
+1. Permission classes check if a given mutation is allowed based on the object being mutated, and
+2. Validation classes process (and potentially amend) input data of a given mutation
+
+A custom validation class defining validations for various mutations looks like this:
+
+```python
+from caluma.core.validations import BaseValidation, validation_for
+from caluma.form.schema import SaveForm
+from caluma.mutation import Mutation
+from rest_framework import exceptions
+
+class CustomValidation(BaseValidation):
+    @validation_for(Mutation)
+    def validate_mutation(self, mutation, data, info):
+        # add your default specific validation code here
+        return data
+
+    @validation_for(SaveForm)
+    def validate_save_form(self, mutation, data, info):
+        if data['meta'] and info.context.group != 'admin':
+          raise exceptions.ValidationException('May not change meta on form')
+        return data
+```
+
+Arguments:
+* `mutation`: mutation class
+* `data`: input data with resolved relationships (e.g. a form ID is represented as actual form object)
+* `info`: resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/1.11/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
+
+Save your validation module as `validations.py` and inject it as Docker volume to path `/app/caluma/extensions/validations.py`,
+see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) for an example.
+
+Afterwards you can configure it in `VALIDATION_CLASSES` as `caluma.extensions.validations.CustomValidation`.
+
 
 ## Contributing
 

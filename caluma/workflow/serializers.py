@@ -118,7 +118,7 @@ class SaveTaskSerializer(serializers.ModelSerializer):
 class SaveSimpleTaskSerializer(SaveTaskSerializer):
     def validate(self, data):
         data["type"] = models.Task.TYPE_SIMPLE
-        return data
+        return super().validate(data)
 
     class Meta(SaveTaskSerializer.Meta):
         pass
@@ -127,7 +127,7 @@ class SaveSimpleTaskSerializer(SaveTaskSerializer):
 class SaveCompleteWorkflowFormTaskSerializer(SaveTaskSerializer):
     def validate(self, data):
         data["type"] = models.Task.TYPE_COMPLETE_WORKFLOW_FORM
-        return data
+        return super().validate(data)
 
     class Meta(SaveTaskSerializer.Meta):
         pass
@@ -140,7 +140,7 @@ class SaveCompleteTaskFormTaskSerializer(SaveTaskSerializer):
 
     def validate(self, data):
         data["type"] = models.Task.TYPE_COMPLETE_TASK_FORM
-        return data
+        return super().validate(data)
 
     class Meta(SaveTaskSerializer.Meta):
         fields = SaveTaskSerializer.Meta.fields + ("form",)
@@ -170,7 +170,7 @@ class StartCaseSerializer(serializers.ModelSerializer):
                     f"Workflow {workflow.pk} does not allow to start case with form {form.pk}"
                 )
 
-        return data
+        return super().validate(data)
 
     @transaction.atomic
     def create(self, validated_data):
@@ -234,7 +234,7 @@ class CancelCaseSerializer(serializers.ModelSerializer):
         data["closed_at"] = timezone.now()
         data["closed_by_user"] = user.username
         data["closed_by_group"] = user.group
-        return data
+        return super().validate(data)
 
     @transaction.atomic
     def update(self, instance, validated_data):
@@ -270,7 +270,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
         data["closed_at"] = timezone.now()
         data["closed_by_user"] = user.username
         data["closed_by_group"] = user.group
-        return data
+        return super().validate(data)
 
     @transaction.atomic
     def update(self, instance, validated_data):

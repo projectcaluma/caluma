@@ -1,9 +1,11 @@
 import pytest
 from django.core.exceptions import ImproperlyConfigured
+from django.db.models import IntegerField
 from django.http import Http404
-from rest_framework import exceptions, serializers
+from rest_framework import exceptions
+from rest_framework.serializers import CharField, Serializer
 
-from .. import models, mutation, permissions, types
+from .. import models, mutation, permissions, serializers, types, validations
 from .fake_model import get_fake_model
 
 
@@ -62,8 +64,8 @@ def test_invalid_mutation_update_mutate_and_get_payload(db, info):
 
 
 def test_mutation_mutate_and_get_payload_without_model(info):
-    class MySerializer(serializers.Serializer):
-        name = serializers.CharField()
+    class MySerializer(Serializer):
+        name = CharField()
 
         def create(self, validated_data):
             return validated_data
@@ -141,6 +143,59 @@ def test_mutation_mutate_and_get_payload_permission_classes_improperly_configure
 
     with pytest.raises(ImproperlyConfigured):
         MyMutation.mutate_and_get_payload(None, info)
+
+
+def test_mutation_mutate_and_get_payload_validation_classes_improperly_configured(
+    db, info
+):
+    FakeModel = get_fake_model()
+
+    class MySerializer(serializers.ModelSerializer):
+        validation_classes = None
+
+        class Meta:
+            model = FakeModel
+            fields = "__all__"
+
+    class CustomNode(types.DjangoObjectType):
+        class Meta:
+            model = FakeModel
+
+    class MyMutation(mutation.Mutation):
+        class Meta:
+            serializer_class = MySerializer
+
+    with pytest.raises(ImproperlyConfigured):
+        MyMutation.mutate_and_get_payload(None, info)
+
+
+def test_mutation_mutate_and_get_payload_validation_classes_custom_validation(db, info):
+    FakeModel = get_fake_model(
+        model_base=models.UUIDModel, fields={"testnum": IntegerField(null=True)}
+    )
+
+    class CustomValidation(validations.BaseValidation):
+        def validate(self, mutation, data, info):
+            data["testnum"] = 1
+            return data
+
+    class MySerializer(serializers.ModelSerializer):
+        validation_classes = [CustomValidation]
+
+        class Meta:
+            model = FakeModel
+            fields = "__all__"
+
+    class CustomNode(types.DjangoObjectType):
+        class Meta:
+            model = FakeModel
+
+    class MyMutation(mutation.Mutation):
+        class Meta:
+            serializer_class = MySerializer
+
+    MyMutation.mutate_and_get_payload(None, info)
+    assert FakeModel.objects.first().testnum == 1
 
 
 def test_user_defined_primary_key_get_serializer_kwargs_not_allowed(db, info):

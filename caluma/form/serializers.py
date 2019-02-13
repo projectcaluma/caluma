@@ -185,7 +185,7 @@ class SaveTextQuestionSerializer(SaveQuestionSerializer):
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_TEXT
-        return data
+        return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + ("max_length",)
@@ -196,7 +196,7 @@ class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_TEXTAREA
-        return data
+        return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + ("max_length",)
@@ -242,7 +242,7 @@ class SaveMultipleChoiceQuestionSerializer(
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_MULTIPLE_CHOICE
-        return data
+        return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + ("options",)
@@ -255,7 +255,7 @@ class SaveChoiceQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSeriali
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_CHOICE
-        return data
+        return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + ("options",)
@@ -281,7 +281,7 @@ class SaveFloatQuestionSerializer(SaveQuestionSerializer):
             )
 
         data["type"] = models.Question.TYPE_FLOAT
-        return data
+        return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + ("min_value", "max_value")
@@ -307,7 +307,7 @@ class SaveIntegerQuestionSerializer(SaveQuestionSerializer):
             )
 
         data["type"] = models.Question.TYPE_INTEGER
-        return data
+        return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + ("min_value", "max_value")
@@ -364,7 +364,7 @@ class DocumentSerializer(serializers.ModelSerializer):
 class SaveAnswerSerializer(serializers.ModelSerializer):
     def validate(self, data):
         validators.AnswerValidator().validate(**data)
-        return data
+        return super().validate(data)
 
     class Meta:
         model = models.Answer

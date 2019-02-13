@@ -1,4 +1,5 @@
 import graphene
+from django.core.exceptions import ImproperlyConfigured
 from django.utils import translation
 from graphene_django.registry import get_global_registry
 from graphene_django.rest_framework import serializer_converter
@@ -6,7 +7,7 @@ from graphql_relay import to_global_id
 from localized_fields.fields import LocalizedField
 from rest_framework import relations, serializers
 
-from . import validators
+from .jexl import JexlValidator
 from .relay import extract_global_id
 
 
@@ -41,11 +42,30 @@ class GlobalIDField(serializers.Field):
 class JexlField(serializers.CharField):
     def __init__(self, jexl, **kwargs):
         super().__init__(**kwargs)
-        self.validators.append(validators.JexlValidator(jexl))
+        self.validators.append(JexlValidator(jexl))
 
 
 class ModelSerializer(serializers.ModelSerializer):
     serializer_related_field = GlobalIDPrimaryKeyRelatedField
+
+    # will be set in core.AppConfig.ready hook, see apps.py
+    # to avoid recursive import error
+    validation_classes = None
+
+    def validate(self, data):
+        mutation = self.context["mutation"]
+        info = self.context["info"]
+
+        if self.validation_classes is None:
+            raise ImproperlyConfigured(
+                "check that app `caluma.core` is part of your `INSTALLED_APPS` "
+                "or custom mutation has `validation_classes` properly assigned."
+            )
+
+        for validation_class in self.validation_classes:
+            data = validation_class().validate(mutation, data, info)
+
+        return data
 
     def create(self, validated_data):
         user = self.context["request"].user
