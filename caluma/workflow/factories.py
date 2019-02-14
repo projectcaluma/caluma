@@ -14,6 +14,7 @@ class TaskFactory(DjangoModelFactory):
     meta = {}
     is_archived = False
     form = SubFactory(FormFactory)
+    lead_time = None
 
     class Meta:
         model = models.Task
@@ -83,6 +84,7 @@ class WorkItemFactory(DjangoModelFactory):
     addressed_groups = []
     assigned_users = []
     meta = {}
+    deadline = None
 
     class Meta:
         model = models.WorkItem
