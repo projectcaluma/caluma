@@ -1111,6 +1111,7 @@ type Workflow implements Node {
   allowAllForms: Boolean!
   allowForms(before: String, after: String, first: Int, last: Int): FormConnection
   id: ID!
+  tasks: [Task]!
   flows(before: String, after: String, first: Int, last: Int, task: ID): FlowConnection
 }
 

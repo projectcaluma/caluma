@@ -69,6 +69,10 @@ class Workflow(SlugModel):
         blank=True,
     )
 
+    @property
+    def flows(self):
+        return Flow.objects.filter(pk__in=self.task_flows.values("flow"))
+
 
 class Flow(UUIDModel):
     next = models.TextField()

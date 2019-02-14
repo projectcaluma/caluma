@@ -1,8 +1,11 @@
+import itertools
+
 import graphene
+from django.db.models import Q
 from graphene import relay
 from graphene_django.rest_framework import serializer_converter
 
-from . import filters, models, serializers
+from . import filters, jexl, models, serializers
 from ..core.filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
 from ..core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..core.types import DjangoObjectType, Node
@@ -123,14 +126,26 @@ class Flow(DjangoObjectType):
 
 class Workflow(DjangoObjectType):
     start_tasks = graphene.List(Task, required=True)
+    tasks = graphene.List(
+        Task, required=True, description="List of tasks referenced in workflow"
+    )
+
+    def resolve_tasks(self, info, **args):
+        flow_jexl = jexl.FlowJexl()
+
+        next_jexls = self.flows.values_list("next", flat=True)
+        jexl_tasks = itertools.chain(
+            *[flow_jexl.extract_tasks(next_jexl) for next_jexl in next_jexls]
+        )
+
+        return models.Task.objects.filter(
+            Q(pk__in=self.start_tasks.all()) | Q(pk__in=jexl_tasks)
+        )
 
     def resolve_start_tasks(self, info, **args):
         return self.start_tasks.all()
 
     flows = DjangoFilterConnectionField(Flow, filterset_class=filters.FlowFilterSet)
-
-    def resolve_flows(self, info, **args):
-        return models.Flow.objects.filter(pk__in=self.task_flows.values("flow"))
 
     class Meta:
         model = models.Workflow
