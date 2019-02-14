@@ -24,6 +24,9 @@ def test_query_all_workflows(
                 name
                 description
                 meta
+                tasks {
+                  slug
+                }
                 flows {
                   edges {
                     node {
@@ -103,12 +106,23 @@ def test_save_workflow(
     ],
 )
 def test_add_workflow_flow(
-    db, workflow, task, snapshot, success, next, admin_schema_executor
+    db,
+    workflow,
+    workflow_start_tasks_factory,
+    task,
+    snapshot,
+    success,
+    next,
+    admin_schema_executor,
 ):
+    workflow_start_tasks_factory.create_batch(2, workflow=workflow)
     query = """
         mutation AddWorkflowFlow($input: AddWorkflowFlowInput!) {
           addWorkflowFlow(input: $input) {
             workflow {
+              tasks {
+                slug
+              }
               flows {
                 edges {
                   node {

@@ -43,6 +43,7 @@ Kid avoid player relationship to range whose. Draw free property consider.""",
                     "name": "Brian Williams",
                     "slug": "effort-meet",
                     "startTasks": [{"slug": "few-list-tax"}],
+                    "tasks": [{"slug": "few-list-tax"}],
                 }
             }
         ]
@@ -64,7 +65,12 @@ snapshots['test_add_workflow_flow[task-slug-"task-slug"|task-True] 1'] = {
                         }
                     }
                 ]
-            }
+            },
+            "tasks": [
+                {"slug": "task-slug"},
+                {"slug": "service-bank-arm"},
+                {"slug": "up-international"},
+            ],
         },
     }
 }
