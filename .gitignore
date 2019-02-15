@@ -70,3 +70,6 @@ target/
 
 # Editor swap files
 *.swp
+
+# IDE specific configurations
+.idea/
