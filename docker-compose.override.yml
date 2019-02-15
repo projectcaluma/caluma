@@ -4,7 +4,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=caluma
     ports:
-      - "5432:5432"
+      - "${PG_PORT:-5432}:5432"
   caluma:
     build:
       context: .
