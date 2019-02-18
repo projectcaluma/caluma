@@ -92,6 +92,7 @@ A list of configuration options which you might need to configure to get Caluma 
 * `DATABASE_PASSWORD`: Password to use when connecting to database
 * `LANGUAGE_CODE`: Default language defined as fallback (default: en)
 * `LANGUAGES`: List of supported language codes (default: all available)
+* `LOG_LEVEL`: [Log level](https://docs.djangoproject.com/en/1.11/topics/logging/#loggers) of messages to write to output (default: INFO)
 
 #### Authentication and authorization
 
