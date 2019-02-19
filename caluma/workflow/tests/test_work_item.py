@@ -184,6 +184,50 @@ def test_complete_task_form_work_item(
         ] == to_const(models.Case.STATUS_COMPLETED)
 
 
+@pytest.mark.parametrize("question__type,answer__value", [(Question.TYPE_INTEGER, 1)])
+def test_complete_multiple_instance_task_form_work_item(
+    db, task_factory, work_item_factory, answer, form_question, schema_executor
+):
+    task = task_factory(type=models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM)
+    work_item_1 = work_item_factory(task=task, child_case=None)
+    work_item_2 = work_item_factory(task=task, child_case=None, case=work_item_1.case)
+    query = """
+        mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
+          completeWorkItem(input: $input) {
+            workItem {
+              status
+              case {
+                status
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {"input": {"id": work_item_1.pk}}
+    result = schema_executor(query, variables=inp)
+
+    assert not bool(result.errors)
+    assert result.data["completeWorkItem"]["workItem"]["status"] == to_const(
+        models.WorkItem.STATUS_COMPLETED
+    )
+    assert result.data["completeWorkItem"]["workItem"]["case"]["status"] == to_const(
+        models.Case.STATUS_RUNNING
+    )
+
+    inp = {"input": {"id": work_item_2.pk}}
+    result = schema_executor(query, variables=inp)
+
+    assert not bool(result.errors)
+    assert result.data["completeWorkItem"]["workItem"]["status"] == to_const(
+        models.WorkItem.STATUS_COMPLETED
+    )
+    assert result.data["completeWorkItem"]["workItem"]["case"]["status"] == to_const(
+        models.Case.STATUS_COMPLETED
+    )
+
+
 @pytest.mark.parametrize(
     "work_item__status,work_item__child_case,task__type",
     [(models.WorkItem.STATUS_READY, None, models.Task.TYPE_SIMPLE)],

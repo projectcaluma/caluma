@@ -280,6 +280,16 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
         user = self.context["request"].user
         case = instance.case
 
+        # If a "multiple instance" task has running siblings, the workflow doesn't continue
+        if (
+            instance.task.type == models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM
+            and case.work_items.filter(task=instance.task)
+            .exclude(status=models.WorkItem.STATUS_COMPLETED)
+            .count()
+            > 0
+        ):
+            return instance
+
         flow = models.Flow.objects.filter(task_flows__task=instance.task_id).first()
         flow_referenced_tasks = models.Task.objects.filter(task_flows__flow=flow)
         completed_flow_work_items = case.work_items.filter(
