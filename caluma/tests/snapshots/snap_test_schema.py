@@ -414,6 +414,37 @@ type MultipleChoiceQuestion implements Question, Node {
   id: ID!
 }
 
+type MultipleInstanceCompleteTaskFormTask implements MultipleInstanceTask, Task, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  name: String!
+  description: String
+  type: TaskType!
+  meta: JSONString!
+  addressGroups: GroupJexl
+  isArchived: Boolean!
+  leadTime: Int
+  form: Form!
+  id: ID!
+}
+
+interface MultipleInstanceTask {
+  id: ID!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  name: String!
+  description: String
+  isArchived: Boolean!
+  addressGroups: GroupJexl
+  meta: JSONString!
+}
+
 type Mutation {
   saveWorkflow(input: SaveWorkflowInput!): SaveWorkflowPayload
   addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
@@ -999,12 +1030,14 @@ enum TaskType {
   SIMPLE
   COMPLETE_WORKFLOW_FORM
   COMPLETE_TASK_FORM
+  MULTIPLE_INSTANCE_COMPLETE_TASK_FORM
 }
 
 enum TaskTypeArgument {
   SIMPLE
   COMPLETE_WORKFLOW_FORM
   COMPLETE_TASK_FORM
+  MULTIPLE_INSTANCE_COMPLETE_TASK_FORM
 }
 
 type TextQuestion implements Question, Node {

@@ -100,8 +100,8 @@ def test_save_workflow(
     "task__slug,next,success",
     [
         ("task-slug", '"task-slug"|task', True),
-        ("task-slug", '"not-av-task-slug"|task', False),
-        ("task-slug", '"not-av-task-slug"|invalid', False),
+        ("task-slug", '"not-a-task-slug"|task', False),
+        ("task-slug", '"not-a-task-slug"|invalid', False),
         ("task-slug", '""', False),
     ],
 )

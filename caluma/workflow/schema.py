@@ -68,6 +68,17 @@ class Task(Node, graphene.Interface):
             models.Task.TYPE_SIMPLE: SimpleTask,
             models.Task.TYPE_COMPLETE_WORKFLOW_FORM: CompleteWorkflowFormTask,
             models.Task.TYPE_COMPLETE_TASK_FORM: CompleteTaskFormTask,
+            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM: MultipleInstanceCompleteTaskFormTask,
+        }
+
+        return TASK_TYPE[instance.type]
+
+
+class MultipleInstanceTask(Task):
+    @classmethod
+    def resolve_type(cls, instance, info):
+        TASK_TYPE = {
+            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM: MultipleInstanceCompleteTaskFormTask
         }
 
         return TASK_TYPE[instance.type]
@@ -110,6 +121,16 @@ class CompleteTaskFormTask(TaskQuerysetMixin, DjangoObjectType):
         exclude_fields = ("task_flows", "work_items")
         use_connection = False
         interfaces = (Task, relay.Node)
+
+
+class MultipleInstanceCompleteTaskFormTask(DjangoObjectType):
+    form = graphene.Field("caluma.form.schema.Form", required=True)
+
+    class Meta:
+        model = models.Task
+        exclude_fields = ("task_flows", "work_items")
+        use_connection = False
+        interfaces = (MultipleInstanceTask, Task, relay.Node)
 
 
 class Flow(DjangoObjectType):

@@ -37,5 +37,6 @@ schema = graphene.Schema(
         workflow_schema.SimpleTask,
         workflow_schema.CompleteWorkflowFormTask,
         workflow_schema.CompleteTaskFormTask,
+        workflow_schema.MultipleInstanceCompleteTaskFormTask,
     ],
 )

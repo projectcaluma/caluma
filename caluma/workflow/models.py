@@ -14,11 +14,22 @@ class Task(SlugModel):
     TYPE_COMPLETE_WORKFLOW_FORM = "complete_workflow_form"
     TYPE_COMPLETE_TASK_FORM = "complete_task_form"
 
-    TYPE_CHOICES = (TYPE_SIMPLE, TYPE_COMPLETE_WORKFLOW_FORM, TYPE_COMPLETE_TASK_FORM)
+    TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM = "multiple_instance_complete_task_form"
+
+    TYPE_CHOICES = (
+        TYPE_SIMPLE,
+        TYPE_COMPLETE_WORKFLOW_FORM,
+        TYPE_COMPLETE_TASK_FORM,
+        TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
+    )
     TYPE_CHOICES_TUPLE = (
-        (TYPE_SIMPLE, "Task which can only be marked as completed."),
-        (TYPE_COMPLETE_WORKFLOW_FORM, "Task completing defined workflow form."),
-        (TYPE_COMPLETE_TASK_FORM, "Task completing defined task form."),
+        (TYPE_SIMPLE, "Task which can simply be marked as completed."),
+        (TYPE_COMPLETE_WORKFLOW_FORM, "Task to complete a defined workflow form."),
+        (TYPE_COMPLETE_TASK_FORM, "Task to complete a defined task form."),
+        (
+            TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
+            "Task to complete a defined task form that allows multiple work items to be created.",
+        ),
     )
 
     name = LocalizedField(blank=False, null=False, required=False)
