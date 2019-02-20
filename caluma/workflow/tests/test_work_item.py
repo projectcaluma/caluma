@@ -189,7 +189,7 @@ def test_complete_task_form_work_item(
 def test_complete_multiple_instance_task_form_work_item(
     db, task_factory, work_item_factory, answer, form_question, schema_executor
 ):
-    task = task_factory(type=models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM)
+    task = task_factory(is_multiple_instance=True)
     work_item_1 = work_item_factory(task=task, child_case=None)
     work_item_2 = work_item_factory(task=task, child_case=None, case=work_item_1.case)
     query = """
@@ -349,8 +349,7 @@ def test_complete_work_item_with_next_multiple_instance_task(
     schema_executor,
 ):
     task_next = task_factory.create(
-        type=models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
-        address_groups=["group1", "group2", "group3"],
+        is_multiple_instance=True, address_groups=["group1", "group2", "group3"]
     )
     task_flow = task_flow_factory(task=task, workflow=workflow)
     task_flow.flow.next = f"['{task_next.slug}']|task"
@@ -476,27 +475,11 @@ def test_save_work_item(db, work_item, schema_executor):
 
 
 @pytest.mark.parametrize(
-    "task__type,work_item__status,work_item__child_case, success",
+    "task__is_multiple_instance,work_item__status,work_item__child_case, success",
     [
-        (models.Task.TYPE_SIMPLE, models.WorkItem.STATUS_READY, None, False),
-        (
-            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
-            models.WorkItem.STATUS_COMPLETED,
-            None,
-            False,
-        ),
-        (
-            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
-            models.WorkItem.STATUS_COMPLETED,
-            None,
-            False,
-        ),
-        (
-            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
-            models.WorkItem.STATUS_READY,
-            None,
-            True,
-        ),
+        (False, models.WorkItem.STATUS_READY, None, False),
+        (True, models.WorkItem.STATUS_COMPLETED, None, False),
+        (True, models.WorkItem.STATUS_READY, None, True),
     ],
 )
 def test_create_work_item(db, work_item, success, schema_executor):

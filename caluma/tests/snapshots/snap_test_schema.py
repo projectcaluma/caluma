@@ -159,6 +159,7 @@ type CompleteTaskFormTask implements Task, Node {
   meta: JSONString!
   addressGroups: GroupJexl
   isArchived: Boolean!
+  isMultipleInstance: Boolean!
   leadTime: Int
   form: Form!
   id: ID!
@@ -186,6 +187,7 @@ type CompleteWorkflowFormTask implements Task, Node {
   meta: JSONString!
   addressGroups: GroupJexl
   isArchived: Boolean!
+  isMultipleInstance: Boolean!
   leadTime: Int
   id: ID!
 }
@@ -428,23 +430,6 @@ type MultipleChoiceQuestion implements Question, Node {
   id: ID!
 }
 
-type MultipleInstanceCompleteTaskFormTask implements Task, Node {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  createdByUser: String
-  createdByGroup: String
-  slug: String!
-  name: String!
-  description: String
-  type: TaskType!
-  meta: JSONString!
-  addressGroups: GroupJexl
-  isArchived: Boolean!
-  leadTime: Int
-  form: Form!
-  id: ID!
-}
-
 type Mutation {
   saveWorkflow(input: SaveWorkflowInput!): SaveWorkflowPayload
   addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
@@ -452,7 +437,6 @@ type Mutation {
   saveSimpleTask(input: SaveSimpleTaskInput!): SaveSimpleTaskPayload
   saveCompleteWorkflowFormTask(input: SaveCompleteWorkflowFormTaskInput!): SaveCompleteWorkflowFormTaskPayload
   saveCompleteTaskFormTask(input: SaveCompleteTaskFormTaskInput!): SaveCompleteTaskFormTaskPayload
-  saveMultipleInstanceCompleteTaskFormTask(input: SaveMultipleInstanceCompleteTaskFormTaskInput!): SaveMultipleInstanceCompleteTaskFormTaskPayload
   startCase(input: StartCaseInput!): StartCasePayload
   cancelCase(input: CancelCaseInput!): CancelCasePayload
   completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
@@ -645,6 +629,7 @@ input SaveCompleteTaskFormTaskInput {
   addressGroups: GroupJexl
   isArchived: Boolean
   leadTime: Int
+  isMultipleInstance: Boolean
   form: ID!
   clientMutationId: String
 }
@@ -662,6 +647,7 @@ input SaveCompleteWorkflowFormTaskInput {
   addressGroups: GroupJexl
   isArchived: Boolean
   leadTime: Int
+  isMultipleInstance: Boolean
   clientMutationId: String
 }
 
@@ -811,23 +797,6 @@ type SaveMultipleChoiceQuestionPayload {
   clientMutationId: String
 }
 
-input SaveMultipleInstanceCompleteTaskFormTaskInput {
-  slug: String!
-  name: String!
-  description: String
-  meta: JSONString
-  addressGroups: GroupJexl
-  isArchived: Boolean
-  leadTime: Int
-  form: ID!
-  clientMutationId: String
-}
-
-type SaveMultipleInstanceCompleteTaskFormTaskPayload {
-  task: Task
-  clientMutationId: String
-}
-
 input SaveOptionInput {
   slug: String!
   label: String!
@@ -848,6 +817,7 @@ input SaveSimpleTaskInput {
   addressGroups: GroupJexl
   isArchived: Boolean
   leadTime: Int
+  isMultipleInstance: Boolean
   clientMutationId: String
 }
 
@@ -947,6 +917,7 @@ type SimpleTask implements Task, Node {
   meta: JSONString!
   addressGroups: GroupJexl
   isArchived: Boolean!
+  isMultipleInstance: Boolean!
   leadTime: Int
   id: ID!
 }
@@ -1016,6 +987,7 @@ interface Task {
   isArchived: Boolean!
   addressGroups: GroupJexl
   meta: JSONString!
+  isMultipleInstance: Boolean!
 }
 
 type TaskConnection {
@@ -1049,14 +1021,12 @@ enum TaskType {
   SIMPLE
   COMPLETE_WORKFLOW_FORM
   COMPLETE_TASK_FORM
-  MULTIPLE_INSTANCE_COMPLETE_TASK_FORM
 }
 
 enum TaskTypeArgument {
   SIMPLE
   COMPLETE_WORKFLOW_FORM
   COMPLETE_TASK_FORM
-  MULTIPLE_INSTANCE_COMPLETE_TASK_FORM
 }
 
 type TextQuestion implements Question, Node {

@@ -155,15 +155,8 @@ def test_cancel_case(db, snapshot, case, work_item, schema_executor, success):
 
 
 @pytest.mark.parametrize(
-    "task__type,task__address_groups,count",
-    [
-        (models.Task.TYPE_SIMPLE, ["group1", "group2"], 1),
-        (
-            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
-            ["group1", "group2"],
-            2,
-        ),
-    ],
+    "task__is_multiple_instance,task__address_groups,count",
+    [(False, ["group1", "group2"], 1), (True, ["group1", "group2"], 2)],
 )
 def test_multiple_instance_task_address_groups(
     db, workflow, workflow_start_tasks, task, count, schema_executor

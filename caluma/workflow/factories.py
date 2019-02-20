@@ -15,6 +15,7 @@ class TaskFactory(DjangoModelFactory):
     is_archived = False
     form = SubFactory(FormFactory)
     lead_time = None
+    is_multiple_instance = False
 
     class Meta:
         model = models.Task

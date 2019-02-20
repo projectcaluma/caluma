@@ -121,6 +121,7 @@ class SaveTaskSerializer(serializers.ModelSerializer):
             "address_groups",
             "is_archived",
             "lead_time",
+            "is_multiple_instance",
         )
 
 
@@ -149,19 +150,6 @@ class SaveCompleteTaskFormTaskSerializer(SaveTaskSerializer):
 
     def validate(self, data):
         data["type"] = models.Task.TYPE_COMPLETE_TASK_FORM
-        return super().validate(data)
-
-    class Meta(SaveTaskSerializer.Meta):
-        fields = SaveTaskSerializer.Meta.fields + ("form",)
-
-
-class SaveMultipleInstanceCompleteTaskFormTaskSerializer(SaveTaskSerializer):
-    form = serializers.GlobalIDPrimaryKeyRelatedField(
-        queryset=Form.objects, required=True
-    )
-
-    def validate(self, data):
-        data["type"] = models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM
         return super().validate(data)
 
     class Meta(SaveTaskSerializer.Meta):
@@ -216,7 +204,7 @@ class StartCaseSerializer(serializers.ModelSerializer):
         tasks = workflow.start_tasks.all()
         for task in tasks:
             task._addressed_groups = [evaluate_assigned_groups(task)]
-            if task.type == models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM:
+            if task.is_multiple_instance:
                 task._addressed_groups = [[x] for x in task._addressed_groups[0]]
 
         work_items = itertools.chain(
@@ -308,7 +296,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
 
         # If a "multiple instance" task has running siblings, the workflow doesn't continue
         if (
-            instance.task.type == models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM
+            instance.task.is_multiple_instance
             and case.work_items.filter(
                 task=instance.task, status=models.WorkItem.STATUS_READY
             ).exists()
@@ -330,7 +318,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
             tasks = models.Task.objects.filter(pk__in=result)
             for task in tasks:
                 task._addressed_groups = [evaluate_assigned_groups(task)]
-                if task.type == models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM:
+                if task.is_multiple_instance:
                     task._addressed_groups = [[x] for x in task._addressed_groups[0]]
 
             work_items = itertools.chain(
@@ -385,9 +373,9 @@ class CreateWorkItemSerializer(serializers.ModelSerializer):
     )
 
     def validate_multiple_instance_task(self, task):
-        if task.type != models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM:
+        if not task.is_multiple_instance:
             raise exceptions.ValidationError(
-                f"The given task type {task.type} does not allow creating multiple instances of it. Please use the corresponding `MultipleInstanceTask` variant of this task."
+                f"The given task type {task.type} does not allow creating multiple instances of it. Please set `isMultipleInstance` to true."
             )
         return task
 

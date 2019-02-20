@@ -61,6 +61,7 @@ class Task(Node, graphene.Interface):
     is_archived = graphene.Boolean(required=True)
     address_groups = GroupJexl()
     meta = graphene.JSONString(required=True)
+    is_multiple_instance = graphene.Boolean(required=True)
 
     @classmethod
     def resolve_type(cls, instance, info):
@@ -68,7 +69,6 @@ class Task(Node, graphene.Interface):
             models.Task.TYPE_SIMPLE: SimpleTask,
             models.Task.TYPE_COMPLETE_WORKFLOW_FORM: CompleteWorkflowFormTask,
             models.Task.TYPE_COMPLETE_TASK_FORM: CompleteTaskFormTask,
-            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM: MultipleInstanceCompleteTaskFormTask,
         }
 
         return TASK_TYPE[instance.type]
@@ -104,16 +104,6 @@ class CompleteWorkflowFormTask(TaskQuerysetMixin, DjangoObjectType):
 
 
 class CompleteTaskFormTask(TaskQuerysetMixin, DjangoObjectType):
-    form = graphene.Field("caluma.form.schema.Form", required=True)
-
-    class Meta:
-        model = models.Task
-        exclude_fields = ("task_flows", "work_items")
-        use_connection = False
-        interfaces = (Task, relay.Node)
-
-
-class MultipleInstanceCompleteTaskFormTask(DjangoObjectType):
     form = graphene.Field("caluma.form.schema.Form", required=True)
 
     class Meta:
@@ -232,14 +222,6 @@ class SaveCompleteTaskFormTask(SaveTask):
         return_field_type = Task
 
 
-class SaveMultipleInstanceCompleteTaskFormTask(SaveTask):
-    class Meta:
-        serializer_class = (
-            serializers.SaveMultipleInstanceCompleteTaskFormTaskSerializer
-        )
-        return_field_type = Task
-
-
 class StartCase(Mutation):
     class Meta:
         serializer_class = serializers.StartCaseSerializer
@@ -279,9 +261,6 @@ class Mutation(object):
     save_simple_task = SaveSimpleTask().Field()
     save_complete_workflow_form_task = SaveCompleteWorkflowFormTask().Field()
     save_complete_task_form_task = SaveCompleteTaskFormTask().Field()
-    save_multiple_instance_complete_task_form_task = (
-        SaveMultipleInstanceCompleteTaskFormTask().Field()
-    )
 
     start_case = StartCase().Field()
     cancel_case = CancelCase().Field()
