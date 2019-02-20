@@ -511,4 +511,5 @@ def test_create_work_item(db, work_item, success, schema_executor):
         pk = extract_global_id(result.data["createWorkItem"]["workItem"]["id"])
         new_work_item = models.WorkItem.objects.get(pk=pk)
         assert new_work_item.assigned_users == assigned_users
+        assert new_work_item.status == models.WorkItem.STATUS_READY
         assert new_work_item.meta == meta

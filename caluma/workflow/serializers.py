@@ -390,6 +390,7 @@ class CreateWorkItemSerializer(serializers.ModelSerializer):
                 f"The given case {case.pk} does not have any running work items corresponding to the task {task.pk}. A new instance of a `MultipleInstanceTask` can only be created when there is at least one running sibling work item."
             )
 
+        data["status"] = models.WorkItem.STATUS_READY
         return super().validate(data)
 
     class Meta:
