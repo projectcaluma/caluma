@@ -1,6 +1,6 @@
 import pytest
 
-from .. import models, serializers
+from .. import serializers
 from ...core.tests import extract_serializer_input_fields
 
 

@@ -159,8 +159,8 @@ type CompleteTaskFormTask implements Task, Node {
   meta: JSONString!
   addressGroups: GroupJexl
   isArchived: Boolean!
-  isMultipleInstance: Boolean!
   leadTime: Int
+  isMultipleInstance: Boolean!
   form: Form!
   id: ID!
 }
@@ -187,8 +187,8 @@ type CompleteWorkflowFormTask implements Task, Node {
   meta: JSONString!
   addressGroups: GroupJexl
   isArchived: Boolean!
-  isMultipleInstance: Boolean!
   leadTime: Int
+  isMultipleInstance: Boolean!
   id: ID!
 }
 
@@ -917,8 +917,8 @@ type SimpleTask implements Task, Node {
   meta: JSONString!
   addressGroups: GroupJexl
   isArchived: Boolean!
-  isMultipleInstance: Boolean!
   leadTime: Int
+  isMultipleInstance: Boolean!
   id: ID!
 }
 

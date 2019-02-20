@@ -1,7 +1,8 @@
+import itertools
+
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import exceptions
-import itertools
 
 from . import models, validators
 from ..core import serializers

@@ -31,7 +31,6 @@ class Task(SlugModel):
         help_text="Group jexl returning what group(s) derived work items will be addressed to.",
     )
     is_archived = models.BooleanField(default=False)
-    is_multiple_instance = models.BooleanField(default=False)
     form = models.ForeignKey(
         "form.Form",
         on_delete=models.DO_NOTHING,
@@ -43,6 +42,10 @@ class Task(SlugModel):
         blank=True,
         null=True,
         help_text="Time in seconds task may take to be processed.",
+    )
+    is_multiple_instance = models.BooleanField(
+        default=False,
+        help_text="Allows creating multiple work items for this task using the `CreateWorkItem` mutation. If true, one work item will be created for each entry in `address_groups`.",
     )
 
     def calculate_deadline(self):
