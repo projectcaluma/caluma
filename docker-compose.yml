@@ -9,6 +9,7 @@ services:
       # - POSTGRES_PASSWORD=
     volumes:
       - dbdata:/var/lib/postgresql/data
+    command: -p ${DATABASE_PORT:-5432}
   caluma:
     image: projectcaluma/caluma:latest
     ports:

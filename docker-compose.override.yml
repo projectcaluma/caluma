@@ -4,7 +4,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=caluma
     ports:
-      - "${PG_PORT:-5432}:5432"
+      - "${DATABASE_PORT:-5432}:${DATABASE_PORT:-5432}"
   caluma:
     build:
       context: .
@@ -17,7 +17,7 @@ services:
       [
         "/bin/sh",
         "-c",
-        "wait-for-it.sh db:5432 -- ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000",
+        "wait-for-it.sh db:${DATABASE_PORT:-5432} -- ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000",
       ]
     environment:
       - ENV=dev
