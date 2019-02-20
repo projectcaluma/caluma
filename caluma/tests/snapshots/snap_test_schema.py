@@ -227,6 +227,20 @@ type CopyQuestionPayload {
   clientMutationId: String
 }
 
+input CreateWorkItemInput {
+  case: ID!
+  multipleInstanceTask: ID!
+  assignedUsers: [String]
+  deadline: DateTime
+  meta: JSONString
+  clientMutationId: String
+}
+
+type CreateWorkItemPayload {
+  workItem: WorkItem
+  clientMutationId: String
+}
+
 scalar DateTime
 
 type Document implements Node {
@@ -414,7 +428,7 @@ type MultipleChoiceQuestion implements Question, Node {
   id: ID!
 }
 
-type MultipleInstanceCompleteTaskFormTask implements MultipleInstanceTask, Task, Node {
+type MultipleInstanceCompleteTaskFormTask implements Task, Node {
   createdAt: DateTime!
   modifiedAt: DateTime!
   createdByUser: String
@@ -431,20 +445,6 @@ type MultipleInstanceCompleteTaskFormTask implements MultipleInstanceTask, Task,
   id: ID!
 }
 
-interface MultipleInstanceTask {
-  id: ID!
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  createdByUser: String
-  createdByGroup: String
-  slug: String!
-  name: String!
-  description: String
-  isArchived: Boolean!
-  addressGroups: GroupJexl
-  meta: JSONString!
-}
-
 type Mutation {
   saveWorkflow(input: SaveWorkflowInput!): SaveWorkflowPayload
   addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
@@ -452,10 +452,12 @@ type Mutation {
   saveSimpleTask(input: SaveSimpleTaskInput!): SaveSimpleTaskPayload
   saveCompleteWorkflowFormTask(input: SaveCompleteWorkflowFormTaskInput!): SaveCompleteWorkflowFormTaskPayload
   saveCompleteTaskFormTask(input: SaveCompleteTaskFormTaskInput!): SaveCompleteTaskFormTaskPayload
+  saveMultipleInstanceCompleteTaskFormTask(input: SaveMultipleInstanceCompleteTaskFormTaskInput!): SaveMultipleInstanceCompleteTaskFormTaskPayload
   startCase(input: StartCaseInput!): StartCasePayload
   cancelCase(input: CancelCaseInput!): CancelCasePayload
   completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
   saveWorkItem(input: SaveWorkItemInput!): SaveWorkItemPayload
+  createWorkItem(input: CreateWorkItemInput!): CreateWorkItemPayload
   saveForm(input: SaveFormInput!): SaveFormPayload
   copyForm(input: CopyFormInput!): CopyFormPayload
   addFormQuestion(input: AddFormQuestionInput!): AddFormQuestionPayload
@@ -806,6 +808,23 @@ input SaveMultipleChoiceQuestionInput {
 
 type SaveMultipleChoiceQuestionPayload {
   question: Question
+  clientMutationId: String
+}
+
+input SaveMultipleInstanceCompleteTaskFormTaskInput {
+  slug: String!
+  name: String!
+  description: String
+  meta: JSONString
+  addressGroups: GroupJexl
+  isArchived: Boolean
+  leadTime: Int
+  form: ID!
+  clientMutationId: String
+}
+
+type SaveMultipleInstanceCompleteTaskFormTaskPayload {
+  task: Task
   clientMutationId: String
 }
 

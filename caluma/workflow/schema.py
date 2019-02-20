@@ -74,16 +74,6 @@ class Task(Node, graphene.Interface):
         return TASK_TYPE[instance.type]
 
 
-class MultipleInstanceTask(Task):
-    @classmethod
-    def resolve_type(cls, instance, info):
-        TASK_TYPE = {
-            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM: MultipleInstanceCompleteTaskFormTask
-        }
-
-        return TASK_TYPE[instance.type]
-
-
 class TaskConnection(graphene.Connection):
     class Meta:
         node = Task
@@ -130,7 +120,7 @@ class MultipleInstanceCompleteTaskFormTask(DjangoObjectType):
         model = models.Task
         exclude_fields = ("task_flows", "work_items")
         use_connection = False
-        interfaces = (MultipleInstanceTask, Task, relay.Node)
+        interfaces = (Task, relay.Node)
 
 
 class Flow(DjangoObjectType):
@@ -242,6 +232,14 @@ class SaveCompleteTaskFormTask(SaveTask):
         return_field_type = Task
 
 
+class SaveMultipleInstanceCompleteTaskFormTask(SaveTask):
+    class Meta:
+        serializer_class = (
+            serializers.SaveMultipleInstanceCompleteTaskFormTaskSerializer
+        )
+        return_field_type = Task
+
+
 class StartCase(Mutation):
     class Meta:
         serializer_class = serializers.StartCaseSerializer
@@ -267,6 +265,12 @@ class SaveWorkItem(Mutation):
         model_operations = ["update"]
 
 
+class CreateWorkItem(Mutation):
+    class Meta:
+        serializer_class = serializers.CreateWorkItemSerializer
+        model_operations = ["create"]
+
+
 class Mutation(object):
     save_workflow = SaveWorkflow().Field()
     add_workflow_flow = AddWorkflowFlow().Field()
@@ -275,11 +279,15 @@ class Mutation(object):
     save_simple_task = SaveSimpleTask().Field()
     save_complete_workflow_form_task = SaveCompleteWorkflowFormTask().Field()
     save_complete_task_form_task = SaveCompleteTaskFormTask().Field()
+    save_multiple_instance_complete_task_form_task = (
+        SaveMultipleInstanceCompleteTaskFormTask().Field()
+    )
 
     start_case = StartCase().Field()
     cancel_case = CancelCase().Field()
     complete_work_item = CompleteWorkItem().Field()
     save_work_item = SaveWorkItem().Field()
+    create_work_item = CreateWorkItem().Field()
 
 
 class Query(object):

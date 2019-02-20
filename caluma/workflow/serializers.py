@@ -1,11 +1,19 @@
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import exceptions
+import itertools
 
 from . import models, validators
 from ..core import serializers
 from ..form.models import Document, Form
 from .jexl import FlowJexl, GroupJexl
+
+
+def evaluate_assigned_groups(task):
+    if task.address_groups:
+        return GroupJexl().evaluate(task.address_groups)
+
+    return []
 
 
 class FlowJexlField(serializers.JexlField):
@@ -147,6 +155,19 @@ class SaveCompleteTaskFormTaskSerializer(SaveTaskSerializer):
         fields = SaveTaskSerializer.Meta.fields + ("form",)
 
 
+class SaveMultipleInstanceCompleteTaskFormTaskSerializer(SaveTaskSerializer):
+    form = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=Form.objects, required=True
+    )
+
+    def validate(self, data):
+        data["type"] = models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM
+        return super().validate(data)
+
+    class Meta(SaveTaskSerializer.Meta):
+        fields = SaveTaskSerializer.Meta.fields + ("form",)
+
+
 class StartCaseSerializer(serializers.ModelSerializer):
     workflow = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Workflow.objects.prefetch_related("start_tasks")
@@ -192,25 +213,30 @@ class StartCaseSerializer(serializers.ModelSerializer):
 
         workflow = instance.workflow
         work_items = []
-        for start_task in workflow.start_tasks.all():
-            addressed_groups = []
-            if start_task.address_groups:
-                addressed_groups = GroupJexl().evaluate(start_task.address_groups)
+        tasks = workflow.start_tasks.all()
+        for task in tasks:
+            task._addressed_groups = [evaluate_assigned_groups(task)]
+            if task.type == models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM:
+                task._addressed_groups = [[x] for x in task._addressed_groups[0]]
 
-            work_items.append(
-                models.WorkItem(
-                    addressed_groups=addressed_groups,
-                    case=instance,
-                    document=Document.objects.create_document_for_task(
-                        start_task, user
-                    ),
-                    task=start_task,
-                    deadline=start_task.calculate_deadline(),
-                    status=models.WorkItem.STATUS_READY,
-                    created_by_user=user.username,
-                    created_by_group=user.group,
-                )
-            )
+        work_items = itertools.chain(
+            *[
+                [
+                    models.WorkItem(
+                        addressed_groups=groups,
+                        task_id=task.pk,
+                        deadline=task.calculate_deadline(),
+                        document=Document.objects.create_document_for_task(task, user),
+                        case=instance,
+                        status=models.WorkItem.STATUS_READY,
+                        created_by_user=user.username,
+                        created_by_group=user.group,
+                    )
+                    for groups in task._addressed_groups
+                ]
+                for task in tasks
+            ]
+        )
 
         models.WorkItem.objects.bulk_create(work_items)
         return instance
@@ -283,10 +309,9 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
         # If a "multiple instance" task has running siblings, the workflow doesn't continue
         if (
             instance.task.type == models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM
-            and case.work_items.filter(task=instance.task)
-            .exclude(status=models.WorkItem.STATUS_COMPLETED)
-            .count()
-            > 0
+            and case.work_items.filter(
+                task=instance.task, status=models.WorkItem.STATUS_READY
+            ).exists()
         ):
             return instance
 
@@ -302,26 +327,33 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
             if not isinstance(result, list):
                 result = [result]
 
-            def evaluate_assigned_groups(task):
-                if task.address_groups:
-                    return GroupJexl().evaluate(task.address_groups)
-
-                return []
-
             tasks = models.Task.objects.filter(pk__in=result)
-            work_items = [
-                models.WorkItem(
-                    addressed_groups=evaluate_assigned_groups(task),
-                    task_id=task.pk,
-                    deadline=task.calculate_deadline(),
-                    document=Document.objects.create_document_for_task(task, user),
-                    case=case,
-                    status=models.WorkItem.STATUS_READY,
-                    created_by_user=user.username,
-                    created_by_group=user.group,
-                )
-                for task in tasks
-            ]
+            for task in tasks:
+                task._addressed_groups = [evaluate_assigned_groups(task)]
+                if task.type == models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM:
+                    task._addressed_groups = [[x] for x in task._addressed_groups[0]]
+
+            work_items = itertools.chain(
+                *[
+                    [
+                        models.WorkItem(
+                            addressed_groups=groups,
+                            task_id=task.pk,
+                            deadline=task.calculate_deadline(),
+                            document=Document.objects.create_document_for_task(
+                                task, user
+                            ),
+                            case=case,
+                            status=models.WorkItem.STATUS_READY,
+                            created_by_user=user.username,
+                            created_by_group=user.group,
+                        )
+                        for groups in task._addressed_groups
+                    ]
+                    for task in tasks
+                ]
+            )
+
             models.WorkItem.objects.bulk_create(work_items)
         else:
             # no more tasks, mark case as complete
@@ -344,3 +376,40 @@ class SaveWorkItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.WorkItem
         fields = ("work_item", "assigned_users", "deadline", "meta")
+
+
+class CreateWorkItemSerializer(serializers.ModelSerializer):
+    case = serializers.GlobalIDPrimaryKeyRelatedField(queryset=models.Case.objects)
+    multiple_instance_task = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.Task.objects, source="task"
+    )
+
+    def validate_multiple_instance_task(self, task):
+        if task.type != models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM:
+            raise exceptions.ValidationError(
+                f"The given task type {task.type} does not allow creating multiple instances of it. Please use the corresponding `MultipleInstanceTask` variant of this task."
+            )
+        return task
+
+    def validate(self, data):
+        case = data["case"]
+        task = data["task"]
+
+        if not case.work_items.filter(
+            task=task, status=models.WorkItem.STATUS_READY
+        ).exists():
+            raise exceptions.ValidationError(
+                f"The given case {case.pk} does not have any running work items corresponding to the task {task.pk}. A new instance of a `MultipleInstanceTask` can only be created when there is at least one running sibling work item."
+            )
+
+        return super().validate(data)
+
+    class Meta:
+        model = models.WorkItem
+        fields = (
+            "case",
+            "multiple_instance_task",
+            "assigned_users",
+            "deadline",
+            "meta",
+        )

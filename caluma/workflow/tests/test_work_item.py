@@ -4,6 +4,7 @@ import pytest
 from graphene.utils.str_converters import to_const
 
 from .. import models
+from ...core.relay import extract_global_id
 from ...form.models import Question
 
 
@@ -293,7 +294,9 @@ def test_complete_work_item_with_next_multiple_tasks(
     workflow,
     schema_executor,
 ):
-    task_next_1, task_next_2 = task_factory.create_batch(2)
+    task_next_1, task_next_2 = task_factory.create_batch(
+        2, type=models.Task.TYPE_SIMPLE
+    )
     task_flow = task_flow_factory(task=task, workflow=workflow)
     task_flow.flow.next = f"['{task_next_1.slug}', '{task_next_2.slug}']|task"
     task_flow.flow.save()
@@ -329,6 +332,58 @@ def test_complete_work_item_with_next_multiple_tasks(
             status=models.WorkItem.STATUS_READY
         )
     ) == {task_next_1.pk, task_next_2.pk}
+
+
+@pytest.mark.parametrize(
+    "work_item__status,work_item__child_case,task__type",
+    [(models.WorkItem.STATUS_READY, None, models.Task.TYPE_SIMPLE)],
+)
+def test_complete_work_item_with_next_multiple_instance_task(
+    db,
+    case,
+    work_item,
+    task,
+    task_factory,
+    task_flow_factory,
+    workflow,
+    schema_executor,
+):
+    task_next = task_factory.create(
+        type=models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
+        address_groups=["group1", "group2", "group3"],
+    )
+    task_flow = task_flow_factory(task=task, workflow=workflow)
+    task_flow.flow.next = f"['{task_next.slug}']|task"
+    task_flow.flow.save()
+
+    query = """
+        mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
+          completeWorkItem(input: $input) {
+            workItem {
+              status
+              case {
+                status
+                workItems {
+                  edges {
+                    node {
+                      status
+                    }
+                  }
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {"input": {"id": work_item.pk}}
+    result = schema_executor(query, variables=inp)
+
+    assert not result.errors
+    assert case.work_items.count() == 4
+    for work_item in case.work_items.filter(status=models.WorkItem.STATUS_READY):
+        assert len(work_item.addressed_groups) == 1
 
 
 @pytest.mark.parametrize(
@@ -418,3 +473,58 @@ def test_save_work_item(db, work_item, schema_executor):
     work_item.refresh_from_db()
     assert work_item.assigned_users == assigned_users
     assert work_item.meta == {"test": "test"}
+
+
+@pytest.mark.parametrize(
+    "task__type,work_item__status,work_item__child_case, success",
+    [
+        (models.Task.TYPE_SIMPLE, models.WorkItem.STATUS_READY, None, False),
+        (
+            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
+            models.WorkItem.STATUS_COMPLETED,
+            None,
+            False,
+        ),
+        (
+            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
+            models.WorkItem.STATUS_COMPLETED,
+            None,
+            False,
+        ),
+        (
+            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
+            models.WorkItem.STATUS_READY,
+            None,
+            True,
+        ),
+    ],
+)
+def test_create_work_item(db, work_item, success, schema_executor):
+    query = """
+        mutation CreateWorkItem($input: CreateWorkItemInput!) {
+          createWorkItem(input: $input) {
+            clientMutationId
+            workItem {
+                id
+            }
+          }
+        }
+    """
+    assigned_users = ["user1", "user2"]
+    meta = {"test": "test"}
+    inp = {
+        "input": {
+            "case": str(work_item.case.pk),
+            "multipleInstanceTask": str(work_item.task.pk),
+            "assignedUsers": assigned_users,
+            "meta": json.dumps(meta),
+        }
+    }
+    result = schema_executor(query, variables=inp)
+
+    assert not bool(result.errors) == success
+    if success:
+        pk = extract_global_id(result.data["createWorkItem"]["workItem"]["id"])
+        new_work_item = models.WorkItem.objects.get(pk=pk)
+        assert new_work_item.assigned_users == assigned_users
+        assert new_work_item.meta == meta

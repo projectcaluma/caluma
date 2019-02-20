@@ -4,7 +4,10 @@ from .. import models, serializers
 from ...core.tests import extract_serializer_input_fields
 
 
-@pytest.mark.parametrize("task__type", [models.Task.TYPE_SIMPLE])
+@pytest.mark.parametrize(
+    "task__type",
+    [models.Task.TYPE_SIMPLE, models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM],
+)
 def test_query_all_tasks(db, snapshot, task, schema_executor):
     query = """
         query AllTasks($name: String!) {
@@ -53,15 +56,39 @@ def test_save_task(db, snapshot, task, mutation, schema_executor):
     snapshot.assert_match(result.data)
 
 
-def test_save_comlete_task_form_task(db, snapshot, task, schema_executor):
+@pytest.mark.parametrize(
+    "task__type,operation_name",
+    [
+        (models.Task.TYPE_SIMPLE, "SaveCompleteTaskFormTask"),
+        (
+            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
+            "SaveMultipleInstanceCompleteTaskFormTask",
+        ),
+    ],
+)
+def test_save_complete_task_form_task(
+    db, snapshot, task, operation_name, schema_executor
+):
     query = """
-        mutation SaveCompleteTaskFormTask($input: SaveCompleteTaskFormTaskInput!) {
-          saveCompleteTaskFormTask(input: $input) {
-            task {
+        fragment TaskProps on Task {
                 slug
                 name
                 __typename
                 meta
+        }
+        mutation SaveCompleteTaskFormTask($input: SaveCompleteTaskFormTaskInput!) {
+          saveCompleteTaskFormTask(input: $input) {
+            task {
+                ...TaskProps
+            }
+            clientMutationId
+          }
+        }
+
+        mutation SaveMultipleInstanceCompleteTaskFormTask($input: SaveMultipleInstanceCompleteTaskFormTaskInput!) {
+          saveMultipleInstanceCompleteTaskFormTask(input: $input) {
+            task {
+                ...TaskProps
             }
             clientMutationId
           }
@@ -73,6 +100,6 @@ def test_save_comlete_task_form_task(db, snapshot, task, schema_executor):
             serializers.SaveCompleteTaskFormTaskSerializer, task
         )
     }
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variables=inp, operation_name=operation_name)
     assert not result.errors
     snapshot.assert_match(result.data)

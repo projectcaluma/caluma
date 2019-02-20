@@ -152,3 +152,31 @@ def test_cancel_case(db, snapshot, case, work_item, schema_executor, success):
     assert not bool(result.errors) == success
     if success:
         snapshot.assert_match(result.data)
+
+
+@pytest.mark.parametrize(
+    "task__type,task__address_groups,count",
+    [
+        (models.Task.TYPE_SIMPLE, ["group1", "group2"], 1),
+        (
+            models.Task.TYPE_MULTIPLE_INSTANCE_COMPLETE_TASK_FORM,
+            ["group1", "group2"],
+            2,
+        ),
+    ],
+)
+def test_multiple_instance_task_address_groups(
+    db, workflow, workflow_start_tasks, task, count, schema_executor
+):
+    query = """
+        mutation StartCase($input: StartCaseInput!) {
+          startCase(input: $input) {
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {"input": {"workflow": workflow.slug}}
+    result = schema_executor(query, variables=inp)
+    assert not bool(result.errors)
+    assert models.WorkItem.objects.count() == count
