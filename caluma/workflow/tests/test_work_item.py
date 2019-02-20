@@ -380,7 +380,8 @@ def test_complete_work_item_with_next_multiple_instance_task(
     result = schema_executor(query, variables=inp)
 
     assert not result.errors
-    assert case.work_items.count() == 4
+    assert case.work_items.filter(status=models.WorkItem.STATUS_READY).count() == 3
+    assert case.work_items.filter(status=models.WorkItem.STATUS_COMPLETED).count() == 1
     for work_item in case.work_items.filter(status=models.WorkItem.STATUS_READY):
         assert len(work_item.addressed_groups) == 1
 

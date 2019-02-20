@@ -31,6 +31,18 @@ snapshots["test_save_task[SaveCompleteWorkflowFormTask] 1"] = {
     }
 }
 
+snapshots["test_save_comlete_task_form_task 1"] = {
+    "saveCompleteTaskFormTask": {
+        "clientMutationId": "testid",
+        "task": {
+            "__typename": "CompleteTaskFormTask",
+            "meta": "{}",
+            "name": "Thomas Johnson",
+            "slug": "sound-air-mission",
+        },
+    }
+}
+
 snapshots["test_query_all_tasks[simple] 1"] = {
     "allTasks": {
         "edges": [
@@ -44,77 +56,5 @@ snapshots["test_query_all_tasks[simple] 1"] = {
                 }
             }
         ]
-    }
-}
-
-snapshots["test_query_all_tasks[multiple_instance_complete_task_form] 1"] = {
-    "allTasks": {
-        "edges": [
-            {
-                "node": {
-                    "__typename": "MultipleInstanceCompleteTaskFormTask",
-                    "description": "State section rock event recent. Final activity hope star check record well. Radio with Mr letter eye.",
-                    "meta": "{}",
-                    "name": "Thomas Johnson",
-                    "slug": "sound-air-mission",
-                }
-            }
-        ]
-    }
-}
-
-snapshots[
-    "test_save_complete_task_form_task[multiple_instance_complete_task_form-SaveMultipleInstanceCompleteTaskFormTask] 1"
-] = {
-    "saveMultipleInstanceCompleteTaskFormTask": {
-        "clientMutationId": "testid",
-        "task": {
-            "__typename": "MultipleInstanceCompleteTaskFormTask",
-            "meta": "{}",
-            "name": "Thomas Johnson",
-            "slug": "sound-air-mission",
-        },
-    }
-}
-
-snapshots[
-    "test_save_complete_task_form_task[complete_task_form-SaveCompleteTaskFormTask] 1"
-] = {
-    "saveCompleteTaskFormTask": {
-        "clientMutationId": "testid",
-        "task": {
-            "__typename": "CompleteTaskFormTask",
-            "meta": "{}",
-            "name": "Thomas Johnson",
-            "slug": "sound-air-mission",
-        },
-    }
-}
-
-snapshots["test_query_all_tasks 1"] = {
-    "allTasks": {
-        "edges": [
-            {
-                "node": {
-                    "__typename": "CompleteTaskFormTask",
-                    "description": "State section rock event recent. Final activity hope star check record well. Radio with Mr letter eye.",
-                    "meta": "{}",
-                    "name": "Thomas Johnson",
-                    "slug": "sound-air-mission",
-                }
-            }
-        ]
-    }
-}
-
-snapshots["test_save_comlete_task_form_task 1"] = {
-    "saveCompleteTaskFormTask": {
-        "clientMutationId": "testid",
-        "task": {
-            "__typename": "CompleteTaskFormTask",
-            "meta": "{}",
-            "name": "Thomas Johnson",
-            "slug": "sound-air-mission",
-        },
     }
 }

@@ -1,9 +1,10 @@
 import pytest
 
-from .. import serializers
+from .. import models, serializers
 from ...core.tests import extract_serializer_input_fields
 
 
+@pytest.mark.parametrize("task__type", [models.Task.TYPE_SIMPLE])
 def test_query_all_tasks(db, snapshot, task, schema_executor):
     query = """
         query AllTasks($name: String!) {
