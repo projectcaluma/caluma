@@ -398,6 +398,7 @@ class CreateWorkItemSerializer(serializers.ModelSerializer):
             "case",
             "multiple_instance_task",
             "assigned_users",
+            "addressed_groups",
             "deadline",
             "meta",
         )

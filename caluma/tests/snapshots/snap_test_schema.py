@@ -233,6 +233,7 @@ input CreateWorkItemInput {
   case: ID!
   multipleInstanceTask: ID!
   assignedUsers: [String]
+  addressedGroups: [String]
   deadline: DateTime
   meta: JSONString
   clientMutationId: String
