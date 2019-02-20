@@ -16,6 +16,13 @@ def evaluate_assigned_groups(task):
     return []
 
 
+def get_addressed_groups(task):
+    addressed_groups = [evaluate_assigned_groups(task)]
+    if task.is_multiple_instance:
+        addressed_groups = [[x] for x in addressed_groups[0]]
+    return addressed_groups
+
+
 class FlowJexlField(serializers.JexlField):
     def __init__(self, **kwargs):
         super().__init__(FlowJexl(), **kwargs)
@@ -202,10 +209,6 @@ class StartCaseSerializer(serializers.ModelSerializer):
         workflow = instance.workflow
         work_items = []
         tasks = workflow.start_tasks.all()
-        for task in tasks:
-            task._addressed_groups = [evaluate_assigned_groups(task)]
-            if task.is_multiple_instance:
-                task._addressed_groups = [[x] for x in task._addressed_groups[0]]
 
         work_items = itertools.chain(
             *[
@@ -220,7 +223,7 @@ class StartCaseSerializer(serializers.ModelSerializer):
                         created_by_user=user.username,
                         created_by_group=user.group,
                     )
-                    for groups in task._addressed_groups
+                    for groups in get_addressed_groups(task)
                 ]
                 for task in tasks
             ]
@@ -316,10 +319,6 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
                 result = [result]
 
             tasks = models.Task.objects.filter(pk__in=result)
-            for task in tasks:
-                task._addressed_groups = [evaluate_assigned_groups(task)]
-                if task.is_multiple_instance:
-                    task._addressed_groups = [[x] for x in task._addressed_groups[0]]
 
             work_items = itertools.chain(
                 *[
@@ -336,7 +335,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
                             created_by_user=user.username,
                             created_by_group=user.group,
                         )
-                        for groups in task._addressed_groups
+                        for groups in get_addressed_groups(task)
                     ]
                     for task in tasks
                 ]
