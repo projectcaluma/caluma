@@ -141,13 +141,14 @@ def test_complete_workflow_form_work_item(
 
 
 @pytest.mark.parametrize(
-    "work_item__status,work_item__child_case,case__status,task__type",
+    "work_item__status,work_item__child_case,case__status,task__type,case__document",
     [
         (
             models.WorkItem.STATUS_READY,
             None,
             models.Case.STATUS_RUNNING,
             models.Task.TYPE_COMPLETE_TASK_FORM,
+            None,
         )
     ],
 )
