@@ -5,14 +5,14 @@ from ..form.validators import DocumentValidator
 
 
 class WorkItemValidator:
-    def _validate_task_complete_task_form(self, task, case, document):
-        DocumentValidator().validate(answers=document.answers, form=case.document.form)
-
     def _validate_task_simple(self, task, case, document):
         pass
 
     def _validate_task_complete_workflow_form(self, task, case, document):
         self._validate_task_complete_task_form(task, case, case.document)
+
+    def _validate_task_complete_task_form(self, task, case, document):
+        DocumentValidator().validate(answers=document.answers, form=document.form)
 
     def validate(self, *, status, child_case, case, task, document, **kwargs):
         if status != models.WorkItem.STATUS_READY:
