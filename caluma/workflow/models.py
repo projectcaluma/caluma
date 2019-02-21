@@ -16,9 +16,9 @@ class Task(SlugModel):
 
     TYPE_CHOICES = (TYPE_SIMPLE, TYPE_COMPLETE_WORKFLOW_FORM, TYPE_COMPLETE_TASK_FORM)
     TYPE_CHOICES_TUPLE = (
-        (TYPE_SIMPLE, "Task which can only be marked as completed."),
-        (TYPE_COMPLETE_WORKFLOW_FORM, "Task completing defined workflow form."),
-        (TYPE_COMPLETE_TASK_FORM, "Task completing defined task form."),
+        (TYPE_SIMPLE, "Task which can simply be marked as completed."),
+        (TYPE_COMPLETE_WORKFLOW_FORM, "Task to complete a defined workflow form."),
+        (TYPE_COMPLETE_TASK_FORM, "Task to complete a defined task form."),
     )
 
     name = LocalizedField(blank=False, null=False, required=False)
@@ -42,6 +42,10 @@ class Task(SlugModel):
         blank=True,
         null=True,
         help_text="Time in seconds task may take to be processed.",
+    )
+    is_multiple_instance = models.BooleanField(
+        default=False,
+        help_text="Allows creating multiple work items for this task using the `CreateWorkItem` mutation. If true, one work item will be created for each entry in `address_groups`.",
     )
 
     def calculate_deadline(self):

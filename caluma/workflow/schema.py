@@ -61,6 +61,7 @@ class Task(Node, graphene.Interface):
     is_archived = graphene.Boolean(required=True)
     address_groups = GroupJexl()
     meta = graphene.JSONString(required=True)
+    is_multiple_instance = graphene.Boolean(required=True)
 
     @classmethod
     def resolve_type(cls, instance, info):
@@ -246,6 +247,12 @@ class SaveWorkItem(Mutation):
         model_operations = ["update"]
 
 
+class CreateWorkItem(Mutation):
+    class Meta:
+        serializer_class = serializers.CreateWorkItemSerializer
+        model_operations = ["create"]
+
+
 class Mutation(object):
     save_workflow = SaveWorkflow().Field()
     add_workflow_flow = AddWorkflowFlow().Field()
@@ -259,6 +266,7 @@ class Mutation(object):
     cancel_case = CancelCase().Field()
     complete_work_item = CompleteWorkItem().Field()
     save_work_item = SaveWorkItem().Field()
+    create_work_item = CreateWorkItem().Field()
 
 
 class Query(object):

@@ -160,6 +160,7 @@ type CompleteTaskFormTask implements Task, Node {
   addressGroups: GroupJexl
   isArchived: Boolean!
   leadTime: Int
+  isMultipleInstance: Boolean!
   form: Form!
   id: ID!
 }
@@ -187,6 +188,7 @@ type CompleteWorkflowFormTask implements Task, Node {
   addressGroups: GroupJexl
   isArchived: Boolean!
   leadTime: Int
+  isMultipleInstance: Boolean!
   id: ID!
 }
 
@@ -224,6 +226,21 @@ input CopyQuestionInput {
 
 type CopyQuestionPayload {
   question: Question
+  clientMutationId: String
+}
+
+input CreateWorkItemInput {
+  case: ID!
+  multipleInstanceTask: ID!
+  assignedUsers: [String]
+  addressedGroups: [String]
+  deadline: DateTime
+  meta: JSONString
+  clientMutationId: String
+}
+
+type CreateWorkItemPayload {
+  workItem: WorkItem
   clientMutationId: String
 }
 
@@ -425,6 +442,7 @@ type Mutation {
   cancelCase(input: CancelCaseInput!): CancelCasePayload
   completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
   saveWorkItem(input: SaveWorkItemInput!): SaveWorkItemPayload
+  createWorkItem(input: CreateWorkItemInput!): CreateWorkItemPayload
   saveForm(input: SaveFormInput!): SaveFormPayload
   copyForm(input: CopyFormInput!): CopyFormPayload
   addFormQuestion(input: AddFormQuestionInput!): AddFormQuestionPayload
@@ -612,6 +630,7 @@ input SaveCompleteTaskFormTaskInput {
   addressGroups: GroupJexl
   isArchived: Boolean
   leadTime: Int
+  isMultipleInstance: Boolean
   form: ID!
   clientMutationId: String
 }
@@ -629,6 +648,7 @@ input SaveCompleteWorkflowFormTaskInput {
   addressGroups: GroupJexl
   isArchived: Boolean
   leadTime: Int
+  isMultipleInstance: Boolean
   clientMutationId: String
 }
 
@@ -798,6 +818,7 @@ input SaveSimpleTaskInput {
   addressGroups: GroupJexl
   isArchived: Boolean
   leadTime: Int
+  isMultipleInstance: Boolean
   clientMutationId: String
 }
 
@@ -898,6 +919,7 @@ type SimpleTask implements Task, Node {
   addressGroups: GroupJexl
   isArchived: Boolean!
   leadTime: Int
+  isMultipleInstance: Boolean!
   id: ID!
 }
 
@@ -966,6 +988,7 @@ interface Task {
   isArchived: Boolean!
   addressGroups: GroupJexl
   meta: JSONString!
+  isMultipleInstance: Boolean!
 }
 
 type TaskConnection {

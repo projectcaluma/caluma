@@ -31,6 +31,18 @@ snapshots["test_save_task[SaveCompleteWorkflowFormTask] 1"] = {
     }
 }
 
+snapshots["test_save_comlete_task_form_task 1"] = {
+    "saveCompleteTaskFormTask": {
+        "clientMutationId": "testid",
+        "task": {
+            "__typename": "CompleteTaskFormTask",
+            "meta": "{}",
+            "name": "Thomas Johnson",
+            "slug": "sound-air-mission",
+        },
+    }
+}
+
 snapshots["test_query_all_tasks[simple] 1"] = {
     "allTasks": {
         "edges": [
@@ -44,17 +56,5 @@ snapshots["test_query_all_tasks[simple] 1"] = {
                 }
             }
         ]
-    }
-}
-
-snapshots["test_save_comlete_task_form_task 1"] = {
-    "saveCompleteTaskFormTask": {
-        "clientMutationId": "testid",
-        "task": {
-            "__typename": "CompleteTaskFormTask",
-            "meta": "{}",
-            "name": "Thomas Johnson",
-            "slug": "sound-air-mission",
-        },
     }
 }
