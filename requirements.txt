@@ -2,7 +2,7 @@ django==1.11.20
 django-cors-headers==2.4.0
 django-environ==0.4.5
 django-filter==2.1.0
-django-localized-fields==5.0a7
+django-localized-fields==5.0a9
 django-postgres-extra==1.21a16
 djangorestframework==3.9.1
 graphene==2.1.3
