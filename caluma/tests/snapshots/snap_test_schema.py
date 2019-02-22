@@ -91,7 +91,7 @@ type Case implements Node {
   status: CaseStatus!
   meta: JSONString!
   document: Document
-  workItems(before: String, after: String, first: Int, last: Int, status: WorkItemStatusArgument, task: ID, case: ID, orderBy: [WorkItemOrdering], addressedGroups: [String]): WorkItemConnection
+  workItems(before: String, after: String, first: Int, last: Int, status: WorkItemStatusArgument, task: ID, case: ID, createdByUser: String, createdByGroup: String, orderBy: [WorkItemOrdering], addressedGroups: [String]): WorkItemConnection
   parentWorkItem: WorkItem
 }
 
@@ -142,8 +142,8 @@ type ChoiceQuestion implements Question, Node {
   isArchived: Boolean!
   meta: JSONString!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
-  options(before: String, after: String, first: Int, last: Int, slug: String, label: String, search: String, orderBy: [OptionOrdering]): OptionConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, search: String): FormConnection
+  options(before: String, after: String, first: Int, last: Int, slug: String, label: String, createdByUser: String, createdByGroup: String, search: String, orderBy: [OptionOrdering]): OptionConnection
   id: ID!
 }
 
@@ -254,7 +254,7 @@ type Document implements Node {
   id: ID!
   form: Form!
   meta: JSONString!
-  answers(before: String, after: String, first: Int, last: Int, question: ID, search: String, orderBy: [AnswerOrdering]): AnswerConnection
+  answers(before: String, after: String, first: Int, last: Int, question: ID, search: String, createdByUser: String, createdByGroup: String, orderBy: [AnswerOrdering]): AnswerConnection
   case: Case
   workItem: WorkItem
 }
@@ -303,7 +303,7 @@ type FloatQuestion implements Question, Node {
   isArchived: Boolean!
   meta: JSONString!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, search: String): FormConnection
   id: ID!
   minValue: Float
   maxValue: Float
@@ -342,7 +342,7 @@ type Form implements Node {
   meta: JSONString!
   isPublished: Boolean!
   isArchived: Boolean!
-  questions(before: String, after: String, first: Int, last: Int, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String, orderBy: [QuestionOrdering]): QuestionConnection
+  questions(before: String, after: String, first: Int, last: Int, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, excludeForms: [ID], search: String, orderBy: [QuestionOrdering]): QuestionConnection
   source: Form
   id: ID!
 }
@@ -395,7 +395,7 @@ type IntegerQuestion implements Question, Node {
   isArchived: Boolean!
   meta: JSONString!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, search: String): FormConnection
   id: ID!
   maxValue: Int
   minValue: Int
@@ -426,8 +426,8 @@ type MultipleChoiceQuestion implements Question, Node {
   isArchived: Boolean!
   meta: JSONString!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
-  options(before: String, after: String, first: Int, last: Int, orderBy: [OptionOrdering], slug: String, label: String, search: String): OptionConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, search: String): FormConnection
+  options(before: String, after: String, first: Int, last: Int, orderBy: [OptionOrdering], slug: String, label: String, createdByUser: String, createdByGroup: String, search: String): OptionConnection
   id: ID!
 }
 
@@ -514,13 +514,13 @@ type PageInfo {
 }
 
 type Query {
-  allWorkflows(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String, orderBy: [WorkflowOrdering]): WorkflowConnection
-  allTasks(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, search: String, orderBy: [TaskOrdering]): TaskConnection
-  allCases(before: String, after: String, first: Int, last: Int, workflow: ID, status: CaseStatusArgument, orderBy: [CaseOrdering]): CaseConnection
-  allWorkItems(before: String, after: String, first: Int, last: Int, status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], task: ID, case: ID, addressedGroups: [String]): WorkItemConnection
-  allForms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
-  allQuestions(before: String, after: String, first: Int, last: Int, orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, excludeForms: [ID], search: String): QuestionConnection
-  allDocuments(before: String, after: String, first: Int, last: Int, form: ID, search: String, id: ID, orderBy: [DocumentOrdering]): DocumentConnection
+  allWorkflows(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, search: String, orderBy: [WorkflowOrdering]): WorkflowConnection
+  allTasks(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, createdByUser: String, createdByGroup: String, search: String, orderBy: [TaskOrdering]): TaskConnection
+  allCases(before: String, after: String, first: Int, last: Int, workflow: ID, status: CaseStatusArgument, createdByUser: String, createdByGroup: String, orderBy: [CaseOrdering]): CaseConnection
+  allWorkItems(before: String, after: String, first: Int, last: Int, status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], task: ID, case: ID, createdByUser: String, createdByGroup: String, addressedGroups: [String]): WorkItemConnection
+  allForms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, search: String): FormConnection
+  allQuestions(before: String, after: String, first: Int, last: Int, orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, excludeForms: [ID], search: String): QuestionConnection
+  allDocuments(before: String, after: String, first: Int, last: Int, form: ID, search: String, id: ID, createdByUser: String, createdByGroup: String, orderBy: [DocumentOrdering]): DocumentConnection
   node(id: ID!): Node
 }
 
@@ -536,7 +536,7 @@ interface Question {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: JSONString!
-  forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String, orderBy: [FormOrdering]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, search: String, orderBy: [FormOrdering]): FormConnection
   source: Question
 }
 
@@ -971,7 +971,7 @@ type TableQuestion implements Question, Node {
   isArchived: Boolean!
   meta: JSONString!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, search: String): FormConnection
   rowForm: Form
   id: ID!
 }
@@ -1042,7 +1042,7 @@ type TextQuestion implements Question, Node {
   isArchived: Boolean!
   meta: JSONString!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, search: String): FormConnection
   id: ID!
   maxLength: Int
 }
@@ -1059,7 +1059,7 @@ type TextareaQuestion implements Question, Node {
   isArchived: Boolean!
   meta: JSONString!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, search: String): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, search: String): FormConnection
   id: ID!
   maxLength: Int
 }
@@ -1135,7 +1135,7 @@ type Workflow implements Node {
   allowForms(before: String, after: String, first: Int, last: Int): FormConnection
   id: ID!
   tasks: [Task]!
-  flows(before: String, after: String, first: Int, last: Int, task: ID): FlowConnection
+  flows(before: String, after: String, first: Int, last: Int, task: ID, createdByUser: String, createdByGroup: String): FlowConnection
 }
 
 type WorkflowConnection {

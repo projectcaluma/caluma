@@ -13,6 +13,7 @@ from django.utils import translation
 from django_filters.constants import EMPTY_VALUES
 from django_filters.fields import ChoiceField
 from django_filters.rest_framework import (
+    CharFilter,
     ChoiceFilter,
     Filter,
     FilterSet,
@@ -167,6 +168,9 @@ class OrderingFilter(OrderingFilter):
 
 
 class FilterSet(GrapheneFilterSetMixin, FilterSet):
+    created_by_user = CharFilter()
+    created_by_group = CharFilter()
+
     @classmethod
     def filter_for_lookup(cls, field, lookup_type):
         filter_class, params = super().filter_for_lookup(field, lookup_type)
