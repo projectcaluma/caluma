@@ -35,6 +35,38 @@ def test_query_all_work_items_filter_status(db, work_item_factory, schema_execut
     )
 
 
+def test_query_all_work_items_filter_addressed_groups(
+    db, work_item_factory, schema_executor
+):
+    work_item_factory(addressed_groups=["A", "B"])
+
+    query = """
+            query WorkItems($addressedGroups: [String]!) {
+              allWorkItems(addressedGroups: $addressedGroups) {
+                edges {
+                  node {
+                    addressedGroups
+                  }
+                }
+              }
+            }
+        """
+
+    result = schema_executor(query, variables={"addressedGroups": ["B", "C"]})
+
+    assert not result.errors
+    assert len(result.data["allWorkItems"]["edges"]) == 1
+    assert result.data["allWorkItems"]["edges"][0]["node"]["addressedGroups"] == [
+        "A",
+        "B",
+    ]
+
+    result = schema_executor(query, variables={"addressedGroups": ["C", "D"]})
+
+    assert not result.errors
+    assert len(result.data["allWorkItems"]["edges"]) == 0
+
+
 @pytest.mark.parametrize("task__type,task__form", [(models.Task.TYPE_SIMPLE, None)])
 @pytest.mark.parametrize(
     "work_item__status,case__status,success",
