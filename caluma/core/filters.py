@@ -1,5 +1,7 @@
 from functools import reduce
 
+import django.forms
+import graphene
 from django import forms
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields.hstore import KeyTransform
@@ -318,3 +320,37 @@ def convert_choice_field_to_enum(field):
 
     registry.register_converted_field(field, converted)
     return converted
+
+
+def _generate_list_filter_class(inner_type):
+    """
+    Return a Filter class that will resolve into a List(`inner_type`) graphene type.
+
+    This allows us to do things like use `__in` and `__overlap` filters that accept
+    graphene lists instead of a comma delimited value string that's interpolated into
+    a list by django_filters.BaseCSVFilter (which is used to define
+    django_filters.BaseInFilter)
+    """
+
+    form_field = type(f"List{inner_type.__name__}FormField", (django.forms.Field,), {})
+    filter_class = type(
+        f"{inner_type.__name__}ListFilter",
+        (Filter,),
+        {
+            "field_class": form_field,
+            "__doc__": (
+                f"{inner_type.__name__}ListFilter is a small extension of a raw "
+                f"django_filters.Filter that allows us to express graphql "
+                f"List({inner_type.__name__}) arguments using FilterSets. "
+                f"Note that the given values are passed directly into queryset filters."
+            ),
+        },
+    )
+    convert_form_field.register(form_field)(
+        lambda x: graphene.List(inner_type, required=x.required)
+    )
+
+    return filter_class
+
+
+StringListFilter = _generate_list_filter_class(graphene.String)

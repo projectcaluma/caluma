@@ -1,5 +1,11 @@
 from . import models
-from ..core.filters import FilterSet, GlobalIDFilter, OrderingFilter, SearchFilter
+from ..core.filters import (
+    FilterSet,
+    GlobalIDFilter,
+    OrderingFilter,
+    SearchFilter,
+    StringListFilter,
+)
 
 
 class WorkflowFilterSet(FilterSet):
@@ -40,6 +46,7 @@ class TaskFilterSet(FilterSet):
 
 class WorkItemFilterSet(FilterSet):
     order_by = OrderingFilter(label="WorkItemOrdering", fields=("status",))
+    addressed_groups = StringListFilter(lookup_expr="overlap")
 
     class Meta:
         model = models.WorkItem
