@@ -315,8 +315,14 @@ class SaveIntegerQuestionSerializer(SaveQuestionSerializer):
 
 class SaveTableQuestionSerializer(SaveQuestionSerializer):
     row_form = serializers.GlobalIDPrimaryKeyRelatedField(
-        required=True, help_text=models.Question._meta.get_field("row_form").help_text
+        queryset=models.Form.objects,
+        required=True,
+        help_text=models.Question._meta.get_field("row_form").help_text,
     )
+
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_TABLE
+        return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + ("row_form",)
