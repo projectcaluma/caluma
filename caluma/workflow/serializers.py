@@ -380,6 +380,7 @@ class CreateWorkItemSerializer(serializers.ModelSerializer):
         return task
 
     def validate(self, data):
+        user = self.context["request"].user
         case = data["case"]
         task = data["task"]
 
@@ -390,6 +391,7 @@ class CreateWorkItemSerializer(serializers.ModelSerializer):
                 f"The given case {case.pk} does not have any running work items corresponding to the task {task.pk}. A new instance of a `MultipleInstanceTask` can only be created when there is at least one running sibling work item."
             )
 
+        data["document"] = Document.objects.create_document_for_task(task, user)
         data["status"] = models.WorkItem.STATUS_READY
         return super().validate(data)
 
