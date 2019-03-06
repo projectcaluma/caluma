@@ -396,3 +396,36 @@ def test_save_choice_question(db, snapshot, question, question_option, schema_ex
     result = schema_executor(query, variables=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
+
+
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_TABLE])
+def test_save_table_question(db, snapshot, question, question_option, schema_executor):
+    query = """
+        mutation SaveTableQuestion($input: SaveTableQuestionInput!) {
+          saveTableQuestion(input: $input) {
+            question {
+              id
+              slug
+              label
+              meta
+              __typename
+              ... on TableQuestion {
+                rowForm {
+                  slug
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveTableQuestionSerializer, question
+        )
+    }
+    question.delete()  # test creation
+    result = schema_executor(query, variables=inp)
+    assert not result.errors
+    snapshot.assert_match(result.data)
