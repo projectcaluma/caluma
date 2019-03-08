@@ -3,6 +3,7 @@ import itertools
 import graphene
 from django.db.models import Q
 from graphene import relay
+from graphene.types import generic
 from graphene_django.rest_framework import serializer_converter
 
 from . import filters, jexl, models, serializers
@@ -60,7 +61,7 @@ class Task(Node, graphene.Interface):
     description = graphene.String()
     is_archived = graphene.Boolean(required=True)
     address_groups = GroupJexl()
-    meta = graphene.JSONString(required=True)
+    meta = generic.GenericScalar(required=True)
     is_multiple_instance = graphene.Boolean(required=True)
 
     @classmethod
@@ -130,6 +131,7 @@ class Workflow(DjangoObjectType):
     tasks = graphene.List(
         Task, required=True, description="List of tasks referenced in workflow"
     )
+    meta = generic.GenericScalar()
 
     def resolve_tasks(self, info, **args):
         flow_jexl = jexl.FlowJexl()

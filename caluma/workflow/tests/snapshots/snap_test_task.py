@@ -12,7 +12,7 @@ snapshots["test_save_task[SaveSimpleTask] 1"] = {
         "clientMutationId": "testid",
         "task": {
             "__typename": "SimpleTask",
-            "meta": "{}",
+            "meta": {},
             "name": "Thomas Johnson",
             "slug": "sound-air-mission",
         },
@@ -24,7 +24,7 @@ snapshots["test_save_task[SaveCompleteWorkflowFormTask] 1"] = {
         "clientMutationId": "testid",
         "task": {
             "__typename": "CompleteWorkflowFormTask",
-            "meta": "{}",
+            "meta": {},
             "name": "Thomas Johnson",
             "slug": "sound-air-mission",
         },
@@ -36,7 +36,7 @@ snapshots["test_save_comlete_task_form_task 1"] = {
         "clientMutationId": "testid",
         "task": {
             "__typename": "CompleteTaskFormTask",
-            "meta": "{}",
+            "meta": {},
             "name": "Thomas Johnson",
             "slug": "sound-air-mission",
         },
@@ -50,7 +50,7 @@ snapshots["test_query_all_tasks[simple] 1"] = {
                 "node": {
                     "__typename": "SimpleTask",
                     "description": "State section rock event recent. Final activity hope star check record well. Radio with Mr letter eye.",
-                    "meta": "{}",
+                    "meta": {},
                     "name": "Thomas Johnson",
                     "slug": "sound-air-mission",
                 }
