@@ -2,13 +2,14 @@ from . import models
 from ..core.filters import (
     FilterSet,
     GlobalIDFilter,
+    MetaFilterSet,
     OrderingFilter,
     SearchFilter,
     StringListFilter,
 )
 
 
-class WorkflowFilterSet(FilterSet):
+class WorkflowFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
     order_by = OrderingFilter(label="WorkflowOrdering", fields=("name", "description"))
 
@@ -25,7 +26,7 @@ class FlowFilterSet(FilterSet):
         fields = ("task",)
 
 
-class CaseFilterSet(FilterSet):
+class CaseFilterSet(MetaFilterSet):
     order_by = OrderingFilter(label="CaseOrdering", fields=("status",))
 
     class Meta:
@@ -33,7 +34,7 @@ class CaseFilterSet(FilterSet):
         fields = ("workflow", "status")
 
 
-class TaskFilterSet(FilterSet):
+class TaskFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
     order_by = OrderingFilter(
         label="TaskOrdering", fields=("name", "description", "type")
@@ -44,7 +45,7 @@ class TaskFilterSet(FilterSet):
         fields = ("slug", "name", "description", "type", "is_archived")
 
 
-class WorkItemFilterSet(FilterSet):
+class WorkItemFilterSet(MetaFilterSet):
     order_by = OrderingFilter(label="WorkItemOrdering", fields=("status",))
     addressed_groups = StringListFilter(lookup_expr="overlap")
 

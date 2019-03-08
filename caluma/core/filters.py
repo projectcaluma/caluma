@@ -183,6 +183,10 @@ class FilterSet(GrapheneFilterSetMixin, FilterSet):
         return filter_class, params
 
 
+class MetaFilterSet(FilterSet):
+    meta_has_key = CharFilter(lookup_expr="has_key", field_name="meta")
+
+
 class DjangoFilterConnectionField(filter.DjangoFilterConnectionField):
     """
     Django connection filter field with object type get_queryset support.

@@ -13,7 +13,7 @@ snapshots["test_save_workflow 1"] = {
         "workflow": {
             "allowAllForms": False,
             "allowForms": {"edges": [{"node": {"slug": "sound-air-mission"}}]},
-            "meta": "{}",
+            "meta": {},
             "name": "Brian Williams",
             "slug": "effort-meet",
         },
@@ -39,7 +39,7 @@ Kid avoid player relationship to range whose. Draw free property consider.""",
                             }
                         ]
                     },
-                    "meta": "{}",
+                    "meta": {},
                     "name": "Brian Williams",
                     "slug": "effort-meet",
                     "startTasks": [{"slug": "few-list-tax"}],

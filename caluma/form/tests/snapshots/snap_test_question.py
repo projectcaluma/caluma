@@ -14,7 +14,7 @@ snapshots["test_save_table_question[table] 1"] = {
             "__typename": "TableQuestion",
             "id": "VGFibGVRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
             "label": "Thomas Johnson",
-            "meta": "{}",
+            "meta": {},
             "rowForm": {"slug": "effort-meet"},
             "slug": "sound-air-mission",
         },
@@ -31,7 +31,7 @@ snapshots["test_query_all_questions[integer-question__configuration0] 1"] = {
                     "integerMaxValue": 10,
                     "integerMinValue": 0,
                     "label": "Thomas Johnson",
-                    "meta": "{}",
+                    "meta": {},
                     "slug": "sound-air-mission",
                 }
             }
@@ -49,7 +49,7 @@ snapshots["test_query_all_questions[float-question__configuration1] 1"] = {
                     "floatMinValue": 0.0,
                     "id": "RmxvYXRRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
                     "label": "Thomas Johnson",
-                    "meta": "{}",
+                    "meta": {},
                     "slug": "sound-air-mission",
                 }
             }
@@ -67,7 +67,7 @@ snapshots["test_query_all_questions[float-question__configuration2] 1"] = {
                     "floatMinValue": None,
                     "id": "RmxvYXRRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
                     "label": "Thomas Johnson",
-                    "meta": "{}",
+                    "meta": {},
                     "slug": "sound-air-mission",
                 }
             }
@@ -84,7 +84,7 @@ snapshots["test_query_all_questions[text-question__configuration3] 1"] = {
                     "id": "VGV4dFF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
                     "label": "Thomas Johnson",
                     "maxLength": 10,
-                    "meta": "{}",
+                    "meta": {},
                     "slug": "sound-air-mission",
                 }
             }
@@ -101,7 +101,7 @@ snapshots["test_query_all_questions[textarea-question__configuration4] 1"] = {
                     "id": "VGV4dGFyZWFRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
                     "label": "Thomas Johnson",
                     "maxLength": 10,
-                    "meta": "{}",
+                    "meta": {},
                     "slug": "sound-air-mission",
                 }
             }
@@ -117,7 +117,7 @@ snapshots["test_query_all_questions[choice-question__configuration5] 1"] = {
                     "__typename": "ChoiceQuestion",
                     "id": "Q2hvaWNlUXVlc3Rpb246c291bmQtYWlyLW1pc3Npb24=",
                     "label": "Thomas Johnson",
-                    "meta": "{}",
+                    "meta": {},
                     "options": {"edges": [{"node": {"slug": "example-indicate"}}]},
                     "slug": "sound-air-mission",
                 }
@@ -134,7 +134,7 @@ snapshots["test_query_all_questions[multiple_choice-question__configuration6] 1"
                     "__typename": "MultipleChoiceQuestion",
                     "id": "TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
                     "label": "Thomas Johnson",
-                    "meta": "{}",
+                    "meta": {},
                     "options": {"edges": [{"node": {"slug": "example-indicate"}}]},
                     "slug": "sound-air-mission",
                 }
@@ -150,7 +150,7 @@ snapshots["test_save_question[true-True-SaveTextQuestion] 1"] = {
             "__typename": "TextQuestion",
             "id": "VGV4dFF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
             "label": "Thomas Johnson",
-            "meta": "{}",
+            "meta": {},
             "slug": "sound-air-mission",
         },
     }
@@ -163,7 +163,7 @@ snapshots["test_save_question[true-True-SaveTextareaQuestion] 1"] = {
             "__typename": "TextareaQuestion",
             "id": "VGV4dGFyZWFRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
             "label": "Thomas Johnson",
-            "meta": "{}",
+            "meta": {},
             "slug": "sound-air-mission",
         },
     }
@@ -176,7 +176,7 @@ snapshots["test_save_question[true-True-SaveIntegerQuestion] 1"] = {
             "__typename": "IntegerQuestion",
             "id": "SW50ZWdlclF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
             "label": "Thomas Johnson",
-            "meta": "{}",
+            "meta": {},
             "slug": "sound-air-mission",
         },
     }
@@ -189,7 +189,7 @@ snapshots["test_save_question[true-True-SaveFloatQuestion] 1"] = {
             "__typename": "FloatQuestion",
             "id": "RmxvYXRRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
             "label": "Thomas Johnson",
-            "meta": "{}",
+            "meta": {},
             "slug": "sound-air-mission",
         },
     }
@@ -203,7 +203,7 @@ snapshots["test_save_float_question[float-question__configuration0-True] 1"] = {
             "id": "RmxvYXRRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
             "label": "Thomas Johnson",
             "maxValue": 10.0,
-            "meta": "{}",
+            "meta": {},
             "minValue": 0.0,
             "slug": "sound-air-mission",
         },
@@ -217,7 +217,7 @@ snapshots["test_save_integer_question[integer-question__configuration0-True] 1"]
             "__typename": "IntegerQuestion",
             "id": "SW50ZWdlclF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
             "label": "Thomas Johnson",
-            "meta": "{}",
+            "meta": {},
             "slug": "sound-air-mission",
         },
     }
@@ -230,7 +230,7 @@ snapshots["test_save_multiple_choice_question[multiple_choice] 1"] = {
             "__typename": "MultipleChoiceQuestion",
             "id": "TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
             "label": "Thomas Johnson",
-            "meta": "{}",
+            "meta": {},
             "options": {
                 "edges": [
                     {
@@ -254,7 +254,7 @@ snapshots["test_save_choice_question[choice] 1"] = {
             "__typename": "ChoiceQuestion",
             "id": "Q2hvaWNlUXVlc3Rpb246c291bmQtYWlyLW1pc3Npb24=",
             "label": "Thomas Johnson",
-            "meta": "{}",
+            "meta": {},
             "options": {
                 "edges": [
                     {"node": {"label": "Kelly Brock", "slug": "example-indicate"}}

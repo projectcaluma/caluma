@@ -1,14 +1,14 @@
 from . import models
 from ..core.filters import (
-    FilterSet,
     GlobalIDFilter,
     GlobalIDMultipleChoiceFilter,
+    MetaFilterSet,
     OrderingFilter,
     SearchFilter,
 )
 
 
-class FormFilterSet(FilterSet):
+class FormFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
     order_by = OrderingFilter(label="FormOrdering", fields=("name",))
 
@@ -17,7 +17,7 @@ class FormFilterSet(FilterSet):
         fields = ("slug", "name", "description", "is_published", "is_archived")
 
 
-class OptionFilterSet(FilterSet):
+class OptionFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "label"))
     order_by = OrderingFilter(label="OptionOrdering", fields=("label",))
 
@@ -26,7 +26,7 @@ class OptionFilterSet(FilterSet):
         fields = ("slug", "label")
 
 
-class QuestionFilterSet(FilterSet):
+class QuestionFilterSet(MetaFilterSet):
     exclude_forms = GlobalIDMultipleChoiceFilter(field_name="forms", exclude=True)
     search = SearchFilter(fields=("slug", "label"))
     order_by = OrderingFilter(label="QuestionOrdering", fields=("label",))
@@ -36,7 +36,7 @@ class QuestionFilterSet(FilterSet):
         fields = ("slug", "label", "is_required", "is_hidden", "is_archived")
 
 
-class DocumentFilterSet(FilterSet):
+class DocumentFilterSet(MetaFilterSet):
     id = GlobalIDFilter()
     search = SearchFilter(
         fields=("form__slug", "form__name", "form__description", "answers__value")
@@ -48,7 +48,7 @@ class DocumentFilterSet(FilterSet):
         fields = ("form", "search", "id")
 
 
-class AnswerFilterSet(FilterSet):
+class AnswerFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("value",))
     order_by = OrderingFilter(label="AnswerOrdering")
 
