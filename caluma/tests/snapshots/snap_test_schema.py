@@ -344,6 +344,7 @@ type Form implements Node {
   isArchived: Boolean!
   questions(before: String, after: String, first: Int, last: Int, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, excludeForms: [ID], search: String, orderBy: [QuestionOrdering]): QuestionConnection
   source: Form
+  documents(before: String, after: String, first: Int, last: Int): DocumentConnection
   id: ID!
 }
 

@@ -178,7 +178,7 @@ class Form(DjangoObjectType):
     class Meta:
         model = models.Form
         interfaces = (relay.Node,)
-        exclude_fields = ("documents", "workflows", "tasks")
+        exclude_fields = ("workflows", "tasks")
 
 
 class SaveForm(UserDefinedPrimaryKeyMixin, Mutation):
