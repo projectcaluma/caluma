@@ -19,7 +19,7 @@ snapshots["test_save_form[some description text-en] 1"] = {
         "clientMutationId": "testid",
         "form": {
             "id": "Rm9ybTplZmZvcnQtbWVldA==",
-            "meta": "{}",
+            "meta": {},
             "name": "Brian Williams",
             "slug": "effort-meet",
         },
@@ -31,7 +31,7 @@ snapshots["test_save_form[some description text-de] 1"] = {
         "clientMutationId": "testid",
         "form": {
             "id": "Rm9ybTplZmZvcnQtbWVldA==",
-            "meta": "{}",
+            "meta": {},
             "name": "Brian Williams",
             "slug": "effort-meet",
         },
@@ -43,7 +43,7 @@ snapshots["test_save_form[en] 1"] = {
         "clientMutationId": "testid",
         "form": {
             "id": "Rm9ybTplZmZvcnQtbWVldA==",
-            "meta": "{}",
+            "meta": {},
             "name": "Brian Williams",
             "slug": "effort-meet",
         },
@@ -55,7 +55,7 @@ snapshots["test_save_form[de] 1"] = {
         "clientMutationId": "testid",
         "form": {
             "id": "Rm9ybTplZmZvcnQtbWVldA==",
-            "meta": "{}",
+            "meta": {},
             "name": "Brian Williams",
             "slug": "effort-meet",
         },
@@ -69,7 +69,7 @@ snapshots["test_query_all_forms[First result-1st-float] 1"] = {
                 "node": {
                     "description": "First result",
                     "id": "Rm9ybTplZmZvcnQtbWVldA==",
-                    "meta": "{}",
+                    "meta": {},
                     "name": "1st",
                     "questions": {
                         "edges": [
@@ -89,7 +89,7 @@ snapshots["test_query_all_forms[First result-1st-float] 1"] = {
                 "node": {
                     "description": "Second result",
                     "id": "Rm9ybTpraXRjaGVuLWRldmVsb3A=",
-                    "meta": "{}",
+                    "meta": {},
                     "name": "2nd",
                     "questions": {"edges": []},
                     "slug": "kitchen-develop",
@@ -99,7 +99,7 @@ snapshots["test_query_all_forms[First result-1st-float] 1"] = {
                 "node": {
                     "description": "Second result",
                     "id": "Rm9ybTpzZXJ2aWNlLWJhbmstYXJt",
-                    "meta": "{}",
+                    "meta": {},
                     "name": "3rd",
                     "questions": {"edges": []},
                     "slug": "service-bank-arm",

@@ -1,5 +1,6 @@
 import graphene
 from graphene import relay
+from graphene.types import generic
 from graphene_django.rest_framework import serializer_converter
 
 from . import filters, models, serializers
@@ -43,7 +44,7 @@ class Question(Node, graphene.Interface):
     is_required = QuestionJexl(required=True)
     is_hidden = QuestionJexl(required=True)
     is_archived = graphene.Boolean(required=True)
-    meta = graphene.JSONString(required=True)
+    meta = generic.GenericScalar(required=True)
     forms = DjangoFilterConnectionField(
         "caluma.form.schema.Form", filterset_class=filters.FormFilterSet
     )
@@ -172,6 +173,7 @@ class Form(DjangoObjectType):
     questions = DjangoFilterSetConnectionField(
         QuestionConnection, filterset_class=filters.QuestionFilterSet
     )
+    meta = generic.GenericScalar()
 
     class Meta:
         model = models.Form
@@ -299,7 +301,7 @@ class Answer(Node, graphene.Interface):
     created_by_group = graphene.String()
     modified_at = graphene.DateTime(required=True)
     question = graphene.Field(Question, required=True)
-    meta = graphene.JSONString(required=True)
+    meta = generic.GenericScalar(required=True)
 
     @classmethod
     def resolve_type(cls, instance, info):
