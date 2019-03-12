@@ -416,7 +416,10 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
 
     def validate(self, data):
         documents = (
-            data.get("documents") or self.instance and self.instance.documents or []
+            data.get("documents")
+            or self.instance
+            and self.instance.documents.all()
+            or []
         )
         question = data.get("question") or self.instance and self.instance.question
 
