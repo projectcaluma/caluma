@@ -197,6 +197,7 @@ input CopyFormInput {
   name: String!
   description: String
   source: ID!
+  isPublished: Boolean
   clientMutationId: String
 }
 

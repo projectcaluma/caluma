@@ -49,7 +49,7 @@ class CopyFormSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Form
-        fields = ("slug", "name", "description", "source")
+        fields = ("slug", "name", "description", "source", "is_published")
 
 
 class AddFormQuestionSerializer(serializers.ModelSerializer):
