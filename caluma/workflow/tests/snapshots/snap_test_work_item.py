@@ -40,3 +40,27 @@ snapshots["test_complete_work_item_with_next[ready-None-simple] 1"] = {
         },
     }
 }
+
+snapshots["test_complete_multiple_instance_task_form_work_item_next[integer-1] 1"] = {
+    "completeWorkItem": {
+        "clientMutationId": None,
+        "workItem": {
+            "case": {
+                "status": "RUNNING",
+                "workItems": {
+                    "edges": [
+                        {
+                            "node": {
+                                "addressedGroups": ["group-name"],
+                                "status": "READY",
+                            }
+                        },
+                        {"node": {"addressedGroups": [], "status": "COMPLETED"}},
+                        {"node": {"addressedGroups": [], "status": "COMPLETED"}},
+                    ]
+                },
+            },
+            "status": "COMPLETED",
+        },
+    }
+}
