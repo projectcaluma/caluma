@@ -294,26 +294,31 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
+        def is_completed(task):
+            # If a "multiple instance" task has running siblings, the task is not completed
+            if task.is_multiple_instance:
+                return not instance.case.work_items.filter(
+                    task=task, status=models.WorkItem.STATUS_READY
+                ).exists()
+            return instance.case.work_items.filter(
+                task=task, status=models.WorkItem.STATUS_COMPLETED
+            ).exists()
+
         instance = super().update(instance, validated_data)
         user = self.context["request"].user
         case = instance.case
 
-        # If a "multiple instance" task has running siblings, the workflow doesn't continue
-        if (
-            instance.task.is_multiple_instance
-            and case.work_items.filter(
-                task=instance.task, status=models.WorkItem.STATUS_READY
-            ).exists()
-        ):
+        if not is_completed(instance.task):
             return instance
 
         flow = models.Flow.objects.filter(task_flows__task=instance.task_id).first()
         flow_referenced_tasks = models.Task.objects.filter(task_flows__flow=flow)
-        completed_flow_work_items = case.work_items.filter(
-            task__in=flow_referenced_tasks
-        ).exclude(status=models.WorkItem.STATUS_READY)
 
-        if flow and flow_referenced_tasks.count() == completed_flow_work_items.count():
+        all_complete = False not in [
+            is_completed(task) for task in flow_referenced_tasks
+        ]
+
+        if flow and all_complete:
             jexl = FlowJexl()
             result = jexl.evaluate(flow.next)
             if not isinstance(result, list):

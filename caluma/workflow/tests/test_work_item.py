@@ -262,6 +262,62 @@ def test_complete_multiple_instance_task_form_work_item(
     )
 
 
+@pytest.mark.parametrize("question__type,answer__value", [(Question.TYPE_INTEGER, 1)])
+def test_complete_multiple_instance_task_form_work_item_next(
+    db,
+    task_factory,
+    task_flow_factory,
+    work_item_factory,
+    answer,
+    form_question,
+    snapshot,
+    schema_executor,
+):
+    task = task_factory(is_multiple_instance=True)
+    work_item = work_item_factory(task=task, child_case=None)
+    work_item_factory(
+        task=task,
+        child_case=None,
+        status=models.WorkItem.STATUS_COMPLETED,
+        case=work_item.case,
+    )
+
+    task_next = task_factory(
+        type=models.Task.TYPE_SIMPLE, form=None, address_groups='["group-name"]|groups'
+    )
+    task_flow = task_flow_factory(task=task)
+    task_flow.flow.next = f"'{task_next.slug}'|task"
+    task_flow.flow.save()
+
+    query = """
+        mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
+          completeWorkItem(input: $input) {
+            workItem {
+              status
+              case {
+                status
+                workItems(orderBy: STATUS_DESC) {
+                  edges {
+                    node {
+                      status
+                      addressedGroups
+                    }
+                  }
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {"input": {"id": work_item.pk}}
+    result = schema_executor(query, variables=inp)
+
+    assert not bool(result.errors)
+    snapshot.assert_match(result.data)
+
+
 @pytest.mark.parametrize(
     "work_item__status,work_item__child_case,task__type",
     [(models.WorkItem.STATUS_READY, None, models.Task.TYPE_SIMPLE)],
