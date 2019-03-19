@@ -4,10 +4,14 @@ from .. import models
 from ...core.relay import extract_global_id
 
 
-def test_query_all_cases(db, snapshot, case, flow, schema_executor):
+@pytest.mark.parametrize(
+    "case__status,result_count",
+    [(models.Case.STATUS_RUNNING, 1), (models.Case.STATUS_COMPLETED, 0)],
+)
+def test_query_all_cases(db, snapshot, case, result_count, flow, schema_executor):
     query = """
         query AllCases {
-          allCases {
+          allCases (status: RUNNING){
             edges {
               node {
                 status
@@ -16,8 +20,9 @@ def test_query_all_cases(db, snapshot, case, flow, schema_executor):
           }
         }
     """
-
     result = schema_executor(query)
+
+    assert len(result.data["allCases"]["edges"]) == result_count
 
     assert not result.errors
     snapshot.assert_match(result.data)
