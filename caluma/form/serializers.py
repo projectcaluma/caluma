@@ -644,3 +644,24 @@ class RemoveAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("answer",)
         model = models.Answer
+
+
+class RemoveDocumentSerializer(serializers.ModelSerializer):
+    document = serializers.GlobalIDField(source="id")
+
+    def update(self, instance, validated_data):
+        if hasattr(instance, "case"):
+            raise Exception("You cannot remove a Document, if it's attached to a case.")
+
+        for answer in instance.answers.filter(
+            question__type=models.Question.TYPE_TABLE
+        ):
+            answer.documents.all().delete()
+
+        instance.delete()
+
+        return instance
+
+    class Meta:
+        fields = ("document",)
+        model = models.Document

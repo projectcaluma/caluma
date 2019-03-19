@@ -811,6 +811,12 @@ class RemoveAnswer(Mutation):
         return_field_type = Answer
 
 
+class RemoveDocument(Mutation):
+    class Meta:
+        lookup_input_kwarg = "document"
+        serializer_class = serializers.RemoveDocumentSerializer
+
+
 class Mutation(object):
     save_form = SaveForm().Field()
     copy_form = CopyForm().Field()
@@ -846,6 +852,7 @@ class Mutation(object):
     save_document_table_answer = SaveDocumentTableAnswer().Field()
     save_document_file_answer = SaveDocumentFileAnswer().Field()
     remove_answer = RemoveAnswer().Field()
+    remove_document = RemoveDocument().Field()
 
 
 class ValidationEntry(ObjectType):

@@ -4,7 +4,7 @@ from graphql_relay import to_global_id
 from ...core.relay import extract_global_id
 from ...core.tests import extract_serializer_input_fields
 from ...core.visibilities import BaseVisibility, filter_queryset_for
-from ...form.models import Answer, Question
+from ...form.models import Answer, Document, Question
 from ...form.schema import Document as DocumentNodeType
 from .. import serializers
 
@@ -875,3 +875,90 @@ def test_validity_with_visibility(
         assert result.data["documentValidity"] is None
     else:
         assert len(result.data["documentValidity"]["edges"]) == 1
+
+
+def test_remove_document_without_case(db, document, answer, schema_executor):
+    query = """
+        mutation RemoveDocument($input: RemoveDocumentInput!) {
+          removeDocument(input: $input) {
+            document {
+              id
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    result = schema_executor(query, variables={"input": {"document": str(document.pk)}})
+
+    assert not result.errors
+    with pytest.raises(Document.DoesNotExist):
+        Document.objects.get(pk=document.pk)
+    with pytest.raises(Answer.DoesNotExist):
+        Answer.objects.get(pk=answer.pk)
+
+
+def test_remove_document_with_case(db, document, answer, case, schema_executor):
+    query = """
+        mutation RemoveDocument($input: RemoveDocumentInput!) {
+          removeDocument(input: $input) {
+            document {
+              id
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    result = schema_executor(query, variables={"input": {"document": str(document.pk)}})
+
+    assert result.errors
+    Document.objects.get(pk=document.pk)
+    Answer.objects.get(pk=answer.pk)
+
+
+def test_remove_document_without_case_table(
+    db,
+    document_factory,
+    answer_factory,
+    answer_document_factory,
+    question_factory,
+    form_question_factory,
+    schema_executor,
+):
+    question = question_factory(type=Question.TYPE_TABLE)
+    documents = document_factory.create_batch(2, form=question.row_form)
+
+    sub_question = question_factory(type=Question.TYPE_TEXT)
+    form_question_factory(form=question.row_form, question=sub_question)
+
+    sub_answers = answer_factory.create_batch(2, question=sub_question)
+    documents[0].answers.add(sub_answers[0])
+    documents[1].answers.add(sub_answers[1])
+
+    table_answer = answer_factory(question=question)
+    answer_document_factory(answer=table_answer, document=documents[0])
+    answer_document_factory(answer=table_answer, document=documents[1])
+
+    query = """
+        mutation RemoveDocument($input: RemoveDocumentInput!) {
+          removeDocument(input: $input) {
+            document {
+              id
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    result = schema_executor(
+        query, variables={"input": {"document": str(table_answer.document.pk)}}
+    )
+
+    assert not result.errors
+    for document in [table_answer.document, *documents]:
+        with pytest.raises(Document.DoesNotExist):
+            Document.objects.get(pk=document.pk)
+    for answer in [table_answer, *sub_answers]:
+        with pytest.raises(Answer.DoesNotExist):
+            Answer.objects.get(pk=answer.pk)
