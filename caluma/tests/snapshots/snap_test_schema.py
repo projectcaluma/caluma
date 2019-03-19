@@ -245,6 +245,35 @@ type CreateWorkItemPayload {
   clientMutationId: String
 }
 
+scalar Date
+
+type DateAnswer implements Answer, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  question: Question!
+  value: Date!
+  meta: GenericScalar!
+}
+
+type DateQuestion implements Question, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  label: String!
+  isRequired: QuestionJexl!
+  isHidden: QuestionJexl!
+  isArchived: Boolean!
+  meta: GenericScalar!
+  source: Question
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
+  id: ID!
+}
+
 scalar DateTime
 
 type Document implements Node {
@@ -458,6 +487,7 @@ type Mutation {
   copyQuestion(input: CopyQuestionInput!): CopyQuestionPayload
   saveTextQuestion(input: SaveTextQuestionInput!): SaveTextQuestionPayload
   saveTextareaQuestion(input: SaveTextareaQuestionInput!): SaveTextareaQuestionPayload
+  saveDateQuestion(input: SaveDateQuestionInput!): SaveDateQuestionPayload
   saveChoiceQuestion(input: SaveChoiceQuestionInput!): SaveChoiceQuestionPayload
   saveMultipleChoiceQuestion(input: SaveMultipleChoiceQuestionInput!): SaveMultipleChoiceQuestionPayload
   saveFloatQuestion(input: SaveFloatQuestionInput!): SaveFloatQuestionPayload
@@ -467,6 +497,7 @@ type Mutation {
   saveDocumentStringAnswer(input: SaveDocumentStringAnswerInput!): SaveDocumentStringAnswerPayload
   saveDocumentIntegerAnswer(input: SaveDocumentIntegerAnswerInput!): SaveDocumentIntegerAnswerPayload
   saveDocumentFloatAnswer(input: SaveDocumentFloatAnswerInput!): SaveDocumentFloatAnswerPayload
+  saveDocumentDateAnswer(input: SaveDocumentDateAnswerInput!): SaveDocumentDateAnswerPayload
   saveDocumentListAnswer(input: SaveDocumentListAnswerInput!): SaveDocumentListAnswerPayload
   saveDocumentTableAnswer(input: SaveDocumentTableAnswerInput!): SaveDocumentTableAnswerPayload
 }
@@ -658,6 +689,34 @@ input SaveCompleteWorkflowFormTaskInput {
 
 type SaveCompleteWorkflowFormTaskPayload {
   task: Task
+  clientMutationId: String
+}
+
+input SaveDateQuestionInput {
+  slug: String!
+  label: String!
+  isRequired: QuestionJexl
+  isHidden: QuestionJexl
+  meta: JSONString
+  isArchived: Boolean
+  clientMutationId: String
+}
+
+type SaveDateQuestionPayload {
+  question: Question
+  clientMutationId: String
+}
+
+input SaveDocumentDateAnswerInput {
+  question: ID!
+  document: ID!
+  meta: JSONString
+  value: Date!
+  clientMutationId: String
+}
+
+type SaveDocumentDateAnswerPayload {
+  answer: Answer
   clientMutationId: String
 }
 

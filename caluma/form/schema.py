@@ -1,3 +1,5 @@
+from datetime import date
+
 import graphene
 from graphene import relay
 from graphene.types import generic
@@ -64,6 +66,7 @@ class Question(Node, graphene.Interface):
             models.Question.TYPE_INTEGER: IntegerQuestion,
             models.Question.TYPE_MULTIPLE_CHOICE: MultipleChoiceQuestion,
             models.Question.TYPE_TEXTAREA: TextareaQuestion,
+            models.Question.TYPE_DATE: DateQuestion,
             models.Question.TYPE_TABLE: TableQuestion,
         }
 
@@ -108,6 +111,14 @@ class TextQuestion(QuestionQuerysetMixin, DjangoObjectType):
 class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
     max_length = graphene.Int()
 
+    class Meta:
+        model = models.Question
+        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
+        use_connection = False
+        interfaces = (Question, graphene.Node)
+
+
+class DateQuestion(QuestionQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Question
         exclude_fields = ("type", "configuration", "options", "answers", "row_form")
@@ -245,6 +256,12 @@ class SaveTextareaQuestion(SaveQuestion):
         return_field_type = Question
 
 
+class SaveDateQuestion(SaveQuestion):
+    class Meta:
+        serializer_class = serializers.SaveDateQuestionSerializer
+        return_field_type = Question
+
+
 class SaveChoiceQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveChoiceQuestionSerializer
@@ -310,6 +327,7 @@ class Answer(Node, graphene.Interface):
             str: StringAnswer,
             float: FloatAnswer,
             int: IntegerAnswer,
+            date: DateAnswer,
             type(None): TableAnswer,
         }
 
@@ -336,6 +354,16 @@ class IntegerAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
 class FloatAnswer(AnswerQuerysetMixin, DjangoObjectType):
     value = graphene.Float(required=True)
+
+    class Meta:
+        model = models.Answer
+        exclude_fields = ("document", "documents")
+        use_connection = False
+        interfaces = (Answer, graphene.Node)
+
+
+class DateAnswer(AnswerQuerysetMixin, DjangoObjectType):
+    value = graphene.types.datetime.Date(required=True)
 
     class Meta:
         model = models.Answer
@@ -436,6 +464,12 @@ class SaveDocumentFloatAnswer(SaveDocumentAnswer):
         return_field_type = Answer
 
 
+class SaveDocumentDateAnswer(SaveDocumentAnswer):
+    class Meta:
+        serializer_class = serializers.SaveDocumentDateAnswerSerializer
+        return_field_type = Answer
+
+
 class SaveDocumentTableAnswer(SaveDocumentAnswer):
     class Meta:
         serializer_class = serializers.SaveDocumentTableAnswerSerializer
@@ -456,6 +490,7 @@ class Mutation(object):
     copy_question = CopyQuestion().Field()
     save_text_question = SaveTextQuestion().Field()
     save_textarea_question = SaveTextareaQuestion().Field()
+    save_date_question = SaveDateQuestion().Field()
     save_choice_question = SaveChoiceQuestion().Field()
     save_multiple_choice_question = SaveMultipleChoiceQuestion().Field()
     save_float_question = SaveFloatQuestion().Field()
@@ -466,6 +501,7 @@ class Mutation(object):
     save_document_string_answer = SaveDocumentStringAnswer().Field()
     save_document_integer_answer = SaveDocumentIntegerAnswer().Field()
     save_document_float_answer = SaveDocumentFloatAnswer().Field()
+    save_document_date_answer = SaveDocumentDateAnswer().Field()
     save_document_list_answer = SaveDocumentListAnswer().Field()
     save_document_table_answer = SaveDocumentTableAnswer().Field()
 

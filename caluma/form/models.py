@@ -1,4 +1,5 @@
 from django.contrib.postgres.fields import JSONField
+from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models.signals import post_init
 from django.dispatch import receiver
@@ -39,6 +40,7 @@ class Question(SlugModel):
     TYPE_MULTIPLE_CHOICE = "multiple_choice"
     TYPE_INTEGER = "integer"
     TYPE_FLOAT = "float"
+    TYPE_DATE = "date"
     TYPE_CHOICE = "choice"
     TYPE_TEXTAREA = "textarea"
     TYPE_TEXT = "text"
@@ -48,6 +50,7 @@ class Question(SlugModel):
         TYPE_MULTIPLE_CHOICE,
         TYPE_INTEGER,
         TYPE_FLOAT,
+        TYPE_DATE,
         TYPE_CHOICE,
         TYPE_TEXTAREA,
         TYPE_TEXT,
@@ -156,7 +159,7 @@ class Answer(UUIDModel):
     question = models.ForeignKey(
         "form.Question", on_delete=models.DO_NOTHING, related_name="answers"
     )
-    value = JSONField(null=True, blank=True)
+    value = JSONField(null=True, blank=True, encoder=DjangoJSONEncoder)
     meta = JSONField(default=dict)
     document = models.ForeignKey(
         Document, on_delete=models.CASCADE, related_name="answers"

@@ -75,74 +75,6 @@ snapshots["test_query_all_questions[float-question__configuration2] 1"] = {
     }
 }
 
-snapshots["test_query_all_questions[text-question__configuration3] 1"] = {
-    "allQuestions": {
-        "edges": [
-            {
-                "node": {
-                    "__typename": "TextQuestion",
-                    "id": "VGV4dFF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
-                    "label": "Thomas Johnson",
-                    "maxLength": 10,
-                    "meta": {},
-                    "slug": "sound-air-mission",
-                }
-            }
-        ]
-    }
-}
-
-snapshots["test_query_all_questions[textarea-question__configuration4] 1"] = {
-    "allQuestions": {
-        "edges": [
-            {
-                "node": {
-                    "__typename": "TextareaQuestion",
-                    "id": "VGV4dGFyZWFRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-                    "label": "Thomas Johnson",
-                    "maxLength": 10,
-                    "meta": {},
-                    "slug": "sound-air-mission",
-                }
-            }
-        ]
-    }
-}
-
-snapshots["test_query_all_questions[choice-question__configuration5] 1"] = {
-    "allQuestions": {
-        "edges": [
-            {
-                "node": {
-                    "__typename": "ChoiceQuestion",
-                    "id": "Q2hvaWNlUXVlc3Rpb246c291bmQtYWlyLW1pc3Npb24=",
-                    "label": "Thomas Johnson",
-                    "meta": {},
-                    "options": {"edges": [{"node": {"slug": "example-indicate"}}]},
-                    "slug": "sound-air-mission",
-                }
-            }
-        ]
-    }
-}
-
-snapshots["test_query_all_questions[multiple_choice-question__configuration6] 1"] = {
-    "allQuestions": {
-        "edges": [
-            {
-                "node": {
-                    "__typename": "MultipleChoiceQuestion",
-                    "id": "TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-                    "label": "Thomas Johnson",
-                    "meta": {},
-                    "options": {"edges": [{"node": {"slug": "example-indicate"}}]},
-                    "slug": "sound-air-mission",
-                }
-            }
-        ]
-    }
-}
-
 snapshots["test_save_question[true-True-SaveTextQuestion] 1"] = {
     "saveTextQuestion": {
         "clientMutationId": "testid",
@@ -260,6 +192,103 @@ snapshots["test_save_choice_question[choice] 1"] = {
                     {"node": {"label": "Kelly Brock", "slug": "example-indicate"}}
                 ]
             },
+            "slug": "sound-air-mission",
+        },
+    }
+}
+
+snapshots["test_query_all_questions[text-question__configuration4] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "TextQuestion",
+                    "id": "VGV4dFF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
+                    "label": "Thomas Johnson",
+                    "maxLength": 10,
+                    "meta": {},
+                    "slug": "sound-air-mission",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_questions[textarea-question__configuration5] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "TextareaQuestion",
+                    "id": "VGV4dGFyZWFRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
+                    "label": "Thomas Johnson",
+                    "maxLength": 10,
+                    "meta": {},
+                    "slug": "sound-air-mission",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_questions[choice-question__configuration6] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "ChoiceQuestion",
+                    "id": "Q2hvaWNlUXVlc3Rpb246c291bmQtYWlyLW1pc3Npb24=",
+                    "label": "Thomas Johnson",
+                    "meta": {},
+                    "options": {"edges": [{"node": {"slug": "example-indicate"}}]},
+                    "slug": "sound-air-mission",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_questions[multiple_choice-question__configuration7] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "MultipleChoiceQuestion",
+                    "id": "TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
+                    "label": "Thomas Johnson",
+                    "meta": {},
+                    "options": {"edges": [{"node": {"slug": "example-indicate"}}]},
+                    "slug": "sound-air-mission",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_query_all_questions[date-question__configuration3] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "DateQuestion",
+                    "id": "RGF0ZVF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
+                    "label": "Thomas Johnson",
+                    "meta": {},
+                    "slug": "sound-air-mission",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_save_question[true-True-SaveDateQuestion] 1"] = {
+    "saveDateQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "DateQuestion",
+            "id": "RGF0ZVF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
+            "label": "Thomas Johnson",
+            "meta": {},
             "slug": "sound-air-mission",
         },
     }
