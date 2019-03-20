@@ -13,6 +13,7 @@ from ...core.tests import (
         (models.Question.TYPE_INTEGER, {"max_value": 10, "min_value": 0}),
         (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 0.0}),
         (models.Question.TYPE_FLOAT, {}),
+        (models.Question.TYPE_DATE, {}),
         (models.Question.TYPE_TEXT, {"max_length": 10}),
         (models.Question.TYPE_TEXTAREA, {"max_length": 10}),
         (models.Question.TYPE_CHOICE, {}),
@@ -140,6 +141,7 @@ def test_copy_question(
         "SaveTextareaQuestion",
         "SaveIntegerQuestion",
         "SaveFloatQuestion",
+        "SaveDateQuestion",
     ],
 )
 @pytest.mark.parametrize(

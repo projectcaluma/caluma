@@ -1,6 +1,12 @@
 from django.db import transaction
 from rest_framework import exceptions
-from rest_framework.serializers import CharField, FloatField, IntegerField, ListField
+from rest_framework.serializers import (
+    CharField,
+    DateField,
+    FloatField,
+    IntegerField,
+    ListField,
+)
 
 from . import models, validators
 from ..core import serializers
@@ -202,6 +208,15 @@ class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
         fields = SaveQuestionSerializer.Meta.fields + ("max_length",)
 
 
+class SaveDateQuestionSerializer(SaveQuestionSerializer):
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_DATE
+        return super().validate(data)
+
+    class Meta(SaveQuestionSerializer.Meta):
+        fields = SaveQuestionSerializer.Meta.fields
+
+
 class SaveQuestionOptionsMixin(object):
     def create_question_options(self, question, options):
         user = self.context["request"].user
@@ -400,6 +415,13 @@ class SaveDocumentIntegerAnswerSerializer(SaveAnswerSerializer):
 
 class SaveDocumentFloatAnswerSerializer(SaveAnswerSerializer):
     value = FloatField()
+
+    class Meta(SaveAnswerSerializer.Meta):
+        pass
+
+
+class SaveDocumentDateAnswerSerializer(SaveAnswerSerializer):
+    value = DateField()
 
     class Meta(SaveAnswerSerializer.Meta):
         pass
