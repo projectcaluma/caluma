@@ -73,6 +73,9 @@ class AnswerValidator:
         for document in value:
             DocumentValidator().validate(form=document.form, answers=document.answers)
 
+    def _validate_question_form(self, question, value):
+        DocumentValidator().validate(form=value.form, answers=value.answers)
+
     def validate(self, *, question, **kwargs):
         value = kwargs.get("documents", kwargs.get("value"))
 

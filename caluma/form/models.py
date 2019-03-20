@@ -45,6 +45,7 @@ class Question(SlugModel):
     TYPE_TEXTAREA = "textarea"
     TYPE_TEXT = "text"
     TYPE_TABLE = "table"
+    TYPE_FORM = "form"
 
     TYPE_CHOICES = (
         TYPE_MULTIPLE_CHOICE,
@@ -55,6 +56,7 @@ class Question(SlugModel):
         TYPE_TEXTAREA,
         TYPE_TEXT,
         TYPE_TABLE,
+        TYPE_FORM,
     )
     TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
 
@@ -73,7 +75,7 @@ class Question(SlugModel):
         blank=True,
         null=True,
         related_name="+",
-        help_text="One row of table is represented by this form",
+        help_text="Form used in TableQuestions and FormQuestions",
     )
 
     source = models.ForeignKey(
@@ -163,6 +165,13 @@ class Answer(UUIDModel):
     meta = JSONField(default=dict)
     document = models.ForeignKey(
         Document, on_delete=models.CASCADE, related_name="answers"
+    )
+    value_document = models.ForeignKey(
+        Document,
+        on_delete=models.DO_NOTHING,
+        related_name="parent_answers",
+        blank=True,
+        null=True,
     )
     documents = models.ManyToManyField(
         Document, through="AnswerDocument", related_name="+"

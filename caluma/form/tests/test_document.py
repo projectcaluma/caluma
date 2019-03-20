@@ -64,6 +64,13 @@ def test_query_all_documents(
                           }
                         }
                       }
+                      ... on FormAnswer {
+                        form_value: value {
+                          form {
+                            slug
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -194,7 +201,7 @@ def test_complex_document_query_performance(
         }
     """
 
-    with django_assert_num_queries(9):
+    with django_assert_num_queries(10):
         result = schema_executor(query, variables={"id": str(document.pk)})
     assert not result.errors
 
@@ -295,6 +302,7 @@ def test_save_document(db, document, schema_executor):
             False,
         ),
         (Question.TYPE_TABLE, {}, None, "SaveDocumentTableAnswer", True),
+        (Question.TYPE_FORM, {}, None, "SaveDocumentFormAnswer", True),
         (Question.TYPE_TEXTAREA, {}, "Test", "SaveDocumentStringAnswer", True),
         (
             Question.TYPE_TEXTAREA,
@@ -371,6 +379,13 @@ def test_save_document_answer(
                   }}
                 }}
               }}
+              ... on FormAnswer {{
+                form_value: value {{
+                  form {{
+                    slug
+                  }}
+                }}
+              }}
             }}
             clientMutationId
           }}
@@ -382,7 +397,7 @@ def test_save_document_answer(
             serializers.SaveAnswerSerializer, answer
         )
     }
-    if question.type == Question.TYPE_TABLE:
+    if question.type in [Question.TYPE_TABLE, Question.TYPE_FORM]:
         documents = document_factory.create_batch(2, form=question.row_form)
         # create a subtree
         document_answer = answer_factory()
@@ -390,6 +405,8 @@ def test_save_document_answer(
         answer_document_factory(answer=answer, document=documents[0])
 
         inp["input"]["value"] = [str(document.pk) for document in documents]
+        if question.type == Question.TYPE_FORM:
+            inp["input"]["value"] = documents[0].pk
 
     if delete_answer:
         # delete answer to force create test instead of update

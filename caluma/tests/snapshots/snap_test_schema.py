@@ -285,6 +285,7 @@ type Document implements Node {
   form: Form!
   meta: JSONString!
   answers(before: String, after: String, first: Int, last: Int, question: ID, search: String, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [AnswerOrdering]): AnswerConnection
+  parentAnswers: [FormAnswer]
   case: Case
   workItem: WorkItem
 }
@@ -378,6 +379,18 @@ type Form implements Node {
   id: ID!
 }
 
+type FormAnswer implements Answer, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  question: Question!
+  value: Document!
+  meta: GenericScalar!
+  document: Document!
+}
+
 type FormConnection {
   pageInfo: PageInfo!
   edges: [FormEdge]!
@@ -399,6 +412,23 @@ enum FormOrdering {
   CREATED_BY_USER_DESC
   CREATED_BY_GROUP_ASC
   CREATED_BY_GROUP_DESC
+}
+
+type FormQuestion implements Question, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  label: String!
+  isRequired: QuestionJexl!
+  isHidden: QuestionJexl!
+  isArchived: Boolean!
+  meta: GenericScalar!
+  source: Question
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
+  rowForm: Form
+  id: ID!
 }
 
 scalar GenericScalar
@@ -493,6 +523,7 @@ type Mutation {
   saveFloatQuestion(input: SaveFloatQuestionInput!): SaveFloatQuestionPayload
   saveIntegerQuestion(input: SaveIntegerQuestionInput!): SaveIntegerQuestionPayload
   saveTableQuestion(input: SaveTableQuestionInput!): SaveTableQuestionPayload
+  saveFormQuestion(input: SaveFormQuestionInput!): SaveFormQuestionPayload
   saveDocument(input: SaveDocumentInput!): SaveDocumentPayload
   saveDocumentStringAnswer(input: SaveDocumentStringAnswerInput!): SaveDocumentStringAnswerPayload
   saveDocumentIntegerAnswer(input: SaveDocumentIntegerAnswerInput!): SaveDocumentIntegerAnswerPayload
@@ -500,6 +531,7 @@ type Mutation {
   saveDocumentDateAnswer(input: SaveDocumentDateAnswerInput!): SaveDocumentDateAnswerPayload
   saveDocumentListAnswer(input: SaveDocumentListAnswerInput!): SaveDocumentListAnswerPayload
   saveDocumentTableAnswer(input: SaveDocumentTableAnswerInput!): SaveDocumentTableAnswerPayload
+  saveDocumentFormAnswer(input: SaveDocumentFormAnswerInput!): SaveDocumentFormAnswerPayload
 }
 
 interface Node {
@@ -733,6 +765,19 @@ type SaveDocumentFloatAnswerPayload {
   clientMutationId: String
 }
 
+input SaveDocumentFormAnswerInput {
+  question: ID!
+  document: ID!
+  meta: JSONString
+  value: ID!
+  clientMutationId: String
+}
+
+type SaveDocumentFormAnswerPayload {
+  answer: Answer
+  clientMutationId: String
+}
+
 input SaveDocumentInput {
   form: ID!
   meta: JSONString
@@ -825,6 +870,22 @@ input SaveFormInput {
 
 type SaveFormPayload {
   form: Form
+  clientMutationId: String
+}
+
+input SaveFormQuestionInput {
+  slug: String!
+  label: String!
+  isRequired: QuestionJexl
+  isHidden: QuestionJexl
+  meta: JSONString
+  isArchived: Boolean
+  rowForm: ID!
+  clientMutationId: String
+}
+
+type SaveFormQuestionPayload {
+  question: Question
   clientMutationId: String
 }
 
