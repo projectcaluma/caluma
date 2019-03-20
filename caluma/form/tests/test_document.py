@@ -54,6 +54,9 @@ def test_query_all_documents(
                       ... on FloatAnswer {
                         float_value: value
                       }
+                      ... on DateAnswer {
+                        date_value: value
+                      }
                       ... on TableAnswer {
                         table_value: value {
                           form {
@@ -141,6 +144,9 @@ def test_complex_document_query_performance(
           ... on FloatAnswer {
             floatValue: value
           }
+          ... on DateAnswer {
+            dateValue: value
+          }
           ... on ListAnswer {
             listValue: value
           }
@@ -188,7 +194,7 @@ def test_complex_document_query_performance(
         }
     """
 
-    with django_assert_num_queries(10):
+    with django_assert_num_queries(9):
         result = schema_executor(query, variables={"id": str(document.pk)})
     assert not result.errors
 
@@ -279,6 +285,15 @@ def test_save_document(db, document, schema_executor):
             "SaveDocumentStringAnswer",
             False,
         ),
+        (Question.TYPE_DATE, {}, "not a date", "SaveDocumentDateAnswer", False),
+        (Question.TYPE_DATE, {}, "2019-02-22", "SaveDocumentDateAnswer", True),
+        (
+            Question.TYPE_TEXT,
+            {"max_length": 1},
+            "toolong",
+            "SaveDocumentStringAnswer",
+            False,
+        ),
         (Question.TYPE_TABLE, {}, None, "SaveDocumentTableAnswer", True),
         (Question.TYPE_TEXTAREA, {}, "Test", "SaveDocumentStringAnswer", True),
         (
@@ -345,6 +360,9 @@ def test_save_document_answer(
               }}
               ... on ListAnswer {{
                 listValue: value
+              }}
+              ... on DateAnswer {{
+                dateValue: value
               }}
               ... on TableAnswer {{
                 table_value: value {{

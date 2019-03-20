@@ -49,6 +49,9 @@ class AnswerValidator:
                 f"and not greater than {max_value}"
             )
 
+    def _validate_question_date(self, question, value):
+        pass
+
     def _validate_question_choice(self, question, value):
         options = question.options.values_list("slug", flat=True)
         if not isinstance(value, str) or value not in options:
