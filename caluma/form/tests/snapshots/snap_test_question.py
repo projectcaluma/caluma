@@ -318,8 +318,8 @@ snapshots["test_save_form_question[form] 1"] = {
             "id": "Rm9ybVF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
             "label": "Thomas Johnson",
             "meta": {},
-            "rowForm": {"slug": "effort-meet"},
             "slug": "sound-air-mission",
+            "subForm": {"slug": "effort-meet"},
         },
     }
 }

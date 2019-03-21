@@ -427,7 +427,7 @@ type FormQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
-  rowForm: Form
+  subForm: Form
   id: ID!
 }
 
@@ -880,7 +880,7 @@ input SaveFormQuestionInput {
   isHidden: QuestionJexl
   meta: JSONString
   isArchived: Boolean
-  rowForm: ID!
+  subForm: ID!
   clientMutationId: String
 }
 

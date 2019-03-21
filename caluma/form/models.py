@@ -75,7 +75,14 @@ class Question(SlugModel):
         blank=True,
         null=True,
         related_name="+",
-        help_text="Form used in TableQuestions and FormQuestions",
+        help_text="Form that represents rows of a TableQuestion",
+    )
+    sub_form = models.ForeignKey(
+        Form,
+        blank=True,
+        null=True,
+        related_name="+",
+        help_text="Form referenced in a FormQuestion",
     )
 
     source = models.ForeignKey(

@@ -446,7 +446,7 @@ def test_save_form_question(db, snapshot, question, question_option, schema_exec
               meta
               __typename
               ... on FormQuestion {
-                rowForm {
+                subForm {
                   slug
                 }
               }
@@ -458,7 +458,7 @@ def test_save_form_question(db, snapshot, question, question_option, schema_exec
 
     inp = {
         "input": extract_serializer_input_fields(
-            serializers.SaveTableQuestionSerializer, question
+            serializers.SaveFormQuestionSerializer, question
         )
     }
     question.delete()  # test creation

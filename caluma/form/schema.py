@@ -104,7 +104,14 @@ class TextQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
+        exclude_fields = (
+            "type",
+            "configuration",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+        )
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -114,7 +121,14 @@ class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
+        exclude_fields = (
+            "type",
+            "configuration",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+        )
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -122,7 +136,14 @@ class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
 class DateQuestion(QuestionQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
+        exclude_fields = (
+            "type",
+            "configuration",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+        )
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -134,7 +155,7 @@ class ChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "answers", "row_form")
+        exclude_fields = ("type", "configuration", "answers", "row_form", "sub_form")
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -146,7 +167,7 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "answers", "row_form")
+        exclude_fields = ("type", "configuration", "answers", "row_form", "sub_form")
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -157,7 +178,14 @@ class IntegerQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
+        exclude_fields = (
+            "type",
+            "configuration",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+        )
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -168,7 +196,14 @@ class FloatQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
+        exclude_fields = (
+            "type",
+            "configuration",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+        )
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -176,7 +211,7 @@ class FloatQuestion(QuestionQuerysetMixin, DjangoObjectType):
 class TableQuestion(QuestionQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers")
+        exclude_fields = ("type", "configuration", "options", "answers", "sub_form")
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -184,7 +219,7 @@ class TableQuestion(QuestionQuerysetMixin, DjangoObjectType):
 class FormQuestion(QuestionQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers")
+        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
         use_connection = False
         interfaces = (Question, graphene.Node)
 

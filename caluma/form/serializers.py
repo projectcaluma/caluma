@@ -1,6 +1,6 @@
 from django.db import transaction
-from rest_framework import exceptions
 from django.db.models import Q
+from rest_framework import exceptions
 from rest_framework.serializers import (
     CharField,
     DateField,
@@ -345,7 +345,7 @@ class SaveTableQuestionSerializer(SaveQuestionSerializer):
 
 
 class SaveFormQuestionSerializer(SaveQuestionSerializer):
-    row_form = serializers.GlobalIDPrimaryKeyRelatedField(
+    sub_form = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Form.objects, required=True
     )
 
@@ -354,7 +354,7 @@ class SaveFormQuestionSerializer(SaveQuestionSerializer):
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ("row_form",)
+        fields = SaveQuestionSerializer.Meta.fields + ("sub_form",)
 
 
 class SaveOptionSerializer(serializers.ModelSerializer):
