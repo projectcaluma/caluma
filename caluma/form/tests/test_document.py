@@ -397,7 +397,7 @@ def test_save_document_answer(
             serializers.SaveAnswerSerializer, answer
         )
     }
-    if question.type in [Question.TYPE_TABLE, Question.TYPE_FORM]:
+    if question.type == Question.TYPE_TABLE:
         documents = document_factory.create_batch(2, form=question.row_form)
         # create a subtree
         document_answer = answer_factory()
@@ -405,8 +405,12 @@ def test_save_document_answer(
         answer_document_factory(answer=answer, document=documents[0])
 
         inp["input"]["value"] = [str(document.pk) for document in documents]
-        if question.type == Question.TYPE_FORM:
-            inp["input"]["value"] = documents[0].pk
+    if question.type == Question.TYPE_FORM:
+        document1 = document_factory.create(form=question.row_form)
+        document2 = document_factory.create()
+        answer.value_document = document2
+        answer.save()
+        inp["input"]["value"] = document1.pk
 
     if delete_answer:
         # delete answer to force create test instead of update
@@ -438,6 +442,29 @@ def test_save_document_table_answer_invalid_row_form(
     inp["input"]["value"] = [
         str(document.pk) for document in document_factory.create_batch(1)
     ]
+    result = schema_executor(query, variables=inp)
+    assert result.errors
+
+
+@pytest.mark.parametrize("question__type", [Question.TYPE_FORM])
+def test_save_document_form_answer_invalid_row_form(
+    db, schema_executor, answer_factory, question, document_factory
+):
+    answer = answer_factory.create(question=question)
+    query = """
+        mutation SaveDocumentFormAnswer($input: SaveDocumentFormAnswerInput!) {
+            saveDocumentFormAnswer(input: $input) {
+                clientMutationId
+            }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveAnswerSerializer, answer
+        )
+    }
+    inp["input"]["value"] = str(document_factory.create().pk)
     result = schema_executor(query, variables=inp)
     assert result.errors
 
