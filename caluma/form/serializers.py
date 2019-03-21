@@ -76,7 +76,7 @@ class AddFormQuestionSerializer(serializers.ModelSerializer):
             # reassign sort from start 1 so a newly added item with sort 0 will
             # be at the end again
             for sort, question in enumerate(
-                reversed(self.instance.questions.all()), start=1
+                self.instance.questions.all().order_by("formquestion__sort"), start=1
             ):
                 models.FormQuestion.objects.filter(
                     form=instance, question=question
