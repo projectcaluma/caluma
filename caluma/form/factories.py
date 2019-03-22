@@ -26,6 +26,7 @@ class QuestionFactory(DjangoModelFactory):
     meta = {}
     is_archived = False
     row_form = SubFactory(FormFactory)
+    sub_form = SubFactory(FormFactory)
 
     class Meta:
         model = models.Question

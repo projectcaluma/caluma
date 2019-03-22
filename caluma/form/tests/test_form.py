@@ -129,7 +129,12 @@ def test_copy_form(db, form, form_question_factory, schema_executor):
 
 
 def test_add_form_question(db, form, question, form_question_factory, schema_executor):
-    form_question_factory.create_batch(5, form=form)
+    form_questions = form_question_factory.create_batch(5, form=form)
+
+    # initialize sorting keys
+    for idx, form_question in enumerate(form_questions):
+        form_question.sort = idx + 1
+        form_question.save()
 
     query = """
         mutation AddFormQuestion($input: AddFormQuestionInput!) {

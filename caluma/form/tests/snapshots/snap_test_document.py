@@ -99,60 +99,6 @@ snapshots[
 }
 
 snapshots[
-    "test_save_document_answer[textarea-question__configuration10-Test-SaveDocumentStringAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"stringValue": "Test"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[textarea-question__configuration10-Test-SaveDocumentStringAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"stringValue": "Test"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[multiple_choice-question__configuration12-answer__value12-SaveDocumentListAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentListAnswer": {
-        "answer": {"listValue": ["option-slug"]},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[multiple_choice-question__configuration12-answer__value12-SaveDocumentListAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentListAnswer": {
-        "answer": {"listValue": ["option-slug"]},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[choice-question__configuration14-option-slug-SaveDocumentStringAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"stringValue": "option-slug"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[choice-question__configuration14-option-slug-SaveDocumentStringAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"stringValue": "option-slug"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
     "test_save_document_answer[date-question__configuration7-2019-02-22-SaveDocumentDateAnswer-True-option-slug-True] 1"
 ] = {
     "saveDocumentDateAnswer": {
@@ -288,5 +234,77 @@ snapshots["test_query_all_documents[table-None] 1"] = {
                 }
             }
         ]
+    }
+}
+
+snapshots[
+    "test_save_document_answer[textarea-question__configuration11-Test-SaveDocumentStringAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "Test"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[textarea-question__configuration11-Test-SaveDocumentStringAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "Test"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[multiple_choice-question__configuration13-answer__value13-SaveDocumentListAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentListAnswer": {
+        "answer": {"listValue": ["option-slug"]},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[multiple_choice-question__configuration13-answer__value13-SaveDocumentListAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentListAnswer": {
+        "answer": {"listValue": ["option-slug"]},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[choice-question__configuration15-option-slug-SaveDocumentStringAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "option-slug"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[choice-question__configuration15-option-slug-SaveDocumentStringAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "option-slug"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[form-question__configuration10-None-SaveDocumentFormAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentFormAnswer": {
+        "answer": {"form_value": {"form": {"slug": "effort-meet"}}},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[form-question__configuration10-None-SaveDocumentFormAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentFormAnswer": {
+        "answer": {"form_value": {"form": {"slug": "effort-meet"}}},
+        "clientMutationId": "testid",
     }
 }
