@@ -18,6 +18,7 @@ from ...core.tests import (
         (models.Question.TYPE_TEXTAREA, {"max_length": 10}),
         (models.Question.TYPE_CHOICE, {}),
         (models.Question.TYPE_MULTIPLE_CHOICE, {}),
+        (models.Question.TYPE_FORM, {}),
     ],
 )
 def test_query_all_questions(
@@ -425,6 +426,39 @@ def test_save_table_question(db, snapshot, question, question_option, schema_exe
     inp = {
         "input": extract_serializer_input_fields(
             serializers.SaveTableQuestionSerializer, question
+        )
+    }
+    question.delete()  # test creation
+    result = schema_executor(query, variables=inp)
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_FORM])
+def test_save_form_question(db, snapshot, question, question_option, schema_executor):
+    query = """
+        mutation SaveFormQuestion($input: SaveFormQuestionInput!) {
+          saveFormQuestion(input: $input) {
+            question {
+              id
+              slug
+              label
+              meta
+              __typename
+              ... on FormQuestion {
+                subForm {
+                  slug
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveFormQuestionSerializer, question
         )
     }
     question.delete()  # test creation

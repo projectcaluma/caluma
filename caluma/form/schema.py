@@ -68,6 +68,7 @@ class Question(Node, graphene.Interface):
             models.Question.TYPE_TEXTAREA: TextareaQuestion,
             models.Question.TYPE_DATE: DateQuestion,
             models.Question.TYPE_TABLE: TableQuestion,
+            models.Question.TYPE_FORM: FormQuestion,
         }
 
         return QUESTION_OBJECT_TYPE[instance.type]
@@ -103,7 +104,14 @@ class TextQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
+        exclude_fields = (
+            "type",
+            "configuration",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+        )
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -113,7 +121,14 @@ class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
+        exclude_fields = (
+            "type",
+            "configuration",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+        )
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -121,7 +136,14 @@ class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
 class DateQuestion(QuestionQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
+        exclude_fields = (
+            "type",
+            "configuration",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+        )
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -133,7 +155,7 @@ class ChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "answers", "row_form")
+        exclude_fields = ("type", "configuration", "answers", "row_form", "sub_form")
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -145,7 +167,7 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "answers", "row_form")
+        exclude_fields = ("type", "configuration", "answers", "row_form", "sub_form")
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -156,7 +178,14 @@ class IntegerQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
+        exclude_fields = (
+            "type",
+            "configuration",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+        )
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -167,7 +196,14 @@ class FloatQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
+        exclude_fields = (
+            "type",
+            "configuration",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+        )
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -175,7 +211,15 @@ class FloatQuestion(QuestionQuerysetMixin, DjangoObjectType):
 class TableQuestion(QuestionQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Question
-        exclude_fields = ("type", "configuration", "options", "answers")
+        exclude_fields = ("type", "configuration", "options", "answers", "sub_form")
+        use_connection = False
+        interfaces = (Question, graphene.Node)
+
+
+class FormQuestion(QuestionQuerysetMixin, DjangoObjectType):
+    class Meta:
+        model = models.Question
+        exclude_fields = ("type", "configuration", "options", "answers", "row_form")
         use_connection = False
         interfaces = (Question, graphene.Node)
 
@@ -292,6 +336,12 @@ class SaveTableQuestion(SaveQuestion):
         return_field_type = Question
 
 
+class SaveFormQuestion(SaveQuestion):
+    class Meta:
+        serializer_class = serializers.SaveFormQuestionSerializer
+        return_field_type = Question
+
+
 class SaveOption(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveOptionSerializer
@@ -328,8 +378,14 @@ class Answer(Node, graphene.Interface):
             float: FloatAnswer,
             int: IntegerAnswer,
             date: DateAnswer,
-            type(None): TableAnswer,
         }
+
+        if instance.value is None:
+            ANSWER_QUESTION_TYPE = {
+                models.Question.TYPE_FORM: FormAnswer,
+                models.Question.TYPE_TABLE: TableAnswer,
+            }
+            return ANSWER_QUESTION_TYPE[instance.question.type]
 
         return ANSWER_TYPE[type(instance.value)]
 
@@ -347,7 +403,7 @@ class IntegerAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents")
+        exclude_fields = ("document", "documents", "value_document")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -357,7 +413,7 @@ class FloatAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents")
+        exclude_fields = ("document", "documents", "value_document")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -367,7 +423,7 @@ class DateAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents")
+        exclude_fields = ("document", "documents", "value_document")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -377,7 +433,7 @@ class StringAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents")
+        exclude_fields = ("document", "documents", "value_document")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -387,7 +443,7 @@ class ListAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents")
+        exclude_fields = ("document", "documents", "value_document")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -416,7 +472,20 @@ class TableAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("documents",)
+        exclude_fields = ("documents", "value_document")
+        use_connection = False
+        interfaces = (Answer, graphene.Node)
+
+
+class FormAnswer(AnswerQuerysetMixin, DjangoObjectType):
+    value = graphene.Field(Document, required=True)
+
+    def resolve_value(self, info, **args):
+        return self.value_document
+
+    class Meta:
+        model = models.Answer
+        exclude_fields = ("documents", "value_document")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -476,6 +545,12 @@ class SaveDocumentTableAnswer(SaveDocumentAnswer):
         return_field_type = Answer
 
 
+class SaveDocumentFormAnswer(SaveDocumentAnswer):
+    class Meta:
+        serializer_class = serializers.SaveDocumentFormAnswerSerializer
+        return_field_type = Answer
+
+
 class Mutation(object):
     save_form = SaveForm().Field()
     copy_form = CopyForm().Field()
@@ -496,6 +571,7 @@ class Mutation(object):
     save_float_question = SaveFloatQuestion().Field()
     save_integer_question = SaveIntegerQuestion().Field()
     save_table_question = SaveTableQuestion().Field()
+    save_form_question = SaveFormQuestion().Field()
 
     save_document = SaveDocument().Field()
     save_document_string_answer = SaveDocumentStringAnswer().Field()
@@ -504,6 +580,7 @@ class Mutation(object):
     save_document_date_answer = SaveDocumentDateAnswer().Field()
     save_document_list_answer = SaveDocumentListAnswer().Field()
     save_document_table_answer = SaveDocumentTableAnswer().Field()
+    save_document_form_answer = SaveDocumentFormAnswer().Field()
 
 
 class Query(object):
