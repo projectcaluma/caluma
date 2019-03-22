@@ -7,31 +7,11 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots["test_query_all_cases 1"] = {
+snapshots["test_query_all_cases[running-1] 1"] = {
     "allCases": {"edges": [{"node": {"status": "RUNNING"}}]}
 }
 
-snapshots["test_cancel_case[running-True-completed] 1"] = {
-    "cancelCase": {
-        "case": {
-            "document": {"form": {"slug": "sound-air-mission"}},
-            "status": "CANCELED",
-            "workItems": {"edges": [{"node": {"status": "COMPLETED"}}]},
-        },
-        "clientMutationId": None,
-    }
-}
-
-snapshots["test_cancel_case[running-True-ready] 1"] = {
-    "cancelCase": {
-        "case": {
-            "document": {"form": {"slug": "sound-air-mission"}},
-            "status": "CANCELED",
-            "workItems": {"edges": [{"node": {"status": "CANCELED"}}]},
-        },
-        "clientMutationId": None,
-    }
-}
+snapshots["test_query_all_cases[completed-0] 1"] = {"allCases": {"edges": []}}
 
 snapshots['test_start_case[["group-name"]|groups-100] 1'] = {
     "startCase": {
@@ -116,6 +96,28 @@ snapshots["test_start_case[None-None] 1"] = {
                     }
                 ]
             },
+        },
+        "clientMutationId": None,
+    }
+}
+
+snapshots["test_cancel_case[running-True-completed] 1"] = {
+    "cancelCase": {
+        "case": {
+            "document": {"form": {"slug": "sound-air-mission"}},
+            "status": "CANCELED",
+            "workItems": {"edges": [{"node": {"status": "COMPLETED"}}]},
+        },
+        "clientMutationId": None,
+    }
+}
+
+snapshots["test_cancel_case[running-True-ready] 1"] = {
+    "cancelCase": {
+        "case": {
+            "document": {"form": {"slug": "sound-air-mission"}},
+            "status": "CANCELED",
+            "workItems": {"edges": [{"node": {"status": "CANCELED"}}]},
         },
         "clientMutationId": None,
     }
