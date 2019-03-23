@@ -1,7 +1,7 @@
 import pytest
 
-from .. import models
 from ...core.relay import extract_global_id
+from .. import models
 
 
 @pytest.mark.parametrize(

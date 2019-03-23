@@ -1,10 +1,10 @@
 import pytest
 
-from .. import models, serializers
 from ...core.tests import (
     extract_global_id_input_fields,
     extract_serializer_input_fields,
 )
+from .. import models, serializers
 
 
 @pytest.mark.parametrize(

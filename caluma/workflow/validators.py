@@ -1,7 +1,7 @@
 from rest_framework import exceptions
 
-from . import models
 from ..form.validators import DocumentValidator
+from . import models
 
 
 class WorkItemValidator:

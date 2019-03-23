@@ -1,7 +1,7 @@
 import pytest
 
-from .. import models, serializers
 from ...core.tests import extract_serializer_input_fields
+from .. import models, serializers
 
 
 @pytest.mark.parametrize("task__type", [models.Task.TYPE_SIMPLE])

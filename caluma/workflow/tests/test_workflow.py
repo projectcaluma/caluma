@@ -1,8 +1,8 @@
 import pytest
 from graphql_relay import to_global_id
 
-from .. import serializers
 from ...core.tests import extract_serializer_input_fields
+from .. import serializers
 
 
 def test_query_all_workflows(

@@ -3,9 +3,9 @@ import json
 import pytest
 from graphene.utils.str_converters import to_const
 
-from .. import models
 from ...core.relay import extract_global_id
 from ...form.models import Question
+from .. import models
 
 
 def test_query_all_work_items_filter_status(db, work_item_factory, schema_executor):

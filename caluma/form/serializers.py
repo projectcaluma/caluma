@@ -9,8 +9,8 @@ from rest_framework.serializers import (
     ListField,
 )
 
-from . import models, validators
 from ..core import serializers
+from . import models, validators
 from .jexl import QuestionJexl
 
 

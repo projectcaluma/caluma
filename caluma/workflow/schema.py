@@ -6,10 +6,10 @@ from graphene import relay
 from graphene.types import generic
 from graphene_django.rest_framework import serializer_converter
 
-from . import filters, jexl, models, serializers
 from ..core.filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
 from ..core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..core.types import DjangoObjectType, Node
+from . import filters, jexl, models, serializers
 
 
 class FlowJexl(graphene.String):

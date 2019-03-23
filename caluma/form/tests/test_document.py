@@ -1,10 +1,10 @@
 import pytest
 from graphql_relay import to_global_id
 
-from .. import serializers
 from ...core.relay import extract_global_id
 from ...core.tests import extract_serializer_input_fields
 from ...form.models import Answer, Question
+from .. import serializers
 
 
 @pytest.mark.parametrize(
