@@ -10,19 +10,19 @@ from .schema import Case, WorkItem
 class AddressedGroups(BaseVisibility):
     """Only show case, work item and document to addressed users through group."""
 
-    def get_visibile_work_items(self, node, queryset, info):
+    def get_visible_work_items(self, node, queryset, info):
         groups = info.context.user.groups
         return models.WorkItem.objects.filter(addressed_groups__overlap=groups)
 
     def get_visible_cases(self, node, queryset, info):
-        work_items = self.get_visibile_work_items(node, queryset, info)
+        work_items = self.get_visible_work_items(node, queryset, info)
         cases = models.Case.objects.filter(
             Q(work_items__in=work_items) | Q(parent_work_item__in=work_items)
         )
         return cases
 
     def get_visible_documents(self, node, queryset, info):
-        work_items = self.get_visibile_work_items(node, queryset, info)
+        work_items = self.get_visible_work_items(node, queryset, info)
         cases = self.get_visible_cases(node, queryset, info)
         families = form_models.Document.objects.filter(
             Q(work_item__in=work_items) | Q(case__in=cases)
@@ -31,7 +31,7 @@ class AddressedGroups(BaseVisibility):
 
     @filter_queryset_for(WorkItem)
     def filter_querset_for_work_item(self, node, queryset, info):
-        work_items = self.get_visibile_work_items(node, queryset, info)
+        work_items = self.get_visible_work_items(node, queryset, info)
         return queryset.filter(pk__in=work_items)
 
     @filter_queryset_for(Case)
