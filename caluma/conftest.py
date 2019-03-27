@@ -128,3 +128,15 @@ def minio_mock(mocker):
     Minio.stat_object.return_value = stat_response
     Minio.bucket_exists.return_value = True
     return Minio
+def custom_visibility_classes():
+    from caluma.core.types import Node
+
+    old_classes = Node.visibility_classes
+
+    def set_classes(classes):
+        Node.visibility_classes = classes
+
+    yield set_classes
+
+    # restore old (default) visibility classes
+    set_classes(old_classes)
