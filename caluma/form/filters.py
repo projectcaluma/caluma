@@ -1,4 +1,5 @@
 from ..core.filters import (
+    AnswerValueFilter,
     GlobalIDFilter,
     GlobalIDMultipleChoiceFilter,
     MetaFilterSet,
@@ -42,10 +43,11 @@ class DocumentFilterSet(MetaFilterSet):
         fields=("form__slug", "form__name", "form__description", "answers__value")
     )
     order_by = OrderingFilter(label="DocumentOrdering")
+    has_answer = AnswerValueFilter()
 
     class Meta:
         model = models.Document
-        fields = ("form", "search", "id")
+        fields = ("form", "search", "id", "has_answer")
 
 
 class AnswerFilterSet(MetaFilterSet):

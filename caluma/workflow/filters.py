@@ -1,4 +1,5 @@
 from ..core.filters import (
+    AnswerValueFilter,
     FilterSet,
     GlobalIDFilter,
     MetaFilterSet,
@@ -28,10 +29,11 @@ class FlowFilterSet(FilterSet):
 
 class CaseFilterSet(MetaFilterSet):
     order_by = OrderingFilter(label="CaseOrdering", fields=("status",))
+    has_answer = AnswerValueFilter(answers_via="document__answers")
 
     class Meta:
         model = models.Case
-        fields = ("workflow", "status")
+        fields = ("workflow", "status", "has_answer")
 
 
 class TaskFilterSet(MetaFilterSet):

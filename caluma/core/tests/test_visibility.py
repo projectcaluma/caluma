@@ -3,6 +3,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.db.models import CharField
 
 from .. import models
+from ...form.schema import Form
 from ..types import DjangoObjectType, Node
 from ..visibilities import BaseVisibility, Union, filter_queryset_for
 from .fake_model import get_fake_model
@@ -165,3 +166,34 @@ def test_union_visibility_none(db):
     assert result.count() == 0
     queryset = ConfiguredUnion().filter_queryset(CustomNode, queryset, None)
     assert queryset.count() == 0
+
+
+def test_has_answer_filter(
+    db, form, form_question, question, schema_executor, answer_factory, document
+):
+
+    # verify assumptions
+    assert question in form.questions.all()
+
+    answer1 = answer_factory(question=question)
+    answer2 = answer_factory(question=question)
+
+    # need two different documents (verifying more assumptions)
+    assert answer1.document.id != answer2.document.id
+
+    query = """
+        query blub($hasAnswer: String) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+    """
+    result = schema_executor(
+        query, variables={"hasAnswer": f"{question.slug}={answer1.value}"}
+    )
+    assert not result.errors
+    assert len(result.data["allDocuments"]["edges"]) == 1
