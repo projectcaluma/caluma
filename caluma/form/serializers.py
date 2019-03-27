@@ -541,9 +541,9 @@ class SaveDocumentFormAnswerSerializer(SaveAnswerSerializer):
         )
         question = data.get("question") or self.instance and self.instance.question
 
-        if document.form_id != question.row_form_id:
+        if document.form_id != question.sub_form_id:
             raise exceptions.ValidationError(
-                f"Document {document.pk} is of form type {document.form_id}, but should be of type {question.row_form.pk}."
+                f"Document {document.pk} is of form type {document.form_id}, but should be of type {question.sub_form_id}."
             )
 
         return super().validate(data)
