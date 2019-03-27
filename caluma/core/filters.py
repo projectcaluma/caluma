@@ -362,3 +362,32 @@ def _generate_list_filter_class(inner_type):
 
 
 StringListFilter = _generate_list_filter_class(graphene.String)
+
+
+class AnswerValueFilter(Filter):
+    """Filters by an arbitrary answer's value.
+
+    The query syntax is (allDocuments: "question_slug=value") Use this to
+    filter documents by an associated question's value, for example.
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.answers_via = kwargs.pop("answers_via", "answers")
+        self.lookup_expr = kwargs.pop("lookup_expr", "contains")
+        self.transform_value = kwargs.pop("transform_value", lambda val: val)
+        super().__init__(*args, **kwargs)
+
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES:
+            return qs
+
+        slug, value = value.split("=", 1)
+
+        filter_expr = {
+            f"{self.answers_via}__question__slug": slug,
+            f"{self.answers_via}__value__{self.lookup_expr}": self.transform_value(
+                value
+            ),
+        }
+
+        return qs.filter(**filter_expr)
