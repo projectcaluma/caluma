@@ -407,7 +407,7 @@ class SaveAnswerSerializer(serializers.ModelSerializer):
 
 
 class SaveDocumentStringAnswerSerializer(SaveAnswerSerializer):
-    value = CharField()
+    value = CharField(allow_blank=True)
 
     class Meta(SaveAnswerSerializer.Meta):
         pass
