@@ -4,8 +4,8 @@ import json
 import pytest
 from django.core.cache import cache
 
-from .. import middleware
 from ...schema import schema
+from .. import middleware
 
 
 @pytest.mark.parametrize(

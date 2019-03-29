@@ -1,4 +1,3 @@
-from . import models
 from ..core.filters import (
     GlobalIDFilter,
     GlobalIDMultipleChoiceFilter,
@@ -6,6 +5,7 @@ from ..core.filters import (
     OrderingFilter,
     SearchFilter,
 )
+from . import models
 
 
 class FormFilterSet(MetaFilterSet):

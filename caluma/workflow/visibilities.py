@@ -1,9 +1,9 @@
 from django.db.models import Q
 
-from . import models
 from ..core.visibilities import BaseVisibility, filter_queryset_for
 from ..form import models as form_models
 from ..form.schema import Answer, Document
+from . import models
 from .schema import Case, WorkItem
 
 

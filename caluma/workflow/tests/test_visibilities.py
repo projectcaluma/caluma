@@ -1,8 +1,8 @@
 import pytest
 
-from .. import models
 from ...form import models as form_models
 from ...form.schema import Answer, Document
+from .. import models
 from ..schema import Case, WorkItem
 from ..visibilities import AddressedGroups
 

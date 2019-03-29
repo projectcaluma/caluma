@@ -2,8 +2,8 @@ import pytest
 from django.utils import translation
 from graphql_relay import to_global_id
 
-from .. import models
 from ...core.tests import extract_serializer_input_fields
+from .. import models
 from ..serializers import SaveFormSerializer
 
 
