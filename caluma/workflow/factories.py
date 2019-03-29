@@ -1,8 +1,8 @@
 from factory import DjangoModelFactory as FactoryDjangoModelFactory, Faker, SubFactory
 
-from . import models
 from ..core.factories import DjangoModelFactory
 from ..form.factories import DocumentFactory, FormFactory
+from . import models
 
 
 class TaskFactory(DjangoModelFactory):

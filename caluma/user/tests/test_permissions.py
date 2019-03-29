@@ -1,8 +1,8 @@
 import pytest
 
-from .. import permissions
 from ...core.models import UUIDModel
 from ...core.tests.fake_model import get_fake_model
+from .. import permissions
 
 
 @pytest.mark.parametrize(

@@ -1,4 +1,3 @@
-from . import models
 from ..core.filters import (
     FilterSet,
     GlobalIDFilter,
@@ -7,6 +6,7 @@ from ..core.filters import (
     SearchFilter,
     StringListFilter,
 )
+from . import models
 
 
 class WorkflowFilterSet(MetaFilterSet):

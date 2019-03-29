@@ -1,7 +1,7 @@
 import pytest
 
-from .. import models, serializers
 from ...core.tests import extract_serializer_input_fields
+from .. import models, serializers
 
 
 def test_save_option(db, option, snapshot, schema_executor):
