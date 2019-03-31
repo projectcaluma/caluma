@@ -391,6 +391,32 @@ class RemoveOptionSerializer(serializers.ModelSerializer):
 
 
 class DocumentSerializer(serializers.ModelSerializer):
+    def create_and_link_child_documents(self, form, document):
+        form_questions = form.questions.filter(type=models.Question.TYPE_FORM)
+
+        for form_question in form_questions:
+            child_document = models.Document.objects.create(form=form_question.sub_form)
+            models.Answer.objects.create(
+                question=form_question, document=document, value_document=child_document
+            )
+            self.create_and_link_child_documents(form_question.sub_form, child_document)
+
+    @transaction.atomic
+    def create(self, validated_data):
+        """
+        Create a document family.
+
+        Create a document for the given form, as well as
+        subdocuments for all the child FormQuestions, and
+        attach them as answers
+        """
+        form = validated_data.get("form")
+        main_document = super().create(validated_data)
+
+        self.create_and_link_child_documents(form, main_document)
+
+        return main_document
+
     class Meta:
         model = models.Document
         fields = ("form", "meta")
