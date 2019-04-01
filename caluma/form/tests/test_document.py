@@ -485,3 +485,56 @@ def test_query_answer_node(db, answer, schema_executor):
 
     result = schema_executor(node_query, variables={"id": global_id})
     assert not result.errors
+
+
+def test_create_document_with_children(
+    db, form_question_factory, question_factory, schema_executor
+):
+    sub_form_question = form_question_factory(question__type=Question.TYPE_FORM)
+    question = question_factory(
+        type=Question.TYPE_FORM, sub_form=sub_form_question.form
+    )
+    form_question = form_question_factory(question=question)
+
+    query = """
+        mutation SaveDocument($input: SaveDocumentInput!) {
+            saveDocument(input: $input) {
+                document {
+                    id
+                    answers {
+                        edges {
+                            node {
+                                id
+                                ... on FormAnswer {
+                                    value {
+                                        id
+                                        answers {
+                                            edges {
+                                                node {
+                                                    id
+                                                    ... on FormAnswer {
+                                                        value {
+                                                            id
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    """
+
+    inp = {"input": {"form": form_question.form.pk}}
+    result = schema_executor(query, variables=inp)
+    assert not result.errors
+    sub_document = result.data["saveDocument"]["document"]["answers"]["edges"][0][
+        "node"
+    ]
+    assert sub_document["id"]
+    assert sub_document["value"]["answers"]["edges"][0]["node"]["id"]
