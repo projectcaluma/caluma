@@ -10,7 +10,7 @@ graphene-django==2.2.0
 graphql-core==2.1
 graphql-relay==0.4.5
 idna==2.8
-psycopg2-binary==2.7.7
+psycopg2-binary==2.8
 pyjexl==0.2.3
 python-memcached==1.59
 requests==2.21.0
