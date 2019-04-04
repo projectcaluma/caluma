@@ -15,6 +15,8 @@ from .. import serializers
         (Question.TYPE_TEXT, "somevalue"),
         (Question.TYPE_MULTIPLE_CHOICE, ["somevalue", "anothervalue"]),
         (Question.TYPE_TABLE, None),
+        (Question.TYPE_FILE, "some-file.pdf"),
+        (Question.TYPE_FILE, "some-other-file.pdf"),
     ],
 )
 def test_query_all_documents(
@@ -24,9 +26,16 @@ def test_query_all_documents(
     form,
     document,
     document_factory,
+    question_factory,
+    form_question_factory,
+    answer_factory,
+    file_factory,
     answer_document,
     answer,
     schema_executor,
+    question,
+    minio_mock,
+    settings,
 ):
     query = """
         query AllDocumentsQuery($search: String) {
@@ -71,6 +80,12 @@ def test_query_all_documents(
                           }
                         }
                       }
+                      ... on FileAnswer {
+                        fileValue: value {
+                          name
+                          downloadUrl
+                        }
+                      }
                     }
                   }
                 }
@@ -79,6 +94,20 @@ def test_query_all_documents(
           }
         }
     """
+
+    if question.type == Question.TYPE_FILE:
+        file_question = question_factory(type=Question.TYPE_FILE)
+        form_question_factory(question=file_question, form=form)
+        answer_factory(
+            question=file_question,
+            value=None,
+            document=document,
+            file=file_factory(name="some-file.pdf"),
+        )
+
+        if answer.value == "some-other-file.pdf":
+            settings.MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = False
+            minio_mock.bucket_exists.return_value = False
 
     search = isinstance(answer.value, list) and " ".join(answer.value) or answer.value
     result = schema_executor(query, variables={"search": search})
@@ -94,8 +123,10 @@ def test_complex_document_query_performance(
     form_question_factory,
     question_factory,
     answer_factory,
+    file_factory,
     question_option_factory,
     django_assert_num_queries,
+    minio_mock,
 ):
     answers = answer_factory.create_batch(5, document=document)
     for answer in answers:
@@ -104,6 +135,11 @@ def test_complex_document_query_performance(
     form_question_factory(question=multiple_choice_question, form=form)
     question_option_factory.create_batch(10, question=multiple_choice_question)
     answer_factory(question=multiple_choice_question)
+    file_question = question_factory(type=Question.TYPE_FILE)
+    form_question_factory(question=file_question, form=form)
+    answer_factory(
+        question=file_question, value=None, document=document, file=file_factory()
+    )
 
     query = """
         query ($id: ID!) {
@@ -139,6 +175,7 @@ def test_complex_document_query_performance(
 
         fragment FieldAnswer on Answer {
           id
+          __typename
           question {
             slug
           }
@@ -156,6 +193,12 @@ def test_complex_document_query_performance(
           }
           ... on ListAnswer {
             listValue: value
+          }
+          ... on FileAnswer {
+            fileValue: value {
+              name
+              downloadUrl
+            }
           }
         }
 
@@ -201,7 +244,7 @@ def test_complex_document_query_performance(
         }
     """
 
-    with django_assert_num_queries(10):
+    with django_assert_num_queries(11):
         result = schema_executor(query, variables={"id": str(document.pk)})
     assert not result.errors
 
@@ -294,6 +337,9 @@ def test_save_document(db, document, schema_executor):
         ),
         (Question.TYPE_DATE, {}, "not a date", "SaveDocumentDateAnswer", False),
         (Question.TYPE_DATE, {}, "2019-02-22", "SaveDocumentDateAnswer", True),
+        (Question.TYPE_FILE, {}, None, "SaveDocumentFileAnswer", False),
+        (Question.TYPE_FILE, {}, "some-file.pdf", "SaveDocumentFileAnswer", True),
+        (Question.TYPE_FILE, {}, "not-exist.pdf", "SaveDocumentFileAnswer", True),
         (
             Question.TYPE_TEXT,
             {"max_length": 1},
@@ -345,9 +391,11 @@ def test_save_document_answer(
     document_factory,
     answer_factory,
     answer_document_factory,
+    file_factory,
     success,
     schema_executor,
     delete_answer,
+    minio_mock,
 ):
     mutation_func = mutation[0].lower() + mutation[1:]
     query = f"""
@@ -386,6 +434,12 @@ def test_save_document_answer(
                   }}
                 }}
               }}
+              ... on FileAnswer {{
+                fileValue: value {{
+                  name
+                  uploadUrl
+                }}
+              }}
             }}
             clientMutationId
           }}
@@ -411,6 +465,12 @@ def test_save_document_answer(
         answer.value_document = document2
         answer.save()
         inp["input"]["value"] = document1.pk
+
+    if question.type == Question.TYPE_FILE and answer.value == "some-file.pdf":
+        file = file_factory(name="some-file.pdf")
+        answer.file = file
+        answer.save()
+        minio_mock.bucket_exists.return_value = False
 
     if delete_answer:
         # delete answer to force create test instead of update

@@ -69,6 +69,7 @@ class Question(Node, graphene.Interface):
             models.Question.TYPE_DATE: DateQuestion,
             models.Question.TYPE_TABLE: TableQuestion,
             models.Question.TYPE_FORM: FormQuestion,
+            models.Question.TYPE_FILE: FileQuestion,
         }
 
         return QUESTION_OBJECT_TYPE[instance.type]
@@ -224,6 +225,21 @@ class FormQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
+class FileQuestion(QuestionQuerysetMixin, DjangoObjectType):
+    class Meta:
+        model = models.Question
+        exclude_fields = (
+            "type",
+            "configuration",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+        )
+        use_connection = False
+        interfaces = (Question, graphene.Node)
+
+
 class Form(DjangoObjectType):
     questions = DjangoFilterSetConnectionField(
         QuestionConnection, filterset_class=filters.QuestionFilterSet
@@ -342,6 +358,12 @@ class SaveFormQuestion(SaveQuestion):
         return_field_type = Question
 
 
+class SaveFileQuestion(SaveQuestion):
+    class Meta:
+        serializer_class = serializers.SaveFileQuestionSerializer
+        return_field_type = Question
+
+
 class SaveOption(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveOptionSerializer
@@ -384,6 +406,7 @@ class Answer(Node, graphene.Interface):
             ANSWER_QUESTION_TYPE = {
                 models.Question.TYPE_FORM: FormAnswer,
                 models.Question.TYPE_TABLE: TableAnswer,
+                models.Question.TYPE_FILE: FileAnswer,
             }
             return ANSWER_QUESTION_TYPE[instance.question.type]
 
@@ -403,7 +426,7 @@ class IntegerAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document")
+        exclude_fields = ("document", "documents", "value_document", "file")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -413,7 +436,7 @@ class FloatAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document")
+        exclude_fields = ("document", "documents", "value_document", "file")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -423,7 +446,7 @@ class DateAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document")
+        exclude_fields = ("document", "documents", "value_document", "file")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -433,7 +456,7 @@ class StringAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document")
+        exclude_fields = ("document", "documents", "value_document", "file")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -443,7 +466,7 @@ class ListAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document")
+        exclude_fields = ("document", "documents", "value_document", "file")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -472,7 +495,7 @@ class TableAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("documents", "value_document")
+        exclude_fields = ("documents", "value_document", "file")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -485,7 +508,36 @@ class FormAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("documents", "value_document")
+        exclude_fields = ("documents", "value_document", "file")
+        use_connection = False
+        interfaces = (Answer, graphene.Node)
+
+
+class File(DjangoObjectType):
+    name = graphene.String(required=True)
+    upload_url = graphene.String()
+    download_url = graphene.String()
+
+    def resolve_upload_url(self, info, **args):
+        return self.upload_url
+
+    def resolve_download_url(self, info, **args):
+        return self.download_url
+
+    class Meta:
+        model = models.File
+        interfaces = (relay.Node,)
+
+
+class FileAnswer(AnswerQuerysetMixin, DjangoObjectType):
+    value = graphene.Field(File, required=True)
+
+    def resolve_value(self, info, **args):
+        return self.file
+
+    class Meta:
+        model = models.Answer
+        exclude_fields = ("document", "documents", "value_document")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -551,6 +603,12 @@ class SaveDocumentFormAnswer(SaveDocumentAnswer):
         return_field_type = Answer
 
 
+class SaveDocumentFileAnswer(SaveDocumentAnswer):
+    class Meta:
+        serializer_class = serializers.SaveDocumentFileAnswerSerializer
+        return_field_type = Answer
+
+
 class Mutation(object):
     save_form = SaveForm().Field()
     copy_form = CopyForm().Field()
@@ -572,6 +630,7 @@ class Mutation(object):
     save_integer_question = SaveIntegerQuestion().Field()
     save_table_question = SaveTableQuestion().Field()
     save_form_question = SaveFormQuestion().Field()
+    save_file_question = SaveFileQuestion().Field()
 
     save_document = SaveDocument().Field()
     save_document_string_answer = SaveDocumentStringAnswer().Field()
@@ -581,6 +640,7 @@ class Mutation(object):
     save_document_list_answer = SaveDocumentListAnswer().Field()
     save_document_table_answer = SaveDocumentTableAnswer().Field()
     save_document_form_answer = SaveDocumentFormAnswer().Field()
+    save_document_file_answer = SaveDocumentFileAnswer().Field()
 
 
 class Query(object):

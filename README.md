@@ -246,6 +246,31 @@ see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/doc
 
 Afterwards you can configure it in `VALIDATION_CLASSES` as `caluma.extensions.validations.CustomValidation`.
 
+## File question and answers
+In order to make use of Calumas file question and answer, you need to set up a storage provider.
+
+For the time being, only [MinIO](https://min.io/) is supported. Other providers may follow.
+
+In the [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml)
+you can find an example configuration for a MinIO container.
+
+Following environment variables need to be set for caluma:
+
+* `MEDIA_STORAGE_SERVICE`: defaults to "minio" (this is the only supported atm)
+* `MINIO_STORAGE_ENDPOINT`: defaults to "minio:9000"
+* `MINIO_STORAGE_ACCESS_KEY`: defaults to "minio"
+* `MINIO_STORAGE_SECRET_KEY`: defaults to "minio123"
+* `MINIO_STORAGE_USE_HTTPS`: defaults to False
+* `MINIO_STORAGE_MEDIA_BUCKET_NAME`: defaults to "caluma-media"
+* `MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET`: defaults to True
+* `MINIO_PRESIGNED_TTL_MINUTES`: defaults to 15
+
+Caluma only handles metadata about files, not the files itself. When saving a `FileAnswer`, Calumna
+will return a presigned `uploadUrl`. So the client can upload the file directly to the storage provider.
+
+The same goes for retrieving files. Caluma will respond with a presigned `downloadUrl` for
+the client to directly download the file from the storage provider.
+
 
 ## Contributing
 

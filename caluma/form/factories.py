@@ -85,3 +85,10 @@ class AnswerDocumentFactory(DjangoModelFactory):
 
     class Meta:
         model = models.AnswerDocument
+
+
+class FileFactory(DjangoModelFactory):
+    name = Faker("file_name")
+
+    class Meta:
+        model = models.File
