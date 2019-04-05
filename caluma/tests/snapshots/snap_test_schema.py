@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -321,6 +320,7 @@ type File implements Node {
   answer: FileAnswer
   uploadUrl: String
   downloadUrl: String
+  metadata: GenericScalar
 }
 
 type FileAnswer implements Answer, Node {

@@ -15,48 +15,43 @@ class Minio:
         )
         self.bucket = settings.MINIO_STORAGE_MEDIA_BUCKET_NAME
 
-    def bucket_exists(self):
-        try:
-            if not self.client.bucket_exists(self.bucket):
-                if settings.MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET:
-                    self.client.make_bucket(self.bucket)
-                    return True
-                return False
-        except minio.error.ResponseError:  # pragma: no cover
-            return False
-        return True
+    def stat_object(self, object_name):
+        """
+        Get stat of object in bucket.
 
-    def object_exists(self, object_name):
-        if not self.bucket_exists():
-            return False
-
+        :param object_name: str
+        :return: stat response if successful, otherwise None
+        """
         try:
-            self.client.stat_object(self.bucket, object_name)
+            return self.client.stat_object(self.bucket, object_name)
         except minio.error.NoSuchKey:  # pragma: no cover
             # object does not exist
-            return False
+            pass
         except minio.error.NoSuchBucket:  # pragma: no cover
-            # should really not happen. Handled anyway...
-            return False
+            if settings.MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET:
+                self.client.make_bucket(self.bucket)
+                return self.stat_object(object_name)
         except minio.error.ResponseError:  # pragma: no cover
-            return False
-        return True
+            pass
 
     def download_url(self, object_name):
-        if self.object_exists(object_name):
-            return self.client.presigned_get_object(
-                self.bucket,
-                object_name,
-                timedelta(minutes=settings.MINIO_PRESIGNED_TTL_MINUTES),
-            )
+        return self.client.presigned_get_object(
+            self.bucket,
+            object_name,
+            timedelta(minutes=settings.MINIO_PRESIGNED_TTL_MINUTES),
+        )
 
     def upload_url(self, object_name):
-        if self.bucket_exists():
+        try:
             return self.client.presigned_put_object(
                 self.bucket,
                 object_name,
                 timedelta(minutes=settings.MINIO_PRESIGNED_TTL_MINUTES),
             )
+        except minio.error.NoSuchBucket:  # pragma: no cover
+            if settings.MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET:
+                self.client.make_bucket(self.bucket)
+                return self.stat_object(object_name)
 
     def remove_object(self, object_name):
         self.client.remove_object(self.bucket, object_name)

@@ -517,12 +517,7 @@ class File(DjangoObjectType):
     name = graphene.String(required=True)
     upload_url = graphene.String()
     download_url = graphene.String()
-
-    def resolve_upload_url(self, info, **args):
-        return self.upload_url
-
-    def resolve_download_url(self, info, **args):
-        return self.download_url
+    metadata = generic.GenericScalar()
 
     class Meta:
         model = models.File

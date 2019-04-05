@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -185,6 +184,28 @@ snapshots["test_query_all_documents[file-some-file.pdf] 1"] = {
                                     "__typename": "FileAnswer",
                                     "fileValue": {
                                         "downloadUrl": "http://minio/download-url",
+                                        "metadata": {
+                                            "bucket_name": "caluma-media",
+                                            "content_type": "application/pdf",
+                                            "etag": "0c81da684e6aaef48e8f3113e5b8769b",
+                                            "is_dir": False,
+                                            "last_modified": (
+                                                2019,
+                                                4,
+                                                5,
+                                                7,
+                                                0,
+                                                49,
+                                                4,
+                                                95,
+                                                0,
+                                            ),
+                                            "metadata": {
+                                                "X-Amz-Meta-Testtag": "super_file"
+                                            },
+                                            "object_name": "some-file.pdf",
+                                            "size": 8200,
+                                        },
                                         "name": "some-file.pdf",
                                     },
                                     "question": {
@@ -405,7 +426,29 @@ snapshots["test_query_all_documents[file-some-other-file.pdf] 1"] = {
                                 "node": {
                                     "__typename": "FileAnswer",
                                     "fileValue": {
-                                        "downloadUrl": None,
+                                        "downloadUrl": "http://minio/download-url",
+                                        "metadata": {
+                                            "bucket_name": "caluma-media",
+                                            "content_type": "application/pdf",
+                                            "etag": "0c81da684e6aaef48e8f3113e5b8769b",
+                                            "is_dir": False,
+                                            "last_modified": (
+                                                2019,
+                                                4,
+                                                5,
+                                                7,
+                                                0,
+                                                49,
+                                                4,
+                                                95,
+                                                0,
+                                            ),
+                                            "metadata": {
+                                                "X-Amz-Meta-Testtag": "super_file"
+                                            },
+                                            "object_name": "some-file.pdf",
+                                            "size": 8200,
+                                        },
                                         "name": "some-file.pdf",
                                     },
                                     "question": {

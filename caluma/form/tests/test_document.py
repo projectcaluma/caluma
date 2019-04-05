@@ -84,6 +84,7 @@ def test_query_all_documents(
                         fileValue: value {
                           name
                           downloadUrl
+                          metadata
                         }
                       }
                     }
@@ -198,6 +199,7 @@ def test_complex_document_query_performance(
             fileValue: value {
               name
               downloadUrl
+              metadata
             }
           }
         }

@@ -226,6 +226,10 @@ class File(UUIDModel):
     def download_url(self):
         return client.download_url(self.object_name)
 
+    @property
+    def metadata(self):
+        return client.stat_object(self.object_name).__dict__
+
 
 @receiver(post_init, sender=Document)
 def set_document_family(sender, instance, **kwargs):
