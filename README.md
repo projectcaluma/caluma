@@ -265,8 +265,8 @@ Following environment variables need to be set for caluma:
 * `MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET`: defaults to True
 * `MINIO_PRESIGNED_TTL_MINUTES`: defaults to 15
 
-Caluma only handles metadata about files, not the files itself. When saving a `FileAnswer`, Calumna
-will return a presigned `uploadUrl`. So the client can upload the file directly to the storage provider.
+Caluma only handles metadata about files, not the files itself. When saving a `FileAnswer`, Caluma
+will return a presigned `uploadUrl`, which the client can use to upload the file directly to the storage provider.
 
 The same goes for retrieving files. Caluma will respond with a presigned `downloadUrl` for
 the client to directly download the file from the storage provider.
