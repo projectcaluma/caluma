@@ -631,8 +631,7 @@ class SaveDocumentFileAnswerSerializer(SaveAnswerSerializer):
 
     def create(self, validated_data):
         validated_data = self.set_file(validated_data)
-        instance = super().create(validated_data)
-        return instance
+        return super().create(validated_data)
 
     def update(self, instance, validated_data):
         if instance.file and instance.file.name is not validated_data["file"]:
@@ -641,8 +640,7 @@ class SaveDocumentFileAnswerSerializer(SaveAnswerSerializer):
         elif not instance.file:
             validated_data = self.set_file(validated_data)
 
-        instance = super().update(instance, validated_data)
-        return instance
+        return super().update(instance, validated_data)
 
     class Meta(SaveAnswerSerializer.Meta):
         fields = "__all__"
