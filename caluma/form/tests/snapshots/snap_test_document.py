@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -39,70 +38,6 @@ snapshots[
 ] = {
     "saveDocumentFloatAnswer": {
         "answer": {"floatValue": 2.1},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[text-question__configuration4-Test-SaveDocumentStringAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"stringValue": "Test"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[text-question__configuration4-Test-SaveDocumentStringAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"stringValue": "Test"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[date-question__configuration7-2019-02-22-SaveDocumentDateAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentDateAnswer": {
-        "answer": {"dateValue": "2019-02-22"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[table-question__configuration9-None-SaveDocumentTableAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentTableAnswer": {
-        "answer": {
-            "table_value": [
-                {"form": {"slug": "effort-meet"}},
-                {"form": {"slug": "effort-meet"}},
-            ]
-        },
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[table-question__configuration9-None-SaveDocumentTableAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentTableAnswer": {
-        "answer": {
-            "table_value": [
-                {"form": {"slug": "effort-meet"}},
-                {"form": {"slug": "effort-meet"}},
-            ]
-        },
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[date-question__configuration7-2019-02-22-SaveDocumentDateAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentDateAnswer": {
-        "answer": {"dateValue": "2019-02-22"},
         "clientMutationId": "testid",
     }
 }
@@ -237,8 +172,69 @@ snapshots["test_query_all_documents[table-None] 1"] = {
     }
 }
 
+snapshots["test_query_all_documents[file-some-file.pdf] 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "FileAnswer",
+                                    "fileValue": {
+                                        "downloadUrl": "http://minio/download-url",
+                                        "metadata": {
+                                            "bucket_name": "caluma-media",
+                                            "content_type": "application/pdf",
+                                            "etag": "0c81da684e6aaef48e8f3113e5b8769b",
+                                            "is_dir": False,
+                                            "last_modified": (
+                                                2019,
+                                                4,
+                                                5,
+                                                7,
+                                                0,
+                                                49,
+                                                4,
+                                                95,
+                                                0,
+                                            ),
+                                            "metadata": {
+                                                "X-Amz-Meta-Testtag": "super_file"
+                                            },
+                                            "object_name": "some-file.pdf",
+                                            "size": 8200,
+                                        },
+                                        "name": "some-file.pdf",
+                                    },
+                                    "question": {
+                                        "label": "Calvin Graham",
+                                        "slug": "service-bank-arm",
+                                    },
+                                }
+                            },
+                            {
+                                "node": {
+                                    "__typename": "StringAnswer",
+                                    "question": {
+                                        "label": "Thomas Johnson",
+                                        "slug": "sound-air-mission",
+                                    },
+                                    "string_value": "some-file.pdf",
+                                }
+                            },
+                        ]
+                    },
+                    "createdByUser": "4602cffe-6aa8-4ae7-ba6b-2cf34839ef47",
+                }
+            }
+        ]
+    }
+}
+
 snapshots[
-    "test_save_document_answer[textarea-question__configuration11-Test-SaveDocumentStringAnswer-True-option-slug-True] 1"
+    "test_save_document_answer[text-question__configuration4-Test-SaveDocumentStringAnswer-True-option-slug-True] 1"
 ] = {
     "saveDocumentStringAnswer": {
         "answer": {"stringValue": "Test"},
@@ -247,7 +243,7 @@ snapshots[
 }
 
 snapshots[
-    "test_save_document_answer[textarea-question__configuration11-Test-SaveDocumentStringAnswer-True-option-slug-False] 1"
+    "test_save_document_answer[text-question__configuration4-Test-SaveDocumentStringAnswer-True-option-slug-False] 1"
 ] = {
     "saveDocumentStringAnswer": {
         "answer": {"stringValue": "Test"},
@@ -256,43 +252,99 @@ snapshots[
 }
 
 snapshots[
-    "test_save_document_answer[multiple_choice-question__configuration13-answer__value13-SaveDocumentListAnswer-True-option-slug-True] 1"
+    "test_save_document_answer[date-question__configuration7-2019-02-22-SaveDocumentDateAnswer-True-option-slug-True] 1"
 ] = {
-    "saveDocumentListAnswer": {
-        "answer": {"listValue": ["option-slug"]},
+    "saveDocumentDateAnswer": {
+        "answer": {"dateValue": "2019-02-22"},
         "clientMutationId": "testid",
     }
 }
 
 snapshots[
-    "test_save_document_answer[multiple_choice-question__configuration13-answer__value13-SaveDocumentListAnswer-True-option-slug-False] 1"
+    "test_save_document_answer[date-question__configuration7-2019-02-22-SaveDocumentDateAnswer-True-option-slug-False] 1"
 ] = {
-    "saveDocumentListAnswer": {
-        "answer": {"listValue": ["option-slug"]},
+    "saveDocumentDateAnswer": {
+        "answer": {"dateValue": "2019-02-22"},
         "clientMutationId": "testid",
     }
 }
 
 snapshots[
-    "test_save_document_answer[choice-question__configuration15-option-slug-SaveDocumentStringAnswer-True-option-slug-True] 1"
+    "test_save_document_answer[file-question__configuration9-some-file.pdf-SaveDocumentFileAnswer-True-option-slug-True] 1"
 ] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"stringValue": "option-slug"},
+    "saveDocumentFileAnswer": {
+        "answer": {
+            "fileValue": {
+                "name": "some-file.pdf",
+                "uploadUrl": "http://minio/upload-url",
+            }
+        },
         "clientMutationId": "testid",
     }
 }
 
 snapshots[
-    "test_save_document_answer[choice-question__configuration15-option-slug-SaveDocumentStringAnswer-True-option-slug-False] 1"
+    "test_save_document_answer[file-question__configuration9-some-file.pdf-SaveDocumentFileAnswer-True-option-slug-False] 1"
 ] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"stringValue": "option-slug"},
+    "saveDocumentFileAnswer": {
+        "answer": {"stringValue": "some-file.pdf"},
         "clientMutationId": "testid",
     }
 }
 
 snapshots[
-    "test_save_document_answer[form-question__configuration10-None-SaveDocumentFormAnswer-True-option-slug-True] 1"
+    "test_save_document_answer[file-question__configuration10-not-exist.pdf-SaveDocumentFileAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentFileAnswer": {
+        "answer": {
+            "fileValue": {
+                "name": "not-exist.pdf",
+                "uploadUrl": "http://minio/upload-url",
+            }
+        },
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[file-question__configuration10-not-exist.pdf-SaveDocumentFileAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentFileAnswer": {
+        "answer": {"stringValue": "not-exist.pdf"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[table-question__configuration12-None-SaveDocumentTableAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentTableAnswer": {
+        "answer": {
+            "table_value": [
+                {"form": {"slug": "effort-meet"}},
+                {"form": {"slug": "effort-meet"}},
+            ]
+        },
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[table-question__configuration12-None-SaveDocumentTableAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentTableAnswer": {
+        "answer": {
+            "table_value": [
+                {"form": {"slug": "effort-meet"}},
+                {"form": {"slug": "effort-meet"}},
+            ]
+        },
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[form-question__configuration13-None-SaveDocumentFormAnswer-True-option-slug-True] 1"
 ] = {
     "saveDocumentFormAnswer": {
         "answer": {"form_value": {"form": {"slug": "effort-meet"}}},
@@ -301,10 +353,125 @@ snapshots[
 }
 
 snapshots[
-    "test_save_document_answer[form-question__configuration10-None-SaveDocumentFormAnswer-True-option-slug-False] 1"
+    "test_save_document_answer[form-question__configuration13-None-SaveDocumentFormAnswer-True-option-slug-False] 1"
 ] = {
     "saveDocumentFormAnswer": {
         "answer": {"form_value": {"form": {"slug": "effort-meet"}}},
         "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[textarea-question__configuration14-Test-SaveDocumentStringAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "Test"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[textarea-question__configuration14-Test-SaveDocumentStringAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "Test"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[multiple_choice-question__configuration16-answer__value16-SaveDocumentListAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentListAnswer": {
+        "answer": {"listValue": ["option-slug"]},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[multiple_choice-question__configuration16-answer__value16-SaveDocumentListAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentListAnswer": {
+        "answer": {"listValue": ["option-slug"]},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[choice-question__configuration18-option-slug-SaveDocumentStringAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "option-slug"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[choice-question__configuration18-option-slug-SaveDocumentStringAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"stringValue": "option-slug"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots["test_query_all_documents[file-some-other-file.pdf] 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "FileAnswer",
+                                    "fileValue": {
+                                        "downloadUrl": "http://minio/download-url",
+                                        "metadata": {
+                                            "bucket_name": "caluma-media",
+                                            "content_type": "application/pdf",
+                                            "etag": "0c81da684e6aaef48e8f3113e5b8769b",
+                                            "is_dir": False,
+                                            "last_modified": (
+                                                2019,
+                                                4,
+                                                5,
+                                                7,
+                                                0,
+                                                49,
+                                                4,
+                                                95,
+                                                0,
+                                            ),
+                                            "metadata": {
+                                                "X-Amz-Meta-Testtag": "super_file"
+                                            },
+                                            "object_name": "some-file.pdf",
+                                            "size": 8200,
+                                        },
+                                        "name": "some-file.pdf",
+                                    },
+                                    "question": {
+                                        "label": "Calvin Graham",
+                                        "slug": "service-bank-arm",
+                                    },
+                                }
+                            },
+                            {
+                                "node": {
+                                    "__typename": "StringAnswer",
+                                    "question": {
+                                        "label": "Thomas Johnson",
+                                        "slug": "sound-air-mission",
+                                    },
+                                    "string_value": "some-other-file.pdf",
+                                }
+                            },
+                        ]
+                    },
+                    "createdByUser": "4602cffe-6aa8-4ae7-ba6b-2cf34839ef47",
+                }
+            }
+        ]
     }
 }

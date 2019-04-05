@@ -19,6 +19,7 @@ from .. import models, serializers
         (models.Question.TYPE_CHOICE, {}),
         (models.Question.TYPE_MULTIPLE_CHOICE, {}),
         (models.Question.TYPE_FORM, {}),
+        (models.Question.TYPE_FILE, {}),
     ],
 )
 def test_query_all_questions(
@@ -143,6 +144,7 @@ def test_copy_question(
         "SaveIntegerQuestion",
         "SaveFloatQuestion",
         "SaveDateQuestion",
+        "SaveFileQuestion",
     ],
 )
 @pytest.mark.parametrize(

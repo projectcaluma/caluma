@@ -76,10 +76,16 @@ class AnswerValidator:
     def _validate_question_form(self, question, value):
         DocumentValidator().validate(form=value.form, answers=value.answers)
 
+    def _validate_question_file(self, question, value):
+        pass
+
     def validate(self, *, question, **kwargs):
-        value = kwargs.get(
-            "value_document", kwargs.get("documents", kwargs.get("value"))
-        )
+        # Check all possible fields for value
+        value = None
+        for i in ["value", "file", "documents", "value_document"]:
+            value = kwargs.get(i, value)
+            if value:
+                break
 
         # empty values are allowed
         # required check will be done in DocumentValidator

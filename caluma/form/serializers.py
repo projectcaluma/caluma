@@ -7,6 +7,7 @@ from rest_framework.serializers import (
     FloatField,
     IntegerField,
     ListField,
+    PrimaryKeyRelatedField,
 )
 
 from ..core import serializers
@@ -357,6 +358,15 @@ class SaveFormQuestionSerializer(SaveQuestionSerializer):
         fields = SaveQuestionSerializer.Meta.fields + ("sub_form",)
 
 
+class SaveFileQuestionSerializer(SaveQuestionSerializer):
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_FILE
+        return super().validate(data)
+
+    class Meta(SaveQuestionSerializer.Meta):
+        fields = SaveQuestionSerializer.Meta.fields
+
+
 class SaveOptionSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("slug", "label", "meta")
@@ -607,3 +617,30 @@ class SaveDocumentFormAnswerSerializer(SaveAnswerSerializer):
 
     class Meta(SaveAnswerSerializer.Meta):
         pass
+
+
+class SaveDocumentFileAnswerSerializer(SaveAnswerSerializer):
+    value = CharField(write_only=True, source="file")
+    value_id = PrimaryKeyRelatedField(read_only=True, source="file")
+
+    def set_file(self, validated_data):
+        file_name = validated_data.get("file")
+        file = models.File.objects.create(name=file_name)
+        validated_data["file"] = file
+        return validated_data
+
+    def create(self, validated_data):
+        validated_data = self.set_file(validated_data)
+        return super().create(validated_data)
+
+    def update(self, instance, validated_data):
+        if instance.file and instance.file.name is not validated_data["file"]:
+            instance.file.delete()
+            validated_data = self.set_file(validated_data)
+        elif not instance.file:
+            validated_data = self.set_file(validated_data)
+
+        return super().update(instance, validated_data)
+
+    class Meta(SaveAnswerSerializer.Meta):
+        fields = "__all__"

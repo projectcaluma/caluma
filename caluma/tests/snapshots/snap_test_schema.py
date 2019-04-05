@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -285,7 +284,7 @@ type Document implements Node {
   form: Form!
   meta: JSONString!
   answers(before: String, after: String, first: Int, last: Int, question: ID, search: String, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [AnswerOrdering]): AnswerConnection
-  parentAnswers: [FormAnswer]
+  parentAnswers: [FileAnswer]
   case: Case
   workItem: WorkItem
 }
@@ -309,6 +308,47 @@ enum DocumentOrdering {
   CREATED_BY_USER_DESC
   CREATED_BY_GROUP_ASC
   CREATED_BY_GROUP_DESC
+}
+
+type File implements Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  name: String!
+  answer: FileAnswer
+  uploadUrl: String
+  downloadUrl: String
+  metadata: GenericScalar
+}
+
+type FileAnswer implements Answer, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  question: Question!
+  value: File!
+  meta: GenericScalar!
+  file: File
+}
+
+type FileQuestion implements Question, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  label: String!
+  isRequired: QuestionJexl!
+  isHidden: QuestionJexl!
+  isArchived: Boolean!
+  meta: GenericScalar!
+  source: Question
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
+  id: ID!
 }
 
 type FloatAnswer implements Answer, Node {
@@ -524,6 +564,7 @@ type Mutation {
   saveIntegerQuestion(input: SaveIntegerQuestionInput!): SaveIntegerQuestionPayload
   saveTableQuestion(input: SaveTableQuestionInput!): SaveTableQuestionPayload
   saveFormQuestion(input: SaveFormQuestionInput!): SaveFormQuestionPayload
+  saveFileQuestion(input: SaveFileQuestionInput!): SaveFileQuestionPayload
   saveDocument(input: SaveDocumentInput!): SaveDocumentPayload
   saveDocumentStringAnswer(input: SaveDocumentStringAnswerInput!): SaveDocumentStringAnswerPayload
   saveDocumentIntegerAnswer(input: SaveDocumentIntegerAnswerInput!): SaveDocumentIntegerAnswerPayload
@@ -532,6 +573,7 @@ type Mutation {
   saveDocumentListAnswer(input: SaveDocumentListAnswerInput!): SaveDocumentListAnswerPayload
   saveDocumentTableAnswer(input: SaveDocumentTableAnswerInput!): SaveDocumentTableAnswerPayload
   saveDocumentFormAnswer(input: SaveDocumentFormAnswerInput!): SaveDocumentFormAnswerPayload
+  saveDocumentFileAnswer(input: SaveDocumentFileAnswerInput!): SaveDocumentFileAnswerPayload
 }
 
 interface Node {
@@ -752,6 +794,28 @@ type SaveDocumentDateAnswerPayload {
   clientMutationId: String
 }
 
+input SaveDocumentFileAnswerInput {
+  id: String
+  value: String!
+  valueId: ID
+  createdAt: DateTime
+  modifiedAt: DateTime
+  createdByUser: String
+  createdByGroup: String
+  meta: JSONString
+  question: ID!
+  document: ID!
+  valueDocument: ID
+  file: ID
+  documents: [ID]
+  clientMutationId: String
+}
+
+type SaveDocumentFileAnswerPayload {
+  answer: Answer
+  clientMutationId: String
+}
+
 input SaveDocumentFloatAnswerInput {
   question: ID!
   document: ID!
@@ -838,6 +902,21 @@ input SaveDocumentTableAnswerInput {
 
 type SaveDocumentTableAnswerPayload {
   answer: Answer
+  clientMutationId: String
+}
+
+input SaveFileQuestionInput {
+  slug: String!
+  label: String!
+  isRequired: QuestionJexl
+  isHidden: QuestionJexl
+  meta: JSONString
+  isArchived: Boolean
+  clientMutationId: String
+}
+
+type SaveFileQuestionPayload {
+  question: Question
   clientMutationId: String
 }
 

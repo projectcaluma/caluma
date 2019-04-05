@@ -35,6 +35,18 @@ services:
       # - VISIBILITY_CLASSES=
       # https://github.com/projectcaluma/caluma#permission-classes
       # - PERMISSION_CLASSES=
+  ## For support of files question and answer, use MinIO
+  # minio:
+  #   image: minio/minio:latest
+  #   volumes:
+  #     - minio_data:/data
+  #   ports:
+  #     - "9000:9000"
+  #   environment:
+  #     - MINIO_ACCESS_KEY=
+  #     - MINIO_SECRET_KEY=
+  #   command: server data
 
 volumes:
   dbdata:
+  minio_data:

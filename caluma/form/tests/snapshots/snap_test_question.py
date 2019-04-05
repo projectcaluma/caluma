@@ -323,3 +323,32 @@ snapshots["test_save_form_question[form] 1"] = {
         },
     }
 }
+
+snapshots["test_query_all_questions[file-question__configuration9] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "FileQuestion",
+                    "id": "RmlsZVF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
+                    "label": "Thomas Johnson",
+                    "meta": {},
+                    "slug": "sound-air-mission",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_save_question[true-True-SaveFileQuestion] 1"] = {
+    "saveFileQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "FileQuestion",
+            "id": "RmlsZVF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
+            "label": "Thomas Johnson",
+            "meta": {},
+            "slug": "sound-air-mission",
+        },
+    }
+}

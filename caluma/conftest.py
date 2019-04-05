@@ -1,11 +1,14 @@
 import functools
 import inspect
+import time
 
 import pytest
 from django.core.cache import cache
 from factory import Faker
 from factory.base import FactoryMetaClass
 from graphene import ResolveInfo
+from minio import Minio
+from minio.definitions import Object as MinioStatObject
 from pytest_factoryboy import register
 
 from .core.faker import MultilangProvider
@@ -100,3 +103,28 @@ def schema_executor(anonymous_request):
 @pytest.fixture
 def admin_schema_executor(admin_request):
     return functools.partial(schema.execute, context=admin_request)
+
+
+@pytest.fixture
+def minio_mock(mocker):
+    stat_response = MinioStatObject(
+        "caluma-media",
+        "some-file.pdf",
+        time.struct_time((2019, 4, 5, 7, 0, 49, 4, 95, 0)),
+        "0c81da684e6aaef48e8f3113e5b8769b",
+        8200,
+        content_type="application/pdf",
+        is_dir=False,
+        metadata={"X-Amz-Meta-Testtag": "super_file"},
+    )
+    mocker.patch.object(Minio, "presigned_get_object")
+    mocker.patch.object(Minio, "presigned_put_object")
+    mocker.patch.object(Minio, "stat_object")
+    mocker.patch.object(Minio, "bucket_exists")
+    mocker.patch.object(Minio, "make_bucket")
+    mocker.patch.object(Minio, "remove_object")
+    Minio.presigned_get_object.return_value = "http://minio/download-url"
+    Minio.presigned_put_object.return_value = "http://minio/upload-url"
+    Minio.stat_object.return_value = stat_response
+    Minio.bucket_exists.return_value = True
+    return Minio

@@ -3,9 +3,11 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
 from django.db.models.signals import post_init
 from django.dispatch import receiver
+from django.template.defaultfilters import slugify
 from localized_fields.fields import LocalizedField
 
 from ..core.models import SlugModel, UUIDModel
+from .storage_clients import client
 
 
 class Form(SlugModel):
@@ -46,6 +48,7 @@ class Question(SlugModel):
     TYPE_TEXT = "text"
     TYPE_TABLE = "table"
     TYPE_FORM = "form"
+    TYPE_FILE = "file"
 
     TYPE_CHOICES = (
         TYPE_MULTIPLE_CHOICE,
@@ -57,6 +60,7 @@ class Question(SlugModel):
         TYPE_TEXT,
         TYPE_TABLE,
         TYPE_FORM,
+        TYPE_FILE,
     )
     TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
 
@@ -183,10 +187,48 @@ class Answer(UUIDModel):
     documents = models.ManyToManyField(
         Document, through="AnswerDocument", related_name="+"
     )
+    file = models.OneToOneField(
+        "File", on_delete=models.SET_NULL, null=True, blank=True
+    )
+
+    def delete(self, *args, **kwargs):
+        if self.file:
+            self.file.delete()
+        super().delete(args, kwargs)
 
     class Meta:
         # a question may only be answerd once per document
         unique_together = ("document", "question")
+
+
+class File(UUIDModel):
+    name = models.CharField(max_length=255)
+
+    def delete(self, *args, **kwargs):
+        client.remove_object(self.object_name)
+        super().delete(*args, **kwargs)
+
+    def save(self, *args, **kwargs):
+        # remove the file on update
+        if self.created_at:
+            client.remove_object(self.object_name)
+        super().save(*args, **kwargs)
+
+    @property
+    def object_name(self):
+        return f"{self.pk}_{slugify(self.name)}"
+
+    @property
+    def upload_url(self):
+        return client.upload_url(self.object_name)
+
+    @property
+    def download_url(self):
+        return client.download_url(self.object_name)
+
+    @property
+    def metadata(self):
+        return client.stat_object(self.object_name).__dict__
 
 
 @receiver(post_init, sender=Document)
