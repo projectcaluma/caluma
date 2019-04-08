@@ -72,6 +72,7 @@ class AnswerFactory(DjangoModelFactory):
     question = SubFactory(QuestionFactory)
     document = SubFactory(DocumentFactory)
     value = Faker("name")
+    date = None
     meta = {}
 
     class Meta:

@@ -39,7 +39,13 @@ class QuestionFilterSet(MetaFilterSet):
 class DocumentFilterSet(MetaFilterSet):
     id = GlobalIDFilter()
     search = SearchFilter(
-        fields=("form__slug", "form__name", "form__description", "answers__value")
+        fields=(
+            "form__slug",
+            "form__name",
+            "form__description",
+            "answers__value",
+            "answers__file__name",
+        )
     )
     order_by = OrderingFilter(label="DocumentOrdering")
 
@@ -49,7 +55,7 @@ class DocumentFilterSet(MetaFilterSet):
 
 
 class AnswerFilterSet(MetaFilterSet):
-    search = SearchFilter(fields=("value",))
+    search = SearchFilter(fields=("value", "file__name"))
     order_by = OrderingFilter(label="AnswerOrdering")
 
     class Meta:

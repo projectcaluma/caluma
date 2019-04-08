@@ -461,7 +461,7 @@ class SaveDocumentFloatAnswerSerializer(SaveAnswerSerializer):
 
 
 class SaveDocumentDateAnswerSerializer(SaveAnswerSerializer):
-    value = DateField()
+    value = DateField(source="date")
 
     class Meta(SaveAnswerSerializer.Meta):
         pass

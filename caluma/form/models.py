@@ -1,5 +1,4 @@
 from django.contrib.postgres.fields import JSONField
-from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models, transaction
 from django.db.models.signals import post_init
 from django.dispatch import receiver
@@ -188,7 +187,7 @@ class Answer(UUIDModel):
     question = models.ForeignKey(
         "form.Question", on_delete=models.DO_NOTHING, related_name="answers"
     )
-    value = JSONField(null=True, blank=True, encoder=DjangoJSONEncoder)
+    value = JSONField(null=True, blank=True)
     meta = JSONField(default=dict)
     document = models.ForeignKey(
         Document, on_delete=models.CASCADE, related_name="answers"
@@ -203,6 +202,7 @@ class Answer(UUIDModel):
     documents = models.ManyToManyField(
         Document, through="AnswerDocument", related_name="+"
     )
+    date = models.DateField(null=True, blank=True)
     file = models.OneToOneField(
         "File", on_delete=models.SET_NULL, null=True, blank=True
     )
