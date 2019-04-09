@@ -153,7 +153,7 @@ class DocumentManager(models.Manager):
                 created_by_user=user.username,
                 created_by_group=user.group,
             )
-            Document.objects.create_and_link_child_documents(task.form, doc)
+            self.create_and_link_child_documents(task.form, doc)
             return doc
 
         return None
@@ -163,7 +163,7 @@ class DocumentManager(models.Manager):
         form_questions = form.questions.filter(type=Question.TYPE_FORM)
 
         for form_question in form_questions:
-            child_document = Document.objects.create(form=form_question.sub_form)
+            child_document = self.create(form=form_question.sub_form)
             Answer.objects.create(
                 question=form_question, document=document, value_document=child_document
             )
