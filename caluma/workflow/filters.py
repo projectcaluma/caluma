@@ -29,7 +29,7 @@ class FlowFilterSet(FilterSet):
 
 class CaseFilterSet(MetaFilterSet):
     order_by = OrderingFilter(label="CaseOrdering", fields=("status",))
-    has_answer = AnswerValueFilter(answers_via="document__answers")
+    has_answer = AnswerValueFilter(answers_via="document__answers", label="has_answer")
 
     class Meta:
         model = models.Case

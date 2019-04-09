@@ -43,7 +43,7 @@ class DocumentFilterSet(MetaFilterSet):
         fields=("form__slug", "form__name", "form__description", "answers__value")
     )
     order_by = OrderingFilter(label="DocumentOrdering")
-    has_answer = AnswerValueFilter()
+    has_answer = AnswerValueFilter(label='has_answer')
 
     class Meta:
         model = models.Document

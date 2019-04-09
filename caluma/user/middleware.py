@@ -60,6 +60,7 @@ class OIDCAuthenticationMiddleware(object):
         if token is None:
             request.user = models.AnonymousUser()
             return next(root, info, **args)
+        # TODO: don't query userinfo if no OIDC_USERINFO_ENDPOINT is configured
 
         userinfo_method = functools.partial(self.get_userinfo, token=token)
         # token might be too long for key so we use hash sum instead.

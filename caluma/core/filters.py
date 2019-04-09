@@ -20,7 +20,7 @@ from django_filters.rest_framework import (
     MultipleChoiceFilter,
     OrderingFilter,
 )
-from graphene import Enum, List
+from graphene import Enum, List, ObjectType
 from graphene.types.utils import get_type
 from graphene.utils.str_converters import to_camel_case
 from graphene_django import filter
@@ -364,12 +364,86 @@ def _generate_list_filter_class(inner_type):
 StringListFilter = _generate_list_filter_class(graphene.String)
 
 
+class AnswerFilterField:
+    """
+    Specific field used as marker to convert to graphql type.
+    """
+
+    def __init__(self, *args, **kwargs):
+        self.name = kwargs.pop("label", "has_answer")
+
+    def validate(self, value):
+        invalid = set(value or []) - {choice[0] for choice in self.choices}
+        return not bool(invalid)
+
+    def to_python(self, value):
+        return value
+
+
+@convert_form_field.register(AnswerFilterField)
+def convert_answer_filter_field(field):
+    registry = get_global_registry()
+    converted = registry.get_converted_field(field)
+    if converted:
+        return converted
+
+    # import here for circular-import avoidance
+    import caluma.form.schema as form_schema
+
+    __import__("pdb").set_trace()
+
+    class FilterParam(graphene.Union, graphene.InputObjectType):
+        class Meta(graphene.types.union.UnionOptions):
+            fields = []
+            types = (
+                form_schema.IntegerAnswer,
+                form_schema.FloatAnswer,
+                form_schema.DateAnswer,
+                form_schema.StringAnswer,
+                form_schema.ListAnswer,
+                form_schema.Document,
+                form_schema.TableAnswer,
+                form_schema.FormAnswer,
+            )
+
+    filter_param_type = type(
+        f"FilterFor{id(field)}",
+        (graphene.Union, graphene.InputObjectType),
+        {
+            "args": [],
+            "kwargs": {},
+            "Meta": type(
+                "Meta",
+                (),
+                {
+                    "fields": {},
+                    "interfaces": [],
+                    "types": (
+                        form_schema.IntegerAnswer,
+                        form_schema.FloatAnswer,
+                        form_schema.DateAnswer,
+                        form_schema.StringAnswer,
+                        form_schema.ListAnswer,
+                        form_schema.Document,
+                        form_schema.TableAnswer,
+                        form_schema.FormAnswer,
+                    ),
+                },
+            ),
+        },
+    )
+
+    return FilterParam()
+
+
 class AnswerValueFilter(Filter):
     """Filters by an arbitrary answer's value.
 
     The query syntax is (allDocuments: "question_slug=value") Use this to
     filter documents by an associated question's value, for example.
     """
+
+    field_class = AnswerFilterField
 
     def __init__(self, *args, **kwargs):
         self.answers_via = kwargs.pop("answers_via", "answers")
