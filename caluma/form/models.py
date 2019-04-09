@@ -146,6 +146,7 @@ class Option(SlugModel):
 
 class DocumentManager(models.Manager):
     def create_document_for_task(self, task, user):
+        """Create a document (including child documents) for a given task."""
         if task.form_id is not None:
             doc = Document.objects.create(
                 form_id=task.form_id,
@@ -158,6 +159,7 @@ class DocumentManager(models.Manager):
         return None
 
     def create_and_link_child_documents(self, form, document):
+        """Create child documents for all FormQuestions in the given form."""
         form_questions = form.questions.filter(type=Question.TYPE_FORM)
 
         for form_question in form_questions:
