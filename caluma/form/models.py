@@ -1,6 +1,6 @@
 from django.contrib.postgres.fields import JSONField
 from django.core.serializers.json import DjangoJSONEncoder
-from django.db import models
+from django.db import models, transaction
 from django.db.models.signals import post_init
 from django.dispatch import receiver
 from django.template.defaultfilters import slugify
@@ -145,15 +145,31 @@ class Option(SlugModel):
 
 
 class DocumentManager(models.Manager):
+    @transaction.atomic
     def create_document_for_task(self, task, user):
+        """Create a document (including child documents) for a given task."""
         if task.form_id is not None:
-            return Document.objects.create(
+            doc = Document.objects.create(
                 form_id=task.form_id,
                 created_by_user=user.username,
                 created_by_group=user.group,
             )
+            self.create_and_link_child_documents(task.form, doc)
+            return doc
 
         return None
+
+    @transaction.atomic
+    def create_and_link_child_documents(self, form, document):
+        """Create child documents for all FormQuestions in the given form."""
+        form_questions = form.questions.filter(type=Question.TYPE_FORM)
+
+        for form_question in form_questions:
+            child_document = self.create(form=form_question.sub_form)
+            Answer.objects.create(
+                question=form_question, document=document, value_document=child_document
+            )
+            self.create_and_link_child_documents(form_question.sub_form, child_document)
 
 
 class Document(UUIDModel):

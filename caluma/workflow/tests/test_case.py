@@ -1,6 +1,7 @@
 import pytest
 
 from ...core.relay import extract_global_id
+from ...form.models import Question
 from .. import models
 
 
@@ -178,3 +179,67 @@ def test_multiple_instance_task_address_groups(
     result = schema_executor(query, variables=inp)
     assert not bool(result.errors)
     assert models.WorkItem.objects.count() == count
+
+
+def test_start_case_with_child_documents(
+    db,
+    workflow,
+    workflow_allow_forms,
+    workflow_start_tasks,
+    task,
+    form,
+    form_question_factory,
+    question_factory,
+    schema_executor,
+):
+    sub_form_question = form_question_factory(question__type=Question.TYPE_FORM)
+    question = question_factory(
+        type=Question.TYPE_FORM, sub_form=sub_form_question.form
+    )
+    form_question = form_question_factory(form=form, question=question)
+
+    query = """
+        mutation StartCase($input: StartCaseInput!) {
+            startCase(input: $input) {
+                case {
+                    id
+                    document {
+                        id
+                        answers {
+                            edges {
+                                node {
+                                    id
+                                    ... on FormAnswer {
+                                        value {
+                                            id
+                                            answers {
+                                                edges {
+                                                    node {
+                                                        id
+                                                        ... on FormAnswer {
+                                                            value {
+                                                                id
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    """
+
+    inp = {"input": {"workflow": workflow.slug, "form": form_question.form.pk}}
+    result = schema_executor(query, variables=inp)
+    assert not result.errors
+    sub_document = result.data["startCase"]["case"]["document"]["answers"]["edges"][0][
+        "node"
+    ]
+    assert sub_document["id"]
+    assert sub_document["value"]["answers"]["edges"][0]["node"]["id"]

@@ -202,6 +202,9 @@ class StartCaseSerializer(serializers.ModelSerializer):
             validated_data["document"] = Document.objects.create(
                 form=form, created_by_user=user.username, created_by_group=user.group
             )
+            Document.objects.create_and_link_child_documents(
+                form, validated_data["document"]
+            )
         instance = super().create(validated_data)
         if parent_work_item:
             parent_work_item.child_case = instance
