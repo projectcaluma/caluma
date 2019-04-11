@@ -3,7 +3,7 @@ from graphql_relay import to_global_id
 
 from ...core.relay import extract_global_id
 from ...core.tests import extract_serializer_input_fields
-from ...form.models import Answer, Question
+from ...form.models import Answer, Document, Question
 from .. import serializers
 
 
@@ -620,5 +620,19 @@ def test_create_document_with_children(
     sub_document = result.data["saveDocument"]["document"]["answers"]["edges"][0][
         "node"
     ]
+
+    doc_id = extract_global_id(result.data["saveDocument"]["document"]["id"])
+    doc = Document.objects.get(pk=doc_id)
+
+    # top-level document should be "head of family"
+    assert doc.pk == doc.family
+
+    subdoc_id = extract_global_id(
+        sub_document["value"]["answers"]["edges"][0]["node"]["value"]["id"]
+    )
+    sub_doc = Document.objects.get(pk=subdoc_id)
+
+    assert sub_doc.family == doc.family
+
     assert sub_document["id"]
     assert sub_document["value"]["answers"]["edges"][0]["node"]["id"]
