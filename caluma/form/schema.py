@@ -1,5 +1,3 @@
-from datetime import date
-
 import graphene
 from graphene import relay
 from graphene.types import generic
@@ -399,7 +397,6 @@ class Answer(Node, graphene.Interface):
             str: StringAnswer,
             float: FloatAnswer,
             int: IntegerAnswer,
-            date: DateAnswer,
         }
 
         if instance.value is None:
@@ -407,6 +404,7 @@ class Answer(Node, graphene.Interface):
                 models.Question.TYPE_FORM: FormAnswer,
                 models.Question.TYPE_TABLE: TableAnswer,
                 models.Question.TYPE_FILE: FileAnswer,
+                models.Question.TYPE_DATE: DateAnswer,
             }
             return ANSWER_QUESTION_TYPE[instance.question.type]
 
@@ -426,7 +424,7 @@ class IntegerAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document", "file")
+        exclude_fields = ("document", "documents", "value_document", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -436,13 +434,16 @@ class FloatAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document", "file")
+        exclude_fields = ("document", "documents", "value_document", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
 
 class DateAnswer(AnswerQuerysetMixin, DjangoObjectType):
     value = graphene.types.datetime.Date(required=True)
+
+    def resolve_value(self, info, **args):
+        return self.date
 
     class Meta:
         model = models.Answer
@@ -456,7 +457,7 @@ class StringAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document", "file")
+        exclude_fields = ("document", "documents", "value_document", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -466,7 +467,7 @@ class ListAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document", "file")
+        exclude_fields = ("document", "documents", "value_document", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -495,7 +496,7 @@ class TableAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("documents", "value_document", "file")
+        exclude_fields = ("documents", "value_document", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -508,7 +509,7 @@ class FormAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("documents", "value_document", "file")
+        exclude_fields = ("documents", "value_document", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -532,7 +533,7 @@ class FileAnswer(AnswerQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document")
+        exclude_fields = ("document", "documents", "value_document", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 

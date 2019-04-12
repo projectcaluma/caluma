@@ -82,7 +82,7 @@ class AnswerValidator:
     def validate(self, *, question, **kwargs):
         # Check all possible fields for value
         value = None
-        for i in ["value", "file", "documents", "value_document"]:
+        for i in ["value", "file", "date", "documents", "value_document"]:
             value = kwargs.get(i, value)
             if value:
                 break

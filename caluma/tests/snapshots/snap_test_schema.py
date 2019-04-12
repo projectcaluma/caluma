@@ -255,6 +255,7 @@ type DateAnswer implements Answer, Node {
   question: Question!
   value: Date!
   meta: GenericScalar!
+  date: Date
 }
 
 type DateQuestion implements Question, Node {
@@ -803,6 +804,7 @@ input SaveDocumentFileAnswerInput {
   createdByUser: String
   createdByGroup: String
   meta: JSONString
+  date: Date
   question: ID!
   document: ID!
   valueDocument: ID

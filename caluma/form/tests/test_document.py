@@ -8,15 +8,16 @@ from .. import serializers
 
 
 @pytest.mark.parametrize(
-    "question__type,answer__value",
+    "question__type,answer__value,answer__date",
     [
-        (Question.TYPE_INTEGER, 1),
-        (Question.TYPE_FLOAT, 2.1),
-        (Question.TYPE_TEXT, "somevalue"),
-        (Question.TYPE_MULTIPLE_CHOICE, ["somevalue", "anothervalue"]),
-        (Question.TYPE_TABLE, None),
-        (Question.TYPE_FILE, "some-file.pdf"),
-        (Question.TYPE_FILE, "some-other-file.pdf"),
+        (Question.TYPE_INTEGER, 1, None),
+        (Question.TYPE_FLOAT, 2.1, None),
+        (Question.TYPE_TEXT, "somevalue", None),
+        (Question.TYPE_MULTIPLE_CHOICE, ["somevalue", "anothervalue"], None),
+        (Question.TYPE_TABLE, None, None),
+        (Question.TYPE_DATE, None, "2019-02-22"),
+        (Question.TYPE_FILE, "some-file.pdf", None),
+        (Question.TYPE_FILE, "some-other-file.pdf", None),
     ],
 )
 def test_query_all_documents(
@@ -96,21 +97,17 @@ def test_query_all_documents(
         }
     """
 
-    if question.type == Question.TYPE_FILE:
-        file_question = question_factory(type=Question.TYPE_FILE)
-        form_question_factory(question=file_question, form=form)
-        answer_factory(
-            question=file_question,
-            value=None,
-            document=document,
-            file=file_factory(name="some-file.pdf"),
-        )
+    search = isinstance(answer.value, list) and " ".join(answer.value) or answer.value
 
+    if question.type == Question.TYPE_FILE:
         if answer.value == "some-other-file.pdf":
             settings.MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = False
             minio_mock.bucket_exists.return_value = False
+        answer.file = file_factory(name=answer.value)
+        answer.value = None
+        answer.save()
+        search = answer.file.name
 
-    search = isinstance(answer.value, list) and " ".join(answer.value) or answer.value
     result = schema_executor(query, variables={"search": search})
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -311,51 +308,56 @@ def test_save_document(db, document, schema_executor):
 @pytest.mark.parametrize("delete_answer", [True, False])
 @pytest.mark.parametrize("option__slug", ["option-slug"])
 @pytest.mark.parametrize(
-    "question__type,question__configuration,answer__value,mutation,success",
+    "question__type,question__configuration,answer__value,answer__date,mutation,success",
     [
-        (Question.TYPE_INTEGER, {}, 1, "SaveDocumentIntegerAnswer", True),
+        (Question.TYPE_INTEGER, {}, 1, None, "SaveDocumentIntegerAnswer", True),
         (
             Question.TYPE_INTEGER,
             {"min_value": 100},
             1,
+            None,
             "SaveDocumentIntegerAnswer",
             False,
         ),
-        (Question.TYPE_FLOAT, {}, 2.1, "SaveDocumentFloatAnswer", True),
+        (Question.TYPE_FLOAT, {}, 2.1, None, "SaveDocumentFloatAnswer", True),
         (
             Question.TYPE_FLOAT,
             {"min_value": 100.0},
             1,
+            None,
             "SaveDocumentFloatAnswer",
             False,
         ),
-        (Question.TYPE_TEXT, {}, "Test", "SaveDocumentStringAnswer", True),
+        (Question.TYPE_TEXT, {}, "Test", None, "SaveDocumentStringAnswer", True),
         (
             Question.TYPE_TEXT,
             {"max_length": 1},
             "toolong",
+            None,
             "SaveDocumentStringAnswer",
             False,
         ),
-        (Question.TYPE_DATE, {}, "not a date", "SaveDocumentDateAnswer", False),
-        (Question.TYPE_DATE, {}, "2019-02-22", "SaveDocumentDateAnswer", True),
-        (Question.TYPE_FILE, {}, None, "SaveDocumentFileAnswer", False),
-        (Question.TYPE_FILE, {}, "some-file.pdf", "SaveDocumentFileAnswer", True),
-        (Question.TYPE_FILE, {}, "not-exist.pdf", "SaveDocumentFileAnswer", True),
+        (Question.TYPE_DATE, {}, None, "1900-01-01", "SaveDocumentDateAnswer", False),
+        (Question.TYPE_DATE, {}, None, "2019-02-22", "SaveDocumentDateAnswer", True),
+        (Question.TYPE_FILE, {}, None, None, "SaveDocumentFileAnswer", False),
+        (Question.TYPE_FILE, {}, "some-file.pdf", None, "SaveDocumentFileAnswer", True),
+        (Question.TYPE_FILE, {}, "not-exist.pdf", None, "SaveDocumentFileAnswer", True),
         (
             Question.TYPE_TEXT,
             {"max_length": 1},
             "toolong",
+            None,
             "SaveDocumentStringAnswer",
             False,
         ),
-        (Question.TYPE_TABLE, {}, None, "SaveDocumentTableAnswer", True),
-        (Question.TYPE_FORM, {}, None, "SaveDocumentFormAnswer", True),
-        (Question.TYPE_TEXTAREA, {}, "Test", "SaveDocumentStringAnswer", True),
+        (Question.TYPE_TABLE, {}, None, None, "SaveDocumentTableAnswer", True),
+        (Question.TYPE_FORM, {}, None, None, "SaveDocumentFormAnswer", True),
+        (Question.TYPE_TEXTAREA, {}, "Test", None, "SaveDocumentStringAnswer", True),
         (
             Question.TYPE_TEXTAREA,
             {"max_length": 1},
             "toolong",
+            None,
             "SaveDocumentStringAnswer",
             False,
         ),
@@ -363,6 +365,7 @@ def test_save_document(db, document, schema_executor):
             Question.TYPE_MULTIPLE_CHOICE,
             {},
             ["option-slug"],
+            None,
             "SaveDocumentListAnswer",
             True,
         ),
@@ -370,14 +373,23 @@ def test_save_document(db, document, schema_executor):
             Question.TYPE_MULTIPLE_CHOICE,
             {},
             ["option-slug", "option-invalid-slug"],
+            None,
             "SaveDocumentStringAnswer",
             False,
         ),
-        (Question.TYPE_CHOICE, {}, "option-slug", "SaveDocumentStringAnswer", True),
+        (
+            Question.TYPE_CHOICE,
+            {},
+            "option-slug",
+            None,
+            "SaveDocumentStringAnswer",
+            True,
+        ),
         (
             Question.TYPE_CHOICE,
             {},
             "invalid-option-slug",
+            None,
             "SaveDocumentStringAnswer",
             False,
         ),
@@ -453,6 +465,7 @@ def test_save_document_answer(
             serializers.SaveAnswerSerializer, answer
         )
     }
+
     if question.type == Question.TYPE_TABLE:
         documents = document_factory.create_batch(2, form=question.row_form)
         # create a subtree
@@ -473,6 +486,15 @@ def test_save_document_answer(
         answer.file = file
         answer.save()
         minio_mock.bucket_exists.return_value = False
+
+    if question.type == Question.TYPE_DATE:
+        inp["input"]["value"] = answer.date
+        answer.value = None
+        answer.save()
+        # Date format is enforced in the model. So we initially had to use a valid date
+        # here we're able to change it:
+        if answer.date == "1900-01-01":
+            inp["input"]["value"] = "not a date"
 
     if delete_answer:
         # delete answer to force create test instead of update
