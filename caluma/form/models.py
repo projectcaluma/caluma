@@ -164,7 +164,9 @@ class DocumentManager(models.Manager):
         form_questions = form.questions.filter(type=Question.TYPE_FORM)
 
         for form_question in form_questions:
-            child_document = self.create(form=form_question.sub_form)
+            child_document = self.create(
+                form=form_question.sub_form, family=document.family
+            )
             Answer.objects.create(
                 question=form_question, document=document, value_document=child_document
             )
