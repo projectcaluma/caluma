@@ -474,12 +474,10 @@ def test_save_document_answer(
         answer_document_factory(answer=answer, document=documents[0])
 
         inp["input"]["value"] = [str(document.pk) for document in documents]
+
     if question.type == Question.TYPE_FORM:
-        document1 = document_factory.create(form=question.row_form)
-        document2 = document_factory.create()
-        answer.value_document = document2
-        answer.save()
-        inp["input"]["value"] = document1.pk
+        document = document_factory.create(form=question.sub_form)
+        inp["input"]["value"] = document.pk
 
     if question.type == Question.TYPE_FILE and answer.value == "some-file.pdf":
         file = file_factory(name="some-file.pdf")
@@ -581,37 +579,37 @@ def test_create_document_with_children(
     form_question = form_question_factory(question=question)
 
     query = """
-        mutation SaveDocument($input: SaveDocumentInput!) {
-            saveDocument(input: $input) {
-                document {
-                    id
-                    answers {
+      mutation SaveDocument($input: SaveDocumentInput!) {
+        saveDocument(input: $input) {
+          document {
+            id
+            answers {
+              edges {
+                node {
+                  id
+                  ... on FormAnswer {
+                    value {
+                      id
+                      answers {
                         edges {
-                            node {
+                          node {
+                            id
+                            ... on FormAnswer {
+                              value {
                                 id
-                                ... on FormAnswer {
-                                    value {
-                                        id
-                                        answers {
-                                            edges {
-                                                node {
-                                                    id
-                                                    ... on FormAnswer {
-                                                        value {
-                                                            id
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
+                              }
                             }
+                          }
                         }
+                      }
                     }
+                  }
                 }
+              }
             }
+          }
         }
+      }
     """
 
     inp = {"input": {"form": form_question.form.pk}}

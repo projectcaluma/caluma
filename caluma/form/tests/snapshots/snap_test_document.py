@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots["test_query_all_documents[integer-1-None] 1"] = {
@@ -129,7 +130,7 @@ snapshots["test_query_all_documents[table-None-None] 1"] = {
                             }
                         ]
                     },
-                    "createdByUser": "4602cffe-6aa8-4ae7-ba6b-2cf34839ef47",
+                    "createdByUser": "872d1b6f-790c-473c-b5e9-2e714d607695",
                 }
             }
         ]
@@ -319,6 +320,24 @@ snapshots[
 }
 
 snapshots[
+    "test_save_document_answer[date-question__configuration7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentDateAnswer": {
+        "answer": {"dateValue": "2019-02-22"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[date-question__configuration7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentDateAnswer": {
+        "answer": {"dateValue": "2019-02-22"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
     "test_save_document_answer[file-question__configuration9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-True] 1"
 ] = {
     "saveDocumentFileAnswer": {
@@ -370,8 +389,8 @@ snapshots[
     "saveDocumentTableAnswer": {
         "answer": {
             "table_value": [
-                {"form": {"slug": "effort-meet"}},
-                {"form": {"slug": "effort-meet"}},
+                {"form": {"slug": "suggest-traditional"}},
+                {"form": {"slug": "suggest-traditional"}},
             ]
         },
         "clientMutationId": "testid",
@@ -384,28 +403,10 @@ snapshots[
     "saveDocumentTableAnswer": {
         "answer": {
             "table_value": [
-                {"form": {"slug": "effort-meet"}},
-                {"form": {"slug": "effort-meet"}},
+                {"form": {"slug": "suggest-traditional"}},
+                {"form": {"slug": "suggest-traditional"}},
             ]
         },
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[form-question__configuration13-None-None-SaveDocumentFormAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentFormAnswer": {
-        "answer": {"form_value": {"form": {"slug": "effort-meet"}}},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[form-question__configuration13-None-None-SaveDocumentFormAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentFormAnswer": {
-        "answer": {"form_value": {"form": {"slug": "effort-meet"}}},
         "clientMutationId": "testid",
     }
 }
@@ -465,19 +466,19 @@ snapshots[
 }
 
 snapshots[
-    "test_save_document_answer[date-question__configuration7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-False] 1"
+    "test_save_document_answer[form-question__configuration13-None-None-SaveDocumentFormAnswer-True-option-slug-True] 1"
 ] = {
-    "saveDocumentDateAnswer": {
-        "answer": {"dateValue": "2019-02-22"},
+    "saveDocumentFormAnswer": {
+        "answer": {"form_value": {"form": {"slug": "suggest-traditional"}}},
         "clientMutationId": "testid",
     }
 }
 
 snapshots[
-    "test_save_document_answer[date-question__configuration7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-True] 1"
+    "test_save_document_answer[form-question__configuration13-None-None-SaveDocumentFormAnswer-True-option-slug-False] 1"
 ] = {
-    "saveDocumentDateAnswer": {
-        "answer": {"dateValue": "2019-02-22"},
+    "saveDocumentFormAnswer": {
+        "answer": {"form_value": {"form": {"slug": "suggest-traditional"}}},
         "clientMutationId": "testid",
     }
 }

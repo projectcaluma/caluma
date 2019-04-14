@@ -12,11 +12,11 @@ snapshots["test_save_table_question[table] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "TableQuestion",
-            "id": "VGFibGVRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-            "label": "Thomas Johnson",
+            "id": "VGFibGVRdWVzdGlvbjplZmZvcnQtbWVldA==",
+            "label": "Brian Williams",
             "meta": {},
-            "rowForm": {"slug": "effort-meet"},
-            "slug": "sound-air-mission",
+            "rowForm": {"slug": "suggest-traditional"},
+            "slug": "effort-meet",
         },
     }
 }
@@ -27,12 +27,12 @@ snapshots["test_query_all_questions[integer-question__configuration0] 1"] = {
             {
                 "node": {
                     "__typename": "IntegerQuestion",
-                    "id": "SW50ZWdlclF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
+                    "id": "SW50ZWdlclF1ZXN0aW9uOmVmZm9ydC1tZWV0",
                     "integerMaxValue": 10,
                     "integerMinValue": 0,
-                    "label": "Thomas Johnson",
+                    "label": "Brian Williams",
                     "meta": {},
-                    "slug": "sound-air-mission",
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -47,10 +47,10 @@ snapshots["test_query_all_questions[float-question__configuration1] 1"] = {
                     "__typename": "FloatQuestion",
                     "floatMaxValue": 1.0,
                     "floatMinValue": 0.0,
-                    "id": "RmxvYXRRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-                    "label": "Thomas Johnson",
+                    "id": "RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==",
+                    "label": "Brian Williams",
                     "meta": {},
-                    "slug": "sound-air-mission",
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -65,10 +65,10 @@ snapshots["test_query_all_questions[float-question__configuration2] 1"] = {
                     "__typename": "FloatQuestion",
                     "floatMaxValue": None,
                     "floatMinValue": None,
-                    "id": "RmxvYXRRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-                    "label": "Thomas Johnson",
+                    "id": "RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==",
+                    "label": "Brian Williams",
                     "meta": {},
-                    "slug": "sound-air-mission",
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -80,10 +80,10 @@ snapshots["test_save_question[true-True-SaveTextQuestion] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "TextQuestion",
-            "id": "VGV4dFF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
-            "label": "Thomas Johnson",
+            "id": "VGV4dFF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+            "label": "Brian Williams",
             "meta": {},
-            "slug": "sound-air-mission",
+            "slug": "effort-meet",
         },
     }
 }
@@ -93,10 +93,10 @@ snapshots["test_save_question[true-True-SaveTextareaQuestion] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "TextareaQuestion",
-            "id": "VGV4dGFyZWFRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-            "label": "Thomas Johnson",
+            "id": "VGV4dGFyZWFRdWVzdGlvbjplZmZvcnQtbWVldA==",
+            "label": "Brian Williams",
             "meta": {},
-            "slug": "sound-air-mission",
+            "slug": "effort-meet",
         },
     }
 }
@@ -106,10 +106,10 @@ snapshots["test_save_question[true-True-SaveIntegerQuestion] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "IntegerQuestion",
-            "id": "SW50ZWdlclF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
-            "label": "Thomas Johnson",
+            "id": "SW50ZWdlclF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+            "label": "Brian Williams",
             "meta": {},
-            "slug": "sound-air-mission",
+            "slug": "effort-meet",
         },
     }
 }
@@ -119,10 +119,10 @@ snapshots["test_save_question[true-True-SaveFloatQuestion] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "FloatQuestion",
-            "id": "RmxvYXRRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-            "label": "Thomas Johnson",
+            "id": "RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==",
+            "label": "Brian Williams",
             "meta": {},
-            "slug": "sound-air-mission",
+            "slug": "effort-meet",
         },
     }
 }
@@ -132,12 +132,12 @@ snapshots["test_save_float_question[float-question__configuration0-True] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "FloatQuestion",
-            "id": "RmxvYXRRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-            "label": "Thomas Johnson",
+            "id": "RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==",
+            "label": "Brian Williams",
             "maxValue": 10.0,
             "meta": {},
             "minValue": 0.0,
-            "slug": "sound-air-mission",
+            "slug": "effort-meet",
         },
     }
 }
@@ -147,10 +147,10 @@ snapshots["test_save_integer_question[integer-question__configuration0-True] 1"]
         "clientMutationId": "testid",
         "question": {
             "__typename": "IntegerQuestion",
-            "id": "SW50ZWdlclF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
-            "label": "Thomas Johnson",
+            "id": "SW50ZWdlclF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+            "label": "Brian Williams",
             "meta": {},
-            "slug": "sound-air-mission",
+            "slug": "effort-meet",
         },
     }
 }
@@ -160,8 +160,8 @@ snapshots["test_save_multiple_choice_question[multiple_choice] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "MultipleChoiceQuestion",
-            "id": "TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-            "label": "Thomas Johnson",
+            "id": "TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjplZmZvcnQtbWVldA==",
+            "label": "Brian Williams",
             "meta": {},
             "options": {
                 "edges": [
@@ -174,7 +174,7 @@ snapshots["test_save_multiple_choice_question[multiple_choice] 1"] = {
                     {"node": {"label": "Daniel Mann", "slug": "live-by-itself"}},
                 ]
             },
-            "slug": "sound-air-mission",
+            "slug": "effort-meet",
         },
     }
 }
@@ -184,15 +184,15 @@ snapshots["test_save_choice_question[choice] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "ChoiceQuestion",
-            "id": "Q2hvaWNlUXVlc3Rpb246c291bmQtYWlyLW1pc3Npb24=",
-            "label": "Thomas Johnson",
+            "id": "Q2hvaWNlUXVlc3Rpb246ZWZmb3J0LW1lZXQ=",
+            "label": "Brian Williams",
             "meta": {},
             "options": {
                 "edges": [
-                    {"node": {"label": "Kelly Brock", "slug": "example-indicate"}}
+                    {"node": {"label": "John Thomas", "slug": "suggest-traditional"}}
                 ]
             },
-            "slug": "sound-air-mission",
+            "slug": "effort-meet",
         },
     }
 }
@@ -203,11 +203,11 @@ snapshots["test_query_all_questions[text-question__configuration4] 1"] = {
             {
                 "node": {
                     "__typename": "TextQuestion",
-                    "id": "VGV4dFF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
-                    "label": "Thomas Johnson",
+                    "id": "VGV4dFF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+                    "label": "Brian Williams",
                     "maxLength": 10,
                     "meta": {},
-                    "slug": "sound-air-mission",
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -220,11 +220,11 @@ snapshots["test_query_all_questions[textarea-question__configuration5] 1"] = {
             {
                 "node": {
                     "__typename": "TextareaQuestion",
-                    "id": "VGV4dGFyZWFRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-                    "label": "Thomas Johnson",
+                    "id": "VGV4dGFyZWFRdWVzdGlvbjplZmZvcnQtbWVldA==",
+                    "label": "Brian Williams",
                     "maxLength": 10,
                     "meta": {},
-                    "slug": "sound-air-mission",
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -237,11 +237,11 @@ snapshots["test_query_all_questions[choice-question__configuration6] 1"] = {
             {
                 "node": {
                     "__typename": "ChoiceQuestion",
-                    "id": "Q2hvaWNlUXVlc3Rpb246c291bmQtYWlyLW1pc3Npb24=",
-                    "label": "Thomas Johnson",
+                    "id": "Q2hvaWNlUXVlc3Rpb246ZWZmb3J0LW1lZXQ=",
+                    "label": "Brian Williams",
                     "meta": {},
-                    "options": {"edges": [{"node": {"slug": "example-indicate"}}]},
-                    "slug": "sound-air-mission",
+                    "options": {"edges": [{"node": {"slug": "treatment-radio"}}]},
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -254,11 +254,11 @@ snapshots["test_query_all_questions[multiple_choice-question__configuration7] 1"
             {
                 "node": {
                     "__typename": "MultipleChoiceQuestion",
-                    "id": "TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjpzb3VuZC1haXItbWlzc2lvbg==",
-                    "label": "Thomas Johnson",
+                    "id": "TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjplZmZvcnQtbWVldA==",
+                    "label": "Brian Williams",
                     "meta": {},
-                    "options": {"edges": [{"node": {"slug": "example-indicate"}}]},
-                    "slug": "sound-air-mission",
+                    "options": {"edges": [{"node": {"slug": "treatment-radio"}}]},
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -271,10 +271,10 @@ snapshots["test_query_all_questions[date-question__configuration3] 1"] = {
             {
                 "node": {
                     "__typename": "DateQuestion",
-                    "id": "RGF0ZVF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
-                    "label": "Thomas Johnson",
+                    "id": "RGF0ZVF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+                    "label": "Brian Williams",
                     "meta": {},
-                    "slug": "sound-air-mission",
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -286,10 +286,10 @@ snapshots["test_save_question[true-True-SaveDateQuestion] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "DateQuestion",
-            "id": "RGF0ZVF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
-            "label": "Thomas Johnson",
+            "id": "RGF0ZVF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+            "label": "Brian Williams",
             "meta": {},
-            "slug": "sound-air-mission",
+            "slug": "effort-meet",
         },
     }
 }
@@ -300,10 +300,11 @@ snapshots["test_query_all_questions[form-question__configuration8] 1"] = {
             {
                 "node": {
                     "__typename": "FormQuestion",
-                    "id": "Rm9ybVF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
-                    "label": "Thomas Johnson",
+                    "id": "Rm9ybVF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+                    "label": "Brian Williams",
                     "meta": {},
-                    "slug": "sound-air-mission",
+                    "slug": "effort-meet",
+                    "subForm": {"slug": "suggest-traditional"},
                 }
             }
         ]
@@ -315,11 +316,11 @@ snapshots["test_save_form_question[form] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "FormQuestion",
-            "id": "Rm9ybVF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
-            "label": "Thomas Johnson",
+            "id": "Rm9ybVF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+            "label": "Brian Williams",
             "meta": {},
-            "slug": "sound-air-mission",
-            "subForm": {"slug": "effort-meet"},
+            "slug": "effort-meet",
+            "subForm": {"slug": "suggest-traditional"},
         },
     }
 }
@@ -330,10 +331,10 @@ snapshots["test_query_all_questions[file-question__configuration9] 1"] = {
             {
                 "node": {
                     "__typename": "FileQuestion",
-                    "id": "RmlsZVF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
-                    "label": "Thomas Johnson",
+                    "id": "RmlsZVF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+                    "label": "Brian Williams",
                     "meta": {},
-                    "slug": "sound-air-mission",
+                    "slug": "effort-meet",
                 }
             }
         ]
@@ -345,10 +346,10 @@ snapshots["test_save_question[true-True-SaveFileQuestion] 1"] = {
         "clientMutationId": "testid",
         "question": {
             "__typename": "FileQuestion",
-            "id": "RmlsZVF1ZXN0aW9uOnNvdW5kLWFpci1taXNzaW9u",
-            "label": "Thomas Johnson",
+            "id": "RmlsZVF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+            "label": "Brian Williams",
             "meta": {},
-            "slug": "sound-air-mission",
+            "slug": "effort-meet",
         },
     }
 }
