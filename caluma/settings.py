@@ -30,6 +30,7 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=default(["*"]))
 
 INSTALLED_APPS = [
     "django.contrib.postgres",
+    "django.contrib.staticfiles",
     "localized_fields",
     "psqlextra",
     "django.contrib.contenttypes",
@@ -38,14 +39,20 @@ INSTALLED_APPS = [
     "caluma.user.apps.DefaultConfig",
     "caluma.form.apps.DefaultConfig",
     "caluma.workflow.apps.DefaultConfig",
+    "silk",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    "silk.middleware.SilkyMiddleware",
 ]
+
+STATIC_ROOT = "/tmp/"
+STATIC_URL = "/static/"
 
 ROOT_URLCONF = "caluma.urls"
 WSGI_APPLICATION = "caluma.wsgi.application"
@@ -63,6 +70,8 @@ TEMPLATES = [
         },
     }
 ]
+
+SILKY_PYTHON_PROFILER = True
 
 
 # Database
