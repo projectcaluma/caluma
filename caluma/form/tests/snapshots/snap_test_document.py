@@ -7,6 +7,443 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
+snapshots["test_complex_nested_document_query_performance 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "FormAnswer",
+                                    "formValue": {
+                                        "answers": {
+                                            "edges": [
+                                                {
+                                                    "node": {
+                                                        "__typename": "ListAnswer",
+                                                        "listValue": [
+                                                            "Robin Walker",
+                                                            "Thomas Hahn",
+                                                        ],
+                                                        "question": {
+                                                            "slug": "need-news-factor"
+                                                        },
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "form": {
+                                            "questions": {
+                                                "edges": [
+                                                    {
+                                                        "node": {
+                                                            "__typename": "MultipleChoiceQuestion",
+                                                            "isHidden": "false",
+                                                            "isRequired": "true",
+                                                            "label": "Sheri Hall",
+                                                            "multipleChoiceOptions": {
+                                                                "edges": [
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Christine Padilla",
+                                                                            "slug": "face-letter-world",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Brittany Williams",
+                                                                            "slug": "focus-leg-note",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Lori Booker",
+                                                                            "slug": "let-next-someone",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Whitney Hughes",
+                                                                            "slug": "government-front",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Laura Cohen",
+                                                                            "slug": "under-miss",
+                                                                        }
+                                                                    },
+                                                                ]
+                                                            },
+                                                            "slug": "need-news-factor",
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "slug": "gas-example-again",
+                                        },
+                                    },
+                                    "question": {"slug": "apply-edge-summer"},
+                                }
+                            },
+                            {
+                                "node": {
+                                    "__typename": "FormAnswer",
+                                    "formValue": {
+                                        "answers": {
+                                            "edges": [
+                                                {
+                                                    "node": {
+                                                        "__typename": "ListAnswer",
+                                                        "listValue": [
+                                                            "Jacob Herrera",
+                                                            "Alexandria Duncan",
+                                                        ],
+                                                        "question": {
+                                                            "slug": "training-front"
+                                                        },
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "form": {
+                                            "questions": {
+                                                "edges": [
+                                                    {
+                                                        "node": {
+                                                            "__typename": "MultipleChoiceQuestion",
+                                                            "isHidden": "false",
+                                                            "isRequired": "true",
+                                                            "label": "Ashley Parrish",
+                                                            "multipleChoiceOptions": {
+                                                                "edges": [
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Joshua Phillips",
+                                                                            "slug": "yes-bad-win-begin",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Alison Wolf",
+                                                                            "slug": "staff-chance-wall",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Anthony Morse",
+                                                                            "slug": "treat-these-keep",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Pamela Ellis",
+                                                                            "slug": "pressure-begin",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Bethany Cortez",
+                                                                            "slug": "laugh-plant-senior",
+                                                                        }
+                                                                    },
+                                                                ]
+                                                            },
+                                                            "slug": "training-front",
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "slug": "light-analysis",
+                                        },
+                                    },
+                                    "question": {"slug": "imagine-item-but"},
+                                }
+                            },
+                            {
+                                "node": {
+                                    "__typename": "FormAnswer",
+                                    "formValue": {
+                                        "answers": {
+                                            "edges": [
+                                                {
+                                                    "node": {
+                                                        "__typename": "ListAnswer",
+                                                        "listValue": [
+                                                            "Tracy Moore",
+                                                            "Ryan Contreras",
+                                                        ],
+                                                        "question": {
+                                                            "slug": "hair-consider-find"
+                                                        },
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "form": {
+                                            "questions": {
+                                                "edges": [
+                                                    {
+                                                        "node": {
+                                                            "__typename": "MultipleChoiceQuestion",
+                                                            "isHidden": "false",
+                                                            "isRequired": "true",
+                                                            "label": "Julie Jones",
+                                                            "multipleChoiceOptions": {
+                                                                "edges": [
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Kristi Arnold",
+                                                                            "slug": "health-trip-foreign",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Lori Wood",
+                                                                            "slug": "rest-around-one",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "James Gallegos",
+                                                                            "slug": "guy-feel-simply",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Sean Sullivan",
+                                                                            "slug": "memory-order",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Jacob Morgan",
+                                                                            "slug": "choose-arm-fact",
+                                                                        }
+                                                                    },
+                                                                ]
+                                                            },
+                                                            "slug": "hair-consider-find",
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "slug": "note-reflect-unit",
+                                        },
+                                    },
+                                    "question": {"slug": "relate-right-will"},
+                                }
+                            },
+                            {
+                                "node": {
+                                    "__typename": "FormAnswer",
+                                    "formValue": {
+                                        "answers": {
+                                            "edges": [
+                                                {
+                                                    "node": {
+                                                        "__typename": "ListAnswer",
+                                                        "listValue": [
+                                                            "Brian Brown",
+                                                            "David Kaiser",
+                                                        ],
+                                                        "question": {
+                                                            "slug": "member-federal-as"
+                                                        },
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "form": {
+                                            "questions": {
+                                                "edges": [
+                                                    {
+                                                        "node": {
+                                                            "__typename": "MultipleChoiceQuestion",
+                                                            "isHidden": "false",
+                                                            "isRequired": "true",
+                                                            "label": "Joshua Greer",
+                                                            "multipleChoiceOptions": {
+                                                                "edges": [
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Mr. Michael Stokes",
+                                                                            "slug": "off-represent",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "James Smith",
+                                                                            "slug": "usually-in-until",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Aaron Banks",
+                                                                            "slug": "choose-fact-affect",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Christopher Schroeder",
+                                                                            "slug": "against-simply-want",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Robert Glass",
+                                                                            "slug": "crime-region",
+                                                                        }
+                                                                    },
+                                                                ]
+                                                            },
+                                                            "slug": "member-federal-as",
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "slug": "political-skin-more",
+                                        },
+                                    },
+                                    "question": {"slug": "service-bank-arm"},
+                                }
+                            },
+                            {
+                                "node": {
+                                    "__typename": "FormAnswer",
+                                    "formValue": {
+                                        "answers": {
+                                            "edges": [
+                                                {
+                                                    "node": {
+                                                        "__typename": "ListAnswer",
+                                                        "listValue": [
+                                                            "Jesse Leach",
+                                                            "Jill Martinez",
+                                                        ],
+                                                        "question": {
+                                                            "slug": "effect-future-down"
+                                                        },
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "form": {
+                                            "questions": {
+                                                "edges": [
+                                                    {
+                                                        "node": {
+                                                            "__typename": "MultipleChoiceQuestion",
+                                                            "isHidden": "false",
+                                                            "isRequired": "true",
+                                                            "label": "Ronald Ford",
+                                                            "multipleChoiceOptions": {
+                                                                "edges": [
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Regina Fernandez",
+                                                                            "slug": "one-physical",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Michael Pollard",
+                                                                            "slug": "bill-professor",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Dalton Cruz",
+                                                                            "slug": "article-pretty",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Cameron Landry",
+                                                                            "slug": "today-lawyer-effort",
+                                                                        }
+                                                                    },
+                                                                    {
+                                                                        "node": {
+                                                                            "label": "Miranda Reynolds",
+                                                                            "slug": "represent-hear-case",
+                                                                        }
+                                                                    },
+                                                                ]
+                                                            },
+                                                            "slug": "effect-future-down",
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "slug": "blood-hair-chance",
+                                        },
+                                    },
+                                    "question": {"slug": "vote-tonight-yard"},
+                                }
+                            },
+                        ]
+                    },
+                    "form": {
+                        "questions": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "__typename": "FormQuestion",
+                                        "isHidden": "false",
+                                        "isRequired": "true",
+                                        "label": "Christopher Hughes",
+                                        "slug": "apply-edge-summer",
+                                    }
+                                },
+                                {
+                                    "node": {
+                                        "__typename": "FormQuestion",
+                                        "isHidden": "false",
+                                        "isRequired": "true",
+                                        "label": "Katie Cunningham",
+                                        "slug": "imagine-item-but",
+                                    }
+                                },
+                                {
+                                    "node": {
+                                        "__typename": "FormQuestion",
+                                        "isHidden": "false",
+                                        "isRequired": "true",
+                                        "label": "Juan Chavez",
+                                        "slug": "relate-right-will",
+                                    }
+                                },
+                                {
+                                    "node": {
+                                        "__typename": "FormQuestion",
+                                        "isHidden": "false",
+                                        "isRequired": "true",
+                                        "label": "Calvin Graham",
+                                        "slug": "service-bank-arm",
+                                    }
+                                },
+                                {
+                                    "node": {
+                                        "__typename": "FormQuestion",
+                                        "isHidden": "false",
+                                        "isRequired": "true",
+                                        "label": "Nicole Wells",
+                                        "slug": "vote-tonight-yard",
+                                    }
+                                },
+                            ]
+                        },
+                        "slug": "effort-meet",
+                    },
+                }
+            }
+        ]
+    }
+}
+
 snapshots["test_query_all_documents[integer-1-None] 1"] = {
     "allDocuments": {
         "edges": [
@@ -265,6 +702,64 @@ snapshots["test_query_all_documents[file-some-other-file.pdf-None] 1"] = {
     }
 }
 
+snapshots["test_query_nested_form[form] 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "FormAnswer",
+                                    "formValue": {
+                                        "answers": {
+                                            "edges": [
+                                                {
+                                                    "node": {
+                                                        "__typename": "StringAnswer",
+                                                        "value": "Allison Manning",
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "form": {
+                                            "questions": {
+                                                "edges": [
+                                                    {
+                                                        "node": {
+                                                            "__typename": "ChoiceQuestion",
+                                                            "slug": "live-by-itself",
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "slug": "beyond-seek-officer",
+                                        },
+                                    },
+                                }
+                            }
+                        ]
+                    },
+                    "form": {
+                        "questions": {
+                            "edges": [
+                                {
+                                    "node": {
+                                        "__typename": "FormQuestion",
+                                        "slug": "animal-treat",
+                                    }
+                                }
+                            ]
+                        },
+                        "slug": "effort-meet",
+                    },
+                }
+            }
+        ]
+    }
+}
+
 snapshots[
     "test_save_document_answer[integer-question__configuration0-1-None-SaveDocumentIntegerAnswer-True-option-slug-True] 1"
 ] = {
@@ -412,6 +907,24 @@ snapshots[
 }
 
 snapshots[
+    "test_save_document_answer[form-question__configuration13-None-None-SaveDocumentFormAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentFormAnswer": {
+        "answer": {"form_value": {"form": {"slug": "suggest-traditional"}}},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[form-question__configuration13-None-None-SaveDocumentFormAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentFormAnswer": {
+        "answer": {"form_value": {"form": {"slug": "suggest-traditional"}}},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
     "test_save_document_answer[textarea-question__configuration14-Test-None-SaveDocumentStringAnswer-True-option-slug-True] 1"
 ] = {
     "saveDocumentStringAnswer": {
@@ -461,24 +974,6 @@ snapshots[
 ] = {
     "saveDocumentStringAnswer": {
         "answer": {"stringValue": "option-slug"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[form-question__configuration13-None-None-SaveDocumentFormAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentFormAnswer": {
-        "answer": {"form_value": {"form": {"slug": "suggest-traditional"}}},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[form-question__configuration13-None-None-SaveDocumentFormAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentFormAnswer": {
-        "answer": {"form_value": {"form": {"slug": "suggest-traditional"}}},
         "clientMutationId": "testid",
     }
 }

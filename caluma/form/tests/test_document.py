@@ -113,6 +113,93 @@ def test_query_all_documents(
     snapshot.assert_match(result.data)
 
 
+@pytest.mark.parametrize("question__type", [Question.TYPE_FORM])
+def test_query_nested_form(
+    db,
+    schema_executor,
+    document,
+    document_factory,
+    question,
+    form_question_factory,
+    answer_factory,
+    snapshot,
+):
+
+    # child form
+    child_answer = answer_factory()
+    form_question_factory(
+        question=child_answer.question, form=child_answer.document.form
+    )
+
+    # main form
+    form_question_factory(question=question, form=document.form)
+    answer_factory(
+        question=question, document=document, value_document=child_answer.document
+    )
+
+    query = """
+      query GetDocument($id: ID!) {
+        allDocuments(id: $id) {
+          edges {
+            node {
+              form {
+                slug
+                questions {
+                  edges {
+                    node {
+                      slug
+                      __typename
+                    }
+                  }
+                }
+              }
+              answers {
+                edges {
+                  node {
+                    __typename
+                    ... on StringAnswer {
+                      stringValue: value
+                    }
+                    ... on FormAnswer {
+                      formValue: value {
+                        form {
+                          slug
+                          questions {
+                            edges {
+                              node {
+                                slug
+                                __typename
+                              }
+                            }
+                          }
+                        }
+                        answers {
+                          edges {
+                            node {
+                              __typename
+                              ... on StringAnswer {
+                                value
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    """
+
+    inp = {"id": document.pk}
+    result = schema_executor(query, variables=inp)
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
 def test_complex_document_query_performance(
     db,
     schema_executor,
@@ -246,6 +333,164 @@ def test_complex_document_query_performance(
     with django_assert_num_queries(12):
         result = schema_executor(query, variables={"id": str(document.pk)})
     assert not result.errors
+
+
+def test_complex_nested_document_query_performance(
+    db,
+    schema_executor,
+    document,
+    document_factory,
+    form_question_factory,
+    question_factory,
+    answer_factory,
+    file_factory,
+    question_option_factory,
+    django_assert_num_queries,
+    snapshot,
+):
+    questions = question_factory.create_batch(5, type=Question.TYPE_FORM)
+    for question in questions:
+        # child form
+        child_answer = answer_factory(question__type=Question.TYPE_MULTIPLE_CHOICE)
+        question_option_factory.create_batch(5, question=child_answer.question)
+        form_question_factory(
+            question=child_answer.question, form=child_answer.document.form
+        )
+
+        # main form
+        form_question_factory(question=question, form=document.form)
+        answer_factory(
+            question=question, document=document, value_document=child_answer.document
+        )
+
+    query = """
+      query ($id: ID!) {
+        allDocuments(id: $id) {
+          edges {
+            node {
+              ...FormDocument
+            }
+          }
+        }
+      }
+
+      fragment FormDocument on Document {
+        answers {
+          edges {
+            node {
+              ...FieldAnswer
+              ... on FormAnswer {
+                formValue: value {
+                  form {
+                    slug
+                    questions {
+                      edges {
+                        node {
+                          ...FieldQuestion
+                        }
+                      }
+                    }
+                  }
+                  answers {
+                    edges {
+                      node {
+                        ...FieldAnswer
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        form {
+          slug
+          questions {
+            edges {
+              node {
+                ...FieldQuestion
+              }
+            }
+          }
+        }
+      }
+
+      fragment FieldAnswer on Answer {
+        __typename
+        question {
+          slug
+        }
+        ... on StringAnswer {
+          stringValue: value
+        }
+        ... on IntegerAnswer {
+          integerValue: value
+        }
+        ... on FloatAnswer {
+          floatValue: value
+        }
+        ... on DateAnswer {
+          dateValue: value
+        }
+        ... on ListAnswer {
+          listValue: value
+        }
+        ... on FileAnswer {
+          fileValue: value {
+            name
+            downloadUrl
+            metadata
+          }
+        }
+      }
+
+      fragment FieldQuestion on Question {
+        slug
+        label
+        isRequired
+        isHidden
+        __typename
+        ... on TextQuestion {
+          textMaxLength: maxLength
+        }
+        ... on TextareaQuestion {
+          textareaMaxLength: maxLength
+        }
+        ... on IntegerQuestion {
+          integerMinValue: minValue
+          integerMaxValue: maxValue
+        }
+        ... on FloatQuestion {
+          floatMinValue: minValue
+          floatMaxValue: maxValue
+        }
+        ... on ChoiceQuestion {
+          choiceOptions: options {
+            edges {
+              node {
+                slug
+                label
+              }
+            }
+          }
+        }
+        ... on MultipleChoiceQuestion {
+          multipleChoiceOptions: options {
+            edges {
+              node {
+                slug
+                label
+              }
+            }
+          }
+        }
+      }
+    """
+
+    with django_assert_num_queries(46):
+        result = schema_executor(query, variables={"id": str(document.pk)})
+    assert not result.errors
+    snapshot.assert_match(result.data)
 
 
 def test_query_all_documents_filter_answers_by_question(
