@@ -1,4 +1,4 @@
-from factory import Faker, LazyAttribute, Maybe, SubFactory
+from factory import Faker, LazyAttribute, Maybe, SubFactory, lazy_attribute
 
 from ..core.factories import DjangoModelFactory
 from . import models
@@ -83,7 +83,18 @@ class AnswerFactory(DjangoModelFactory):
     date = None
     meta = {}
 
-    value = Maybe("is_plain", yes_declaration=Faker("name"), no_declaration=None)
+    @lazy_attribute
+    def value(self):
+        if self.question.type == models.Question.TYPE_MULTIPLE_CHOICE:
+            return [Faker("name").generate({}), Faker("name").generate({})]
+        elif self.question.type not in [
+            models.Question.TYPE_FORM,
+            models.Question.TYPE_TABLE,
+        ]:
+            return Faker("name").generate({})
+
+        return None
+
     value_document = Maybe(
         "is_form", yes_declaration=SubFactory(DocumentFactory), no_declaration=None
     )
@@ -92,10 +103,6 @@ class AnswerFactory(DjangoModelFactory):
         model = models.Answer
 
     class Params:
-        is_plain = LazyAttribute(
-            lambda a: a.question.type
-            not in [models.Question.TYPE_FORM, models.Question.TYPE_TABLE]
-        )
         is_form = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_FORM)
 
 
