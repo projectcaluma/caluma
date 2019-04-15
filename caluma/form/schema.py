@@ -64,6 +64,8 @@ class Question(Node, graphene.Interface):
             models.Question.TYPE_CHOICE: ChoiceQuestion,
             models.Question.TYPE_INTEGER: IntegerQuestion,
             models.Question.TYPE_MULTIPLE_CHOICE: MultipleChoiceQuestion,
+            models.Question.TYPE_DYNAMIC_CHOICE: DynamicChoiceQuestion,
+            models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: DynamicMultipleChoiceQuestion,
             models.Question.TYPE_TEXTAREA: TextareaQuestion,
             models.Question.TYPE_DATE: DateQuestion,
             models.Question.TYPE_TABLE: TableQuestion,
@@ -108,6 +110,7 @@ class TextQuestion(QuestionQuerysetMixin, DjangoObjectType):
         exclude_fields = (
             "type",
             "configuration",
+            "data_source",
             "options",
             "answers",
             "row_form",
@@ -126,6 +129,7 @@ class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
         exclude_fields = (
             "type",
             "configuration",
+            "data_source",
             "options",
             "answers",
             "row_form",
@@ -141,6 +145,7 @@ class DateQuestion(QuestionQuerysetMixin, DjangoObjectType):
         exclude_fields = (
             "type",
             "configuration",
+            "data_source",
             "options",
             "answers",
             "row_form",
@@ -161,6 +166,7 @@ class ChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
         exclude_fields = (
             "type",
             "configuration",
+            "data_source",
             "answers",
             "row_form",
             "sub_form",
@@ -174,6 +180,47 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
+
+    class Meta:
+        model = models.Question
+        exclude_fields = (
+            "type",
+            "configuration",
+            "data_source",
+            "answers",
+            "row_form",
+            "sub_form",
+            "placeholder",
+        )
+        use_connection = False
+        interfaces = (Question, graphene.Node)
+
+
+class DynamicChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
+    options = DjangoFilterConnectionField(
+        Option, filterset_class=filters.OptionFilterSet
+    )
+    data_source = graphene.String(required=True)
+
+    class Meta:
+        model = models.Question
+        exclude_fields = (
+            "type",
+            "configuration",
+            "answers",
+            "row_form",
+            "sub_form",
+            "placeholder",
+        )
+        use_connection = False
+        interfaces = (Question, graphene.Node)
+
+
+class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
+    options = DjangoFilterConnectionField(
+        Option, filterset_class=filters.OptionFilterSet
+    )
+    data_source = graphene.String(required=True)
 
     class Meta:
         model = models.Question
@@ -199,6 +246,7 @@ class IntegerQuestion(QuestionQuerysetMixin, DjangoObjectType):
         exclude_fields = (
             "type",
             "configuration",
+            "data_source",
             "options",
             "answers",
             "row_form",
@@ -218,6 +266,7 @@ class FloatQuestion(QuestionQuerysetMixin, DjangoObjectType):
         exclude_fields = (
             "type",
             "configuration",
+            "data_source",
             "options",
             "answers",
             "row_form",
@@ -233,6 +282,7 @@ class TableQuestion(QuestionQuerysetMixin, DjangoObjectType):
         exclude_fields = (
             "type",
             "configuration",
+            "data_source",
             "options",
             "answers",
             "sub_form",
@@ -248,6 +298,7 @@ class FormQuestion(QuestionQuerysetMixin, DjangoObjectType):
         exclude_fields = (
             "type",
             "configuration",
+            "data_source",
             "options",
             "answers",
             "row_form",
@@ -263,6 +314,7 @@ class FileQuestion(QuestionQuerysetMixin, DjangoObjectType):
         exclude_fields = (
             "type",
             "configuration",
+            "data_source",
             "options",
             "answers",
             "row_form",
@@ -364,6 +416,18 @@ class SaveChoiceQuestion(SaveQuestion):
 class SaveMultipleChoiceQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveMultipleChoiceQuestionSerializer
+        return_field_type = Question
+
+
+class SaveDynamicChoiceQuestion(SaveQuestion):
+    class Meta:
+        serializer_class = serializers.SaveDynamicChoiceQuestionSerializer
+        return_field_type = Question
+
+
+class SaveDynamicMultipleChoiceQuestion(SaveQuestion):
+    class Meta:
+        serializer_class = serializers.SaveDynamicMultipleChoiceQuestionSerializer
         return_field_type = Question
 
 
@@ -657,6 +721,8 @@ class Mutation(object):
     save_date_question = SaveDateQuestion().Field()
     save_choice_question = SaveChoiceQuestion().Field()
     save_multiple_choice_question = SaveMultipleChoiceQuestion().Field()
+    save_dynamic_choice_question = SaveDynamicChoiceQuestion().Field()
+    save_dynamic_multiple_choice_question = SaveDynamicMultipleChoiceQuestion().Field()
     save_float_question = SaveFloatQuestion().Field()
     save_integer_question = SaveIntegerQuestion().Field()
     save_table_question = SaveTableQuestion().Field()

@@ -33,12 +33,23 @@ class QuestionFactory(DjangoModelFactory):
         "is_form", yes_declaration=SubFactory(FormFactory), no_declaration=None
     )
 
+    data_source = Maybe(
+        "is_dynamic", yes_declaration="MyDataSource", no_declaration=None
+    )
+
     class Meta:
         model = models.Question
 
     class Params:
         is_table = LazyAttribute(lambda q: q.type == models.Question.TYPE_TABLE)
         is_form = LazyAttribute(lambda q: q.type == models.Question.TYPE_FORM)
+        is_dynamic = LazyAttribute(
+            lambda q: q.type
+            in [
+                models.Question.TYPE_DYNAMIC_CHOICE,
+                models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            ]
+        )
 
 
 class OptionFactory(DjangoModelFactory):

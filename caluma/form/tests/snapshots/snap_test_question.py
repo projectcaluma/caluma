@@ -4,60 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
-
-snapshots["test_save_question[true-True-SaveTextQuestion] 1"] = {
-    "saveTextQuestion": {
-        "clientMutationId": "testid",
-        "question": {
-            "__typename": "TextQuestion",
-            "id": "VGV4dFF1ZXN0aW9uOmVmZm9ydC1tZWV0",
-            "label": "Brian Williams",
-            "meta": {},
-            "slug": "effort-meet",
-        },
-    }
-}
-
-snapshots["test_save_question[true-True-SaveTextareaQuestion] 1"] = {
-    "saveTextareaQuestion": {
-        "clientMutationId": "testid",
-        "question": {
-            "__typename": "TextareaQuestion",
-            "id": "VGV4dGFyZWFRdWVzdGlvbjplZmZvcnQtbWVldA==",
-            "label": "Brian Williams",
-            "meta": {},
-            "slug": "effort-meet",
-        },
-    }
-}
-
-snapshots["test_save_question[true-True-SaveIntegerQuestion] 1"] = {
-    "saveIntegerQuestion": {
-        "clientMutationId": "testid",
-        "question": {
-            "__typename": "IntegerQuestion",
-            "id": "SW50ZWdlclF1ZXN0aW9uOmVmZm9ydC1tZWV0",
-            "label": "Brian Williams",
-            "meta": {},
-            "slug": "effort-meet",
-        },
-    }
-}
-
-snapshots["test_save_question[true-True-SaveFloatQuestion] 1"] = {
-    "saveFloatQuestion": {
-        "clientMutationId": "testid",
-        "question": {
-            "__typename": "FloatQuestion",
-            "id": "RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==",
-            "label": "Brian Williams",
-            "meta": {},
-            "slug": "effort-meet",
-        },
-    }
-}
 
 snapshots["test_query_all_questions[integer-question__configuration0] 1"] = {
     "allQuestions": {
@@ -245,6 +192,58 @@ snapshots["test_query_all_questions[file-question__configuration9] 1"] = {
     }
 }
 
+snapshots["test_save_question[true-True-SaveTextQuestion] 1"] = {
+    "saveTextQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "TextQuestion",
+            "id": "VGV4dFF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+            "label": "Brian Williams",
+            "meta": {},
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots["test_save_question[true-True-SaveTextareaQuestion] 1"] = {
+    "saveTextareaQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "TextareaQuestion",
+            "id": "VGV4dGFyZWFRdWVzdGlvbjplZmZvcnQtbWVldA==",
+            "label": "Brian Williams",
+            "meta": {},
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots["test_save_question[true-True-SaveIntegerQuestion] 1"] = {
+    "saveIntegerQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "IntegerQuestion",
+            "id": "SW50ZWdlclF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+            "label": "Brian Williams",
+            "meta": {},
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots["test_save_question[true-True-SaveFloatQuestion] 1"] = {
+    "saveFloatQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "FloatQuestion",
+            "id": "RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==",
+            "label": "Brian Williams",
+            "meta": {},
+            "slug": "effort-meet",
+        },
+    }
+}
+
 snapshots["test_save_question[true-True-SaveDateQuestion] 1"] = {
     "saveDateQuestion": {
         "clientMutationId": "testid",
@@ -334,6 +333,142 @@ snapshots["test_save_choice_question[choice] 1"] = {
             "options": {
                 "edges": [
                     {"node": {"label": "John Thomas", "slug": "suggest-traditional"}}
+                ]
+            },
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots["test_save_dynamic_choice_question[dynamic_choice-True] 1"] = {
+    "saveDynamicChoiceQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "DynamicChoiceQuestion",
+            "id": "RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+            "label": "Brian Williams",
+            "meta": {},
+            "options": {
+                "edges": [
+                    {"node": {"label": "1", "slug": "1"}},
+                    {"node": {"label": "5.5", "slug": "5.5"}},
+                    {"node": {"label": "sdkj", "slug": "sdkj"}},
+                    {"node": {"label": "info", "slug": "value"}},
+                    {"node": {"label": "something", "slug": "something"}},
+                ]
+            },
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots["test_save_dynamic_choice_question[dynamic_choice-False] 1"] = {
+    "saveDynamicChoiceQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "DynamicChoiceQuestion",
+            "id": "RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+            "label": "Brian Williams",
+            "meta": {},
+            "options": {
+                "edges": [
+                    {"node": {"label": "1", "slug": "1"}},
+                    {"node": {"label": "5.5", "slug": "5.5"}},
+                    {"node": {"label": "sdkj", "slug": "sdkj"}},
+                    {"node": {"label": "info", "slug": "value"}},
+                    {"node": {"label": "something", "slug": "something"}},
+                ]
+            },
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots["test_save_dynamic_choice_question[dynamic_multiple_choice-True] 1"] = {
+    "saveDynamicChoiceQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "DynamicChoiceQuestion",
+            "id": "RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+            "label": "Brian Williams",
+            "meta": {},
+            "options": {
+                "edges": [
+                    {"node": {"label": "1", "slug": "1"}},
+                    {"node": {"label": "5.5", "slug": "5.5"}},
+                    {"node": {"label": "sdkj", "slug": "sdkj"}},
+                    {"node": {"label": "info", "slug": "value"}},
+                    {"node": {"label": "something", "slug": "something"}},
+                ]
+            },
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots["test_save_dynamic_choice_question[dynamic_multiple_choice-False] 1"] = {
+    "saveDynamicChoiceQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "DynamicChoiceQuestion",
+            "id": "RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVmZm9ydC1tZWV0",
+            "label": "Brian Williams",
+            "meta": {},
+            "options": {
+                "edges": [
+                    {"node": {"label": "1", "slug": "1"}},
+                    {"node": {"label": "5.5", "slug": "5.5"}},
+                    {"node": {"label": "sdkj", "slug": "sdkj"}},
+                    {"node": {"label": "info", "slug": "value"}},
+                    {"node": {"label": "something", "slug": "something"}},
+                ]
+            },
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots[
+    "test_save_dynamic_multiple_choice_question[dynamic_multiple_choice-True] 1"
+] = {
+    "saveDynamicMultipleChoiceQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "DynamicMultipleChoiceQuestion",
+            "id": "RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZWZmb3J0LW1lZXQ=",
+            "label": "Brian Williams",
+            "meta": {},
+            "options": {
+                "edges": [
+                    {"node": {"label": "1", "slug": "1"}},
+                    {"node": {"label": "5.5", "slug": "5.5"}},
+                    {"node": {"label": "sdkj", "slug": "sdkj"}},
+                    {"node": {"label": "info", "slug": "value"}},
+                    {"node": {"label": "something", "slug": "something"}},
+                ]
+            },
+            "slug": "effort-meet",
+        },
+    }
+}
+
+snapshots[
+    "test_save_dynamic_multiple_choice_question[dynamic_multiple_choice-False] 1"
+] = {
+    "saveDynamicMultipleChoiceQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "DynamicMultipleChoiceQuestion",
+            "id": "RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZWZmb3J0LW1lZXQ=",
+            "label": "Brian Williams",
+            "meta": {},
+            "options": {
+                "edges": [
+                    {"node": {"label": "1", "slug": "1"}},
+                    {"node": {"label": "5.5", "slug": "5.5"}},
+                    {"node": {"label": "sdkj", "slug": "sdkj"}},
+                    {"node": {"label": "info", "slug": "value"}},
+                    {"node": {"label": "something", "slug": "something"}},
                 ]
             },
             "slug": "effort-meet",

@@ -3,6 +3,7 @@ from graphene.relay import Node
 from graphene_django.converter import convert_django_field, convert_field_to_string
 from localized_fields.fields import LocalizedField
 
+from .data_source import schema as data_source_schema
 from .form import schema as form_schema
 from .workflow import schema as workflow_schema
 
@@ -13,7 +14,12 @@ class Mutation(form_schema.Mutation, workflow_schema.Mutation, graphene.ObjectTy
     pass
 
 
-class Query(form_schema.Query, workflow_schema.Query, graphene.ObjectType):
+class Query(
+    form_schema.Query,
+    workflow_schema.Query,
+    data_source_schema.Query,
+    graphene.ObjectType,
+):
     node = Node.Field()
 
 
@@ -25,6 +31,8 @@ schema = graphene.Schema(
         form_schema.TextQuestion,
         form_schema.ChoiceQuestion,
         form_schema.MultipleChoiceQuestion,
+        form_schema.DynamicChoiceQuestion,
+        form_schema.DynamicMultipleChoiceQuestion,
         form_schema.TextareaQuestion,
         form_schema.FloatQuestion,
         form_schema.IntegerQuestion,

@@ -128,3 +128,20 @@ def minio_mock(mocker):
     Minio.stat_object.return_value = stat_response
     Minio.bucket_exists.return_value = True
     return Minio
+
+
+@pytest.fixture
+def data_source_mock(mocker):
+    from caluma.data_source.data_sources import BaseDataSource
+
+    class MyDataSource(BaseDataSource):
+        info = "Nice test data source"
+        timeout = 3600
+        default = []
+
+        def get_data(self, info):
+            return [1, 5.5, "sdkj", ["info", "value"], ["something"]]
+
+    source_mock = mocker.patch("caluma.data_source.data_source_handlers.data_sources")
+    source_mock.MyDataSource = MyDataSource
+    return source_mock

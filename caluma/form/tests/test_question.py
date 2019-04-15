@@ -413,6 +413,101 @@ def test_save_choice_question(db, snapshot, question, question_option, schema_ex
     snapshot.assert_match(result.data)
 
 
+@pytest.mark.parametrize("delete", [True, False])
+@pytest.mark.parametrize(
+    "question__type",
+    [models.Question.TYPE_DYNAMIC_CHOICE, models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE],
+)
+def test_save_dynamic_choice_question(
+    db, snapshot, question, delete, schema_executor, data_source_mock
+):
+    query = """
+        mutation SaveDynamicChoiceQuestion($input: SaveDynamicChoiceQuestionInput!) {
+          saveDynamicChoiceQuestion(input: $input) {
+            question {
+              id
+              slug
+              label
+              meta
+              __typename
+              ... on DynamicChoiceQuestion {
+                options {
+                  edges {
+                    node {
+                      slug
+                      label
+                    }
+                  }
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveDynamicChoiceQuestionSerializer, question
+        )
+    }
+    if delete:
+        question.delete()  # test creation
+    result = schema_executor(query, variables=inp)
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
+@pytest.mark.parametrize("delete", [True, False])
+@pytest.mark.parametrize(
+    "question__type", [models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE]
+)
+def test_save_dynamic_multiple_choice_question(
+    db,
+    snapshot,
+    question,
+    delete,
+    question_option_factory,
+    schema_executor,
+    data_source_mock,
+):
+    query = """
+        mutation SaveDynamicMultipleChoiceQuestion($input: SaveDynamicMultipleChoiceQuestionInput!) {
+          saveDynamicMultipleChoiceQuestion(input: $input) {
+            question {
+              id
+              slug
+              label
+              meta
+              __typename
+              ... on DynamicMultipleChoiceQuestion {
+                options {
+                  edges {
+                    node {
+                      slug
+                      label
+                    }
+                  }
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveDynamicMultipleChoiceQuestionSerializer, question
+        )
+    }
+    if delete:
+        question.delete()  # test creation
+    result = schema_executor(query, variables=inp)
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
 @pytest.mark.parametrize("question__type", [models.Question.TYPE_TABLE])
 def test_save_table_question(db, snapshot, question, question_option, schema_executor):
     query = """

@@ -10,6 +10,8 @@ from rest_framework.serializers import (
     PrimaryKeyRelatedField,
 )
 
+from caluma.data_source.data_source_handlers import get_data_source_data
+
 from ..core import serializers
 from . import models, validators
 from .jexl import QuestionJexl
@@ -258,6 +260,50 @@ class SaveQuestionOptionsMixin(object):
         return instance
 
 
+class SaveDynamicQuestionOptionsMixin(object):
+    def create_question_options(self, question, options):
+        user = self.context["request"].user
+        question_options = []
+        for sort, option in enumerate(reversed(options), start=1):
+            opt = models.Option(
+                label=option.option,
+                slug=option.value,
+                created_by_user=user.username,
+                created_by_group=user.group,
+            )
+            opt.save()
+            question_options.append(
+                models.QuestionOption(
+                    sort=sort,
+                    question=question,
+                    option=opt,
+                    created_by_user=user.username,
+                    created_by_group=user.group,
+                )
+            )
+
+        models.QuestionOption.objects.bulk_create(question_options)
+
+    @transaction.atomic
+    def create(self, validated_data):
+        data_source = validated_data.pop("data_source")
+        instance = super().create(validated_data)
+        info = self.context["info"]
+        options = get_data_source_data(info, data_source)
+        self.create_question_options(instance, options)
+        return instance
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        data_source = validated_data.pop("data_source")
+        models.QuestionOption.objects.filter(question=instance).delete()
+        instance = super().update(instance, validated_data)
+        info = self.context["info"]
+        options = get_data_source_data(info, data_source)
+        self.create_question_options(instance, options)
+        return instance
+
+
 class SaveMultipleChoiceQuestionSerializer(
     SaveQuestionOptionsMixin, SaveQuestionSerializer
 ):
@@ -284,6 +330,34 @@ class SaveChoiceQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSeriali
 
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + ("options",)
+
+
+class SaveDynamicChoiceQuestionSerializer(
+    SaveDynamicQuestionOptionsMixin, SaveQuestionSerializer
+):
+    options = serializers.GlobalIDPrimaryKeyRelatedField(many=True, read_only=True)
+    data_source = CharField()
+
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_DYNAMIC_CHOICE
+        return super().validate(data)
+
+    class Meta(SaveQuestionSerializer.Meta):
+        fields = SaveQuestionSerializer.Meta.fields + ("options", "data_source")
+
+
+class SaveDynamicMultipleChoiceQuestionSerializer(
+    SaveDynamicQuestionOptionsMixin, SaveQuestionSerializer
+):
+    options = serializers.GlobalIDPrimaryKeyRelatedField(many=True, read_only=True)
+    data_source = CharField()
+
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE
+        return super().validate(data)
+
+    class Meta(SaveQuestionSerializer.Meta):
+        fields = SaveQuestionSerializer.Meta.fields + ("options", "data_source")
 
 
 class SaveFloatQuestionSerializer(SaveQuestionSerializer):

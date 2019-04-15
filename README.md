@@ -271,6 +271,34 @@ will return a presigned `uploadUrl`, which the client can use to upload the file
 The same goes for retrieving files. Caluma will respond with a presigned `downloadUrl` for
 the client to directly download the file from the storage provider.
 
+## Custom data sources
+For Choice- and MultipleChoiceQuestions it's sometimes necessary to populate the choices
+with calculated data or data from external sources.
+
+For this you can use the data_source extension point.
+
+An example data_source looks like this:
+
+ ```python
+from caluma.core.data_sources import BaseDataSource
+import requests
+
+class CustomDataSource(BaseDataSource):
+    info = 'User choices from "someapi"'
+    timeout = 3600
+    default = []
+
+    def get_data(self, info):
+        response = requests.get(
+            f"https://someapi/?user={info.context.user.username}"
+        )
+        return [result["value"] for result in response.json()["results"]]
+ ```
+The `get_data`-method should return an iterable. This iterable can contain strings, ints, floats
+and also iterables. Those contained iterables can consist of maximally two items. The first
+will be used for the option name, the second one for it's value. If only one value is provided,
+this value will also be used as choice name.
+
 
 ## Contributing
 
