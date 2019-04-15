@@ -1,4 +1,4 @@
-from factory import Faker, SubFactory
+from factory import Faker, LazyAttribute, Maybe, SubFactory, lazy_attribute
 
 from ..core.factories import DjangoModelFactory
 from . import models
@@ -25,11 +25,20 @@ class QuestionFactory(DjangoModelFactory):
     configuration = {}
     meta = {}
     is_archived = False
-    row_form = SubFactory(FormFactory)
-    sub_form = SubFactory(FormFactory)
+
+    row_form = Maybe(
+        "is_table", yes_declaration=SubFactory(FormFactory), no_declaration=None
+    )
+    sub_form = Maybe(
+        "is_form", yes_declaration=SubFactory(FormFactory), no_declaration=None
+    )
 
     class Meta:
         model = models.Question
+
+    class Params:
+        is_table = LazyAttribute(lambda q: q.type == models.Question.TYPE_TABLE)
+        is_form = LazyAttribute(lambda q: q.type == models.Question.TYPE_FORM)
 
 
 class OptionFactory(DjangoModelFactory):
@@ -71,12 +80,30 @@ class DocumentFactory(DjangoModelFactory):
 class AnswerFactory(DjangoModelFactory):
     question = SubFactory(QuestionFactory)
     document = SubFactory(DocumentFactory)
-    value = Faker("name")
     date = None
     meta = {}
 
+    @lazy_attribute
+    def value(self):
+        if self.question.type == models.Question.TYPE_MULTIPLE_CHOICE:
+            return [Faker("name").generate({}), Faker("name").generate({})]
+        elif self.question.type not in [
+            models.Question.TYPE_FORM,
+            models.Question.TYPE_TABLE,
+        ]:
+            return Faker("name").generate({})
+
+        return None
+
+    value_document = Maybe(
+        "is_form", yes_declaration=SubFactory(DocumentFactory), no_declaration=None
+    )
+
     class Meta:
         model = models.Answer
+
+    class Params:
+        is_form = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_FORM)
 
 
 class AnswerDocumentFactory(DjangoModelFactory):

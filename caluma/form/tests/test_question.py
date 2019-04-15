@@ -75,6 +75,11 @@ def test_query_all_questions(
                     }
                   }
                 }
+                ... on FormQuestion {
+                  subForm {
+                    slug
+                  }
+                }
               }
             }
           }
