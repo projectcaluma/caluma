@@ -185,7 +185,15 @@ class SaveQuestionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Question
-        fields = ("slug", "label", "is_required", "is_hidden", "meta", "is_archived")
+        fields = (
+            "slug",
+            "label",
+            "info_text",
+            "is_required",
+            "is_hidden",
+            "meta",
+            "is_archived",
+        )
 
 
 class SaveTextQuestionSerializer(SaveQuestionSerializer):
@@ -196,7 +204,7 @@ class SaveTextQuestionSerializer(SaveQuestionSerializer):
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ("max_length",)
+        fields = SaveQuestionSerializer.Meta.fields + ("max_length", "placeholder")
 
 
 class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
@@ -207,7 +215,7 @@ class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ("max_length",)
+        fields = SaveQuestionSerializer.Meta.fields + ("max_length", "placeholder")
 
 
 class SaveDateQuestionSerializer(SaveQuestionSerializer):
@@ -301,7 +309,11 @@ class SaveFloatQuestionSerializer(SaveQuestionSerializer):
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ("min_value", "max_value")
+        fields = SaveQuestionSerializer.Meta.fields + (
+            "min_value",
+            "max_value",
+            "placeholder",
+        )
 
 
 class SaveIntegerQuestionSerializer(SaveQuestionSerializer):
@@ -327,7 +339,11 @@ class SaveIntegerQuestionSerializer(SaveQuestionSerializer):
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ("min_value", "max_value")
+        fields = SaveQuestionSerializer.Meta.fields + (
+            "min_value",
+            "max_value",
+            "placeholder",
+        )
 
 
 class SaveTableQuestionSerializer(SaveQuestionSerializer):

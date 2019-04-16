@@ -68,6 +68,8 @@ class Question(SlugModel):
     is_required = models.TextField(default="false")
     is_hidden = models.TextField(default="false")
     is_archived = models.BooleanField(default=False)
+    placeholder = LocalizedField(blank=True, null=True, required=False)
+    info_text = LocalizedField(blank=True, null=True, required=False)
     configuration = JSONField(default=dict)
     meta = JSONField(default=dict)
     options = models.ManyToManyField(
