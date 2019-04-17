@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -144,6 +145,7 @@ type ChoiceQuestion implements Question, Node {
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
   options(before: String, after: String, first: Int, last: Int, slug: String, label: String, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, orderBy: [OptionOrdering]): OptionConnection
   id: ID!
+  hideLabel: Boolean
 }
 
 type CompleteTaskFormTask implements Task, Node {
@@ -533,6 +535,7 @@ type MultipleChoiceQuestion implements Question, Node {
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
   options(before: String, after: String, first: Int, last: Int, orderBy: [OptionOrdering], slug: String, label: String, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): OptionConnection
   id: ID!
+  hideLabel: Boolean
 }
 
 type Mutation {

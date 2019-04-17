@@ -120,6 +120,14 @@ class Question(SlugModel):
     def min_value(self, value):
         self.configuration["min_value"] = value
 
+    @property
+    def hide_label(self):
+        return self.configuration.get("hide_label")
+
+    @min_value.setter
+    def hide_label(self, value):
+        self.configuration["hide_label"] = value
+
 
 class QuestionOption(UUIDModel):
     question = models.ForeignKey("Question", on_delete=models.CASCADE)

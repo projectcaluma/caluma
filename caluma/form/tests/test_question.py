@@ -16,8 +16,8 @@ from .. import models, serializers
         (models.Question.TYPE_DATE, {}),
         (models.Question.TYPE_TEXT, {"max_length": 10}),
         (models.Question.TYPE_TEXTAREA, {"max_length": 10}),
-        (models.Question.TYPE_CHOICE, {}),
-        (models.Question.TYPE_MULTIPLE_CHOICE, {}),
+        (models.Question.TYPE_CHOICE, {"hide_label": True}),
+        (models.Question.TYPE_MULTIPLE_CHOICE, {"hide_label": True}),
         (models.Question.TYPE_FORM, {}),
         (models.Question.TYPE_FILE, {}),
     ],
@@ -65,6 +65,7 @@ def test_query_all_questions(
                       }
                     }
                   }
+                  hideLabel
                 }
                 ... on ChoiceQuestion {
                   options {
@@ -74,6 +75,7 @@ def test_query_all_questions(
                       }
                     }
                   }
+                  hideLabel
                 }
                 ... on FormQuestion {
                   subForm {

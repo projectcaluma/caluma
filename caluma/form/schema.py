@@ -151,6 +151,7 @@ class ChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
+    hide_label = graphene.Boolean()
 
     class Meta:
         model = models.Question
@@ -163,6 +164,7 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
+    hide_label = graphene.Boolean()
 
     class Meta:
         model = models.Question
