@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -139,6 +140,7 @@ type ChoiceQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
+  infoText: String
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
@@ -268,6 +270,7 @@ type DateQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
+  infoText: String
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
@@ -346,6 +349,7 @@ type FileQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
+  infoText: String
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
@@ -373,6 +377,8 @@ type FloatQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
+  placeholder: String
+  infoText: String
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
@@ -465,6 +471,7 @@ type FormQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
+  infoText: String
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
@@ -497,6 +504,8 @@ type IntegerQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
+  placeholder: String
+  infoText: String
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
@@ -528,6 +537,7 @@ type MultipleChoiceQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
+  infoText: String
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
@@ -642,6 +652,7 @@ interface Question {
   createdByGroup: String
   slug: String!
   label: String!
+  infoText: String
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
@@ -719,6 +730,7 @@ type ReorderFormQuestionsPayload {
 input SaveChoiceQuestionInput {
   slug: String!
   label: String!
+  infoText: String
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
@@ -770,6 +782,7 @@ type SaveCompleteWorkflowFormTaskPayload {
 input SaveDateQuestionInput {
   slug: String!
   label: String!
+  infoText: String
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
@@ -910,6 +923,7 @@ type SaveDocumentTableAnswerPayload {
 input SaveFileQuestionInput {
   slug: String!
   label: String!
+  infoText: String
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
@@ -925,12 +939,14 @@ type SaveFileQuestionPayload {
 input SaveFloatQuestionInput {
   slug: String!
   label: String!
+  infoText: String
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
   isArchived: Boolean
   minValue: Float
   maxValue: Float
+  placeholder: String
   clientMutationId: String
 }
 
@@ -957,6 +973,7 @@ type SaveFormPayload {
 input SaveFormQuestionInput {
   slug: String!
   label: String!
+  infoText: String
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
@@ -973,12 +990,14 @@ type SaveFormQuestionPayload {
 input SaveIntegerQuestionInput {
   slug: String!
   label: String!
+  infoText: String
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
   isArchived: Boolean
   minValue: Int
   maxValue: Int
+  placeholder: String
   clientMutationId: String
 }
 
@@ -990,6 +1009,7 @@ type SaveIntegerQuestionPayload {
 input SaveMultipleChoiceQuestionInput {
   slug: String!
   label: String!
+  infoText: String
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
@@ -1035,6 +1055,7 @@ type SaveSimpleTaskPayload {
 input SaveTableQuestionInput {
   slug: String!
   label: String!
+  infoText: String
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
@@ -1051,11 +1072,13 @@ type SaveTableQuestionPayload {
 input SaveTextQuestionInput {
   slug: String!
   label: String!
+  infoText: String
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
   isArchived: Boolean
   maxLength: Int
+  placeholder: String
   clientMutationId: String
 }
 
@@ -1067,11 +1090,13 @@ type SaveTextQuestionPayload {
 input SaveTextareaQuestionInput {
   slug: String!
   label: String!
+  infoText: String
   isRequired: QuestionJexl
   isHidden: QuestionJexl
   meta: JSONString
   isArchived: Boolean
   maxLength: Int
+  placeholder: String
   clientMutationId: String
 }
 
@@ -1174,6 +1199,7 @@ type TableQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
+  infoText: String
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
@@ -1245,6 +1271,8 @@ type TextQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
+  placeholder: String
+  infoText: String
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
@@ -1262,6 +1290,8 @@ type TextareaQuestion implements Question, Node {
   isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
+  placeholder: String
+  infoText: String
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection

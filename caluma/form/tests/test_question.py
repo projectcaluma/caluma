@@ -43,19 +43,24 @@ def test_query_all_questions(
                 slug
                 label
                 meta
+                infoText
                 ... on TextQuestion {
                   maxLength
+                  placeholder
                 }
                 ... on TextareaQuestion {
                   maxLength
+                  placeholder
                 }
                 ... on FloatQuestion {
                   floatMinValue: minValue
                   floatMaxValue: maxValue
+                  placeholder
                 }
                 ... on IntegerQuestion {
                   integerMinValue: minValue
                   integerMaxValue: maxValue
+                  placeholder
                 }
                 ... on MultipleChoiceQuestion {
                   options {
