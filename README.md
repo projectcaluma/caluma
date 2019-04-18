@@ -300,6 +300,17 @@ will be used for the option name, the second one for it's value. If only one val
 this value will also be used as choice name.
 
 
+## Client tokens
+If you want to use additional services that need to talk to caluma (e.g.
+[caluma-interval](https://github.com/projectcaluma/caluma-interval)), you need to have
+an additional OIDC-client with the `token_introspection` scope key.
+
+Following environment variables need to be set for caluma:
+
+* `OIDC_INTROSPECT_ENDPOINT`: introspect endpoint from the OIDC-provider
+* `OIDC_INTROSPECT_CLIENT_ID`: ID of the OIDC-client
+* `OIDC_INTROSPECT_CLIENT_SECRET`: Secret of the OIDC-client
+
 ## Contributing
 
 Look at our [contributing guidelines](CONTRIBUTING.md) to start with your first contribution.

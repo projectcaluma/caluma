@@ -34,3 +34,17 @@ class OIDCUser(object):
 
     def __str__(self):
         return self.username
+
+
+class OIDCClient(object):
+    def __init__(self, token, introspection):
+        self.token = token
+        self.username = f"system-{introspection['client_id']}"
+        self.introspection = introspection
+
+    @property
+    def is_authenticated(self):
+        return True
+
+    def __str__(self):
+        return self.username

@@ -35,11 +35,16 @@ class Minio:
             pass
 
     def download_url(self, object_name):
-        return self.client.presigned_get_object(
-            self.bucket,
-            object_name,
-            timedelta(minutes=settings.MINIO_PRESIGNED_TTL_MINUTES),
-        )
+        try:
+            return self.client.presigned_get_object(
+                self.bucket,
+                object_name,
+                timedelta(minutes=settings.MINIO_PRESIGNED_TTL_MINUTES),
+            )
+        except minio.error.NoSuchBucket:  # pragma: no cover
+            if settings.MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET:
+                self.client.make_bucket(self.bucket)
+                return self.download_url(object_name)
 
     def upload_url(self, object_name):
         try:
@@ -51,7 +56,7 @@ class Minio:
         except minio.error.NoSuchBucket:  # pragma: no cover
             if settings.MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET:
                 self.client.make_bucket(self.bucket)
-                return self.stat_object(object_name)
+                return self.upload_url(object_name)
 
     def remove_object(self, object_name):
         self.client.remove_object(self.bucket, object_name)
