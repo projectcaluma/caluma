@@ -62,7 +62,7 @@ class OIDCAuthenticationMiddleware(object):
             )
         ).decode()
         headers = {
-            "Authorization:": f"Basic {basic}",
+            "Authorization": f"Basic {basic}",
             "Content-Type": "application/x-www-form-urlencoded",
         }
         response = requests.post(
@@ -99,7 +99,10 @@ class OIDCAuthenticationMiddleware(object):
             )
             request.user = models.OIDCUser(token, userinfo)
         except requests.HTTPError as e:
-            if e.response.status_code == 401 and settings.OIDC_INTROSPECT_ENDPOINT:
+            if (
+                e.response.status_code in [401, 403]
+                and settings.OIDC_INTROSPECT_ENDPOINT
+            ):
                 introspect_method = functools.partial(
                     self.get_introspection, token=token
                 )
