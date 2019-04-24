@@ -226,8 +226,14 @@ class SaveCompleteTaskFormTask(SaveTask):
 
 class StartCase(Mutation):
     class Meta:
-        serializer_class = serializers.StartCaseSerializer
+        serializer_class = serializers.CaseSerializer
         model_operations = ["create"]
+
+
+class SaveCase(Mutation):
+    class Meta:
+        serializer_class = serializers.SaveCaseSerializer
+        model_operations = ["create", "update"]
 
 
 class CancelCase(Mutation):
@@ -265,6 +271,10 @@ class Mutation(object):
     save_complete_task_form_task = SaveCompleteTaskFormTask().Field()
 
     start_case = StartCase().Field()
+
+    start_case.deprecation_reason = "Use SaveCase mutation instead"
+
+    save_case = SaveCase().Field()
     cancel_case = CancelCase().Field()
     complete_work_item = CompleteWorkItem().Field()
     save_work_item = SaveWorkItem().Field()

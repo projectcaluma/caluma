@@ -164,7 +164,7 @@ class SaveCompleteTaskFormTaskSerializer(SaveTaskSerializer):
         fields = SaveTaskSerializer.Meta.fields + ("form",)
 
 
-class StartCaseSerializer(serializers.ModelSerializer):
+class CaseSerializer(serializers.ModelSerializer):
     workflow = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Workflow.objects.prefetch_related("start_tasks")
     )
@@ -239,6 +239,11 @@ class StartCaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Case
         fields = ("workflow", "meta", "parent_work_item", "form")
+
+
+class SaveCaseSerializer(CaseSerializer):
+    class Meta(CaseSerializer.Meta):
+        fields = ("id", "workflow", "meta", "parent_work_item", "form")
 
 
 class CancelCaseSerializer(serializers.ModelSerializer):
