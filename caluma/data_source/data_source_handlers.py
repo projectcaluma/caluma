@@ -1,8 +1,10 @@
 from collections import namedtuple
 from datetime import timedelta
 
+from django.conf import settings
+from django.utils.module_loading import import_string
+
 from caluma.data_source.utils import cache_handler
-from caluma.extensions import data_sources
 
 DataSource = namedtuple("DataSource", ["name", "info"])
 
@@ -35,24 +37,23 @@ class Data:
         return str(self.data), str(self.data)
 
 
-def get_data_sources():
-    sources = []
-    for name in dir(data_sources):
-        cls = getattr(data_sources, name)
-        if (
-            isinstance(cls, type)
-            and name.endswith("DataSource")
-            and not name == "BaseDataSource"
-        ):
-            sources.append(DataSource(name=name, info=cls.info))
-    return sources
+def get_data_sources(dic=False):
+    """Get all configured DataSources.
+
+    :param dic: Should return a dict
+    :return: List of DataSource-objects if dic False otherwise dict
+    """
+    data_source_classes = [import_string(cls) for cls in settings.DATA_SOURCE_CLASSES]
+    if dic:
+        return {ds.__name__: ds for ds in data_source_classes}
+    return [DataSource(name=ds.__name__, info=ds.info) for ds in data_source_classes]
 
 
 def get_data_source_data(info, name):
-    try:
-        cls = getattr(data_sources, name)
-    except AttributeError:
+    data_sources = get_data_sources(dic=True)
+    if name not in data_sources:
         raise DataSourceException(f"No data_source found for name: {name}")
+    cls = data_sources[name]
     ds = cls()
     key = f"data_source_{name}_{info.context.user.username}"
     raw_data = cache_handler(

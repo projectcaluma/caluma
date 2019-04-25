@@ -1,10 +1,8 @@
 import pytest
 from django.core.cache import cache
 
-from caluma.data_source.data_sources import BaseDataSource
 
-
-def test_fetch_data_sources(snapshot, schema_executor, data_source_mock):
+def test_fetch_data_sources(snapshot, schema_executor, data_source_settings):
     query = """
         query dataSources {
           allDataSources {
@@ -27,7 +25,7 @@ def test_fetch_data_sources(snapshot, schema_executor, data_source_mock):
     snapshot.assert_match(result.data)
 
 
-def test_fetch_data_from_data_source(snapshot, schema_executor, data_source_mock):
+def test_fetch_data_from_data_source(snapshot, schema_executor, data_source_settings):
     query = """
         query dataSource {
           dataSource (name: "MyDataSource") {
@@ -57,21 +55,17 @@ def test_fetch_data_from_data_source(snapshot, schema_executor, data_source_mock
     ]
 
 
-@pytest.mark.parametrize("data", ["just a string", [["just", "some", "strings"]]])
-def test_fetch_faulty_data_from_data_source(data, schema_executor, data_source_mock):
-    class MyFaultyDataSource(BaseDataSource):
-        info = "Nice test data source"
-        timeout = 3600
-        default = []
-
-        def get_data(self, info):
-            return data
-
-    data_source_mock.MyFaultyDataSource = MyFaultyDataSource
+@pytest.mark.parametrize(
+    "data_source", ["MyFaultyDataSource", "MyOtherFaultyDataSource"]
+)
+def test_data_source_failure(data_source, schema_executor, settings):
+    settings.DATA_SOURCE_CLASSES = [
+        f"caluma.data_source.tests.data_sources.{data_source}"
+    ]
 
     query = """
-        query dataSource {
-          dataSource (name: "MyFaultyDataSource") {
+        query dataSource($name: String!) {
+          dataSource (name: $name) {
             pageInfo {
               startCursor
               endCursor
@@ -86,11 +80,19 @@ def test_fetch_faulty_data_from_data_source(data, schema_executor, data_source_m
         }
     """
 
-    result = schema_executor(query)
+    inp = {"name": data_source}
+
+    result = schema_executor(query, variables=inp)
     assert result.errors
 
 
-def test_fetch_data_from_non_existing_data_source(schema_executor,):
+@pytest.mark.parametrize("configure", [True, False])
+def test_fetch_data_from_non_existing_data_source(schema_executor, settings, configure):
+    if configure:
+        settings.DATA_SOURCE_CLASSES = [
+            f"caluma.data_source.tests.data_sources.NonExistentDataSource"
+        ]
+
     query = """
         query dataSource {
           dataSource (name: "NonExistentDataSource") {

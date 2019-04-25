@@ -419,7 +419,7 @@ def test_save_choice_question(db, snapshot, question, question_option, schema_ex
     [models.Question.TYPE_DYNAMIC_CHOICE, models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE],
 )
 def test_save_dynamic_choice_question(
-    db, snapshot, question, delete, schema_executor, data_source_mock
+    db, snapshot, question, delete, schema_executor, data_source_settings
 ):
     query = """
         mutation SaveDynamicChoiceQuestion($input: SaveDynamicChoiceQuestionInput!) {
@@ -469,7 +469,7 @@ def test_save_dynamic_multiple_choice_question(
     delete,
     question_option_factory,
     schema_executor,
-    data_source_mock,
+    data_source_settings,
 ):
     query = """
         mutation SaveDynamicMultipleChoiceQuestion($input: SaveDynamicMultipleChoiceQuestionInput!) {

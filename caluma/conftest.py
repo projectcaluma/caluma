@@ -131,17 +131,7 @@ def minio_mock(mocker):
 
 
 @pytest.fixture
-def data_source_mock(mocker):
-    from caluma.data_source.data_sources import BaseDataSource
-
-    class MyDataSource(BaseDataSource):
-        info = "Nice test data source"
-        timeout = 3600
-        default = []
-
-        def get_data(self, info):
-            return [1, 5.5, "sdkj", ["info", "value"], ["something"]]
-
-    source_mock = mocker.patch("caluma.data_source.data_source_handlers.data_sources")
-    source_mock.MyDataSource = MyDataSource
-    return source_mock
+def data_source_settings(settings):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.data_source.tests.data_sources.MyDataSource"
+    ]
