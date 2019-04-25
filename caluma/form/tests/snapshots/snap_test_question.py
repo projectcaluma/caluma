@@ -169,6 +169,12 @@ snapshots["test_save_dynamic_choice_question[dynamic_choice-True] 1"] = {
                     {"node": {"label": "sdkj", "slug": "sdkj"}},
                     {"node": {"label": "info", "slug": "value"}},
                     {"node": {"label": "something", "slug": "something"}},
+                    {
+                        "node": {
+                            "label": "english description",
+                            "slug": "translated_value",
+                        }
+                    },
                 ]
             },
             "slug": "effort-meet",
@@ -191,6 +197,12 @@ snapshots["test_save_dynamic_choice_question[dynamic_choice-False] 1"] = {
                     {"node": {"label": "sdkj", "slug": "sdkj"}},
                     {"node": {"label": "info", "slug": "value"}},
                     {"node": {"label": "something", "slug": "something"}},
+                    {
+                        "node": {
+                            "label": "english description",
+                            "slug": "translated_value",
+                        }
+                    },
                 ]
             },
             "slug": "effort-meet",
@@ -213,6 +225,12 @@ snapshots["test_save_dynamic_choice_question[dynamic_multiple_choice-True] 1"] =
                     {"node": {"label": "sdkj", "slug": "sdkj"}},
                     {"node": {"label": "info", "slug": "value"}},
                     {"node": {"label": "something", "slug": "something"}},
+                    {
+                        "node": {
+                            "label": "english description",
+                            "slug": "translated_value",
+                        }
+                    },
                 ]
             },
             "slug": "effort-meet",
@@ -235,6 +253,12 @@ snapshots["test_save_dynamic_choice_question[dynamic_multiple_choice-False] 1"] 
                     {"node": {"label": "sdkj", "slug": "sdkj"}},
                     {"node": {"label": "info", "slug": "value"}},
                     {"node": {"label": "something", "slug": "something"}},
+                    {
+                        "node": {
+                            "label": "english description",
+                            "slug": "translated_value",
+                        }
+                    },
                 ]
             },
             "slug": "effort-meet",
@@ -259,6 +283,12 @@ snapshots[
                     {"node": {"label": "sdkj", "slug": "sdkj"}},
                     {"node": {"label": "info", "slug": "value"}},
                     {"node": {"label": "something", "slug": "something"}},
+                    {
+                        "node": {
+                            "label": "english description",
+                            "slug": "translated_value",
+                        }
+                    },
                 ]
             },
             "slug": "effort-meet",
@@ -283,6 +313,12 @@ snapshots[
                     {"node": {"label": "sdkj", "slug": "sdkj"}},
                     {"node": {"label": "info", "slug": "value"}},
                     {"node": {"label": "something", "slug": "something"}},
+                    {
+                        "node": {
+                            "label": "english description",
+                            "slug": "translated_value",
+                        }
+                    },
                 ]
             },
             "slug": "effort-meet",
@@ -521,6 +557,12 @@ snapshots["test_query_all_questions[dynamic_choice-question__configuration10] 1"
                             {"node": {"label": "sdkj", "slug": "sdkj"}},
                             {"node": {"label": "info", "slug": "value"}},
                             {"node": {"label": "something", "slug": "something"}},
+                            {
+                                "node": {
+                                    "label": "english description",
+                                    "slug": "translated_value",
+                                }
+                            },
                         ]
                     },
                     "slug": "effort-meet",
@@ -549,6 +591,12 @@ snapshots[
                             {"node": {"label": "sdkj", "slug": "sdkj"}},
                             {"node": {"label": "info", "slug": "value"}},
                             {"node": {"label": "something", "slug": "something"}},
+                            {
+                                "node": {
+                                    "label": "english description",
+                                    "slug": "translated_value",
+                                }
+                            },
                         ]
                     },
                     "slug": "effort-meet",

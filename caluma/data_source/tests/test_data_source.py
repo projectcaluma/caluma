@@ -1,8 +1,14 @@
 import pytest
 from django.core.cache import cache
+from django.utils import translation
 
 
-def test_fetch_data_sources(snapshot, schema_executor, data_source_settings):
+def test_fetch_data_sources(snapshot, schema_executor, settings):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.data_source.tests.data_sources.MyDataSource",
+        "caluma.data_source.tests.data_sources.MyFaultyDataSource",
+        "caluma.data_source.tests.data_sources.MyOtherFaultyDataSource",
+    ]
     query = """
         query dataSources {
           allDataSources {
@@ -23,6 +29,16 @@ def test_fetch_data_sources(snapshot, schema_executor, data_source_settings):
     result = schema_executor(query)
     assert not result.errors
     snapshot.assert_match(result.data)
+
+    with translation.override("de"):
+        result = schema_executor(query)
+        assert not result.errors
+        snapshot.assert_match(result.data)
+
+    with translation.override("nolang"):
+        result = schema_executor(query)
+        assert not result.errors
+        snapshot.assert_match(result.data)
 
 
 def test_fetch_data_from_data_source(snapshot, schema_executor, data_source_settings):
@@ -50,9 +66,23 @@ def test_fetch_data_from_data_source(snapshot, schema_executor, data_source_sett
         1,
         5.5,
         "sdkj",
-        ["info", "value"],
+        ["value", "info"],
         ["something"],
+        [
+            "translated_value",
+            {"de": "deutsche Beschreibung", "en": "english description"},
+        ],
     ]
+
+    with translation.override("de"):
+        result = schema_executor(query)
+        assert not result.errors
+        snapshot.assert_match(result.data)
+
+    with translation.override("nolang"):
+        result = schema_executor(query)
+        assert not result.errors
+        snapshot.assert_match(result.data)
 
 
 @pytest.mark.parametrize(

@@ -256,8 +256,8 @@ type DataSourceConnection {
 }
 
 type DataSourceData {
-  slug: String!
   label: String!
+  slug: String!
 }
 
 type DataSourceDataConnection {
@@ -1015,7 +1015,6 @@ input SaveDynamicChoiceQuestionInput {
   isHidden: QuestionJexl
   meta: JSONString
   isArchived: Boolean
-  options: [ID]
   dataSource: String!
   clientMutationId: String
 }
@@ -1033,7 +1032,6 @@ input SaveDynamicMultipleChoiceQuestionInput {
   isHidden: QuestionJexl
   meta: JSONString
   isArchived: Boolean
-  options: [ID]
   dataSource: String!
   clientMutationId: String
 }

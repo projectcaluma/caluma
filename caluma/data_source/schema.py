@@ -15,8 +15,8 @@ class DataSourceConnection(Connection):
 
 
 class DataSourceData(ObjectType):
-    slug = String(required=True)
     label = String(required=True)
+    slug = String(required=True)
 
 
 class DataSourceDataConnection(Connection):

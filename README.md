@@ -285,8 +285,6 @@ import requests
 
 class CustomDataSource(BaseDataSource):
     info = 'User choices from "someapi"'
-    timeout = 3600
-    default = []
 
     def get_data(self, info):
         response = requests.get(
@@ -297,10 +295,31 @@ class CustomDataSource(BaseDataSource):
 
 This class needs also to be added to the `DATA_SOURCE_CLASSES` environment variable.
 
-The `get_data`-method should return an iterable. This iterable can contain strings, ints, floats
+### Properties
+
+* `info`: Descriptive text for the data source (can also be a multilingual dict)
+* `timeout`: Time you want to cache the data
+* `default`: The default value to be returned if execution of `get_data()` fails
+
+### `get_data`-method
+Must return an iterable. This iterable can contain strings, ints, floats
 and also iterables. Those contained iterables can consist of maximally two items. The first
-will be used for the option name, the second one for it's value. If only one value is provided,
-this value will also be used as choice name.
+will be used for the option slug, the second one for it's label. If only one value is provided,
+this value will also be used as label.
+
+For the label, it's possible to use a dict with translated values.
+
+#### Some valid examples
+
+```python
+['my-option', {"en": "english description", "de": "deutsche Beschreibung"}, ...]
+
+[['my-option', "my description"], ...]
+
+['my-option', ...]
+
+[['my-option'], ...]
+```
 
 
 ## Client tokens

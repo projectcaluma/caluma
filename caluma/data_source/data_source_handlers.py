@@ -2,6 +2,7 @@ from collections import namedtuple
 from datetime import timedelta
 
 from django.conf import settings
+from django.utils import translation
 from django.utils.module_loading import import_string
 
 from caluma.data_source.utils import cache_handler
@@ -21,10 +22,19 @@ def is_iterable_and_no_string(value):
         return False
 
 
+def translate_value(value, lang):
+    if isinstance(value, dict):
+        if lang in value:
+            return value[lang]
+        if settings.LANGUAGE_CODE in value:
+            return value[settings.LANGUAGE_CODE]
+    return value
+
+
 class Data:
     def __init__(self, data):
         self.data = data
-        self.label, self.slug = self.load()
+        self.slug, self.label = self.load()
 
     def load(self):
         if is_iterable_and_no_string(self.data):
@@ -32,6 +42,14 @@ class Data:
                 raise DataSourceException(f"Failed to parse data:\n{self.data}")
             elif len(self.data) == 1:
                 return str(self.data[0]), str(self.data[0])
+            elif isinstance(self.data[1], dict):
+                return (
+                    str(self.data[0]),
+                    str(
+                        translate_value(self.data[1], translation.get_language())
+                        or self.data[0]
+                    ),
+                )
             return str(self.data[0]), str(self.data[1])
 
         return str(self.data), str(self.data)
@@ -43,10 +61,16 @@ def get_data_sources(dic=False):
     :param dic: Should return a dict
     :return: List of DataSource-objects if dic False otherwise dict
     """
+
     data_source_classes = [import_string(cls) for cls in settings.DATA_SOURCE_CLASSES]
     if dic:
         return {ds.__name__: ds for ds in data_source_classes}
-    return [DataSource(name=ds.__name__, info=ds.info) for ds in data_source_classes]
+    return [
+        DataSource(
+            name=ds.__name__, info=translate_value(ds.info, translation.get_language())
+        )
+        for ds in data_source_classes
+    ]
 
 
 def get_data_source_data(info, name):

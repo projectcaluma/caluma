@@ -7,8 +7,10 @@ class BaseDataSource:
     value. If only one value is provided, this value will also be used as choice name.
 
     Examples:
-        ["some", "strings", ...]
-        ["some", "strings", ("now", 5), ["and", "that"], ...]
+        [['my-option', {"en": "english description", "de": "deutsche Beschreibung"}, ...]
+        [['my-option', "my description"], ...]
+        ['my-option', ...]
+        [['my-option'], ...]
 
     Properties:
         info: Informational string about this data source
@@ -24,8 +26,6 @@ class BaseDataSource:
     ...
     ... class CustomDataSource(BaseDataSource):
     ...     info = 'User choices from "someapi"'
-    ...     timeout = 3600
-    ...     default = []
     ...
     ...     def get_data(self, info):
     ...         response = requests.get(

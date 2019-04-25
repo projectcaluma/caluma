@@ -2,16 +2,26 @@ from caluma.data_source.data_sources import BaseDataSource
 
 
 class MyDataSource(BaseDataSource):
-    info = "Nice test data source"
+    info = {"en": "Nice test data source", "de": "Schöne Datenquelle"}
     timeout = 3600
     default = []
 
     def get_data(self, info):
-        return [1, 5.5, "sdkj", ["info", "value"], ["something"]]
+        return [
+            1,
+            5.5,
+            "sdkj",
+            ["value", "info"],
+            ["something"],
+            [
+                "translated_value",
+                {"en": "english description", "de": "deutsche Beschreibung"},
+            ],
+        ]
 
 
 class MyFaultyDataSource(BaseDataSource):
-    info = "Nice test data source"
+    info = "Faulty test data source"
     timeout = 3600
     default = []
 
@@ -20,7 +30,7 @@ class MyFaultyDataSource(BaseDataSource):
 
 
 class MyOtherFaultyDataSource(BaseDataSource):
-    info = "Nice test data source"
+    info = "Other faulty test data source"
     timeout = 3600
     default = []
 
