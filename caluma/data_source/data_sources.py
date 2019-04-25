@@ -12,7 +12,7 @@ class BaseDataSource:
 
     Properties:
         info: Informational string about this data source
-        timeout: timeout seconds for the cache (defaults to 2600)
+        timeout: timeout seconds for the cache (defaults to 3600)
         default: default value to return if execution of `get_data()` fails
                  (defaults to [])
 

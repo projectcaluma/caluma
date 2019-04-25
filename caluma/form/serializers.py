@@ -287,7 +287,6 @@ class SaveChoiceQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSeriali
 
 
 class SaveDynamicChoiceQuestionSerializer(SaveQuestionSerializer):
-    options = serializers.GlobalIDPrimaryKeyRelatedField(many=True, read_only=True)
     data_source = CharField()
 
     def validate(self, data):
@@ -295,11 +294,10 @@ class SaveDynamicChoiceQuestionSerializer(SaveQuestionSerializer):
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ("options", "data_source")
+        fields = SaveQuestionSerializer.Meta.fields + ("data_source",)
 
 
 class SaveDynamicMultipleChoiceQuestionSerializer(SaveQuestionSerializer):
-    options = serializers.GlobalIDPrimaryKeyRelatedField(many=True, read_only=True)
     data_source = CharField()
 
     def validate(self, data):
@@ -307,7 +305,7 @@ class SaveDynamicMultipleChoiceQuestionSerializer(SaveQuestionSerializer):
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ("options", "data_source")
+        fields = SaveQuestionSerializer.Meta.fields + ("data_source",)
 
 
 class SaveFloatQuestionSerializer(SaveQuestionSerializer):
