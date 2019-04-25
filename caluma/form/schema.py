@@ -644,6 +644,7 @@ class FileAnswer(AnswerQuerysetMixin, DjangoObjectType):
 class SaveDocument(Mutation):
     class Meta:
         serializer_class = serializers.DocumentSerializer
+        model_operations = ["create", "update"]
 
 
 class SaveDocumentAnswer(Mutation):

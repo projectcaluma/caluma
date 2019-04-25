@@ -31,6 +31,7 @@ def test_query_all_cases(db, snapshot, case, result_count, flow, schema_executor
 
 @pytest.mark.parametrize("task__lead_time", [100, None])
 @pytest.mark.parametrize("task__address_groups", ['["group-name"]|groups', None])
+@pytest.mark.parametrize("mutation", ["startCase", "saveCase"])
 def test_start_case(
     db,
     snapshot,
@@ -40,11 +41,18 @@ def test_start_case(
     work_item,
     form,
     schema_executor,
+    mutation,
+    case,
 ):
+
+    input_type = {"startCase": "StartCaseInput!", "saveCase": "SaveCaseInput!"}[
+        mutation
+    ]
     query = """
-        mutation StartCase($input: StartCaseInput!) {
-          startCase(input: $input) {
+        mutation StartCase($input: %s) {
+          %s (input: $input) {
             case {
+              id
               document {
                 form {
                   slug
@@ -71,12 +79,27 @@ def test_start_case(
             clientMutationId
           }
         }
-    """
+    """ % (
+        input_type,
+        mutation,
+    )
 
     inp = {"input": {"workflow": workflow.slug, "form": form.slug}}
+
+    if mutation == "saveCase":
+        inp["input"]["id"] = str(case.id)
+
     result = schema_executor(query, variables=inp)
 
     assert not result.errors
+
+    # if StartCase, we need a new ID, if "saveCase", we expect the same ID
+    id_needs_to_be_same = mutation == "saveCase"
+    is_same_id = extract_global_id(result.data[mutation]["case"]["id"]) == str(case.id)
+    assert is_same_id == id_needs_to_be_same
+
+    # can't snapshot IDs, they change
+    del result.data[mutation]["case"]["id"]
     snapshot.assert_match(result.data)
 
 
