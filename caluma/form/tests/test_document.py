@@ -280,7 +280,8 @@ def test_query_all_documents_filter_answers_by_question(
     assert extract_global_id(result_answer["id"]) == str(answer.id)
 
 
-def test_save_document(db, document, schema_executor):
+@pytest.mark.parametrize("update", [True, False])
+def test_save_document(db, document, schema_executor, update):
     query = """
         mutation SaveDocument($input: SaveDocumentInput!) {
           saveDocument(input: $input) {
@@ -288,6 +289,7 @@ def test_save_document(db, document, schema_executor):
                 form {
                   slug
                 }
+                id
             }
             clientMutationId
           }
@@ -299,10 +301,22 @@ def test_save_document(db, document, schema_executor):
             serializers.DocumentSerializer, document
         )
     }
+
+    if not update:
+        # not update = create = we don't pass the ID
+        del inp["input"]["id"]
+
     result = schema_executor(query, variables=inp)
 
     assert not result.errors
     assert result.data["saveDocument"]["document"]["form"]["slug"] == document.form.slug
+
+    same_id = extract_global_id(result.data["saveDocument"]["document"]["id"]) == str(
+        document.id
+    )
+
+    # if updating, the resulting document must be the same
+    assert same_id == update
 
 
 @pytest.mark.parametrize("delete_answer", [True, False])

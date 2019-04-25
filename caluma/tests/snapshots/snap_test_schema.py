@@ -552,7 +552,8 @@ type Mutation {
   saveSimpleTask(input: SaveSimpleTaskInput!): SaveSimpleTaskPayload
   saveCompleteWorkflowFormTask(input: SaveCompleteWorkflowFormTaskInput!): SaveCompleteWorkflowFormTaskPayload
   saveCompleteTaskFormTask(input: SaveCompleteTaskFormTaskInput!): SaveCompleteTaskFormTaskPayload
-  startCase(input: StartCaseInput!): StartCasePayload
+  startCase(input: StartCaseInput!): StartCasePayload @deprecated(reason: "Use SaveCase mutation instead")
+  saveCase(input: SaveCaseInput!): SaveCasePayload
   cancelCase(input: CancelCaseInput!): CancelCasePayload
   completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
   saveWorkItem(input: SaveWorkItemInput!): SaveWorkItemPayload
@@ -727,6 +728,20 @@ type ReorderFormQuestionsPayload {
   clientMutationId: String
 }
 
+input SaveCaseInput {
+  id: String
+  workflow: ID!
+  meta: JSONString
+  parentWorkItem: ID
+  form: ID
+  clientMutationId: String
+}
+
+type SaveCasePayload {
+  case: Case
+  clientMutationId: String
+}
+
 input SaveChoiceQuestionInput {
   slug: String!
   label: String!
@@ -858,6 +873,7 @@ type SaveDocumentFormAnswerPayload {
 }
 
 input SaveDocumentInput {
+  id: String
   form: ID!
   meta: JSONString
   clientMutationId: String
