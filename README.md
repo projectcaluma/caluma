@@ -280,7 +280,7 @@ For this you can use the data_source extension point.
 An example data_source looks like this:
 
  ```python
-from caluma.core.data_sources import BaseDataSource
+from caluma.data_sources import BaseDataSource
 import requests
 
 class CustomDataSource(BaseDataSource):
@@ -293,7 +293,10 @@ class CustomDataSource(BaseDataSource):
             f"https://someapi/?user={info.context.user.username}"
         )
         return [result["value"] for result in response.json()["results"]]
- ```
+```
+
+This class needs also to be added to the `DATA_SOURCE_CLASSES` environment variable.
+
 The `get_data`-method should return an iterable. This iterable can contain strings, ints, floats
 and also iterables. Those contained iterables can consist of maximally two items. The first
 will be used for the option name, the second one for it's value. If only one value is provided,

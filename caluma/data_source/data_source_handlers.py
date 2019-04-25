@@ -14,9 +14,7 @@ class DataSourceException(Exception):
 def is_iterable_and_no_string(value):
     try:
         iter(value)
-        if isinstance(value, str):
-            return False
-        return True
+        return not isinstance(value, str)
     except TypeError:
         return False
 
@@ -63,6 +61,4 @@ def get_data_source_data(info, name):
     if not is_iterable_and_no_string(raw_data):
         raise DataSourceException(f"Failed to parse data from source: {name}")
 
-    data = [Data(d) for d in raw_data]
-
-    return data
+    return [Data(d) for d in raw_data]

@@ -18,7 +18,7 @@ class BaseDataSource:
 
     A custom data source class could look like this:
     ```
-    >>> from caluma.core.data_sources import BaseDataSource
+    >>> from caluma.data_sources import BaseDataSource
     ... import requests
     ...
     ...
