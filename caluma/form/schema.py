@@ -1,5 +1,5 @@
 import graphene
-from graphene import relay
+from graphene import ConnectionField, relay
 from graphene.types import generic
 from graphene_django.rest_framework import serializer_converter
 
@@ -7,6 +7,8 @@ from ..core.filters import DjangoFilterConnectionField, DjangoFilterSetConnectio
 from ..core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..core.relay import extract_global_id
 from ..core.types import DjangoObjectType, Node
+from ..data_source.data_source_handlers import get_data_source_data
+from ..data_source.schema import DataSourceDataConnection
 from . import filters, models, serializers
 
 
@@ -197,10 +199,11 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
 
 class DynamicChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
-    options = DjangoFilterConnectionField(
-        Option, filterset_class=filters.OptionFilterSet
-    )
+    options = ConnectionField(DataSourceDataConnection)
     data_source = graphene.String(required=True)
+
+    def resolve_options(self, info, *args):
+        return get_data_source_data(info, self.data_source)
 
     class Meta:
         model = models.Question
@@ -217,10 +220,11 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
 
 
 class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
-    options = DjangoFilterConnectionField(
-        Option, filterset_class=filters.OptionFilterSet
-    )
+    options = ConnectionField(DataSourceDataConnection)
     data_source = graphene.String(required=True)
+
+    def resolve_options(self, info, *args):
+        return get_data_source_data(info, self.data_source)
 
     class Meta:
         model = models.Question

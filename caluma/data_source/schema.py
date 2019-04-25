@@ -15,8 +15,8 @@ class DataSourceConnection(Connection):
 
 
 class DataSourceData(ObjectType):
-    option = String()
-    value = String()
+    slug = String(required=True)
+    label = String(required=True)
 
 
 class DataSourceDataConnection(Connection):

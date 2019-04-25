@@ -35,8 +35,8 @@ def test_fetch_data_from_data_source(snapshot, schema_executor, data_source_sett
             }
             edges {
               node {
-                option
-                value
+                label
+                slug
               }
             }
           }
@@ -72,8 +72,8 @@ def test_data_source_failure(data_source, schema_executor, settings):
             }
             edges {
               node {
-                option
-                value
+                label
+                slug
               }
             }
           }
@@ -102,8 +102,8 @@ def test_fetch_data_from_non_existing_data_source(schema_executor, settings, con
             }
             edges {
               node {
-                option
-                value
+                label
+                slug
               }
             }
           }

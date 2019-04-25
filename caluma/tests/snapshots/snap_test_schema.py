@@ -256,8 +256,8 @@ type DataSourceConnection {
 }
 
 type DataSourceData {
-  option: String
-  value: String
+  slug: String!
+  label: String!
 }
 
 type DataSourceDataConnection {
@@ -357,7 +357,7 @@ type DynamicChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
-  options(before: String, after: String, first: Int, last: Int, orderBy: [OptionOrdering], slug: String, label: String, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): OptionConnection
+  options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   dataSource: String!
   id: ID!
 }
@@ -376,7 +376,7 @@ type DynamicMultipleChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
-  options(before: String, after: String, first: Int, last: Int, orderBy: [OptionOrdering], slug: String, label: String, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): OptionConnection
+  options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   dataSource: String!
   id: ID!
 }

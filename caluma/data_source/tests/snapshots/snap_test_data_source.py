@@ -19,11 +19,11 @@ snapshots["test_fetch_data_sources 1"] = {
 snapshots["test_fetch_data_from_data_source 1"] = {
     "dataSource": {
         "edges": [
-            {"node": {"option": "1", "value": "1"}},
-            {"node": {"option": "5.5", "value": "5.5"}},
-            {"node": {"option": "sdkj", "value": "sdkj"}},
-            {"node": {"option": "info", "value": "value"}},
-            {"node": {"option": "something", "value": "something"}},
+            {"node": {"label": "1", "slug": "1"}},
+            {"node": {"label": "5.5", "slug": "5.5"}},
+            {"node": {"label": "sdkj", "slug": "sdkj"}},
+            {"node": {"label": "info", "slug": "value"}},
+            {"node": {"label": "something", "slug": "something"}},
         ],
         "pageInfo": {
             "endCursor": "YXJyYXljb25uZWN0aW9uOjQ=",

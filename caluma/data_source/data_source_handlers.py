@@ -24,7 +24,7 @@ def is_iterable_and_no_string(value):
 class Data:
     def __init__(self, data):
         self.data = data
-        self.option, self.value = self.load()
+        self.label, self.slug = self.load()
 
     def load(self):
         if is_iterable_and_no_string(self.data):

@@ -20,6 +20,8 @@ from .. import models, serializers
         (models.Question.TYPE_MULTIPLE_CHOICE, {}),
         (models.Question.TYPE_FORM, {}),
         (models.Question.TYPE_FILE, {}),
+        (models.Question.TYPE_DYNAMIC_CHOICE, {"data_source": "MyDataSource"}),
+        (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, {"data_source": "MyDataSource"}),
     ],
 )
 def test_query_all_questions(
@@ -30,6 +32,7 @@ def test_query_all_questions(
     form,
     form_question_factory,
     question_option,
+    data_source_settings,
 ):
     form_question_factory.create(form=form)
 
@@ -76,6 +79,26 @@ def test_query_all_questions(
                     edges {
                       node {
                         slug
+                      }
+                    }
+                  }
+                }
+                ... on DynamicMultipleChoiceQuestion {
+                  options {
+                    edges {
+                      node {
+                        slug
+                        label
+                      }
+                    }
+                  }
+                }
+                ... on DynamicChoiceQuestion {
+                  options {
+                    edges {
+                      node {
+                        slug
+                        label
                       }
                     }
                   }
