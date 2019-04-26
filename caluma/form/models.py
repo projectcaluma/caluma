@@ -2,7 +2,6 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models, transaction
 from django.db.models.signals import post_init
 from django.dispatch import receiver
-from django.template.defaultfilters import slugify
 from localized_fields.fields import LocalizedField
 
 from ..core.models import SlugModel, UUIDModel
@@ -236,7 +235,7 @@ class File(UUIDModel):
 
     @property
     def object_name(self):
-        return f"{self.pk}_{slugify(self.name)}"
+        return f"{self.pk}_{self.name}"
 
     @property
     def upload_url(self):
