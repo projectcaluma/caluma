@@ -412,6 +412,24 @@ snapshots[
 }
 
 snapshots[
+    "test_save_document_answer[form-question__configuration13-None-None-SaveDocumentFormAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentFormAnswer": {
+        "answer": {"form_value": {"form": {"slug": "suggest-traditional"}}},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[form-question__configuration13-None-None-SaveDocumentFormAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentFormAnswer": {
+        "answer": {"form_value": {"form": {"slug": "suggest-traditional"}}},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
     "test_save_document_answer[textarea-question__configuration14-Test-None-SaveDocumentStringAnswer-True-option-slug-True] 1"
 ] = {
     "saveDocumentStringAnswer": {
@@ -461,24 +479,6 @@ snapshots[
 ] = {
     "saveDocumentStringAnswer": {
         "answer": {"stringValue": "option-slug"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[form-question__configuration13-None-None-SaveDocumentFormAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentFormAnswer": {
-        "answer": {"form_value": {"form": {"slug": "suggest-traditional"}}},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[form-question__configuration13-None-None-SaveDocumentFormAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentFormAnswer": {
-        "answer": {"form_value": {"form": {"slug": "suggest-traditional"}}},
         "clientMutationId": "testid",
     }
 }
