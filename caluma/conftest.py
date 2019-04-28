@@ -128,3 +128,10 @@ def minio_mock(mocker):
     Minio.stat_object.return_value = stat_response
     Minio.bucket_exists.return_value = True
     return Minio
+
+
+@pytest.fixture
+def data_source_settings(settings):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.data_source.tests.data_sources.MyDataSource"
+    ]

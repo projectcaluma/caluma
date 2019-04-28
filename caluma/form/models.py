@@ -47,6 +47,8 @@ class Question(SlugModel):
     TYPE_TABLE = "table"
     TYPE_FORM = "form"
     TYPE_FILE = "file"
+    TYPE_DYNAMIC_CHOICE = "dynamic_choice"
+    TYPE_DYNAMIC_MULTIPLE_CHOICE = "dynamic_multiple_choice"
 
     TYPE_CHOICES = (
         TYPE_MULTIPLE_CHOICE,
@@ -59,11 +61,13 @@ class Question(SlugModel):
         TYPE_TABLE,
         TYPE_FORM,
         TYPE_FILE,
+        TYPE_DYNAMIC_CHOICE,
+        TYPE_DYNAMIC_MULTIPLE_CHOICE,
     )
     TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
 
     label = LocalizedField(blank=False, null=False, required=False)
-    type = models.CharField(choices=TYPE_CHOICES_TUPLE, max_length=15)
+    type = models.CharField(choices=TYPE_CHOICES_TUPLE, max_length=23)
     is_required = models.TextField(default="false")
     is_hidden = models.TextField(default="false")
     is_archived = models.BooleanField(default=False)
@@ -71,6 +75,7 @@ class Question(SlugModel):
     info_text = LocalizedField(blank=True, null=True, required=False)
     configuration = JSONField(default=dict)
     meta = JSONField(default=dict)
+    data_source = models.CharField(max_length=255, blank=True, null=True)
     options = models.ManyToManyField(
         "Option", through="QuestionOption", related_name="questions"
     )

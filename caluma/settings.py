@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "caluma.user.apps.DefaultConfig",
     "caluma.form.apps.DefaultConfig",
     "caluma.workflow.apps.DefaultConfig",
+    "caluma.data_source.apps.DefaultConfig",
 ]
 
 MIDDLEWARE = [
@@ -179,6 +180,8 @@ PERMISSION_CLASSES = env.list(
 )
 
 VALIDATION_CLASSES = env.list("VALIDATION_CLASSES", default=[])
+
+DATA_SOURCE_CLASSES = env.list("DATA_SOURCE_CLASSES", default=[])
 
 # Cors headers
 

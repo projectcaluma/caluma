@@ -271,6 +271,56 @@ will return a presigned `uploadUrl`, which the client can use to upload the file
 The same goes for retrieving files. Caluma will respond with a presigned `downloadUrl` for
 the client to directly download the file from the storage provider.
 
+## Custom data sources
+For Choice- and MultipleChoiceQuestions it's sometimes necessary to populate the choices
+with calculated data or data from external sources.
+
+For this you can use the data_source extension point.
+
+An example data_source looks like this:
+
+ ```python
+from caluma.data_sources import BaseDataSource
+import requests
+
+class CustomDataSource(BaseDataSource):
+    info = 'User choices from "someapi"'
+
+    def get_data(self, info):
+        response = requests.get(
+            f"https://someapi/?user={info.context.user.username}"
+        )
+        return [result["value"] for result in response.json()["results"]]
+```
+
+This class needs also to be added to the `DATA_SOURCE_CLASSES` environment variable.
+
+### Properties
+
+* `info`: Descriptive text for the data source (can also be a multilingual dict)
+* `timeout`: Time you want to cache the data
+* `default`: The default value to be returned if execution of `get_data()` fails
+
+### `get_data`-method
+Must return an iterable. This iterable can contain strings, ints, floats
+and also iterables. Those contained iterables can consist of maximally two items. The first
+will be used for the option slug, the second one for it's label. If only one value is provided,
+this value will also be used as label.
+
+For the label, it's possible to use a dict with translated values.
+
+#### Some valid examples
+
+```python
+['my-option', {"en": "english description", "de": "deutsche Beschreibung"}, ...]
+
+[['my-option', "my description"], ...]
+
+['my-option', ...]
+
+[['my-option'], ...]
+```
+
 
 ## Client tokens
 If you want to use additional services that need to talk to caluma (e.g.

@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -246,6 +245,36 @@ type CreateWorkItemPayload {
   clientMutationId: String
 }
 
+type DataSource {
+  info: String
+  name: String!
+}
+
+type DataSourceConnection {
+  pageInfo: PageInfo!
+  edges: [DataSourceEdge]!
+}
+
+type DataSourceData {
+  label: String!
+  slug: String!
+}
+
+type DataSourceDataConnection {
+  pageInfo: PageInfo!
+  edges: [DataSourceDataEdge]!
+}
+
+type DataSourceDataEdge {
+  node: DataSourceData
+  cursor: String!
+}
+
+type DataSourceEdge {
+  node: DataSource
+  cursor: String!
+}
+
 scalar Date
 
 type DateAnswer implements Answer, Node {
@@ -312,6 +341,44 @@ enum DocumentOrdering {
   CREATED_BY_USER_DESC
   CREATED_BY_GROUP_ASC
   CREATED_BY_GROUP_DESC
+}
+
+type DynamicChoiceQuestion implements Question, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  label: String!
+  isRequired: QuestionJexl!
+  isHidden: QuestionJexl!
+  isArchived: Boolean!
+  infoText: String
+  meta: GenericScalar!
+  source: Question
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
+  options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+  dataSource: String!
+  id: ID!
+}
+
+type DynamicMultipleChoiceQuestion implements Question, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  label: String!
+  isRequired: QuestionJexl!
+  isHidden: QuestionJexl!
+  isArchived: Boolean!
+  infoText: String
+  meta: GenericScalar!
+  source: Question
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
+  options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+  dataSource: String!
+  id: ID!
 }
 
 type File implements Node {
@@ -572,6 +639,8 @@ type Mutation {
   saveDateQuestion(input: SaveDateQuestionInput!): SaveDateQuestionPayload
   saveChoiceQuestion(input: SaveChoiceQuestionInput!): SaveChoiceQuestionPayload
   saveMultipleChoiceQuestion(input: SaveMultipleChoiceQuestionInput!): SaveMultipleChoiceQuestionPayload
+  saveDynamicChoiceQuestion(input: SaveDynamicChoiceQuestionInput!): SaveDynamicChoiceQuestionPayload
+  saveDynamicMultipleChoiceQuestion(input: SaveDynamicMultipleChoiceQuestionInput!): SaveDynamicMultipleChoiceQuestionPayload
   saveFloatQuestion(input: SaveFloatQuestionInput!): SaveFloatQuestionPayload
   saveIntegerQuestion(input: SaveIntegerQuestionInput!): SaveIntegerQuestionPayload
   saveTableQuestion(input: SaveTableQuestionInput!): SaveTableQuestionPayload
@@ -635,6 +704,8 @@ type PageInfo {
 }
 
 type Query {
+  allDataSources(before: String, after: String, first: Int, last: Int): DataSourceConnection
+  dataSource(name: String, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   allWorkflows(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, orderBy: [WorkflowOrdering]): WorkflowConnection
   allTasks(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, orderBy: [TaskOrdering]): TaskConnection
   allCases(before: String, after: String, first: Int, last: Int, workflow: ID, status: CaseStatusArgument, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [CaseOrdering]): CaseConnection
@@ -933,6 +1004,40 @@ input SaveDocumentTableAnswerInput {
 
 type SaveDocumentTableAnswerPayload {
   answer: Answer
+  clientMutationId: String
+}
+
+input SaveDynamicChoiceQuestionInput {
+  slug: String!
+  label: String!
+  infoText: String
+  isRequired: QuestionJexl
+  isHidden: QuestionJexl
+  meta: JSONString
+  isArchived: Boolean
+  dataSource: String!
+  clientMutationId: String
+}
+
+type SaveDynamicChoiceQuestionPayload {
+  question: Question
+  clientMutationId: String
+}
+
+input SaveDynamicMultipleChoiceQuestionInput {
+  slug: String!
+  label: String!
+  infoText: String
+  isRequired: QuestionJexl
+  isHidden: QuestionJexl
+  meta: JSONString
+  isArchived: Boolean
+  dataSource: String!
+  clientMutationId: String
+}
+
+type SaveDynamicMultipleChoiceQuestionPayload {
+  question: Question
   clientMutationId: String
 }
 

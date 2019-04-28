@@ -286,6 +286,28 @@ class SaveChoiceQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSeriali
         fields = SaveQuestionSerializer.Meta.fields + ("options",)
 
 
+class SaveDynamicChoiceQuestionSerializer(SaveQuestionSerializer):
+    data_source = CharField()
+
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_DYNAMIC_CHOICE
+        return super().validate(data)
+
+    class Meta(SaveQuestionSerializer.Meta):
+        fields = SaveQuestionSerializer.Meta.fields + ("data_source",)
+
+
+class SaveDynamicMultipleChoiceQuestionSerializer(SaveQuestionSerializer):
+    data_source = CharField()
+
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE
+        return super().validate(data)
+
+    class Meta(SaveQuestionSerializer.Meta):
+        fields = SaveQuestionSerializer.Meta.fields + ("data_source",)
+
+
 class SaveFloatQuestionSerializer(SaveQuestionSerializer):
     min_value = FloatField(required=False, allow_null=True)
     max_value = FloatField(required=False, allow_null=True)
