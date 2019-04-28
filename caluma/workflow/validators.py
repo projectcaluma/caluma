@@ -12,7 +12,7 @@ class WorkItemValidator:
         self._validate_task_complete_task_form(task, case, case.document)
 
     def _validate_task_complete_task_form(self, task, case, document):
-        DocumentValidator().validate(answers=document.answers, form=document.form)
+        DocumentValidator().validate(document)
 
     def validate(self, *, status, child_case, case, task, document, **kwargs):
         if status != models.WorkItem.STATUS_READY:
