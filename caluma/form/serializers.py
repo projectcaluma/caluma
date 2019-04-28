@@ -405,6 +405,25 @@ class SaveFileQuestionSerializer(SaveQuestionSerializer):
         fields = SaveQuestionSerializer.Meta.fields
 
 
+class SaveStaticQuestionSerializer(SaveQuestionSerializer):
+    static_content = CharField(required=True)
+
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_STATIC
+        return super().validate(data)
+
+    class Meta(SaveQuestionSerializer.Meta):
+        fields = (
+            "label",
+            "slug",
+            "info_text",
+            "is_hidden",
+            "meta",
+            "is_archived",
+            "static_content",
+        )
+
+
 class SaveOptionSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("slug", "label", "meta")

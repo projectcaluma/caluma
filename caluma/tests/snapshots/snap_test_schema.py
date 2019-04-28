@@ -646,6 +646,7 @@ type Mutation {
   saveTableQuestion(input: SaveTableQuestionInput!): SaveTableQuestionPayload
   saveFormQuestion(input: SaveFormQuestionInput!): SaveFormQuestionPayload
   saveFileQuestion(input: SaveFileQuestionInput!): SaveFileQuestionPayload
+  saveStaticQuestion(input: SaveStaticQuestionInput!): SaveStaticQuestionPayload
   saveDocument(input: SaveDocumentInput!): SaveDocumentPayload
   saveDocumentStringAnswer(input: SaveDocumentStringAnswerInput!): SaveDocumentStringAnswerPayload
   saveDocumentIntegerAnswer(input: SaveDocumentIntegerAnswerInput!): SaveDocumentIntegerAnswerPayload
@@ -1173,6 +1174,22 @@ type SaveSimpleTaskPayload {
   clientMutationId: String
 }
 
+input SaveStaticQuestionInput {
+  label: String!
+  slug: String!
+  infoText: String
+  isHidden: QuestionJexl
+  meta: JSONString
+  isArchived: Boolean
+  staticContent: String!
+  clientMutationId: String
+}
+
+type SaveStaticQuestionPayload {
+  question: Question
+  clientMutationId: String
+}
+
 input SaveTableQuestionInput {
   slug: String!
   label: String!
@@ -1285,6 +1302,24 @@ input StartCaseInput {
 type StartCasePayload {
   case: Case
   clientMutationId: String
+}
+
+type StaticQuestion implements Question, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  label: String!
+  isHidden: QuestionJexl!
+  isArchived: Boolean!
+  infoText: String
+  meta: GenericScalar!
+  source: Question
+  forms(before: String, after: String, first: Int, last: Int, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
+  staticContent: String
+  id: ID!
+  isRequired: QuestionJexl!
 }
 
 type StringAnswer implements Answer, Node {

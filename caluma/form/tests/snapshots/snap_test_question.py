@@ -605,3 +605,37 @@ snapshots[
         ]
     }
 }
+
+snapshots["test_query_all_questions[static-question__configuration10] 1"] = {
+    "allQuestions": {
+        "edges": [
+            {
+                "node": {
+                    "__typename": "StaticQuestion",
+                    "id": "U3RhdGljUXVlc3Rpb246ZWZmb3J0LW1lZXQ=",
+                    "infoText": "",
+                    "label": "Brian Williams",
+                    "meta": {},
+                    "slug": "effort-meet",
+                    "staticContent": """Line whatever team suggest traditional boy. Drop argue move. Anyone remember prove.
+Kid avoid player relationship to range whose. Draw free property consider.""",
+                }
+            }
+        ]
+    }
+}
+
+snapshots["test_save_static_question[static] 1"] = {
+    "saveStaticQuestion": {
+        "clientMutationId": "testid",
+        "question": {
+            "__typename": "StaticQuestion",
+            "id": "U3RhdGljUXVlc3Rpb246ZWZmb3J0LW1lZXQ=",
+            "label": "Brian Williams",
+            "meta": {},
+            "slug": "effort-meet",
+            "staticContent": """Line whatever team suggest traditional boy. Drop argue move. Anyone remember prove.
+Kid avoid player relationship to range whose. Draw free property consider.""",
+        },
+    }
+}

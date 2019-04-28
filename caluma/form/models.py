@@ -49,6 +49,7 @@ class Question(SlugModel):
     TYPE_FILE = "file"
     TYPE_DYNAMIC_CHOICE = "dynamic_choice"
     TYPE_DYNAMIC_MULTIPLE_CHOICE = "dynamic_multiple_choice"
+    TYPE_STATIC = "static"
 
     TYPE_CHOICES = (
         TYPE_MULTIPLE_CHOICE,
@@ -63,6 +64,7 @@ class Question(SlugModel):
         TYPE_FILE,
         TYPE_DYNAMIC_CHOICE,
         TYPE_DYNAMIC_MULTIPLE_CHOICE,
+        TYPE_STATIC,
     )
     TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
 
@@ -73,6 +75,7 @@ class Question(SlugModel):
     is_archived = models.BooleanField(default=False)
     placeholder = LocalizedField(blank=True, null=True, required=False)
     info_text = LocalizedField(blank=True, null=True, required=False)
+    static_content = LocalizedField(blank=True, null=True, required=False)
     configuration = JSONField(default=dict)
     meta = JSONField(default=dict)
     data_source = models.CharField(max_length=255, blank=True, null=True)
