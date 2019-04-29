@@ -26,8 +26,8 @@ def test_validate_simple_required_field(
     [
         ("true", True),
         ("false", False),
-        ("'sub_2_question_1'|answer('parent.sub_2') == 'foo'", True),
-        ("'sub_2_question_1'|answer('parent.sub_2') == 'bar'", False),
+        ("'parent.sub_2.sub_2_question_1'|answer == 'foo'", True),
+        ("'parent.sub_2.sub_2_question_1'|answer == 'bar'", False),
     ],
 )
 def test_validate_nested_form(

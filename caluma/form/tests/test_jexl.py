@@ -25,8 +25,8 @@ def test_question_jexl_validate(expression, num_errors):
     "expression,result",
     [
         ('"a1"|answer', "A1"),
-        ('"b1"|answer("parent.form_b")', "B1"),
-        ('"a1"|answer("parent.form_b.parent.form_a")', "A1"),
+        ('"parent.form_b.b1"|answer', "B1"),
+        ('"parent.form_b.parent.form_a.a1"|answer', "A1"),
     ],
 )
 def test_jexl_traversal(expression, result):

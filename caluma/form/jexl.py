@@ -19,15 +19,12 @@ class QuestionJexl(JEXL):
         self.add_transform("answer", self.answer_transform)
         self.add_transform("mapby", lambda arr, key: [obj[key] for obj in arr])
 
-    def answer_transform(self, *args):
-        question = args[0]
-        path = args[1] if len(args) > 1 else None
-
+    def answer_transform(self, question_with_path):
         current_context = self.context
-        if path:
-            parts = path.split(".")
-            for part in parts:
-                current_context = current_context.get(part)
+        segments = question_with_path.split(".")
+        question = segments.pop()
+        for segment in segments:
+            current_context = current_context.get(segment)
 
         return current_context.get(question)
 
