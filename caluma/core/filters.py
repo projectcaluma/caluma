@@ -20,7 +20,7 @@ from django_filters.rest_framework import (
     MultipleChoiceFilter,
     OrderingFilter,
 )
-from graphene import Enum, List
+from graphene import Enum, InputObjectType, List
 from graphene.types.utils import get_type
 from graphene.utils.str_converters import to_camel_case
 from graphene_django import filter
@@ -183,8 +183,56 @@ class FilterSet(GrapheneFilterSetMixin, FilterSet):
         return filter_class, params
 
 
+class MetaLookupMode(Enum):
+    EXACT = "exact"
+    STARTSWITH = "startswith"
+    CONTAINS = "icontains"
+
+
+class MetaValueFilterType(InputObjectType):
+    key = graphene.String(required=True)
+    value = graphene.String(required=True)
+    lookup = MetaLookupMode()
+
+
+class MetaValueFilterField(forms.MultiValueField):
+    def __init__(self, label, **kwargs):
+        super().__init__(fields=(forms.CharField(), forms.CharField()))
+
+    def clean(self, data):
+        # override parent clean() which would reject our data structure.
+        # We don't validate, as the structure is already enforced by the
+        # schema.
+        return data
+
+
+class MetaValueFilter(Filter):
+    field_class = MetaValueFilterField
+
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES:
+            return qs
+        meta_key = value["key"]
+        meta_value = value["value"]
+        lookup = value.get("lookup", self.lookup_expr)
+        return qs.filter(**{f"{self.field_name}__{meta_key}__{lookup}": meta_value})
+
+
+@convert_form_field.register(MetaValueFilterField)
+def convert_meta_value_field(field):
+    registry = get_global_registry()
+    converted = registry.get_converted_field(field)
+    if converted:
+        return converted
+
+    converted = MetaValueFilterType()
+    registry.register_converted_field(field, converted)
+    return converted
+
+
 class MetaFilterSet(FilterSet):
     meta_has_key = CharFilter(lookup_expr="has_key", field_name="meta")
+    meta_value = MetaValueFilter(field_name="meta")
 
 
 class DjangoFilterConnectionField(filter.DjangoFilterConnectionField):
