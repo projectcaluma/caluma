@@ -219,6 +219,7 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "row_form",
             "sub_form",
             "placeholder",
+            "static_content",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)

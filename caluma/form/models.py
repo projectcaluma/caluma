@@ -2,7 +2,7 @@ from django.contrib.postgres.fields import JSONField
 from django.db import models, transaction
 from django.db.models.signals import post_init
 from django.dispatch import receiver
-from localized_fields.fields import LocalizedField
+from localized_fields.fields import LocalizedField, LocalizedTextField
 
 from ..core.models import SlugModel, UUIDModel
 from .storage_clients import client
@@ -75,7 +75,7 @@ class Question(SlugModel):
     is_archived = models.BooleanField(default=False)
     placeholder = LocalizedField(blank=True, null=True, required=False)
     info_text = LocalizedField(blank=True, null=True, required=False)
-    static_content = LocalizedField(blank=True, null=True, required=False)
+    static_content = LocalizedTextField(blank=True, null=True, required=False)
     configuration = JSONField(default=dict)
     meta = JSONField(default=dict)
     data_source = models.CharField(max_length=255, blank=True, null=True)
