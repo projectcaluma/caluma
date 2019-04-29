@@ -1,3 +1,8 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 class BaseDataSource:
     """Basic data source class to be extended by any data source implementation.
 
@@ -14,19 +19,20 @@ class BaseDataSource:
 
     Properties:
         info: Informational string about this data source
-        timeout: timeout seconds for the cache (defaults to 3600)
-        default: default value to return if execution of `get_data()` fails
-                 (defaults to [])
+        default: default value to return if execution of `get_data()` fails.
+                 If this is `None`, the Exception won't be handled. Defaults to None.
 
     A custom data source class could look like this:
     ```
-    >>> from caluma.data_sources import BaseDataSource
+    >>> from caluma.data_source.data_sources import BaseDataSource
+    ... from caluma.data_source.utils import data_source_cache
     ... import requests
     ...
     ...
     ... class CustomDataSource(BaseDataSource):
     ...     info = 'User choices from "someapi"'
     ...
+    ...     @data_source_cache(timeout=3600)
     ...     def get_data(self, info):
     ...         response = requests.get(
     ...             f"https://someapi/?user={info.context.request.user.username}"
@@ -37,11 +43,23 @@ class BaseDataSource:
     """
 
     info = None
-    timeout = 3600
-    default = []
+    default = None
 
     def __init__(self):
         pass
 
     def get_data(self, info):  # pragma: no cover
         raise NotImplementedError()
+
+    def try_get_data_with_fallback(self, info):
+        try:
+            new_data = self.get_data(info)
+        except Exception as e:
+            logger.exception(
+                f"Executing {type(self).__name__}.get_data() failed:"
+                f"{e}\n Using default data."
+            )
+            if self.default is None:
+                raise e
+            return self.default
+        return new_data

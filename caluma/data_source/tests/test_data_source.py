@@ -62,7 +62,7 @@ def test_fetch_data_from_data_source(snapshot, schema_executor, data_source_sett
     result = schema_executor(query)
     assert not result.errors
     snapshot.assert_match(result.data)
-    assert cache.get("data_source_MyDataSource_None")["data"] == [
+    assert cache.get("data_source_MyDataSource") == [
         1,
         5.5,
         "sdkj",
@@ -113,6 +113,59 @@ def test_data_source_failure(data_source, schema_executor, settings):
     inp = {"name": data_source}
 
     result = schema_executor(query, variables=inp)
+    assert result.errors
+
+
+def test_data_source_defaults(snapshot, schema_executor, settings):
+    settings.DATA_SOURCE_CLASSES = [
+        f"caluma.data_source.tests.data_sources.MyBrokenDataSource"
+    ]
+
+    query = """
+            query dataSource {
+              dataSource (name: "MyBrokenDataSource") {
+                pageInfo {
+                  startCursor
+                  endCursor
+                }
+                edges {
+                  node {
+                    label
+                    slug
+                  }
+                }
+              }
+            }
+        """
+
+    result = schema_executor(query, variables={})
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
+def test_data_source_exception(schema_executor, settings):
+    settings.DATA_SOURCE_CLASSES = [
+        f"caluma.data_source.tests.data_sources.MyOtherBrokenDataSource"
+    ]
+
+    query = """
+            query dataSource {
+              dataSource (name: "MyOtherBrokenDataSource") {
+                pageInfo {
+                  startCursor
+                  endCursor
+                }
+                edges {
+                  node {
+                    label
+                    slug
+                  }
+                }
+              }
+            }
+        """
+
+    result = schema_executor(query, variables={})
     assert result.errors
 
 
