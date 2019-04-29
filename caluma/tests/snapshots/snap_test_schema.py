@@ -89,7 +89,7 @@ type Case implements Node {
   closedByGroup: String
   workflow: Workflow!
   status: CaseStatus!
-  meta: JSONString!
+  meta: GenericScalar
   document: Document
   workItems(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, status: WorkItemStatusArgument, task: ID, case: ID, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [WorkItemOrdering], addressedGroups: [String]): WorkItemConnection
   parentWorkItem: WorkItem
@@ -316,7 +316,7 @@ type Document implements Node {
   createdByGroup: String
   id: ID!
   form: Form!
-  meta: JSONString!
+  meta: GenericScalar
   answers(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, question: ID, search: String, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [AnswerOrdering]): AnswerConnection
   parentAnswers: [FileAnswer]
   case: Case
@@ -683,7 +683,7 @@ type Option implements Node {
   createdByGroup: String
   slug: String!
   label: String!
-  meta: JSONString!
+  meta: GenericScalar
   source: Option
   id: ID!
 }
@@ -1482,7 +1482,7 @@ type WorkItem implements Node {
   deadline: DateTime
   task: Task!
   status: WorkItemStatus!
-  meta: JSONString!
+  meta: GenericScalar
   addressedGroups: [String]!
   assignedUsers: [String]!
   case: Case!

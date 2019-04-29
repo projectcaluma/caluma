@@ -158,6 +158,7 @@ class Workflow(DjangoObjectType):
 
 class WorkItem(DjangoObjectType):
     task = graphene.Field(Task, required=True)
+    meta = generic.GenericScalar()
 
     class Meta:
         model = models.WorkItem
@@ -168,6 +169,7 @@ class Case(DjangoObjectType):
     work_items = DjangoFilterConnectionField(
         WorkItem, filterset_class=filters.WorkItemFilterSet
     )
+    meta = generic.GenericScalar()
 
     class Meta:
         model = models.Case

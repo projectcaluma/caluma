@@ -80,6 +80,8 @@ class Question(Node, graphene.Interface):
 
 
 class Option(DjangoObjectType):
+    meta = generic.GenericScalar()
+
     class Meta:
         model = models.Option
         interfaces = (relay.Node,)
@@ -619,6 +621,7 @@ class Document(DjangoObjectType):
     answers = DjangoFilterSetConnectionField(
         AnswerConnection, filterset_class=filters.AnswerFilterSet
     )
+    meta = generic.GenericScalar()
 
     class Meta:
         model = models.Document
