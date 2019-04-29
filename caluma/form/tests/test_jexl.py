@@ -19,3 +19,22 @@ from ..jexl import QuestionJexl
 def test_question_jexl_validate(expression, num_errors):
     jexl = QuestionJexl()
     assert len(list(jexl.validate(expression))) == num_errors
+
+
+@pytest.mark.parametrize(
+    "expression,result",
+    [
+        ('"a1"|answer', "A1"),
+        ('"parent.form_b.b1"|answer', "B1"),
+        ('"parent.form_b.parent.form_a.a1"|answer', "A1"),
+    ],
+)
+def test_jexl_traversal(expression, result):
+    form_a = {"a1": "A1"}
+    form_b = {"b1": "B1"}
+    parent = {"form_a": form_a, "form_b": form_b}
+    form_a["parent"] = parent
+    form_b["parent"] = parent
+
+    jexl = QuestionJexl(form_a)
+    assert jexl.evaluate(expression) == result
