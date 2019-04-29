@@ -3,6 +3,7 @@ import sys
 from rest_framework import exceptions
 
 from . import jexl
+from .models import Question
 
 
 class AnswerValidator:
@@ -97,28 +98,13 @@ class AnswerValidator:
 
 class DocumentValidator:
     def validate(self, document, **kwargs):
-        def get_document_answers(document):
-            return {
-                answer.question.pk: get_answer_value(answer)
-                for answer in document.answers.all()
-            }
-
-        def get_answer_value(answer):
-            if answer.value is None:
-                # table type maps to list of dicts
-                return [
-                    get_document_answers(document)
-                    for document in answer.documents.all()
-                ]
-
-            return answer.value
-
         def get_answers_by_question(document):
             answers = document.answers.select_related("question").prefetch_related(
                 "question__options"
             )
             return {
-                answer.question.slug: get_answer_value(answer) for answer in answers
+                answer.question.slug: self.get_answer_value(answer, document)
+                for answer in answers
             }
 
         answer_by_question = get_answers_by_question(document)
@@ -126,6 +112,40 @@ class DocumentValidator:
         if parent:
             answer_by_question["parent"] = get_answers_by_question(parent)
 
+        self.validate_required(document, answer_by_question)
+
+        for answer in document.answers.all():
+            AnswerValidator().validate(
+                document=document,
+                question=answer.question,
+                value=answer.value,
+                value_document=answer.value_document,
+            )
+
+    def get_answer_value(self, answer, document):
+        def get_document_answers(document):
+            return {
+                answer.question.pk: self.get_answer_value(answer, document)
+                for answer in document.answers.all()
+            }
+
+        if answer.value is None:
+            if answer.question.type == Question.TYPE_FORM:
+                # form type maps to dict
+                return get_document_answers(answer.value_document)
+
+            elif answer.question.type == Question.TYPE_TABLE:
+                # table type maps to list of dicts
+                return [
+                    get_document_answers(document)
+                    for document in answer.documents.all()
+                ]
+            else:  # pragma: no cover
+                raise Exception("unhandled question type mapping")
+
+        return answer.value
+
+    def validate_required(self, document, answer_by_question):
         required_but_empty = []
         for question in document.form.questions.all():
             if jexl.QuestionJexl(answer_by_question).evaluate(question.is_required):
@@ -135,9 +155,4 @@ class DocumentValidator:
         if required_but_empty:
             raise exceptions.ValidationError(
                 f"Questions {','.join(required_but_empty)} are required but not provided."
-            )
-
-        for answer in document.answers.all():
-            AnswerValidator().validate(
-                document=document, question=answer.question, value=answer.value
             )
