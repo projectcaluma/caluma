@@ -22,6 +22,7 @@ from .. import models, serializers
         (models.Question.TYPE_FILE, {}),
         (models.Question.TYPE_DYNAMIC_CHOICE, {"data_source": "MyDataSource"}),
         (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, {"data_source": "MyDataSource"}),
+        (models.Question.TYPE_STATIC, {}),
     ],
 )
 def test_query_all_questions(
@@ -107,6 +108,9 @@ def test_query_all_questions(
                   subForm {
                     slug
                   }
+                }
+                ... on StaticQuestion {
+                  staticContent
                 }
               }
             }
@@ -594,4 +598,34 @@ def test_save_form_question(db, snapshot, question, question_option, schema_exec
     question.delete()  # test creation
     result = schema_executor(query, variables=inp)
     assert not result.errors
+    snapshot.assert_match(result.data)
+
+
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_STATIC])
+def test_save_static_question(db, snapshot, question, schema_executor):
+    query = """
+        mutation SaveStaticQuestion($input: SaveStaticQuestionInput!) {
+          saveStaticQuestion(input: $input) {
+            question {
+              id
+              slug
+              label
+              meta
+              __typename
+              ... on StaticQuestion {
+                staticContent
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveStaticQuestionSerializer, question
+        )
+    }
+    result = schema_executor(query, variables=inp)
+    assert not bool(result.errors)
     snapshot.assert_match(result.data)
