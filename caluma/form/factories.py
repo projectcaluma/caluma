@@ -32,6 +32,11 @@ class QuestionFactory(DjangoModelFactory):
     sub_form = Maybe(
         "is_form", yes_declaration=SubFactory(FormFactory), no_declaration=None
     )
+    static_content = Maybe(
+        "is_static",
+        yes_declaration=Faker("multilang", faker_provider="text"),
+        no_declaration=None,
+    )
 
     data_source = Maybe(
         "is_dynamic", yes_declaration="MyDataSource", no_declaration=None
@@ -50,6 +55,7 @@ class QuestionFactory(DjangoModelFactory):
                 models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
             ]
         )
+        is_static = LazyAttribute(lambda q: q.type == models.Question.TYPE_STATIC)
 
 
 class OptionFactory(DjangoModelFactory):
