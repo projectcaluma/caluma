@@ -46,7 +46,7 @@ class TaskFilterSet(MetaFilterSet):
 
 
 class WorkItemFilterSet(MetaFilterSet):
-    order_by = OrderingFilter(label="WorkItemOrdering", fields=("status",))
+    order_by = OrderingFilter(label="WorkItemOrdering", fields=("status", "deadline"))
     addressed_groups = StringListFilter(lookup_expr="overlap")
 
     class Meta:
