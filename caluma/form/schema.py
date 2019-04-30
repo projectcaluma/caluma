@@ -73,12 +73,15 @@ class Question(Node, graphene.Interface):
             models.Question.TYPE_TABLE: TableQuestion,
             models.Question.TYPE_FORM: FormQuestion,
             models.Question.TYPE_FILE: FileQuestion,
+            models.Question.TYPE_STATIC: StaticQuestion,
         }
 
         return QUESTION_OBJECT_TYPE[instance.type]
 
 
 class Option(DjangoObjectType):
+    meta = generic.GenericScalar()
+
     class Meta:
         model = models.Option
         interfaces = (relay.Node,)
@@ -117,6 +120,7 @@ class TextQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "answers",
             "row_form",
             "sub_form",
+            "static_content",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -136,6 +140,7 @@ class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "answers",
             "row_form",
             "sub_form",
+            "static_content",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -153,6 +158,7 @@ class DateQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "row_form",
             "sub_form",
             "placeholder",
+            "static_content",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -173,6 +179,7 @@ class ChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "row_form",
             "sub_form",
             "placeholder",
+            "static_content",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -214,6 +221,7 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "row_form",
             "sub_form",
             "placeholder",
+            "static_content",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -235,6 +243,7 @@ class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "row_form",
             "sub_form",
             "placeholder",
+            "static_content",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -255,6 +264,7 @@ class IntegerQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "answers",
             "row_form",
             "sub_form",
+            "static_content",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -275,6 +285,7 @@ class FloatQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "answers",
             "row_form",
             "sub_form",
+            "static_content",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -291,6 +302,7 @@ class TableQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "answers",
             "sub_form",
             "placeholder",
+            "static_content",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -307,6 +319,7 @@ class FormQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "answers",
             "row_form",
             "placeholder",
+            "static_content",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -324,6 +337,24 @@ class FileQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "row_form",
             "sub_form",
             "placeholder",
+            "static_content",
+        )
+        use_connection = False
+        interfaces = (Question, graphene.Node)
+
+
+class StaticQuestion(QuestionQuerysetMixin, DjangoObjectType):
+    class Meta:
+        model = models.Question
+        exclude_fields = (
+            "type",
+            "configuration",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+            "placeholder",
+            "is_required",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -465,6 +496,12 @@ class SaveFileQuestion(SaveQuestion):
         return_field_type = Question
 
 
+class SaveStaticQuestion(SaveQuestion):
+    class Meta:
+        serializer_class = serializers.SaveStaticQuestionSerializer
+        return_field_type = Question
+
+
 class SaveOption(UserDefinedPrimaryKeyMixin, Mutation):
     class Meta:
         serializer_class = serializers.SaveOptionSerializer
@@ -584,6 +621,7 @@ class Document(DjangoObjectType):
     answers = DjangoFilterSetConnectionField(
         AnswerConnection, filterset_class=filters.AnswerFilterSet
     )
+    meta = generic.GenericScalar()
 
     class Meta:
         model = models.Document
@@ -733,6 +771,7 @@ class Mutation(object):
     save_table_question = SaveTableQuestion().Field()
     save_form_question = SaveFormQuestion().Field()
     save_file_question = SaveFileQuestion().Field()
+    save_static_question = SaveStaticQuestion().Field()
 
     save_document = SaveDocument().Field()
     save_document_string_answer = SaveDocumentStringAnswer().Field()

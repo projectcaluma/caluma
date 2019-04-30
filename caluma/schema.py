@@ -40,6 +40,7 @@ schema = graphene.Schema(
         form_schema.TableQuestion,
         form_schema.FormQuestion,
         form_schema.FileQuestion,
+        form_schema.StaticQuestion,
         form_schema.StringAnswer,
         form_schema.ListAnswer,
         form_schema.IntegerAnswer,

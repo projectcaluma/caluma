@@ -89,7 +89,7 @@ type Case implements Node {
   closedByGroup: String
   workflow: Workflow!
   status: CaseStatus!
-  meta: JSONString!
+  meta: GenericScalar
   document: Document
   workItems(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, status: WorkItemStatusArgument, task: ID, case: ID, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [WorkItemOrdering], addressedGroups: [String]): WorkItemConnection
   parentWorkItem: WorkItem
@@ -316,7 +316,7 @@ type Document implements Node {
   createdByGroup: String
   id: ID!
   form: Form!
-  meta: JSONString!
+  meta: GenericScalar
   answers(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, question: ID, search: String, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [AnswerOrdering]): AnswerConnection
   parentAnswers: [FileAnswer]
   case: Case
@@ -622,6 +622,7 @@ type MultipleChoiceQuestion implements Question, Node {
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
   options(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [OptionOrdering], slug: String, label: String, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): OptionConnection
+  staticContent: String
   id: ID!
 }
 
@@ -659,6 +660,7 @@ type Mutation {
   saveTableQuestion(input: SaveTableQuestionInput!): SaveTableQuestionPayload
   saveFormQuestion(input: SaveFormQuestionInput!): SaveFormQuestionPayload
   saveFileQuestion(input: SaveFileQuestionInput!): SaveFileQuestionPayload
+  saveStaticQuestion(input: SaveStaticQuestionInput!): SaveStaticQuestionPayload
   saveDocument(input: SaveDocumentInput!): SaveDocumentPayload
   saveDocumentStringAnswer(input: SaveDocumentStringAnswerInput!): SaveDocumentStringAnswerPayload
   saveDocumentIntegerAnswer(input: SaveDocumentIntegerAnswerInput!): SaveDocumentIntegerAnswerPayload
@@ -681,7 +683,7 @@ type Option implements Node {
   createdByGroup: String
   slug: String!
   label: String!
-  meta: JSONString!
+  meta: GenericScalar
   source: Option
   id: ID!
 }
@@ -1186,6 +1188,22 @@ type SaveSimpleTaskPayload {
   clientMutationId: String
 }
 
+input SaveStaticQuestionInput {
+  label: String!
+  slug: String!
+  infoText: String
+  isHidden: QuestionJexl
+  meta: JSONString
+  isArchived: Boolean
+  staticContent: String!
+  clientMutationId: String
+}
+
+type SaveStaticQuestionPayload {
+  question: Question
+  clientMutationId: String
+}
+
 input SaveTableQuestionInput {
   slug: String!
   label: String!
@@ -1298,6 +1316,25 @@ input StartCaseInput {
 type StartCasePayload {
   case: Case
   clientMutationId: String
+}
+
+type StaticQuestion implements Question, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  slug: String!
+  label: String!
+  isHidden: QuestionJexl!
+  isArchived: Boolean!
+  infoText: String
+  meta: GenericScalar!
+  source: Question
+  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
+  staticContent: String
+  dataSource: String
+  id: ID!
+  isRequired: QuestionJexl!
 }
 
 type StringAnswer implements Answer, Node {
@@ -1445,7 +1482,7 @@ type WorkItem implements Node {
   deadline: DateTime
   task: Task!
   status: WorkItemStatus!
-  meta: JSONString!
+  meta: GenericScalar
   addressedGroups: [String]!
   assignedUsers: [String]!
   case: Case!
@@ -1466,6 +1503,8 @@ type WorkItemEdge {
 enum WorkItemOrdering {
   STATUS_ASC
   STATUS_DESC
+  DEADLINE_ASC
+  DEADLINE_DESC
   CREATED_AT_ASC
   CREATED_AT_DESC
   MODIFIED_AT_ASC
