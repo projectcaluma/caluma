@@ -232,7 +232,7 @@ class CustomValidation(BaseValidation):
     @validation_for(SaveForm)
     def validate_save_form(self, mutation, data, info):
         if data['meta'] and info.context.group != 'admin':
-          raise exceptions.ValidationException('May not change meta on form')
+            raise exceptions.ValidationException('May not change meta on form')
         return data
 ```
 
