@@ -5,16 +5,25 @@ from ...form.models import Document, Question
 from ..validators import DocumentValidator
 
 
-@pytest.mark.parametrize("is_required", ["true", "false"])
-def test_validate_simple_required_field(
-    db, is_required, form_question, document_factory
+@pytest.mark.parametrize(
+    "required_jexl,hidden_jexl,should_throw",
+    [
+        ("false", "true", False),
+        ("false", "false", False),
+        ("true", "true", False),
+        ("true", "false", True),
+    ],
+)
+def test_validate_hidden_required_field(
+    db, required_jexl, hidden_jexl, should_throw, form_question, document_factory
 ):
-    form_question.question.is_required = is_required
+    form_question.question.is_required = required_jexl
+    form_question.question.is_hidden = hidden_jexl
     form_question.question.save()
 
     document = document_factory(form=form_question.form)
     error_msg = f"Questions {form_question.question.slug} are required but not provided"
-    if is_required == "true":
+    if should_throw:
         with pytest.raises(ValidationError, match=error_msg):
             DocumentValidator().validate(document)
     else:
