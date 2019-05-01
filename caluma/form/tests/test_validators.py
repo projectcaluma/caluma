@@ -31,8 +31,7 @@ def test_validate_hidden_required_field(
 
 
 @pytest.mark.parametrize(
-    "question__type,question__is_required",
-    [(Question.TYPE_FILE, "false"), (Question.TYPE_DATE, "false")],
+    "question__type,question__is_required", [(Question.TYPE_FILE, "false")]
 )
 def test_validate_file_field(
     db, form_question, question, document_factory, answer_factory, info
@@ -149,3 +148,71 @@ def test_validate_dynamic_options(
     else:
         with pytest.raises(ValidationError):
             DocumentValidator().validate(document, info)
+
+@pytest.mark.parametrize(
+    "question__type,answer__value,expected_value",
+    [
+        (Question.TYPE_MULTIPLE_CHOICE, None, []),
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, None, []),
+        (Question.TYPE_FORM, None, {}),
+    ],
+)
+def test_validate_empty_answers(
+    db,
+    form_question,
+    document,
+    answer,
+    question,
+    document_factory,
+    answer_factory,
+    expected_value,
+):
+
+    answer_value = DocumentValidator().get_answer_value(answer, document)
+    assert answer_value == expected_value
+
+
+@pytest.mark.parametrize(
+    "question__slug,question__type,question__is_required,question__is_hidden,answer__value,exception_message",
+    [
+        (
+            "q-slug",
+            Question.TYPE_TEXT,
+            "'foo' in blah",
+            "false",
+            "",
+            "Error while evaluating 'is_required' expression on question q-slug: 'foo' in blah. The system log contains more information",
+        ),
+        (
+            "q-slug",
+            Question.TYPE_TEXT,
+            "true",
+            "'foo' in blah",
+            "",
+            "Error while evaluating 'is_hidden' expression on question q-slug: 'foo' in blah. The system log contains more information",
+        ),
+        (
+            "q-slug",
+            Question.TYPE_TEXT,
+            "'value' == 'q-slug'|answer",
+            "false",
+            "value",
+            None,
+        ),
+    ],
+)
+def test_validate_invalid_jexl(
+    db,
+    form_question,
+    document,
+    answer,
+    question,
+    exception_message,
+):
+
+    if exception_message is not None:
+        with pytest.raises(RuntimeError) as exc:
+            DocumentValidator().validate(document)
+        assert exc.value.args[0] == exception_message
+    else:
+        assert DocumentValidator().validate(document) is None

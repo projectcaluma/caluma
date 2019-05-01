@@ -1,7 +1,7 @@
 import sys
+from logging import getLogger
 
 from rest_framework import exceptions
-from logging import getLogger
 
 from caluma.data_source.data_source_handlers import (
     get_data_source_data,
@@ -164,6 +164,8 @@ class DocumentValidator:
         answer_by_question = get_answers_by_question(document)
         parent = kwargs.get("parent", None)
         if parent:
+            # FIXME: this should be a weak reference, see here:
+            # https://docs.python.org/3/library/weakref.html
             answer_by_question["parent"] = get_answers_by_question(parent)
 
         self.validate_required(document, answer_by_question)
@@ -185,7 +187,14 @@ class DocumentValidator:
             }
 
         if answer.value is None:
-            if answer.question.type == Question.TYPE_FORM:
+            if answer.question.type in (
+                Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+                Question.TYPE_MULTIPLE_CHOICE,
+            ):
+                # Unanswered multiple choice should return empty list
+                # to denote emptyness
+                return []
+            elif answer.question.type == Question.TYPE_FORM:
                 # form type maps to dict
                 return get_document_answers(answer.value_document)
 

@@ -22,14 +22,17 @@ def test_question_jexl_validate(expression, num_errors):
 
 
 @pytest.mark.parametrize(
-    "expression,result",
+    "expression,result,should_raise",
     [
-        ('"a1"|answer', "A1"),
-        ('"parent.form_b.b1"|answer', "B1"),
-        ('"parent.form_b.parent.form_a.a1"|answer', "A1"),
+        ('"a1"|answer', "A1", False),
+        ('"parent.form_b.b1"|answer', "B1", False),
+        ('"parent.form_b.parent.form_a.a1"|answer', "A1", False),
+        ('"parent.parent.parent.form_a.a1"|answer', "A1", True),
+        ('"root.parent.a1"|answer', "A1", True),
+        ('"root.form_b.b1"|answer', "B1", False),
     ],
 )
-def test_jexl_traversal(expression, result):
+def test_jexl_traversal(expression, result, should_raise):
     form_a = {"a1": "A1"}
     form_b = {"b1": "B1"}
     parent = {"form_a": form_a, "form_b": form_b}
@@ -37,7 +40,11 @@ def test_jexl_traversal(expression, result):
     form_b["parent"] = parent
 
     jexl = QuestionJexl(form_a)
-    assert jexl.evaluate(expression) == result
+    if should_raise:
+        with pytest.raises(RuntimeError):
+            jexl.evaluate(expression)
+    else:
+        assert jexl.evaluate(expression) == result
 
 
 @pytest.mark.parametrize(
