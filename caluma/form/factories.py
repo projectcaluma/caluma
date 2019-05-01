@@ -94,6 +94,13 @@ class DocumentFactory(DjangoModelFactory):
         model = models.Document
 
 
+class FileFactory(DjangoModelFactory):
+    name = Faker("file_name")
+
+    class Meta:
+        model = models.File
+
+
 class AnswerFactory(DjangoModelFactory):
     question = SubFactory(QuestionFactory)
     document = SubFactory(DocumentFactory)
@@ -107,6 +114,7 @@ class AnswerFactory(DjangoModelFactory):
         elif self.question.type not in [
             models.Question.TYPE_FORM,
             models.Question.TYPE_TABLE,
+            models.Question.TYPE_FILE,
         ]:
             return Faker("name").generate({})
 
@@ -115,12 +123,16 @@ class AnswerFactory(DjangoModelFactory):
     value_document = Maybe(
         "is_form", yes_declaration=SubFactory(DocumentFactory), no_declaration=None
     )
+    file = Maybe(
+        "is_file", yes_declaration=SubFactory(FileFactory), no_declaration=None
+    )
 
     class Meta:
         model = models.Answer
 
     class Params:
         is_form = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_FORM)
+        is_file = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_FILE)
 
 
 class AnswerDocumentFactory(DjangoModelFactory):
@@ -130,10 +142,3 @@ class AnswerDocumentFactory(DjangoModelFactory):
 
     class Meta:
         model = models.AnswerDocument
-
-
-class FileFactory(DjangoModelFactory):
-    name = Faker("file_name")
-
-    class Meta:
-        model = models.File

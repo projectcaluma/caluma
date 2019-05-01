@@ -140,6 +140,10 @@ class DocumentValidator:
                     get_document_answers(document)
                     for document in answer.documents.all()
                 ]
+
+            elif answer.question.type == Question.TYPE_FILE:
+                return answer.file.name
+
             else:  # pragma: no cover
                 raise Exception("unhandled question type mapping")
 
