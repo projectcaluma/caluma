@@ -38,3 +38,20 @@ def test_jexl_traversal(expression, result):
 
     jexl = QuestionJexl(form_a)
     assert jexl.evaluate(expression) == result
+
+
+@pytest.mark.parametrize(
+    "expression,result",
+    [
+        ("[1,2] intersects [2,3]", True),
+        ("[1,2] intersects [3,4]", False),
+        ("[] intersects []", False),
+        ("[1] intersects []", False),
+        ("['foo'] intersects ['bar', 'bazz']", False),
+        ("['foo'] intersects ['foo', 'foo']", True),
+        ("[1] intersects [1] && [2] intersects [2]", True),
+        ("[2] intersects [1] + [2]", True),
+    ],
+)
+def test_intersects_operator(expression, result):
+    assert QuestionJexl().evaluate(expression) == result

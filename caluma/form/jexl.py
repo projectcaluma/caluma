@@ -18,6 +18,9 @@ class QuestionJexl(JEXL):
         self.context = answer_by_question
         self.add_transform("answer", self.answer_transform)
         self.add_transform("mapby", lambda arr, key: [obj[key] for obj in arr])
+        self.add_binary_operator(
+            "intersects", 20, lambda left, right: any(x in right for x in left)
+        )
 
     def answer_transform(self, question_with_path):
         current_context = self.context
