@@ -4,6 +4,7 @@ from rest_framework import exceptions
 
 from . import jexl
 from .models import Question
+from caluma.data_source.data_source_handlers import get_data_source_data
 
 
 class AnswerValidator:
@@ -63,6 +64,27 @@ class AnswerValidator:
 
     def _validate_question_multiple_choice(self, question, value, **kwargs):
         options = question.options.values_list("slug", flat=True)
+        invalid_options = set(value) - set(options)
+        if not isinstance(value, list) or invalid_options:
+            raise exceptions.ValidationError(
+                f"Invalid options [{', '.join(invalid_options)}]. "
+                f"Should be one of the options [{', '.join(options)}]"
+            )
+
+    def _validate_question_dynamic_choice(self, question, value, **kwargs):
+        options = get_data_source_data(document, question.data_source).values_list(
+            "slug", flat=True
+        )
+        if not isinstance(value, str) or value not in options:
+            raise exceptions.ValidationError(
+                f"Invalid value {value}. "
+                f"Should be of type str and one of the options {'.'.join(options)}"
+            )
+
+    def _validate_question_dynamic_multiple_choice(self, question, value, **kwargs):
+        options = get_data_source_data(
+            kwargs["document"], question.data_source
+        ).values_list("slug", flat=True)
         invalid_options = set(value) - set(options)
         if not isinstance(value, list) or invalid_options:
             raise exceptions.ValidationError(
