@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -670,6 +669,7 @@ type Mutation {
   saveDocumentTableAnswer(input: SaveDocumentTableAnswerInput!): SaveDocumentTableAnswerPayload
   saveDocumentFormAnswer(input: SaveDocumentFormAnswerInput!): SaveDocumentFormAnswerPayload
   saveDocumentFileAnswer(input: SaveDocumentFileAnswerInput!): SaveDocumentFileAnswerPayload
+  removeAnswer(input: RemoveAnswerInput!): RemoveAnswerPayload
 }
 
 interface Node {
@@ -771,6 +771,16 @@ enum QuestionOrdering {
   CREATED_BY_USER_DESC
   CREATED_BY_GROUP_ASC
   CREATED_BY_GROUP_DESC
+}
+
+input RemoveAnswerInput {
+  answer: ID!
+  clientMutationId: String
+}
+
+type RemoveAnswerPayload {
+  answer: FileAnswer
+  clientMutationId: String
 }
 
 input RemoveFlowInput {

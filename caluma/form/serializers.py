@@ -691,3 +691,15 @@ class SaveDocumentFileAnswerSerializer(SaveAnswerSerializer):
 
     class Meta(SaveAnswerSerializer.Meta):
         fields = "__all__"
+
+
+class RemoveAnswerSerializer(serializers.ModelSerializer):
+    answer = PrimaryKeyRelatedField(queryset=models.Answer.objects.all())
+
+    def update(self, instance, validated_data):
+        instance.delete()
+        return instance
+
+    class Meta:
+        fields = ("answer",)
+        model = models.Answer
