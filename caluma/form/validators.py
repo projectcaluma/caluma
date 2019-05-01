@@ -1,6 +1,7 @@
 import sys
 
 from rest_framework import exceptions
+from logging import getLogger
 
 from caluma.data_source.data_source_handlers import (
     get_data_source_data,
@@ -9,6 +10,8 @@ from caluma.data_source.data_source_handlers import (
 
 from . import jexl
 from .models import Question
+
+log = getLogger()
 
 
 class AnswerValidator:
@@ -209,13 +212,28 @@ class DocumentValidator:
     def validate_required(self, document, answer_by_question):
         required_but_empty = []
         for question in document.form.questions.all():
-            if jexl.QuestionJexl(answer_by_question).evaluate(
-                question.is_required
-            ) and not jexl.QuestionJexl(answer_by_question).evaluate(
-                question.is_hidden
-            ):
-                if not answer_by_question.get(question.slug, None):
-                    required_but_empty.append(question.slug)
+            try:
+                expr = "is_required"
+                is_required = jexl.QuestionJexl(answer_by_question).evaluate(
+                    question.is_required
+                )
+                expr = "is_hidden"
+                is_hidden = jexl.QuestionJexl(answer_by_question).evaluate(
+                    question.is_hidden
+                )
+                if is_required and not is_hidden:
+                    if not answer_by_question.get(question.slug, None):
+                        required_but_empty.append(question.slug)
+            except Exception as exc:
+                expr_jexl = getattr(question, expr)
+                log.error(
+                    f"Error while evaluating '{expr}' expression on question {question.slug}: "
+                    f"{expr_jexl}: {str(exc)}"
+                )
+                raise RuntimeError(
+                    f"Error while evaluating '{expr}' expression on question {question.slug}: "
+                    f"{expr_jexl}. The system log contains more information"
+                )
 
         if required_but_empty:
             raise exceptions.ValidationError(
