@@ -681,9 +681,9 @@ class SaveDocumentFileAnswerSerializer(SaveAnswerSerializer):
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
-        instance.file.delete()
-        validated_data = self.set_file(validated_data)
-
+        if instance.file.name is not validated_data["file"]:
+            instance.file.delete()
+            validated_data = self.set_file(validated_data)
         return super().update(instance, validated_data)
 
     class Meta(SaveAnswerSerializer.Meta):
