@@ -481,7 +481,7 @@ class DocumentSerializer(serializers.ModelSerializer):
 
 class SaveAnswerSerializer(serializers.ModelSerializer):
     def validate(self, data):
-        validators.AnswerValidator().validate(**data)
+        validators.AnswerValidator().validate(**data, info=self.context["info"])
         return super().validate(data)
 
     class Meta:

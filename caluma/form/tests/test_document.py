@@ -8,16 +8,18 @@ from .. import serializers
 
 
 @pytest.mark.parametrize(
-    "question__type,answer__value,answer__date",
+    "question__type,question__data_source,answer__value,answer__date",
     [
-        (Question.TYPE_INTEGER, 1, None),
-        (Question.TYPE_FLOAT, 2.1, None),
-        (Question.TYPE_TEXT, "somevalue", None),
-        (Question.TYPE_MULTIPLE_CHOICE, ["somevalue", "anothervalue"], None),
-        (Question.TYPE_TABLE, None, None),
-        (Question.TYPE_DATE, None, "2019-02-22"),
-        (Question.TYPE_FILE, "some-file.pdf", None),
-        (Question.TYPE_FILE, "some-other-file.pdf", None),
+        (Question.TYPE_INTEGER, None, 1, None),
+        (Question.TYPE_FLOAT, None, 2.1, None),
+        (Question.TYPE_TEXT, None, "somevalue", None),
+        (Question.TYPE_MULTIPLE_CHOICE, None, ["somevalue", "anothervalue"], None),
+        (Question.TYPE_TABLE, None, None, None),
+        (Question.TYPE_DATE, None, None, "2019-02-22"),
+        (Question.TYPE_FILE, None, "some-file.pdf", None),
+        (Question.TYPE_FILE, None, "some-other-file.pdf", None),
+        (Question.TYPE_DYNAMIC_CHOICE, "MyDataSource", "5.5", None),
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, "MyDataSource", "5.5", None),
     ],
 )
 def test_query_all_documents(
@@ -36,6 +38,7 @@ def test_query_all_documents(
     schema_executor,
     question,
     minio_mock,
+    data_source_settings,
     settings,
 ):
     query = """
@@ -407,6 +410,38 @@ def test_save_document(db, document, schema_executor, update):
             "SaveDocumentStringAnswer",
             False,
         ),
+        (
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            {"data_source": "MyDataSource"},
+            ["5.5", "1"],
+            None,
+            "SaveDocumentListAnswer",
+            True,
+        ),
+        (
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            {"data_source": "MyDataSource"},
+            ["not in data"],
+            None,
+            "SaveDocumentStringAnswer",
+            False,
+        ),
+        (
+            Question.TYPE_DYNAMIC_CHOICE,
+            {"data_source": "MyDataSource"},
+            "5.5",
+            None,
+            "SaveDocumentStringAnswer",
+            True,
+        ),
+        (
+            Question.TYPE_DYNAMIC_CHOICE,
+            {"data_source": "MyDataSource"},
+            "not in data",
+            None,
+            "SaveDocumentStringAnswer",
+            False,
+        ),
     ],
 )
 def test_save_document_answer(
@@ -424,6 +459,7 @@ def test_save_document_answer(
     schema_executor,
     delete_answer,
     minio_mock,
+    data_source_settings,
 ):
     mutation_func = mutation[0].lower() + mutation[1:]
     query = f"""
