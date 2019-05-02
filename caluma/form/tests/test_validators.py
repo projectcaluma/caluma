@@ -31,9 +31,10 @@ def test_validate_hidden_required_field(
 
 
 @pytest.mark.parametrize(
-    "question__type,question__is_required", [(Question.TYPE_FILE, "false")]
+    "question__type,question__is_required",
+    [(Question.TYPE_FILE, "false"), (Question.TYPE_DATE, "false")],
 )
-def test_validate_file_field(
+def test_validate_special_fields(
     db, form_question, question, document_factory, answer_factory
 ):
     document = document_factory(form=form_question.form)
