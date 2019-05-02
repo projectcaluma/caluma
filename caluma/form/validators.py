@@ -144,8 +144,13 @@ class DocumentValidator:
             elif answer.question.type == Question.TYPE_FILE:
                 return answer.file.name
 
+            elif answer.question.type == Question.TYPE_DATE:
+                return answer.date
+
             else:  # pragma: no cover
-                raise Exception("unhandled question type mapping")
+                raise Exception(
+                    f"unhandled question type mapping {answer.question.type}"
+                )
 
         return answer.value
 

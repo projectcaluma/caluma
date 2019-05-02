@@ -115,6 +115,7 @@ class AnswerFactory(DjangoModelFactory):
             models.Question.TYPE_FORM,
             models.Question.TYPE_TABLE,
             models.Question.TYPE_FILE,
+            models.Question.TYPE_DATE,
         ]:
             return Faker("name").generate({})
 
@@ -126,6 +127,7 @@ class AnswerFactory(DjangoModelFactory):
     file = Maybe(
         "is_file", yes_declaration=SubFactory(FileFactory), no_declaration=None
     )
+    date = Maybe("is_date", yes_declaration=Faker("date"), no_declaration=None)
 
     class Meta:
         model = models.Answer
@@ -133,6 +135,7 @@ class AnswerFactory(DjangoModelFactory):
     class Params:
         is_form = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_FORM)
         is_file = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_FILE)
+        is_date = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_DATE)
 
 
 class AnswerDocumentFactory(DjangoModelFactory):
