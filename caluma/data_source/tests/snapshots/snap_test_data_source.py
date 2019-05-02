@@ -113,3 +113,17 @@ snapshots["test_fetch_data_from_data_source 3"] = {
         },
     }
 }
+
+snapshots["test_data_source_defaults 1"] = {
+    "dataSource": {
+        "edges": [
+            {"node": {"label": "1", "slug": "1"}},
+            {"node": {"label": "2", "slug": "2"}},
+            {"node": {"label": "3", "slug": "3"}},
+        ],
+        "pageInfo": {
+            "endCursor": "YXJyYXljb25uZWN0aW9uOjI=",
+            "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
+        },
+    }
+}

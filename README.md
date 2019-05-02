@@ -280,12 +280,14 @@ For this you can use the data_source extension point.
 An example data_source looks like this:
 
  ```python
-from caluma.data_sources import BaseDataSource
+from caluma.data_source.data_sources import BaseDataSource
+from caluma.data_source.utils import data_source_cache
 import requests
 
 class CustomDataSource(BaseDataSource):
     info = 'User choices from "someapi"'
 
+    @data_source_cache(timeout=3600)
     def get_data(self, info):
         response = requests.get(
             f"https://someapi/?user={info.context.user.username}"
@@ -298,8 +300,8 @@ This class needs also to be added to the `DATA_SOURCE_CLASSES` environment varia
 ### Properties
 
 * `info`: Descriptive text for the data source (can also be a multilingual dict)
-* `timeout`: Time you want to cache the data
-* `default`: The default value to be returned if execution of `get_data()` fails
+* `default`: The default value to be returned if execution of `get_data()` fails. If
+             this is `None`, the Exception won't be handled. Defaults to None.
 
 ### `get_data`-method
 Must return an iterable. This iterable can contain strings, ints, floats
@@ -308,6 +310,13 @@ will be used for the option slug, the second one for it's label. If only one val
 this value will also be used as label.
 
 For the label, it's possible to use a dict with translated values.
+
+### `data_source_cache` decorator
+This decorator allows for caching the data based on the DataSource name.
+
+Django's cache framework is used, so you can also implement your own caching logic. When
+doing so, it is advisable to use the `data_source_` prefix for the key in order to avoid
+conflicts.
 
 #### Some valid examples
 

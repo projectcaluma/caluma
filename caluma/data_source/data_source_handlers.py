@@ -1,11 +1,8 @@
 from collections import namedtuple
-from datetime import timedelta
 
 from django.conf import settings
 from django.utils import translation
 from django.utils.module_loading import import_string
-
-from caluma.data_source.utils import cache_handler
 
 DataSource = namedtuple("DataSource", ["name", "info"])
 
@@ -77,12 +74,8 @@ def get_data_source_data(info, name):
     data_sources = get_data_sources(dic=True)
     if name not in data_sources:
         raise DataSourceException(f"No data_source found for name: {name}")
-    cls = data_sources[name]
-    ds = cls()
-    key = f"data_source_{name}_{info.context.user.username}"
-    raw_data = cache_handler(
-        ds.get_data, timedelta(seconds=ds.timeout), ds.default, key, info=info
-    )
+
+    raw_data = data_sources[name]().try_get_data_with_fallback(info)
     if not is_iterable_and_no_string(raw_data):
         raise DataSourceException(f"Failed to parse data from source: {name}")
 
