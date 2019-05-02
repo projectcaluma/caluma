@@ -315,7 +315,7 @@ For the label, it's possible to use a dict with translated values.
 This decorator allows for caching the data based on the DataSource name.
 
 Django's cache framework is used, so you can also implement your own caching logic. When
-doing so it's, advisable to use the `data_source_` prefix for the key in order to avoid
+doing so, it is advisable to use the `data_source_` prefix for the key in order to avoid
 conflicts.
 
 #### Some valid examples
