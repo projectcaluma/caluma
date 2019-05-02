@@ -687,7 +687,7 @@ class SaveDocumentFileAnswerSerializer(SaveAnswerSerializer):
         return super().update(instance, validated_data)
 
     class Meta(SaveAnswerSerializer.Meta):
-        fields = "__all__"
+        fields = SaveAnswerSerializer.Meta.fields + ("value_id",)
 
 
 class RemoveAnswerSerializer(serializers.ModelSerializer):
