@@ -779,7 +779,7 @@ input RemoveAnswerInput {
 }
 
 type RemoveAnswerPayload {
-  answer: FileAnswer
+  answer: Answer
   clientMutationId: String
 }
 

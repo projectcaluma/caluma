@@ -13,6 +13,7 @@ def test_remove_answer(db, snapshot, question, answer, schema_executor):
             answer {
               id
               meta
+              __typename
             }
             clientMutationId
           }

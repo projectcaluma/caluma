@@ -8,7 +8,11 @@ snapshots = Snapshot()
 
 snapshots["test_remove_answer[integer-23] 1"] = {
     "removeAnswer": {
-        "answer": {"id": "RmlsZUFuc3dlcjpOb25l", "meta": {}},
+        "answer": {
+            "__typename": "IntegerAnswer",
+            "id": "SW50ZWdlckFuc3dlcjpOb25l",
+            "meta": {},
+        },
         "clientMutationId": None,
     }
 }

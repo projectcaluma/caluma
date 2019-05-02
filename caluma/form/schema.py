@@ -751,6 +751,7 @@ class RemoveAnswer(Mutation):
     class Meta:
         lookup_input_kwarg = "answer"
         serializer_class = serializers.RemoveAnswerSerializer
+        return_field_type = Answer
 
 
 class Mutation(object):
