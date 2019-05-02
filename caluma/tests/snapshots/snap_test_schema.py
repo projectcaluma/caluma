@@ -920,20 +920,11 @@ type SaveDocumentDateAnswerPayload {
 }
 
 input SaveDocumentFileAnswerInput {
-  id: String
-  value: String!
-  valueId: ID
-  createdAt: DateTime
-  modifiedAt: DateTime
-  createdByUser: String
-  createdByGroup: String
-  meta: JSONString
-  date: Date
   question: ID!
   document: ID!
-  valueDocument: ID
-  file: ID
-  documents: [ID]
+  meta: JSONString
+  value: String!
+  valueId: ID
   clientMutationId: String
 }
 
