@@ -2,7 +2,10 @@ import sys
 
 from rest_framework import exceptions
 
-from caluma.data_source.data_source_handlers import get_data_source_data
+from caluma.data_source.data_source_handlers import (
+    get_data_source_data,
+    get_data_sources,
+)
 
 from . import jexl
 from .models import Question
@@ -73,24 +76,49 @@ class AnswerValidator:
             )
 
     def _validate_question_dynamic_choice(self, question, value, info, **kwargs):
+        data_source = get_data_sources(dic=True)[question.data_source]
+        if not data_source.validate:
+            if not isinstance(value, str):
+                raise exceptions.ValidationError(
+                    f'Invalid value: "{value}". Must be of type str'
+                )
+            return
+
         data = get_data_source_data(info, question.data_source)
         options = [d.slug for d in data]
+
         if not isinstance(value, str) or value not in options:
             raise exceptions.ValidationError(
-                f"Invalid value {value}. "
-                f"Should be of type str and one of the options {'.'.join(options)}"
+                f'Invalid value "{value}". '
+                f"Must be of type str and one of the options \"{', '.join(options)}\""
             )
 
     def _validate_question_dynamic_multiple_choice(
         self, question, value, info, **kwargs
     ):
+        data_source = get_data_sources(dic=True)[question.data_source]
+        if not data_source.validate:
+            if not isinstance(value, list):
+                raise exceptions.ValidationError(
+                    f'Invalid value: "{value}". Must be of type list'
+                )
+            for v in value:
+                if not isinstance(v, str):
+                    raise exceptions.ValidationError(
+                        f'Invalid value: "{v}". Must be of type string'
+                    )
+            return
         data = get_data_source_data(info, question.data_source)
         options = [d.slug for d in data]
-        invalid_options = set(value) - set(options)
-        if not isinstance(value, list) or invalid_options:
+        if not isinstance(value, list):
             raise exceptions.ValidationError(
-                f"Invalid options [{', '.join(invalid_options)}]. "
-                f"Should be one of the options [{', '.join(options)}]"
+                f'Invalid value: "{value}". Must be of type list'
+            )
+        invalid_options = set(value) - set(options)
+        if invalid_options:
+            raise exceptions.ValidationError(
+                f'Invalid options "{invalid_options}". '
+                f"Should be one of the options \"[{', '.join(options)}]\""
             )
 
     def _validate_question_table(self, question, value, document, info, **kwargs):

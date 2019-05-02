@@ -106,3 +106,46 @@ def test_validate_nested_form(
             DocumentValidator().validate(main_document, info)
     else:
         DocumentValidator().validate(main_document, info)
+
+
+@pytest.mark.parametrize(
+    "question__data_source,value,valid",
+    [
+        ("MyDataSource", "5.5", True),
+        ("MyDataSource", 5.5, False),
+        ("MyOtherDataSource", "5.5", True),
+        ("MyOtherDataSource", 5.5, False),
+        ("MyOtherDataSource", 23, False),
+        ("MyDataSource", "not in data", False),
+        ("MyOtherDataSource", "not in data", True),
+    ],
+)
+@pytest.mark.parametrize(
+    "question__type",
+    [Question.TYPE_DYNAMIC_CHOICE, Question.TYPE_DYNAMIC_MULTIPLE_CHOICE],
+)
+def test_validate_dynamic_options(
+    db,
+    form_question,
+    question,
+    value,
+    valid,
+    document_factory,
+    answer_factory,
+    info,
+    settings,
+):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.data_source.tests.data_sources.MyDataSource",
+        "caluma.data_source.tests.data_sources.MyOtherDataSource",
+    ]
+    if question.type == Question.TYPE_DYNAMIC_MULTIPLE_CHOICE and not value == 23:
+        value = [value]
+
+    document = document_factory(form=form_question.form)
+    answer_factory(value=value, document=document, question=question)
+    if valid:
+        DocumentValidator().validate(document, info)
+    else:
+        with pytest.raises(ValidationError):
+            DocumentValidator().validate(document, info)

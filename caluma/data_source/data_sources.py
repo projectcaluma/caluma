@@ -21,6 +21,8 @@ class BaseDataSource:
         info: Informational string about this data source
         default: default value to return if execution of `get_data()` fails.
                  If this is `None`, the Exception won't be handled. Defaults to None.
+        validate: boolean that indicates if answers should be validated against the
+                  current response from `get_data()`. Defaults to `True`.
 
     A custom data source class could look like this:
     ```
@@ -44,6 +46,7 @@ class BaseDataSource:
 
     info = None
     default = None
+    validate = True
 
     def __init__(self):
         pass
