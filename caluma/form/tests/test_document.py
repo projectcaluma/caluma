@@ -283,6 +283,46 @@ def test_query_all_documents_filter_answers_by_question(
     assert extract_global_id(result_answer["id"]) == str(answer.id)
 
 
+def test_query_all_documents_filter_answers_by_questions(
+    db, document_factory, question_factory, answer_factory, schema_executor
+):
+    documents = []
+    answers = []
+    questions = []
+
+    for i in range(3):
+        documents.append(document_factory())
+        questions.append(question_factory())
+        answers.append(answer_factory(document=documents[-1], question=questions[-1]))
+
+    query = """
+        query AllDocumentsQuery($questions: [ID!]) {
+          allDocuments {
+            edges {
+              node {
+                answers(questions: $questions) {
+                  edges {
+                    node {
+                      id
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    result = schema_executor(
+        query, variables={"questions": [questions[0].slug, questions[1].slug]}
+    )
+    assert not result.errors
+    assert len(result.data["allDocuments"]["edges"]) == 3
+    assert len(result.data["allDocuments"]["edges"][0]["node"]["answers"]["edges"]) == 1
+    assert len(result.data["allDocuments"]["edges"][1]["node"]["answers"]["edges"]) == 1
+    assert len(result.data["allDocuments"]["edges"][2]["node"]["answers"]["edges"]) == 0
+
+
 @pytest.mark.parametrize("update", [True, False])
 def test_save_document(db, document, schema_executor, update):
     query = """
