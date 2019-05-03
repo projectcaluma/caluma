@@ -65,6 +65,39 @@ def test_oidc_authentication_middleware(
             )
 
 
+@pytest.mark.parametrize("introspection", [False, True])
+def test_oidc_authentication_middleware_400(introspection, rf, requests_mock, settings):
+    requests_mock.get(settings.OIDC_USERINFO_ENDPOINT, status_code=400)
+
+    if introspection:
+        requests_mock.get(settings.OIDC_USERINFO_ENDPOINT, status_code=401)
+        requests_mock.post(settings.OIDC_INTROSPECT_ENDPOINT, status_code=400)
+    elif not introspection:
+        settings.OIDC_INTROSPECT_ENDPOINT = None
+
+    request = rf.get("/graphql", HTTP_AUTHORIZATION="Bearer Token")
+
+    query = """
+    {
+      __schema {
+        mutationType {
+          name
+          description
+        }
+      }
+    }
+    """
+
+    result = schema.execute(
+        query, context=request, middleware=[middleware.OIDCAuthenticationMiddleware()]
+    )
+    assert result.errors
+    assert (
+        result.errors[0].message
+        == f'400 Client Error: None for url: mock://caluma.io/openid/{"introspect" if introspection else "userinfo"}'
+    )
+
+
 def test_oidc_authentication_middleware_improperly_configured(rf, settings):
     settings.OIDC_USERINFO_ENDPOINT = None
     request = rf.get("/graphql", HTTP_AUTHORIZATION="Bearer Token")
