@@ -7,6 +7,7 @@ from caluma.data_source.utils import data_source_cache
 class MyDataSource(BaseDataSource):
     info = {"en": "Nice test data source", "de": "Schöne Datenquelle"}
     default = [1, 2, 3]
+    validate = True
 
     @data_source_cache(timeout=3600)
     def get_data(self, info):
@@ -33,6 +34,10 @@ class MyDataSource(BaseDataSource):
     @data_source_cache(timeout=1)
     def get_data_expire(self, info):
         return str(uuid4())
+
+
+class MyOtherDataSource(MyDataSource):
+    validate = False
 
 
 class MyFaultyDataSource(BaseDataSource):

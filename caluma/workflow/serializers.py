@@ -293,6 +293,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
             task=self.instance.task,
             case=self.instance.case,
             document=self.instance.document,
+            info=self.context["info"],
         )
         data["status"] = models.WorkItem.STATUS_COMPLETED
         data["closed_at"] = timezone.now()

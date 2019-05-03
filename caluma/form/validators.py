@@ -2,6 +2,11 @@ import sys
 
 from rest_framework import exceptions
 
+from caluma.data_source.data_source_handlers import (
+    get_data_source_data,
+    get_data_sources,
+)
+
 from . import jexl
 from .models import Question
 
@@ -20,7 +25,7 @@ class AnswerValidator:
     def _validate_question_textarea(self, question, value, **kwargs):
         self._validate_question_text(question, value)
 
-    def _validate_question_float(self, question, value, document):
+    def _validate_question_float(self, question, value, document, **kwargs):
         min_value = (
             question.min_value if question.min_value is not None else float("-inf")
         )
@@ -70,17 +75,63 @@ class AnswerValidator:
                 f"Should be one of the options [{', '.join(options)}]"
             )
 
-    def _validate_question_table(self, question, value, document):
-        for _document in value:
-            DocumentValidator().validate(_document, parent=document)
+    def _validate_question_dynamic_choice(self, question, value, info, **kwargs):
+        data_source = get_data_sources(dic=True)[question.data_source]
+        if not data_source.validate:
+            if not isinstance(value, str):
+                raise exceptions.ValidationError(
+                    f'Invalid value: "{value}". Must be of type str'
+                )
+            return
 
-    def _validate_question_form(self, question, value, document):
-        DocumentValidator().validate(value, parent=document)
+        data = get_data_source_data(info, question.data_source)
+        options = [d.slug for d in data]
+
+        if not isinstance(value, str) or value not in options:
+            raise exceptions.ValidationError(
+                f'Invalid value "{value}". '
+                f"Must be of type str and one of the options \"{', '.join(options)}\""
+            )
+
+    def _validate_question_dynamic_multiple_choice(
+        self, question, value, info, **kwargs
+    ):
+        data_source = get_data_sources(dic=True)[question.data_source]
+        if not data_source.validate:
+            if not isinstance(value, list):
+                raise exceptions.ValidationError(
+                    f'Invalid value: "{value}". Must be of type list'
+                )
+            for v in value:
+                if not isinstance(v, str):
+                    raise exceptions.ValidationError(
+                        f'Invalid value: "{v}". Must be of type string'
+                    )
+            return
+        data = get_data_source_data(info, question.data_source)
+        options = [d.slug for d in data]
+        if not isinstance(value, list):
+            raise exceptions.ValidationError(
+                f'Invalid value: "{value}". Must be of type list'
+            )
+        invalid_options = set(value) - set(options)
+        if invalid_options:
+            raise exceptions.ValidationError(
+                f'Invalid options "{invalid_options}". '
+                f"Should be one of the options \"[{', '.join(options)}]\""
+            )
+
+    def _validate_question_table(self, question, value, document, info, **kwargs):
+        for _document in value:
+            DocumentValidator().validate(_document, parent=document, info=info)
+
+    def _validate_question_form(self, question, value, document, info, **kwargs):
+        DocumentValidator().validate(value, parent=document, info=info)
 
     def _validate_question_file(self, question, value, **kwargs):
         pass
 
-    def validate(self, *, question, document, **kwargs):
+    def validate(self, *, question, document, info, **kwargs):
         # Check all possible fields for value
         value = None
         for i in ["value", "file", "date", "documents", "value_document"]:
@@ -92,12 +143,12 @@ class AnswerValidator:
         # required check will be done in DocumentValidator
         if value:
             getattr(self, f"_validate_question_{question.type}")(
-                question, value, document=document
+                question, value, document=document, info=info
             )
 
 
 class DocumentValidator:
-    def validate(self, document, **kwargs):
+    def validate(self, document, info, **kwargs):
         def get_answers_by_question(document):
             answers = document.answers.select_related("question").prefetch_related(
                 "question__options"
@@ -120,6 +171,7 @@ class DocumentValidator:
                 question=answer.question,
                 value=answer.value,
                 value_document=answer.value_document,
+                info=info,
             )
 
     def get_answer_value(self, answer, document):

@@ -302,6 +302,8 @@ This class needs also to be added to the `DATA_SOURCE_CLASSES` environment varia
 * `info`: Descriptive text for the data source (can also be a multilingual dict)
 * `default`: The default value to be returned if execution of `get_data()` fails. If
              this is `None`, the Exception won't be handled. Defaults to None.
+* `validate`: boolean that indicates if answers should be validated against the
+              current response from `get_data()`. Defaults to `True`.
 
 ### `get_data`-method
 Must return an iterable. This iterable can contain strings, ints, floats

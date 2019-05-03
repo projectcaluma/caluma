@@ -15,7 +15,7 @@ from ..validators import DocumentValidator
     ],
 )
 def test_validate_hidden_required_field(
-    db, required_jexl, hidden_jexl, should_throw, form_question, document_factory
+    db, required_jexl, hidden_jexl, should_throw, form_question, document_factory, info
 ):
     form_question.question.is_required = required_jexl
     form_question.question.is_hidden = hidden_jexl
@@ -25,21 +25,21 @@ def test_validate_hidden_required_field(
     error_msg = f"Questions {form_question.question.slug} are required but not provided"
     if should_throw:
         with pytest.raises(ValidationError, match=error_msg):
-            DocumentValidator().validate(document)
+            DocumentValidator().validate(document, info)
     else:
-        DocumentValidator().validate(document)
+        DocumentValidator().validate(document, info)
 
 
 @pytest.mark.parametrize(
     "question__type,question__is_required",
     [(Question.TYPE_FILE, "false"), (Question.TYPE_DATE, "false")],
 )
-def test_validate_special_fields(
-    db, form_question, question, document_factory, answer_factory
+def test_validate_file_field(
+    db, form_question, question, document_factory, answer_factory, info
 ):
     document = document_factory(form=form_question.form)
     answer_factory(document=document, question=question)
-    DocumentValidator().validate(document)
+    DocumentValidator().validate(document, info)
 
 
 @pytest.mark.parametrize(
@@ -61,6 +61,7 @@ def test_validate_nested_form(
     question_factory,
     answer_factory,
     answer_document_factory,
+    info,
 ):
     sub_form_question_1 = form_question_factory(
         form__slug="sub_1",
@@ -102,6 +103,49 @@ def test_validate_nested_form(
     if should_throw:
         error_msg = f"Questions {sub_form_question_1.question.slug} are required but not provided"
         with pytest.raises(ValidationError, match=error_msg):
-            DocumentValidator().validate(main_document)
+            DocumentValidator().validate(main_document, info)
     else:
-        DocumentValidator().validate(main_document)
+        DocumentValidator().validate(main_document, info)
+
+
+@pytest.mark.parametrize(
+    "question__data_source,value,valid",
+    [
+        ("MyDataSource", "5.5", True),
+        ("MyDataSource", 5.5, False),
+        ("MyOtherDataSource", "5.5", True),
+        ("MyOtherDataSource", 5.5, False),
+        ("MyOtherDataSource", 23, False),
+        ("MyDataSource", "not in data", False),
+        ("MyOtherDataSource", "not in data", True),
+    ],
+)
+@pytest.mark.parametrize(
+    "question__type",
+    [Question.TYPE_DYNAMIC_CHOICE, Question.TYPE_DYNAMIC_MULTIPLE_CHOICE],
+)
+def test_validate_dynamic_options(
+    db,
+    form_question,
+    question,
+    value,
+    valid,
+    document_factory,
+    answer_factory,
+    info,
+    settings,
+):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.data_source.tests.data_sources.MyDataSource",
+        "caluma.data_source.tests.data_sources.MyOtherDataSource",
+    ]
+    if question.type == Question.TYPE_DYNAMIC_MULTIPLE_CHOICE and not value == 23:
+        value = [value]
+
+    document = document_factory(form=form_question.form)
+    answer_factory(value=value, document=document, question=question)
+    if valid:
+        DocumentValidator().validate(document, info)
+    else:
+        with pytest.raises(ValidationError):
+            DocumentValidator().validate(document, info)
