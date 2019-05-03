@@ -112,5 +112,7 @@ class OIDCAuthenticationMiddleware(object):
                     timeout=settings.OIDC_BEARER_TOKEN_REVALIDATION_TIME,
                 )
                 request.user = models.OIDCClient(token, introspection)
+            else:
+                raise e
 
         return next(root, info, **args)
