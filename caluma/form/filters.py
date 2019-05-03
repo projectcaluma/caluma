@@ -57,6 +57,7 @@ class DocumentFilterSet(MetaFilterSet):
 class AnswerFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("value", "file__name"))
     order_by = OrderingFilter(label="AnswerOrdering")
+    questions = GlobalIDMultipleChoiceFilter(field_name="question")
 
     class Meta:
         model = models.Answer

@@ -316,7 +316,7 @@ type Document implements Node {
   id: ID!
   form: Form!
   meta: GenericScalar
-  answers(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, question: ID, search: String, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [AnswerOrdering]): AnswerConnection
+  answers(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, question: ID, search: String, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [AnswerOrdering], questions: [ID]): AnswerConnection
   parentAnswers: [FileAnswer]
   case: Case
   workItem: WorkItem
