@@ -31,9 +31,10 @@ def test_validate_hidden_required_field(
 
 
 @pytest.mark.parametrize(
-    "question__type,question__is_required", [(Question.TYPE_FILE, "false")]
+    "question__type,question__is_required",
+    [(Question.TYPE_FILE, "false"), (Question.TYPE_DATE, "false")],
 )
-def test_validate_file_field(
+def test_validate_special_fields(
     db, form_question, question, document_factory, answer_factory, info
 ):
     document = document_factory(form=form_question.form)
@@ -149,6 +150,7 @@ def test_validate_dynamic_options(
         with pytest.raises(ValidationError):
             DocumentValidator().validate(document, info)
 
+
 @pytest.mark.parametrize(
     "question__type,answer__value,expected_value",
     [
@@ -202,17 +204,12 @@ def test_validate_empty_answers(
     ],
 )
 def test_validate_invalid_jexl(
-    db,
-    form_question,
-    document,
-    answer,
-    question,
-    exception_message,
+    db, form_question, document, answer, question, exception_message, info
 ):
 
     if exception_message is not None:
         with pytest.raises(RuntimeError) as exc:
-            DocumentValidator().validate(document)
+            DocumentValidator().validate(document, info)
         assert exc.value.args[0] == exception_message
     else:
-        assert DocumentValidator().validate(document) is None
+        assert DocumentValidator().validate(document, info) is None
