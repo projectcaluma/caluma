@@ -622,6 +622,7 @@ class Document(DjangoObjectType):
         AnswerConnection, filterset_class=filters.AnswerFilterSet
     )
     meta = generic.GenericScalar()
+    parent_answers = graphene.List("caluma.form.schema.FormAnswer")
 
     class Meta:
         model = models.Document
@@ -660,6 +661,7 @@ class File(DjangoObjectType):
     upload_url = graphene.String()
     download_url = graphene.String()
     metadata = generic.GenericScalar()
+    answer = graphene.Field("caluma.form.schema.FileAnswer")
 
     class Meta:
         model = models.File

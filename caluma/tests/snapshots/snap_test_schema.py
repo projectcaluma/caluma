@@ -317,7 +317,7 @@ type Document implements Node {
   form: Form!
   meta: GenericScalar
   answers(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, question: ID, search: String, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [AnswerOrdering], questions: [ID]): AnswerConnection
-  parentAnswers: [FileAnswer]
+  parentAnswers: [FormAnswer]
   case: Case
   workItem: WorkItem
 }
