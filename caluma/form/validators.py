@@ -1,4 +1,5 @@
 import sys
+from logging import getLogger
 
 from rest_framework import exceptions
 
@@ -9,6 +10,8 @@ from caluma.data_source.data_source_handlers import (
 
 from . import jexl
 from .models import Question
+
+log = getLogger()
 
 
 class AnswerValidator:
@@ -161,6 +164,8 @@ class DocumentValidator:
         answer_by_question = get_answers_by_question(document)
         parent = kwargs.get("parent", None)
         if parent:
+            # FIXME: this should be a weak reference, see here:
+            # https://docs.python.org/3/library/weakref.html
             answer_by_question["parent"] = get_answers_by_question(parent)
 
         self.validate_required(document, answer_by_question)
@@ -182,7 +187,14 @@ class DocumentValidator:
             }
 
         if answer.value is None:
-            if answer.question.type == Question.TYPE_FORM:
+            if answer.question.type in (
+                Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+                Question.TYPE_MULTIPLE_CHOICE,
+            ):
+                # Unanswered multiple choice should return empty list
+                # to denote emptyness
+                return []
+            elif answer.question.type == Question.TYPE_FORM:
                 # form type maps to dict
                 return get_document_answers(answer.value_document)
 
@@ -209,13 +221,28 @@ class DocumentValidator:
     def validate_required(self, document, answer_by_question):
         required_but_empty = []
         for question in document.form.questions.all():
-            if jexl.QuestionJexl(answer_by_question).evaluate(
-                question.is_required
-            ) and not jexl.QuestionJexl(answer_by_question).evaluate(
-                question.is_hidden
-            ):
-                if not answer_by_question.get(question.slug, None):
-                    required_but_empty.append(question.slug)
+            try:
+                expr = "is_required"
+                is_required = jexl.QuestionJexl(answer_by_question).evaluate(
+                    question.is_required
+                )
+                expr = "is_hidden"
+                is_hidden = jexl.QuestionJexl(answer_by_question).evaluate(
+                    question.is_hidden
+                )
+                if is_required and not is_hidden:
+                    if not answer_by_question.get(question.slug, None):
+                        required_but_empty.append(question.slug)
+            except Exception as exc:
+                expr_jexl = getattr(question, expr)
+                log.error(
+                    f"Error while evaluating '{expr}' expression on question {question.slug}: "
+                    f"{expr_jexl}: {str(exc)}"
+                )
+                raise RuntimeError(
+                    f"Error while evaluating '{expr}' expression on question {question.slug}: "
+                    f"{expr_jexl}. The system log contains more information"
+                )
 
         if required_but_empty:
             raise exceptions.ValidationError(

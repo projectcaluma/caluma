@@ -25,11 +25,26 @@ class QuestionJexl(JEXL):
     def answer_transform(self, question_with_path):
         current_context = self.context
         segments = question_with_path.split(".")
-        question = segments.pop()
-        for segment in segments:
-            current_context = current_context.get(segment)
 
-        return current_context.get(question)
+        # Allow question paths to originate from the toplevel (root) document
+        if segments[0] == "root":
+            while "parent" in current_context:
+                current_context = current_context["parent"]
+            segments = segments[1:]
+
+        try:
+            for segment in segments:
+                current_context = current_context[segment]
+            return current_context
+        except KeyError:
+            explanation = ""
+            if len(segments) > 1:
+                explanation = f" (failed at segment '{segment}')"
+
+            available_keys = ", ".join(current_context.keys())
+            raise RuntimeError(
+                f"Question could not be resolved: {question_with_path}{explanation}. Available: {available_keys}"
+            )
 
     def validate(self, expression):
         return super().validate(expression, QuestionValidatingAnalyzer)
