@@ -8,21 +8,21 @@ from .. import models, serializers
 
 
 @pytest.mark.parametrize(
-    "question__type,question__configuration",
+    "question__type,question__configuration,question__data_source,question__format_validators",
     [
-        (models.Question.TYPE_INTEGER, {"max_value": 10, "min_value": 0}),
-        (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 0.0}),
-        (models.Question.TYPE_FLOAT, {}),
-        (models.Question.TYPE_DATE, {}),
-        (models.Question.TYPE_TEXT, {"max_length": 10}),
-        (models.Question.TYPE_TEXTAREA, {"max_length": 10}),
-        (models.Question.TYPE_CHOICE, {}),
-        (models.Question.TYPE_MULTIPLE_CHOICE, {}),
-        (models.Question.TYPE_FORM, {}),
-        (models.Question.TYPE_FILE, {}),
-        (models.Question.TYPE_DYNAMIC_CHOICE, {"data_source": "MyDataSource"}),
-        (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, {"data_source": "MyDataSource"}),
-        (models.Question.TYPE_STATIC, {}),
+        (models.Question.TYPE_INTEGER, {"max_value": 10, "min_value": 0}, None, []),
+        (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 0.0}, None, []),
+        (models.Question.TYPE_FLOAT, {}, None, []),
+        (models.Question.TYPE_DATE, {}, None, []),
+        (models.Question.TYPE_TEXT, {"max_length": 10}, None, ["email"]),
+        (models.Question.TYPE_TEXTAREA, {"max_length": 10}, None, []),
+        (models.Question.TYPE_CHOICE, {}, None, []),
+        (models.Question.TYPE_MULTIPLE_CHOICE, {}, None, []),
+        (models.Question.TYPE_FORM, {}, None, []),
+        (models.Question.TYPE_FILE, {}, None, []),
+        (models.Question.TYPE_DYNAMIC_CHOICE, {}, "MyDataSource", []),
+        (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, {}, "MyDataSource", []),
+        (models.Question.TYPE_STATIC, {}, None, []),
     ],
 )
 def test_query_all_questions(
@@ -51,10 +51,30 @@ def test_query_all_questions(
                 ... on TextQuestion {
                   maxLength
                   placeholder
+                  formatValidators {
+                    edges {
+                      node {
+                        slug
+                        name
+                        regex
+                        errorMsg
+                      }
+                    }
+                  }
                 }
                 ... on TextareaQuestion {
                   maxLength
                   placeholder
+                  formatValidators {
+                    edges {
+                      node {
+                        slug
+                        name
+                        regex
+                        errorMsg
+                      }
+                    }
+                  }
                 }
                 ... on FloatQuestion {
                   floatMinValue: minValue
@@ -217,10 +237,14 @@ def test_save_question(db, snapshot, question, mutation, schema_executor, succes
 
 
 @pytest.mark.parametrize(
-    "question__type,question__configuration",
-    [(models.Question.TYPE_TEXT, {"max_length": 10})],
+    "question__type,question__configuration,question__format_validators,success",
+    [
+        (models.Question.TYPE_TEXT, {"max_length": 10}, [], True),
+        (models.Question.TYPE_TEXT, {"max_length": 10}, ["email"], True),
+        (models.Question.TYPE_TEXT, {"max_length": 10}, ["notavalidator"], False),
+    ],
 )
-def test_save_text_question(db, question, schema_executor):
+def test_save_text_question(db, question, schema_executor, success):
     query = """
         mutation SaveTextQuestion($input: SaveTextQuestionInput!) {
           saveTextQuestion(input: $input) {
@@ -232,6 +256,16 @@ def test_save_text_question(db, question, schema_executor):
               __typename
               ... on TextQuestion {
                 maxLength
+                formatValidators {
+                  edges {
+                    node {
+                      slug
+                      name
+                      regex
+                      errorMsg
+                    }
+                  }
+                }
               }
             }
             clientMutationId
@@ -245,8 +279,16 @@ def test_save_text_question(db, question, schema_executor):
         )
     }
     result = schema_executor(query, variables=inp)
-    assert not result.errors
-    assert result.data["saveTextQuestion"]["question"]["maxLength"] == 10
+    assert not bool(result.errors) == success
+    if success:
+        assert result.data["saveTextQuestion"]["question"]["maxLength"] == 10
+        if question.format_validators:
+            assert (
+                result.data["saveTextQuestion"]["question"]["formatValidators"][
+                    "edges"
+                ][0]["node"]["slug"]
+                == "email"
+            )
 
 
 @pytest.mark.parametrize(

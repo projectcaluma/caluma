@@ -9,6 +9,7 @@ from caluma.data_source.data_source_handlers import (
 )
 
 from . import jexl
+from .format_validators import get_format_validators
 from .models import Question
 
 log = getLogger()
@@ -148,6 +149,9 @@ class AnswerValidator:
             getattr(self, f"_validate_question_{question.type}")(
                 question, value, document=document, info=info
             )
+        format_validators = get_format_validators(dic=True)
+        for validator_slug in question.format_validators:
+            format_validators[validator_slug]().validate(value, document)
 
 
 class DocumentValidator:
@@ -248,3 +252,20 @@ class DocumentValidator:
             raise exceptions.ValidationError(
                 f"Questions {','.join(required_but_empty)} are required but not provided."
             )
+
+
+class QuestionValidator:
+    @staticmethod
+    def _validate_format_validators(data):
+        format_validators = data.get("format_validators")
+        if format_validators:
+            fv = get_format_validators(include=format_validators, dic=True)
+            diff_list = list(set(format_validators) - set(fv))
+            if diff_list:
+                raise exceptions.ValidationError(
+                    f"Invalid format validators {diff_list}."
+                )
+
+    def validate(self, data):
+        if data["type"] in ["text", "textarea"]:
+            self._validate_format_validators(data)

@@ -183,6 +183,8 @@ VALIDATION_CLASSES = env.list("VALIDATION_CLASSES", default=[])
 
 DATA_SOURCE_CLASSES = env.list("DATA_SOURCE_CLASSES", default=[])
 
+FORMAT_VALIDATOR_CLASSES = env.list("FORMAT_VALIDATOR_CLASSES", default=[])
+
 # Cors headers
 
 CORS_ORIGIN_ALLOW_ALL = env.bool("CORS_ORIGIN_ALLOW_ALL", default=False)

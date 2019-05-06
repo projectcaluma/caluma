@@ -25,6 +25,7 @@ class QuestionFactory(DjangoModelFactory):
     configuration = {}
     meta = {}
     is_archived = False
+    format_validators = []
 
     row_form = Maybe(
         "is_table", yes_declaration=SubFactory(FormFactory), no_declaration=None

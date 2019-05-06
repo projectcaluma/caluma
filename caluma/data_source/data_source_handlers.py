@@ -1,8 +1,9 @@
 from collections import namedtuple
 
 from django.conf import settings
-from django.utils import translation
 from django.utils.module_loading import import_string
+
+from caluma.core.utils import translate_value
 
 DataSource = namedtuple("DataSource", ["name", "info"])
 
@@ -19,15 +20,6 @@ def is_iterable_and_no_string(value):
         return False
 
 
-def translate_value(value, lang):
-    if isinstance(value, dict):
-        if lang in value:
-            return value[lang]
-        if settings.LANGUAGE_CODE in value:
-            return value[settings.LANGUAGE_CODE]
-    return value
-
-
 class Data:
     def __init__(self, data):
         self.data = data
@@ -42,10 +34,7 @@ class Data:
             elif isinstance(self.data[1], dict):
                 return (
                     str(self.data[0]),
-                    str(
-                        translate_value(self.data[1], translation.get_language())
-                        or self.data[0]
-                    ),
+                    str(translate_value(self.data[1]) or self.data[0]),
                 )
             return str(self.data[0]), str(self.data[1])
 
@@ -63,9 +52,7 @@ def get_data_sources(dic=False):
     if dic:
         return {ds.__name__: ds for ds in data_source_classes}
     return [
-        DataSource(
-            name=ds.__name__, info=translate_value(ds.info, translation.get_language())
-        )
+        DataSource(name=ds.__name__, info=translate_value(ds.info))
         for ds in data_source_classes
     ]
 

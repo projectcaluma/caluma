@@ -546,6 +546,23 @@ type FormQuestion implements Question, Node {
   id: ID!
 }
 
+type FormatValidator {
+  slug: String!
+  name: String!
+  regex: String!
+  errorMsg: String!
+}
+
+type FormatValidatorConnection {
+  pageInfo: PageInfo!
+  edges: [FormatValidatorEdge]!
+}
+
+type FormatValidatorEdge {
+  node: FormatValidator
+  cursor: String!
+}
+
 scalar GenericScalar
 
 scalar GroupJexl
@@ -728,6 +745,7 @@ type Query {
   allForms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
   allQuestions(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, excludeForms: [ID], search: String): QuestionConnection
   allDocuments(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, form: ID, search: String, id: ID, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [DocumentOrdering]): DocumentConnection
+  allFormatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
   node(id: ID!): Node
 }
 
@@ -1232,6 +1250,7 @@ input SaveTextQuestionInput {
   isArchived: Boolean
   maxLength: Int
   placeholder: String
+  formatValidators: [String]
   clientMutationId: String
 }
 
@@ -1250,6 +1269,7 @@ input SaveTextareaQuestionInput {
   isArchived: Boolean
   maxLength: Int
   placeholder: String
+  formatValidators: [String]
   clientMutationId: String
 }
 
@@ -1447,6 +1467,7 @@ type TextQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
+  formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
   forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
   id: ID!
   maxLength: Int
@@ -1466,6 +1487,7 @@ type TextareaQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
+  formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
   forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
   id: ID!
   maxLength: Int
