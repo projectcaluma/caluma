@@ -141,8 +141,9 @@ visibility class defining per node how to filter.
 Example:
 ```python
 from caluma.core.visibilities import BaseVisibility, filter_queryset_for
-from caluma.types import Node
+from caluma.core.types import Node
 from caluma.form.schema import Form
+
 
 class CustomVisibility(BaseVisibility):
     @filter_queryset_for(Node)
@@ -180,7 +181,8 @@ Example:
 ```python
 from caluma.core.permissions import BasePermission, permission_for, object_permission_for
 from caluma.form.schema import SaveForm
-from caluma.mutation import Mutation
+from caluma.core.mutation import Mutation
+
 
 class CustomPermission(BasePermission):
     @permission_for(Mutation)
@@ -220,8 +222,9 @@ A custom validation class defining validations for various mutations looks like 
 ```python
 from caluma.core.validations import BaseValidation, validation_for
 from caluma.form.schema import SaveForm
-from caluma.mutation import Mutation
+from caluma.core.mutation import Mutation
 from rest_framework import exceptions
+
 
 class CustomValidation(BaseValidation):
     @validation_for(Mutation)
@@ -232,7 +235,7 @@ class CustomValidation(BaseValidation):
     @validation_for(SaveForm)
     def validate_save_form(self, mutation, data, info):
         if data['meta'] and info.context.group != 'admin':
-            raise exceptions.ValidationException('May not change meta on form')
+            raise exceptions.ValidationError('May not change meta on form')
         return data
 ```
 
