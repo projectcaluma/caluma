@@ -218,16 +218,17 @@ class MetaValueFilter(Filter):
         return qs.filter(**{f"{self.field_name}__{meta_key}__{lookup}": meta_value})
 
 
-@convert_form_field.register(MetaValueFilterField)
-def convert_meta_value_field(field):
-    registry = get_global_registry()
-    converted = registry.get_converted_field(field)
-    if converted:
-        return converted
+    @staticmethod
+    @convert_form_field.register(MetaValueFilterField)
+    def convert_meta_value_field(field):
+        registry = get_global_registry()
+        converted = registry.get_converted_field(field)
+        if converted:
+            return converted
 
-    converted = MetaValueFilterType()
-    registry.register_converted_field(field, converted)
-    return converted
+        converted = MetaValueFilterType()
+        registry.register_converted_field(field, converted)
+        return converted
 
 
 class MetaFilterSet(FilterSet):
