@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -1214,7 +1215,7 @@ input SaveStaticQuestionInput {
   isHidden: QuestionJexl
   meta: JSONString
   isArchived: Boolean
-  staticContent: String!
+  staticContent: String
   clientMutationId: String
 }
 
