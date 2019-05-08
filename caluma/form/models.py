@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import ArrayField, JSONField
 from django.db import models, transaction
 from django.db.models.signals import post_init
 from django.dispatch import receiver
@@ -103,6 +103,9 @@ class Question(SlugModel):
         null=True,
         related_name="+",
         help_text="Reference this question has been copied from",
+    )
+    format_validators = ArrayField(
+        models.CharField(max_length=255), blank=True, default=list
     )
 
     @property

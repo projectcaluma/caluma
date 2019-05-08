@@ -1,6 +1,6 @@
 import graphene
-from graphene import ConnectionField, relay
-from graphene.types import generic
+from graphene import Connection, ConnectionField, relay
+from graphene.types import ObjectType, generic
 from graphene_django.rest_framework import serializer_converter
 
 from ..core.filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
@@ -10,6 +10,7 @@ from ..core.types import DjangoObjectType, Node
 from ..data_source.data_source_handlers import get_data_source_data
 from ..data_source.schema import DataSourceDataConnection
 from . import filters, models, serializers
+from .format_validators import get_format_validators
 
 
 class QuestionJexl(graphene.String):
@@ -106,9 +107,25 @@ class QuestionQuerysetMixin(object):
         return Question.get_queryset(queryset, info)
 
 
+class FormatValidator(ObjectType):
+    slug = graphene.String(required=True)
+    name = graphene.String(required=True)
+    regex = graphene.String(required=True)
+    error_msg = graphene.String(required=True)
+
+
+class FormatValidatorConnection(Connection):
+    class Meta:
+        node = FormatValidator
+
+
 class TextQuestion(QuestionQuerysetMixin, DjangoObjectType):
     max_length = graphene.Int()
     placeholder = graphene.String()
+    format_validators = graphene.ConnectionField(FormatValidatorConnection)
+
+    def resolve_format_validators(self, info):
+        return get_format_validators(include=self.format_validators)
 
     class Meta:
         model = models.Question
@@ -129,6 +146,10 @@ class TextQuestion(QuestionQuerysetMixin, DjangoObjectType):
 class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
     max_length = graphene.Int()
     placeholder = graphene.String()
+    format_validators = graphene.ConnectionField(FormatValidatorConnection)
+
+    def resolve_format_validators(self, info):
+        return get_format_validators(include=self.format_validators)
 
     class Meta:
         model = models.Question
@@ -159,6 +180,7 @@ class DateQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "sub_form",
             "placeholder",
             "static_content",
+            "format_validators",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -180,6 +202,7 @@ class ChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "sub_form",
             "placeholder",
             "static_content",
+            "format_validators",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -200,6 +223,7 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "row_form",
             "sub_form",
             "placeholder",
+            "format_validators",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -222,6 +246,7 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "sub_form",
             "placeholder",
             "static_content",
+            "format_validators",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -244,6 +269,7 @@ class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "sub_form",
             "placeholder",
             "static_content",
+            "format_validators",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -265,6 +291,7 @@ class IntegerQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "row_form",
             "sub_form",
             "static_content",
+            "format_validators",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -286,6 +313,7 @@ class FloatQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "row_form",
             "sub_form",
             "static_content",
+            "format_validators",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -303,6 +331,7 @@ class TableQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "sub_form",
             "placeholder",
             "static_content",
+            "format_validators",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -320,6 +349,7 @@ class FormQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "row_form",
             "placeholder",
             "static_content",
+            "format_validators",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -338,6 +368,7 @@ class FileQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "sub_form",
             "placeholder",
             "static_content",
+            "format_validators",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -355,6 +386,7 @@ class StaticQuestion(QuestionQuerysetMixin, DjangoObjectType):
             "sub_form",
             "placeholder",
             "is_required",
+            "format_validators",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -800,3 +832,7 @@ class Query(object):
     all_documents = DjangoFilterConnectionField(
         Document, filterset_class=filters.DocumentFilterSet
     )
+    all_format_validators = ConnectionField(FormatValidatorConnection)
+
+    def resolve_all_format_validators(self, info):
+        return get_format_validators()

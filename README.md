@@ -116,6 +116,16 @@ Per default no CORS headers are set but can be configured with following options
 * `CORS_ORIGIN_ALLOW_ALL`: If True, the whitelist will not be used and all origins will be accepted. (default: False)
 * `CORS_ORIGIN_WHITELIST`: A list of origin hostnames that are authorized to make cross-site HTTP requests.
 
+#### FormatValidators
+FormatValidator classes can validate input data for answers, based on rules set on the question.
+
+There are a variety of base FormatValidators ready to use. There is also an [extension point](#formatvalidator-classes) for them.
+
+List of built-in base FormatValidators:
+
+* email
+* phone-number
+
 #### Extension points
 
 Caluma is meant to be used as a service with a clean API hence it doesn't provide a Django app.
@@ -248,6 +258,31 @@ Save your validation module as `validations.py` and inject it as Docker volume t
 see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) for an example.
 
 Afterwards you can configure it in `VALIDATION_CLASSES` as `caluma.extensions.validations.CustomValidation`.
+
+##### FormatValidator classes
+
+Custom FormatValidator classes can be created to validate input data for answers, based
+on rules set on the question.
+
+There are some [core FormatValidators](#formatvalidators) you can use.
+
+A custom FormatValidator looks like this:
+
+```python
+from caluma.form.format_validators import BaseFormatValidator
+
+
+class MyFormatValidator(BaseFormatValidator):
+    slug = "my-slug"
+    name = {"en": "english name", "de": "Deutscher Name"}
+    regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+    error_msg = {"en": "Not valid", "de": "Nicht gültig"}
+```
+
+For more complex validations, you can also additionally override the `validate()`
+method. Obviously, everything that happens in there must also be implemented in the
+corresponding frontend validation, if any.
+
 
 ## File question and answers
 In order to make use of Calumas file question and answer, you need to set up a storage provider.

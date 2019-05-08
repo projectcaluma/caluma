@@ -183,6 +183,10 @@ class SaveQuestionSerializer(serializers.ModelSerializer):
     is_hidden = QuestionJexlField(required=False)
     is_required = QuestionJexlField(required=False)
 
+    def validate(self, data):
+        validators.QuestionValidator().validate(data)
+        return super().validate(data)
+
     class Meta:
         model = models.Question
         fields = (
@@ -198,24 +202,34 @@ class SaveQuestionSerializer(serializers.ModelSerializer):
 
 class SaveTextQuestionSerializer(SaveQuestionSerializer):
     max_length = IntegerField(min_value=1, required=False, allow_null=True)
+    format_validators = ListField(child=CharField(), required=False)
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_TEXT
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ("max_length", "placeholder")
+        fields = SaveQuestionSerializer.Meta.fields + (
+            "max_length",
+            "placeholder",
+            "format_validators",
+        )
 
 
 class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
     max_length = IntegerField(min_value=1, required=False, allow_null=True)
+    format_validators = ListField(child=CharField(), required=False)
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_TEXTAREA
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ("max_length", "placeholder")
+        fields = SaveQuestionSerializer.Meta.fields + (
+            "max_length",
+            "placeholder",
+            "format_validators",
+        )
 
 
 class SaveDateQuestionSerializer(SaveQuestionSerializer):
