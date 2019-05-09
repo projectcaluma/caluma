@@ -644,6 +644,7 @@ def test_save_document_answer(
         mutation {mutation}($input: {mutation}Input!) {{
           {mutation_func}(input: $input) {{
             answer {{
+              __typename
               ... on StringAnswer {{
                 stringValue: value
               }}
@@ -707,11 +708,11 @@ def test_save_document_answer(
         document = document_factory.create(form=question.sub_form)
         inp["input"]["value"] = document.pk
 
-    if question.type == Question.TYPE_FILE and answer.value == "some-file.pdf":
-        file = file_factory(name="some-file.pdf")
-        answer.file = file
+    if question.type == Question.TYPE_FILE:
+        if answer.value == "some-file.pdf":
+            minio_mock.bucket_exists.return_value = False
+        answer.value = None
         answer.save()
-        minio_mock.bucket_exists.return_value = False
 
     if question.type == Question.TYPE_DATE:
         inp["input"]["value"] = answer.date
