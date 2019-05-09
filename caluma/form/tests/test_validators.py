@@ -1,8 +1,10 @@
 import pytest
 from rest_framework.exceptions import ValidationError
 
+from ...core.tests import extract_serializer_input_fields
 from ...form.models import Document, Question
-from ..validators import DocumentValidator
+from .. import serializers
+from ..validators import DocumentValidator, QuestionValidator
 
 
 @pytest.mark.parametrize(
@@ -149,6 +151,34 @@ def test_validate_dynamic_options(
     else:
         with pytest.raises(ValidationError):
             DocumentValidator().validate(document, info)
+
+
+@pytest.mark.parametrize(
+    "question__data_source,valid", [("MyDataSource", True), ("NotADataSource", False)]
+)
+@pytest.mark.parametrize(
+    "question__type,serializer_to_use",
+    [
+        (Question.TYPE_DYNAMIC_CHOICE, "SaveDynamicChoiceQuestionSerializer"),
+        (
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            "SaveDynamicMultipleChoiceQuestionSerializer",
+        ),
+    ],
+)
+def test_validate_data_source(
+    db, question, valid, info, serializer_to_use, data_source_settings
+):
+    serializer = getattr(serializers, serializer_to_use)
+
+    data = extract_serializer_input_fields(serializer, question)
+    data["type"] = question.type
+
+    if valid:
+        QuestionValidator().validate(data)
+    else:
+        with pytest.raises(ValidationError):
+            QuestionValidator().validate(data)
 
 
 @pytest.mark.parametrize(
