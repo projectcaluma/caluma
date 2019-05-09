@@ -266,6 +266,14 @@ class QuestionValidator:
                     f"Invalid format validators {diff_list}."
                 )
 
+    @staticmethod
+    def _validate_data_source(data_source):
+        data_sources = get_data_sources(dic=True)
+        if data_source not in data_sources:
+            raise exceptions.ValidationError(f'Invalid data_source: "{data_source}"')
+
     def validate(self, data):
         if data["type"] in ["text", "textarea"]:
             self._validate_format_validators(data)
+        if "dataSource" in data:
+            self._validate_data_source(data["dataSource"])
