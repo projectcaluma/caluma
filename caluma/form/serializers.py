@@ -420,7 +420,7 @@ class SaveFileQuestionSerializer(SaveQuestionSerializer):
 
 
 class SaveStaticQuestionSerializer(SaveQuestionSerializer):
-    static_content = CharField(required=True)
+    static_content = CharField(required=False)
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_STATIC
