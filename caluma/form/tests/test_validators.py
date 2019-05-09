@@ -213,3 +213,16 @@ def test_validate_invalid_jexl(
         assert exc.value.args[0] == exception_message
     else:
         assert DocumentValidator().validate(document, info) is None
+
+
+def test_validate_required_integer_0(
+    db, form_question, answer_factory, document_factory, info
+):
+    form_question.question.is_required = "true"
+    form_question.question.type = Question.TYPE_INTEGER
+    form_question.question.save()
+
+    document = document_factory(form=form_question.form)
+    answer_factory(document=document, value=0, question=form_question.question)
+
+    DocumentValidator().validate(document, info)

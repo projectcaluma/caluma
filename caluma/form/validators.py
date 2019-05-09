@@ -235,7 +235,7 @@ class DocumentValidator:
                     question.is_hidden
                 )
                 if is_required and not is_hidden:
-                    if not answer_by_question.get(question.slug, None):
+                    if answer_by_question.get(question.slug, None) in [None, ""]:
                         required_but_empty.append(question.slug)
             except Exception as exc:
                 expr_jexl = getattr(question, expr)
