@@ -105,7 +105,6 @@ class FileFactory(DjangoModelFactory):
 class AnswerFactory(DjangoModelFactory):
     question = SubFactory(QuestionFactory)
     document = SubFactory(DocumentFactory)
-    date = None
     meta = {}
 
     @lazy_attribute
@@ -115,6 +114,10 @@ class AnswerFactory(DjangoModelFactory):
             or self.question.type == models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE
         ):
             return [Faker("name").generate({}), Faker("name").generate({})]
+        elif self.question.type == models.Question.TYPE_FLOAT:
+            return Faker("pyfloat").generate({})
+        elif self.question.type == models.Question.TYPE_INTEGER:
+            return Faker("pyint").generate({})
         elif self.question.type not in [
             models.Question.TYPE_FORM,
             models.Question.TYPE_TABLE,

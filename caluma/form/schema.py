@@ -13,6 +13,67 @@ from . import filters, models, serializers
 from .format_validators import get_format_validators
 
 
+def resolve_answer(answer):
+    ANSWER_TYPE = {
+        list: ListAnswer,
+        str: StringAnswer,
+        float: FloatAnswer,
+        int: IntegerAnswer,
+    }
+
+    if answer.value is None:
+        ANSWER_QUESTION_TYPE = {
+            models.Question.TYPE_FORM: FormAnswer,
+            models.Question.TYPE_TABLE: TableAnswer,
+            models.Question.TYPE_FILE: FileAnswer,
+            models.Question.TYPE_DATE: DateAnswer,
+        }
+        return ANSWER_QUESTION_TYPE[answer.question.type]
+
+    return ANSWER_TYPE[type(answer.value)]
+
+
+def resolve_question(question):
+    QUESTION_OBJECT_TYPE = {
+        models.Question.TYPE_TEXT: TextQuestion,
+        models.Question.TYPE_FLOAT: FloatQuestion,
+        models.Question.TYPE_CHOICE: ChoiceQuestion,
+        models.Question.TYPE_INTEGER: IntegerQuestion,
+        models.Question.TYPE_MULTIPLE_CHOICE: MultipleChoiceQuestion,
+        models.Question.TYPE_DYNAMIC_CHOICE: DynamicChoiceQuestion,
+        models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: DynamicMultipleChoiceQuestion,
+        models.Question.TYPE_TEXTAREA: TextareaQuestion,
+        models.Question.TYPE_DATE: DateQuestion,
+        models.Question.TYPE_TABLE: TableQuestion,
+        models.Question.TYPE_FORM: FormQuestion,
+        models.Question.TYPE_FILE: FileQuestion,
+        models.Question.TYPE_STATIC: StaticQuestion,
+    }
+
+    return QUESTION_OBJECT_TYPE[question.type]
+
+
+class FormDjangoObjectType(DjangoObjectType):
+    """
+    Django object type with improved `is_type_of`.
+
+    This is needed to resolve our different Answer and Question types.
+    """
+
+    @classmethod
+    def is_type_of(cls, root, info):
+        is_type = super().is_type_of(root, info)
+        if is_type:
+            if root._meta.model == models.Answer:
+                return resolve_answer(root)._meta.name == cls._meta.name
+            if root._meta.model == models.Question:
+                return resolve_question(root)._meta.name == cls._meta.name
+        return is_type
+
+    class Meta:
+        abstract = True
+
+
 class QuestionJexl(graphene.String):
     """Question jexl expression returning boolean.
 
@@ -61,26 +122,10 @@ class Question(Node, graphene.Interface):
 
     @classmethod
     def resolve_type(cls, instance, info):
-        QUESTION_OBJECT_TYPE = {
-            models.Question.TYPE_TEXT: TextQuestion,
-            models.Question.TYPE_FLOAT: FloatQuestion,
-            models.Question.TYPE_CHOICE: ChoiceQuestion,
-            models.Question.TYPE_INTEGER: IntegerQuestion,
-            models.Question.TYPE_MULTIPLE_CHOICE: MultipleChoiceQuestion,
-            models.Question.TYPE_DYNAMIC_CHOICE: DynamicChoiceQuestion,
-            models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: DynamicMultipleChoiceQuestion,
-            models.Question.TYPE_TEXTAREA: TextareaQuestion,
-            models.Question.TYPE_DATE: DateQuestion,
-            models.Question.TYPE_TABLE: TableQuestion,
-            models.Question.TYPE_FORM: FormQuestion,
-            models.Question.TYPE_FILE: FileQuestion,
-            models.Question.TYPE_STATIC: StaticQuestion,
-        }
-
-        return QUESTION_OBJECT_TYPE[instance.type]
+        return resolve_question(instance)
 
 
-class Option(DjangoObjectType):
+class Option(FormDjangoObjectType):
     meta = generic.GenericScalar()
 
     class Meta:
@@ -119,7 +164,7 @@ class FormatValidatorConnection(Connection):
         node = FormatValidator
 
 
-class TextQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class TextQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     max_length = graphene.Int()
     placeholder = graphene.String()
     format_validators = graphene.ConnectionField(FormatValidatorConnection)
@@ -143,7 +188,7 @@ class TextQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     max_length = graphene.Int()
     placeholder = graphene.String()
     format_validators = graphene.ConnectionField(FormatValidatorConnection)
@@ -167,7 +212,7 @@ class TextareaQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class DateQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class DateQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
         exclude_fields = (
@@ -186,7 +231,7 @@ class DateQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class ChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class ChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
@@ -208,7 +253,7 @@ class ChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class MultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
@@ -229,7 +274,7 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class DynamicChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     options = ConnectionField(DataSourceDataConnection)
     data_source = graphene.String(required=True)
 
@@ -252,7 +297,7 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     options = ConnectionField(DataSourceDataConnection)
     data_source = graphene.String(required=True)
 
@@ -275,7 +320,7 @@ class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class IntegerQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class IntegerQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     max_value = graphene.Int()
     min_value = graphene.Int()
     placeholder = graphene.String()
@@ -297,7 +342,7 @@ class IntegerQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class FloatQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class FloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     min_value = graphene.Float()
     max_value = graphene.Float()
     placeholder = graphene.String()
@@ -319,7 +364,7 @@ class FloatQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class TableQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class TableQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
         exclude_fields = (
@@ -337,7 +382,7 @@ class TableQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class FormQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class FormQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
         exclude_fields = (
@@ -355,7 +400,7 @@ class FormQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class FileQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class FileQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
         exclude_fields = (
@@ -374,7 +419,7 @@ class FileQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class StaticQuestion(QuestionQuerysetMixin, DjangoObjectType):
+class StaticQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
         exclude_fields = (
@@ -392,7 +437,7 @@ class StaticQuestion(QuestionQuerysetMixin, DjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class Form(DjangoObjectType):
+class Form(FormDjangoObjectType):
     questions = DjangoFilterSetConnectionField(
         QuestionConnection, filterset_class=filters.QuestionFilterSet
     )
@@ -564,23 +609,7 @@ class Answer(Node, graphene.Interface):
 
     @classmethod
     def resolve_type(cls, instance, info):
-        ANSWER_TYPE = {
-            list: ListAnswer,
-            str: StringAnswer,
-            float: FloatAnswer,
-            int: IntegerAnswer,
-        }
-
-        if instance.value is None:
-            ANSWER_QUESTION_TYPE = {
-                models.Question.TYPE_FORM: FormAnswer,
-                models.Question.TYPE_TABLE: TableAnswer,
-                models.Question.TYPE_FILE: FileAnswer,
-                models.Question.TYPE_DATE: DateAnswer,
-            }
-            return ANSWER_QUESTION_TYPE[instance.question.type]
-
-        return ANSWER_TYPE[type(instance.value)]
+        return resolve_answer(instance)
 
 
 class AnswerQuerysetMixin(object):
@@ -591,7 +620,7 @@ class AnswerQuerysetMixin(object):
         return Answer.get_queryset(queryset, info)
 
 
-class IntegerAnswer(AnswerQuerysetMixin, DjangoObjectType):
+class IntegerAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
     value = graphene.Int(required=True)
 
     class Meta:
@@ -601,7 +630,7 @@ class IntegerAnswer(AnswerQuerysetMixin, DjangoObjectType):
         interfaces = (Answer, graphene.Node)
 
 
-class FloatAnswer(AnswerQuerysetMixin, DjangoObjectType):
+class FloatAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
     value = graphene.Float(required=True)
 
     class Meta:
@@ -611,7 +640,7 @@ class FloatAnswer(AnswerQuerysetMixin, DjangoObjectType):
         interfaces = (Answer, graphene.Node)
 
 
-class DateAnswer(AnswerQuerysetMixin, DjangoObjectType):
+class DateAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
     value = graphene.types.datetime.Date(required=True)
 
     def resolve_value(self, info, **args):
@@ -624,7 +653,7 @@ class DateAnswer(AnswerQuerysetMixin, DjangoObjectType):
         interfaces = (Answer, graphene.Node)
 
 
-class StringAnswer(AnswerQuerysetMixin, DjangoObjectType):
+class StringAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
     value = graphene.String(required=True)
 
     class Meta:
@@ -634,7 +663,7 @@ class StringAnswer(AnswerQuerysetMixin, DjangoObjectType):
         interfaces = (Answer, graphene.Node)
 
 
-class ListAnswer(AnswerQuerysetMixin, DjangoObjectType):
+class ListAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
     value = graphene.List(graphene.String, required=True)
 
     class Meta:
@@ -649,11 +678,12 @@ class AnswerConnection(graphene.Connection):
         node = Answer
 
 
-class Document(DjangoObjectType):
+class Document(FormDjangoObjectType):
     answers = DjangoFilterSetConnectionField(
         AnswerConnection, filterset_class=filters.AnswerFilterSet
     )
     meta = generic.GenericScalar()
+    parent_answers = graphene.List("caluma.form.schema.FormAnswer")
 
     class Meta:
         model = models.Document
@@ -661,7 +691,7 @@ class Document(DjangoObjectType):
         interfaces = (graphene.Node,)
 
 
-class TableAnswer(AnswerQuerysetMixin, DjangoObjectType):
+class TableAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
     value = graphene.List(Document, required=True)
 
     def resolve_value(self, info, **args):
@@ -674,7 +704,7 @@ class TableAnswer(AnswerQuerysetMixin, DjangoObjectType):
         interfaces = (Answer, graphene.Node)
 
 
-class FormAnswer(AnswerQuerysetMixin, DjangoObjectType):
+class FormAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
     value = graphene.Field(Document, required=True)
 
     def resolve_value(self, info, **args):
@@ -687,18 +717,19 @@ class FormAnswer(AnswerQuerysetMixin, DjangoObjectType):
         interfaces = (Answer, graphene.Node)
 
 
-class File(DjangoObjectType):
+class File(FormDjangoObjectType):
     name = graphene.String(required=True)
     upload_url = graphene.String()
     download_url = graphene.String()
     metadata = generic.GenericScalar()
+    answer = graphene.Field("caluma.form.schema.FileAnswer")
 
     class Meta:
         model = models.File
         interfaces = (relay.Node,)
 
 
-class FileAnswer(AnswerQuerysetMixin, DjangoObjectType):
+class FileAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
     value = graphene.Field(File, required=True)
 
     def resolve_value(self, info, **args):
