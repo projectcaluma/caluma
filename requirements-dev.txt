@@ -1,3 +1,6 @@
+# When adding new dependencies here, also add them to the renovate.json to
+# enable auto-merge
+
 -r requirements.txt
 black==18.9b0
 factory-boy==2.11.1

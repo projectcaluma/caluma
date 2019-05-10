@@ -8,5 +8,34 @@
         "pinDigests": false
       }
     ]
-  }
+  },
+  "digest": {
+    "automerge": true
+  },
+  "packageRules": [
+    {
+      "packageNames": [
+        "black",
+        "factory",
+        "faker",
+        "flake8",
+        "flake8-debugger",
+        "flake8-docstrings",
+        "flake8-isort",
+        "flake8-string-format",
+        "flake8-tuple",
+        "isort",
+        "pytest",
+        "pytest-cov",
+        "pytest-django",
+        "pytest-env",
+        "pytest-factoryboy",
+        "pytest-mock",
+        "pytest-randomly",
+        "requests-mock",
+        "snapshottest"
+      ],
+      "automerge": true
+    }
+  ]
 }
