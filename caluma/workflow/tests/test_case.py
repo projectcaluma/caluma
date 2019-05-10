@@ -13,6 +13,7 @@ def test_query_all_cases(db, snapshot, case, result_count, flow, schema_executor
     query = """
         query AllCases {
           allCases (status: RUNNING){
+            totalCount
             edges {
               node {
                 status
@@ -229,6 +230,7 @@ def test_start_case_with_child_documents(
                     document {
                         id
                         answers {
+                            totalCount
                             edges {
                                 node {
                                     id
@@ -236,6 +238,7 @@ def test_start_case_with_child_documents(
                                         value {
                                             id
                                             answers {
+                                                totalCount
                                                 edges {
                                                     node {
                                                         id

@@ -4,8 +4,15 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
+
+snapshots["test_query_all_cases[running-1] 1"] = {
+    "allCases": {"edges": [{"node": {"status": "RUNNING"}}], "totalCount": 1}
+}
+
+snapshots["test_query_all_cases[completed-0] 1"] = {
+    "allCases": {"edges": [], "totalCount": 0}
+}
 
 snapshots['test_start_case[startCase-["group-name"]|groups-100] 1'] = {
     "startCase": {
@@ -182,12 +189,6 @@ snapshots["test_start_case[saveCase-None-None] 1"] = {
         "clientMutationId": None,
     }
 }
-
-snapshots["test_query_all_cases[running-1] 1"] = {
-    "allCases": {"edges": [{"node": {"status": "RUNNING"}}]}
-}
-
-snapshots["test_query_all_cases[completed-0] 1"] = {"allCases": {"edges": []}}
 
 snapshots["test_cancel_case[running-True-completed] 1"] = {
     "cancelCase": {

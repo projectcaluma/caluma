@@ -24,7 +24,8 @@ snapshots[
                     "slug": "effort-meet",
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 
@@ -46,7 +47,8 @@ snapshots[
                     "slug": "effort-meet",
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 
@@ -68,7 +70,8 @@ snapshots[
                     "slug": "effort-meet",
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 
@@ -87,7 +90,8 @@ snapshots[
                     "slug": "effort-meet",
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 
@@ -120,7 +124,8 @@ snapshots[
                     "slug": "effort-meet",
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 
@@ -142,7 +147,8 @@ snapshots[
                     "slug": "effort-meet",
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 
@@ -158,11 +164,15 @@ snapshots[
                     "infoText": "",
                     "label": "Brian Williams",
                     "meta": {},
-                    "options": {"edges": [{"node": {"slug": "treatment-radio"}}]},
+                    "options": {
+                        "edges": [{"node": {"slug": "treatment-radio"}}],
+                        "totalCount": 1,
+                    },
                     "slug": "effort-meet",
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 
@@ -178,11 +188,15 @@ snapshots[
                     "infoText": "",
                     "label": "Brian Williams",
                     "meta": {},
-                    "options": {"edges": [{"node": {"slug": "treatment-radio"}}]},
+                    "options": {
+                        "edges": [{"node": {"slug": "treatment-radio"}}],
+                        "totalCount": 1,
+                    },
                     "slug": "effort-meet",
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 
@@ -202,7 +216,8 @@ snapshots[
                     "subForm": {"slug": "suggest-traditional"},
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 
@@ -221,7 +236,8 @@ snapshots[
                     "slug": "effort-meet",
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 
@@ -255,7 +271,8 @@ snapshots[
                     "slug": "effort-meet",
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 
@@ -289,7 +306,8 @@ snapshots[
                     "slug": "effort-meet",
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 
@@ -310,7 +328,8 @@ snapshots[
 Kid avoid player relationship to range whose. Draw free property consider.""",
                 }
             }
-        ]
+        ],
+        "totalCount": 1,
     }
 }
 

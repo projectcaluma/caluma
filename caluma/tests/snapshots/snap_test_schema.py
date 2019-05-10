@@ -49,6 +49,7 @@ interface Answer {
 type AnswerConnection {
   pageInfo: PageInfo!
   edges: [AnswerEdge]!
+  totalCount: Int
 }
 
 type AnswerEdge {
@@ -97,6 +98,7 @@ type Case implements Node {
 type CaseConnection {
   pageInfo: PageInfo!
   edges: [CaseEdge]!
+  totalCount: Int
 }
 
 type CaseEdge {
@@ -253,6 +255,7 @@ type DataSource {
 type DataSourceConnection {
   pageInfo: PageInfo!
   edges: [DataSourceEdge]!
+  totalCount: Int
 }
 
 type DataSourceData {
@@ -263,6 +266,7 @@ type DataSourceData {
 type DataSourceDataConnection {
   pageInfo: PageInfo!
   edges: [DataSourceDataEdge]!
+  totalCount: Int
 }
 
 type DataSourceDataEdge {
@@ -325,6 +329,7 @@ type Document implements Node {
 type DocumentConnection {
   pageInfo: PageInfo!
   edges: [DocumentEdge]!
+  totalCount: Int
 }
 
 type DocumentEdge {
@@ -467,6 +472,7 @@ type Flow implements Node {
 type FlowConnection {
   pageInfo: PageInfo!
   edges: [FlowEdge]!
+  totalCount: Int
 }
 
 type FlowEdge {
@@ -508,6 +514,7 @@ type FormAnswer implements Answer, Node {
 type FormConnection {
   pageInfo: PageInfo!
   edges: [FormEdge]!
+  totalCount: Int
 }
 
 type FormEdge {
@@ -556,6 +563,7 @@ type FormatValidator {
 type FormatValidatorConnection {
   pageInfo: PageInfo!
   edges: [FormatValidatorEdge]!
+  totalCount: Int
 }
 
 type FormatValidatorEdge {
@@ -708,6 +716,7 @@ type Option implements Node {
 type OptionConnection {
   pageInfo: PageInfo!
   edges: [OptionEdge]!
+  totalCount: Int
 }
 
 type OptionEdge {
@@ -769,6 +778,7 @@ interface Question {
 type QuestionConnection {
   pageInfo: PageInfo!
   edges: [QuestionEdge]!
+  totalCount: Int
 }
 
 type QuestionEdge {
@@ -1417,6 +1427,7 @@ interface Task {
 type TaskConnection {
   pageInfo: PageInfo!
   edges: [TaskEdge]!
+  totalCount: Int
 }
 
 type TaskEdge {
@@ -1516,6 +1527,7 @@ type WorkItem implements Node {
 type WorkItemConnection {
   pageInfo: PageInfo!
   edges: [WorkItemEdge]!
+  totalCount: Int
 }
 
 type WorkItemEdge {
@@ -1572,6 +1584,7 @@ type Workflow implements Node {
 type WorkflowConnection {
   pageInfo: PageInfo!
   edges: [WorkflowEdge]!
+  totalCount: Int
 }
 
 type WorkflowEdge {

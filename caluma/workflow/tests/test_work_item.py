@@ -15,6 +15,7 @@ def test_query_all_work_items_filter_status(db, work_item_factory, schema_execut
     query = """
         query WorkItems($status: WorkItemStatusArgument!) {
           allWorkItems(status: $status) {
+            totalCount
             edges {
               node {
                 status
@@ -43,6 +44,7 @@ def test_query_all_work_items_filter_addressed_groups(
     query = """
             query WorkItems($addressedGroups: [String]!) {
               allWorkItems(addressedGroups: $addressedGroups) {
+                totalCount
                 edges {
                   node {
                     addressedGroups
@@ -297,6 +299,7 @@ def test_complete_multiple_instance_task_form_work_item_next(
               case {
                 status
                 workItems(orderBy: STATUS_DESC) {
+                  totalCount
                   edges {
                     node {
                       status
@@ -348,6 +351,7 @@ def test_complete_work_item_with_next(
               case {
                 status
                 workItems(orderBy: STATUS_DESC) {
+                  totalCount
                   edges {
                     node {
                       status
@@ -398,6 +402,7 @@ def test_complete_work_item_with_next_multiple_tasks(
               case {
                 status
                 workItems {
+                  totalCount
                   edges {
                     node {
                       status
@@ -452,6 +457,7 @@ def test_complete_work_item_with_next_multiple_instance_task(
               case {
                 status
                 workItems {
+                  totalCount
                   edges {
                     node {
                       status

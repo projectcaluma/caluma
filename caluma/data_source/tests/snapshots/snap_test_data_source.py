@@ -22,23 +22,7 @@ snapshots["test_fetch_data_sources 1"] = {
             "endCursor": "YXJyYXljb25uZWN0aW9uOjI=",
             "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
         },
-    }
-}
-
-snapshots["test_fetch_data_from_data_source 1"] = {
-    "dataSource": {
-        "edges": [
-            {"node": {"label": "1", "slug": "1"}},
-            {"node": {"label": "5.5", "slug": "5.5"}},
-            {"node": {"label": "sdkj", "slug": "sdkj"}},
-            {"node": {"label": "info", "slug": "value"}},
-            {"node": {"label": "something", "slug": "something"}},
-            {"node": {"label": "english description", "slug": "translated_value"}},
-        ],
-        "pageInfo": {
-            "endCursor": "YXJyYXljb25uZWN0aW9uOjU=",
-            "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
-        },
+        "totalCount": 3,
     }
 }
 
@@ -58,6 +42,7 @@ snapshots["test_fetch_data_sources 2"] = {
             "endCursor": "YXJyYXljb25uZWN0aW9uOjI=",
             "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
         },
+        "totalCount": 3,
     }
 }
 
@@ -77,6 +62,25 @@ snapshots["test_fetch_data_sources 3"] = {
             "endCursor": "YXJyYXljb25uZWN0aW9uOjI=",
             "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
         },
+        "totalCount": 3,
+    }
+}
+
+snapshots["test_fetch_data_from_data_source 1"] = {
+    "dataSource": {
+        "edges": [
+            {"node": {"label": "1", "slug": "1"}},
+            {"node": {"label": "5.5", "slug": "5.5"}},
+            {"node": {"label": "sdkj", "slug": "sdkj"}},
+            {"node": {"label": "info", "slug": "value"}},
+            {"node": {"label": "something", "slug": "something"}},
+            {"node": {"label": "english description", "slug": "translated_value"}},
+        ],
+        "pageInfo": {
+            "endCursor": "YXJyYXljb25uZWN0aW9uOjU=",
+            "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
+        },
+        "totalCount": 6,
     }
 }
 
@@ -94,6 +98,7 @@ snapshots["test_fetch_data_from_data_source 2"] = {
             "endCursor": "YXJyYXljb25uZWN0aW9uOjU=",
             "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
         },
+        "totalCount": 6,
     }
 }
 
@@ -111,6 +116,7 @@ snapshots["test_fetch_data_from_data_source 3"] = {
             "endCursor": "YXJyYXljb25uZWN0aW9uOjU=",
             "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
         },
+        "totalCount": 6,
     }
 }
 
@@ -125,5 +131,6 @@ snapshots["test_data_source_defaults 1"] = {
             "endCursor": "YXJyYXljb25uZWN0aW9uOjI=",
             "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
         },
+        "totalCount": 3,
     }
 }
