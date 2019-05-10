@@ -170,7 +170,8 @@ class CopyQuestionSerializer(serializers.ModelSerializer):
                 reversed(models.QuestionOption.objects.filter(question=source)), start=1
             )
         ]
-        models.QuestionOption.objects.bulk_create(new_question_options)
+        for question_option in new_question_options:
+            question_option.save()
 
         return question
 
@@ -244,7 +245,7 @@ class SaveDateQuestionSerializer(SaveQuestionSerializer):
 class SaveQuestionOptionsMixin(object):
     def create_question_options(self, question, options):
         user = self.context["request"].user
-        question_option = [
+        question_options = [
             models.QuestionOption(
                 sort=sort,
                 question=question,
@@ -254,7 +255,8 @@ class SaveQuestionOptionsMixin(object):
             )
             for sort, option in enumerate(reversed(options), start=1)
         ]
-        models.QuestionOption.objects.bulk_create(question_option)
+        for question_option in question_options:
+            question_option.save()
 
     @transaction.atomic
     def create(self, validated_data):
