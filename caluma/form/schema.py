@@ -1,12 +1,12 @@
 import graphene
-from graphene import Connection, ConnectionField, relay
+from graphene import ConnectionField, relay
 from graphene.types import ObjectType, generic
 from graphene_django.rest_framework import serializer_converter
 
 from ..core.filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
 from ..core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..core.relay import extract_global_id
-from ..core.types import DjangoObjectType, Node
+from ..core.types import CountableConnectionBase, DjangoObjectType, Node
 from ..data_source.data_source_handlers import get_data_source_data
 from ..data_source.schema import DataSourceDataConnection
 from . import filters, models, serializers
@@ -132,6 +132,7 @@ class Option(FormDjangoObjectType):
         model = models.Option
         interfaces = (relay.Node,)
         exclude_fields = ("questions",)
+        connection_class = CountableConnectionBase
 
     @classmethod
     def get_queryset(cls, queryset, info):
@@ -139,7 +140,7 @@ class Option(FormDjangoObjectType):
         return queryset.order_by("-questionoption__sort")
 
 
-class QuestionConnection(graphene.Connection):
+class QuestionConnection(CountableConnectionBase):
     class Meta:
         node = Question
 
@@ -159,7 +160,7 @@ class FormatValidator(ObjectType):
     error_msg = graphene.String(required=True)
 
 
-class FormatValidatorConnection(Connection):
+class FormatValidatorConnection(CountableConnectionBase):
     class Meta:
         node = FormatValidator
 
@@ -447,6 +448,7 @@ class Form(FormDjangoObjectType):
         model = models.Form
         interfaces = (relay.Node,)
         exclude_fields = ("workflows", "tasks")
+        connection_class = CountableConnectionBase
 
 
 class SaveForm(UserDefinedPrimaryKeyMixin, Mutation):
@@ -673,7 +675,7 @@ class ListAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
         interfaces = (Answer, graphene.Node)
 
 
-class AnswerConnection(graphene.Connection):
+class AnswerConnection(CountableConnectionBase):
     class Meta:
         node = Answer
 
@@ -689,6 +691,7 @@ class Document(FormDjangoObjectType):
         model = models.Document
         exclude_fields = ("family",)
         interfaces = (graphene.Node,)
+        connection_class = CountableConnectionBase
 
 
 class TableAnswer(AnswerQuerysetMixin, FormDjangoObjectType):

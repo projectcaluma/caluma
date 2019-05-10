@@ -8,7 +8,7 @@ from graphene_django.rest_framework import serializer_converter
 
 from ..core.filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
 from ..core.mutation import Mutation, UserDefinedPrimaryKeyMixin
-from ..core.types import DjangoObjectType, Node
+from ..core.types import CountableConnectionBase, DjangoObjectType, Node
 from . import filters, jexl, models, serializers
 
 
@@ -75,7 +75,7 @@ class Task(Node, graphene.Interface):
         return TASK_TYPE[instance.type]
 
 
-class TaskConnection(graphene.Connection):
+class TaskConnection(CountableConnectionBase):
     class Meta:
         node = Task
 
@@ -124,6 +124,7 @@ class Flow(DjangoObjectType):
     class Meta:
         model = models.Flow
         interfaces = (relay.Node,)
+        connection_class = CountableConnectionBase
 
 
 class Workflow(DjangoObjectType):
@@ -154,6 +155,7 @@ class Workflow(DjangoObjectType):
         model = models.Workflow
         exclude_fields = ("cases", "task_flows")
         interfaces = (relay.Node,)
+        connection_class = CountableConnectionBase
 
 
 class WorkItem(DjangoObjectType):
@@ -163,6 +165,7 @@ class WorkItem(DjangoObjectType):
     class Meta:
         model = models.WorkItem
         interfaces = (relay.Node,)
+        connection_class = CountableConnectionBase
 
 
 class Case(DjangoObjectType):
@@ -174,6 +177,7 @@ class Case(DjangoObjectType):
     class Meta:
         model = models.Case
         interfaces = (relay.Node,)
+        connection_class = CountableConnectionBase
 
 
 class SaveWorkflow(UserDefinedPrimaryKeyMixin, Mutation):

@@ -1,4 +1,6 @@
+import graphene
 from django.core.exceptions import ImproperlyConfigured
+from django.db.models.query import QuerySet
 from graphene_django import types
 
 
@@ -38,3 +40,17 @@ class DjangoObjectType(Node, types.DjangoObjectType):
 
     class Meta:
         abstract = True
+
+
+class CountableConnectionBase(graphene.Connection):
+    """Connection subclass that supports totalCount."""
+
+    class Meta:
+        abstract = True
+
+    total_count = graphene.Int()
+
+    def resolve_total_count(self, info, **kwargs):
+        if isinstance(self.iterable, QuerySet):
+            return self.iterable.count()
+        return len(self.iterable)

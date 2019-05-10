@@ -38,6 +38,7 @@ snapshots["test_fetch_format_validators 1"] = {
             "endCursor": "YXJyYXljb25uZWN0aW9uOjI=",
             "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
         },
+        "totalCount": 3,
     }
 }
 
@@ -73,6 +74,7 @@ snapshots["test_fetch_format_validators 2"] = {
             "endCursor": "YXJyYXljb25uZWN0aW9uOjI=",
             "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
         },
+        "totalCount": 3,
     }
 }
 
@@ -108,6 +110,7 @@ snapshots["test_fetch_format_validators 3"] = {
             "endCursor": "YXJyYXljb25uZWN0aW9uOjI=",
             "startCursor": "YXJyYXljb25uZWN0aW9uOjA=",
         },
+        "totalCount": 3,
     }
 }
 
