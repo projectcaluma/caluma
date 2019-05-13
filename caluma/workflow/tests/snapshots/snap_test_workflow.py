@@ -74,7 +74,7 @@ snapshots['test_add_workflow_flow[task-slug-"task-slug"|task-True] 1'] = {
             "tasks": [
                 {"slug": "task-slug"},
                 {"slug": "service-bank-arm"},
-                {"slug": "up-international"},
+                {"slug": "relate-right-will"},
             ],
         },
     }
