@@ -114,7 +114,7 @@ Caluma expects a bearer token to be passed on as [Authorization Request Header F
 Per default no CORS headers are set but can be configured with following options.
 
 * `CORS_ORIGIN_ALLOW_ALL`: If True, the whitelist will not be used and all origins will be accepted. (default: False)
-* `CORS_ORIGIN_WHITELIST`: A list of origin hostnames that are authorized to make cross-site HTTP requests.
+* `CORS_ORIGIN_WHITELIST`: A list of origin hostnames (including the scheme and with optional port) that are authorized to make cross-site HTTP requests.
 
 #### FormatValidators
 FormatValidator classes can validate input data for answers, based on rules set on the question.
