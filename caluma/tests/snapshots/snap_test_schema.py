@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -55,6 +56,22 @@ type AnswerConnection {
 type AnswerEdge {
   node: Answer
   cursor: String!
+}
+
+enum AnswerHierarchyMode {
+  DIRECT
+  FAMILY
+}
+
+enum AnswerLookupMode {
+  EXACT
+  STARTSWITH
+  CONTAINS
+  ICONTAINS
+  GTE
+  GT
+  LTE
+  LT
 }
 
 enum AnswerOrdering {
@@ -575,6 +592,13 @@ scalar GenericScalar
 
 scalar GroupJexl
 
+input HasAnswerFilterType {
+  question: String!
+  value: GenericScalar!
+  lookup: AnswerLookupMode
+  hierarchy: AnswerHierarchyMode
+}
+
 type IntegerAnswer implements Answer, Node {
   createdAt: DateTime!
   modifiedAt: DateTime!
@@ -749,11 +773,11 @@ type Query {
   dataSource(name: String, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   allWorkflows(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, orderBy: [WorkflowOrdering]): WorkflowConnection
   allTasks(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, orderBy: [TaskOrdering]): TaskConnection
-  allCases(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, workflow: ID, status: CaseStatusArgument, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [CaseOrdering]): CaseConnection
+  allCases(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, workflow: ID, status: CaseStatusArgument, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [CaseOrdering], hasAnswer: [HasAnswerFilterType]): CaseConnection
   allWorkItems(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], task: ID, case: ID, createdByUser: String, createdByGroup: String, metaHasKey: String, addressedGroups: [String]): WorkItemConnection
   allForms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): FormConnection
   allQuestions(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, excludeForms: [ID], search: String): QuestionConnection
-  allDocuments(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, form: ID, search: String, id: ID, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [DocumentOrdering]): DocumentConnection
+  allDocuments(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, form: ID, search: String, id: ID, createdByUser: String, createdByGroup: String, metaHasKey: String, orderBy: [DocumentOrdering], hasAnswer: [HasAnswerFilterType]): DocumentConnection
   allFormatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
   node(id: ID!): Node
 }

@@ -6,6 +6,7 @@ from django import forms
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields.hstore import KeyTransform
 from django.contrib.postgres.search import SearchVector
+from django.core import exceptions
 from django.db import models
 from django.db.models.constants import LOOKUP_SEP
 from django.db.models.functions import Cast
@@ -29,6 +30,8 @@ from graphene_django.filter.filterset import GrapheneFilterSetMixin
 from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
 from localized_fields.fields import LocalizedField
+
+from caluma.form.models import Answer, Question
 
 from .forms import GlobalIDFormField, GlobalIDMultipleChoiceField
 from .relay import extract_global_id
@@ -217,17 +220,175 @@ class MetaValueFilter(Filter):
         lookup = value.get("lookup", self.lookup_expr)
         return qs.filter(**{f"{self.field_name}__{meta_key}__{lookup}": meta_value})
 
+    @staticmethod
+    @convert_form_field.register(MetaValueFilterField)
+    def convert_meta_value_field(field):
+        registry = get_global_registry()
+        converted = registry.get_converted_field(field)
+        if converted:
+            return converted
 
-@convert_form_field.register(MetaValueFilterField)
-def convert_meta_value_field(field):
-    registry = get_global_registry()
-    converted = registry.get_converted_field(field)
-    if converted:
+        converted = MetaValueFilterType()
+        registry.register_converted_field(field, converted)
         return converted
 
-    converted = MetaValueFilterType()
-    registry.register_converted_field(field, converted)
-    return converted
+
+class AnswerLookupMode(Enum):
+    EXACT = "exact"
+    STARTSWITH = "startswith"
+    CONTAINS = "contains"
+    ICONTAINS = "icontains"
+
+    GTE = "gte"
+    GT = "gt"
+    LTE = "lte"
+    LT = "lt"
+
+
+class AnswerHierarchyMode(Enum):
+    DIRECT = "DIRECT"
+    FAMILY = "FAMILY"
+
+
+class HasAnswerFilterType(InputObjectType):
+    """Lookup type to search document structures.
+
+    The question is either a "plain" question slug, or of the form
+    "parent_slug.question_slug". Note that in this case, the parent_slug will
+    match the form slug, which in turn may be a subform of the whole form
+    structure.
+
+    What does NOT work is matching a full path, as the lookup would quickly
+    generate very complex database queries.
+
+    So, given the document structure "top.some_form.subform.question_foo", you can
+    either search for "subform.question_foo" (if question_foo is used in other
+    contexts within the same form), or search directly for "question_foo" if
+    you don't need to be that specific, which will speed up the query slightly.
+
+    """
+
+    question = graphene.String(required=True)
+    value = graphene.types.generic.GenericScalar(required=True)
+    lookup = AnswerLookupMode()
+    hierarchy = AnswerHierarchyMode()
+
+
+class HasAnswerFilterField(forms.MultiValueField):
+    def __init__(self, label, **kwargs):
+        super().__init__(fields=(forms.CharField(), forms.CharField()))
+
+    def clean(self, data):
+        # override parent clean() which would reject our data structure.
+        # We don't validate, as the structure is already enforced by the
+        # schema.
+        return data
+
+
+class HasAnswerFilter(Filter):
+    field_class = HasAnswerFilterField
+
+    def __init__(self, *args, **kwargs):
+        self.document_id = kwargs.pop("document_id")
+        super().__init__(self, *args, **kwargs)
+
+    VALID_LOOKUPS = {
+        "text": [
+            AnswerLookupMode.EXACT,
+            AnswerLookupMode.STARTSWITH,
+            AnswerLookupMode.CONTAINS,
+            AnswerLookupMode.ICONTAINS,
+        ],
+        "integer": [
+            AnswerLookupMode.EXACT,
+            AnswerLookupMode.LT,
+            AnswerLookupMode.LTE,
+            AnswerLookupMode.GT,
+            AnswerLookupMode.GTE,
+        ],
+        "multiple_choice": [AnswerLookupMode.EXACT, AnswerLookupMode.CONTAINS],
+    }
+    VALID_LOOKUPS["date"] = VALID_LOOKUPS["integer"]
+    VALID_LOOKUPS["float"] = VALID_LOOKUPS["integer"]
+    VALID_LOOKUPS["choice"] = VALID_LOOKUPS["multiple_choice"]
+    VALID_LOOKUPS["textarea"] = VALID_LOOKUPS["text"]
+    VALID_LOOKUPS["datetime"] = VALID_LOOKUPS["integer"]
+
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES:
+            return qs
+
+        for expr in value:
+            qs = self.apply_expr(qs, expr)
+        return qs
+
+    def apply_expr(self, qs, expr):
+        question_slug = expr["question"]
+        match_value = expr["value"]
+
+        lookup = expr.get("lookup", self.lookup_expr)
+        hierarchy = expr.get("hierarchy", AnswerHierarchyMode.FAMILY)
+
+        form_slug, question_slug = self._extract_form_and_question_slug(question_slug)
+
+        question = Question.objects.get(slug=question_slug)
+        self._validate_lookup(question, lookup)
+
+        filters = {f"value__{lookup}": match_value, "question__slug": question_slug}
+
+        if form_slug:
+            filters["document__form_id"] = form_slug
+
+        answers = Answer.objects.filter(**filters)
+
+        if hierarchy == AnswerHierarchyMode.FAMILY:
+            return qs.filter(
+                **{f"{self.document_id}__in": answers.values("document__family")}
+            )
+        else:
+            return qs.filter(**{f"{self.document_id}__in": answers.values("document")})
+
+    def _validate_lookup(self, question, lookup):
+        try:
+            valid_lookups = self.VALID_LOOKUPS[question.type]
+        except KeyError:  # pragma: no cover
+            # Not covered in tests - this only happens when you add a new
+            # question type and forget to update the lookup config above.  In
+            # that case, the fix is simple - go up a few lines and adjust the
+            # VALID_LOOKUPS dict.
+            raise exceptions.ProgrammingError(
+                f"Valid lookups not configured for question type {question.type}"
+            )
+
+        if lookup not in valid_lookups:
+            raise exceptions.ValidationError(
+                f"Invalid lookup for question slug={question.slug} ({question.type.upper()}): {lookup.upper()}"
+            )
+
+    def _extract_form_and_question_slug(self, question_slug):
+        split_slug = question_slug.split(".")
+        form_slug = split_slug[0] if len(split_slug) == 2 else None
+
+        question_slug = split_slug[-1]  # will be correct in all cases
+        if len(split_slug) > 2:
+            raise exceptions.ProgrammingError(
+                "Cannot match multi-level slug path, only form_slug.question_slug"
+            )
+        return form_slug, question_slug
+
+    @staticmethod
+    @convert_form_field.register(HasAnswerFilterField)
+    def convert_meta_value_field(field):
+        registry = get_global_registry()
+        converted = registry.get_converted_field(field)
+        if converted:
+            return converted
+
+        # the converted type must be list-of-filter, as we need to apply
+        # multiple conditions
+        converted = List(HasAnswerFilterType)
+        registry.register_converted_field(field, converted)
+        return converted
 
 
 class MetaFilterSet(FilterSet):

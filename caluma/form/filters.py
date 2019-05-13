@@ -1,6 +1,7 @@
 from ..core.filters import (
     GlobalIDFilter,
     GlobalIDMultipleChoiceFilter,
+    HasAnswerFilter,
     MetaFilterSet,
     OrderingFilter,
     SearchFilter,
@@ -48,6 +49,8 @@ class DocumentFilterSet(MetaFilterSet):
         )
     )
     order_by = OrderingFilter(label="DocumentOrdering")
+
+    has_answer = HasAnswerFilter(document_id="pk")
 
     class Meta:
         model = models.Document

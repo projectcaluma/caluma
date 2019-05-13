@@ -1,6 +1,7 @@
 from ..core.filters import (
     FilterSet,
     GlobalIDFilter,
+    HasAnswerFilter,
     MetaFilterSet,
     OrderingFilter,
     SearchFilter,
@@ -28,6 +29,8 @@ class FlowFilterSet(FilterSet):
 
 class CaseFilterSet(MetaFilterSet):
     order_by = OrderingFilter(label="CaseOrdering", fields=("status",))
+
+    has_answer = HasAnswerFilter(document_id="document__pk")
 
     class Meta:
         model = models.Case
