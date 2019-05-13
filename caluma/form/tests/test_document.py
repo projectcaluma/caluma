@@ -248,7 +248,7 @@ def test_complex_document_query_performance(
         }
     """
 
-    with django_assert_num_queries(12):
+    with django_assert_num_queries(11):
         result = schema_executor(query, variables={"id": str(document.pk)})
     assert not result.errors
 
@@ -634,6 +634,7 @@ def test_save_document_answer(
     document_factory,
     answer_factory,
     answer_document_factory,
+    question_factory,
     file_factory,
     success,
     schema_executor,
@@ -700,7 +701,8 @@ def test_save_document_answer(
     if question.type == Question.TYPE_TABLE:
         documents = document_factory.create_batch(2, form=question.row_form)
         # create a subtree
-        document_answer = answer_factory()
+        sub_question = question_factory(type=Question.TYPE_TEXT)
+        document_answer = answer_factory(question=sub_question)
         documents[0].answers.add(document_answer)
         answer_document_factory(answer=answer, document=documents[0])
 
