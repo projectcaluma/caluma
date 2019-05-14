@@ -195,7 +195,7 @@ class DocumentValidator:
                 Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
                 Question.TYPE_MULTIPLE_CHOICE,
             ):
-                # Unanswered multiple choice should return empty list
+                # Unanswered (multiple) choice should return empty list
                 # to denote emptyness
                 return []
             elif answer.question.type == Question.TYPE_FORM:
@@ -211,9 +211,20 @@ class DocumentValidator:
 
             elif answer.question.type == Question.TYPE_FILE:
                 return answer.file.name
-
             elif answer.question.type == Question.TYPE_DATE:
                 return answer.date
+
+            # Simple scalar types' value default to None in validation context
+            elif answer.question.type in (
+                Question.TYPE_INTEGER,
+                Question.TYPE_FLOAT,
+                Question.TYPE_TEXTAREA,
+                Question.TYPE_TEXT,
+                Question.TYPE_STATIC,
+                Question.TYPE_DYNAMIC_CHOICE,
+                Question.TYPE_CHOICE,
+            ):
+                return None
 
             else:  # pragma: no cover
                 raise Exception(
