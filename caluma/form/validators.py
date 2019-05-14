@@ -10,7 +10,7 @@ from caluma.data_source.data_source_handlers import (
 
 from . import jexl
 from .format_validators import get_format_validators
-from .models import Question
+from .models import Question, Answer
 
 log = getLogger()
 
@@ -156,21 +156,13 @@ class AnswerValidator:
 
 class DocumentValidator:
     def validate(self, document, info, **kwargs):
-        def get_answers_by_question(document):
-            answers = document.answers.select_related("question").prefetch_related(
-                "question__options"
-            )
-            return {
-                answer.question.slug: self.get_answer_value(answer, document)
-                for answer in answers
-            }
 
-        answer_by_question = get_answers_by_question(document)
+        answer_by_question = self.get_document_answers(document)
         parent = kwargs.get("parent", None)
         if parent:
             # FIXME: this should be a weak reference, see here:
             # https://docs.python.org/3/library/weakref.html
-            answer_by_question["parent"] = get_answers_by_question(parent)
+            answer_by_question["parent"] = self.get_document_answers(parent)
 
         self.validate_required(document, answer_by_question)
 
@@ -183,12 +175,29 @@ class DocumentValidator:
                 info=info,
             )
 
+    def get_document_answers(self, document):
+        answers = document.answers.select_related("question").prefetch_related(
+            "question__options"
+        )
+        questions = document.form.questions.all().values("slug")
+        answers_by_slug = {ans.question_id: ans for ans in answers}
+
+        answers = {
+            question["slug"]: self.get_answer_value(
+                # note: creates an (unsaved) answer if it doesn't exist in
+                # the document.  this is required for proper evaluation,
+                # even if we don't want it in the DB
+                answers_by_slug.get(
+                    question["slug"],
+                    Answer(question_id=question["slug"], document=document),
+                ),
+                document,
+            )
+            for question in questions
+        }
+        return answers
+
     def get_answer_value(self, answer, document):
-        def get_document_answers(document):
-            return {
-                answer.question.pk: self.get_answer_value(answer, document)
-                for answer in document.answers.all()
-            }
 
         if answer.value is None:
             if answer.question.type in (
@@ -200,12 +209,12 @@ class DocumentValidator:
                 return []
             elif answer.question.type == Question.TYPE_FORM:
                 # form type maps to dict
-                return get_document_answers(answer.value_document)
+                return self.get_document_answers(answer.value_document)
 
             elif answer.question.type == Question.TYPE_TABLE:
                 # table type maps to list of dicts
                 return [
-                    get_document_answers(document)
+                    self.get_document_answers(document)
                     for document in answer.documents.all()
                 ]
 
