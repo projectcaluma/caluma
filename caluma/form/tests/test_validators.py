@@ -45,18 +45,23 @@ def test_validate_special_fields(
 
 
 @pytest.mark.parametrize(
-    "required_jexl,should_throw",
+    "main_required,required_jexl,should_throw",
     [
-        ("true", True),
-        ("false", False),
-        ("'parent.sub_2.sub_2_question_1'|answer == 'foo'", True),
-        ("'parent.sub_2.sub_2_question_1'|answer == 'bar'", False),
+        ("true", "true", True),
+        ("true", "false", False),
+        ("true", "'parent.sub_2.sub_2_question_1'|answer == 'foo'", True),
+        ("true", "'parent.sub_2.sub_2_question_1'|answer == 'bar'", False),
+        ("false", "true", False),
+        ("false", "false", False),
+        ("false", "'parent.sub_2.sub_2_question_1'|answer == 'foo'", False),
+        ("false", "'parent.sub_2.sub_2_question_1'|answer == 'bar'", False),
     ],
 )
 def test_validate_nested_form(
     db,
     required_jexl,
     should_throw,
+    main_required,
     form,
     form_question_factory,
     document_factory,
@@ -82,7 +87,7 @@ def test_validate_nested_form(
         question__type=Question.TYPE_FORM,
         question__sub_form=sub_form_question_1.form,
         question__slug="sub_1",
-        question__is_required="false",
+        question__is_required=main_required,
     )
     form_question_factory(
         form=main_form_question_1.form,
@@ -200,7 +205,7 @@ def test_validate_empty_answers(
     expected_value,
 ):
 
-    answer_value = DocumentValidator().get_answer_value(answer, document)
+    answer_value = DocumentValidator()._get_answer_value(answer, document, None)
     assert answer_value == expected_value
 
 
