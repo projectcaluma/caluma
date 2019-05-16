@@ -651,7 +651,7 @@ enum MetaLookupMode {
 
 input MetaValueFilterType {
   key: String!
-  value: String!
+  value: GenericScalar!
   lookup: MetaLookupMode
 }
 
