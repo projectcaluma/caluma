@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -627,7 +628,7 @@ enum MetaLookupMode {
 
 input MetaValueFilterType {
   key: String!
-  value: String!
+  value: GenericScalar!
   lookup: MetaLookupMode
 }
 

@@ -21,6 +21,7 @@ from django_filters.rest_framework import (
     OrderingFilter,
 )
 from graphene import Enum, InputObjectType, List
+from graphene.types import generic
 from graphene.types.utils import get_type
 from graphene.utils.str_converters import to_camel_case
 from graphene_django import filter
@@ -191,7 +192,7 @@ class MetaLookupMode(Enum):
 
 class MetaValueFilterType(InputObjectType):
     key = graphene.String(required=True)
-    value = graphene.String(required=True)
+    value = generic.GenericScalar(required=True)
     lookup = MetaLookupMode()
 
 
