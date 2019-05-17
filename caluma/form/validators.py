@@ -11,7 +11,7 @@ from caluma.data_source.data_source_handlers import (
 
 from . import jexl
 from .format_validators import get_format_validators
-from .models import Question, Answer
+from .models import Answer, Question
 
 log = getLogger()
 
@@ -144,7 +144,7 @@ class AnswerValidator:
         )
 
     def _document_validator(self):
-        """Factory for DocumentValidator.
+        """Return instance of DocumentValidator.
 
         Configure the DocumentValidator according to our own config.
         """
@@ -155,7 +155,7 @@ class AnswerValidator:
 
     def validate(self, *, question, document, info, **kwargs):
         # Check all possible fields for value
-        answer_tree = kwargs.pop('answer_tree')
+        answer_tree = kwargs.pop("answer_tree", {})
         value = None
         for i in ["value", "file", "date", "documents", "value_document"]:
             value = kwargs.get(i, value)
@@ -166,7 +166,9 @@ class AnswerValidator:
         # required check will be done in DocumentValidator
         if value:
             validate_func = getattr(self, f"_validate_question_{question.type}")
-            validate_func(question, value, document=document, info=info, answer_tree=answer_tree)
+            validate_func(
+                question, value, document=document, info=info, answer_tree=answer_tree
+            )
 
         format_validators = get_format_validators(dic=True)
         for validator_slug in question.format_validators:
@@ -178,8 +180,9 @@ class DocumentValidator:
         self.do_check_required = do_check_required
 
     def validate(self, document, info, **kwargs):
-        answer_tree = kwargs.get("answer_tree", self.get_document_answers(document))
-        parent = kwargs.get("parent", None)
+        answer_tree = kwargs.get("answer_tree", {}) or self.get_document_answers(
+            document
+        )
 
         required_state = self.validate_required(document, answer_tree)
 
@@ -243,7 +246,7 @@ class DocumentValidator:
                 Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
                 Question.TYPE_MULTIPLE_CHOICE,
             ):
-                # Unanswered (multiple) choice should return empty list
+                # Unanswered multiple choice should return empty list
                 # to denote emptyness
                 return []
             elif answer.question.type == Question.TYPE_FORM:
@@ -302,7 +305,7 @@ class DocumentValidator:
                 required_state[question.slug] = is_required
             except Exception as exc:
                 expr_jexl = getattr(question, expr)
-                log.error (
+                log.error(
                     f"Error while evaluating {expr} expression on question {question.slug}: "
                     f"{expr_jexl}: {str(exc)}"
                 )
@@ -310,7 +313,6 @@ class DocumentValidator:
                     f"Error while evaluating '{expr}' expression on question {question.slug}: "
                     f"{expr_jexl}. The system log contains more information"
                 )
-
 
         if required_but_empty and self.do_check_required:
             raise exceptions.ValidationError(
