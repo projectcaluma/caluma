@@ -241,48 +241,47 @@ class DocumentValidator:
 
     def _get_answer_value(self, answer, document, parent):
 
-        if answer.value is None:
-            if answer.question.type in (
-                Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
-                Question.TYPE_MULTIPLE_CHOICE,
-            ):
-                # Unanswered multiple choice should return empty list
-                # to denote emptyness
-                return []
-            elif answer.question.type == Question.TYPE_FORM:
-                # form type maps to dict
-                return self.get_document_answers(answer.value_document, parent=parent)
+        if answer.value is not None:
+            return answer.value
 
-            elif answer.question.type == Question.TYPE_TABLE:
-                # table type maps to list of dicts
-                return [
-                    self.get_document_answers(document, parent=parent)
-                    for document in answer.documents.all()
-                ]
+        if answer.question.type in (
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            Question.TYPE_MULTIPLE_CHOICE,
+        ):
+            # Unanswered multiple choice should return empty list
+            # to denote emptyness
+            return []
 
-            elif answer.question.type == Question.TYPE_FILE:
-                return answer.file.name
-            elif answer.question.type == Question.TYPE_DATE:
-                return answer.date
+        elif answer.question.type == Question.TYPE_FORM:
+            # form type maps to dict
+            return self.get_document_answers(answer.value_document, parent=parent)
 
-            # Simple scalar types' value default to None in validation context
-            elif answer.question.type in (
-                Question.TYPE_INTEGER,
-                Question.TYPE_FLOAT,
-                Question.TYPE_TEXTAREA,
-                Question.TYPE_TEXT,
-                Question.TYPE_STATIC,
-                Question.TYPE_DYNAMIC_CHOICE,
-                Question.TYPE_CHOICE,
-            ):
-                return None
+        elif answer.question.type == Question.TYPE_TABLE:
+            # table type maps to list of dicts
+            return [
+                self.get_document_answers(document, parent=parent)
+                for document in answer.documents.all()
+            ]
 
-            else:  # pragma: no cover
-                raise Exception(
-                    f"unhandled question type mapping {answer.question.type}"
-                )
+        elif answer.question.type == Question.TYPE_FILE:
+            return answer.file.name
+        elif answer.question.type == Question.TYPE_DATE:
+            return answer.date
 
-        return answer.value
+        # Simple scalar types' value default to None in validation context
+        elif answer.question.type in (
+            Question.TYPE_INTEGER,
+            Question.TYPE_FLOAT,
+            Question.TYPE_TEXTAREA,
+            Question.TYPE_TEXT,
+            Question.TYPE_STATIC,
+            Question.TYPE_DYNAMIC_CHOICE,
+            Question.TYPE_CHOICE,
+        ):
+            return None
+
+        else:  # pragma: no cover
+            raise Exception(f"unhandled question type mapping {answer.question.type}")
 
     def validate_required(self, document, answer_tree):
         required_but_empty = []
