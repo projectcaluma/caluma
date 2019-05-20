@@ -335,7 +335,10 @@ class HasAnswerFilter(Filter):
         question = Question.objects.get(slug=question_slug)
         self._validate_lookup(question, lookup)
 
-        filters = {f"value__{lookup}": match_value, "question__slug": question_slug}
+        if question.type == Question.TYPE_DATE:
+            filters = {f"date__{lookup}": match_value, "question__slug": question_slug}
+        else:
+            filters = {f"value__{lookup}": match_value, "question__slug": question_slug}
 
         if form_slug:
             filters["document__form_id"] = form_slug
