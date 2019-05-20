@@ -111,11 +111,18 @@ def test_query_all_questions(
     ans_subform = document.answers.get(question__slug="subform")
 
     for qtype, question in sub_questions.items():
-        answer_factory(
-            question=question,
-            document=ans_subform.value_document,
-            value=TEST_VALUES[qtype][form_value],
-        )
+        if qtype == models.Question.TYPE_DATE:
+            answer_factory(
+                question=question,
+                document=ans_subform.value_document,
+                date=TEST_VALUES[qtype][form_value],
+            )
+        else:
+            answer_factory(
+                question=question,
+                document=ans_subform.value_document,
+                value=TEST_VALUES[qtype][form_value],
+            )
 
     query = """
         query asdf ($hasAnswer: [HasAnswerFilterType]!) {
