@@ -20,5 +20,5 @@ requests==2.22.0
 # in the newest version) Can be removed once the following issue
 # is resolved:
 # https://github.com/kennethreitz/requests/issues/5067
-urllib3==1.24.2
+urllib3==1.25.3
 uwsgi==2.0.18
