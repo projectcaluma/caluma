@@ -171,9 +171,23 @@ class OrderingFilter(OrderingFilter):
         )
 
 
+class IntegerFilter(Filter):
+    field_class = forms.IntegerField
+
+
 class FilterSet(GrapheneFilterSetMixin, FilterSet):
     created_by_user = CharFilter()
     created_by_group = CharFilter()
+    offset = IntegerFilter(method="filter_offset")
+    limit = IntegerFilter(method="filter_limit")
+
+    @staticmethod
+    def filter_offset(queryset, name, value):
+        return queryset[value:]
+
+    @staticmethod
+    def filter_limit(queryset, name, value):
+        return queryset[:value]
 
     @classmethod
     def filter_for_lookup(cls, field, lookup_type):
