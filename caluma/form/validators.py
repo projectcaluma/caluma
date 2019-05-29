@@ -188,7 +188,13 @@ class DocumentValidator:
 
         # TODO: can we iterate over the entries in answer_tree here
         # so the loop doesn't hit the DB?
-        for answer in document.answers.all():
+
+        for answer in (
+            document.answers.all()
+            .select_related("value_document", "question")
+            .prefetch_related("documents")
+        ):
+
             # If the question's "requiredness" evaluated to false,
             # we need to pass this along to sub validators, so they
             # won't complain if something is not provided "down there"
