@@ -49,6 +49,7 @@ class DocumentFilterSet(MetaFilterSet):
         )
     )
     order_by = OrderingFilter(label="DocumentOrdering")
+    root_document = GlobalIDFilter(field_name="family")
 
     has_answer = HasAnswerFilter(document_id="pk")
 
