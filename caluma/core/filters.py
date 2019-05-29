@@ -34,7 +34,11 @@ from localized_fields.fields import LocalizedField
 
 from caluma.form.models import Answer, Question
 
-from .forms import GlobalIDFormField, GlobalIDMultipleChoiceField
+from .forms import (
+    GlobalIDFormField,
+    GlobalIDMultipleChoiceField,
+    SlugMultipleChoiceField,
+)
 from .relay import extract_global_id
 from .types import DjangoConnectionField
 
@@ -55,6 +59,13 @@ class GlobalIDMultipleChoiceFilter(MultipleChoiceFilter):
     def filter(self, qs, value):
         gids = [extract_global_id(v) for v in value]
         return super(GlobalIDMultipleChoiceFilter, self).filter(qs, gids)
+
+
+class SlugMultipleChoiceFilter(MultipleChoiceFilter):
+    field_class = SlugMultipleChoiceField
+
+    def filter(self, qs, value):
+        return super().filter(qs, value)
 
 
 class LocalizedFilter(Filter):
