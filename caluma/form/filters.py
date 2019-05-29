@@ -1,3 +1,5 @@
+from django_filters.rest_framework import CharFilter
+
 from ..core.filters import (
     GlobalIDFilter,
     GlobalIDMultipleChoiceFilter,
@@ -5,6 +7,7 @@ from ..core.filters import (
     MetaFilterSet,
     OrderingFilter,
     SearchFilter,
+    SlugMultipleChoiceFilter,
 )
 from . import models
 
@@ -12,6 +15,9 @@ from . import models
 class FormFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
     order_by = OrderingFilter(label="FormOrdering", fields=("name",))
+    slugs = SlugMultipleChoiceFilter(field_name="slug")
+    slug = CharFilter()
+    slug.deprecation_reason = "Use the `slugs` (plural) filter instead, which allows filtering for multiple slugs"
 
     class Meta:
         model = models.Form

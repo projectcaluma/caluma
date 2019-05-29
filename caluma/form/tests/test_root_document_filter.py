@@ -1,6 +1,3 @@
-import pytest
-
-from ...core.filters import AnswerHierarchyMode, AnswerLookupMode
 from ...core.relay import extract_global_id
 from .. import models
 
