@@ -47,14 +47,14 @@ def test_validate_special_fields(
 @pytest.mark.parametrize(
     "num_queries,main_required,required_jexl,should_throw",
     [
-        (47, "true", "true", True),
-        (52, "true", "false", False),
-        (47, "true", "'parent.sub_2.sub_2_question_1'|answer == 'foo'", True),
-        (52, "true", "'parent.sub_2.sub_2_question_1'|answer == 'bar'", False),
-        (52, "false", "true", False),
-        (52, "false", "false", False),
-        (52, "false", "'parent.sub_2.sub_2_question_1'|answer == 'foo'", False),
-        (52, "false", "'parent.sub_2.sub_2_question_1'|answer == 'bar'", False),
+        (39, "true", "true", True),
+        (39, "true", "false", False),
+        (39, "true", "'parent.sub_2.sub_2_question_1'|answer == 'foo'", True),
+        (39, "true", "'parent.sub_2.sub_2_question_1'|answer == 'bar'", False),
+        (39, "false", "true", False),
+        (39, "false", "false", False),
+        (39, "false", "'parent.sub_2.sub_2_question_1'|answer == 'foo'", False),
+        (39, "false", "'parent.sub_2.sub_2_question_1'|answer == 'bar'", False),
     ],
 )
 def test_validate_nested_form(
@@ -72,8 +72,8 @@ def test_validate_nested_form(
     django_assert_num_queries,
         num_queries
 ):
-    #with django_assert_num_queries(num_queries):
-    for _ in range(1): # dummy block so we dont have to reindent during dev
+    with django_assert_num_queries(num_queries):
+    #for _ in range(1): # dummy block so we dont have to reindent during dev
         sub_form_question_1 = form_question_factory(
             form__slug="sub_1",
             question__type=Question.TYPE_TEXT,

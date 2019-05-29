@@ -131,16 +131,21 @@ class AnswerValidator:
 
     def _validate_question_table(self, question, value, document, info, **kwargs):
         for _document in value:
+            assert "_val" not in _document
             self._document_validator().validate(
-                _document,
+                _document["_val"],
                 parent=document,
                 info=info,
-                answer_tree=kwargs.get("answer_tree"),
+                answer_tree=kwargs.get("answer_tree")["_val"],
             )
 
     def _validate_question_form(self, question, value, document, info, **kwargs):
+        assert "_val" not in value
         self._document_validator().validate(
-            value, parent=document, info=info, answer_tree=kwargs.get("answer_tree")
+            value,
+            parent=document,
+            info=info,
+            answer_tree=kwargs.get("answer_tree")["_val"],
         )
 
     def _document_validator(self):
@@ -189,37 +194,32 @@ class DocumentValidator:
         # TODO: can we iterate over the entries in answer_tree here
         # so the loop doesn't hit the DB?
 
-        for answer in (
-            document.answers.all()
-            .select_related("value_document", "question")
-            .prefetch_related("documents")
-        ):
+        for question_slug, answer_info in answer_tree.items():
+            if question_slug == "parent" or question_slug.startswith("_"):
+                continue
 
             # If the question's "requiredness" evaluated to false,
             # we need to pass this along to sub validators, so they
             # won't complain if something is not provided "down there"
-            required = required_state.get(answer.question.slug, True)
+            required = required_state.get(question_slug, True)
 
             further_check_required = required and self.do_check_required
 
             validator = AnswerValidator(further_check_required)
+
             validator.validate(
                 document=document,
-                question=answer.question,
-                value=answer.value,
-                value_document=answer.value_document,
+                question=answer_info["_question"],
+                value=answer_info["_val"],
+                value_document=answer_info["_value_doc"],
                 info=info,
-                answer_tree=answer_tree[answer.question.slug],
+                answer_tree=answer_tree[question_slug],
             )
 
     def get_document_answers(self, document, parent=None):
-        doc_answers = document.answers.select_related("question").prefetch_related(
-            "question__options"
-        )
-        question_slugs = [
-            q["slug"] for q in document.form.questions.all().values("slug")
-        ]
-
+        doc_answers = document.answers.select_related(
+            "question", "value_document"
+        ).prefetch_related("question__options")
         # need to initialize here so we have a "parent" pointer to pass along
         answers = {}
         if parent is not None:
@@ -227,7 +227,15 @@ class DocumentValidator:
 
         answers.update(
             {
-                ans.question_id: self._get_answer_value(ans, document, parent=answers)
+                ans.question_id: {
+                    "_is_ans": True,
+                    "_is_answered": True,
+                    "_val": self._get_answer_value(ans, document, parent=answers),
+                    "_question": ans.question,
+                    "_ans": ans,
+                    "_value_doc": getattr(ans, "value_document", None),
+                    "_form": document.form,
+                }
                 for ans in doc_answers
             }
         )
@@ -235,11 +243,21 @@ class DocumentValidator:
         # Create answer values for questions in the form that don't have
         # answers (yet)
         unanswered = {
-            q_slug: self._get_answer_value(
-                Answer(question_id=q_slug, document=document), document, parent=answers
-            )
-            for q_slug in question_slugs
-            if q_slug not in answers
+            question.slug: {
+                "_is_ans": True,
+                "_is_unanswered": True,
+                "_val": self._get_answer_value(
+                    Answer(question=question, document=document),
+                    document,
+                    parent=answers,
+                ),
+                "_question": question,
+                "_value_doc": None,
+                "_ans": Answer(question=question, document=document),
+                "_form": document.form,
+            }
+            for question in document.form.questions.all()
+            if question.slug not in answers
         }
 
         answers.update(unanswered)
@@ -292,8 +310,15 @@ class DocumentValidator:
     def validate_required(self, document, answer_tree):
         required_but_empty = []
         required_state = {}
-        for question in document.form.questions.all():
-            # TODO: can we iterate over questions of answers via answer_tree?
+
+        # need "document" in root of answre tree, not answer
+        assert "_val" not in answer_tree
+
+        for question_slug, answer_info in answer_tree.items():
+            if question_slug == "parent" or question_slug.startswith("_"):
+                continue
+
+            question = answer_info["_question"]
             try:
                 expr = "is_required"
                 is_required = (
@@ -303,8 +328,12 @@ class DocumentValidator:
 
                 expr = "is_hidden"
                 is_hidden = jexl.QuestionJexl(answer_tree).evaluate(question.is_hidden)
+
                 if is_required and not is_hidden:
-                    if answer_tree.get(question.slug, None) in EMPTY_VALUES:
+                    answer_info = answer_tree.get(question.slug, None)
+                    if answer_info["_val"] in EMPTY_VALUES or answer_info.get(
+                        "_is_unanswered", False
+                    ):
                         required_but_empty.append(question.slug)
 
                 required_state[question.slug] = is_required

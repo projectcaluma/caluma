@@ -35,6 +35,7 @@ class QuestionJexl(JEXL):
         try:
             for segment in segments:
                 current_context = current_context[segment]
+                current_context = current_context.get('_val', current_context)
             return current_context
         except KeyError:
             explanation = ""
