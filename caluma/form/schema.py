@@ -1,12 +1,17 @@
 import graphene
-from graphene import ConnectionField, relay
+from graphene import relay
 from graphene.types import ObjectType, generic
 from graphene_django.rest_framework import serializer_converter
 
 from ..core.filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
 from ..core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..core.relay import extract_global_id
-from ..core.types import CountableConnectionBase, DjangoObjectType, Node
+from ..core.types import (
+    ConnectionField,
+    CountableConnectionBase,
+    DjangoObjectType,
+    Node,
+)
 from ..data_source.data_source_handlers import get_data_source_data
 from ..data_source.schema import DataSourceDataConnection
 from . import filters, models, serializers
@@ -168,7 +173,7 @@ class FormatValidatorConnection(CountableConnectionBase):
 class TextQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     max_length = graphene.Int()
     placeholder = graphene.String()
-    format_validators = graphene.ConnectionField(FormatValidatorConnection)
+    format_validators = ConnectionField(FormatValidatorConnection)
 
     def resolve_format_validators(self, info):
         return get_format_validators(include=self.format_validators)
@@ -192,7 +197,7 @@ class TextQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     max_length = graphene.Int()
     placeholder = graphene.String()
-    format_validators = graphene.ConnectionField(FormatValidatorConnection)
+    format_validators = ConnectionField(FormatValidatorConnection)
 
     def resolve_format_validators(self, info):
         return get_format_validators(include=self.format_validators)
