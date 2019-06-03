@@ -36,6 +36,7 @@ from caluma.form.models import Answer, Question
 
 from .forms import GlobalIDFormField, GlobalIDMultipleChoiceField
 from .relay import extract_global_id
+from .types import DjangoConnectionField
 
 
 class GlobalIDFilter(Filter):
@@ -414,7 +415,9 @@ class MetaFilterSet(FilterSet):
     meta_value = MetaValueFilter(field_name="meta")
 
 
-class DjangoFilterConnectionField(filter.DjangoFilterConnectionField):
+class DjangoFilterConnectionField(
+    filter.DjangoFilterConnectionField, DjangoConnectionField
+):
     """
     Django connection filter field with object type get_queryset support.
 
