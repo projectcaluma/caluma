@@ -560,7 +560,7 @@ def convert_choice_field_to_enum(field):
     return converted
 
 
-def _generate_list_filter_class(inner_type):
+def generate_list_filter_class(inner_type):
     """
     Return a Filter class that will resolve into a List(`inner_type`) graphene type.
 
@@ -591,4 +591,4 @@ def _generate_list_filter_class(inner_type):
     return filter_class
 
 
-StringListFilter = _generate_list_filter_class(graphene.String)
+StringListFilter = generate_list_filter_class(graphene.String)

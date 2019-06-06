@@ -1,3 +1,5 @@
+from graphene import Enum
+
 from ..core.filters import (
     FilterSet,
     GlobalIDFilter,
@@ -6,8 +8,27 @@ from ..core.filters import (
     OrderingFilter,
     SearchFilter,
     StringListFilter,
+    generate_list_filter_class,
 )
 from . import models
+
+
+def case_status_filter(*args, **kwargs):
+    case_status_descriptions = {
+        s.upper(): d for s, d in models.Case.STATUS_CHOICE_TUPLE
+    }
+
+    class EnumWithDescriptionsType(object):
+        @property
+        def description(self):
+            return case_status_descriptions[self.name]
+
+    enum = Enum(
+        "CaseStatusArgument",
+        [(i.upper(), i) for i in models.Case.STATUS_CHOICES],
+        type=EnumWithDescriptionsType,
+    )
+    return generate_list_filter_class(enum)(*args, **kwargs)
 
 
 class WorkflowFilterSet(MetaFilterSet):
@@ -31,10 +52,11 @@ class CaseFilterSet(MetaFilterSet):
     order_by = OrderingFilter(label="CaseOrdering", fields=("status",))
 
     has_answer = HasAnswerFilter(document_id="document__pk")
+    status = case_status_filter(lookup_expr="in")
 
     class Meta:
         model = models.Case
-        fields = ("workflow", "status")
+        fields = ("workflow",)
 
 
 class TaskFilterSet(MetaFilterSet):

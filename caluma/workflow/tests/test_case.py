@@ -269,3 +269,26 @@ def test_start_case_with_child_documents(
     ]
     assert sub_document["id"]
     assert sub_document["value"]["answers"]["edges"][0]["node"]["id"]
+
+
+def test_status_filter(db, case_factory, schema_executor):
+    case_factory(status=models.Case.STATUS_CANCELED)
+    case_factory(status=models.Case.STATUS_COMPLETED)
+    case_factory(status=models.Case.STATUS_RUNNING)
+
+    query = """
+        query AllCases {
+          allCases (status: [RUNNING, CANCELED]){
+            totalCount
+            edges {
+              node {
+                status
+              }
+            }
+          }
+        }
+    """
+    result = schema_executor(query)
+    assert result.data["allCases"]["totalCount"] == 2
+    assert result.data["allCases"]["edges"][0]["node"]["status"] == "CANCELED"
+    assert result.data["allCases"]["edges"][1]["node"]["status"] == "RUNNING"
