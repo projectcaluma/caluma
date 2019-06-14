@@ -47,7 +47,6 @@ schema = graphene.Schema(
         form_schema.FloatAnswer,
         form_schema.DateAnswer,
         form_schema.TableAnswer,
-        form_schema.FormAnswer,
         form_schema.FileAnswer,
         workflow_schema.SimpleTask,
         workflow_schema.CompleteWorkflowFormTask,

@@ -278,22 +278,7 @@ class AnswerHierarchyMode(Enum):
 
 
 class HasAnswerFilterType(InputObjectType):
-    """Lookup type to search document structures.
-
-    The question is either a "plain" question slug, or of the form
-    "parent_slug.question_slug". Note that in this case, the parent_slug will
-    match the form slug, which in turn may be a subform of the whole form
-    structure.
-
-    What does NOT work is matching a full path, as the lookup would quickly
-    generate very complex database queries.
-
-    So, given the document structure "top.some_form.subform.question_foo", you can
-    either search for "subform.question_foo" (if question_foo is used in other
-    contexts within the same form), or search directly for "question_foo" if
-    you don't need to be that specific, which will speed up the query slightly.
-
-    """
+    """Lookup type to search document structures."""
 
     question = graphene.String(required=True)
     value = graphene.types.generic.GenericScalar(required=True)
@@ -356,18 +341,17 @@ class HasAnswerFilter(Filter):
         lookup = expr.get("lookup", self.lookup_expr)
         hierarchy = expr.get("hierarchy", AnswerHierarchyMode.FAMILY)
 
-        form_slug, question_slug = self._extract_form_and_question_slug(question_slug)
-
         question = Question.objects.get(slug=question_slug)
         self._validate_lookup(question, lookup)
 
+        answer_value = "value"
         if question.type == Question.TYPE_DATE:
-            filters = {f"date__{lookup}": match_value, "question__slug": question_slug}
-        else:
-            filters = {f"value__{lookup}": match_value, "question__slug": question_slug}
+            answer_value = "date"
 
-        if form_slug:
-            filters["document__form_id"] = form_slug
+        filters = {
+            f"{answer_value}__{lookup}": match_value,
+            "question__slug": question_slug,
+        }
 
         answers = Answer.objects.filter(**filters)
 
@@ -394,17 +378,6 @@ class HasAnswerFilter(Filter):
             raise exceptions.ValidationError(
                 f"Invalid lookup for question slug={question.slug} ({question.type.upper()}): {lookup.upper()}"
             )
-
-    def _extract_form_and_question_slug(self, question_slug):
-        split_slug = question_slug.split(".")
-        form_slug = split_slug[0] if len(split_slug) == 2 else None
-
-        question_slug = split_slug[-1]  # will be correct in all cases
-        if len(split_slug) > 2:
-            raise exceptions.ProgrammingError(
-                "Cannot match multi-level slug path, only form_slug.question_slug"
-            )
-        return form_slug, question_slug
 
     @staticmethod
     @convert_form_field.register(HasAnswerFilterField)

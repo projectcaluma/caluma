@@ -5,10 +5,8 @@ from .. import models
 def test_root_document_filter(
     schema_executor,
     db,
-    question,
     form_factory,
     form_question_factory,
-    question_factory,
     document_factory,
     answer_factory,
 ):
@@ -21,7 +19,7 @@ def test_root_document_filter(
     ).question
     subform_question = form_question_factory.create(
         form=top_form,
-        question__slug="subform",
+        question__slug="subform-question",
         question__type=models.Question.TYPE_FORM,
         question__sub_form__slug="subform",
     ).question
@@ -39,30 +37,15 @@ def test_root_document_filter(
         ).question,
     ]
 
-    # Now, make a document for it
-    result = schema_executor(
-        """
-            mutation foo ($form_id: ID!){
-                saveDocument(input: {form: $form_id}) {
-                    document {
-                      id
-                    }
-                }
-            }
-        """,
-        variables={"form_id": top_form.pk},
-    )
+    document1 = document_factory(form=top_form)
+    document2 = document_factory(form=top_form, family=document1.id)
+    document3 = document_factory(form=top_form)
 
-    document_id = extract_global_id(result.data["saveDocument"]["document"]["id"])
-    document = models.Document.objects.get(pk=document_id)
-    # just some other question in the tree
-    answer_factory(question=top_question, document=document, value="foo")
-    ans_subform = document.answers.get(question__slug="subform")
+    for d in [document1, document2]:
+        for question in sub_questions:
+            answer_factory(question=question, document=d, value="hello")
 
-    for question in sub_questions:
-        answer_factory(
-            question=question, document=ans_subform.value_document, value="hello"
-        )
+    answer_factory(question=top_question, document=document3, value="foo")
 
     # fetch documents, see if subdocuments are included
     query = """
@@ -76,15 +59,13 @@ def test_root_document_filter(
           }
         }
     """
-    variables = {"root": str(document.id)}
+    variables = {"root": str(document1.id)}
 
     result = schema_executor(query, variables=variables)
     assert not result.errors
-    result_ids = set(
+    result_ids = [
         extract_global_id(doc["node"]["id"])
         for doc in result.data["allDocuments"]["edges"]
-    )
+    ]
 
-    db_doc_ids = set(str(doc.id) for doc in models.Document.objects.all())
-
-    assert db_doc_ids == result_ids
+    assert sorted(result_ids) == sorted([str(document1.id), str(document2.id)])

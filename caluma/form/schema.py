@@ -28,7 +28,6 @@ def resolve_answer(answer):
         models.Question.TYPE_TEXTAREA: StringAnswer,
         models.Question.TYPE_TEXT: StringAnswer,
         models.Question.TYPE_TABLE: TableAnswer,
-        models.Question.TYPE_FORM: FormAnswer,
         models.Question.TYPE_FILE: FileAnswer,
         models.Question.TYPE_DYNAMIC_CHOICE: StringAnswer,
         models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: ListAnswer,
@@ -88,10 +87,14 @@ class QuestionJexl(graphene.String):
     * mapby - map list by key. Helpful to work with table answers
       whereas an answer is a list of dicts.
 
+    Following context is available:
+    * form - access form of document
+
     Examples:
     * 'answer' == 'question-slug'|answer
     * 'answer' in 'list-question-slug'|answer
     * 'answer' in 'table-question-slug'|answer|mapby('column-question')
+    * 'form-slug' == form
 
     """
 
@@ -633,7 +636,7 @@ class IntegerAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document", "file", "date")
+        exclude_fields = ("document", "documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -643,7 +646,7 @@ class FloatAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document", "file", "date")
+        exclude_fields = ("document", "documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -656,7 +659,7 @@ class DateAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document", "file")
+        exclude_fields = ("document", "documents", "file")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -666,7 +669,7 @@ class StringAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document", "file", "date")
+        exclude_fields = ("document", "documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -676,7 +679,7 @@ class ListAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document", "file", "date")
+        exclude_fields = ("document", "documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -691,7 +694,6 @@ class Document(FormDjangoObjectType):
         AnswerConnection, filterset_class=filters.AnswerFilterSet
     )
     meta = generic.GenericScalar()
-    parent_answers = graphene.List("caluma.form.schema.FormAnswer")
 
     class Meta:
         model = models.Document
@@ -708,20 +710,7 @@ class TableAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("documents", "value_document", "file", "date")
-        use_connection = False
-        interfaces = (Answer, graphene.Node)
-
-
-class FormAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
-    value = graphene.Field(Document, required=True)
-
-    def resolve_value(self, info, **args):
-        return self.value_document
-
-    class Meta:
-        model = models.Answer
-        exclude_fields = ("documents", "value_document", "file", "date")
+        exclude_fields = ("documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -746,7 +735,7 @@ class FileAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "value_document", "date")
+        exclude_fields = ("document", "documents", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -807,12 +796,6 @@ class SaveDocumentTableAnswer(SaveDocumentAnswer):
         return_field_type = Answer
 
 
-class SaveDocumentFormAnswer(SaveDocumentAnswer):
-    class Meta:
-        serializer_class = serializers.SaveDocumentFormAnswerSerializer
-        return_field_type = Answer
-
-
 class SaveDocumentFileAnswer(SaveDocumentAnswer):
     class Meta:
         serializer_class = serializers.SaveDocumentFileAnswerSerializer
@@ -859,7 +842,6 @@ class Mutation(object):
     save_document_date_answer = SaveDocumentDateAnswer().Field()
     save_document_list_answer = SaveDocumentListAnswer().Field()
     save_document_table_answer = SaveDocumentTableAnswer().Field()
-    save_document_form_answer = SaveDocumentFormAnswer().Field()
     save_document_file_answer = SaveDocumentFileAnswer().Field()
     remove_answer = RemoveAnswer().Field()
 

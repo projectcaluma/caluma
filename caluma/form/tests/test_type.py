@@ -18,7 +18,6 @@ from .. import models
         (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, "ListAnswer", True),
         (models.Question.TYPE_DATE, "DateAnswer", True),
         (models.Question.TYPE_TABLE, "TableAnswer", True),
-        (models.Question.TYPE_FORM, "FormAnswer", True),
         (models.Question.TYPE_STATIC, "StringAnswer", False),
     ],
 )

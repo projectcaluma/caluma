@@ -3,7 +3,7 @@ from graphql_relay import to_global_id
 
 from ...core.relay import extract_global_id
 from ...core.tests import extract_serializer_input_fields
-from ...form.models import Answer, Document, Question
+from ...form.models import Answer, Question
 from .. import serializers
 
 
@@ -74,13 +74,6 @@ def test_query_all_documents(
                       }
                       ... on TableAnswer {
                         table_value: value {
-                          form {
-                            slug
-                          }
-                        }
-                      }
-                      ... on FormAnswer {
-                        form_value: value {
                           form {
                             slug
                           }
@@ -248,7 +241,7 @@ def test_complex_document_query_performance(
         }
     """
 
-    with django_assert_num_queries(11):
+    with django_assert_num_queries(12):
         result = schema_executor(query, variables={"id": str(document.pk)})
     assert not result.errors
 
@@ -481,7 +474,6 @@ def test_save_document(db, document, schema_executor, update):
             "SaveDocumentTableAnswer",
             True,
         ),
-        (Question.TYPE_FORM, {}, None, [], None, None, "SaveDocumentFormAnswer", True),
         (
             Question.TYPE_TEXTAREA,
             {},
@@ -673,13 +665,6 @@ def test_save_document_answer(
                   }}
                 }}
               }}
-              ... on FormAnswer {{
-                form_value: value {{
-                  form {{
-                    slug
-                  }}
-                }}
-              }}
               ... on FileAnswer {{
                 fileValue: value {{
                   name
@@ -707,10 +692,6 @@ def test_save_document_answer(
         answer_document_factory(answer=answer, document=documents[0])
 
         inp["input"]["value"] = [str(document.pk) for document in documents]
-
-    if question.type == Question.TYPE_FORM:
-        document = document_factory.create(form=question.sub_form)
-        inp["input"]["value"] = document.pk
 
     if question.type == Question.TYPE_FILE:
         if answer.value == "some-file.pdf":
@@ -800,70 +781,3 @@ def test_query_answer_node(db, answer, schema_executor):
 
     result = schema_executor(node_query, variables={"id": global_id})
     assert not result.errors
-
-
-def test_create_document_with_children(
-    db, form_question_factory, question_factory, schema_executor
-):
-    sub_form_question = form_question_factory(question__type=Question.TYPE_FORM)
-    question = question_factory(
-        type=Question.TYPE_FORM, sub_form=sub_form_question.form
-    )
-    form_question = form_question_factory(question=question)
-
-    query = """
-      mutation SaveDocument($input: SaveDocumentInput!) {
-        saveDocument(input: $input) {
-          document {
-            id
-            answers {
-              edges {
-                node {
-                  id
-                  ... on FormAnswer {
-                    value {
-                      id
-                      answers {
-                        edges {
-                          node {
-                            id
-                            ... on FormAnswer {
-                              value {
-                                id
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    """
-
-    inp = {"input": {"form": form_question.form.pk}}
-    result = schema_executor(query, variables=inp)
-    assert not result.errors
-    sub_document = result.data["saveDocument"]["document"]["answers"]["edges"][0][
-        "node"
-    ]
-
-    doc_id = extract_global_id(result.data["saveDocument"]["document"]["id"])
-    doc = Document.objects.get(pk=doc_id)
-
-    # top-level document should be "head of family"
-    assert doc.pk == doc.family
-
-    subdoc_id = extract_global_id(
-        sub_document["value"]["answers"]["edges"][0]["node"]["value"]["id"]
-    )
-    sub_doc = Document.objects.get(pk=subdoc_id)
-
-    assert sub_doc.family == doc.family
-
-    assert sub_document["id"]
-    assert sub_document["value"]["answers"]["edges"][0]["node"]["id"]
