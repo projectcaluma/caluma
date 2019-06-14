@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots["test_query_all_questions[multiple_choice-search_value0-matching-None] 1"] = {
@@ -23,21 +22,11 @@ snapshots["test_query_all_questions[multiple_choice-search_value0-matching-None]
         }
     """,
         "variables": {
-            "hasAnswer": [
-                {
-                    "hierarchy": "FAMILY",
-                    "question": "subform.multiple_choice",
-                    "value": ["a", "b"],
-                }
-            ]
+            "hasAnswer": [{"question": "multiple_choice", "value": ["a", "b"]}]
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -61,21 +50,12 @@ snapshots[
     """,
         "variables": {
             "hasAnswer": [
-                {
-                    "hierarchy": "FAMILY",
-                    "lookup": "EXACT",
-                    "question": "subform.multiple_choice",
-                    "value": ["a", "b"],
-                }
+                {"lookup": "EXACT", "question": "multiple_choice", "value": ["a", "b"]}
             ]
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -100,9 +80,8 @@ snapshots[
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "FAMILY",
                     "lookup": "STARTSWITH",
-                    "question": "subform.multiple_choice",
+                    "question": "multiple_choice",
                     "value": ["a", "b"],
                 }
             ]
@@ -134,20 +113,15 @@ snapshots[
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "FAMILY",
                     "lookup": "CONTAINS",
-                    "question": "subform.multiple_choice",
+                    "question": "multiple_choice",
                     "value": ["a", "b"],
                 }
             ]
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -172,9 +146,8 @@ snapshots[
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "FAMILY",
                     "lookup": "ICONTAINS",
-                    "question": "subform.multiple_choice",
+                    "question": "multiple_choice",
                     "value": ["a", "b"],
                 }
             ]
@@ -203,12 +176,7 @@ snapshots["test_query_all_questions[multiple_choice-search_value0-matching-GTE] 
     """,
         "variables": {
             "hasAnswer": [
-                {
-                    "hierarchy": "FAMILY",
-                    "lookup": "GTE",
-                    "question": "subform.multiple_choice",
-                    "value": ["a", "b"],
-                }
+                {"lookup": "GTE", "question": "multiple_choice", "value": ["a", "b"]}
             ]
         },
     },
@@ -235,12 +203,7 @@ snapshots["test_query_all_questions[multiple_choice-search_value0-matching-GT] 1
     """,
         "variables": {
             "hasAnswer": [
-                {
-                    "hierarchy": "FAMILY",
-                    "lookup": "GT",
-                    "question": "subform.multiple_choice",
-                    "value": ["a", "b"],
-                }
+                {"lookup": "GT", "question": "multiple_choice", "value": ["a", "b"]}
             ]
         },
     },
@@ -267,12 +230,7 @@ snapshots["test_query_all_questions[multiple_choice-search_value0-matching-LTE] 
     """,
         "variables": {
             "hasAnswer": [
-                {
-                    "hierarchy": "FAMILY",
-                    "lookup": "LTE",
-                    "question": "subform.multiple_choice",
-                    "value": ["a", "b"],
-                }
+                {"lookup": "LTE", "question": "multiple_choice", "value": ["a", "b"]}
             ]
         },
     },
@@ -299,12 +257,7 @@ snapshots["test_query_all_questions[multiple_choice-search_value0-matching-LT] 1
     """,
         "variables": {
             "hasAnswer": [
-                {
-                    "hierarchy": "FAMILY",
-                    "lookup": "LT",
-                    "question": "subform.multiple_choice",
-                    "value": ["a", "b"],
-                }
+                {"lookup": "LT", "question": "multiple_choice", "value": ["a", "b"]}
             ]
         },
     },
@@ -330,13 +283,7 @@ snapshots["test_query_all_questions[multiple_choice-search_value0-nomatch-None] 
         }
     """,
         "variables": {
-            "hasAnswer": [
-                {
-                    "hierarchy": "FAMILY",
-                    "question": "subform.multiple_choice",
-                    "value": ["a", "b"],
-                }
-            ]
+            "hasAnswer": [{"question": "multiple_choice", "value": ["a", "b"]}]
         },
     },
     "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
@@ -359,12 +306,7 @@ snapshots["test_query_all_questions[multiple_choice-search_value0-nomatch-EXACT]
     """,
         "variables": {
             "hasAnswer": [
-                {
-                    "hierarchy": "FAMILY",
-                    "lookup": "EXACT",
-                    "question": "subform.multiple_choice",
-                    "value": ["a", "b"],
-                }
+                {"lookup": "EXACT", "question": "multiple_choice", "value": ["a", "b"]}
             ]
         },
     },
@@ -391,9 +333,8 @@ snapshots[
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "FAMILY",
                     "lookup": "STARTSWITH",
-                    "question": "subform.multiple_choice",
+                    "question": "multiple_choice",
                     "value": ["a", "b"],
                 }
             ]
@@ -425,9 +366,8 @@ snapshots[
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "FAMILY",
                     "lookup": "CONTAINS",
-                    "question": "subform.multiple_choice",
+                    "question": "multiple_choice",
                     "value": ["a", "b"],
                 }
             ]
@@ -456,9 +396,8 @@ snapshots[
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "FAMILY",
                     "lookup": "ICONTAINS",
-                    "question": "subform.multiple_choice",
+                    "question": "multiple_choice",
                     "value": ["a", "b"],
                 }
             ]
@@ -487,12 +426,7 @@ snapshots["test_query_all_questions[multiple_choice-search_value0-nomatch-GTE] 1
     """,
         "variables": {
             "hasAnswer": [
-                {
-                    "hierarchy": "FAMILY",
-                    "lookup": "GTE",
-                    "question": "subform.multiple_choice",
-                    "value": ["a", "b"],
-                }
+                {"lookup": "GTE", "question": "multiple_choice", "value": ["a", "b"]}
             ]
         },
     },
@@ -519,12 +453,7 @@ snapshots["test_query_all_questions[multiple_choice-search_value0-nomatch-GT] 1"
     """,
         "variables": {
             "hasAnswer": [
-                {
-                    "hierarchy": "FAMILY",
-                    "lookup": "GT",
-                    "question": "subform.multiple_choice",
-                    "value": ["a", "b"],
-                }
+                {"lookup": "GT", "question": "multiple_choice", "value": ["a", "b"]}
             ]
         },
     },
@@ -551,12 +480,7 @@ snapshots["test_query_all_questions[multiple_choice-search_value0-nomatch-LTE] 1
     """,
         "variables": {
             "hasAnswer": [
-                {
-                    "hierarchy": "FAMILY",
-                    "lookup": "LTE",
-                    "question": "subform.multiple_choice",
-                    "value": ["a", "b"],
-                }
+                {"lookup": "LTE", "question": "multiple_choice", "value": ["a", "b"]}
             ]
         },
     },
@@ -583,12 +507,7 @@ snapshots["test_query_all_questions[multiple_choice-search_value0-nomatch-LT] 1"
     """,
         "variables": {
             "hasAnswer": [
-                {
-                    "hierarchy": "FAMILY",
-                    "lookup": "LT",
-                    "question": "subform.multiple_choice",
-                    "value": ["a", "b"],
-                }
+                {"lookup": "LT", "question": "multiple_choice", "value": ["a", "b"]}
             ]
         },
     },
@@ -613,14 +532,12 @@ snapshots["test_query_all_questions[integer-10-matching-None] 1"] = {
           }
         }
     """,
-        "variables": {"hasAnswer": [{"question": "subform.integer", "value": 10}]},
+        "variables": {
+            "hasAnswer": [{"hierarchy": "DIRECT", "question": "integer", "value": 10}]
+        },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -642,16 +559,17 @@ snapshots["test_query_all_questions[integer-10-matching-EXACT] 1"] = {
     """,
         "variables": {
             "hasAnswer": [
-                {"lookup": "EXACT", "question": "subform.integer", "value": 10}
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "EXACT",
+                    "question": "integer",
+                    "value": 10,
+                }
             ]
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -673,7 +591,12 @@ snapshots["test_query_all_questions[integer-10-matching-STARTSWITH] 1"] = {
     """,
         "variables": {
             "hasAnswer": [
-                {"lookup": "STARTSWITH", "question": "subform.integer", "value": 10}
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "STARTSWITH",
+                    "question": "integer",
+                    "value": 10,
+                }
             ]
         },
     },
@@ -700,7 +623,12 @@ snapshots["test_query_all_questions[integer-10-matching-CONTAINS] 1"] = {
     """,
         "variables": {
             "hasAnswer": [
-                {"lookup": "CONTAINS", "question": "subform.integer", "value": 10}
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "CONTAINS",
+                    "question": "integer",
+                    "value": 10,
+                }
             ]
         },
     },
@@ -727,7 +655,12 @@ snapshots["test_query_all_questions[integer-10-matching-ICONTAINS] 1"] = {
     """,
         "variables": {
             "hasAnswer": [
-                {"lookup": "ICONTAINS", "question": "subform.integer", "value": 10}
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "ICONTAINS",
+                    "question": "integer",
+                    "value": 10,
+                }
             ]
         },
     },
@@ -753,15 +686,18 @@ snapshots["test_query_all_questions[integer-10-matching-GTE] 1"] = {
         }
     """,
         "variables": {
-            "hasAnswer": [{"lookup": "GTE", "question": "subform.integer", "value": 10}]
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "GTE",
+                    "question": "integer",
+                    "value": 10,
+                }
+            ]
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -782,7 +718,14 @@ snapshots["test_query_all_questions[integer-10-matching-GT] 1"] = {
         }
     """,
         "variables": {
-            "hasAnswer": [{"lookup": "GT", "question": "subform.integer", "value": 10}]
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "GT",
+                    "question": "integer",
+                    "value": 10,
+                }
+            ]
         },
     },
     "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
@@ -804,15 +747,18 @@ snapshots["test_query_all_questions[integer-10-matching-LTE] 1"] = {
         }
     """,
         "variables": {
-            "hasAnswer": [{"lookup": "LTE", "question": "subform.integer", "value": 10}]
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "LTE",
+                    "question": "integer",
+                    "value": 10,
+                }
+            ]
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -833,7 +779,14 @@ snapshots["test_query_all_questions[integer-10-matching-LT] 1"] = {
         }
     """,
         "variables": {
-            "hasAnswer": [{"lookup": "LT", "question": "subform.integer", "value": 10}]
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "LT",
+                    "question": "integer",
+                    "value": 10,
+                }
+            ]
         },
     },
     "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
@@ -854,7 +807,9 @@ snapshots["test_query_all_questions[integer-10-nomatch-None] 1"] = {
           }
         }
     """,
-        "variables": {"hasAnswer": [{"question": "subform.integer", "value": 10}]},
+        "variables": {
+            "hasAnswer": [{"hierarchy": "DIRECT", "question": "integer", "value": 10}]
+        },
     },
     "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
 }
@@ -876,7 +831,12 @@ snapshots["test_query_all_questions[integer-10-nomatch-EXACT] 1"] = {
     """,
         "variables": {
             "hasAnswer": [
-                {"lookup": "EXACT", "question": "subform.integer", "value": 10}
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "EXACT",
+                    "question": "integer",
+                    "value": 10,
+                }
             ]
         },
     },
@@ -900,7 +860,12 @@ snapshots["test_query_all_questions[integer-10-nomatch-STARTSWITH] 1"] = {
     """,
         "variables": {
             "hasAnswer": [
-                {"lookup": "STARTSWITH", "question": "subform.integer", "value": 10}
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "STARTSWITH",
+                    "question": "integer",
+                    "value": 10,
+                }
             ]
         },
     },
@@ -927,7 +892,12 @@ snapshots["test_query_all_questions[integer-10-nomatch-CONTAINS] 1"] = {
     """,
         "variables": {
             "hasAnswer": [
-                {"lookup": "CONTAINS", "question": "subform.integer", "value": 10}
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "CONTAINS",
+                    "question": "integer",
+                    "value": 10,
+                }
             ]
         },
     },
@@ -954,7 +924,12 @@ snapshots["test_query_all_questions[integer-10-nomatch-ICONTAINS] 1"] = {
     """,
         "variables": {
             "hasAnswer": [
-                {"lookup": "ICONTAINS", "question": "subform.integer", "value": 10}
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "ICONTAINS",
+                    "question": "integer",
+                    "value": 10,
+                }
             ]
         },
     },
@@ -980,15 +955,18 @@ snapshots["test_query_all_questions[integer-10-nomatch-GTE] 1"] = {
         }
     """,
         "variables": {
-            "hasAnswer": [{"lookup": "GTE", "question": "subform.integer", "value": 10}]
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "GTE",
+                    "question": "integer",
+                    "value": 10,
+                }
+            ]
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -1009,15 +987,18 @@ snapshots["test_query_all_questions[integer-10-nomatch-GT] 1"] = {
         }
     """,
         "variables": {
-            "hasAnswer": [{"lookup": "GT", "question": "subform.integer", "value": 10}]
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "GT",
+                    "question": "integer",
+                    "value": 10,
+                }
+            ]
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -1038,7 +1019,14 @@ snapshots["test_query_all_questions[integer-10-nomatch-LTE] 1"] = {
         }
     """,
         "variables": {
-            "hasAnswer": [{"lookup": "LTE", "question": "subform.integer", "value": 10}]
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "LTE",
+                    "question": "integer",
+                    "value": 10,
+                }
+            ]
         },
     },
     "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
@@ -1060,7 +1048,14 @@ snapshots["test_query_all_questions[integer-10-nomatch-LT] 1"] = {
         }
     """,
         "variables": {
-            "hasAnswer": [{"lookup": "LT", "question": "subform.integer", "value": 10}]
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "LT",
+                    "question": "integer",
+                    "value": 10,
+                }
+            ]
         },
     },
     "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
@@ -1632,11 +1627,7 @@ snapshots["test_query_all_questions[textarea-foo-matching-None] 1"] = {
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -1668,11 +1659,7 @@ snapshots["test_query_all_questions[textarea-foo-matching-EXACT] 1"] = {
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -1733,11 +1720,7 @@ snapshots["test_query_all_questions[textarea-foo-matching-CONTAINS] 1"] = {
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -1769,11 +1752,7 @@ snapshots["test_query_all_questions[textarea-foo-matching-ICONTAINS] 1"] = {
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -2190,9 +2169,7 @@ snapshots["test_query_all_questions[float-11.5-matching-None] 1"] = {
         }
     """,
         "variables": {
-            "hasAnswer": [
-                {"hierarchy": "DIRECT", "question": "subform.float", "value": 11.5}
-            ]
+            "hasAnswer": [{"hierarchy": "FAMILY", "question": "float", "value": 11.5}]
         },
     },
     "response": {
@@ -2219,9 +2196,9 @@ snapshots["test_query_all_questions[float-11.5-matching-EXACT] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "EXACT",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2251,9 +2228,9 @@ snapshots["test_query_all_questions[float-11.5-matching-STARTSWITH] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "STARTSWITH",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2283,9 +2260,9 @@ snapshots["test_query_all_questions[float-11.5-matching-CONTAINS] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "CONTAINS",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2315,9 +2292,9 @@ snapshots["test_query_all_questions[float-11.5-matching-ICONTAINS] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "ICONTAINS",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2347,9 +2324,9 @@ snapshots["test_query_all_questions[float-11.5-matching-GTE] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "GTE",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2379,9 +2356,9 @@ snapshots["test_query_all_questions[float-11.5-matching-GT] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "GT",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2408,9 +2385,9 @@ snapshots["test_query_all_questions[float-11.5-matching-LTE] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "LTE",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2440,9 +2417,9 @@ snapshots["test_query_all_questions[float-11.5-matching-LT] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "LT",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2467,9 +2444,7 @@ snapshots["test_query_all_questions[float-11.5-nomatch-None] 1"] = {
         }
     """,
         "variables": {
-            "hasAnswer": [
-                {"hierarchy": "DIRECT", "question": "subform.float", "value": 11.5}
-            ]
+            "hasAnswer": [{"hierarchy": "FAMILY", "question": "float", "value": 11.5}]
         },
     },
     "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
@@ -2493,9 +2468,9 @@ snapshots["test_query_all_questions[float-11.5-nomatch-EXACT] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "EXACT",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2522,9 +2497,9 @@ snapshots["test_query_all_questions[float-11.5-nomatch-STARTSWITH] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "STARTSWITH",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2554,9 +2529,9 @@ snapshots["test_query_all_questions[float-11.5-nomatch-CONTAINS] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "CONTAINS",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2586,9 +2561,9 @@ snapshots["test_query_all_questions[float-11.5-nomatch-ICONTAINS] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "ICONTAINS",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2618,9 +2593,9 @@ snapshots["test_query_all_questions[float-11.5-nomatch-GTE] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "GTE",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2650,9 +2625,9 @@ snapshots["test_query_all_questions[float-11.5-nomatch-GT] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "GT",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2682,9 +2657,9 @@ snapshots["test_query_all_questions[float-11.5-nomatch-LTE] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "LTE",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -2711,9 +2686,9 @@ snapshots["test_query_all_questions[float-11.5-nomatch-LT] 1"] = {
         "variables": {
             "hasAnswer": [
                 {
-                    "hierarchy": "DIRECT",
+                    "hierarchy": "FAMILY",
                     "lookup": "LT",
-                    "question": "subform.float",
+                    "question": "float",
                     "value": 11.5,
                 }
             ]
@@ -3898,11 +3873,7 @@ snapshots["test_query_all_questions[choice-a-matching-None] 1"] = {
         "variables": {"hasAnswer": [{"question": "choice", "value": "a"}]},
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -3927,11 +3898,7 @@ snapshots["test_query_all_questions[choice-a-matching-EXACT] 1"] = {
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -3981,11 +3948,7 @@ snapshots["test_query_all_questions[choice-a-matching-CONTAINS] 1"] = {
         },
     },
     "response": {
-        "data": {
-            "allDocuments": {
-                "edges": [{"node": {"form": {"slug": "service-bank-arm"}}}]
-            }
-        },
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
         "errors": "None",
     },
 }
@@ -4326,511 +4289,5 @@ snapshots["test_query_all_questions[choice-a-nomatch-LT] 1"] = {
     "response": {
         "data": {"allDocuments": None},
         "errors": "[GraphQLLocatedError(\"['Invalid lookup for question slug=choice (CHOICE): LT']\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-matching-None] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [{"question": "top.subform.foobar", "value": "test"}]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-matching-EXACT] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {"lookup": "EXACT", "question": "top.subform.foobar", "value": "test"}
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-matching-STARTSWITH] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {
-                    "lookup": "STARTSWITH",
-                    "question": "top.subform.foobar",
-                    "value": "test",
-                }
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-matching-CONTAINS] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {
-                    "lookup": "CONTAINS",
-                    "question": "top.subform.foobar",
-                    "value": "test",
-                }
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-matching-ICONTAINS] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {
-                    "lookup": "ICONTAINS",
-                    "question": "top.subform.foobar",
-                    "value": "test",
-                }
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-matching-GTE] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {"lookup": "GTE", "question": "top.subform.foobar", "value": "test"}
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-matching-GT] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {"lookup": "GT", "question": "top.subform.foobar", "value": "test"}
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-matching-LTE] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {"lookup": "LTE", "question": "top.subform.foobar", "value": "test"}
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-matching-LT] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {"lookup": "LT", "question": "top.subform.foobar", "value": "test"}
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-nomatch-None] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [{"question": "top.subform.foobar", "value": "test"}]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-nomatch-EXACT] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {"lookup": "EXACT", "question": "top.subform.foobar", "value": "test"}
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-nomatch-STARTSWITH] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {
-                    "lookup": "STARTSWITH",
-                    "question": "top.subform.foobar",
-                    "value": "test",
-                }
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-nomatch-CONTAINS] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {
-                    "lookup": "CONTAINS",
-                    "question": "top.subform.foobar",
-                    "value": "test",
-                }
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-nomatch-ICONTAINS] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {
-                    "lookup": "ICONTAINS",
-                    "question": "top.subform.foobar",
-                    "value": "test",
-                }
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-nomatch-GTE] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {"lookup": "GTE", "question": "top.subform.foobar", "value": "test"}
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-nomatch-GT] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {"lookup": "GT", "question": "top.subform.foobar", "value": "test"}
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-nomatch-LTE] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {"lookup": "LTE", "question": "top.subform.foobar", "value": "test"}
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
-    },
-}
-
-snapshots["test_query_all_questions[top.subform.foobar-test-nomatch-LT] 1"] = {
-    "request": {
-        "query": """
-        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
-            edges {
-              node {
-                form {
-                  slug
-                }
-              }
-            }
-          }
-        }
-    """,
-        "variables": {
-            "hasAnswer": [
-                {"lookup": "LT", "question": "top.subform.foobar", "value": "test"}
-            ]
-        },
-    },
-    "response": {
-        "data": {"allDocuments": None},
-        "errors": "[GraphQLLocatedError(\"module 'django.core.exceptions' has no attribute 'ProgrammingError'\",)]",
     },
 }

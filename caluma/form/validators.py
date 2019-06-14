@@ -33,7 +33,7 @@ class AnswerValidator:
     def _validate_question_textarea(self, question, value, **kwargs):
         self._validate_question_text(question, value)
 
-    def _validate_question_float(self, question, value, document, **kwargs):
+    def _validate_question_float(self, question, value, **kwargs):
         min_value = (
             question.min_value if question.min_value is not None else float("-inf")
         )
@@ -138,11 +138,6 @@ class AnswerValidator:
                 answer_tree=kwargs.get("answer_tree"),
             )
 
-    def _validate_question_form(self, question, value, document, info, **kwargs):
-        self._document_validator().validate(
-            value, parent=document, info=info, answer_tree=kwargs.get("answer_tree")
-        )
-
     def _document_validator(self):
         """Return instance of DocumentValidator.
 
@@ -157,7 +152,7 @@ class AnswerValidator:
         # Check all possible fields for value
         answer_tree = kwargs.pop("answer_tree", {})
         value = None
-        for i in ["value", "file", "date", "documents", "value_document"]:
+        for i in ["value", "file", "date", "documents"]:
             value = kwargs.get(i, value)
             if value:
                 break
@@ -197,22 +192,33 @@ class DocumentValidator:
             further_check_required = required and self.do_check_required
 
             validator = AnswerValidator(further_check_required)
-            validator.validate(
-                document=document,
-                question=answer.question,
-                value=answer.value,
-                value_document=answer.value_document,
-                info=info,
-                answer_tree=answer_tree[answer.question.slug],
-            )
+            if not isinstance(answer_tree[answer.question.slug], list):
+                validator.validate(
+                    document=document,
+                    question=answer.question,
+                    value=answer.value,
+                    documents=answer.documents.all(),
+                    info=info,
+                    answer_tree=answer_tree[answer.question.slug],
+                )
+                continue
+
+            for sub_tree in answer_tree[answer.question.slug]:
+                validator.validate(
+                    document=document,
+                    question=answer.question,
+                    value=answer.value,
+                    documents=answer.documents.all(),
+                    info=info,
+                    answer_tree=sub_tree,
+                )
 
     def get_document_answers(self, document, parent=None):
         doc_answers = document.answers.select_related("question").prefetch_related(
             "question__options"
         )
-        question_slugs = [
-            q["slug"] for q in document.form.questions.all().values("slug")
-        ]
+
+        questions = document.form.all_questions().values("slug", "type")
 
         # need to initialize here so we have a "parent" pointer to pass along
         answers = {}
@@ -229,11 +235,14 @@ class DocumentValidator:
         # Create answer values for questions in the form that don't have
         # answers (yet)
         unanswered = {
-            q_slug: self._get_answer_value(
-                Answer(question_id=q_slug, document=document), document, parent=answers
+            q["slug"]: self._get_answer_value(
+                Answer(question_id=q["slug"], document=document),
+                document,
+                parent=answers,
             )
-            for q_slug in question_slugs
-            if q_slug not in answers
+            for q in questions
+            if q["slug"] not in answers
+            and q["type"] not in [Question.TYPE_FORM, Question.TYPE_STATIC]
         }
 
         answers.update(unanswered)
@@ -251,10 +260,6 @@ class DocumentValidator:
             # Unanswered multiple choice should return empty list
             # to denote emptyness
             return []
-
-        elif answer.question.type == Question.TYPE_FORM:
-            # form type maps to dict
-            return self.get_document_answers(answer.value_document, parent=parent)
 
         elif answer.question.type == Question.TYPE_TABLE:
             # table type maps to list of dicts
@@ -286,34 +291,36 @@ class DocumentValidator:
     def validate_required(self, document, answer_tree):
         required_but_empty = []
         required_state = {}
-        for question in document.form.questions.all():
+        for question in document.form.all_questions().values(
+            "slug", "is_required", "is_hidden"
+        ):
             # TODO: can we iterate over questions of answers via answer_tree?
             try:
                 expr = "is_required"
                 is_required = (
-                    jexl.QuestionJexl(answer_tree, document.root_form.slug).evaluate(
-                        question.is_required
+                    jexl.QuestionJexl(answer_tree, document.form.slug).evaluate(
+                        question["is_required"]
                     )
                     and self.do_check_required
                 )
 
                 expr = "is_hidden"
-                is_hidden = jexl.QuestionJexl(
-                    answer_tree, document.root_form.slug
-                ).evaluate(question.is_hidden)
+                is_hidden = jexl.QuestionJexl(answer_tree, document.form.slug).evaluate(
+                    question["is_hidden"]
+                )
                 if is_required and not is_hidden:
-                    if answer_tree.get(question.slug, None) in EMPTY_VALUES:
-                        required_but_empty.append(question.slug)
+                    if answer_tree.get(question["slug"], None) in EMPTY_VALUES:
+                        required_but_empty.append(question["slug"])
 
-                required_state[question.slug] = is_required
+                required_state[question["slug"]] = is_required
             except Exception as exc:
-                expr_jexl = getattr(question, expr)
+                expr_jexl = question.get(expr)
                 log.error(
-                    f"Error while evaluating {expr} expression on question {question.slug}: "
+                    f"Error while evaluating {expr} expression on question {question['slug']}: "
                     f"{expr_jexl}: {str(exc)}"
                 )
                 raise RuntimeError(
-                    f"Error while evaluating '{expr}' expression on question {question.slug}: "
+                    f"Error while evaluating '{expr}' expression on question {question['slug']}: "
                     f"{expr_jexl}. The system log contains more information"
                 )
 

@@ -4,7 +4,15 @@ from ..core.factories import DjangoModelFactory
 from . import models
 
 AUTO_QUESTION_TYPES = [
-    t for t in models.Question.TYPE_CHOICES if not t == models.Question.TYPE_STATIC
+    t
+    for t in models.Question.TYPE_CHOICES
+    if t
+    not in [
+        models.Question.TYPE_STATIC,
+        models.Question.TYPE_FORM,
+        models.Question.TYPE_DYNAMIC_CHOICE,
+        models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+    ]
 ]
 
 
@@ -123,7 +131,6 @@ class AnswerFactory(DjangoModelFactory):
         elif self.question.type == models.Question.TYPE_INTEGER:
             return Faker("pyint").generate({})
         elif self.question.type not in [
-            models.Question.TYPE_FORM,
             models.Question.TYPE_TABLE,
             models.Question.TYPE_FILE,
             models.Question.TYPE_DATE,
@@ -132,9 +139,6 @@ class AnswerFactory(DjangoModelFactory):
 
         return None
 
-    value_document = Maybe(
-        "is_form", yes_declaration=SubFactory(DocumentFactory), no_declaration=None
-    )
     file = Maybe(
         "is_file", yes_declaration=SubFactory(FileFactory), no_declaration=None
     )
@@ -144,7 +148,6 @@ class AnswerFactory(DjangoModelFactory):
         model = models.Answer
 
     class Params:
-        is_form = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_FORM)
         is_file = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_FILE)
         is_date = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_DATE)
 

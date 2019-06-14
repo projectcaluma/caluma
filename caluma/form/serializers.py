@@ -1,5 +1,4 @@
 from django.db import transaction
-from django.db.models import Q
 from rest_framework import exceptions
 from rest_framework.serializers import (
     CharField,
@@ -474,22 +473,6 @@ class RemoveOptionSerializer(serializers.ModelSerializer):
 
 
 class DocumentSerializer(serializers.ModelSerializer):
-    @transaction.atomic
-    def create(self, validated_data):
-        """
-        Create a document family.
-
-        Create a document for the given form, as well as
-        subdocuments for all the child FormQuestions, and
-        attach them as answers
-        """
-        form = validated_data.get("form")
-        main_document = super().create(validated_data)
-
-        models.Document.objects.create_and_link_child_documents(form, main_document)
-
-        return main_document
-
     class Meta:
         model = models.Document
         fields = ("id", "form", "meta")
@@ -540,20 +523,6 @@ class SaveDocumentDateAnswerSerializer(SaveAnswerSerializer):
         pass
 
 
-def _get_document_tree(document_id):
-    answers = models.AnswerDocument.objects.filter(document_id=document_id).values(
-        "answer"
-    )
-    child_documents = models.Document.objects.filter(
-        Q(answers=answers) | Q(parent_answers=answers)
-    ).distinct()
-
-    for child_document in child_documents:
-        yield from _get_document_tree(child_document.pk)
-
-    yield document_id
-
-
 class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
     value = serializers.GlobalIDPrimaryKeyRelatedField(
         source="documents",
@@ -562,6 +531,17 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         required=True,
         help_text="List of document IDs representing the rows in the table.",
     )
+
+    def _get_document_tree(self, document_id):
+        answers = models.AnswerDocument.objects.filter(document_id=document_id).values(
+            "answer"
+        )
+        child_documents = models.Document.objects.filter(answers=answers).distinct()
+
+        for child_document in child_documents:
+            yield from self._get_document_tree(child_document.pk)
+
+        yield document_id
 
     def validate(self, data):
         documents = (
@@ -612,7 +592,7 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         for answer_document in models.Document.objects.filter(
             pk__in=answer_documents.values("document")
         ):
-            children = _get_document_tree(answer_document.pk)
+            children = self._get_document_tree(answer_document.pk)
             models.Document.objects.filter(pk__in=children).update(
                 family=answer_document.pk
             )
@@ -620,62 +600,6 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
 
         instance = super().update(instance, validated_data)
         self.create_answer_documents(instance, documents)
-        return instance
-
-    class Meta(SaveAnswerSerializer.Meta):
-        pass
-
-
-class SaveDocumentFormAnswerSerializer(SaveAnswerSerializer):
-    value = serializers.GlobalIDPrimaryKeyRelatedField(
-        queryset=models.Document.objects,
-        required=True,
-        help_text="Document IDs representing the content of the form.",
-        source="value_document",
-    )
-
-    def validate(self, data):
-        document = (
-            data.get("value_document") or self.instance and self.instance.value_document
-        )
-        question = data.get("question") or self.instance and self.instance.question
-
-        if document.form_id != question.sub_form_id:
-            raise exceptions.ValidationError(
-                f"Document {document.pk} is of form type {document.form_id}, but should be of type {question.sub_form_id}."
-            )
-
-        return super().validate(data)
-
-    def set_family(self, answer, document):
-        family = answer.document.family
-
-        # attach document answers to root document family
-        models.Document.objects.filter(
-            family=models.Document.objects.get(pk=document.id).family
-        ).update(family=family)
-
-    @transaction.atomic
-    def create(self, validated_data):
-        document = validated_data.get("document")
-        instance = super().create(validated_data)
-        self.set_family(instance, document)
-        return instance
-
-    @transaction.atomic
-    def update(self, instance, validated_data):
-        value_document = validated_data.get("value_document")
-
-        # detach current answer document to its own family tree
-        answer_document = instance.value_document
-        if answer_document:
-            children = _get_document_tree(answer_document.pk)
-            models.Document.objects.filter(pk__in=children).update(
-                family=answer_document.pk
-            )
-
-        instance = super().update(instance, validated_data)
-        self.set_family(instance, value_document)
         return instance
 
     class Meta(SaveAnswerSerializer.Meta):

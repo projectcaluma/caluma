@@ -25,9 +25,7 @@ TEST_VALUES = {
 @pytest.mark.parametrize("form_value", ["matching", "nomatch"])
 @pytest.mark.parametrize(
     "search_slug,search_value",
-    [(qtype, vals["matching"]) for qtype, vals in TEST_VALUES.items()]
-    # test invalid lookup (multiple steps)
-    + [("top.subform.foobar", "test")],
+    [(qtype, vals["matching"]) for qtype, vals in TEST_VALUES.items()],
 )
 def test_query_all_questions(
     schema_executor,
@@ -53,21 +51,18 @@ def test_query_all_questions(
     ).question
     subform_question = form_question_factory.create(
         form=top_form,
-        question__slug="subform",
+        question__slug="subform-question",
         question__type=models.Question.TYPE_FORM,
         question__sub_form__slug="subform",
     ).question
 
-    # "randomly" prefix some search slugs with the subform, so we test both
-    # variants (no need to do exhaustive testing with full parametrization)
-    if len(search_slug) % 2 and "." not in search_slug:
-        search_slug = f"subform.{search_slug}"
+    subform_document = document_factory(form=subform_question.sub_form)
 
     # "randomly" set the hierarchy lookup mode. Not parametrized, as it would
     # explode the test run time three-fold
-    possible_hieararchy_lookups = [None, *AnswerHierarchyMode._meta.enum.__members__]
-    hierarchy_lookup = possible_hieararchy_lookups[
-        len(search_slug) % len(possible_hieararchy_lookups)
+    possible_hierarchy_lookups = [None, *AnswerHierarchyMode._meta.enum.__members__]
+    hierarchy_lookup = possible_hierarchy_lookups[
+        len(search_slug) % len(possible_hierarchy_lookups)
     ]
 
     sub_questions = {
@@ -106,21 +101,20 @@ def test_query_all_questions(
 
     document_id = extract_global_id(result.data["saveDocument"]["document"]["id"])
     document = models.Document.objects.get(pk=document_id)
-    # just some other question in the tree
+    # just some other answer
     answer_factory(question=top_question, document=document, value="foo")
-    ans_subform = document.answers.get(question__slug="subform")
 
     for qtype, question in sub_questions.items():
         if qtype == models.Question.TYPE_DATE:
             answer_factory(
                 question=question,
-                document=ans_subform.value_document,
+                document=subform_document,
                 date=TEST_VALUES[qtype][form_value],
             )
         else:
             answer_factory(
                 question=question,
-                document=ans_subform.value_document,
+                document=subform_document,
                 value=TEST_VALUES[qtype][form_value],
             )
 
