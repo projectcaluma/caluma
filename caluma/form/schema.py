@@ -19,23 +19,24 @@ from .format_validators import get_format_validators
 
 
 def resolve_answer(answer):
-    ANSWER_TYPE = {
-        list: ListAnswer,
-        str: StringAnswer,
-        float: FloatAnswer,
-        int: IntegerAnswer,
+    question_answer_types = {
+        models.Question.TYPE_MULTIPLE_CHOICE: ListAnswer,
+        models.Question.TYPE_INTEGER: IntegerAnswer,
+        models.Question.TYPE_FLOAT: FloatAnswer,
+        models.Question.TYPE_DATE: DateAnswer,
+        models.Question.TYPE_CHOICE: StringAnswer,
+        models.Question.TYPE_TEXTAREA: StringAnswer,
+        models.Question.TYPE_TEXT: StringAnswer,
+        models.Question.TYPE_TABLE: TableAnswer,
+        models.Question.TYPE_FORM: FormAnswer,
+        models.Question.TYPE_FILE: FileAnswer,
+        models.Question.TYPE_DYNAMIC_CHOICE: StringAnswer,
+        models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: ListAnswer,
     }
+    if answer.question.type == models.Question.TYPE_STATIC:
+        raise Exception('Questions of type "static" should never have an answer!')
 
-    if answer.value is None:
-        ANSWER_QUESTION_TYPE = {
-            models.Question.TYPE_FORM: FormAnswer,
-            models.Question.TYPE_TABLE: TableAnswer,
-            models.Question.TYPE_FILE: FileAnswer,
-            models.Question.TYPE_DATE: DateAnswer,
-        }
-        return ANSWER_QUESTION_TYPE[answer.question.type]
-
-    return ANSWER_TYPE[type(answer.value)]
+    return question_answer_types[answer.question.type]
 
 
 def resolve_question(question):

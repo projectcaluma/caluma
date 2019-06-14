@@ -19,7 +19,7 @@ from .. import serializers
         (Question.TYPE_FILE, None, "some-file.pdf", None),
         (Question.TYPE_FILE, None, "some-other-file.pdf", None),
         (Question.TYPE_DYNAMIC_CHOICE, "MyDataSource", "5.5", None),
-        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, "MyDataSource", "5.5", None),
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, "MyDataSource", ["5.5"], None),
     ],
 )
 def test_query_all_documents(
