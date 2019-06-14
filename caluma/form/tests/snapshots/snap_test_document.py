@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -622,7 +621,7 @@ snapshots["test_query_all_documents[dynamic_choice-MyDataSource-5.5-None] 1"] = 
 }
 
 snapshots[
-    "test_query_all_documents[dynamic_multiple_choice-MyDataSource-5.5-None] 1"
+    "test_query_all_documents[dynamic_multiple_choice-MyDataSource-answer__value9-None] 1"
 ] = {
     "allDocuments": {
         "edges": [
@@ -632,12 +631,12 @@ snapshots[
                         "edges": [
                             {
                                 "node": {
-                                    "__typename": "StringAnswer",
+                                    "__typename": "ListAnswer",
+                                    "list_value": ["5.5"],
                                     "question": {
                                         "label": "Thomas Johnson",
                                         "slug": "sound-air-mission",
                                     },
-                                    "string_value": "5.5",
                                 }
                             }
                         ],

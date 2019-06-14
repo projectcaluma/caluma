@@ -3,6 +3,10 @@ from factory import Faker, LazyAttribute, Maybe, SubFactory, lazy_attribute
 from ..core.factories import DjangoModelFactory
 from . import models
 
+AUTO_QUESTION_TYPES = [
+    t for t in models.Question.TYPE_CHOICES if not t == models.Question.TYPE_STATIC
+]
+
 
 class FormFactory(DjangoModelFactory):
     slug = Faker("slug")
@@ -19,7 +23,7 @@ class FormFactory(DjangoModelFactory):
 class QuestionFactory(DjangoModelFactory):
     slug = Faker("slug")
     label = Faker("multilang", faker_provider="name")
-    type = Faker("word", ext_word_list=models.Question.TYPE_CHOICES)
+    type = Faker("word", ext_word_list=AUTO_QUESTION_TYPES)
     is_required = "true"
     is_hidden = "false"
     configuration = {}

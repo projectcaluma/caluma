@@ -5,24 +5,26 @@ from .. import models
 
 
 @pytest.mark.parametrize(
-    "question__type,expected_typename",
+    "question__type,expected_typename,success",
     [
-        (models.Question.TYPE_FILE, "FileAnswer"),
-        (models.Question.TYPE_TEXT, "StringAnswer"),
-        (models.Question.TYPE_TEXTAREA, "StringAnswer"),
-        (models.Question.TYPE_FLOAT, "FloatAnswer"),
-        (models.Question.TYPE_CHOICE, "StringAnswer"),
-        (models.Question.TYPE_INTEGER, "IntegerAnswer"),
-        (models.Question.TYPE_MULTIPLE_CHOICE, "ListAnswer"),
-        (models.Question.TYPE_DYNAMIC_CHOICE, "StringAnswer"),
-        (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, "ListAnswer"),
-        (models.Question.TYPE_DATE, "DateAnswer"),
-        (models.Question.TYPE_TABLE, "TableAnswer"),
-        (models.Question.TYPE_STATIC, "StringAnswer"),
-        (models.Question.TYPE_FORM, "FormAnswer"),
+        (models.Question.TYPE_FILE, "FileAnswer", True),
+        (models.Question.TYPE_TEXT, "StringAnswer", True),
+        (models.Question.TYPE_TEXTAREA, "StringAnswer", True),
+        (models.Question.TYPE_FLOAT, "FloatAnswer", True),
+        (models.Question.TYPE_CHOICE, "StringAnswer", True),
+        (models.Question.TYPE_INTEGER, "IntegerAnswer", True),
+        (models.Question.TYPE_MULTIPLE_CHOICE, "ListAnswer", True),
+        (models.Question.TYPE_DYNAMIC_CHOICE, "StringAnswer", True),
+        (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, "ListAnswer", True),
+        (models.Question.TYPE_DATE, "DateAnswer", True),
+        (models.Question.TYPE_TABLE, "TableAnswer", True),
+        (models.Question.TYPE_FORM, "FormAnswer", True),
+        (models.Question.TYPE_STATIC, "StringAnswer", False),
     ],
 )
-def test_answer_types(db, question, expected_typename, answer_factory, schema_executor):
+def test_answer_types(
+    db, question, expected_typename, success, answer_factory, schema_executor
+):
     answer = answer_factory(question=question)
     global_id = to_global_id(expected_typename, answer.pk)
 
@@ -36,8 +38,9 @@ def test_answer_types(db, question, expected_typename, answer_factory, schema_ex
     """
 
     result = schema_executor(query, variables={"id": global_id})
-    assert not result.errors
-    assert result.data["node"]["__typename"] == expected_typename
+    assert not result.errors == success
+    if success:
+        assert result.data["node"]["__typename"] == expected_typename
 
 
 @pytest.mark.parametrize(
