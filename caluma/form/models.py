@@ -199,6 +199,13 @@ class Document(UUIDModel):
     )
     meta = JSONField(default=dict)
 
+    @property
+    def root_form(self):
+        d = self
+        while d.parent_answers.count():
+            d = d.parent_answers.first().document
+        return d.form
+
 
 class Answer(UUIDModel):
     question = models.ForeignKey(

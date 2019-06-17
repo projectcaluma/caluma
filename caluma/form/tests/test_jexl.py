@@ -62,3 +62,15 @@ def test_jexl_traversal(expression, result, should_raise):
 )
 def test_intersects_operator(expression, result):
     assert QuestionJexl().evaluate(expression) == result
+
+
+def test_jexl_form():
+    answer_by_question = {
+        "a1": {"value": "A1", "root_form": "f-main-slug"},
+        "b1": {"value": "B1", "root_form": "f-main-slug"},
+    }
+
+    assert (
+        QuestionJexl(answer_by_question, "f-main-slug").evaluate("rootForm")
+        == "f-main-slug"
+    )

@@ -291,12 +291,16 @@ class DocumentValidator:
             try:
                 expr = "is_required"
                 is_required = (
-                    jexl.QuestionJexl(answer_tree).evaluate(question.is_required)
+                    jexl.QuestionJexl(answer_tree, document.root_form.slug).evaluate(
+                        question.is_required
+                    )
                     and self.do_check_required
                 )
 
                 expr = "is_hidden"
-                is_hidden = jexl.QuestionJexl(answer_tree).evaluate(question.is_hidden)
+                is_hidden = jexl.QuestionJexl(
+                    answer_tree, document.root_form.slug
+                ).evaluate(question.is_hidden)
                 if is_required and not is_hidden:
                     if answer_tree.get(question.slug, None) in EMPTY_VALUES:
                         required_but_empty.append(question.slug)
