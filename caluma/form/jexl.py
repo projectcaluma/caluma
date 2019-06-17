@@ -1,4 +1,5 @@
 from pyjexl.analysis import ValidatingAnalyzer
+from pyjexl.evaluator import Context
 
 from ..core.jexl import JEXL
 
@@ -12,10 +13,12 @@ class QuestionValidatingAnalyzer(ValidatingAnalyzer):
 
 
 class QuestionJexl(JEXL):
-    def __init__(self, answer_by_question={}, **kwargs):
+    def __init__(self, answer_by_question={}, root_form=None, **kwargs):
         super().__init__(**kwargs)
 
-        self.context = answer_by_question
+        self.context = Context({"rootForm": root_form})
+        self.answer_by_question = answer_by_question
+
         self.add_transform("answer", self.answer_transform)
         self.add_transform("mapby", lambda arr, key: [obj[key] for obj in arr])
         self.add_binary_operator(
@@ -23,7 +26,7 @@ class QuestionJexl(JEXL):
         )
 
     def answer_transform(self, question_with_path):
-        current_context = self.context
+        current_context = self.answer_by_question
         segments = question_with_path.split(".")
 
         # Allow question paths to originate from the toplevel (root) document
