@@ -239,6 +239,7 @@ class Answer(UUIDModel):
     class Meta:
         # a question may only be answerd once per document
         unique_together = ("document", "question")
+        indexes = [models.Index(fields=["value"]), models.Index(fields=["date"])]
 
 
 class File(UUIDModel):
