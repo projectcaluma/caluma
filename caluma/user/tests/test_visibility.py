@@ -7,7 +7,7 @@ from ..visibilities import Authenticated, CreatedByGroup
 
 
 @pytest.mark.parametrize("info_fixture,size", [("info", 0), ("admin_info", 1)])
-def test_authenticated_visibility(db, info_fixture, size, request):
+def test_authenticated_visibility(db, info_fixture, size, request, history_mock):
     info = request.getfixturevalue(info_fixture)
     FakeModel = get_fake_model(model_base=UUIDModel)
 
@@ -22,7 +22,9 @@ def test_authenticated_visibility(db, info_fixture, size, request):
 
 
 @pytest.mark.parametrize("group,size", [("unknown", 0), ("group", 1)])
-def test_created_by_group_visibility(db, admin_info, group, admin_user, size):
+def test_created_by_group_visibility(
+    db, admin_info, group, admin_user, size, history_mock
+):
     admin_user.groups = [group]
     FakeModel = get_fake_model(model_base=UUIDModel)
 

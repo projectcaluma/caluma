@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "psqlextra",
     "django.contrib.contenttypes",
     "graphene_django",
+    "simple_history",
     "caluma.core.apps.DefaultConfig",
     "caluma.user.apps.DefaultConfig",
     "caluma.form.apps.DefaultConfig",
@@ -46,6 +47,7 @@ MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.locale.LocaleMiddleware",
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 ROOT_URLCONF = "caluma.urls"
@@ -190,6 +192,9 @@ FORMAT_VALIDATOR_CLASSES = env.list("FORMAT_VALIDATOR_CLASSES", default=[])
 CORS_ORIGIN_ALLOW_ALL = env.bool("CORS_ORIGIN_ALLOW_ALL", default=False)
 CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default=[])
 
+
+# simple history
+SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
 
 # Logging
 

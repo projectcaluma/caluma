@@ -169,7 +169,9 @@ def test_mutation_mutate_and_get_payload_validation_classes_improperly_configure
         MyMutation.mutate_and_get_payload(None, info)
 
 
-def test_mutation_mutate_and_get_payload_validation_classes_custom_validation(db, info):
+def test_mutation_mutate_and_get_payload_validation_classes_custom_validation(
+    db, info, history_mock
+):
     FakeModel = get_fake_model(
         model_base=models.UUIDModel, fields={"testnum": IntegerField(null=True)}
     )
@@ -198,7 +200,9 @@ def test_mutation_mutate_and_get_payload_validation_classes_custom_validation(db
     assert FakeModel.objects.first().testnum == 1
 
 
-def test_user_defined_primary_key_get_serializer_kwargs_not_allowed(db, info):
+def test_user_defined_primary_key_get_serializer_kwargs_not_allowed(
+    db, info, history_mock
+):
     """Test that user may not overwrite existing instance which is not visible."""
     FakeModel = get_fake_model(model_base=models.SlugModel)
 
@@ -227,7 +231,9 @@ def test_user_defined_primary_key_get_serializer_kwargs_not_allowed(db, info):
         MyMutation.get_serializer_kwargs(None, info, slug="test")
 
 
-def test_user_defined_primary_key_get_serializer_kwargs_update_not_allowed(db, info):
+def test_user_defined_primary_key_get_serializer_kwargs_update_not_allowed(
+    db, info, history_mock
+):
     FakeModel = get_fake_model(model_base=models.SlugModel)
 
     class FakeModelObjectType(types.DjangoObjectType):

@@ -3,6 +3,7 @@ import itertools
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import exceptions
+from simple_history.utils import bulk_create_with_history
 
 from ..core import serializers
 from ..form.models import Document, Form
@@ -91,7 +92,7 @@ class AddWorkflowFlowSerializer(serializers.ModelSerializer):
         task_flows = [
             models.TaskFlow(task=task, workflow=instance, flow=flow) for task in tasks
         ]
-        models.TaskFlow.objects.bulk_create(task_flows)
+        bulk_create_with_history(task_flows, models.TaskFlow)
 
         return instance
 
@@ -229,7 +230,7 @@ class CaseSerializer(serializers.ModelSerializer):
             ]
         )
 
-        models.WorkItem.objects.bulk_create(work_items)
+        bulk_create_with_history(work_items, models.WorkItem)
         return instance
 
     class Meta:
@@ -352,7 +353,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
                 ]
             )
 
-            models.WorkItem.objects.bulk_create(work_items)
+            bulk_create_with_history(work_items, models.WorkItem)
         else:
             # no more tasks, mark case as complete
             case.status = models.Case.STATUS_COMPLETED

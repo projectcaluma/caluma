@@ -8,7 +8,7 @@ from ..visibilities import BaseVisibility, Union, filter_queryset_for
 from .fake_model import get_fake_model
 
 
-def test_custom_visibility_override_filter_queryset_for_custom_node(db):
+def test_custom_visibility_override_filter_queryset_for_custom_node(db, history_mock):
     FakeModel = get_fake_model(model_base=models.UUIDModel)
     FakeModel.objects.create()
 
@@ -27,7 +27,7 @@ def test_custom_visibility_override_filter_queryset_for_custom_node(db):
     assert queryset.count() == 0
 
 
-def test_custom_visibility_override_filter_queryset_with_duplicates(db):
+def test_custom_visibility_override_filter_queryset_with_duplicates(db, history_mock):
     FakeModel = get_fake_model(model_base=models.UUIDModel)
     FakeModel.objects.create()
 
@@ -52,7 +52,7 @@ def test_custom_visibility_override_filter_queryset_with_duplicates(db):
         CustomVisibility()
 
 
-def test_custom_node_filter_queryset_improperly_configured(db):
+def test_custom_node_filter_queryset_improperly_configured(db, history_mock):
     FakeModel = get_fake_model(model_base=models.UUIDModel)
     FakeModel.objects.create()
 
@@ -66,7 +66,7 @@ def test_custom_node_filter_queryset_improperly_configured(db):
         CustomNode.get_queryset(None, None)
 
 
-def test_custom_visibility_override_specificity(db):
+def test_custom_visibility_override_specificity(db, history_mock):
     """The first matching filter 'wins'."""
     FakeModel = get_fake_model(
         dict(name=CharField(max_length=255)), model_base=models.UUIDModel
@@ -94,7 +94,7 @@ def test_custom_visibility_override_specificity(db):
     assert queryset.count() == 1
 
 
-def test_union_visibility(db):
+def test_union_visibility(db, history_mock):
     FakeModel = get_fake_model(
         dict(name=CharField(max_length=255)), model_base=models.UUIDModel
     )
@@ -137,7 +137,7 @@ def test_union_visibility(db):
     assert queryset.get(name="Name2")
 
 
-def test_union_visibility_none(db):
+def test_union_visibility_none(db, history_mock):
     FakeModel = get_fake_model(model_base=models.UUIDModel)
     FakeModel.objects.create()
 
