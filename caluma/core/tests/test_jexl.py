@@ -3,7 +3,7 @@ import functools
 import pytest
 from pyjexl import JEXL
 
-from ..jexl import ExtractTransformSubjectAnalyzer
+from ..jexl import Cache, ExtractTransformSubjectAnalyzer
 
 
 @pytest.mark.parametrize(
@@ -28,3 +28,31 @@ def test_extract_transforms(expression, expected_transforms):
             ),
         )
     ) == set(expected_transforms)
+
+
+def test_jexl_cache():
+    cache = Cache(20, 10)
+
+    # fill the cache "to the brim"
+    for x in range(19):
+        cache.get_or_set(x, lambda: x)
+    assert len(cache._mru) == 19
+    assert len(cache._cache) == 19
+
+    # insert last element before eviction
+    cache.get_or_set("x", lambda: "x")
+    assert len(cache._mru) == 20
+    assert len(cache._cache) == 20
+
+    # one more - this should trigger eviction
+    cache.get_or_set("y", lambda: "y")
+    assert len(cache._mru) == 10
+    assert len(cache._cache) == 10
+
+    # now make sure the right entries were evicted
+    for x in range(10):
+        assert x not in cache._cache
+        assert x not in cache._mru
+
+    # validate invariants
+    assert cache._cache.keys() == cache._mru.keys()
