@@ -363,6 +363,17 @@ enum DocumentOrdering {
   CREATED_BY_GROUP_DESC
 }
 
+type DocumentValidityConnection {
+  pageInfo: PageInfo!
+  edges: [DocumentValidityEdge]!
+  totalCount: Int
+}
+
+type DocumentValidityEdge {
+  node: ValidationResult
+  cursor: String!
+}
+
 type DynamicChoiceQuestion implements Question, Node {
   createdAt: DateTime!
   modifiedAt: DateTime!
@@ -764,6 +775,7 @@ type Query {
   allQuestions(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, excludeForms: [ID], search: String): QuestionConnection
   allDocuments(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, form: ID, search: String, id: ID, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, orderBy: [DocumentOrdering], rootDocument: ID, hasAnswer: [HasAnswerFilterType]): DocumentConnection
   allFormatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
+  documentValidity(id: ID!, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
   node(id: ID!): Node
 }
 
@@ -1498,6 +1510,17 @@ type TextareaQuestion implements Question, Node {
   forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
   id: ID!
   maxLength: Int
+}
+
+type ValidationEntry {
+  slug: String!
+  errorMsg: String!
+}
+
+type ValidationResult {
+  id: ID
+  isValid: Boolean
+  errors: [ValidationEntry]
 }
 
 type WorkItem implements Node {

@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots["test_query_all_documents[integer-None-1-None] 1"] = {
@@ -111,34 +112,6 @@ snapshots["test_query_all_documents[multiple_choice-None-answer__value3-None] 1"
                         "totalCount": 1,
                     },
                     "createdByUser": "b24d3781-2f59-44c4-8602-cffe6aa89ae7",
-                }
-            }
-        ],
-        "totalCount": 1,
-    }
-}
-
-snapshots["test_query_all_documents[table-None-None-None] 1"] = {
-    "allDocuments": {
-        "edges": [
-            {
-                "node": {
-                    "answers": {
-                        "edges": [
-                            {
-                                "node": {
-                                    "__typename": "TableAnswer",
-                                    "question": {
-                                        "label": "Thomas Johnson",
-                                        "slug": "sound-air-mission",
-                                    },
-                                    "table_value": [{"form": {"slug": "effort-meet"}}],
-                                }
-                            }
-                        ],
-                        "totalCount": 1,
-                    },
-                    "createdByUser": "872d1b6f-790c-473c-b5e9-2e714d607695",
                 }
             }
         ],
@@ -331,6 +304,34 @@ snapshots[
                         "totalCount": 1,
                     },
                     "createdByUser": "b24d3781-2f59-44c4-8602-cffe6aa89ae7",
+                }
+            }
+        ],
+        "totalCount": 1,
+    }
+}
+
+snapshots["test_query_all_documents[table-None-None-None] 1"] = {
+    "allDocuments": {
+        "edges": [
+            {
+                "node": {
+                    "answers": {
+                        "edges": [
+                            {
+                                "node": {
+                                    "__typename": "TableAnswer",
+                                    "question": {
+                                        "label": "Thomas Johnson",
+                                        "slug": "sound-air-mission",
+                                    },
+                                    "table_value": [{"form": {"slug": "effort-meet"}}],
+                                }
+                            }
+                        ],
+                        "totalCount": 1,
+                    },
+                    "createdByUser": "872d1b6f-790c-473c-b5e9-2e714d607695",
                 }
             }
         ],

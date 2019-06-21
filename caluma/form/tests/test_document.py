@@ -3,7 +3,9 @@ from graphql_relay import to_global_id
 
 from ...core.relay import extract_global_id
 from ...core.tests import extract_serializer_input_fields
+from ...core.visibilities import BaseVisibility, filter_queryset_for
 from ...form.models import Answer, Question
+from ...form.schema import Document as DocumentNodeType
 from .. import serializers
 
 
@@ -124,6 +126,7 @@ def test_complex_document_query_performance(
     django_assert_num_queries,
     minio_mock,
 ):
+
     answers = answer_factory.create_batch(5, document=document)
     for answer in answers:
         form_question_factory(question=answer.question, form=form)
@@ -781,3 +784,94 @@ def test_query_answer_node(db, answer, schema_executor):
 
     result = schema_executor(node_query, variables={"id": global_id})
     assert not result.errors
+
+
+@pytest.mark.parametrize(
+    "question__is_required,question__type,question__data_source,is_valid",
+    [
+        ("true", Question.TYPE_TEXT, None, False),
+        ("false", Question.TYPE_TEXT, None, True),
+        ("true", Question.TYPE_TEXT, None, True),
+    ],
+)
+def test_validity_query(db, form, question, document, is_valid, schema_executor):
+
+    form.questions.through.objects.create(form=form, question=question, sort=1)
+    document.form = form
+    document.save()
+
+    if is_valid:
+        document.answers.create(question=question, value="hello")
+    else:
+        assert not document.answers.exists()
+
+    query = """
+        query ValidateBaugesuch ($document_id: ID!) {
+          documentValidity(
+            id: $document_id
+          ) {
+            edges {
+              node {
+                id
+                isValid
+                errors {
+                  slug
+                  errorMsg
+                }
+              }
+            }
+          }
+        }
+    """
+
+    result = schema_executor(query, variables={"document_id": document.id})
+
+    # if is_valid, we expect 0 errors, otherwise one
+    num_errors = int(not is_valid)
+
+    assert result.data["documentValidity"]["edges"][0]["node"]["id"] == str(document.id)
+    assert result.data["documentValidity"]["edges"][0]["node"]["isValid"] == is_valid
+    assert (
+        len(result.data["documentValidity"]["edges"][0]["node"]["errors"]) == num_errors
+    )
+
+
+@pytest.mark.parametrize("hide_documents", [True, False])
+def test_validity_with_visibility(
+    db, form, document, schema_executor, hide_documents, mocker
+):
+
+    query = """
+        query ValidateBaugesuch ($document_id: ID!) {
+          documentValidity(
+            id: $document_id
+          ) {
+            edges {
+              node {
+                id
+                isValid
+                errors {
+                  slug
+                  errorMsg
+                }
+              }
+            }
+          }
+        }
+    """
+
+    class CustomVisibility(BaseVisibility):
+        @filter_queryset_for(DocumentNodeType)
+        def filter_queryset_for_document(self, node, queryset, info):
+            if hide_documents:
+                return queryset.none()
+            return queryset
+
+    mocker.patch("caluma.core.types.Node.visibility_classes", [CustomVisibility])
+
+    result = schema_executor(query, variables={"document_id": document.id})
+
+    if hide_documents:
+        assert result.data["documentValidity"] is None
+    else:
+        assert len(result.data["documentValidity"]["edges"]) == 1
