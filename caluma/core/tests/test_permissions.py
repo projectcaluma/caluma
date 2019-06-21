@@ -7,7 +7,9 @@ from ..permissions import BasePermission, object_permission_for, permission_for
 from .fake_model import get_fake_model
 
 
-def test_custom_permission_override_has_permission_for_custom_node(db, info):
+def test_custom_permission_override_has_permission_for_custom_node(
+    db, info, history_mock
+):
     FakeModel = get_fake_model(model_base=models.UUIDModel)
     instance = FakeModel.objects.create()
 

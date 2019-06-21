@@ -9,6 +9,8 @@ from rest_framework.serializers import (
     PrimaryKeyRelatedField,
 )
 
+from simple_history.utils import bulk_create_with_history
+
 from ..core import serializers
 from . import models, validators
 from .jexl import QuestionJexl
@@ -50,7 +52,7 @@ class CopyFormSerializer(serializers.ModelSerializer):
                 reversed(models.FormQuestion.objects.filter(form=source)), start=1
             )
         ]
-        models.FormQuestion.objects.bulk_create(new_form_questions)
+        bulk_create_with_history(new_form_questions, models.FormQuestion)
 
         return form
 
@@ -593,9 +595,10 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
             pk__in=answer_documents.values("document")
         ):
             children = self._get_document_tree(answer_document.pk)
-            models.Document.objects.filter(pk__in=children).update(
-                family=answer_document.pk
-            )
+            for doc in models.Document.objects.filter(pk__in=children):
+                doc.family = answer_document.pk
+                doc.save()
+
         answer_documents.delete()
 
         instance = super().update(instance, validated_data)

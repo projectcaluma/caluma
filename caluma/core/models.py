@@ -1,6 +1,21 @@
 import uuid
 
+from django.conf import settings
 from django.db import models
+
+from simple_history.models import HistoricalRecords
+
+
+def _history_user_getter(historical_instance):
+    return historical_instance.history_user_id
+
+
+def _history_user_setter(historical_instance, user):
+    request = getattr(HistoricalRecords.thread, "request", None)
+    if request is not None:
+        historical_instance.history_user_id = request.user.username
+    else:
+        historical_instance.history_user_id = None
 
 
 class BaseModel(models.Model):
@@ -10,6 +25,13 @@ class BaseModel(models.Model):
     created_by_group = models.CharField(
         max_length=150, blank=True, null=True, db_index=True
     )
+    if settings.SIMPLE_HISTORY_ACTIVE:
+        history = HistoricalRecords(
+            inherit=True,
+            history_user_id_field=models.CharField(null=True, max_length=150),
+            history_user_setter=_history_user_setter,
+            history_user_getter=_history_user_getter,
+        )
 
     class Meta:
         abstract = True

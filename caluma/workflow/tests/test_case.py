@@ -222,6 +222,10 @@ def test_status_filter(db, case_factory, schema_executor):
         }
     """
     result = schema_executor(query)
-    assert result.data["allCases"]["totalCount"] == 2
-    assert result.data["allCases"]["edges"][0]["node"]["status"] == "CANCELED"
-    assert result.data["allCases"]["edges"][1]["node"]["status"] == "RUNNING"
+
+    expected = ["CANCELED", "RUNNING"]
+    received = sorted(
+        [edge["node"]["status"] for edge in result.data["allCases"]["edges"]]
+    )
+
+    assert expected == received

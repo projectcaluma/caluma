@@ -382,6 +382,16 @@ Following environment variables need to be set for caluma:
 * `OIDC_INTROSPECT_CLIENT_ID`: ID of the OIDC-client
 * `OIDC_INTROSPECT_CLIENT_SECRET`: Secret of the OIDC-client
 
+
+# Auditing
+Optionally you can have caluma save a history of changes to the models. For this Caluma
+uses [django-simple-history](https://github.com/treyhunner/django-simple-history).
+
+Yo can enable this feature by setting the envvar `SIMPLE_HISTORY_ACTIVE` to `true`.
+
+Switching this setting results in two migrations.
+
+
 ## Contributing
 
 Look at our [contributing guidelines](CONTRIBUTING.md) to start with your first contribution.

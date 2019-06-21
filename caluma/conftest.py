@@ -12,6 +12,7 @@ from minio.definitions import Object as MinioStatObject
 from pytest_factoryboy import register
 
 from .core.faker import MultilangProvider
+from .core.models import HistoricalRecords
 from .form import factories as form_factories
 from .schema import schema
 from .user.models import AnonymousUser, OIDCUser
@@ -135,3 +136,8 @@ def data_source_settings(settings):
     settings.DATA_SOURCE_CLASSES = [
         "caluma.data_source.tests.data_sources.MyDataSource"
     ]
+
+
+@pytest.fixture
+def history_mock(mocker):
+    mocker.patch.object(HistoricalRecords, "create_historical_record")
