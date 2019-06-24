@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -338,7 +337,6 @@ type Document implements Node {
   form: Form!
   meta: GenericScalar
   answers(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, question: ID, search: String, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, orderBy: [AnswerOrdering], questions: [ID]): AnswerConnection
-  parentAnswers: [FormAnswer]
   case: Case
   workItem: WorkItem
 }
@@ -514,18 +512,6 @@ type Form implements Node {
   source: Form
   documents(before: String, after: String, first: Int, last: Int): DocumentConnection
   id: ID!
-}
-
-type FormAnswer implements Answer, Node {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  createdByUser: String
-  createdByGroup: String
-  id: ID!
-  question: Question!
-  value: Document!
-  meta: GenericScalar!
-  document: Document!
 }
 
 type FormConnection {
@@ -716,7 +702,6 @@ type Mutation {
   saveDocumentDateAnswer(input: SaveDocumentDateAnswerInput!): SaveDocumentDateAnswerPayload
   saveDocumentListAnswer(input: SaveDocumentListAnswerInput!): SaveDocumentListAnswerPayload
   saveDocumentTableAnswer(input: SaveDocumentTableAnswerInput!): SaveDocumentTableAnswerPayload
-  saveDocumentFormAnswer(input: SaveDocumentFormAnswerInput!): SaveDocumentFormAnswerPayload
   saveDocumentFileAnswer(input: SaveDocumentFileAnswerInput!): SaveDocumentFileAnswerPayload
   removeAnswer(input: RemoveAnswerInput!): RemoveAnswerPayload
 }
@@ -994,19 +979,6 @@ input SaveDocumentFloatAnswerInput {
 }
 
 type SaveDocumentFloatAnswerPayload {
-  answer: Answer
-  clientMutationId: String
-}
-
-input SaveDocumentFormAnswerInput {
-  question: ID!
-  document: ID!
-  meta: JSONString
-  value: ID!
-  clientMutationId: String
-}
-
-type SaveDocumentFormAnswerPayload {
   answer: Answer
   clientMutationId: String
 }

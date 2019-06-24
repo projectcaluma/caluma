@@ -2,7 +2,7 @@ import pytest
 from rest_framework.exceptions import ValidationError
 
 from ...core.tests import extract_serializer_input_fields
-from ...form.models import Document, Question
+from ...form.models import Question
 from .. import serializers
 from ..validators import DocumentValidator, QuestionValidator
 
@@ -16,6 +16,7 @@ from ..validators import DocumentValidator, QuestionValidator
         ("true", "false", True),
     ],
 )
+@pytest.mark.parametrize("question__type", [Question.TYPE_TEXT])
 def test_validate_hidden_required_field(
     db, required_jexl, hidden_jexl, should_throw, form_question, document_factory, info
 ):
@@ -42,77 +43,6 @@ def test_validate_special_fields(
     document = document_factory(form=form_question.form)
     answer_factory(document=document, question=question)
     DocumentValidator().validate(document, info)
-
-
-@pytest.mark.parametrize(
-    "main_required,required_jexl,should_throw",
-    [
-        ("true", "true", True),
-        ("true", "false", False),
-        ("true", "'parent.sub_2.sub_2_question_1'|answer == 'foo'", True),
-        ("true", "'parent.sub_2.sub_2_question_1'|answer == 'bar'", False),
-        ("false", "true", False),
-        ("false", "false", False),
-        ("false", "'parent.sub_2.sub_2_question_1'|answer == 'foo'", False),
-        ("false", "'parent.sub_2.sub_2_question_1'|answer == 'bar'", False),
-    ],
-)
-def test_validate_nested_form(
-    db,
-    required_jexl,
-    should_throw,
-    main_required,
-    form,
-    form_question_factory,
-    document_factory,
-    question_factory,
-    answer_factory,
-    answer_document_factory,
-    info,
-):
-    sub_form_question_1 = form_question_factory(
-        form__slug="sub_1",
-        question__type=Question.TYPE_TEXT,
-        question__is_required=required_jexl,
-        question__slug="sub_1_question_1",
-    )
-    sub_form_question_2 = form_question_factory(
-        form__slug="sub_2",
-        question__type=Question.TYPE_TEXT,
-        question__is_required="true",
-        question__slug="sub_2_question_1",
-    )
-
-    main_form_question_1 = form_question_factory(
-        question__type=Question.TYPE_FORM,
-        question__sub_form=sub_form_question_1.form,
-        question__slug="sub_1",
-        question__is_required=main_required,
-    )
-    form_question_factory(
-        form=main_form_question_1.form,
-        question__type=Question.TYPE_FORM,
-        question__sub_form=sub_form_question_2.form,
-        question__slug="sub_2",
-    )
-
-    main_document = document_factory(form=main_form_question_1.form)
-
-    Document.objects.create_and_link_child_documents(
-        main_form_question_1.form, main_document
-    )
-
-    sub_2_document = Document.objects.filter(form__slug="sub_2").first()
-    answer_factory(
-        document=sub_2_document, question=sub_form_question_2.question, value="foo"
-    )
-
-    if should_throw:
-        error_msg = f"Questions {sub_form_question_1.question.slug} are required but not provided"
-        with pytest.raises(ValidationError, match=error_msg):
-            DocumentValidator().validate(main_document, info)
-    else:
-        DocumentValidator().validate(main_document, info)
 
 
 @pytest.mark.parametrize(
@@ -159,6 +89,152 @@ def test_validate_dynamic_options(
 
 
 @pytest.mark.parametrize(
+    "required_jexl,should_throw", [("true", True), ("false", False)]
+)
+def test_validate_nested_form(
+    db,
+    required_jexl,
+    should_throw,
+    form_question_factory,
+    document_factory,
+    answer_factory,
+    info,
+):
+    sub_form_question_1 = form_question_factory(
+        form__slug="sub_1",
+        question__type=Question.TYPE_TEXT,
+        question__slug="sub_1_question_1",
+    )
+    sub_form_question_2 = form_question_factory(
+        form__slug="sub_2",
+        question__type=Question.TYPE_TEXT,
+        question__is_required=required_jexl,
+        question__slug="sub_2_question_1",
+    )
+
+    main_form_question_1 = form_question_factory(
+        question__type=Question.TYPE_FORM,
+        question__sub_form=sub_form_question_1.form,
+        question__slug="sub_1",
+        question__is_required="false",
+    )
+    form_question_factory(
+        form=main_form_question_1.form,
+        question__type=Question.TYPE_FORM,
+        question__sub_form=sub_form_question_2.form,
+        question__slug="sub_2",
+        question__is_required="false",
+    )
+
+    main_document = document_factory(form=main_form_question_1.form)
+
+    answer_factory(
+        document=main_document, question=sub_form_question_1.question, value="foo"
+    )
+
+    if should_throw:
+        error_msg = f"Questions {sub_form_question_2.question.slug} are required but not provided"
+        with pytest.raises(ValidationError, match=error_msg):
+            DocumentValidator().validate(main_document, info)
+    else:
+        DocumentValidator().validate(main_document, info)
+
+
+@pytest.mark.parametrize(
+    "required_jexl_main,required_jexl_sub,should_throw",
+    [
+        ("true", "false", True),
+        ("'other_q_1'|answer == 'something'", "false", True),
+        ("false", "false", False),
+        ("'foo' in 'main_table_1'|answer|mapby('sub_1_question_a')", "false", True),
+        (
+            "'nothere' in 'main_table_1'|answer|mapby('sub_1_question_a')",
+            "false",
+            False,
+        ),
+        ("false", "'foo' == 'sub_1_question_a'|answer", True),
+        ("false", "'bar' == 'sub_1_question_a'|answer", False),
+        ("false", "'something' == 'other_q_1'|answer", True),
+        ("false", "'fail' == 'no-question-slug'|answer", True),
+    ],
+)
+def test_validate_table(
+    db,
+    required_jexl_main,
+    required_jexl_sub,
+    should_throw,
+    answer_document_factory,
+    form_factory,
+    form_question_factory,
+    document_factory,
+    answer_factory,
+    info,
+):
+    main_table_question_1 = form_question_factory(
+        form__slug="main-form",
+        question__type=Question.TYPE_TABLE,
+        question__slug="main_table_1",
+        question__is_required="true",
+    )
+
+    main_table_question_1.question.sub_form = form_factory()
+
+    sub_question_a = form_question_factory(
+        form=main_table_question_1.question.sub_form,
+        question__type=Question.TYPE_TEXT,
+        question__slug="sub_1_question_a",
+    )
+    sub_question_b = form_question_factory(
+        form=main_table_question_1.question.sub_form,
+        question__type=Question.TYPE_TEXT,
+        question__is_required=required_jexl_sub,
+        question__slug="sub_2_question_b",
+    )
+
+    main_document = document_factory(form=main_table_question_1.form)
+    table_answer = answer_factory(
+        document=main_document, question=main_table_question_1.question, value=None
+    )
+    row_document_1 = document_factory(form=main_table_question_1.question.sub_form)
+    answer_factory(
+        question=sub_question_a.question, document=row_document_1, value="foo"
+    )
+    answer_document_factory(document=row_document_1, answer=table_answer)
+
+    other_q_1 = form_question_factory(
+        form=main_table_question_1.form,
+        question__type=Question.TYPE_TEXT,
+        question__slug="other_q_1",
+        question__is_required="false",
+    )
+
+    other_q_2 = form_question_factory(
+        form=main_table_question_1.form,
+        question__type=Question.TYPE_TEXT,
+        question__slug="other_q_2",
+        question__is_required=required_jexl_main,
+    )
+
+    answer_factory(
+        question=other_q_1.question, document=main_document, value="something"
+    )
+
+    if should_throw and required_jexl_sub.startswith("'fail'"):
+        error_msg = "Error while evaluating 'is_required' expression on question sub_2_question_b: 'fail' == 'no-question-slug'|answer"
+        with pytest.raises(RuntimeError, match=error_msg):
+            DocumentValidator().validate(main_document, info)
+    elif should_throw:
+        q_slug = sub_question_b.question.slug
+        if required_jexl_sub == "false":
+            q_slug = other_q_2.question.slug
+        error_msg = f"Questions {q_slug} are required but not provided"
+        with pytest.raises(ValidationError, match=error_msg):
+            DocumentValidator().validate(main_document, info)
+    else:
+        DocumentValidator().validate(main_document, info)
+
+
+@pytest.mark.parametrize(
     "question__data_source,valid", [("MyDataSource", True), ("NotADataSource", False)]
 )
 @pytest.mark.parametrize(
@@ -191,7 +267,6 @@ def test_validate_data_source(
     [
         (Question.TYPE_MULTIPLE_CHOICE, None, []),
         (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, None, []),
-        (Question.TYPE_FORM, None, {}),
     ],
 )
 def test_validate_empty_answers(

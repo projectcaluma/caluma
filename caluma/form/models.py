@@ -25,6 +25,13 @@ class Form(SlugModel):
         related_name="+",
     )
 
+    def all_questions(self):
+        questions = self.questions.all()
+        for q in self.questions.filter(type=Question.TYPE_FORM):
+            questions = questions.union(q.sub_form.all_questions())
+
+        return questions
+
 
 class FormQuestion(UUIDModel):
     form = models.ForeignKey("Form", on_delete=models.CASCADE)
@@ -161,31 +168,13 @@ class Option(SlugModel):
 class DocumentManager(models.Manager):
     @transaction.atomic
     def create_document_for_task(self, task, user):
-        """Create a document (including child documents) for a given task."""
+        """Create a document for a given task."""
         if task.form_id is not None:
-            doc = Document.objects.create(
+            return Document.objects.create(
                 form_id=task.form_id,
                 created_by_user=user.username,
                 created_by_group=user.group,
             )
-            self.create_and_link_child_documents(task.form, doc)
-            return doc
-
-        return None
-
-    @transaction.atomic
-    def create_and_link_child_documents(self, form, document):
-        """Create child documents for all FormQuestions in the given form."""
-        form_questions = form.questions.filter(type=Question.TYPE_FORM)
-
-        for form_question in form_questions:
-            child_document = self.create(
-                form=form_question.sub_form, family=document.family
-            )
-            Answer.objects.create(
-                question=form_question, document=document, value_document=child_document
-            )
-            self.create_and_link_child_documents(form_question.sub_form, child_document)
 
 
 class Document(UUIDModel):
@@ -199,13 +188,6 @@ class Document(UUIDModel):
     )
     meta = JSONField(default=dict)
 
-    @property
-    def root_form(self):
-        d = self
-        while d.parent_answers.count():
-            d = d.parent_answers.first().document
-        return d.form
-
 
 class Answer(UUIDModel):
     question = models.ForeignKey(
@@ -215,13 +197,6 @@ class Answer(UUIDModel):
     meta = JSONField(default=dict)
     document = models.ForeignKey(
         Document, on_delete=models.CASCADE, related_name="answers"
-    )
-    value_document = models.ForeignKey(
-        Document,
-        on_delete=models.DO_NOTHING,
-        related_name="parent_answers",
-        blank=True,
-        null=True,
     )
     documents = models.ManyToManyField(
         Document, through="AnswerDocument", related_name="+"
