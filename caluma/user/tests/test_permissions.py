@@ -16,7 +16,7 @@ def test_is_authenticated_permission(db, info_fixture, is_authenticated, request
 @pytest.mark.parametrize(
     "admin_groups,is_created_by", [(["admin_group"], True), (["nogroup"], False)]
 )
-def test_created_by_group_permission(db, admin_info, is_created_by):
+def test_created_by_group_permission(db, admin_info, is_created_by, history_mock):
     FakeModel = get_fake_model(model_base=UUIDModel)
     instance = FakeModel.objects.create(created_by_group="admin_group")
     assert (
