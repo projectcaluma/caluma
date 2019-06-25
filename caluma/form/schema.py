@@ -1,4 +1,5 @@
 import graphene
+from django.shortcuts import get_object_or_404
 from graphene import relay
 from graphene.types import ObjectType, generic
 from graphene_django.rest_framework import serializer_converter
@@ -16,6 +17,7 @@ from ..data_source.data_source_handlers import get_data_source_data
 from ..data_source.schema import DataSourceDataConnection
 from . import filters, models, serializers
 from .format_validators import get_format_validators
+from .validators import get_document_validity
 
 
 def resolve_answer(answer):
@@ -846,7 +848,42 @@ class Mutation(object):
     remove_answer = RemoveAnswer().Field()
 
 
-class Query(object):
+class ValidationEntry(ObjectType):
+    slug = graphene.String(required=True)
+    error_msg = graphene.String(required=True)
+
+
+class ValidationResult(ObjectType):
+    id = graphene.ID()
+    id.__doc__ = "References the document ID"
+
+    is_valid = graphene.Boolean()
+    errors = graphene.List(ValidationEntry)
+
+
+class DocumentValidityConnection(CountableConnectionBase):
+    class Meta:
+        node = ValidationResult
+
+
+def validate_document(info, document_global_id):
+
+    document_id = extract_global_id(document_global_id)
+
+    document_qs = Document.get_queryset(models.Document.objects.all(), info)
+
+    document = get_object_or_404(document_qs, pk=document_id)
+    result = get_document_validity(document, info)
+
+    errors = result.pop("errors")
+    result = ValidationResult(
+        **result, errors=[ValidationEntry(**err) for err in errors]
+    )
+
+    return [result]
+
+
+class Query:
     all_forms = DjangoFilterConnectionField(Form, filterset_class=filters.FormFilterSet)
     all_questions = DjangoFilterSetConnectionField(
         QuestionConnection, filterset_class=filters.QuestionFilterSet
@@ -856,5 +893,12 @@ class Query(object):
     )
     all_format_validators = ConnectionField(FormatValidatorConnection)
 
+    document_validity = ConnectionField(
+        DocumentValidityConnection, id=graphene.ID(required=True)
+    )
+
     def resolve_all_format_validators(self, info):
         return get_format_validators()
+
+    def resolve_document_validity(self, info, id):
+        return validate_document(info, id)

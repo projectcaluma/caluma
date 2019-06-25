@@ -16,6 +16,18 @@ from .models import Answer, Question
 log = getLogger()
 
 
+class CustomValidationError(exceptions.ValidationError):
+    """Custom validation error to carry more information.
+
+    This can carry more information about the error, so the documentValidity
+    query can show more useful information.
+    """
+
+    def __init__(self, detail, code=None, slugs=[]):
+        super().__init__(detail, code)
+        self.slugs = slugs
+
+
 class AnswerValidator:
     def __init__(self, do_check_required=True):
         self.do_check_required = do_check_required
@@ -25,9 +37,10 @@ class AnswerValidator:
             question.max_length if question.max_length is not None else sys.maxsize
         )
         if not isinstance(value, str) or len(value) > max_length:
-            raise exceptions.ValidationError(
+            raise CustomValidationError(
                 f"Invalid value {value}. "
-                f"Should be of type str and max length {max_length}"
+                f"Should be of type str and max length {max_length}",
+                slugs=[question.slug],
             )
 
     def _validate_question_textarea(self, question, value, **kwargs):
@@ -42,10 +55,11 @@ class AnswerValidator:
         )
 
         if not isinstance(value, float) or value < min_value or value > max_value:
-            raise exceptions.ValidationError(
+            raise CustomValidationError(
                 f"Invalid value {value}. "
                 f"Should be of type float, not lower than {min_value} "
-                f"and not greater than {max_value}"
+                f"and not greater than {max_value}",
+                slugs=[question.slug],
             )
 
     def _validate_question_integer(self, question, value, **kwargs):
@@ -57,10 +71,11 @@ class AnswerValidator:
         )
 
         if not isinstance(value, int) or value < min_value or value > max_value:
-            raise exceptions.ValidationError(
+            raise CustomValidationError(
                 f"Invalid value {value}. "
                 f"Should be of type int, not lower than {min_value} "
-                f"and not greater than {max_value}"
+                f"and not greater than {max_value}",
+                slugs=[question.slug],
             )
 
     def _validate_question_date(self, question, value, **kwargs):
@@ -69,26 +84,29 @@ class AnswerValidator:
     def _validate_question_choice(self, question, value, **kwargs):
         options = question.options.values_list("slug", flat=True)
         if not isinstance(value, str) or value not in options:
-            raise exceptions.ValidationError(
+            raise CustomValidationError(
                 f"Invalid value {value}. "
-                f"Should be of type str and one of the options {'.'.join(options)}"
+                f"Should be of type str and one of the options {'.'.join(options)}",
+                slugs=[question.slug],
             )
 
     def _validate_question_multiple_choice(self, question, value, **kwargs):
         options = question.options.values_list("slug", flat=True)
         invalid_options = set(value) - set(options)
         if not isinstance(value, list) or invalid_options:
-            raise exceptions.ValidationError(
+            raise CustomValidationError(
                 f"Invalid options [{', '.join(invalid_options)}]. "
-                f"Should be one of the options [{', '.join(options)}]"
+                f"Should be one of the options [{', '.join(options)}]",
+                slugs=[question.slug],
             )
 
     def _validate_question_dynamic_choice(self, question, value, info, **kwargs):
         data_source = get_data_sources(dic=True)[question.data_source]
         if not data_source.validate:
             if not isinstance(value, str):
-                raise exceptions.ValidationError(
-                    f'Invalid value: "{value}". Must be of type str'
+                raise CustomValidationError(
+                    f'Invalid value: "{value}". Must be of type str',
+                    slugs=[question.slug],
                 )
             return
 
@@ -96,9 +114,10 @@ class AnswerValidator:
         options = [d.slug for d in data]
 
         if not isinstance(value, str) or value not in options:
-            raise exceptions.ValidationError(
+            raise CustomValidationError(
                 f'Invalid value "{value}". '
-                f"Must be of type str and one of the options \"{', '.join(options)}\""
+                f"Must be of type str and one of the options \"{', '.join(options)}\"",
+                slugs=[question.slug],
             )
 
     def _validate_question_dynamic_multiple_choice(
@@ -107,26 +126,29 @@ class AnswerValidator:
         data_source = get_data_sources(dic=True)[question.data_source]
         if not data_source.validate:
             if not isinstance(value, list):
-                raise exceptions.ValidationError(
-                    f'Invalid value: "{value}". Must be of type list'
+                raise CustomValidationError(
+                    f'Invalid value: "{value}". Must be of type list',
+                    slugs=[question.slug],
                 )
             for v in value:
                 if not isinstance(v, str):
-                    raise exceptions.ValidationError(
-                        f'Invalid value: "{v}". Must be of type string'
+                    raise CustomValidationError(
+                        f'Invalid value: "{v}". Must be of type string',
+                        slugs=[question.slug],
                     )
             return
         data = get_data_source_data(info, question.data_source)
         options = [d.slug for d in data]
         if not isinstance(value, list):
-            raise exceptions.ValidationError(
-                f'Invalid value: "{value}". Must be of type list'
+            raise CustomValidationError(
+                f'Invalid value: "{value}". Must be of type list', slugs=[question.slug]
             )
         invalid_options = set(value) - set(options)
         if invalid_options:
-            raise exceptions.ValidationError(
+            raise CustomValidationError(
                 f'Invalid options "{invalid_options}". '
-                f"Should be one of the options \"[{', '.join(options)}]\""
+                f"Should be one of the options \"[{', '.join(options)}]\"",
+                slugs=[question.slug],
             )
 
     def _validate_question_table(self, question, value, document, info, **kwargs):
@@ -325,8 +347,9 @@ class DocumentValidator:
                 )
 
         if required_but_empty and self.do_check_required:
-            raise exceptions.ValidationError(
-                f"Questions {','.join(required_but_empty)} are required but not provided."
+            raise CustomValidationError(
+                f"Questions {','.join(required_but_empty)} are required but not provided.",
+                slugs=required_but_empty,
             )
 
         return required_state
@@ -355,3 +378,18 @@ class QuestionValidator:
             self._validate_format_validators(data)
         if "dataSource" in data:
             self._validate_data_source(data["dataSource"])
+
+
+def get_document_validity(document, info):
+    validator = DocumentValidator()
+    is_valid = True
+    errors = []
+
+    try:
+        validator.validate(document, info)
+    except CustomValidationError as exc:
+        is_valid = False
+        detail = str(exc.detail[0])
+        errors = [{"slug": slug, "error_msg": detail} for slug in exc.slugs]
+
+    return {"id": document.id, "is_valid": is_valid, "errors": errors}
