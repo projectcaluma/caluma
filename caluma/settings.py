@@ -201,3 +201,7 @@ LOGGING = {
         "": {"handlers": ["console"], "level": env.str("LOG_LEVEL", default="INFO")}
     },
 }
+
+# Configure the fields you intend to use in the "meta" fields. This will
+# provide corresponding constants in the ordreBy filter.
+META_FIELDS = env.list("META_FIELDS", default=[])

@@ -1,8 +1,10 @@
+import itertools
 from functools import reduce
 
 import django.forms
 import graphene
 from django import forms
+from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields.hstore import KeyTransform
 from django.contrib.postgres.search import SearchVector
@@ -160,6 +162,8 @@ class OrderingFilter(OrderingFilter):
     """Ordering filter adding default fields from models.BaseModel.
 
     Label is required and is used for enum naming in GraphQL schema.
+
+    This filter additionally allows sorting by meta field values.
     """
 
     base_field_class = ListField
@@ -171,7 +175,10 @@ class OrderingFilter(OrderingFilter):
             "modified_at",
             "created_by_user",
             "created_by_group",
+            *[f"meta_{f}" for f in settings.META_FIELDS],
         )
+
+        self._gen = itertools.count()
 
         super().__init__(
             *args,
@@ -181,6 +188,41 @@ class OrderingFilter(OrderingFilter):
             null_label=None,
             **kwargs,
         )
+
+    def _prepare_val(self, val, qs):
+        """Prepare value for sorting.
+
+        If the orderby value is a meta field, we annotate the queryset by an
+        expression to extract said value, then tell Django to order by that
+        value. Direct ordering on expressions seems not to work
+        """
+        if not any(val.startswith(prefix) for prefix in ("meta_", "-meta_")):
+            return val, qs
+
+        reverse = ""
+        if val.startswith("-"):
+            reverse = "-"
+            val = val[1:]
+
+        meta_field = val[5:]
+
+        ann = f"order_{next(self._gen)}"
+
+        qs = qs.annotate(**{ann: models.F("meta")._combine(meta_field, "->>", False)})
+
+        return f"{reverse}{ann}", qs
+
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES:
+            return qs
+
+        newvals = []
+
+        for val in value:
+            newval, qs = self._prepare_val(val, qs)
+            newvals.append(newval)
+
+        return super().filter(qs, newvals)
 
 
 class IntegerFilter(Filter):
