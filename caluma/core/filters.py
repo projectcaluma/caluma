@@ -232,6 +232,7 @@ class IntegerFilter(Filter):
 class FilterSet(GrapheneFilterSetMixin, FilterSet):
     created_by_user = CharFilter()
     created_by_group = CharFilter()
+
     offset = IntegerFilter(method="filter_offset")
     limit = IntegerFilter(method="filter_limit")
 
@@ -242,6 +243,33 @@ class FilterSet(GrapheneFilterSetMixin, FilterSet):
     @staticmethod
     def filter_limit(queryset, name, value):
         return queryset[:value]
+
+    def filter_queryset(self, queryset):
+        def _filter_prio(filter_name):
+            # order before any others
+            if "order" in filter_name.lower():
+                return 20
+
+            # offset to the end, but before limit
+            elif filter_name == "offset":
+                return 80
+            elif filter_name == "limit":
+                return 90
+
+            # normal filters
+            return 50
+
+        filter_names = sorted(self.form.cleaned_data.keys(), key=_filter_prio)
+
+        for name in filter_names:
+            value = self.form.cleaned_data[name]
+            queryset = self.filters[name].filter(queryset, value)
+            assert isinstance(queryset, models.QuerySet), (
+                "Expected '%s.%s' to return a QuerySet, but got a %s instead."
+                % (type(self).__name__, name, type(queryset).__name__)
+            )
+
+        return queryset
 
     @classmethod
     def filter_for_lookup(cls, field, lookup_type):
