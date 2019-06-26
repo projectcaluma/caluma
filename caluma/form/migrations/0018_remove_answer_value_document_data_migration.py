@@ -12,13 +12,31 @@ logger = logging.getLogger(__name__)
 def attach_form_sub_answers_to_main_document(apps, schema_editor):
     """Answers to sub-questions of FormQuestions share document with parent."""
     Answer = apps.get_model("form", "Answer")
-    for a in Answer.objects.filter(question__type="form"):
+    to_delete = []
+
+    count = Answer.objects.filter(question__type="form").count()
+
+    for i, a in enumerate(Answer.objects.filter(question__type="form")):
+        logger.info(f"    migrating... {i+1}/{count}")
+
         if a.value_document:
             for answer in a.value_document.answers.all():
-                answer.document = a.document
+                logger.debug(
+                    f"moving answer {answer.pk} from {answer.document.pk} to root {a.document.family}"
+                )
+                answer.document_id = a.document.family
                 answer.save()
-            a.value_document.delete()
-        a.delete()
+
+            logger.debug(
+                f"mark unused value document for deletion: {a.value_document.pk}"
+            )
+            to_delete.append(a.value_document)
+        logger.debug(f"mark unused form answer for deletion: {a.pk}")
+        to_delete.append(a)
+
+    for obj in to_delete:
+        logger.debug(f"deleting {obj} {obj.pk}")
+        obj.delete()
 
 
 def undo_attach_form_sub_answers_to_main_document(apps, schema_editor):
