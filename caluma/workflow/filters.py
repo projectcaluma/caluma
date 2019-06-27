@@ -1,6 +1,8 @@
+from django.db.models import OuterRef, Subquery
 from graphene import Enum
 
 from ..core.filters import (
+    CharFilter,
     FilterSet,
     GlobalIDFilter,
     HasAnswerFilter,
@@ -10,6 +12,7 @@ from ..core.filters import (
     StringListFilter,
     generate_list_filter_class,
 )
+from ..form.models import Answer, Question
 from . import models
 
 
@@ -53,6 +56,45 @@ class CaseFilterSet(MetaFilterSet):
 
     has_answer = HasAnswerFilter(document_id="document__pk")
     status = case_status_filter(lookup_expr="in")
+    order_by_question_answer_value = CharFilter(
+        method="filter_order_by_question_answer_value",
+        label=(
+            "Expects a question slug. If the slug is prefixed with a hyphen, "
+            "the order will be reversed\n\n"
+            "For file questions, the filename is used for sorting.\n\n"
+            "Table questions are not supported at this time."
+        ),
+    )
+
+    @staticmethod
+    def filter_order_by_question_answer_value(queryset, _, question_slug):
+        order_by = "-order_value" if question_slug.startswith("-") else "order_value"
+        question_slug = question_slug.lstrip("-")
+
+        # Based on question type, set answer field to use for sorting
+        not_supported = (Question.TYPE_TABLE,)
+        question = Question.objects.get(slug=question_slug)
+        answer_value = "value"
+        if question.type in not_supported:
+            raise RuntimeError(
+                f'Questions with type "{question.type}" are not supported '
+                f'by "filterOrderByQuestionAnswerValue"'
+            )
+        elif question.type == Question.TYPE_DATE:
+            answer_value = "date"
+        elif question.type == Question.TYPE_FILE:
+            answer_value = "file__name"
+
+        # Initialize subquery
+        answers = Answer.objects.filter(
+            question=question, document=OuterRef("document")
+        )
+
+        # Annotate the cases in the queryset with the value of the answer of the given
+        # question and order by it.
+        return queryset.annotate(
+            order_value=Subquery(answers.values(answer_value)[:1])
+        ).order_by(order_by)
 
     class Meta:
         model = models.Case
