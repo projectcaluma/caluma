@@ -355,6 +355,8 @@ def test_order_by_question_answer_value(
         question_factory(type=Question.TYPE_TABLE, slug="test_question1")
         case_factory(document=d1)
 
+    # It's necessary to order the answers by "CREATED_AT_ASC" in order to every time
+    # produce the same response
     query = """
         query AllCases($orderByQuestionAnswerValue: String) {
           allCases(orderByQuestionAnswerValue: $orderByQuestionAnswerValue){
@@ -362,7 +364,7 @@ def test_order_by_question_answer_value(
             edges {
               node {
                 document {
-                  answers {
+                  answers(orderBy: CREATED_AT_ASC) {
                     totalCount
                     edges {
                       node {
