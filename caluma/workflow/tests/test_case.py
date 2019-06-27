@@ -1,6 +1,7 @@
 import pytest
 
 from ...core.relay import extract_global_id
+from ...form.models import Question
 from .. import models
 
 
@@ -229,3 +230,171 @@ def test_status_filter(db, case_factory, schema_executor):
     )
 
     assert expected == received
+
+
+@pytest.mark.parametrize("asc", [True, False])
+@pytest.mark.parametrize(
+    "type,success",
+    [
+        (Question.TYPE_TEXT, True),
+        (Question.TYPE_FORM, True),
+        (Question.TYPE_DATE, True),
+        (Question.TYPE_FILE, True),
+        (Question.TYPE_TABLE, False),
+    ],
+)
+def test_order_by_question_answer_value(
+    db,
+    snapshot,
+    schema_executor,
+    asc,
+    type,
+    success,
+    case_factory,
+    document_factory,
+    question_factory,
+    form_question_factory,
+    form_factory,
+    answer_factory,
+):
+    value = "test_question1"
+
+    if type == Question.TYPE_TEXT:
+        d1 = document_factory()
+        d2 = document_factory()
+        d3 = document_factory()
+
+        q1 = question_factory(type=Question.TYPE_TEXT, slug="test_question1")
+        answer_factory(question=q1, value="c", document=d1)
+        answer_factory(question=q1, value="a", document=d2)
+        answer_factory(question=q1, value="b", document=d3)
+
+        q2 = question_factory(type=Question.TYPE_TEXT, slug="test_question2")
+        answer_factory(question=q2, value="a2", document=d1)
+        answer_factory(question=q2, value="b2", document=d2)
+        answer_factory(question=q2, value="c2", document=d3)
+
+        case_factory(document=d1)
+        case_factory(document=d2)
+        case_factory(document=d3)
+
+    elif type == Question.TYPE_FORM:
+        value = "test_sub_question1"
+
+        f = form_factory(slug="test_sub_form")
+        question = question_factory(type=Question.TYPE_TEXT, slug="test_sub_question1")
+        form_question_factory(form=f, question=question)
+
+        d1 = document_factory(form=f)
+        answer_factory(question=question, value="d", document=d1)
+
+        d2 = document_factory(form=f)
+        answer_factory(question=question, value="b", document=d2)
+
+        d3 = document_factory(form=f)
+        answer_factory(question=question, value="f", document=d3)
+
+        form_question = question_factory(
+            type=Question.TYPE_FORM, slug="test_form_question", sub_form=f
+        )
+
+        form_question_factory(question=form_question)
+
+        case_factory(document=d1)
+
+        case_factory(document=d2)
+
+        case_factory(document=d3)
+
+        # add another form_question and corresponding answers
+        form_question_factory(question=question)
+        answer_factory(question=question, value="c")
+        answer_factory(question=question, value="e")
+        answer_factory(question=question, value="a")
+
+    elif type == Question.TYPE_DATE:
+        d1 = document_factory()
+        d2 = document_factory()
+        d3 = document_factory()
+
+        q1 = question_factory(type=Question.TYPE_DATE, slug="test_question1")
+        answer_factory(question=q1, date="2019-05-31", document=d1)
+        answer_factory(question=q1, date="2019-05-29", document=d2)
+        answer_factory(question=q1, date="2019-05-27", document=d3)
+
+        q2 = question_factory(type=Question.TYPE_DATE, slug="test_question2")
+        answer_factory(question=q2, date="2019-05-26", document=d1)
+        answer_factory(question=q2, date="2019-05-30", document=d2)
+        answer_factory(question=q2, date="2019-05-28", document=d3)
+
+        case_factory(document=d1)
+        case_factory(document=d2)
+        case_factory(document=d3)
+
+    elif type == Question.TYPE_FILE:
+        d1 = document_factory()
+        d2 = document_factory()
+        d3 = document_factory()
+
+        q1 = question_factory(type=Question.TYPE_FILE, slug="test_question1")
+        answer_factory(question=q1, file__name="d", document=d1)
+        answer_factory(question=q1, file__name="b", document=d2)
+        answer_factory(question=q1, file__name="f", document=d3)
+
+        q2 = question_factory(type=Question.TYPE_FILE, slug="test_question2")
+        answer_factory(question=q2, file__name="c", document=d1)
+        answer_factory(question=q2, file__name="e", document=d2)
+        answer_factory(question=q2, file__name="a", document=d3)
+
+        case_factory(document=d1)
+        case_factory(document=d2)
+        case_factory(document=d3)
+
+    elif type == Question.TYPE_TABLE:
+        d1 = document_factory()
+        question_factory(type=Question.TYPE_TABLE, slug="test_question1")
+        case_factory(document=d1)
+
+    query = """
+        query AllCases($orderByQuestionAnswerValue: String) {
+          allCases(orderByQuestionAnswerValue: $orderByQuestionAnswerValue){
+            totalCount
+            edges {
+              node {
+                document {
+                  answers {
+                    totalCount
+                    edges {
+                      node {
+                        ... on StringAnswer {
+                          stringValue: value
+                        }
+                        ... on DateAnswer {
+                          dateValue: value
+                        }
+                        ... on FileAnswer {
+                          fileValue: value {
+                            name
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    if not asc:
+        value = f"-{value}"
+
+    inp = {"orderByQuestionAnswerValue": value}
+
+    result = schema_executor(query, variables=inp)
+
+    assert not bool(result.errors) == success
+    if success:
+        assert result.data["allCases"]["totalCount"] == 3
+        snapshot.assert_match(result.data)
