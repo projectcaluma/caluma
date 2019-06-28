@@ -731,6 +731,7 @@ type Mutation {
   saveDocumentTableAnswer(input: SaveDocumentTableAnswerInput!): SaveDocumentTableAnswerPayload
   saveDocumentFileAnswer(input: SaveDocumentFileAnswerInput!): SaveDocumentFileAnswerPayload
   removeAnswer(input: RemoveAnswerInput!): RemoveAnswerPayload
+  removeDocument(input: RemoveDocumentInput!): RemoveDocumentPayload
 }
 
 interface Node {
@@ -853,6 +854,16 @@ input RemoveAnswerInput {
 
 type RemoveAnswerPayload {
   answer: Answer
+  clientMutationId: String
+}
+
+input RemoveDocumentInput {
+  document: ID!
+  clientMutationId: String
+}
+
+type RemoveDocumentPayload {
+  document: Document
   clientMutationId: String
 }
 
