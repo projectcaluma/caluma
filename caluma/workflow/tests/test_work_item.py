@@ -609,3 +609,51 @@ def test_create_work_item(db, work_item, success, schema_executor):
         assert new_work_item.status == models.WorkItem.STATUS_READY
         assert new_work_item.meta == meta
         assert new_work_item.document is not None
+
+
+def test_filter_document_has_answer(
+    db, schema_executor, simple_case, work_item_factory
+):
+    item_a, item_b = work_item_factory.create_batch(2)
+
+    item_a.document = simple_case.document
+    item_a.save()
+    item_b.case = simple_case
+    item_b.save()
+
+    answer = simple_case.document.answers.first()
+    answer.value = "foo"
+    answer.save()
+    answer.question.type = answer.question.TYPE_TEXT
+    answer.question.save()
+
+    query_expect = [("documentHasAnswer", item_a), ("caseDocumentHasAnswer", item_b)]
+
+    for filt, expected in query_expect:
+        query = """
+            query WorkItems($has_answer: [HasAnswerFilterType!]) {
+              allWorkItems(%(filt)s: $has_answer) {
+                edges {
+                  node {
+                    id
+                  }
+                }
+              }
+            }
+        """ % {
+            "filt": filt
+        }
+
+        result = schema_executor(
+            query,
+            variables={
+                "has_answer": [{"question": answer.question_id, "value": "foo"}]
+            },
+        )
+
+        assert not result.errors
+        assert len(result.data["allWorkItems"]["edges"]) == 1
+        node_id = extract_global_id(
+            result.data["allWorkItems"]["edges"][0]["node"]["id"]
+        )
+        assert node_id == str(expected.id)

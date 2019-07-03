@@ -141,3 +141,13 @@ def data_source_settings(settings):
 @pytest.fixture
 def history_mock(mocker):
     mocker.patch.object(HistoricalRecords, "create_historical_record")
+
+
+@pytest.fixture
+def simple_case(case_factory, document_factory, question_factory, answer_factory):
+    question = question_factory()
+    document = document_factory()
+    answer_factory(document=document, question=question)
+    case = case_factory(document=document)
+
+    return case
