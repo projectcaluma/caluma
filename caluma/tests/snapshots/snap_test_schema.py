@@ -661,6 +661,10 @@ enum MetaLookupMode {
   EXACT
   STARTSWITH
   CONTAINS
+  GTE
+  GT
+  LTE
+  LT
 }
 
 input MetaValueFilterType {

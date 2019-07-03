@@ -287,6 +287,10 @@ class MetaLookupMode(Enum):
     EXACT = "exact"
     STARTSWITH = "startswith"
     CONTAINS = "icontains"
+    GTE = "gte"
+    GT = "gt"
+    LTE = "lte"
+    LT = "lt"
 
 
 class MetaValueFilterType(InputObjectType):
