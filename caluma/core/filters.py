@@ -9,7 +9,7 @@ from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields.hstore import KeyTransform
 from django.contrib.postgres.search import SearchVector
 from django.core import exceptions
-from django.db import models
+from django.db import ProgrammingError, models
 from django.db.models import Q
 from django.db.models.constants import LOOKUP_SEP
 from django.db.models.functions import Cast
@@ -469,7 +469,7 @@ class HasAnswerFilter(Filter):
             # question type and forget to update the lookup config above.  In
             # that case, the fix is simple - go up a few lines and adjust the
             # VALID_LOOKUPS dict.
-            raise exceptions.ProgrammingError(
+            raise ProgrammingError(
                 f"Valid lookups not configured for question type {question.type}"
             )
 
