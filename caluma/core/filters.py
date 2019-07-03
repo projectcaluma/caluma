@@ -317,10 +317,16 @@ class MetaValueFilter(Filter):
     def filter(self, qs, value):
         if value in EMPTY_VALUES:
             return qs
-        meta_key = value["key"]
-        meta_value = value["value"]
-        lookup = value.get("lookup", self.lookup_expr)
-        return qs.filter(**{f"{self.field_name}__{meta_key}__{lookup}": meta_value})
+
+        for val in value:
+            if val in EMPTY_VALUES:  # pragma: no cover
+                continue
+
+            meta_key = val["key"]
+            meta_value = val["value"]
+            lookup = val.get("lookup", self.lookup_expr)
+            qs = qs.filter(**{f"{self.field_name}__{meta_key}__{lookup}": meta_value})
+        return qs
 
     @staticmethod
     @convert_form_field.register(MetaValueFilterField)
@@ -330,7 +336,7 @@ class MetaValueFilter(Filter):
         if converted:
             return converted
 
-        converted = MetaValueFilterType()
+        converted = List(MetaValueFilterType)
         registry.register_converted_field(field, converted)
         return converted
 

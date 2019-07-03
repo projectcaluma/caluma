@@ -21,7 +21,7 @@ def test_meta_value_filter(db, schema_executor, document_factory, lookup, expect
     }
 
     query = """
-        query AllDocumentsQuery($filter: MetaValueFilterType) {
+        query AllDocumentsQuery($filter: [MetaValueFilterType]) {
           allDocuments(metaValue: $filter) {
             edges {
               node {
@@ -32,9 +32,9 @@ def test_meta_value_filter(db, schema_executor, document_factory, lookup, expect
         }
     """
 
-    variables = {"filter": {"key": "foo", "value": "bar"}}
+    variables = {"filter": [{"key": "foo", "value": "bar"}]}
     if lookup:
-        variables["filter"]["lookup"] = lookup
+        variables["filter"][0]["lookup"] = lookup
 
     result = schema_executor(query, variables=variables)
 
