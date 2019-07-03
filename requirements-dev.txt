@@ -16,7 +16,7 @@ pytest==4.6.3
 pytest-cov==2.7.1
 pytest-django==3.5.1
 pytest-env==0.6.2
-pytest-factoryboy==2.0.2
+pytest-factoryboy==2.0.3
 pytest-mock==1.10.4
 pytest-randomly==3.0.0
 requests-mock==1.6.0
