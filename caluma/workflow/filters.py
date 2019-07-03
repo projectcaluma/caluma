@@ -54,6 +54,7 @@ class FlowFilterSet(FilterSet):
 class CaseFilterSet(MetaFilterSet):
     order_by = OrderingFilter(label="CaseOrdering", fields=("status",))
 
+    document_form = CharFilter(field_name="document__form_id")
     has_answer = HasAnswerFilter(document_id="document__pk")
     status = case_status_filter(lookup_expr="in")
     order_by_question_answer_value = CharFilter(

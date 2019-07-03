@@ -400,3 +400,41 @@ def test_order_by_question_answer_value(
     if success:
         assert result.data["allCases"]["totalCount"] == 3
         snapshot.assert_match(result.data)
+
+
+def test_document_form(
+    db, schema_executor, case_factory, document_factory, form_factory
+):
+
+    form_a, form_b = form_factory.create_batch(2)
+
+    # two cases, one for each form
+    case_factory(document=document_factory(form=form_a))
+    case_factory(document=document_factory(form=form_b))
+
+    query = """
+        query AllCases ($form: String!) {
+          allCases (documentForm: $form){
+            totalCount
+            edges {
+              node {
+                document {
+                  form {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+    # search for form A's slug
+    result = schema_executor(query, variables={"form": form_a.slug})
+
+    assert len(result.data["allCases"]["edges"]) == 1
+
+    assert not result.errors
+
+    document = result.data["allCases"]["edges"][0]["node"]["document"]
+
+    assert extract_global_id(document["form"]["id"]) == form_a.slug
