@@ -4292,3 +4292,501 @@ snapshots["test_query_all_questions[choice-a-nomatch-LT] 1"] = {
         "errors": "[GraphQLLocatedError(\"['Invalid lookup for question slug=choice (CHOICE): LT']\",)]",
     },
 }
+
+snapshots[
+    "test_query_all_questions[multiple_choice-search_value0-matching-INTERSECTS] 1"
+] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "lookup": "INTERSECTS",
+                    "question": "multiple_choice",
+                    "value": ["a", "b"],
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
+        "errors": "None",
+    },
+}
+
+snapshots[
+    "test_query_all_questions[multiple_choice-search_value0-nomatch-INTERSECTS] 1"
+] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "lookup": "INTERSECTS",
+                    "question": "multiple_choice",
+                    "value": ["a", "b"],
+                }
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots["test_query_all_questions[integer-10-matching-INTERSECTS] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "INTERSECTS",
+                    "question": "integer",
+                    "value": 10,
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError(\"['Invalid lookup for question slug=integer (INTEGER): INTERSECTS']\",)]",
+    },
+}
+
+snapshots["test_query_all_questions[integer-10-nomatch-INTERSECTS] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "INTERSECTS",
+                    "question": "integer",
+                    "value": 10,
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError(\"['Invalid lookup for question slug=integer (INTEGER): INTERSECTS']\",)]",
+    },
+}
+
+snapshots["test_query_all_questions[text-foo-matching-INTERSECTS] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "INTERSECTS",
+                    "question": "text",
+                    "value": "foo",
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError(\"['Invalid lookup for question slug=text (TEXT): INTERSECTS']\",)]",
+    },
+}
+
+snapshots["test_query_all_questions[text-foo-nomatch-INTERSECTS] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "INTERSECTS",
+                    "question": "text",
+                    "value": "foo",
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError(\"['Invalid lookup for question slug=text (TEXT): INTERSECTS']\",)]",
+    },
+}
+
+snapshots["test_query_all_questions[textarea-foo-matching-INTERSECTS] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "FAMILY",
+                    "lookup": "INTERSECTS",
+                    "question": "textarea",
+                    "value": "foo",
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError(\"['Invalid lookup for question slug=textarea (TEXTAREA): INTERSECTS']\",)]",
+    },
+}
+
+snapshots["test_query_all_questions[textarea-foo-nomatch-INTERSECTS] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "FAMILY",
+                    "lookup": "INTERSECTS",
+                    "question": "textarea",
+                    "value": "foo",
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError(\"['Invalid lookup for question slug=textarea (TEXTAREA): INTERSECTS']\",)]",
+    },
+}
+
+snapshots["test_query_all_questions[float-11.5-matching-INTERSECTS] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "FAMILY",
+                    "lookup": "INTERSECTS",
+                    "question": "float",
+                    "value": 11.5,
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError(\"['Invalid lookup for question slug=float (FLOAT): INTERSECTS']\",)]",
+    },
+}
+
+snapshots["test_query_all_questions[float-11.5-nomatch-INTERSECTS] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "FAMILY",
+                    "lookup": "INTERSECTS",
+                    "question": "float",
+                    "value": 11.5,
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError(\"['Invalid lookup for question slug=float (FLOAT): INTERSECTS']\",)]",
+    },
+}
+
+snapshots[
+    "test_query_all_questions[datetime-2018-05-09T14:54:51.728786-matching-INTERSECTS] 1"
+] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "FAMILY",
+                    "lookup": "INTERSECTS",
+                    "question": "datetime",
+                    "value": "2018-05-09T14:54:51.728786",
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError('Question matching query does not exist.',)]",
+    },
+}
+
+snapshots[
+    "test_query_all_questions[datetime-2018-05-09T14:54:51.728786-nomatch-INTERSECTS] 1"
+] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "FAMILY",
+                    "lookup": "INTERSECTS",
+                    "question": "datetime",
+                    "value": "2018-05-09T14:54:51.728786",
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError('Question matching query does not exist.',)]",
+    },
+}
+
+snapshots["test_query_all_questions[date-2018-05-09-matching-INTERSECTS] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "INTERSECTS",
+                    "question": "date",
+                    "value": "2018-05-09",
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError(\"['Invalid lookup for question slug=date (DATE): INTERSECTS']\",)]",
+    },
+}
+
+snapshots["test_query_all_questions[date-2018-05-09-nomatch-INTERSECTS] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "INTERSECTS",
+                    "question": "date",
+                    "value": "2018-05-09",
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError(\"['Invalid lookup for question slug=date (DATE): INTERSECTS']\",)]",
+    },
+}
+
+snapshots["test_query_all_questions[choice-a-matching-INTERSECTS] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [{"lookup": "INTERSECTS", "question": "choice", "value": "a"}]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": {"edges": [{"node": {"form": {"slug": "subform"}}}]}},
+        "errors": "None",
+    },
+}
+
+snapshots["test_query_all_questions[choice-a-nomatch-INTERSECTS] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [{"lookup": "INTERSECTS", "question": "choice", "value": "a"}]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}

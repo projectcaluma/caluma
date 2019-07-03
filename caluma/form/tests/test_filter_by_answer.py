@@ -147,3 +147,54 @@ def test_query_all_questions(
             "response": {"errors": str(result.errors), "data": result.data},
         }
     )
+
+
+@pytest.mark.parametrize(
+    "question__type,value,search,expect_find",
+    [
+        (models.Question.TYPE_MULTIPLE_CHOICE, ["a", "b"], ["a"], True),
+        (models.Question.TYPE_MULTIPLE_CHOICE, ["a", "b"], ["c"], False),
+        (models.Question.TYPE_CHOICE, "foo", ["foo", "bar"], True),
+        (models.Question.TYPE_CHOICE, "foo", ["bar", "baz"], False),
+        (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["a", "b"], ["a"], True),
+        (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["a", "b"], ["c"], False),
+        (models.Question.TYPE_DYNAMIC_CHOICE, "foo", ["foo", "bar"], True),
+        (models.Question.TYPE_DYNAMIC_CHOICE, "foo", ["bar", "baz"], False),
+    ],
+)
+def test_has_answer_intersect(
+    schema_executor,
+    db,
+    question,
+    document_factory,
+    answer_factory,
+    value,
+    search,
+    expect_find,
+):
+    doc = document_factory()
+    answer_factory(document=doc, question=question, value=value)
+
+    query = """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+    """
+    variables = {
+        "hasAnswer": [
+            {"question": question.slug, "value": search, "lookup": "INTERSECTS"}
+        ]
+    }
+
+    result = schema_executor(query, variables=variables)
+    assert not result.errors
+
+    expect_count = 1 if expect_find else 0
+
+    assert len(result.data["allDocuments"]["edges"]) == expect_count

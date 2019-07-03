@@ -10,6 +10,7 @@ from django.contrib.postgres.fields.hstore import KeyTransform
 from django.contrib.postgres.search import SearchVector
 from django.core import exceptions
 from django.db import models
+from django.db.models import Q
 from django.db.models.constants import LOOKUP_SEP
 from django.db.models.functions import Cast
 from django.utils import translation
@@ -339,6 +340,7 @@ class AnswerLookupMode(Enum):
     STARTSWITH = "startswith"
     CONTAINS = "contains"
     ICONTAINS = "icontains"
+    INTERSECTS = "intersects"
 
     GTE = "gte"
     GT = "gt"
@@ -392,7 +394,11 @@ class HasAnswerFilter(Filter):
             AnswerLookupMode.GT,
             AnswerLookupMode.GTE,
         ],
-        "multiple_choice": [AnswerLookupMode.EXACT, AnswerLookupMode.CONTAINS],
+        "multiple_choice": [
+            AnswerLookupMode.EXACT,
+            AnswerLookupMode.CONTAINS,
+            AnswerLookupMode.INTERSECTS,
+        ],
     }
     VALID_LOOKUPS["date"] = VALID_LOOKUPS["integer"]
     VALID_LOOKUPS["float"] = VALID_LOOKUPS["integer"]
@@ -424,12 +430,29 @@ class HasAnswerFilter(Filter):
         if question.type == Question.TYPE_DATE:
             answer_value = "date"
 
-        filters = {
-            f"{answer_value}__{lookup}": match_value,
-            "question__slug": question_slug,
-        }
+        answers = Answer.objects.all()
 
-        answers = Answer.objects.filter(**filters)
+        if lookup == AnswerLookupMode.INTERSECTS:
+            inner_lookup = "exact"
+            if question.type in (
+                Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+                Question.TYPE_MULTIPLE_CHOICE,
+            ):
+                inner_lookup = "contains"
+
+            exprs = [
+                Q(**{f"value__{inner_lookup}": val, "question__slug": question_slug})
+                for val in match_value
+            ]
+            # connect all expressions with OR
+            answers = answers.filter(reduce(lambda a, b: a | b, exprs))
+        else:
+            answers = answers.filter(
+                **{
+                    f"{answer_value}__{lookup}": match_value,
+                    "question__slug": question_slug,
+                }
+            )
 
         if hierarchy == AnswerHierarchyMode.FAMILY:
             return qs.filter(

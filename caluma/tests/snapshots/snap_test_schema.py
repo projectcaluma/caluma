@@ -68,6 +68,7 @@ enum AnswerLookupMode {
   STARTSWITH
   CONTAINS
   ICONTAINS
+  INTERSECTS
   GTE
   GT
   LTE
