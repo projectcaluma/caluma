@@ -397,6 +397,8 @@ class HasAnswerFilter(Filter):
     VALID_LOOKUPS["date"] = VALID_LOOKUPS["integer"]
     VALID_LOOKUPS["float"] = VALID_LOOKUPS["integer"]
     VALID_LOOKUPS["choice"] = VALID_LOOKUPS["multiple_choice"]
+    VALID_LOOKUPS["dynamic_choice"] = VALID_LOOKUPS["multiple_choice"]
+    VALID_LOOKUPS["dynamic_multiple_choice"] = VALID_LOOKUPS["multiple_choice"]
     VALID_LOOKUPS["textarea"] = VALID_LOOKUPS["text"]
     VALID_LOOKUPS["datetime"] = VALID_LOOKUPS["integer"]
 
