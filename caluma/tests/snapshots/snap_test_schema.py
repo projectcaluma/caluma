@@ -113,7 +113,7 @@ type Case implements Node {
   status: CaseStatus!
   meta: GenericScalar
   document: Document
-  workItems(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, status: WorkItemStatusArgument, task: ID, case: ID, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, orderBy: [WorkItemOrdering], addressedGroups: [String]): WorkItemConnection
+  workItems(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], status: WorkItemStatusArgument, task: ID, case: ID, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, orderBy: [WorkItemOrdering], addressedGroups: [String]): WorkItemConnection
   parentWorkItem: WorkItem
 }
 
@@ -170,8 +170,8 @@ type ChoiceQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  options(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, slug: String, label: String, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, orderBy: [OptionOrdering]): OptionConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  options(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], slug: String, label: String, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, orderBy: [OptionOrdering]): OptionConnection
   id: ID!
 }
 
@@ -332,7 +332,7 @@ type DateQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
   id: ID!
 }
 
@@ -346,7 +346,7 @@ type Document implements Node {
   id: ID!
   form: Form!
   meta: GenericScalar
-  answers(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, question: ID, search: String, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, orderBy: [AnswerOrdering], questions: [ID]): AnswerConnection
+  answers(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], question: ID, search: String, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, orderBy: [AnswerOrdering], questions: [ID]): AnswerConnection
   case: Case
   workItem: WorkItem
 }
@@ -401,7 +401,7 @@ type DynamicChoiceQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
   options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   dataSource: String!
   id: ID!
@@ -420,7 +420,7 @@ type DynamicMultipleChoiceQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
   options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   dataSource: String!
   id: ID!
@@ -464,7 +464,7 @@ type FileQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
   id: ID!
 }
 
@@ -493,7 +493,7 @@ type FloatQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
   id: ID!
   minValue: Float
   maxValue: Float
@@ -533,7 +533,7 @@ type Form implements Node {
   meta: GenericScalar
   isPublished: Boolean!
   isArchived: Boolean!
-  questions(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, excludeForms: [ID], search: String, orderBy: [QuestionOrdering]): QuestionConnection
+  questions(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, excludeForms: [ID], search: String, orderBy: [QuestionOrdering]): QuestionConnection
   source: Form
   documents(before: String, after: String, first: Int, last: Int): DocumentConnection
   id: ID!
@@ -580,7 +580,7 @@ type FormQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
   subForm: Form
   id: ID!
 }
@@ -639,7 +639,7 @@ type IntegerQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
   id: ID!
   maxValue: Int
   minValue: Int
@@ -687,8 +687,8 @@ type MultipleChoiceQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  options(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [OptionOrdering], slug: String, label: String, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String): OptionConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  options(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [OptionOrdering], slug: String, label: String, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String): OptionConnection
   staticContent: String
   id: ID!
 }
@@ -794,13 +794,13 @@ type PageInfo {
 type Query {
   allDataSources(before: String, after: String, first: Int, last: Int): DataSourceConnection
   dataSource(name: String, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
-  allWorkflows(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, orderBy: [WorkflowOrdering]): WorkflowConnection
-  allTasks(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, orderBy: [TaskOrdering]): TaskConnection
-  allCases(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, workflow: ID, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, orderBy: [CaseOrdering], documentForm: String, hasAnswer: [HasAnswerFilterType], status: [CaseStatusArgument], orderByQuestionAnswerValue: String): CaseConnection
-  allWorkItems(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], task: ID, case: ID, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, addressedGroups: [String]): WorkItemConnection
-  allForms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  allQuestions(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, excludeForms: [ID], search: String): QuestionConnection
-  allDocuments(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, form: ID, search: String, id: ID, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, orderBy: [DocumentOrdering], rootDocument: ID, hasAnswer: [HasAnswerFilterType]): DocumentConnection
+  allWorkflows(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, orderBy: [WorkflowOrdering]): WorkflowConnection
+  allTasks(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, orderBy: [TaskOrdering]): TaskConnection
+  allCases(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], workflow: ID, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, orderBy: [CaseOrdering], documentForm: String, hasAnswer: [HasAnswerFilterType], status: [CaseStatusArgument], orderByQuestionAnswerValue: String): CaseConnection
+  allWorkItems(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], task: ID, case: ID, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, addressedGroups: [String]): WorkItemConnection
+  allForms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  allQuestions(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, excludeForms: [ID], search: String): QuestionConnection
+  allDocuments(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], form: ID, search: String, id: ID, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, orderBy: [DocumentOrdering], rootDocument: ID, hasAnswer: [HasAnswerFilterType]): DocumentConnection
   allFormatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
   documentValidity(id: ID!, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
   node(id: ID!): Node
@@ -819,7 +819,7 @@ interface Question {
   isHidden: QuestionJexl!
   isArchived: Boolean!
   meta: GenericScalar!
-  forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, metaValue: MetaValueFilterType, search: String, orderBy: [FormOrdering], slugs: [String]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, metaValue: [MetaValueFilterType], search: String, orderBy: [FormOrdering], slugs: [String]): FormConnection
   source: Question
 }
 
@@ -1410,7 +1410,7 @@ type StaticQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
   staticContent: String
   dataSource: String
   id: ID!
@@ -1453,7 +1453,7 @@ type TableQuestion implements Question, Node {
   infoText: String
   meta: GenericScalar!
   source: Question
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
   rowForm: Form
   id: ID!
 }
@@ -1532,7 +1532,7 @@ type TextQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
   id: ID!
   maxLength: Int
 }
@@ -1552,7 +1552,7 @@ type TextareaQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
-  forms(before: String, after: String, first: Int, last: Int, metaValue: MetaValueFilterType, orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, offset: Int, limit: Int, metaHasKey: String, search: String, slugs: [String]): FormConnection
   id: ID!
   maxLength: Int
 }
