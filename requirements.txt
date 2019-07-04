@@ -1,5 +1,5 @@
 django==1.11.22
-django-cors-headers==3.0.1
+django-cors-headers==3.0.2
 django-environ==0.4.5
 django-filter==2.1.0
 django-localized-fields==5.0a9
