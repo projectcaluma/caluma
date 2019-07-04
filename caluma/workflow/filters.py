@@ -117,6 +117,9 @@ class WorkItemFilterSet(MetaFilterSet):
     order_by = OrderingFilter(label="WorkItemOrdering", fields=("status", "deadline"))
     addressed_groups = StringListFilter(lookup_expr="overlap")
 
+    document_has_answer = HasAnswerFilter(document_id="document__pk")
+    case_document_has_answer = HasAnswerFilter(document_id="case__document__pk")
+
     class Meta:
         model = models.WorkItem
         fields = ("status", "task", "case")
