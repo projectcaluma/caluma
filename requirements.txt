@@ -11,7 +11,7 @@ graphene-django==2.2.0
 graphql-core==2.1
 graphql-relay==0.4.5
 idna==2.8
-minio==4.0.17
+minio==4.0.18
 psycopg2-binary==2.8.3
 pyjexl==0.2.3
 python-memcached==1.59
