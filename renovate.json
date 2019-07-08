@@ -25,6 +25,7 @@
         "flake8-string-format",
         "flake8-tuple",
         "isort",
+        "pydocstyle",
         "pytest",
         "pytest-cov",
         "pytest-django",
