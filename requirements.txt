@@ -16,10 +16,5 @@ psycopg2-binary==2.8.3
 pyjexl==0.2.3
 python-memcached==1.59
 requests==2.22.0
-# urllib3 explicit version requirement. Pin it to below 1.25, as
-# requests doesn't work above that version (and minio would pull
-# in the newest version) Can be removed once the following issue
-# is resolved:
-# https://github.com/kennethreitz/requests/issues/5067
 urllib3==1.25.3
 uwsgi==2.0.18
