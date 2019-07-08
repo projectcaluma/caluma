@@ -481,49 +481,12 @@ class DjangoFilterConnectionField(
         return self._provided_filterset_class
 
     @classmethod
-    def resolve_queryset(cls, connection, queryset, info, **args):
-        return connection._meta.node.get_queryset(queryset, info)
-
-    @classmethod
     def merge_querysets(cls, default_queryset, queryset):
         queryset = super().merge_querysets(default_queryset, queryset)
         # avoid query explosion of single relationships
         # may be removed once following issue is fixed:
         # https://github.com/graphql-python/graphene-django/issues/57
         return queryset.select_related()
-
-    @classmethod
-    def connection_resolver(
-        cls,
-        resolver,
-        connection,
-        default_manager,
-        max_limit,
-        enforce_first_or_last,
-        filterset_class,
-        filtering_args,
-        root,
-        info,
-        **args,
-    ):
-        class QuerysetManager(object):
-            def get_queryset(self):
-                return cls.resolve_queryset(
-                    connection, default_manager.get_queryset(), info, **args
-                )
-
-        return super().connection_resolver(
-            resolver,
-            connection,
-            QuerysetManager(),
-            max_limit,
-            enforce_first_or_last,
-            filterset_class,
-            filtering_args,
-            root,
-            info,
-            **args,
-        )
 
 
 class DjangoFilterSetConnectionField(DjangoFilterConnectionField):

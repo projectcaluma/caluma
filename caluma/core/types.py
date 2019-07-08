@@ -41,11 +41,6 @@ class DjangoObjectType(Node, types.DjangoObjectType):
     and might be removed once merged.
     """
 
-    @classmethod
-    def get_node(cls, info, id):
-        queryset = cls.get_queryset(cls._meta.model.objects, info)
-        return queryset.filter(pk=id).first()
-
     class Meta:
         abstract = True
 
