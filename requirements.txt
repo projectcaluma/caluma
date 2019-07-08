@@ -2,7 +2,7 @@ django==1.11.22
 django-cors-headers==3.0.2
 django-environ==0.4.5
 django-filter==2.1.0
-django-localized-fields==5.0a9
+django-localized-fields==5.3
 django-postgres-extra==1.22
 django_simple_history==2.7.2
 djangorestframework==3.9.4
