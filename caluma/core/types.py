@@ -54,9 +54,13 @@ class CountableConnectionBase(graphene.Connection):
     total_count = graphene.Int()
 
     def resolve_total_count(self, info, **kwargs):
-        if isinstance(self.iterable, QuerySet):
-            return self.iterable.count()
-        return len(self.iterable)
+        try:
+            # DjangoConnectionField sets the length already
+            return self.length
+        except AttributeError:
+            if isinstance(self.iterable, QuerySet):  # pragma: no cover
+                return self.iterable.count()
+            return len(self.iterable)
 
 
 class DjangoConnectionField(DjangoConnectionField):
@@ -77,7 +81,14 @@ class DjangoConnectionField(DjangoConnectionField):
             if iterable is not default_manager:
                 default_queryset = maybe_queryset(default_manager)
                 iterable = cls.merge_querysets(default_queryset, iterable)
-            _len = iterable.count()
+
+            # only query count on database when pagination is needed
+            # resolve_connection may be removed again once following issue is fixed:
+            # https://github.com/graphql-python/graphene-django/issues/177
+            if "before" in args or "after" in args or "first" in args or "last" in args:
+                _len = iterable.count()
+            else:
+                _len = len(iterable)
         else:  # pragma: no cover
             _len = len(iterable)
         connection = connection_from_list_slice(
