@@ -537,7 +537,7 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         answers = models.AnswerDocument.objects.filter(document_id=document_id).values(
             "answer"
         )
-        child_documents = models.Document.objects.filter(answers=answers).distinct()
+        child_documents = models.Document.objects.filter(answers__in=answers).distinct()
 
         for child_document in child_documents:
             yield from self._get_document_tree(child_document.pk)

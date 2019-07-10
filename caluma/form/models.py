@@ -23,6 +23,7 @@ class Form(SlugModel):
         null=True,
         help_text="Reference this form has been copied from",
         related_name="+",
+        on_delete=models.SET_NULL,
     )
 
     def all_questions(self):
@@ -95,6 +96,7 @@ class Question(SlugModel):
         null=True,
         related_name="+",
         help_text="Form that represents rows of a TableQuestion",
+        on_delete=models.PROTECT,
     )
     sub_form = models.ForeignKey(
         Form,
@@ -102,6 +104,7 @@ class Question(SlugModel):
         null=True,
         related_name="+",
         help_text="Form referenced in a FormQuestion",
+        on_delete=models.PROTECT,
     )
 
     source = models.ForeignKey(
@@ -110,6 +113,7 @@ class Question(SlugModel):
         null=True,
         related_name="+",
         help_text="Reference this question has been copied from",
+        on_delete=models.SET_NULL,
     )
     format_validators = ArrayField(
         models.CharField(max_length=255), blank=True, default=list
@@ -162,6 +166,7 @@ class Option(SlugModel):
         null=True,
         related_name="+",
         help_text="Reference this option has been copied from",
+        on_delete=models.SET_NULL,
     )
 
 
