@@ -22,7 +22,7 @@ services:
     environment:
       - ENV=dev
   minio:
-    image: minio/minio:latest@sha256:f79c41332aef24d35385fe6cfec074c329fdd3eba3110e46117145a9a28cf762
+    image: minio/minio:latest@sha256:6905a694840339f68f995f9707216aa123bbdeda4464b139c98bce8ea0eed400
     volumes:
       - minio_data:/data
     ports:
