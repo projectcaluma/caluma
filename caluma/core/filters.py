@@ -470,6 +470,50 @@ class DjangoFilterConnectionField(
         queryset.query.select_related = default_queryset.query.select_related
         return queryset
 
+    @classmethod
+    def connection_resolver(
+        cls,
+        resolver,
+        connection,
+        default_manager,
+        max_limit,
+        enforce_first_or_last,
+        filterset_class,
+        filtering_args,
+        root,
+        info,
+        **args,
+    ):
+        # building form within filterset class is a performance hit
+        # and should only be done if there are actual filter arguments
+        filter_kwargs = {k: v for k, v in args.items() if k in filtering_args}
+        if not filter_kwargs:
+            # skip parent DjangoFilterConnetionField which does filtering and directly
+            # go to its parent
+            return super(filter.DjangoFilterConnectionField, cls).connection_resolver(
+                resolver,
+                connection,
+                default_manager,
+                max_limit,
+                enforce_first_or_last,
+                root,
+                info,
+                **args,
+            )
+
+        return super().connection_resolver(
+            resolver,
+            connection,
+            default_manager,
+            max_limit,
+            enforce_first_or_last,
+            filterset_class,
+            filtering_args,
+            root,
+            info,
+            **args,
+        )
+
 
 class DjangoFilterSetConnectionField(DjangoFilterConnectionField):
     @property
