@@ -140,6 +140,12 @@ def test_complex_document_query_performance(
         question=file_question, value=None, document=document, file=file_factory()
     )
 
+    form_question = question_factory(type=Question.TYPE_FORM)
+    form_question_factory(question=form_question, form=form)
+
+    table_question = question_factory(type=Question.TYPE_TABLE)
+    form_question_factory(question=table_question, form=form)
+
     query = """
         query ($id: ID!) {
           allDocuments(id: $id) {
@@ -229,6 +235,17 @@ def test_complex_document_query_performance(
                   label
                 }
               }
+            }
+          }
+          ... on FormQuestion {
+            subForm {
+              slug
+              name
+            }
+          }
+          ... on TableQuestion {
+            rowForm {
+              slug
             }
           }
           ... on MultipleChoiceQuestion {

@@ -486,7 +486,8 @@ class DjangoFilterConnectionField(
         # avoid query explosion of single relationships
         # may be removed once following issue is fixed:
         # https://github.com/graphql-python/graphene-django/issues/57
-        return queryset.select_related()
+        queryset.query.select_related = default_queryset.query.select_related
+        return queryset
 
 
 class DjangoFilterSetConnectionField(DjangoFilterConnectionField):
