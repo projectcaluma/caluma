@@ -38,6 +38,9 @@ class GlobalIDField(serializers.Field):
     def to_internal_value(self, data):
         return extract_global_id(data)
 
+    def to_representation(self, value):
+        return value
+
 
 class JexlField(serializers.CharField):
     def __init__(self, jexl, **kwargs):

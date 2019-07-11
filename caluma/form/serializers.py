@@ -147,7 +147,6 @@ class CopyQuestionSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        user = self.context["request"].user
         source = validated_data["source"]
         validated_data["type"] = source.type
         validated_data["is_required"] = source.is_required
@@ -155,25 +154,9 @@ class CopyQuestionSerializer(serializers.ModelSerializer):
         validated_data["configuration"] = dict(source.configuration)
         validated_data["meta"] = dict(source.meta)
         validated_data["row_form"] = source.row_form
+        validated_data["option_slugs"] = source.option_slugs
 
-        question = super().create(validated_data)
-
-        new_question_options = [
-            models.QuestionOption(
-                sort=sort,
-                question=question,
-                option=question_option.option,
-                created_by_user=user.username,
-                created_by_group=user.group,
-            )
-            for sort, question_option in enumerate(
-                reversed(models.QuestionOption.objects.filter(question=source)), start=1
-            )
-        ]
-        for question_option in new_question_options:
-            question_option.save()
-
-        return question
+        return super().create(validated_data)
 
     class Meta:
         model = models.Question
@@ -242,44 +225,8 @@ class SaveDateQuestionSerializer(SaveQuestionSerializer):
         fields = SaveQuestionSerializer.Meta.fields
 
 
-class SaveQuestionOptionsMixin(object):
-    def create_question_options(self, question, options):
-        user = self.context["request"].user
-        question_options = [
-            models.QuestionOption(
-                sort=sort,
-                question=question,
-                option=option,
-                created_by_user=user.username,
-                created_by_group=user.group,
-            )
-            for sort, option in enumerate(reversed(options), start=1)
-        ]
-        for question_option in question_options:
-            question_option.save()
-
-    @transaction.atomic
-    def create(self, validated_data):
-        options = validated_data.pop("options")
-        instance = super().create(validated_data)
-        self.create_question_options(instance, options)
-        return instance
-
-    @transaction.atomic
-    def update(self, instance, validated_data):
-        options = validated_data.pop("options")
-        models.QuestionOption.objects.filter(question=instance).delete()
-        instance = super().update(instance, validated_data)
-        self.create_question_options(instance, options)
-        return instance
-
-
-class SaveMultipleChoiceQuestionSerializer(
-    SaveQuestionOptionsMixin, SaveQuestionSerializer
-):
-    options = serializers.GlobalIDPrimaryKeyRelatedField(
-        queryset=models.Option.objects.all(), many=True, required=True
-    )
+class SaveMultipleChoiceQuestionSerializer(SaveQuestionSerializer):
+    options = ListField(source="option_slugs", child=serializers.GlobalIDField())
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_MULTIPLE_CHOICE
@@ -289,10 +236,8 @@ class SaveMultipleChoiceQuestionSerializer(
         fields = SaveQuestionSerializer.Meta.fields + ("options",)
 
 
-class SaveChoiceQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSerializer):
-    options = serializers.GlobalIDPrimaryKeyRelatedField(
-        queryset=models.Option.objects.all(), many=True, required=True
-    )
+class SaveChoiceQuestionSerializer(SaveQuestionSerializer):
+    options = ListField(source="option_slugs", child=serializers.GlobalIDField())
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_CHOICE

@@ -171,8 +171,8 @@ type ChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  options(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], slug: String, label: String, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, orderBy: [OptionOrdering]): OptionConnection
   id: ID!
+  options(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], slug: String, label: String, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, orderBy: [OptionOrdering]): OptionConnection
 }
 
 type CompleteTaskFormTask implements Task, Node {
@@ -402,9 +402,9 @@ type DynamicChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   dataSource: String!
   id: ID!
+  options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
 }
 
 type DynamicMultipleChoiceQuestion implements Question, Node {
@@ -421,9 +421,9 @@ type DynamicMultipleChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   dataSource: String!
   id: ID!
+  options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
 }
 
 type File implements Node {
@@ -688,9 +688,9 @@ type MultipleChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  options(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [OptionOrdering], slug: String, label: String, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): OptionConnection
   staticContent: String
   id: ID!
+  options(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [OptionOrdering], slug: String, label: String, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): OptionConnection
 }
 
 type Mutation {

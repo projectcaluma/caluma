@@ -62,19 +62,3 @@ class UUIDModel(BaseModel):
 
     class Meta:
         abstract = True
-
-
-class NaturalKeyModel(BaseModel):
-    """Models which use a natural key as primary key."""
-
-    id = models.CharField(max_length=255, unique=True, primary_key=True)
-
-    def natural_key(self):  # pragma: no cover
-        raise NotImplementedError()
-
-    def save(self, *args, **kwargs):
-        self.id = self.natural_key()
-        return super().save(*args, **kwargs)
-
-    class Meta:
-        abstract = True

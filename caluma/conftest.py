@@ -151,3 +151,9 @@ def simple_case(case_factory, document_factory, question_factory, answer_factory
     case = case_factory(document=document)
 
     return case
+
+
+@pytest.fixture
+def question_option(question, option):
+    question.option_slugs.append(option.slug)
+    question.save()

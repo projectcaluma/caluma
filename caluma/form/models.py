@@ -4,7 +4,7 @@ from django.db.models.signals import post_init
 from django.dispatch import receiver
 from localized_fields.fields import LocalizedField, LocalizedTextField
 
-from ..core.models import NaturalKeyModel, SlugModel, UUIDModel
+from ..core.models import SlugModel, UUIDModel
 from .storage_clients import client
 
 
@@ -87,9 +87,7 @@ class Question(SlugModel):
     configuration = JSONField(default=dict)
     meta = JSONField(default=dict)
     data_source = models.CharField(max_length=255, blank=True, null=True)
-    options = models.ManyToManyField(
-        "Option", through="QuestionOption", related_name="questions"
-    )
+    option_slugs = ArrayField(models.SlugField(max_length=50), default=list)
     row_form = models.ForeignKey(
         Form,
         blank=True,
@@ -142,19 +140,6 @@ class Question(SlugModel):
     @min_value.setter
     def min_value(self, value):
         self.configuration["min_value"] = value
-
-
-class QuestionOption(NaturalKeyModel):
-    question = models.ForeignKey("Question", on_delete=models.CASCADE)
-    option = models.ForeignKey("Option", on_delete=models.CASCADE)
-    sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
-
-    def natural_key(self):
-        return f"{self.question_id}.{self.option_id}"
-
-    class Meta:
-        ordering = ("-sort",)
-        unique_together = ("option", "question")
 
 
 class Option(SlugModel):

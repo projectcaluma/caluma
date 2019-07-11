@@ -80,15 +80,6 @@ class OptionFactory(DjangoModelFactory):
         model = models.Option
 
 
-class QuestionOptionFactory(DjangoModelFactory):
-    option = SubFactory(OptionFactory)
-    question = SubFactory(QuestionFactory)
-    sort = 0
-
-    class Meta:
-        model = models.QuestionOption
-
-
 class FormQuestionFactory(DjangoModelFactory):
     form = SubFactory(FormFactory)
     question = SubFactory(QuestionFactory)

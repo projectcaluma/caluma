@@ -122,7 +122,7 @@ def test_complex_document_query_performance(
     question_factory,
     answer_factory,
     file_factory,
-    question_option_factory,
+    option_factory,
     django_assert_num_queries,
     minio_mock,
 ):
@@ -130,10 +130,23 @@ def test_complex_document_query_performance(
     answers = answer_factory.create_batch(5, document=document)
     for answer in answers:
         form_question_factory(question=answer.question, form=form)
+
     multiple_choice_question = question_factory(type=Question.TYPE_MULTIPLE_CHOICE)
     form_question_factory(question=multiple_choice_question, form=form)
-    question_option_factory.create_batch(10, question=multiple_choice_question)
-    answer_factory(question=multiple_choice_question)
+    mmultiple_choice_options = option_factory.create_batch(10)
+    multiple_choice_question.option_slugs = [
+        option.slug for option in mmultiple_choice_options
+    ]
+    multiple_choice_question.save()
+    answer_factory(question=multiple_choice_question, document=document)
+
+    choice_question = question_factory(type=Question.TYPE_CHOICE)
+    form_question_factory(question=choice_question, form=form)
+    choice_options = option_factory.create_batch(10)
+    choice_question.option_slugs = [option.slug for option in choice_options]
+    choice_question.save()
+    answer_factory(question=choice_question, document=document)
+
     file_question = question_factory(type=Question.TYPE_FILE)
     form_question_factory(question=file_question, form=form)
     answer_factory(

@@ -82,7 +82,7 @@ class AnswerValidator:
         pass
 
     def _validate_question_choice(self, question, value, **kwargs):
-        options = question.options.values_list("slug", flat=True)
+        options = question.option_slugs
         if not isinstance(value, str) or value not in options:
             raise CustomValidationError(
                 f"Invalid value {value}. "
@@ -91,7 +91,7 @@ class AnswerValidator:
             )
 
     def _validate_question_multiple_choice(self, question, value, **kwargs):
-        options = question.options.values_list("slug", flat=True)
+        options = question.option_slugs
         invalid_options = set(value) - set(options)
         if not isinstance(value, list) or invalid_options:
             raise CustomValidationError(
@@ -236,9 +236,7 @@ class DocumentValidator:
                 )
 
     def get_document_answers(self, document, parent=None):
-        doc_answers = document.answers.select_related("question").prefetch_related(
-            "question__options"
-        )
+        doc_answers = document.answers.select_related("question")
 
         questions = document.form.all_questions().values("slug", "type")
 

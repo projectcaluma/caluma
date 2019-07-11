@@ -3,6 +3,8 @@ from django.shortcuts import get_object_or_404
 from graphene import relay
 from graphene.types import ObjectType, generic
 from graphene_django.rest_framework import serializer_converter
+from promise import Promise
+from promise.dataloader import DataLoader
 
 from ..core.filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
 from ..core.mutation import Mutation, UserDefinedPrimaryKeyMixin
@@ -10,6 +12,7 @@ from ..core.relay import extract_global_id
 from ..core.types import (
     ConnectionField,
     CountableConnectionBase,
+    DjangoConnectionField,
     DjangoObjectType,
     Node,
 )
@@ -147,11 +150,6 @@ class Option(FormDjangoObjectType):
         exclude_fields = ("questions",)
         connection_class = CountableConnectionBase
 
-    @classmethod
-    def get_queryset(cls, queryset, info):
-        queryset = super().get_queryset(queryset, info)
-        return queryset.order_by("-questionoption__sort")
-
 
 class QuestionConnection(CountableConnectionBase):
     class Meta:
@@ -192,7 +190,7 @@ class TextQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "type",
             "configuration",
             "data_source",
-            "options",
+            "option_slugs",
             "answers",
             "row_form",
             "sub_form",
@@ -216,7 +214,7 @@ class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "type",
             "configuration",
             "data_source",
-            "options",
+            "option_slugs",
             "answers",
             "row_form",
             "sub_form",
@@ -233,7 +231,7 @@ class DateQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "type",
             "configuration",
             "data_source",
-            "options",
+            "option_slugs",
             "answers",
             "row_form",
             "sub_form",
@@ -245,11 +243,39 @@ class DateQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class ChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
-    options = DjangoFilterConnectionField(
-        Option, filterset_class=filters.OptionFilterSet
-    )
+class OptionLoader(DataLoader):
+    def batch_load_fn(self, keys):
+        options = models.Option.objects.in_bulk(keys)
+        sorted_options = [options[key] for key in keys]
+        return Promise.resolve(sorted_options)
 
+
+option_loader = OptionLoader()
+
+
+class OptionsMixin:
+    options = DjangoConnectionField(Option, search=graphene.String())
+
+    def resolve_options(self, info, **args):
+        def filter_options(options):
+            # lazy load visible options per request
+            if not hasattr(info.context, "visible_options"):
+                queryset = Option.get_queryset(models.Option.objects, info)
+                info.context.visible_options = set(
+                    queryset.values_list("pk", flat=True)
+                )
+
+            return [
+                option
+                for option in options
+                if option.pk in info.context.visible_options
+            ]
+
+        # TODO: add filters (need manual)
+        return option_loader.load_many(self.option_slugs).then(filter_options)
+
+
+class ChoiceQuestion(OptionsMixin, QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
         exclude_fields = (
@@ -262,16 +288,13 @@ class ChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "placeholder",
             "static_content",
             "format_validators",
+            "option_slugs",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
 
 
-class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
-    options = DjangoFilterConnectionField(
-        Option, filterset_class=filters.OptionFilterSet
-    )
-
+class MultipleChoiceQuestion(OptionsMixin, QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
         exclude_fields = (
@@ -283,6 +306,7 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "sub_form",
             "placeholder",
             "format_validators",
+            "option_slugs",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -306,6 +330,7 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "placeholder",
             "static_content",
             "format_validators",
+            "option_slugs",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -329,6 +354,7 @@ class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType)
             "placeholder",
             "static_content",
             "format_validators",
+            "option_slugs",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -345,7 +371,7 @@ class IntegerQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "type",
             "configuration",
             "data_source",
-            "options",
+            "option_slugs",
             "answers",
             "row_form",
             "sub_form",
@@ -367,7 +393,7 @@ class FloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "type",
             "configuration",
             "data_source",
-            "options",
+            "option_slugs",
             "answers",
             "row_form",
             "sub_form",
@@ -385,7 +411,7 @@ class TableQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "type",
             "configuration",
             "data_source",
-            "options",
+            "option_slugs",
             "answers",
             "sub_form",
             "placeholder",
@@ -403,7 +429,7 @@ class FormQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "type",
             "configuration",
             "data_source",
-            "options",
+            "option_slugs",
             "answers",
             "row_form",
             "placeholder",
@@ -421,7 +447,7 @@ class FileQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "type",
             "configuration",
             "data_source",
-            "options",
+            "option_slugs",
             "answers",
             "row_form",
             "sub_form",
@@ -439,7 +465,7 @@ class StaticQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
         exclude_fields = (
             "type",
             "configuration",
-            "options",
+            "option_slugs",
             "answers",
             "row_form",
             "sub_form",

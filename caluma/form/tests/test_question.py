@@ -154,10 +154,11 @@ def test_query_all_questions(
 
 
 @pytest.mark.parametrize("question__meta", [{"meta": "set"}])
-def test_copy_question(
-    db, snapshot, question, question_option_factory, schema_executor
-):
-    question_option_factory.create_batch(5, question=question)
+def test_copy_question(db, snapshot, question, option_factory, schema_executor):
+    options = option_factory.create_batch(5)
+    question.option_slugs = [option.slug for option in options]
+    question.save()
+
     query = """
         mutation CopyQuestion($input: CopyQuestionInput!) {
           copyQuestion(input: $input) {
@@ -405,11 +406,13 @@ def test_save_integer_question(db, snapshot, question, success, schema_executor)
 
 @pytest.mark.parametrize("question__type", [models.Question.TYPE_MULTIPLE_CHOICE])
 def test_save_multiple_choice_question(
-    db, snapshot, question, question_option_factory, schema_executor
+    db, snapshot, question, option_factory, schema_executor
 ):
-    question_option_factory.create_batch(2, question=question)
+    options = option_factory.create_batch(2)
+    question.option_slugs = [option.slug for option in options]
+    question.save()
 
-    option_ids = question.options.order_by("-slug").values_list("slug", flat=True)
+    option_ids = list(reversed(question.option_slugs))
 
     query = """
         mutation SaveMultipleChoiceQuestion($input: SaveMultipleChoiceQuestionInput!) {
@@ -535,13 +538,7 @@ def test_save_dynamic_choice_question(
     "question__type", [models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE]
 )
 def test_save_dynamic_multiple_choice_question(
-    db,
-    snapshot,
-    question,
-    delete,
-    question_option_factory,
-    schema_executor,
-    data_source_settings,
+    db, snapshot, question, delete, schema_executor, data_source_settings
 ):
     query = """
         mutation SaveDynamicMultipleChoiceQuestion($input: SaveDynamicMultipleChoiceQuestionInput!) {

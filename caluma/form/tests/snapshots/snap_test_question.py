@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -449,13 +450,8 @@ snapshots["test_save_multiple_choice_question[multiple_choice] 1"] = {
             "meta": {},
             "options": {
                 "edges": [
-                    {
-                        "node": {
-                            "label": "Mariah Reynolds",
-                            "slug": "provide-beyond-seek",
-                        }
-                    },
-                    {"node": {"label": "Daniel Mann", "slug": "live-by-itself"}},
+                    {"node": {"label": "Calvin Graham", "slug": "service-bank-arm"}},
+                    {"node": {"label": "Robert Skinner", "slug": "eye-plan-third"}},
                 ]
             },
             "slug": "effort-meet",
