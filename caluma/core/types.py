@@ -34,12 +34,7 @@ class Node(object):
 
 
 class DjangoObjectType(Node, types.DjangoObjectType):
-    """
-    Django object type with overwriting get_queryset support.
-
-    Inspired by https://github.com/graphql-python/graphene-django/pull/528/files
-    and might be removed once merged.
-    """
+    """Django object type implementing default get_queryset with visibility layer."""
 
     class Meta:
         abstract = True
