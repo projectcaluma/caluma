@@ -469,13 +469,6 @@ class MetaFilterSet(FilterSet):
 class DjangoFilterConnectionField(
     filter.DjangoFilterConnectionField, DjangoConnectionField
 ):
-    """
-    Django connection filter field with object type get_queryset support.
-
-    Inspired by https://github.com/graphql-python/graphene-django/pull/528/files
-    and might be removed once merged.
-    """
-
     @property
     def filterset_class(self):
         return self._provided_filterset_class
