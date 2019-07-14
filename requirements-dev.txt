@@ -21,4 +21,4 @@ pytest-factoryboy==2.0.3
 pytest-mock==1.10.4
 pytest-randomly==3.0.0
 requests-mock==1.6.0
-snapshottest==0.5.0
+snapshottest==0.5.1
