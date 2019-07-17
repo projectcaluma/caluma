@@ -9,7 +9,7 @@ djangorestframework==3.10.0
 graphene==2.1.6
 graphene-django==2.3.2
 graphql-core==2.2
-graphql-relay==0.4.5
+graphql-relay==2.0.0
 idna==2.8
 minio==4.0.18
 psycopg2-binary==2.8.3
