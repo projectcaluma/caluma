@@ -56,12 +56,13 @@ class DocumentFilterSet(MetaFilterSet):
     )
     order_by = OrderingFilter(label="DocumentOrdering")
     root_document = GlobalIDFilter(field_name="family")
+    forms = GlobalIDMultipleChoiceFilter(field_name="form")
 
     has_answer = HasAnswerFilter(document_id="pk")
 
     class Meta:
         model = models.Document
-        fields = ("form", "search", "id")
+        fields = ("form", "forms", "search", "id")
 
 
 class AnswerFilterSet(MetaFilterSet):
