@@ -6,7 +6,7 @@ from django.db import models
 from django.utils import timezone
 from localized_fields.fields import LocalizedField
 
-from ..core.models import SlugModel, UUIDModel
+from ..core.models import ChoicesCharField, SlugModel, UUIDModel
 
 
 class Task(SlugModel):
@@ -23,7 +23,7 @@ class Task(SlugModel):
 
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
-    type = models.CharField(choices=TYPE_CHOICES_TUPLE, max_length=50)
+    type = ChoicesCharField(choices=TYPE_CHOICES_TUPLE, max_length=50)
     meta = JSONField(default=dict)
     address_groups = models.TextField(
         blank=True,
@@ -116,7 +116,7 @@ class Case(UUIDModel):
     workflow = models.ForeignKey(
         Workflow, related_name="cases", on_delete=models.DO_NOTHING
     )
-    status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
+    status = ChoicesCharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default=dict)
     document = models.OneToOneField(
         "form.Document",
@@ -151,7 +151,7 @@ class WorkItem(UUIDModel):
     task = models.ForeignKey(
         Task, on_delete=models.DO_NOTHING, related_name="work_items"
     )
-    status = models.CharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
+    status = ChoicesCharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
     meta = JSONField(default=dict)
 
     addressed_groups = ArrayField(

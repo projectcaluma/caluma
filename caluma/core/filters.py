@@ -18,7 +18,6 @@ from django_filters.constants import EMPTY_VALUES
 from django_filters.fields import ChoiceField
 from django_filters.rest_framework import (
     CharFilter,
-    ChoiceFilter,
     Filter,
     FilterSet,
     MultipleChoiceFilter,
@@ -233,17 +232,6 @@ class IntegerFilter(Filter):
 class FilterSet(GrapheneFilterSetMixin, FilterSet):
     created_by_user = CharFilter()
     created_by_group = CharFilter()
-
-    @classmethod
-    def filter_for_lookup(cls, field, lookup_type):
-        filter_class, params = super().filter_for_lookup(field, lookup_type)
-        if issubclass(filter_class, ChoiceFilter):
-            meta = field.model._meta
-            # Postfixing newly created filter with Argument to avoid conflicts
-            # with query nodes
-            name = to_camel_case(f"{meta.object_name}_{field.name}_argument")
-            params["label"] = name
-        return filter_class, params
 
 
 class MetaLookupMode(Enum):
@@ -531,6 +519,7 @@ def convert_ordering_field_to_enum(field):
     return converted
 
 
+@convert_form_field.register(forms.ChoiceField)
 @convert_form_field.register(ChoiceField)
 def convert_choice_field_to_enum(field):
     """
@@ -540,7 +529,9 @@ def convert_choice_field_to_enum(field):
     """
 
     registry = get_global_registry()
-    converted = registry.get_converted_field(field)
+
+    # field label of enum needs to be unique so stored it likewise
+    converted = registry.get_converted_field(field.label)
     if converted:
         return converted
 
@@ -564,7 +555,7 @@ def convert_choice_field_to_enum(field):
     enum = Enum(name, list(named_choices), type=EnumWithDescriptionsType)
     converted = enum(description=field.help_text, required=field.required)
 
-    registry.register_converted_field(field, converted)
+    registry.register_converted_field(field.label, converted)
     return converted
 
 

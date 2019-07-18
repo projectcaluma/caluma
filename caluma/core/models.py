@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from graphene.utils.str_converters import to_camel_case
 from simple_history.models import HistoricalRecords
 
 
@@ -78,3 +79,21 @@ class NaturalKeyModel(BaseModel):
 
     class Meta:
         abstract = True
+
+
+class ChoicesCharField(models.CharField):
+    """
+    Choices char field type with specific form field.
+
+    Graphene Django Filter converter uses formfield for conversion.
+    To support enum choices for arguments we need to set a label
+    which is unique across schema.
+    """
+
+    def formfield(self, **kwargs):
+        # Postfixing newly created filter with Argument to avoid conflicts
+        # with query nodes
+        meta = self.model._meta
+        name = to_camel_case(f"{meta.object_name}_{self.name}_argument")
+
+        return super().formfield(label=name, **kwargs)
