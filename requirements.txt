@@ -8,7 +8,7 @@ django_simple_history==2.7.3
 djangorestframework==3.10.1
 graphene==2.1.7
 graphene-django==2.3.2
-graphql-core==2.2
+graphql-core==2.2.1
 graphql-relay==2.0.0
 idna==2.8
 minio==4.0.18
