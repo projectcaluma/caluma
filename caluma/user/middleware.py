@@ -76,6 +76,11 @@ class OIDCAuthenticationMiddleware(object):
 
     def resolve(self, next, root, info, **args):
         request = info.context
+
+        # user already set on request, hence authentication already passed
+        if hasattr(request, "user"):
+            return next(root, info, **args)
+
         token = self.get_bearer_token(request)
 
         if token is None:
