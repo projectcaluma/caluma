@@ -3,6 +3,7 @@ import re
 
 import environ
 from django.conf import global_settings
+from promise import async_instance
 
 env = environ.Env()
 django_root = environ.Path(__file__) - 2
@@ -222,3 +223,9 @@ META_FIELDS = env.list("META_FIELDS", default=[])
 # static files
 
 STATIC_URL = "/static/"
+
+# disable trampoline to improve performance
+# see https://github.com/graphql-python/graphene/issues/268
+# this means though that data loader won't work which we currently don't use
+# best to remove once graphql-core-next is compatible with graphene.
+async_instance.disable_trampoline()
