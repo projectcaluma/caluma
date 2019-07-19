@@ -144,7 +144,7 @@ class Option(FormDjangoObjectType):
     class Meta:
         model = models.Option
         interfaces = (relay.Node,)
-        exclude_fields = ("questions",)
+        exclude = ("questions",)
         connection_class = CountableConnectionBase
 
     @classmethod
@@ -188,7 +188,7 @@ class TextQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "data_source",
@@ -212,7 +212,7 @@ class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "data_source",
@@ -229,7 +229,7 @@ class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 class DateQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "data_source",
@@ -252,7 +252,7 @@ class ChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "data_source",
@@ -274,7 +274,7 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "data_source",
@@ -297,7 +297,7 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "answers",
@@ -320,7 +320,7 @@ class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType)
 
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "answers",
@@ -341,7 +341,7 @@ class IntegerQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "data_source",
@@ -363,7 +363,7 @@ class FloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "data_source",
@@ -381,7 +381,7 @@ class FloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 class TableQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "data_source",
@@ -399,7 +399,7 @@ class TableQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 class FormQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "data_source",
@@ -417,7 +417,7 @@ class FormQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 class FileQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "data_source",
@@ -436,7 +436,7 @@ class FileQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 class StaticQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
-        exclude_fields = (
+        exclude = (
             "type",
             "configuration",
             "options",
@@ -460,7 +460,7 @@ class Form(FormDjangoObjectType):
     class Meta:
         model = models.Form
         interfaces = (relay.Node,)
-        exclude_fields = ("workflows", "tasks")
+        exclude = ("workflows", "tasks")
         connection_class = CountableConnectionBase
 
 
@@ -640,7 +640,7 @@ class IntegerAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "file", "date")
+        exclude = ("document", "documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -650,7 +650,7 @@ class FloatAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "file", "date")
+        exclude = ("document", "documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -663,7 +663,7 @@ class DateAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "file")
+        exclude = ("document", "documents", "file")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -673,7 +673,7 @@ class StringAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "file", "date")
+        exclude = ("document", "documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -683,7 +683,7 @@ class ListAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "file", "date")
+        exclude = ("document", "documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -701,7 +701,7 @@ class Document(FormDjangoObjectType):
 
     class Meta:
         model = models.Document
-        exclude_fields = ("family",)
+        exclude = ("family",)
         interfaces = (graphene.Node,)
         connection_class = CountableConnectionBase
 
@@ -714,7 +714,7 @@ class TableAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("documents", "file", "date")
+        exclude = ("documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -739,7 +739,7 @@ class FileAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude_fields = ("document", "documents", "date")
+        exclude = ("document", "documents", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 

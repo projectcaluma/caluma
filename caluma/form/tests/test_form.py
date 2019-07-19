@@ -12,10 +12,18 @@ from ..serializers import SaveFormSerializer
     [("First result", "1st", models.Question.TYPE_FLOAT)],
 )
 def test_query_all_forms(
-    db, snapshot, form, form_factory, form_question, question, schema_executor
+    db,
+    snapshot,
+    form,
+    form_factory,
+    form_question,
+    form_question_factory,
+    question,
+    schema_executor,
 ):
     form_factory(name="3rd", description="Second result")
     form_factory(name="2nd", description="Second result")
+    form_question_factory(form=form)
 
     query = """
         query AllFormsQuery($name: String, $question: String, $orderBy: [FormOrdering]) {

@@ -57,8 +57,8 @@ class Mutation(ClientIDMutation):
       and performing side effect.
     * `model_class`: The model class to lookup instance of. Defaults to model of serializer.
     * `model_operations`: Define which operations are allowed. Defaults to `['create', 'update'].
-    * `only_fields`: Restrict input fields. Defaults to serializer fields.
-    * `exclude_fields`: Exclude input fields. Defaults to serializer fields.
+    * `fields`: Restrict input fields. Defaults to serializer fields.
+    * `exclude`: Exclude input fields. Defaults to serializer fields.
     * `return_field_name`: Name of return graph. Defaults to camel cased model class name.
                            Maybe set to False to not return a field at all.
     * `return_field_type`: Type of return graph. Defaults to object type of given model_class.
@@ -79,8 +79,8 @@ class Mutation(ClientIDMutation):
         serializer_class=None,
         model_class=None,
         model_operations=["create", "update"],
-        only_fields=(),
-        exclude_fields=(),
+        fields=(),
+        exclude=(),
         return_field_name=None,
         return_field_type=None,
         **options
@@ -102,9 +102,7 @@ class Mutation(ClientIDMutation):
         if lookup_input_kwarg is None:
             lookup_input_kwarg = lookup_field
 
-        input_fields = fields_for_serializer(
-            serializer, only_fields, exclude_fields, is_input=True
-        )
+        input_fields = fields_for_serializer(serializer, fields, exclude, is_input=True)
 
         if return_field_name is None:
             model_name = model_class.__name__
