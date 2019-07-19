@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     "localized_fields",
     "psqlextra",
     "django.contrib.contenttypes",
+    "django.contrib.staticfiles",
     "graphene_django",
     "simple_history",
     "caluma.core.apps.DefaultConfig",
@@ -210,3 +211,8 @@ LOGGING = {
 # Configure the fields you intend to use in the "meta" fields. This will
 # provide corresponding constants in the ordreBy filter.
 META_FIELDS = env.list("META_FIELDS", default=[])
+
+
+# static files
+
+STATIC_URL = "/static/"
