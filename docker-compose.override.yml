@@ -19,6 +19,8 @@ services:
         "-c",
         "wait-for-it.sh db:${DATABASE_PORT:-5432} -- ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000",
       ]
+    # example for profiling
+    # command: ./manage.py runprofileserver --use-cprofile 0.0.0.0:8000 --nothreading --prof-path /app
     environment:
       - ENV=dev
   minio:

@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     "caluma.data_source.apps.DefaultConfig",
 ]
 
+if DEBUG:
+    INSTALLED_APPS.append("django_extensions")
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -158,6 +161,9 @@ GRAPHENE = {
     "SCHEMA": "caluma.schema.schema",
     "MIDDLEWARE": ["caluma.user.middleware.OIDCAuthenticationMiddleware"],
 }
+
+if DEBUG:
+    GRAPHENE["MIDDLEWARE"].append("graphene_django.debug.DjangoDebugMiddleware")
 
 # OpenID connect
 

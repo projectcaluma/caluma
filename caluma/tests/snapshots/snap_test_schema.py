@@ -338,6 +338,27 @@ type DateQuestion implements Question, Node {
 
 scalar DateTime
 
+type DjangoDebug {
+  sql: [DjangoDebugSQL]
+}
+
+type DjangoDebugSQL {
+  vendor: String!
+  alias: String!
+  sql: String
+  duration: Float!
+  rawSql: String!
+  params: String!
+  startTime: Float!
+  stopTime: Float!
+  isSlow: Boolean!
+  isSelect: Boolean!
+  transId: String
+  transStatus: String
+  isoLevel: String
+  encoding: String
+}
+
 type Document implements Node {
   createdAt: DateTime!
   modifiedAt: DateTime!
@@ -804,6 +825,7 @@ type Query {
   allFormatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
   documentValidity(id: ID!, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
   node(id: ID!): Node
+  _debug: DjangoDebug
 }
 
 interface Question {
