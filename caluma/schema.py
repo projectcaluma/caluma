@@ -1,6 +1,8 @@
 import graphene
+from django.conf import settings
 from graphene.relay import Node
 from graphene_django.converter import convert_django_field, convert_field_to_string
+from graphene_django.debug import DjangoDebug
 from localized_fields.fields import LocalizedField
 
 from .data_source import schema as data_source_schema
@@ -21,6 +23,8 @@ class Query(
     graphene.ObjectType,
 ):
     node = Node.Field()
+    if settings.DEBUG:
+        debug = graphene.Field(DjangoDebug, name="_debug")
 
 
 schema = graphene.Schema(
