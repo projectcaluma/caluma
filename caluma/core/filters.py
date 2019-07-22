@@ -493,7 +493,7 @@ class DjangoFilterConnectionField(
             return super(filter.DjangoFilterConnectionField, cls).connection_resolver(
                 resolver,
                 connection,
-                default_manager,
+                default_manager.get_queryset(),
                 max_limit,
                 enforce_first_or_last,
                 root,
