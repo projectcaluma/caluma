@@ -571,13 +571,11 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
             )
 
         # attach document answers to root document family
-        for document in models.Document.objects.filter(
+        models.Document.objects.filter(
             family__in=models.Document.objects.filter(pk__in=document_ids).values(
                 "family"
             )
-        ):
-            document.family = family
-            document.save()
+        ).update(family=family)
 
     @transaction.atomic
     def create(self, validated_data):
@@ -596,9 +594,9 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
             pk__in=answer_documents.values("document")
         ):
             children = self._get_document_tree(answer_document.pk)
-            for doc in models.Document.objects.filter(pk__in=children):
-                doc.family = answer_document.pk
-                doc.save()
+            models.Document.objects.filter(pk__in=children).update(
+                family=answer_document.pk
+            )
 
         answer_documents.delete()
 
