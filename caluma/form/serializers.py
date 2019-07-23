@@ -534,12 +534,16 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
     )
 
     def _get_document_tree(self, document_id):
-        answers = models.AnswerDocument.objects.filter(document_id=document_id).values(
-            "answer"
-        )
-        child_documents = models.Document.objects.filter(answers__in=answers).distinct()
+        """Get all child documents (table rows) of a given document, and the document itself."""
 
-        for child_document in child_documents:
+        answers = models.Answer.objects.filter(document_id=document_id)
+        child_documents = (
+            answers.filter(documents__isnull=False)
+            .values_list("documents", flat=True)
+            .distinct()
+        )
+
+        for child_document in child_documents:  # pragma: no cover
             yield from self._get_document_tree(child_document.pk)
 
         yield document_id
@@ -592,19 +596,18 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
     def update(self, instance, validated_data):
         documents = validated_data.pop("documents")
 
-        # detach answers to its own family tree
-        answer_documents = models.AnswerDocument.objects.filter(answer=instance)
-        for answer_document in models.Document.objects.filter(
-            pk__in=answer_documents.values("document")
-        ):
-            children = self._get_document_tree(answer_document.pk)
-            for doc in models.Document.objects.filter(pk__in=children):
+        document_pks = instance.documents.values_list("pk", flat=True)
+        for document_pk in document_pks:
+            tree = self._get_document_tree(document_pk)
+            for doc in models.Document.objects.filter(pk__in=tree):
                 # do not use update but set family one by one
                 # to allow django-simple-history to update history
-                doc.family = answer_document.pk
+                doc.family = document_pk
                 doc.save()
 
-        answer_documents.delete()
+        models.AnswerDocument.objects.filter(
+            document__in=instance.documents.values("pk")
+        ).delete()
 
         instance = super().update(instance, validated_data)
         self.create_answer_documents(instance, documents)
