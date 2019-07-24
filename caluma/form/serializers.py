@@ -576,6 +576,8 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
                 "family"
             )
         ):
+            # do not use update but set family one by one
+            # to allow django-simple-history to update history
             document.family = family
             document.save()
 
@@ -597,6 +599,8 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         ):
             children = self._get_document_tree(answer_document.pk)
             for doc in models.Document.objects.filter(pk__in=children):
+                # do not use update but set family one by one
+                # to allow django-simple-history to update history
                 doc.family = answer_document.pk
                 doc.save()
 
