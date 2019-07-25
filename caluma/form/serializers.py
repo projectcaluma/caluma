@@ -536,15 +536,13 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
     def _get_document_tree(self, document_id):
         """Get all child documents (table rows) of a given document, and the document itself."""
 
-        answers = models.Answer.objects.filter(document_id=document_id)
-        child_documents = (
-            answers.filter(documents__isnull=False)
-            .values_list("documents", flat=True)
-            .distinct()
+        table_answers = models.Answer.objects.filter(
+            document_id=document_id, question__type=models.Question.TYPE_TABLE
         )
+        child_documents = table_answers.values_list("documents", flat=True).distinct()
 
-        for child_document in child_documents:  # pragma: no cover
-            yield from self._get_document_tree(child_document.pk)
+        for child_document in child_documents:
+            yield from self._get_document_tree(child_document)
 
         yield document_id
 
@@ -596,6 +594,7 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
     def update(self, instance, validated_data):
         documents = validated_data.pop("documents")
 
+        # detach each table row to its own family
         document_pks = instance.documents.values_list("pk", flat=True)
         for document_pk in document_pks:
             tree = self._get_document_tree(document_pk)
@@ -605,9 +604,7 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
                 doc.family = document_pk
                 doc.save()
 
-        models.AnswerDocument.objects.filter(
-            document__in=instance.documents.values("pk")
-        ).delete()
+        models.AnswerDocument.objects.filter(document__in=document_pks).delete()
 
         instance = super().update(instance, validated_data)
         self.create_answer_documents(instance, documents)
