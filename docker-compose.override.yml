@@ -6,6 +6,7 @@ services:
     ports:
       - "${DATABASE_PORT:-5432}:${DATABASE_PORT:-5432}"
   caluma:
+    image: projectcaluma/caluma:dev
     build:
       context: .
       args:
