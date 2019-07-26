@@ -1,7 +1,7 @@
 import pytest
 
-from ...core.filters import AnswerHierarchyMode, AnswerLookupMode
 from ...core.relay import extract_global_id
+from ...form.filters import AnswerHierarchyMode, AnswerLookupMode
 from .. import models
 
 TEST_VALUES = {

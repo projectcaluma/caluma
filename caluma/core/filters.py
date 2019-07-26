@@ -1,15 +1,12 @@
 from functools import reduce
 
-import django.forms
 import graphene
 from django import forms
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields.hstore import KeyTransform
 from django.contrib.postgres.search import SearchVector
-from django.core import exceptions
-from django.db import ProgrammingError, models
-from django.db.models import Q
+from django.db import models
 from django.db.models.constants import LOOKUP_SEP
 from django.db.models.expressions import OrderBy, RawSQL
 from django.db.models.functions import Cast
@@ -33,8 +30,6 @@ from graphene_django.filter.filterset import GrapheneFilterSetMixin
 from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
 from localized_fields.fields import LocalizedField
-
-from caluma.form.models import Answer, Question
 
 from .forms import (
     GlobalIDFormField,
@@ -273,164 +268,6 @@ class MetaValueFilter(Filter):
         return converted
 
 
-class AnswerLookupMode(Enum):
-    EXACT = "exact"
-    STARTSWITH = "startswith"
-    CONTAINS = "contains"
-    ICONTAINS = "icontains"
-    INTERSECTS = "intersects"
-
-    GTE = "gte"
-    GT = "gt"
-    LTE = "lte"
-    LT = "lt"
-
-
-class AnswerHierarchyMode(Enum):
-    DIRECT = "DIRECT"
-    FAMILY = "FAMILY"
-
-
-class HasAnswerFilterType(InputObjectType):
-    """Lookup type to search document structures."""
-
-    question = graphene.String(required=True)
-    value = graphene.types.generic.GenericScalar(required=True)
-    lookup = AnswerLookupMode()
-    hierarchy = AnswerHierarchyMode()
-
-
-class HasAnswerFilterField(forms.MultiValueField):
-    def __init__(self, label, **kwargs):
-        super().__init__(fields=(forms.CharField(), forms.CharField()))
-
-    def clean(self, data):
-        # override parent clean() which would reject our data structure.
-        # We don't validate, as the structure is already enforced by the
-        # schema.
-        return data
-
-
-class HasAnswerFilter(Filter):
-    field_class = HasAnswerFilterField
-
-    def __init__(self, *args, **kwargs):
-        self.document_id = kwargs.pop("document_id")
-        super().__init__(self, *args, **kwargs)
-
-    VALID_LOOKUPS = {
-        "text": [
-            AnswerLookupMode.EXACT,
-            AnswerLookupMode.STARTSWITH,
-            AnswerLookupMode.CONTAINS,
-            AnswerLookupMode.ICONTAINS,
-        ],
-        "integer": [
-            AnswerLookupMode.EXACT,
-            AnswerLookupMode.LT,
-            AnswerLookupMode.LTE,
-            AnswerLookupMode.GT,
-            AnswerLookupMode.GTE,
-        ],
-        "multiple_choice": [
-            AnswerLookupMode.EXACT,
-            AnswerLookupMode.CONTAINS,
-            AnswerLookupMode.INTERSECTS,
-        ],
-    }
-    VALID_LOOKUPS["date"] = VALID_LOOKUPS["integer"]
-    VALID_LOOKUPS["float"] = VALID_LOOKUPS["integer"]
-    VALID_LOOKUPS["choice"] = VALID_LOOKUPS["multiple_choice"]
-    VALID_LOOKUPS["dynamic_choice"] = VALID_LOOKUPS["multiple_choice"]
-    VALID_LOOKUPS["dynamic_multiple_choice"] = VALID_LOOKUPS["multiple_choice"]
-    VALID_LOOKUPS["textarea"] = VALID_LOOKUPS["text"]
-    VALID_LOOKUPS["datetime"] = VALID_LOOKUPS["integer"]
-
-    def filter(self, qs, value):
-        if value in EMPTY_VALUES:
-            return qs
-
-        for expr in value:
-            qs = self.apply_expr(qs, expr)
-        return qs
-
-    def apply_expr(self, qs, expr):
-        question_slug = expr["question"]
-        match_value = expr["value"]
-
-        lookup = expr.get("lookup", self.lookup_expr)
-        hierarchy = expr.get("hierarchy", AnswerHierarchyMode.FAMILY)
-
-        question = Question.objects.get(slug=question_slug)
-        self._validate_lookup(question, lookup)
-
-        answer_value = "value"
-        if question.type == Question.TYPE_DATE:
-            answer_value = "date"
-
-        answers = Answer.objects.all()
-
-        if lookup == AnswerLookupMode.INTERSECTS:
-            inner_lookup = "exact"
-            if question.type in (
-                Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
-                Question.TYPE_MULTIPLE_CHOICE,
-            ):
-                inner_lookup = "contains"
-
-            exprs = [
-                Q(**{f"value__{inner_lookup}": val, "question__slug": question_slug})
-                for val in match_value
-            ]
-            # connect all expressions with OR
-            answers = answers.filter(reduce(lambda a, b: a | b, exprs))
-        else:
-            answers = answers.filter(
-                **{
-                    f"{answer_value}__{lookup}": match_value,
-                    "question__slug": question_slug,
-                }
-            )
-
-        if hierarchy == AnswerHierarchyMode.FAMILY:
-            return qs.filter(
-                **{f"{self.document_id}__in": answers.values("document__family")}
-            )
-        else:
-            return qs.filter(**{f"{self.document_id}__in": answers.values("document")})
-
-    def _validate_lookup(self, question, lookup):
-        try:
-            valid_lookups = self.VALID_LOOKUPS[question.type]
-        except KeyError:  # pragma: no cover
-            # Not covered in tests - this only happens when you add a new
-            # question type and forget to update the lookup config above.  In
-            # that case, the fix is simple - go up a few lines and adjust the
-            # VALID_LOOKUPS dict.
-            raise ProgrammingError(
-                f"Valid lookups not configured for question type {question.type}"
-            )
-
-        if lookup not in valid_lookups:
-            raise exceptions.ValidationError(
-                f"Invalid lookup for question slug={question.slug} ({question.type.upper()}): {lookup.upper()}"
-            )
-
-    @staticmethod
-    @convert_form_field.register(HasAnswerFilterField)
-    def convert_meta_value_field(field):
-        registry = get_global_registry()
-        converted = registry.get_converted_field(field)
-        if converted:
-            return converted
-
-        # the converted type must be list-of-filter, as we need to apply
-        # multiple conditions
-        converted = List(HasAnswerFilterType)
-        registry.register_converted_field(field, converted)
-        return converted
-
-
 class MetaFilterSet(FilterSet):
     meta_has_key = CharFilter(lookup_expr="has_key", field_name="meta")
     meta_value = MetaValueFilter(field_name="meta")
@@ -595,7 +432,7 @@ def generate_list_filter_class(inner_type):
     django_filters.BaseInFilter)
     """
 
-    form_field = type(f"List{inner_type.__name__}FormField", (django.forms.Field,), {})
+    form_field = type(f"List{inner_type.__name__}FormField", (forms.Field,), {})
     filter_class = type(
         f"{inner_type.__name__}ListFilter",
         (Filter,),
