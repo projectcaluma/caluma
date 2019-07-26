@@ -13,9 +13,9 @@ import pytest
 def test_order_by_meta(db, schema_executor, request, factory, query, reverse):
 
     factory = request.getfixturevalue(factory)
-
-    for x in range(3):
-        factory(meta={"test-key": x})
+    factory(meta={"test-key": 3})
+    factory(meta={"test-key": 100})
+    factory(meta={"test-key": 20})
 
     order = "META_TEST_KEY_DESC" if reverse else "META_TEST_KEY_ASC"
 
