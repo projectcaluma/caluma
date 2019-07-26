@@ -765,7 +765,12 @@ def test_save_document_table_answer_invalid_row_form(
 
 @pytest.mark.parametrize("question__type", [Question.TYPE_TABLE])
 def test_save_document_table_answer_setting_family(
-    db, schema_executor, answer, document_factory
+    db,
+    schema_executor,
+    answer,
+    answer_factory,
+    document_factory,
+    answer_document_factory,
 ):
     query = """
         mutation SaveDocumentTableAnswer($input: SaveDocumentTableAnswerInput!) {
@@ -785,16 +790,26 @@ def test_save_document_table_answer_setting_family(
     main_family = answer.document.family
     remaining_document = document_factory(form=answer.question.row_form)
     to_be_deleted_document = document_factory(form=answer.question.row_form)
+    answer_factory(document=to_be_deleted_document)
+    to_be_deleted_table_row = document_factory(
+        form=answer.question.row_form, family=to_be_deleted_document.family
+    )
+    table_answer = answer_factory(
+        question=answer.question, document=to_be_deleted_document
+    )
+    answer_document_factory(answer=table_answer, document=to_be_deleted_table_row)
 
     # attach documents to table answer
     inp["input"]["value"] = {remaining_document.pk, to_be_deleted_document.pk}
     result = schema_executor(query, variables=inp)
     assert not result.errors
-    assert {main_pk} | inp["input"]["value"] == set(
+    assert {main_pk, to_be_deleted_table_row.pk} | inp["input"]["value"] == set(
         Document.objects.filter(family=main_family).values_list("id", flat=True)
     ), "family is not set to main document"
     to_be_deleted_document.refresh_from_db()
     assert to_be_deleted_document.family == main_family
+    to_be_deleted_table_row.refresh_from_db()
+    assert to_be_deleted_table_row.family == main_family
 
     # detach one document answer from table answer
     inp["input"]["value"] = {remaining_document.pk}
@@ -804,8 +819,9 @@ def test_save_document_table_answer_setting_family(
         Document.objects.filter(family=main_family).values_list("id", flat=True)
     )
     to_be_deleted_document.refresh_from_db()
-    assert to_be_deleted_document.family != main_family
     assert to_be_deleted_document.family == to_be_deleted_document.pk
+    to_be_deleted_table_row.refresh_from_db()
+    assert to_be_deleted_table_row.family == to_be_deleted_document.family
 
 
 @pytest.mark.parametrize("question__type", [Question.TYPE_FORM])
