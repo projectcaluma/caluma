@@ -6,25 +6,20 @@ import requests
 from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
+from django.http.response import HttpResponse
 from django.utils.encoding import force_bytes, smart_text
-from rest_framework import exceptions
+from graphene_django.views import GraphQLView, HttpError
 from rest_framework.authentication import get_authorization_header
 
 from . import models
 
 
-class OIDCAuthenticationMiddleware(object):
-    """GraphQL middleware to authenticate against open id connect provider.
+class HttpResponseUnauthorized(HttpResponse):
+    status_code = 401
 
-    This middle enforces authentication for all graphs.
-    """
 
-    def __init__(self):
-        self._keys = None
-
+class AuthenticationGraphQLView(GraphQLView):
     def get_bearer_token(self, request):
-        # TODO: status code of AuthenticationFailed error should be 401
-        # https://github.com/graphql-python/graphene-django/issues/252
         auth = get_authorization_header(request).split()
         header_prefix = "Bearer"
 
@@ -32,17 +27,17 @@ class OIDCAuthenticationMiddleware(object):
             return None
 
         if smart_text(auth[0].lower()) != header_prefix.lower():
-            raise exceptions.AuthenticationFailed("No Bearer Authorization header")
+            raise HttpError(HttpResponseUnauthorized("No Bearer Authorization header"))
 
         if len(auth) == 1:
             msg = "Invalid Authorization header. No credentials provided"
-            raise exceptions.AuthenticationFailed(msg)
+            raise HttpError(HttpResponseUnauthorized(msg))
         elif len(auth) > 2:
             msg = (
                 "Invalid Authorization header. Credentials string should "
                 "not contain spaces."
             )
-            raise exceptions.AuthenticationFailed(msg)
+            raise HttpError(HttpResponseUnauthorized(msg))
 
         return auth[1]
 
@@ -74,18 +69,11 @@ class OIDCAuthenticationMiddleware(object):
         response.raise_for_status()
         return response.json()
 
-    def resolve(self, next, root, info, **args):
-        request = info.context
-
-        # user already set on request, hence authentication already passed
-        if hasattr(request, "user"):
-            return next(root, info, **args)
-
+    def get_user(self, request):
         token = self.get_bearer_token(request)
 
         if token is None:
-            request.user = models.AnonymousUser()
-            return next(root, info, **args)
+            return models.AnonymousUser()
 
         if not settings.OIDC_USERINFO_ENDPOINT:
             raise ImproperlyConfigured(
@@ -102,22 +90,38 @@ class OIDCAuthenticationMiddleware(object):
                 userinfo_method,
                 timeout=settings.OIDC_BEARER_TOKEN_REVALIDATION_TIME,
             )
-            request.user = models.OIDCUser(token, userinfo)
+            return models.OIDCUser(token, userinfo)
         except requests.HTTPError as e:
-            if (
-                e.response.status_code in [401, 403]
-                and settings.OIDC_INTROSPECT_ENDPOINT
-            ):
-                introspect_method = functools.partial(
-                    self.get_introspection, token=token
-                )
-                introspection = cache.get_or_set(
-                    f"authentication.introspect.{hashsum_token}",
-                    introspect_method,
-                    timeout=settings.OIDC_BEARER_TOKEN_REVALIDATION_TIME,
-                )
-                request.user = models.OIDCClient(token, introspection)
-            else:
-                raise e
+            try:
+                if (
+                    e.response.status_code in [401, 403]
+                    and settings.OIDC_INTROSPECT_ENDPOINT
+                ):
+                    introspect_method = functools.partial(
+                        self.get_introspection, token=token
+                    )
+                    introspection = cache.get_or_set(
+                        f"authentication.introspect.{hashsum_token}",
+                        introspect_method,
+                        timeout=settings.OIDC_BEARER_TOKEN_REVALIDATION_TIME,
+                    )
+                    return models.OIDCClient(token, introspection)
+                else:
+                    raise e
+            except requests.HTTPError as internal_exception:
+                # convert request error to django http error
+                response = HttpResponse()
+                response.status_code = internal_exception.response.status_code
+                raise HttpError(response, message=str(internal_exception))
 
-        return next(root, info, **args)
+    def dispatch(self, request, *args, **kwargs):
+        try:
+            request.user = self.get_user(request)
+            return super().dispatch(request, *args, **kwargs)
+        except HttpError as e:
+            response = e.response
+            response["Content-Type"] = "application/json"
+            response.content = self.json_encode(
+                request, {"errors": [self.format_error(e)]}
+            )
+            return response
