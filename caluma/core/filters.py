@@ -1,4 +1,3 @@
-import itertools
 from functools import reduce
 
 import django.forms
@@ -12,6 +11,7 @@ from django.core import exceptions
 from django.db import ProgrammingError, models
 from django.db.models import Q
 from django.db.models.constants import LOOKUP_SEP
+from django.db.models.expressions import OrderBy, RawSQL
 from django.db.models.functions import Cast
 from django.utils import translation
 from django_filters.constants import EMPTY_VALUES
@@ -178,8 +178,6 @@ class OrderingFilter(OrderingFilter):
             *[f"meta_{f}" for f in settings.META_FIELDS],
         )
 
-        self._gen = itertools.count()
-
         super().__init__(
             *args,
             fields=fields,
@@ -189,40 +187,24 @@ class OrderingFilter(OrderingFilter):
             **kwargs,
         )
 
-    def _prepare_val(self, val, qs):
-        """Prepare value for sorting.
+    def get_ordering_value(self, param):
+        if not any(param.startswith(prefix) for prefix in ("meta_", "-meta_")):
+            return super().get_ordering_value(param)
 
-        If the orderby value is a meta field, we annotate the queryset by an
-        expression to extract said value, then tell Django to order by that
-        value. Direct ordering on expressions seems not to work
-        """
-        if not any(val.startswith(prefix) for prefix in ("meta_", "-meta_")):
-            return val, qs
+        descending = False
+        if param.startswith("-"):
+            descending = True
+            param = param[1:]
 
-        reverse = ""
-        if val.startswith("-"):
-            reverse = "-"
-            val = val[1:]
+        meta_field_key = param[5:]
 
-        meta_field = val[5:]
-
-        ann = f"order_{next(self._gen)}"
-
-        qs = qs.annotate(**{ann: models.F("meta")._combine(meta_field, "->>", False)})
-
-        return f"{reverse}{ann}", qs
-
-    def filter(self, qs, value):
-        if value in EMPTY_VALUES:
-            return qs
-
-        newvals = []
-
-        for val in value:
-            newval, qs = self._prepare_val(val, qs)
-            newvals.append(newval)
-
-        return super().filter(qs, newvals)
+        # order_by works on json field keys only without dashes
+        # but we want to support dasherized keys as well as this is
+        # valid json, hence need to use raw sql
+        return OrderBy(
+            RawSQL(f'"{self.model._meta.db_table}"."meta"->%s', (meta_field_key,)),
+            descending=descending,
+        )
 
 
 class IntegerFilter(Filter):
