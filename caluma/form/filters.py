@@ -40,7 +40,7 @@ class OptionFilterSet(MetaFilterSet):
 
     class Meta:
         model = models.Option
-        fields = ("slug", "label")
+        fields = ("slug", "label", "is_archived")
 
 
 class QuestionFilterSet(MetaFilterSet):

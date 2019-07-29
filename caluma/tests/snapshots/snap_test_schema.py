@@ -171,7 +171,7 @@ type ChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  options(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], slug: String, label: String, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, orderBy: [OptionOrdering]): OptionConnection
+  options(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], slug: String, label: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, orderBy: [OptionOrdering]): OptionConnection
   id: ID!
 }
 
@@ -709,7 +709,7 @@ type MultipleChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  options(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [OptionOrdering], slug: String, label: String, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): OptionConnection
+  options(before: String, after: String, first: Int, last: Int, metaValue: [MetaValueFilterType], orderBy: [OptionOrdering], slug: String, label: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): OptionConnection
   staticContent: String
   id: ID!
 }
@@ -733,7 +733,6 @@ type Mutation {
   removeFormQuestion(input: RemoveFormQuestionInput!): RemoveFormQuestionPayload
   reorderFormQuestions(input: ReorderFormQuestionsInput!): ReorderFormQuestionsPayload
   saveOption(input: SaveOptionInput!): SaveOptionPayload
-  removeOption(input: RemoveOptionInput!): RemoveOptionPayload
   copyOption(input: CopyOptionInput!): CopyOptionPayload
   copyQuestion(input: CopyQuestionInput!): CopyQuestionPayload
   saveTextQuestion(input: SaveTextQuestionInput!): SaveTextQuestionPayload
@@ -772,6 +771,7 @@ type Option implements Node {
   createdByGroup: String
   slug: String!
   label: String!
+  isArchived: Boolean!
   meta: GenericScalar
   source: Option
   id: ID!
@@ -913,15 +913,6 @@ input RemoveFormQuestionInput {
 
 type RemoveFormQuestionPayload {
   form: Form
-  clientMutationId: String
-}
-
-input RemoveOptionInput {
-  option: ID!
-  clientMutationId: String
-}
-
-type RemoveOptionPayload {
   clientMutationId: String
 }
 
@@ -1262,6 +1253,7 @@ type SaveMultipleChoiceQuestionPayload {
 input SaveOptionInput {
   slug: String!
   label: String!
+  isArchived: Boolean
   meta: JSONString
   clientMutationId: String
 }

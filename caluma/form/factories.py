@@ -74,6 +74,7 @@ class QuestionFactory(DjangoModelFactory):
 class OptionFactory(DjangoModelFactory):
     slug = Faker("slug")
     label = Faker("multilang", faker_provider="name")
+    is_archived = False
     meta = {}
 
     class Meta:
