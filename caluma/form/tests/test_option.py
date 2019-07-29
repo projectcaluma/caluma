@@ -27,21 +27,6 @@ def test_save_option(db, option, snapshot, schema_executor):
     snapshot.assert_match(result.data)
 
 
-def test_remove_option(db, option, schema_executor):
-    query = """
-        mutation RemoveOption($input: RemoveOptionInput!) {
-          removeOption(input: $input) {
-            clientMutationId
-          }
-        }
-    """
-
-    result = schema_executor(query, variables={"input": {"option": option.pk}})
-    assert not result.errors
-    with pytest.raises(models.Option.DoesNotExist):
-        option.refresh_from_db()
-
-
 @pytest.mark.parametrize("option__meta", [{"meta": "set"}])
 def test_copy_option(db, option, schema_executor):
     query = """

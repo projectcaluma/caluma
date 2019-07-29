@@ -166,6 +166,7 @@ class QuestionOption(NaturalKeyModel):
 
 class Option(SlugModel):
     label = LocalizedField(blank=False, null=False, required=False)
+    is_archived = models.BooleanField(default=False)
     meta = JSONField(default=dict)
     source = models.ForeignKey(
         "self",

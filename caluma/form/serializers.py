@@ -442,7 +442,7 @@ class SaveStaticQuestionSerializer(SaveQuestionSerializer):
 
 class SaveOptionSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ("slug", "label", "meta")
+        fields = ("slug", "label", "is_archived", "meta")
         model = models.Option
 
 
@@ -458,18 +458,6 @@ class CopyOptionSerializer(serializers.ModelSerializer):
 
     class Meta:
         fields = ("slug", "label", "source")
-        model = models.Option
-
-
-class RemoveOptionSerializer(serializers.ModelSerializer):
-    option = serializers.GlobalIDField(source="slug")
-
-    def update(self, instance, validated_data):
-        models.Option.objects.filter(pk=instance).delete()
-        return instance
-
-    class Meta:
-        fields = ("option",)
         model = models.Option
 
 

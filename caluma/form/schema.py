@@ -605,14 +605,6 @@ class CopyOption(UserDefinedPrimaryKeyMixin, Mutation):
         model_operations = ["create"]
 
 
-class RemoveOption(UserDefinedPrimaryKeyMixin, Mutation):
-    class Meta:
-        lookup_input_kwarg = "option"
-        serializer_class = serializers.RemoveOptionSerializer
-        return_field_name = False
-        model_operations = ["update"]
-
-
 class Answer(Node, graphene.Interface):
     id = graphene.ID()
     created_at = graphene.DateTime(required=True)
@@ -827,7 +819,6 @@ class Mutation(object):
     reorder_form_questions = ReorderFormQuestions().Field()
 
     save_option = SaveOption().Field()
-    remove_option = RemoveOption().Field()
     copy_option = CopyOption().Field()
 
     copy_question = CopyQuestion().Field()
