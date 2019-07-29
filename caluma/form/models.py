@@ -1,4 +1,5 @@
 from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
 from django.db.models.signals import post_init
 from django.dispatch import receiver
@@ -32,6 +33,9 @@ class Form(SlugModel):
             questions = questions.union(q.sub_form.all_questions())
 
         return questions
+
+    class Meta:
+        indexes = [GinIndex(fields=["meta"])]
 
 
 class FormQuestion(UUIDModel):
@@ -143,6 +147,9 @@ class Question(SlugModel):
     def min_value(self, value):
         self.configuration["min_value"] = value
 
+    class Meta:
+        indexes = [GinIndex(fields=["meta"])]
+
 
 class QuestionOption(NaturalKeyModel):
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
@@ -169,6 +176,9 @@ class Option(SlugModel):
         on_delete=models.SET_NULL,
     )
 
+    class Meta:
+        indexes = [GinIndex(fields=["meta"])]
+
 
 class DocumentManager(models.Manager):
     @transaction.atomic
@@ -192,6 +202,9 @@ class Document(UUIDModel):
         "form.Form", on_delete=models.DO_NOTHING, related_name="documents"
     )
     meta = JSONField(default=dict)
+
+    class Meta:
+        indexes = [GinIndex(fields=["meta"])]
 
 
 class Answer(UUIDModel):
@@ -219,7 +232,7 @@ class Answer(UUIDModel):
     class Meta:
         # a question may only be answerd once per document
         unique_together = ("document", "question")
-        indexes = [models.Index(fields=["value"]), models.Index(fields=["date"])]
+        indexes = [models.Index(fields=["date"]), GinIndex(fields=["meta", "value"])]
 
 
 class File(UUIDModel):

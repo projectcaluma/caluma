@@ -53,6 +53,9 @@ class Task(SlugModel):
             return timezone.now() + timedelta(seconds=self.lead_time)
         return None
 
+    class Meta:
+        indexes = [GinIndex(fields=["meta"])]
+
 
 class Workflow(SlugModel):
     name = LocalizedField(blank=False, null=False, required=False)
@@ -76,6 +79,9 @@ class Workflow(SlugModel):
     @property
     def flows(self):
         return Flow.objects.filter(pk__in=self.task_flows.values("flow"))
+
+    class Meta:
+        indexes = [GinIndex(fields=["meta"])]
 
 
 class Flow(UUIDModel):
@@ -125,6 +131,9 @@ class Case(UUIDModel):
         blank=True,
         null=True,
     )
+
+    class Meta:
+        indexes = [GinIndex(fields=["meta"])]
 
 
 class WorkItem(UUIDModel):
@@ -191,4 +200,5 @@ class WorkItem(UUIDModel):
         indexes = [
             GinIndex(fields=["addressed_groups"]),
             GinIndex(fields=["assigned_users"]),
+            GinIndex(fields=["meta"]),
         ]
