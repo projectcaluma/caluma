@@ -93,7 +93,6 @@ A list of configuration options which you might need to configure to get Caluma 
 * `LANGUAGE_CODE`: Default language defined as fallback (default: en)
 * `LANGUAGES`: List of supported language codes (default: all available)
 * `LOG_LEVEL`: [Log level](https://docs.djangoproject.com/en/1.11/topics/logging/#loggers) of messages to write to output (default: INFO)
-* `META_FIELDS`: If you want to sort data by values in the `meta` field, you can add them here
 
 #### Authentication and authorization
 
