@@ -5,13 +5,13 @@ from ..core.filters import (
     CharFilter,
     FilterSet,
     GlobalIDFilter,
-    HasAnswerFilter,
     MetaFilterSet,
     OrderingFilter,
     SearchFilter,
     StringListFilter,
     generate_list_filter_class,
 )
+from ..form.filters import HasAnswerFilter
 from ..form.models import Answer, Question
 from . import models
 
