@@ -383,11 +383,19 @@ Following environment variables need to be set for caluma:
 * `OIDC_INTROSPECT_CLIENT_ID`: ID of the OIDC-client
 * `OIDC_INTROSPECT_CLIENT_SECRET`: Secret of the OIDC-client
 
+## Auditing
 
-# Auditing
 Caluma uses [django-simple-history](https://github.com/treyhunner/django-simple-history)
 to save a history of changes to the models.
 
+## Debugging
+
+Set environment variable `ENV` to `dev` to enable debugging capabilities. Don't use this in production as it exposes confidential information!
+
+This enables [Django Debug Middleware](https://docs.graphene-python.org/projects/django/en/latest/debug/).
+
+For profiling you can use `./manage.py runprofileserver`. See [docker-compose.yml](docker-compose.override.yml) for
+an example.
 
 ## Contributing
 
