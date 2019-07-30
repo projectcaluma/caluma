@@ -4,6 +4,7 @@ from rest_framework.exceptions import ValidationError
 from ...core.tests import extract_serializer_input_fields
 from ...form.models import Question
 from .. import serializers
+from ..jexl import QuestionMissing
 from ..validators import DocumentValidator, QuestionValidator
 
 
@@ -220,8 +221,7 @@ def test_validate_table(
     )
 
     if should_throw and required_jexl_sub.startswith("'fail'"):
-        error_msg = "Error while evaluating 'is_required' expression on question sub_2_question_b: 'fail' == 'no-question-slug'|answer"
-        with pytest.raises(RuntimeError, match=error_msg):
+        with pytest.raises(QuestionMissing):
             DocumentValidator().validate(main_document, info)
     elif should_throw:
         q_slug = sub_question_b.question.slug

@@ -278,6 +278,8 @@ class DocumentValidator:
                     if is_required and answers.get(question["slug"]) in EMPTY_VALUES:
                         required_but_empty.append(question["slug"])
 
+            except jexl.QuestionMissing:
+                raise
             except Exception as exc:
                 expr_jexl = question.get(expr)
                 log.error(
