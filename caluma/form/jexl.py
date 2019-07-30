@@ -27,10 +27,7 @@ class QuestionJexl(JEXL):
 
     def answer_transform(self, question):
         try:
-            return (
-                self.answer_by_question.get(question)
-                or self.answer_by_question.get("parent", {})[question]
-            )
+            return self.answer_by_question[question]
         except KeyError:
             raise RuntimeError(f"Question could not be found: {question}")
 
