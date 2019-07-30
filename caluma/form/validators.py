@@ -1,5 +1,4 @@
 import sys
-from logging import getLogger
 
 from django_filters.constants import EMPTY_VALUES
 from rest_framework import exceptions
@@ -12,8 +11,6 @@ from caluma.data_source.data_source_handlers import (
 from . import jexl
 from .format_validators import get_format_validators
 from .models import Answer, Question
-
-log = getLogger()
 
 
 class CustomValidationError(exceptions.ValidationError):
@@ -263,31 +260,17 @@ class DocumentValidator:
             "slug", "is_required", "is_hidden"
         ):
             # TODO: can we iterate over questions of answers via answers?
-            try:
-                expr = "is_hidden"
-                is_hidden = jexl.QuestionJexl(answers, document.form.slug).evaluate(
-                    question["is_hidden"]
+            is_hidden = jexl.QuestionJexl(answers, document.form.slug).evaluate(
+                question["is_hidden"]
+            )
+
+            if not is_hidden:
+                is_required = jexl.QuestionJexl(answers, document.form.slug).evaluate(
+                    question["is_required"]
                 )
 
-                if not is_hidden:
-                    expr = "is_required"
-                    is_required = jexl.QuestionJexl(
-                        answers, document.form.slug
-                    ).evaluate(question["is_required"])
-
-                    if is_required and answers.get(question["slug"]) in EMPTY_VALUES:
-                        required_but_empty.append(question["slug"])
-
-            except Exception as exc:
-                expr_jexl = question.get(expr)
-                log.error(
-                    f"Error while evaluating {expr} expression on question {question['slug']}: "
-                    f"{expr_jexl}: {str(exc)}"
-                )
-                raise RuntimeError(
-                    f"Error while evaluating '{expr}' expression on question {question['slug']}: "
-                    f"{expr_jexl}. The system log contains more information"
-                )
+                if is_required and answers.get(question["slug"]) in EMPTY_VALUES:
+                    required_but_empty.append(question["slug"])
 
         if required_but_empty:
             raise CustomValidationError(
