@@ -117,7 +117,10 @@ class Question(Node, graphene.Interface):
     slug = graphene.String(required=True)
     label = graphene.String(required=True)
     info_text = graphene.String()
-    is_required = QuestionJexl(required=True)
+    is_required = QuestionJexl(
+        required=True,
+        description="Required expression is only evaluated when question is not hidden.",
+    )
     is_hidden = QuestionJexl(required=True)
     is_archived = graphene.Boolean(required=True)
     meta = generic.GenericScalar(required=True)
