@@ -144,7 +144,7 @@ def test_validate_nested_form(
     "required_jexl_main,required_jexl_sub,should_throw",
     [
         ("true", "false", True),
-        ("'other_q_1'|answer == 'something'", "false", True),
+        ("'other_q_1'|answer == 'something'", "false", False),
         ("false", "false", False),
         ("'foo' in 'main_table_1'|answer|mapby('sub_1_question_a')", "false", True),
         (
@@ -216,7 +216,7 @@ def test_validate_table(
     )
 
     answer_factory(
-        question=other_q_1.question, document=main_document, value="something"
+        question=other_q_1.question, document=row_document_1, value="something"
     )
 
     if should_throw and required_jexl_sub.startswith("'fail'"):
@@ -280,7 +280,7 @@ def test_validate_empty_answers(
     expected_value,
 ):
 
-    answer_value = DocumentValidator()._get_answer_value(answer, document, None)
+    answer_value = DocumentValidator()._get_answer_value(answer, document)
     assert answer_value == expected_value
 
 
