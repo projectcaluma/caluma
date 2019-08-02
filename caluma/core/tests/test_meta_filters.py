@@ -10,6 +10,7 @@ from ...core.relay import extract_global_id
         ("EXACT", ["exact"]),
         ("STARTSWITH", ["exact", "starts"]),
         ("CONTAINS", ["contains", "starts", "exact"]),
+        ("ICONTAINS", ["icontains", "contains", "starts", "exact"]),
     ],
 )
 def test_meta_value_filter(db, schema_executor, document_factory, lookup, expect):
@@ -18,10 +19,11 @@ def test_meta_value_filter(db, schema_executor, document_factory, lookup, expect
         "exact": document_factory(meta={"foo": "bar"}),
         "starts": document_factory(meta={"foo": "bar is what it starts with"}),
         "contains": document_factory(meta={"foo": "contains a bar somewhere"}),
+        "icontains": document_factory(meta={"foo": "contains a Bar somewhere"}),
     }
 
     query = """
-        query AllDocumentsQuery($filter: [MetaValueFilterType]) {
+        query AllDocumentsQuery($filter: [JSONValueFilterType]) {
           allDocuments(metaValue: $filter) {
             edges {
               node {

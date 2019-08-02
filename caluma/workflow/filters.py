@@ -1,10 +1,11 @@
+import graphene
 from django.db.models import OuterRef, Subquery
-from graphene import Enum
 
 from ..core.filters import (
     CharFilter,
     FilterSet,
     GlobalIDFilter,
+    JSONValueFilter,
     MetaFilterSet,
     OrderingFilter,
     SearchFilter,
@@ -26,7 +27,7 @@ def case_status_filter(*args, **kwargs):
         def description(self):
             return case_status_descriptions[self.name]
 
-    enum = Enum(
+    enum = graphene.Enum(
         "CaseStatusArgument",
         [(i.upper(), i) for i in models.Case.STATUS_CHOICES],
         type=EnumWithDescriptionsType,
@@ -119,6 +120,7 @@ class WorkItemFilterSet(MetaFilterSet):
 
     document_has_answer = HasAnswerFilter(document_id="document__pk")
     case_document_has_answer = HasAnswerFilter(document_id="case__document__pk")
+    case_meta_value = JSONValueFilter(field_name="case__meta")
 
     class Meta:
         model = models.WorkItem

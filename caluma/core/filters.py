@@ -5,6 +5,7 @@ from django import forms
 from django.conf import settings
 from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields.hstore import KeyTransform
+from django.contrib.postgres.fields.jsonb import KeyTextTransform
 from django.contrib.postgres.search import SearchVector
 from django.db import models
 from django.db.models.constants import LOOKUP_SEP
@@ -211,23 +212,24 @@ class FilterSet(GrapheneFilterSetMixin, FilterSet):
     created_by_group = CharFilter()
 
 
-class MetaLookupMode(Enum):
+class JSONLookupMode(Enum):
     EXACT = "exact"
     STARTSWITH = "startswith"
-    CONTAINS = "icontains"
+    CONTAINS = "contains"
+    ICONTAINS = "icontains"
     GTE = "gte"
     GT = "gt"
     LTE = "lte"
     LT = "lt"
 
 
-class MetaValueFilterType(InputObjectType):
+class JSONValueFilterType(InputObjectType):
     key = graphene.String(required=True)
     value = generic.GenericScalar(required=True)
-    lookup = MetaLookupMode()
+    lookup = JSONLookupMode()
 
 
-class MetaValueFilterField(forms.MultiValueField):
+class JSONValueFilterField(forms.MultiValueField):
     def __init__(self, label, **kwargs):
         super().__init__(fields=(forms.CharField(), forms.CharField()))
 
@@ -238,39 +240,42 @@ class MetaValueFilterField(forms.MultiValueField):
         return data
 
 
-class MetaValueFilter(Filter):
-    field_class = MetaValueFilterField
+class JSONValueFilter(Filter):
+    field_class = JSONValueFilterField
 
     def filter(self, qs, value):
         if value in EMPTY_VALUES:
             return qs
 
-        for val in value:
-            if val in EMPTY_VALUES:  # pragma: no cover
+        for expr in value:
+            if expr in EMPTY_VALUES:  # pragma: no cover
                 continue
-
-            meta_key = val["key"]
-            meta_value = val["value"]
-            lookup = val.get("lookup", self.lookup_expr)
-            qs = qs.filter(**{f"{self.field_name}__{meta_key}__{lookup}": meta_value})
+            lookup_expr = expr.get("lookup", self.lookup_expr)
+            # "contains" behaves differently on JSONFields as it does on TextFields.
+            # That's why we annotate the queryset with the value.
+            # Some discussion about it can be found here:
+            # https://code.djangoproject.com/ticket/26511
+            qs = qs.annotate(field_val=KeyTextTransform(expr["key"], self.field_name))
+            lookup = {f"field_val__{lookup_expr}": expr["value"]}
+            qs = qs.filter(**lookup)
         return qs
 
     @staticmethod
-    @convert_form_field.register(MetaValueFilterField)
+    @convert_form_field.register(JSONValueFilterField)
     def convert_meta_value_field(field):
         registry = get_global_registry()
         converted = registry.get_converted_field(field)
         if converted:
             return converted
 
-        converted = List(MetaValueFilterType)
+        converted = List(JSONValueFilterType)
         registry.register_converted_field(field, converted)
         return converted
 
 
 class MetaFilterSet(FilterSet):
     meta_has_key = CharFilter(lookup_expr="has_key", field_name="meta")
-    meta_value = MetaValueFilter(field_name="meta")
+    meta_value = JSONValueFilter(field_name="meta")
 
 
 class DjangoFilterConnectionField(
