@@ -657,3 +657,59 @@ def test_filter_document_has_answer(
             result.data["allWorkItems"]["edges"][0]["node"]["id"]
         )
         assert node_id == str(expected.id)
+
+
+@pytest.mark.parametrize(
+    "lookup_expr,int,value,len_results",
+    [
+        (None, False, "value1", 1),
+        ("EXACT", False, "value1", 1),
+        ("EXACT", False, "value", 0),
+        ("STARTSWITH", False, "alue1", 0),
+        ("STARTSWITH", False, "val", 2),
+        ("CONTAINS", False, "alue", 2),
+        ("CONTAINS", False, "AlUe", 0),
+        ("ICONTAINS", False, "AlUe", 2),
+        ("GTE", True, 2, 2),
+        ("GTE", True, 5, 1),
+        ("GTE", True, 6, 0),
+        ("GT", True, 4, 1),
+        ("GT", True, 5, 0),
+        ("LTE", True, 1, 0),
+        ("LTE", True, 2, 1),
+        ("LTE", True, 6, 2),
+        ("LT", True, 2, 0),
+        ("LT", True, 6, 2),
+    ],
+)
+def test_query_all_work_items_filter_case_meta_value(
+    db, work_item_factory, schema_executor, lookup_expr, int, value, len_results
+):
+    work_item_factory(case__meta={"testkey": 2 if int else "value1"})
+    work_item_factory(case__meta={"testkey": 5 if int else "value2"})
+    work_item_factory(case__meta={"testkey2": 2 if int else "value1"})
+
+    query = """
+        query WorkItems($case_meta_value: [JSONValueFilterType!]) {
+          allWorkItems(caseMetaValue: $case_meta_value) {
+            totalCount
+            edges {
+              node {
+                case {
+                  meta
+                }
+              }
+            }
+          }
+        }
+    """
+
+    variables = {"key": "testkey", "value": value}
+
+    if lookup_expr:
+        variables["lookup"] = lookup_expr
+
+    result = schema_executor(query, variables={"case_meta_value": [variables]})
+
+    assert not result.errors
+    assert len(result.data["allWorkItems"]["edges"]) == len_results
