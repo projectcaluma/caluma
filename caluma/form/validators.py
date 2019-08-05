@@ -29,9 +29,6 @@ class CustomValidationError(exceptions.ValidationError):
 
 
 class AnswerValidator:
-    def __init__(self, do_check_required=True):
-        self.do_check_required = do_check_required
-
     def _validate_question_text(self, question, value, **kwargs):
         max_length = (
             question.max_length if question.max_length is not None else sys.maxsize
@@ -153,26 +150,13 @@ class AnswerValidator:
 
     def _validate_question_table(self, question, value, document, info, **kwargs):
         for _document in value:
-            self._document_validator().validate(
-                _document,
-                parent=document,
-                info=info,
-                answer_tree=kwargs.get("answer_tree"),
-            )
-
-    def _document_validator(self):
-        """Return instance of DocumentValidator.
-
-        Configure the DocumentValidator according to our own config.
-        """
-        return DocumentValidator(do_check_required=self.do_check_required)
+            DocumentValidator().validate(_document, info=info)
 
     def _validate_question_file(self, question, value, **kwargs):
         pass
 
     def validate(self, *, question, document, info, **kwargs):
         # Check all possible fields for value
-        answer_tree = kwargs.pop("answer_tree", {})
         value = None
         for i in ["value", "file", "date", "documents"]:
             value = kwargs.get(i, value)
@@ -183,9 +167,7 @@ class AnswerValidator:
         # required check will be done in DocumentValidator
         if value:
             validate_func = getattr(self, f"_validate_question_{question.type}")
-            validate_func(
-                question, value, document=document, info=info, answer_tree=answer_tree
-            )
+            validate_func(question, value, document=document, info=info)
 
         format_validators = get_format_validators(dic=True)
         for validator_slug in question.format_validators:
@@ -193,74 +175,39 @@ class AnswerValidator:
 
 
 class DocumentValidator:
-    def __init__(self, do_check_required=True):
-        self.do_check_required = do_check_required
-
     def validate(self, document, info, **kwargs):
-        answer_tree = kwargs.get("answer_tree", {}) or self.get_document_answers(
-            document
-        )
-
-        required_state = self.validate_required(document, answer_tree)
+        answers = self.get_document_answers(document)
+        self.validate_required(document, answers)
 
         # TODO: can we iterate over the entries in answer_tree here
         # so the loop doesn't hit the DB?
         for answer in document.answers.all():
-            # If the question's "requiredness" evaluated to false,
-            # we need to pass this along to sub validators, so they
-            # won't complain if something is not provided "down there"
-            required = required_state.get(answer.question.slug, True)
+            validator = AnswerValidator()
+            validator.validate(
+                document=document,
+                question=answer.question,
+                value=answer.value,
+                documents=answer.documents.all(),
+                info=info,
+                answers=answers[answer.question.slug],
+            )
 
-            further_check_required = required and self.do_check_required
-
-            validator = AnswerValidator(further_check_required)
-            if not isinstance(answer_tree[answer.question.slug], list):
-                validator.validate(
-                    document=document,
-                    question=answer.question,
-                    value=answer.value,
-                    documents=answer.documents.all(),
-                    info=info,
-                    answer_tree=answer_tree[answer.question.slug],
-                )
-                continue
-
-            for sub_tree in answer_tree[answer.question.slug]:
-                validator.validate(
-                    document=document,
-                    question=answer.question,
-                    value=answer.value,
-                    documents=answer.documents.all(),
-                    info=info,
-                    answer_tree=sub_tree,
-                )
-
-    def get_document_answers(self, document, parent=None):
+    def get_document_answers(self, document):
         doc_answers = document.answers.select_related("question").prefetch_related(
             "question__options"
         )
 
-        questions = document.form.all_questions().values("slug", "type")
-
-        # need to initialize here so we have a "parent" pointer to pass along
-        answers = {}
-        if parent is not None:
-            answers["parent"] = parent
-
-        answers.update(
-            {
-                ans.question_id: self._get_answer_value(ans, document, parent=answers)
-                for ans in doc_answers
-            }
-        )
+        answers = {
+            ans.question_id: self._get_answer_value(ans, document)
+            for ans in doc_answers
+        }
 
         # Create answer values for questions in the form that don't have
         # answers (yet)
+        questions = document.form.all_questions().values("slug", "type")
         unanswered = {
             q["slug"]: self._get_answer_value(
-                Answer(question_id=q["slug"], document=document),
-                document,
-                parent=answers,
+                Answer(question_id=q["slug"], document=document), document
             )
             for q in questions
             if q["slug"] not in answers
@@ -270,7 +217,7 @@ class DocumentValidator:
         answers.update(unanswered)
         return answers
 
-    def _get_answer_value(self, answer, document, parent):
+    def _get_answer_value(self, answer, document):
 
         if answer.value is not None:
             return answer.value
@@ -286,7 +233,7 @@ class DocumentValidator:
         elif answer.question.type == Question.TYPE_TABLE:
             # table type maps to list of dicts
             return [
-                self.get_document_answers(document, parent=parent)
+                self.get_document_answers(document)
                 for document in answer.documents.all()
             ]
 
@@ -310,31 +257,27 @@ class DocumentValidator:
         else:  # pragma: no cover
             raise Exception(f"unhandled question type mapping {answer.question.type}")
 
-    def validate_required(self, document, answer_tree):
+    def validate_required(self, document, answers):
         required_but_empty = []
-        required_state = {}
         for question in document.form.all_questions().values(
             "slug", "is_required", "is_hidden"
         ):
-            # TODO: can we iterate over questions of answers via answer_tree?
+            # TODO: can we iterate over questions of answers via answers?
             try:
-                expr = "is_required"
-                is_required = (
-                    jexl.QuestionJexl(answer_tree, document.form.slug).evaluate(
-                        question["is_required"]
-                    )
-                    and self.do_check_required
-                )
-
                 expr = "is_hidden"
-                is_hidden = jexl.QuestionJexl(answer_tree, document.form.slug).evaluate(
+                is_hidden = jexl.QuestionJexl(answers, document.form.slug).evaluate(
                     question["is_hidden"]
                 )
-                if is_required and not is_hidden:
-                    if answer_tree.get(question["slug"], None) in EMPTY_VALUES:
+
+                if not is_hidden:
+                    expr = "is_required"
+                    is_required = jexl.QuestionJexl(
+                        answers, document.form.slug
+                    ).evaluate(question["is_required"])
+
+                    if is_required and answers.get(question["slug"]) in EMPTY_VALUES:
                         required_but_empty.append(question["slug"])
 
-                required_state[question["slug"]] = is_required
             except Exception as exc:
                 expr_jexl = question.get(expr)
                 log.error(
@@ -346,13 +289,11 @@ class DocumentValidator:
                     f"{expr_jexl}. The system log contains more information"
                 )
 
-        if required_but_empty and self.do_check_required:
+        if required_but_empty:
             raise CustomValidationError(
                 f"Questions {','.join(required_but_empty)} are required but not provided.",
                 slugs=required_but_empty,
             )
-
-        return required_state
 
 
 class QuestionValidator:
