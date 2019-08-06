@@ -4,6 +4,10 @@ from pyjexl.evaluator import Context
 from ..core.jexl import JEXL
 
 
+class QuestionMissing(Exception):
+    pass
+
+
 class QuestionValidatingAnalyzer(ValidatingAnalyzer):
     def visit_Transform(self, transform):
         if transform.name == "answer" and not isinstance(transform.subject.value, str):
@@ -29,7 +33,9 @@ class QuestionJexl(JEXL):
         try:
             return self.answer_by_question[question]
         except KeyError:
-            raise RuntimeError(f"Question could not be found: {question}")
+            raise QuestionMissing(
+                f"Question `{question}` could not be found in form {self.context['form']}"
+            )
 
     def validate(self, expression, **kwargs):
         return super().validate(expression, QuestionValidatingAnalyzer)
