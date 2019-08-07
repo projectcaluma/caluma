@@ -4,22 +4,30 @@ from ...core.relay import extract_global_id
 
 
 @pytest.mark.parametrize(
-    "lookup,expect",
+    "lookup,search,expect",
     [
-        (None, ["exact"]),
-        ("EXACT", ["exact"]),
-        ("STARTSWITH", ["exact", "starts"]),
-        ("CONTAINS", ["contains", "starts", "exact"]),
-        ("ICONTAINS", ["icontains", "contains", "starts", "exact"]),
+        (None, "bar", ["exact"]),
+        ("EXACT", "bar", ["exact"]),
+        ("STARTSWITH", "bar", ["exact", "starts"]),
+        ("CONTAINS", "bar", ["contains", "starts", "exact"]),
+        ("ICONTAINS", "bar", ["icontains", "contains", "starts", "exact"]),
+        (None, True, ["bool"]),
+        (None, 123, ["int"]),
+        (None, 123.456, ["float"]),
     ],
 )
-def test_meta_value_filter(db, schema_executor, document_factory, lookup, expect):
+def test_meta_value_filter(
+    db, schema_executor, document_factory, lookup, search, expect
+):
     docs = {
         "nope": document_factory(meta={"foo": "does not match"}),
         "exact": document_factory(meta={"foo": "bar"}),
         "starts": document_factory(meta={"foo": "bar is what it starts with"}),
         "contains": document_factory(meta={"foo": "contains a bar somewhere"}),
         "icontains": document_factory(meta={"foo": "contains a Bar somewhere"}),
+        "bool": document_factory(meta={"foo": True}),
+        "int": document_factory(meta={"foo": 123}),
+        "float": document_factory(meta={"foo": 123.456}),
     }
 
     query = """
@@ -34,7 +42,7 @@ def test_meta_value_filter(db, schema_executor, document_factory, lookup, expect
         }
     """
 
-    variables = {"filter": [{"key": "foo", "value": "bar"}]}
+    variables = {"filter": [{"key": "foo", "value": search}]}
     if lookup:
         variables["filter"][0]["lookup"] = lookup
 
