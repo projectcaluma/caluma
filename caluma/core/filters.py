@@ -255,8 +255,15 @@ class JSONValueFilter(Filter):
             # That's why we annotate the queryset with the value.
             # Some discussion about it can be found here:
             # https://code.djangoproject.com/ticket/26511
-            qs = qs.annotate(field_val=KeyTextTransform(expr["key"], self.field_name))
-            lookup = {f"field_val__{lookup_expr}": expr["value"]}
+            if isinstance(expr["value"], str):
+                qs = qs.annotate(
+                    field_val=KeyTextTransform(expr["key"], self.field_name)
+                )
+                lookup = {f"field_val__{lookup_expr}": expr["value"]}
+            else:
+                lookup = {
+                    f"{self.field_name}__{expr['key']}__{lookup_expr}": expr["value"]
+                }
             qs = qs.filter(**lookup)
         return qs
 
