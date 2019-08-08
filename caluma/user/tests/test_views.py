@@ -3,9 +3,10 @@ import json
 
 import pytest
 from django.core.cache import cache
+from django.core.exceptions import ImproperlyConfigured
+from rest_framework import status
 
-from ...schema import schema
-from .. import middleware
+from .. import views
 
 
 @pytest.mark.parametrize("is_id_token", [True, False])
@@ -19,7 +20,7 @@ from .. import middleware
         ("Bearer Token", True, False),
     ],
 )
-def test_oidc_authentication_middleware(
+def test_authentication_view(
     rf,
     authentication_header,
     authenticated,
@@ -37,24 +38,11 @@ def test_oidc_authentication_middleware(
         requests_mock.post(settings.OIDC_INTROSPECT_ENDPOINT, text=json.dumps(userinfo))
 
     request = rf.get("/graphql", HTTP_AUTHORIZATION=authentication_header)
-
-    query = """
-    {
-      __schema {
-        mutationType {
-          name
-          description
-        }
-      }
-    }
-    """
-
-    result = schema.execute(
-        query, context=request, middleware=[middleware.OIDCAuthenticationMiddleware()]
-    )
-    assert bool(result.errors) == error
-    key = "userinfo" if is_id_token else "introspect"
+    response = views.AuthenticationGraphQLView.as_view()(request)
+    assert bool(response.status_code == status.HTTP_401_UNAUTHORIZED) == error
     if not error:
+        key = "userinfo" if is_id_token else "introspect"
+
         assert request.user.is_authenticated == authenticated
         if authenticated:
             assert (
@@ -66,7 +54,7 @@ def test_oidc_authentication_middleware(
 
 
 @pytest.mark.parametrize("introspection", [False, True])
-def test_oidc_authentication_middleware_400(introspection, rf, requests_mock, settings):
+def test_authentication_invalid_provider(introspection, rf, requests_mock, settings):
     requests_mock.get(settings.OIDC_USERINFO_ENDPOINT, status_code=400)
 
     if introspection:
@@ -76,44 +64,17 @@ def test_oidc_authentication_middleware_400(introspection, rf, requests_mock, se
         settings.OIDC_INTROSPECT_ENDPOINT = None
 
     request = rf.get("/graphql", HTTP_AUTHORIZATION="Bearer Token")
-
-    query = """
-    {
-      __schema {
-        mutationType {
-          name
-          description
-        }
-      }
-    }
-    """
-
-    result = schema.execute(
-        query, context=request, middleware=[middleware.OIDCAuthenticationMiddleware()]
-    )
-    assert result.errors
+    response = views.AuthenticationGraphQLView.as_view()(request)
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    result = json.loads(response.content)
     assert (
-        result.errors[0].message
+        result["errors"][0]["message"]
         == f'400 Client Error: None for url: mock://caluma.io/openid/{"introspect" if introspection else "userinfo"}'
     )
 
 
-def test_oidc_authentication_middleware_improperly_configured(rf, settings):
+def test_authentication_view_improperly_configured(rf, settings):
     settings.OIDC_USERINFO_ENDPOINT = None
     request = rf.get("/graphql", HTTP_AUTHORIZATION="Bearer Token")
-
-    query = """
-    {
-      __schema {
-        mutationType {
-          name
-          description
-        }
-      }
-    }
-    """
-
-    result = schema.execute(
-        query, context=request, middleware=[middleware.OIDCAuthenticationMiddleware()]
-    )
-    assert bool(result.errors)
+    with pytest.raises(ImproperlyConfigured):
+        views.AuthenticationGraphQLView.as_view()(request)

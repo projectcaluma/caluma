@@ -158,10 +158,7 @@ ADMINS = parse_admins(env.list("ADMINS", default=[]))
 
 # GraphQL
 
-GRAPHENE = {
-    "SCHEMA": "caluma.schema.schema",
-    "MIDDLEWARE": ["caluma.user.middleware.OIDCAuthenticationMiddleware"],
-}
+GRAPHENE = {"SCHEMA": "caluma.schema.schema", "MIDDLEWARE": []}
 
 if DEBUG:
     GRAPHENE["MIDDLEWARE"].append("graphene_django.debug.DjangoDebugMiddleware")
