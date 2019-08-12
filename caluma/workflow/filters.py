@@ -12,7 +12,7 @@ from ..core.filters import (
     StringListFilter,
     generate_list_filter_class,
 )
-from ..form.filters import HasAnswerFilter
+from ..form.filters import HasAnswerFilter, SearchAnswerFilter
 from ..form.models import Answer, Question
 from . import models
 
@@ -57,6 +57,7 @@ class CaseFilterSet(MetaFilterSet):
 
     document_form = CharFilter(field_name="document__form_id")
     has_answer = HasAnswerFilter(document_id="document__pk")
+    search_answers = SearchAnswerFilter(document_id="document__pk")
     status = case_status_filter(lookup_expr="in")
     order_by_question_answer_value = CharFilter(
         method="filter_order_by_question_answer_value",

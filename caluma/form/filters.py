@@ -19,6 +19,7 @@ from ..core.filters import (
     SearchFilter,
     SlugMultipleChoiceFilter,
 )
+from ..form.models import Answer, Question
 from . import models
 
 
@@ -211,6 +212,106 @@ class HasAnswerFilter(Filter):
         return converted
 
 
+class SearchLookupMode(Enum):
+    STARTSWITH = "startswith"
+    CONTAINS = "icontains"
+    TEXT = "search"
+
+
+class SearchAnswerFilterType(InputObjectType):
+    """Lookup type to search in answers."""
+
+    slugs = List(graphene.String)
+    value = graphene.types.generic.GenericScalar(required=True)
+    lookup = SearchLookupMode(required=False)
+
+
+class SearchAnswerFilterField(forms.MultiValueField):
+    def __init__(self, label, **kwargs):
+        super().__init__(fields=(forms.CharField(), forms.CharField()))
+
+    def clean(self, data):
+        # override parent clean() which would reject our data structure.
+        # We don't validate, as the structure is already enforced by the
+        # schema.
+        return data
+
+
+class SearchAnswerFilter(Filter):
+    field_class = SearchAnswerFilterField
+
+    FIELD_MAP = {
+        Question.TYPE_TEXT: "value",
+        Question.TYPE_TEXTAREA: "value",
+        Question.TYPE_DATE: "date",
+        Question.TYPE_CHOICE: "value",
+        Question.TYPE_DYNAMIC_CHOICE: "value",
+    }
+
+    def __init__(self, *args, **kwargs):
+        self.document_id = kwargs.pop("document_id")
+        super().__init__(self, *args, **kwargs)
+
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES:
+            return qs
+
+        questions = self._validate_and_get_questions(value["slugs"])
+
+        for word in value["value"].split():
+            answers_with_word = self._answers_with_word(
+                questions, word, value.get("lookup", SearchLookupMode.CONTAINS.value)
+            )
+            qs = qs.filter(
+                **{
+                    f"{self.document_id}__in": answers_with_word.values(
+                        "document__family"
+                    )
+                }
+            )
+
+        return qs
+
+    def _answers_with_word(self, questions, word, lookup):
+        exprs = [
+            Q(
+                **{
+                    f"{self.FIELD_MAP[question.type]}__{lookup}": word,
+                    "question": question,
+                }
+            )
+            for q_slug, question in questions.items()
+        ]
+
+        # join expressions with OR
+        return Answer.objects.filter(reduce(lambda a, b: a | b, exprs))
+
+    def _validate_and_get_questions(self, questions):
+        res = {}
+        for q_slug in questions:
+            question = Question.objects.get(pk=q_slug)
+            if question.type not in self.FIELD_MAP:
+                raise exceptions.ValidationError(
+                    f"Questions of type {question.type} cannot be used in searchAnswers"
+                )
+            res[q_slug] = question
+        return res
+
+    @staticmethod
+    @convert_form_field.register(SearchAnswerFilterField)
+    def convert_meta_value_field(field):
+        registry = get_global_registry()
+        converted = registry.get_converted_field(field)
+        if converted:
+            return converted
+
+        # the converted type must be list-of-filter, as we need to apply
+        # multiple conditions
+        converted = SearchAnswerFilterType()
+        registry.register_converted_field(field, converted)
+        return converted
+
+
 class DocumentFilterSet(MetaFilterSet):
     id = GlobalIDFilter()
     search = SearchFilter(
@@ -227,6 +328,7 @@ class DocumentFilterSet(MetaFilterSet):
     forms = GlobalIDMultipleChoiceFilter(field_name="form")
 
     has_answer = HasAnswerFilter(document_id="pk")
+    search_answers = SearchAnswerFilter(document_id="pk")
 
     class Meta:
         model = models.Document
