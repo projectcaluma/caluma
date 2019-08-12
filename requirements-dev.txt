@@ -2,7 +2,7 @@
 # enable auto-merge
 
 -r requirements.txt
-black==18.9b0
+black==19.3b0
 factory-boy==2.12.0
 faker==2.0.0
 flake8==3.7.8
