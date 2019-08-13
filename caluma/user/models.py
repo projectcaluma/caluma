@@ -1,50 +1,57 @@
 from django.conf import settings
 
 
-class AnonymousUser(object):
+class BaseUser:  # pragma: no cover
     def __init__(self):
         self.username = None
         self.groups = []
         self.token = None
         self.userinfo = {}
-        self.group = None
+        self.is_authenticated = False
 
     @property
-    def is_authenticated(self):
-        return False
+    def group(self):
+        raise NotImplementedError
+
+    def __str__(self):
+        raise NotImplementedError
+
+
+class AnonymousUser(BaseUser):
+    @property
+    def group(self):
+        return None
 
     def __str__(self):
         return "AnonymousUser"
 
 
-class OIDCUser(object):
+class OIDCUser(BaseUser):
     def __init__(self, token, userinfo):
         self.token = token
         self.username = userinfo["sub"]
         self.userinfo = userinfo
         self.groups = userinfo.get(settings.OIDC_GROUPS_CLAIM) or []
+        self.is_authenticated = True
 
     @property
     def group(self):
-        return self.groups and self.groups[0]
-
-    @property
-    def is_authenticated(self):
-        return True
+        return self.groups[0] if self.groups else None
 
     def __str__(self):
         return self.username
 
 
-class OIDCClient(object):
+class OIDCClient(BaseUser):
     def __init__(self, token, introspection):
         self.token = token
         self.username = f"system-{introspection['client_id']}"
         self.introspection = introspection
+        self.is_authenticated = True
 
     @property
-    def is_authenticated(self):
-        return True
+    def group(self):  # pragma: no cover
+        return None
 
     def __str__(self):
         return self.username
