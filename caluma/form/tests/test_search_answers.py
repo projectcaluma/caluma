@@ -27,21 +27,22 @@ def test_search(
     doc_b.answers.create(question=question_a, value="goodbye planet")
     doc_b.answers.create(question=question_b, value="seeya world")
 
+    query = """
+        query ($search: [SearchAnswersFilterType!]) {
+          allDocuments (searchAnswers: $search) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+    """
+
     def _search(slugs, word, expect_count):
-        result = schema_executor(
-            """
-                query ($search: SearchAnswerFilterType!) {
-                  allDocuments (searchAnswers: $search) {
-                    edges {
-                      node {
-                        id
-                      }
-                    }
-                  }
-                }
-            """,
-            variables={"search": {"slugs": slugs, "value": word}},
-        )
+        variables = {"search": [{"questions": slugs, "value": word}]}
+        result = schema_executor(query, variables=variables)
+
         assert not result.errors
         edges = result.data["allDocuments"]["edges"]
         assert len(edges) == expect_count
@@ -65,7 +66,7 @@ def test_search_invalid_question_type(schema_executor, db, question_factory):
 
     result = schema_executor(
         """
-            query ($search: SearchAnswerFilterType!) {
+            query ($search: [SearchAnswersFilterType!]) {
               allDocuments (searchAnswers: $search) {
                 edges {
                   node {
@@ -75,7 +76,7 @@ def test_search_invalid_question_type(schema_executor, db, question_factory):
               }
             }
         """,
-        variables={"search": {"slugs": [question.slug], "value": "blah"}},
+        variables={"search": [{"questions": [question.slug], "value": "blah"}]},
     )
 
     assert [str(err) for err in result.errors] == [
