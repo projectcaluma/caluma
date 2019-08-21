@@ -11,10 +11,12 @@ def _history_user_getter(historical_instance):
 
 def _history_user_setter(historical_instance, user):
     request = getattr(HistoricalRecords.thread, "request", None)
+    user = None
     if request is not None:
-        historical_instance.history_user_id = request.user.username
-    else:
-        historical_instance.history_user_id = None
+        user = request.user.username
+        if request.user.__class__.__name__ == "AnonymousUser":
+            user = "AnonymousUser"
+    historical_instance.history_user_id = user
 
 
 class BaseModel(models.Model):

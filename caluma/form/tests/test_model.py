@@ -19,6 +19,7 @@ def test_delete_file_answer(
     answer = answer_factory(
         question=file_question, value=None, document=document, file=file_factory()
     )
+    mocker.patch.object(Minio, "copy_object")
     mocker.patch.object(Minio, "remove_object")
     answer.delete()
     with pytest.raises(File.DoesNotExist):
@@ -27,7 +28,9 @@ def test_delete_file_answer(
 
 def test_update_file(db, file_factory, mocker):
     file = file_factory()
+    mocker.patch.object(Minio, "copy_object")
     mocker.patch.object(Minio, "remove_object")
     file.name = "something else"
     file.save()
+    Minio.copy_object.assert_called()
     Minio.remove_object.assert_called()
