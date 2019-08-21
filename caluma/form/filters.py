@@ -218,15 +218,15 @@ class SearchLookupMode(Enum):
     TEXT = "search"
 
 
-class SearchAnswerFilterType(InputObjectType):
+class SearchAnswersFilterType(InputObjectType):
     """Lookup type to search in answers."""
 
-    slugs = List(graphene.String)
+    questions = List(graphene.String)
     value = graphene.types.generic.GenericScalar(required=True)
     lookup = SearchLookupMode(required=False)
 
 
-class SearchAnswerFilterField(forms.MultiValueField):
+class SearchAnswersFilterField(forms.MultiValueField):
     def __init__(self, label, **kwargs):
         super().__init__(fields=(forms.CharField(), forms.CharField()))
 
@@ -237,8 +237,8 @@ class SearchAnswerFilterField(forms.MultiValueField):
         return data
 
 
-class SearchAnswerFilter(Filter):
-    field_class = SearchAnswerFilterField
+class SearchAnswersFilter(Filter):
+    field_class = SearchAnswersFilterField
 
     FIELD_MAP = {
         Question.TYPE_TEXT: "value",
@@ -256,7 +256,17 @@ class SearchAnswerFilter(Filter):
         if value in EMPTY_VALUES:
             return qs
 
-        questions = self._validate_and_get_questions(value["slugs"])
+        assert isinstance(value, list)
+
+        for val in value:
+            if val in EMPTY_VALUES:  # pragma: no cover
+                continue
+            qs = self._apply_filter(qs, val)
+        return qs
+
+    def _apply_filter(self, qs, value):
+
+        questions = self._validate_and_get_questions(value["questions"])
 
         for word in value["value"].split():
             answers_with_word = self._answers_with_word(
@@ -298,16 +308,14 @@ class SearchAnswerFilter(Filter):
         return res
 
     @staticmethod
-    @convert_form_field.register(SearchAnswerFilterField)
+    @convert_form_field.register(SearchAnswersFilterField)
     def convert_meta_value_field(field):
         registry = get_global_registry()
         converted = registry.get_converted_field(field)
         if converted:
             return converted
 
-        # the converted type must be list-of-filter, as we need to apply
-        # multiple conditions
-        converted = SearchAnswerFilterType()
+        converted = List(SearchAnswersFilterType)
         registry.register_converted_field(field, converted)
         return converted
 
@@ -328,7 +336,7 @@ class DocumentFilterSet(MetaFilterSet):
     forms = GlobalIDMultipleChoiceFilter(field_name="form")
 
     has_answer = HasAnswerFilter(document_id="pk")
-    search_answers = SearchAnswerFilter(document_id="pk")
+    search_answers = SearchAnswersFilter(document_id="pk")
 
     class Meta:
         model = models.Document
