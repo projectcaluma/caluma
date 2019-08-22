@@ -246,6 +246,8 @@ class SearchAnswersFilter(Filter):
         Question.TYPE_DATE: "date",
         Question.TYPE_CHOICE: "value",
         Question.TYPE_DYNAMIC_CHOICE: "value",
+        Question.TYPE_INTEGER: "value",
+        Question.TYPE_FLOAT: "value",
     }
 
     def __init__(self, *args, **kwargs):
