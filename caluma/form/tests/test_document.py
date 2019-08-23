@@ -824,29 +824,6 @@ def test_save_document_table_answer_setting_family(
     assert to_be_deleted_table_row.family == to_be_deleted_document.family
 
 
-@pytest.mark.parametrize("question__type", [Question.TYPE_FORM])
-def test_save_document_form_answer_invalid_row_form(
-    db, schema_executor, answer_factory, question, document_factory
-):
-    answer = answer_factory.create(question=question)
-    query = """
-        mutation SaveDocumentFormAnswer($input: SaveDocumentFormAnswerInput!) {
-            saveDocumentFormAnswer(input: $input) {
-                clientMutationId
-            }
-        }
-    """
-
-    inp = {
-        "input": extract_serializer_input_fields(
-            serializers.SaveAnswerSerializer, answer
-        )
-    }
-    inp["input"]["value"] = str(document_factory.create().pk)
-    result = schema_executor(query, variables=inp)
-    assert result.errors
-
-
 @pytest.mark.parametrize("answer__value", [1.1])
 def test_query_answer_node(db, answer, schema_executor):
     global_id = to_global_id("FloatAnswer", answer.pk)
