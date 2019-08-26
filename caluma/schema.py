@@ -16,13 +16,55 @@ class Mutation(form_schema.Mutation, workflow_schema.Mutation, graphene.ObjectTy
     pass
 
 
-class Query(
+query_inherit_from = [
     form_schema.Query,
-    form_historical_schema.Query,
     workflow_schema.Query,
     data_source_schema.Query,
     graphene.ObjectType,
-):
+]
+
+types = [
+    form_schema.TextQuestion,
+    form_schema.ChoiceQuestion,
+    form_schema.MultipleChoiceQuestion,
+    form_schema.DynamicChoiceQuestion,
+    form_schema.DynamicMultipleChoiceQuestion,
+    form_schema.TextareaQuestion,
+    form_schema.FloatQuestion,
+    form_schema.IntegerQuestion,
+    form_schema.DateQuestion,
+    form_schema.TableQuestion,
+    form_schema.FormQuestion,
+    form_schema.FileQuestion,
+    form_schema.StaticQuestion,
+    form_schema.StringAnswer,
+    form_schema.ListAnswer,
+    form_schema.IntegerAnswer,
+    form_schema.FloatAnswer,
+    form_schema.DateAnswer,
+    form_schema.TableAnswer,
+    form_schema.FileAnswer,
+    workflow_schema.SimpleTask,
+    workflow_schema.CompleteWorkflowFormTask,
+    workflow_schema.CompleteTaskFormTask,
+]
+
+historical_types = [
+    form_historical_schema.HistoricalStringAnswer,
+    form_historical_schema.HistoricalListAnswer,
+    form_historical_schema.HistoricalIntegerAnswer,
+    form_historical_schema.HistoricalFloatAnswer,
+    form_historical_schema.HistoricalDateAnswer,
+    form_historical_schema.HistoricalTableAnswer,
+    form_historical_schema.HistoricalFileAnswer,
+]
+
+if settings.ENABLE_HISTORICAL_API:
+    types += historical_types
+    query_inherit_from.append(form_historical_schema.Query)
+
+
+class Query(*query_inherit_from):
     node = Node.Field()
     if settings.DEBUG:
         debug = graphene.Field(DjangoDebug, name="_debug")
@@ -32,36 +74,5 @@ schema = graphene.Schema(
     query=Query,
     mutation=Mutation,
     # TODO: define what app exposes what types
-    types=[
-        form_schema.TextQuestion,
-        form_schema.ChoiceQuestion,
-        form_schema.MultipleChoiceQuestion,
-        form_schema.DynamicChoiceQuestion,
-        form_schema.DynamicMultipleChoiceQuestion,
-        form_schema.TextareaQuestion,
-        form_schema.FloatQuestion,
-        form_schema.IntegerQuestion,
-        form_schema.DateQuestion,
-        form_schema.TableQuestion,
-        form_schema.FormQuestion,
-        form_schema.FileQuestion,
-        form_schema.StaticQuestion,
-        form_schema.StringAnswer,
-        form_schema.ListAnswer,
-        form_schema.IntegerAnswer,
-        form_schema.FloatAnswer,
-        form_schema.DateAnswer,
-        form_schema.TableAnswer,
-        form_schema.FileAnswer,
-        form_historical_schema.HistoricalStringAnswer,
-        form_historical_schema.HistoricalListAnswer,
-        form_historical_schema.HistoricalIntegerAnswer,
-        form_historical_schema.HistoricalFloatAnswer,
-        form_historical_schema.HistoricalDateAnswer,
-        form_historical_schema.HistoricalTableAnswer,
-        form_historical_schema.HistoricalFileAnswer,
-        workflow_schema.SimpleTask,
-        workflow_schema.CompleteWorkflowFormTask,
-        workflow_schema.CompleteTaskFormTask,
-    ],
+    types=types,
 )
