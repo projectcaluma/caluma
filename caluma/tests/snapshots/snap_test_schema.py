@@ -555,7 +555,7 @@ type Form implements Node {
   isArchived: Boolean!
   questions(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, excludeForms: [ID], search: String, orderBy: [QuestionOrdering]): QuestionConnection
   source: Form
-  documents(before: String, after: String, first: Int, last: Int): DocumentConnection
+  documents(before: String, after: String, first: Int, last: Int): DocumentConnection!
   id: ID!
 }
 
@@ -1836,7 +1836,7 @@ type Workflow implements Node {
   isArchived: Boolean!
   startTasks: [Task]!
   allowAllForms: Boolean!
-  allowForms(before: String, after: String, first: Int, last: Int): FormConnection
+  allowForms(before: String, after: String, first: Int, last: Int): FormConnection!
   id: ID!
   tasks: [Task]!
   flows(before: String, after: String, first: Int, last: Int, task: ID, createdByUser: String, createdByGroup: String): FlowConnection
