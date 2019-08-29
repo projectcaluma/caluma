@@ -96,18 +96,33 @@ def admin_info(admin_request):
     )
 
 
+def simple_history_middleware(next, root, info, **args):
+    """Mimick behaviour of simple_history.middleware.HistoryRequestMiddleware."""
+    HistoricalRecords.thread.request = info.context
+    return next(root, info, **args)
+
+
 @pytest.fixture
 def schema_executor(anonymous_request):
-    return functools.partial(schema.execute, context=anonymous_request)
+    return functools.partial(
+        schema.execute,
+        context=anonymous_request,
+        middleware=[simple_history_middleware],
+    )
 
 
 @pytest.fixture
 def admin_schema_executor(admin_request):
-    return functools.partial(schema.execute, context=admin_request)
+    return functools.partial(
+        schema.execute, context=admin_request, middleware=[simple_history_middleware]
+    )
 
 
 @pytest.fixture
 def minio_mock(mocker):
+    def side_effect(bucket, object_name, expires):
+        return f"http://minio/download-url/{object_name}"
+
     stat_response = MinioStatObject(
         "caluma-media",
         "some-file.pdf",
@@ -124,7 +139,8 @@ def minio_mock(mocker):
     mocker.patch.object(Minio, "bucket_exists")
     mocker.patch.object(Minio, "make_bucket")
     mocker.patch.object(Minio, "remove_object")
-    Minio.presigned_get_object.return_value = "http://minio/download-url"
+    mocker.patch.object(Minio, "copy_object")
+    Minio.presigned_get_object.side_effect = side_effect
     Minio.presigned_put_object.return_value = "http://minio/upload-url"
     Minio.stat_object.return_value = stat_response
     Minio.bucket_exists.return_value = True

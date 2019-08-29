@@ -239,14 +239,20 @@ class Answer(UUIDModel):
 class File(UUIDModel):
     name = models.CharField(max_length=255)
 
+    def _move_blob(self):
+        # move the file on update
+        # this makes sure it stays available when querying the history
+        old_file = self.history.first()
+        new_name = f"{old_file.pk}_{old_file.name}"
+        client.move_object(self.object_name, new_name)
+
     def delete(self, *args, **kwargs):
-        client.remove_object(self.object_name)
+        self._move_blob()
         super().delete(*args, **kwargs)
 
     def save(self, *args, **kwargs):
-        # remove the file on update
         if self.created_at:
-            client.remove_object(self.object_name)
+            self._move_blob()
         super().save(*args, **kwargs)
 
     @property

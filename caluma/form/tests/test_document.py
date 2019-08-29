@@ -103,7 +103,10 @@ def test_query_all_documents(
         if answer.value == "some-other-file.pdf":
             settings.MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = False
             minio_mock.bucket_exists.return_value = False
-        answer.file = file_factory(name=answer.value)
+        # we need to set the pk here in order to match the snapshots
+        answer.file = file_factory(
+            name=answer.value, pk="09c697fb-fd0a-4345-bb9c-99df350b0cdb"
+        )
         answer.value = None
         answer.save()
         search = answer.file.name

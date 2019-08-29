@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -635,6 +634,170 @@ input HasAnswerFilterType {
   hierarchy: AnswerHierarchyMode
 }
 
+interface HistoricalAnswer {
+  id: ID
+  createdAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  modifiedAt: DateTime!
+  question: Question!
+  meta: GenericScalar!
+  historyDate: DateTime!
+  historyUserId: String
+  historyType: String
+}
+
+type HistoricalAnswerConnection {
+  pageInfo: PageInfo!
+  edges: [HistoricalAnswerEdge]!
+  totalCount: Int
+}
+
+type HistoricalAnswerEdge {
+  node: HistoricalAnswer
+  cursor: String!
+}
+
+type HistoricalDateAnswer implements HistoricalAnswer, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  value: Date!
+  meta: GenericScalar!
+  date: Date
+  historyUserId: String
+  question: Question!
+  historyId: UUID!
+  historyDate: DateTime!
+  historyChangeReason: String
+  historyType: String
+}
+
+type HistoricalDocument implements Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  meta: GenericScalar
+  historyUserId: String
+  form: Form
+  historyDate: DateTime!
+  historyType: String
+  answers(before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
+}
+
+type HistoricalFile implements Node {
+  id: ID!
+  name: String!
+  downloadUrl: String
+  metadata: GenericScalar
+  answer: HistoricalFileAnswer
+  historyDate: DateTime!
+  historyUserId: String
+  historyType: String
+}
+
+type HistoricalFileAnswer implements HistoricalAnswer, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  value: HistoricalFile!
+  meta: GenericScalar!
+  historyUserId: String
+  question: Question!
+  historyId: UUID!
+  historyDate: DateTime!
+  historyChangeReason: String
+  historyType: String
+  file: File
+}
+
+type HistoricalFloatAnswer implements HistoricalAnswer, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  value: Float!
+  meta: GenericScalar!
+  historyUserId: String
+  question: Question!
+  historyId: UUID!
+  historyDate: DateTime!
+  historyChangeReason: String
+  historyType: String
+}
+
+type HistoricalIntegerAnswer implements HistoricalAnswer, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  value: Int!
+  meta: GenericScalar!
+  historyUserId: String
+  question: Question!
+  historyId: UUID!
+  historyDate: DateTime!
+  historyChangeReason: String
+  historyType: String
+}
+
+type HistoricalListAnswer implements HistoricalAnswer, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  value: [String]!
+  meta: GenericScalar!
+  historyUserId: String
+  question: Question!
+  historyId: UUID!
+  historyDate: DateTime!
+  historyChangeReason: String
+  historyType: String
+}
+
+type HistoricalStringAnswer implements HistoricalAnswer, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  value: String!
+  meta: GenericScalar!
+  historyUserId: String
+  question: Question!
+  historyId: UUID!
+  historyDate: DateTime!
+  historyChangeReason: String
+  historyType: String
+}
+
+type HistoricalTableAnswer implements HistoricalAnswer, Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  value: [HistoricalDocument]!
+  meta: GenericScalar!
+  historyUserId: String
+  question: Question!
+  historyId: UUID!
+  historyDate: DateTime!
+  historyChangeReason: String
+  historyType: String
+  document: Document
+}
+
 type IntegerAnswer implements Answer, Node {
   createdAt: DateTime!
   modifiedAt: DateTime!
@@ -814,6 +977,7 @@ type PageInfo {
 }
 
 type Query {
+  documentAsOf(id: ID!, asOf: DateTime!): HistoricalDocument
   allDataSources(before: String, after: String, first: Int, last: Int): DataSourceConnection
   dataSource(name: String, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   allWorkflows(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, orderBy: [WorkflowOrdering]): WorkflowConnection
@@ -1583,6 +1747,8 @@ type TextareaQuestion implements Question, Node {
   id: ID!
   maxLength: Int
 }
+
+scalar UUID
 
 type ValidationEntry {
   slug: String!

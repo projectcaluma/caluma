@@ -116,6 +116,13 @@ Per default no CORS headers are set but can be configured with following options
 * `CORS_ORIGIN_ALLOW_ALL`: If True, the whitelist will not be used and all origins will be accepted. (default: False)
 * `CORS_ORIGIN_WHITELIST`: A list of origin hostnames (including the scheme and with optional port) that are authorized to make cross-site HTTP requests.
 
+#### Historical API
+If you wish to expose an API for querying previous revisions of documents, you need to set following environment variable:
+
+`ENABLE_HISTORICAL_API`: Defaults to `false`.
+
+If you enable this, make sure to also configure [visibilities](#visibility-classes) and [permissions](#permission-classes) for historical types.
+
 #### FormatValidators
 FormatValidator classes can validate input data for answers, based on rules set on the question.
 

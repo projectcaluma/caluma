@@ -193,13 +193,14 @@ DATA_SOURCE_CLASSES = env.list("DATA_SOURCE_CLASSES", default=[])
 FORMAT_VALIDATOR_CLASSES = env.list("FORMAT_VALIDATOR_CLASSES", default=[])
 
 # Cors headers
-
 CORS_ORIGIN_ALLOW_ALL = env.bool("CORS_ORIGIN_ALLOW_ALL", default=False)
 CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default=[])
 
-
 # simple history
 SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
+
+# Historical API
+ENABLE_HISTORICAL_API = env.bool("ENABLE_HISTORICAL_API", default=False)
 
 # Logging
 
