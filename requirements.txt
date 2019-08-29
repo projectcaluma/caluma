@@ -7,7 +7,7 @@ django-localized-fields==5.4
 django-postgres-extra==1.22
 djangorestframework==3.10.2
 django_simple_history==2.7.3
-graphene==2.1.7
+graphene==2.1.8
 graphene-django==2.4.0
 graphql-core==2.2.1
 graphql-relay==2.0.0
