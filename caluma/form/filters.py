@@ -48,6 +48,9 @@ class QuestionFilterSet(MetaFilterSet):
     exclude_forms = GlobalIDMultipleChoiceFilter(field_name="forms", exclude=True)
     search = SearchFilter(fields=("slug", "label"))
     order_by = OrderingFilter(label="QuestionOrdering", fields=("label",))
+    slugs = SlugMultipleChoiceFilter(field_name="slug")
+    slug = CharFilter()
+    slug.deprecation_reason = "Use the `slugs` (plural) filter instead, which allows filtering for multiple slugs"
 
     class Meta:
         model = models.Question
