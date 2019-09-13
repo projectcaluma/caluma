@@ -389,6 +389,42 @@ Following environment variables need to be set for caluma:
 * `OIDC_INTROSPECT_CLIENT_ID`: ID of the OIDC-client
 * `OIDC_INTROSPECT_CLIENT_SECRET`: Secret of the OIDC-client
 
+## uWSGI defaults
+
+We are using the sane uWSGI-defaults researched by [bloomberg](https://www.techatbloomberg.com/blog/configuring-uwsgi-production-deployment/?sf104898833=1). You can override the defaults using environment-variables.
+
+- UWSGI_STRICT=true
+- UWSGI_WSGI_FILE=/app/caluma/wsgi.py
+- UWSGI_MASTER=true
+- UWSGI_ENABLE_THREADS=true
+- UWSGI_VACUUM=true
+- UWSGI_SINGLE_INTERPRETER=true
+- UWSGI_DIE_ON_TERM=true
+- UWSGI_NEED_APP=true
+- UWSGI_DISABLE_LOGGING=true
+- UWSGI_LOG_4XX=true
+- UWSGI_LOG_5XX=true
+- UWSGI_MAX_REQUESTS=1000
+- UWSGI_MAX_WORKER_LIFETIME=3600
+- UWSGI_RELOAD_ON_RSS=2048
+- UWSGI_WORKER_RELOAD_MERCY=60
+- UWSGI_CHEAPER_ALGO=busyness
+- UWSGI_PROCESSES=500
+- UWSGI_CHEAPER=8
+- UWSGI_CHEAPER_INITIAL=16
+- UWSGI_CHEAPER_OVERLOAD=1
+- UWSGI_CHEAPER_STEP=16
+- UWSGI_CHEAPER_BUSYNESS_MULTIPLIER=30
+- UWSGI_CHEAPER_BUSYNESS_MIN=20
+- UWSGI_CHEAPER_BUSYNESS_MAX=70
+- UWSGI_CHEAPER_BUSYNESS_BACKLOG_ALERT=16
+- UWSGI_CHEAPER_BUSYNESS_BACKLOG_STEP=2
+- UWSGI_HARAKIRI=60
+- UWSGI_AUTO_PROCNAME=true
+- UWSGI_PROCNAME_PREFIX="caluma "
+
+See https://git.io/JemA2 for more information.
+
 ## Auditing
 
 Caluma uses [django-simple-history](https://github.com/treyhunner/django-simple-history)
