@@ -58,7 +58,7 @@ snapshots["test_document_as_of 3"] = {
 }
 
 snapshots["test_historical_table_answer 1"] = {
-    "documentAsOf": {
+    "d1": {
         "answers": {
             "edges": [
                 {
@@ -80,11 +80,8 @@ snapshots["test_historical_table_answer 1"] = {
                 }
             ]
         }
-    }
-}
-
-snapshots["test_historical_table_answer 2"] = {
-    "documentAsOf": {
+    },
+    "d2": {
         "answers": {
             "edges": [
                 {
@@ -101,5 +98,5 @@ snapshots["test_historical_table_answer 2"] = {
                 }
             ]
         }
-    }
+    },
 }
