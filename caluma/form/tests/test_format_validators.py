@@ -47,6 +47,11 @@ def test_fetch_format_validators(snapshot, schema_executor, settings):
         assert not result.errors
         snapshot.assert_match(result.data)
 
+    with translation.override("fr"):
+        result = schema_executor(query)
+        assert not result.errors
+        snapshot.assert_match(result.data)
+
     with translation.override("nolang"):
         result = schema_executor(query)
         assert not result.errors
