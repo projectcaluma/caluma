@@ -686,7 +686,7 @@ type HistoricalDocument implements Node {
   form: Form
   historyDate: DateTime!
   historyType: String
-  answers(asOf: DateTime!, before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
+  historicalAnswers(asOf: DateTime!, before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
 }
 
 type HistoricalFile implements Node {
@@ -694,7 +694,7 @@ type HistoricalFile implements Node {
   name: String!
   downloadUrl: String
   metadata: GenericScalar
-  answer: HistoricalFileAnswer
+  historicalAnswer: HistoricalFileAnswer
   historyDate: DateTime!
   historyUserId: String
   historyType: String

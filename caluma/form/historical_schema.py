@@ -9,9 +9,9 @@ from . import models
 from .schema import (
     Answer,
     DateAnswer,
-    Document,
     FileAnswer,
     FloatAnswer,
+    FormDjangoObjectType,
     IntegerAnswer,
     ListAnswer,
     StringAnswer,
@@ -106,7 +106,9 @@ class HistoricalFile(ObjectType):
     name = graphene.String(required=True)
     download_url = graphene.String()
     metadata = generic.GenericScalar()
-    answer = graphene.Field("caluma.form.historical_schema.HistoricalFileAnswer")
+    historical_answer = graphene.Field(
+        "caluma.form.historical_schema.HistoricalFileAnswer"
+    )
     history_date = graphene.types.datetime.DateTime(required=True)
     history_user_id = graphene.String()
     history_type = graphene.String()
@@ -144,16 +146,17 @@ class HistoricalFileAnswer(FileAnswer):
         interfaces = (HistoricalAnswer, graphene.Node)
 
 
-class HistoricalDocument(Document):
-    answers = ConnectionField(
+class HistoricalDocument(FormDjangoObjectType):
+    historical_answers = ConnectionField(
         HistoricalAnswerConnection,
         as_of=graphene.types.datetime.DateTime(required=True),
     )
     history_date = graphene.types.datetime.DateTime(required=True)
     history_user_id = graphene.String()
     history_type = graphene.String()
+    meta = generic.GenericScalar()
 
-    def resolve_answers(self, info, as_of, *args):
+    def resolve_historical_answers(self, info, as_of, *args):
         answers = [
             a
             for a in historical_qs_as_of(
