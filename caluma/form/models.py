@@ -38,10 +38,13 @@ class Form(SlugModel):
         indexes = [GinIndex(fields=["meta"])]
 
 
-class FormQuestion(UUIDModel):
+class FormQuestion(NaturalKeyModel):
     form = models.ForeignKey("Form", on_delete=models.CASCADE)
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
     sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
+
+    def natural_key(self):
+        return f"{self.form_id}.{self.question_id}"
 
     class Meta:
         ordering = ("-sort",)

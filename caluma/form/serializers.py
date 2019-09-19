@@ -8,7 +8,6 @@ from rest_framework.serializers import (
     ListField,
     PrimaryKeyRelatedField,
 )
-from simple_history.utils import bulk_create_with_history
 
 from ..core import serializers
 from . import models, validators
@@ -36,22 +35,18 @@ class CopyFormSerializer(serializers.ModelSerializer):
         user = self.context["request"].user
         source = validated_data["source"]
         validated_data["meta"] = dict(source.meta)
-
         form = super().create(validated_data)
 
-        new_form_questions = [
-            models.FormQuestion(
+        for sort, form_question in enumerate(
+            reversed(models.FormQuestion.objects.filter(form=source)), start=1
+        ):
+            models.FormQuestion.objects.create(
                 sort=sort,
                 form=form,
                 question=form_question.question,
                 created_by_user=user.username,
                 created_by_group=user.group,
             )
-            for sort, form_question in enumerate(
-                reversed(models.FormQuestion.objects.filter(form=source)), start=1
-            )
-        ]
-        bulk_create_with_history(new_form_questions, models.FormQuestion)
 
         return form
 
