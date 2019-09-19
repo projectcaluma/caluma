@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -687,7 +686,7 @@ type HistoricalDocument implements Node {
   form: Form
   historyDate: DateTime!
   historyType: String
-  answers(before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
+  historicalAnswers(asOf: DateTime!, before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
 }
 
 type HistoricalFile implements Node {
@@ -695,7 +694,7 @@ type HistoricalFile implements Node {
   name: String!
   downloadUrl: String
   metadata: GenericScalar
-  answer: HistoricalFileAnswer
+  historicalAnswer: HistoricalFileAnswer
   historyDate: DateTime!
   historyUserId: String
   historyType: String
@@ -707,7 +706,7 @@ type HistoricalFileAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: HistoricalFile!
+  value(asOf: DateTime!): HistoricalFile!
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -788,7 +787,7 @@ type HistoricalTableAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: [HistoricalDocument]!
+  value(asOf: DateTime!): [HistoricalDocument]!
   meta: GenericScalar!
   historyUserId: String
   question: Question!

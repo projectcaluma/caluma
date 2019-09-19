@@ -8,7 +8,7 @@ snapshots = Snapshot()
 
 snapshots["test_document_as_of 1"] = {
     "documentAsOf": {
-        "answers": {
+        "historicalAnswers": {
             "edges": [
                 {
                     "node": {
@@ -25,7 +25,7 @@ snapshots["test_document_as_of 1"] = {
 
 snapshots["test_document_as_of 2"] = {
     "documentAsOf": {
-        "answers": {
+        "historicalAnswers": {
             "edges": [
                 {
                     "node": {
@@ -42,7 +42,7 @@ snapshots["test_document_as_of 2"] = {
 
 snapshots["test_document_as_of 3"] = {
     "documentAsOf": {
-        "answers": {
+        "historicalAnswers": {
             "edges": [
                 {
                     "node": {
@@ -58,20 +58,20 @@ snapshots["test_document_as_of 3"] = {
 }
 
 snapshots["test_historical_table_answer 1"] = {
-    "documentAsOf": {
-        "answers": {
+    "d1": {
+        "historicalAnswers": {
             "edges": [
                 {
                     "node": {
                         "__typename": "HistoricalTableAnswer",
                         "value": [
                             {
-                                "answers": {
+                                "historicalAnswers": {
                                     "edges": [{"node": {"value": "first row value"}}]
                                 }
                             },
                             {
-                                "answers": {
+                                "historicalAnswers": {
                                     "edges": [{"node": {"value": "second row value"}}]
                                 }
                             },
@@ -80,19 +80,16 @@ snapshots["test_historical_table_answer 1"] = {
                 }
             ]
         }
-    }
-}
-
-snapshots["test_historical_table_answer 2"] = {
-    "documentAsOf": {
-        "answers": {
+    },
+    "d2": {
+        "historicalAnswers": {
             "edges": [
                 {
                     "node": {
                         "__typename": "HistoricalTableAnswer",
                         "value": [
                             {
-                                "answers": {
+                                "historicalAnswers": {
                                     "edges": [{"node": {"value": "first row value"}}]
                                 }
                             }
@@ -101,5 +98,5 @@ snapshots["test_historical_table_answer 2"] = {
                 }
             ]
         }
-    }
+    },
 }

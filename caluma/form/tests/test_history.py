@@ -121,7 +121,7 @@ def test_document_as_of(
         query documentAsOf($id: ID!, $asOf: DateTime!) {
           documentAsOf (id: $id, asOf: $asOf) {
             meta
-            answers {
+            historicalAnswers (asOf: $asOf) {
               edges {
                 node {
                   ...on HistoricalStringAnswer {
@@ -137,6 +137,7 @@ def test_document_as_of(
     """
 
     variables = {"id": document.pk, "asOf": timestamp1}
+
     result = admin_schema_executor(historical_query, variables=variables)
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -208,17 +209,20 @@ def test_historical_file_answer(
     historical_query = """
             query documentAsOf($id: ID!, $asOf: DateTime!) {
               documentAsOf (id: $id, asOf: $asOf) {
-                answers {
+                historicalAnswers (asOf: $asOf) {
                   edges {
                     node {
                       ...on HistoricalFileAnswer {
                         __typename
                         historyUserId
-                        value {
+                        value (asOf: $asOf) {
                           name
                           downloadUrl
                           historyUserId
                           historyType
+                          historicalAnswer {
+                            id
+                          }
                         }
                       }
                     }
@@ -232,7 +236,7 @@ def test_historical_file_answer(
     result = schema_executor(historical_query, variables=variables)
     assert not result.errors
     assert (
-        result.data["documentAsOf"]["answers"]["edges"][0]["node"]["value"][
+        result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"]["value"][
             "downloadUrl"
         ]
         == f"http://minio/download-url/{hist_file_1.pk}_{hist_file_1.name}"
@@ -242,7 +246,7 @@ def test_historical_file_answer(
     result = schema_executor(historical_query, variables=variables)
     assert not result.errors
     assert (
-        result.data["documentAsOf"]["answers"]["edges"][0]["node"]["value"][
+        result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"]["value"][
             "downloadUrl"
         ]
         == f"http://minio/download-url/{hist_file_2.pk}_{hist_file_2.name}"
@@ -254,7 +258,7 @@ def test_historical_file_answer(
     result = schema_executor(historical_query, variables=variables)
     assert not result.errors
     assert (
-        result.data["documentAsOf"]["answers"]["edges"][0]["node"]["value"][
+        result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"]["value"][
             "downloadUrl"
         ]
         == f"http://minio/download-url/{file3.pk}_{file3.name}"
@@ -311,15 +315,37 @@ def test_historical_table_answer(
     timestamp_2 = timezone.now()
 
     historical_query = """
-        query documentAsOf($id: ID!, $asOf: DateTime!) {
-          documentAsOf (id: $id, asOf: $asOf) {
-            answers {
+        query documentAsOf($id: ID!, $asOf1: DateTime!, $asOf2: DateTime!) {
+          d1: documentAsOf (id: $id, asOf: $asOf1) {
+            historicalAnswers (asOf: $asOf1) {
               edges {
                 node {
                   ...on HistoricalTableAnswer {
                     __typename
-                    value {
-                      answers {
+                    value (asOf: $asOf1) {
+                      historicalAnswers (asOf: $asOf1) {
+                        edges {
+                          node {
+                            ...on HistoricalStringAnswer {
+                              value
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+          d2: documentAsOf (id: $id, asOf: $asOf2) {
+            historicalAnswers (asOf: $asOf2) {
+              edges {
+                node {
+                  ...on HistoricalTableAnswer {
+                    __typename
+                    value (asOf: $asOf2) {
+                      historicalAnswers (asOf: $asOf2) {
                         edges {
                           node {
                             ...on HistoricalStringAnswer {
@@ -337,12 +363,7 @@ def test_historical_table_answer(
         }
     """
 
-    variables = {"id": main_document.pk, "asOf": timestamp_init}
-    result = schema_executor(historical_query, variables=variables)
-    assert not result.errors
-    snapshot.assert_match(result.data)
-
-    variables["asOf"] = timestamp_2
+    variables = {"id": main_document.pk, "asOf1": timestamp_init, "asOf2": timestamp_2}
     result = schema_executor(historical_query, variables=variables)
     assert not result.errors
     snapshot.assert_match(result.data)

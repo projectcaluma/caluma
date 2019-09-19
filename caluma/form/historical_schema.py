@@ -9,9 +9,9 @@ from . import models
 from .schema import (
     Answer,
     DateAnswer,
-    Document,
     FileAnswer,
     FloatAnswer,
+    FormDjangoObjectType,
     IntegerAnswer,
     ListAnswer,
     StringAnswer,
@@ -106,7 +106,9 @@ class HistoricalFile(ObjectType):
     name = graphene.String(required=True)
     download_url = graphene.String()
     metadata = generic.GenericScalar()
-    answer = graphene.Field("caluma.form.historical_schema.HistoricalFileAnswer")
+    historical_answer = graphene.Field(
+        "caluma.form.historical_schema.HistoricalFileAnswer"
+    )
     history_date = graphene.types.datetime.DateTime(required=True)
     history_user_id = graphene.String()
     history_type = graphene.String()
@@ -125,12 +127,16 @@ class HistoricalFile(ObjectType):
 
 
 class HistoricalFileAnswer(FileAnswer):
-    value = graphene.Field(HistoricalFile, required=True)
+    value = graphene.Field(
+        HistoricalFile,
+        required=True,
+        as_of=graphene.types.datetime.DateTime(required=True),
+    )
 
-    def resolve_value(self, info, **args):
+    def resolve_value(self, info, as_of, **args):
         # we need to use the HistoricalFile of the correct revision
         return models.File.history.filter(
-            id=self.file_id, history_date__lte=self.history_date
+            id=self.file_id, history_date__lte=as_of
         ).first()
 
     class Meta:
@@ -140,19 +146,21 @@ class HistoricalFileAnswer(FileAnswer):
         interfaces = (HistoricalAnswer, graphene.Node)
 
 
-class HistoricalDocument(Document):
-    answers = ConnectionField(HistoricalAnswerConnection)
+class HistoricalDocument(FormDjangoObjectType):
+    historical_answers = ConnectionField(
+        HistoricalAnswerConnection,
+        as_of=graphene.types.datetime.DateTime(required=True),
+    )
     history_date = graphene.types.datetime.DateTime(required=True)
     history_user_id = graphene.String()
     history_type = graphene.String()
+    meta = generic.GenericScalar()
 
-    def resolve_answers(self, info, *args):
+    def resolve_historical_answers(self, info, as_of, *args):
         answers = [
             a
             for a in historical_qs_as_of(
-                models.Answer.history.filter(document_id=self.id),
-                info.variable_values["asOf"],
-                "id",
+                models.Answer.history.filter(document_id=self.id), as_of, "id"
             )
         ]
         return answers
@@ -165,15 +173,17 @@ class HistoricalDocument(Document):
 
 
 class HistoricalTableAnswer(TableAnswer):
-    value = graphene.List(HistoricalDocument, required=True)
+    value = graphene.List(
+        HistoricalDocument,
+        required=True,
+        as_of=graphene.types.datetime.DateTime(required=True),
+    )
 
-    def resolve_value(self, info, **args):
+    def resolve_value(self, info, as_of, *args):
         answerdocuments = [
             ad
             for ad in historical_qs_as_of(
-                models.AnswerDocument.history.filter(answer_id=self.id),
-                info.variable_values["asOf"],
-                "id",
+                models.AnswerDocument.history.filter(answer_id=self.id), as_of, "id"
             )
         ]
 
@@ -181,7 +191,7 @@ class HistoricalTableAnswer(TableAnswer):
 
         documents = [
             models.Document.history.filter(id=ad.document_id).filter(
-                history_date__lte=info.variable_values["asOf"]
+                history_date__lte=as_of
             )[0]
             for ad in answerdocuments
         ]
