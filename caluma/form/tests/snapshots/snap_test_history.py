@@ -67,12 +67,26 @@ snapshots["test_historical_table_answer 1"] = {
                         "value": [
                             {
                                 "historicalAnswers": {
-                                    "edges": [{"node": {"value": "first row value"}}]
+                                    "edges": [
+                                        {
+                                            "node": {
+                                                "historyType": "+",
+                                                "value": "first row value",
+                                            }
+                                        }
+                                    ]
                                 }
                             },
                             {
                                 "historicalAnswers": {
-                                    "edges": [{"node": {"value": "second row value"}}]
+                                    "edges": [
+                                        {
+                                            "node": {
+                                                "historyType": "+",
+                                                "value": "second row value",
+                                            }
+                                        }
+                                    ]
                                 }
                             },
                         ],
@@ -90,9 +104,28 @@ snapshots["test_historical_table_answer 1"] = {
                         "value": [
                             {
                                 "historicalAnswers": {
-                                    "edges": [{"node": {"value": "first row value"}}]
+                                    "edges": [
+                                        {
+                                            "node": {
+                                                "historyType": "+",
+                                                "value": "first row value",
+                                            }
+                                        }
+                                    ]
                                 }
-                            }
+                            },
+                            {
+                                "historicalAnswers": {
+                                    "edges": [
+                                        {
+                                            "node": {
+                                                "historyType": "-",
+                                                "value": "second row value",
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
                         ],
                     }
                 }
