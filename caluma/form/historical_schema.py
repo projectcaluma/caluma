@@ -35,10 +35,6 @@ def historical_qs_as_of(queryset, date, pk_attr):
     for original_pk in set(queryset.values_list(pk_attr, flat=True)):
         changes = queryset.filter(**{pk_attr: original_pk})
         last_change = changes.latest("history_date")
-        if changes.filter(
-            history_date=last_change.history_date, history_type="-"
-        ).exists():
-            continue
         yield last_change
 
 

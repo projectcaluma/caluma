@@ -297,7 +297,7 @@ def test_historical_table_answer(
     )
 
     row2_document = document_factory(form=row_f)
-    answer_factory(
+    answer = answer_factory(
         question=q_row.question, document=row2_document, value="second row value"
     )
 
@@ -307,11 +307,11 @@ def test_historical_table_answer(
         document=row1_document,
         sort=0,
     )
-    ad2 = answer_document_factory(answer=ad.answer, document=row2_document, sort=1)
+    answer_document_factory(answer=ad.answer, document=row2_document, sort=1)
 
     timestamp_init = timezone.now()
 
-    ad2.delete()
+    answer.delete()
     timestamp_2 = timezone.now()
 
     historical_query = """
@@ -328,6 +328,7 @@ def test_historical_table_answer(
                           node {
                             ...on HistoricalStringAnswer {
                               value
+                              historyType
                             }
                           }
                         }
@@ -350,6 +351,7 @@ def test_historical_table_answer(
                           node {
                             ...on HistoricalStringAnswer {
                               value
+                              historyType
                             }
                           }
                         }
