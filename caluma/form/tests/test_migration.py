@@ -1,7 +1,9 @@
-from uuid import uuid4
+from uuid import UUID, uuid4
 
+import pytest
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
+from django.db.utils import DataError
 
 
 def test_migrate_to_flat_answers(transactional_db):
@@ -70,3 +72,64 @@ def test_migrate_to_flat_answers(transactional_db):
     assert Answer.objects.filter(question__type="form").count() == 0
     assert sub_answer.document.pk == main_document.pk
     assert text_answer.document.pk == main_document.pk
+
+
+def test_migrate_to_form_question_natural_key_forward(transactional_db):
+    executor = MigrationExecutor(connection)
+    app = "form"
+    migrate_from = [(app, "0023_auto_20190729_1448")]
+    migrate_to = [(app, "0024_auto_20190919_1244")]
+
+    executor.migrate(migrate_from)
+    old_apps = executor.loader.project_state(migrate_from).apps
+
+    # Create some old data. Can't use factories here
+
+    Form = old_apps.get_model(app, "Form")
+    Question = old_apps.get_model(app, "Question")
+    FormQuestion = old_apps.get_model(app, "FormQuestion")
+
+    form_1 = Form.objects.create(slug="form-1")
+
+    question_1 = Question.objects.create(type="text", slug="question-1")
+    form_question = FormQuestion.objects.create(form=form_1, question=question_1)
+
+    assert isinstance(form_question.pk, UUID)
+
+    # Migrate forwards.
+    executor.loader.build_graph()  # reload.
+    executor.migrate(migrate_to)
+    new_apps = executor.loader.project_state(migrate_to).apps
+
+    # Test the new data.
+    FormQuestion = new_apps.get_model(app, "FormQuestion")
+
+    form_question = FormQuestion.objects.first()
+
+    assert form_question.pk == "form-1.question-1"
+
+
+def test_migrate_to_form_question_natural_key_reverse(transactional_db):
+    executor = MigrationExecutor(connection)
+    app = "form"
+    migrate_from = [(app, "0024_auto_20190919_1244")]
+    migrate_to = [(app, "0023_auto_20190729_1448")]
+
+    executor.migrate(migrate_from)
+    old_apps = executor.loader.project_state(migrate_from).apps
+
+    # Create some old data. Can't use factories here
+
+    Form = old_apps.get_model(app, "Form")
+    Question = old_apps.get_model(app, "Question")
+    FormQuestion = old_apps.get_model(app, "FormQuestion")
+
+    form_1 = Form.objects.create(slug="form-1")
+
+    question_1 = Question.objects.create(type="text", slug="question-1")
+    FormQuestion.objects.create(form=form_1, question=question_1)
+
+    # Migrate backwards.
+    executor.loader.build_graph()  # reload.
+    with pytest.raises(DataError):
+        executor.migrate(migrate_to)
