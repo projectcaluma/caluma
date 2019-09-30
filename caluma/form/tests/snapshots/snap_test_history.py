@@ -8,6 +8,7 @@ snapshots = Snapshot()
 
 snapshots["test_document_as_of 1"] = {
     "documentAsOf": {
+        "documentId": "890ca108-d93d-4725-9066-7d0bddad8230",
         "historicalAnswers": {
             "edges": [
                 {
@@ -25,6 +26,7 @@ snapshots["test_document_as_of 1"] = {
 
 snapshots["test_document_as_of 2"] = {
     "documentAsOf": {
+        "documentId": "890ca108-d93d-4725-9066-7d0bddad8230",
         "historicalAnswers": {
             "edges": [
                 {
@@ -42,6 +44,7 @@ snapshots["test_document_as_of 2"] = {
 
 snapshots["test_document_as_of 3"] = {
     "documentAsOf": {
+        "documentId": "890ca108-d93d-4725-9066-7d0bddad8230",
         "historicalAnswers": {
             "edges": [
                 {

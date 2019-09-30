@@ -1,3 +1,5 @@
+from uuid import UUID
+
 import pytest
 from django.utils import timezone
 
@@ -76,7 +78,7 @@ def test_document_as_of(
     admin_schema_executor,
 ):
     f = form_factory(slug="root-form")
-    document = document_factory(form=f)
+    document = document_factory(form=f, id=UUID("890ca108-d93d-4725-9066-7d0bddad8230"))
 
     q1 = form_question_factory(
         question__type=models.Question.TYPE_TEXT,
@@ -121,6 +123,7 @@ def test_document_as_of(
         query documentAsOf($id: ID!, $asOf: DateTime!) {
           documentAsOf (id: $id, asOf: $asOf) {
             meta
+            documentId
             historicalAnswers (asOf: $asOf) {
               edges {
                 node {
