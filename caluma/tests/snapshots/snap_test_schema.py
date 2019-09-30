@@ -687,6 +687,7 @@ type HistoricalDocument implements Node {
   historyDate: DateTime!
   historyType: String
   historicalAnswers(asOf: DateTime!, before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
+  documentId: UUID
 }
 
 type HistoricalFile implements Node {
