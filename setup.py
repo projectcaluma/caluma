@@ -11,6 +11,6 @@ setup(
     version=version["__version__"],
     description=version["__description__"],
     url="https://projectcaluma.github.io/",
-    license="MIT",
+    license="License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)",
     packages=find_packages(),
 )
