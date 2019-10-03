@@ -41,6 +41,27 @@ from .relay import extract_global_id
 from .types import DjangoConnectionField
 
 
+class CompositeFieldClass(forms.MultiValueField):
+    """Mixin to build complex field classes.
+
+    This is just to pretend to Graphene that it's a composite type.
+    It's the base of the internal representation that only passes
+    values from the request down to the filters (or similar).
+
+    The actual schema type is generated via the `convert_form_field()`
+    function from `graphene_django.forms.converter`.
+    """
+
+    def __init__(self, label, **kwargs):
+        super().__init__(fields=(forms.CharField(), forms.CharField()))
+
+    def clean(self, data):
+        # override parent clean() which would reject our data structure.
+        # We don't validate, as the structure is already enforced by the
+        # schema.
+        return data
+
+
 class GlobalIDFilter(Filter):
     field_class = GlobalIDFormField
 
@@ -229,15 +250,8 @@ class JSONValueFilterType(InputObjectType):
     lookup = JSONLookupMode()
 
 
-class JSONValueFilterField(forms.MultiValueField):
-    def __init__(self, label, **kwargs):
-        super().__init__(fields=(forms.CharField(), forms.CharField()))
-
-    def clean(self, data):
-        # override parent clean() which would reject our data structure.
-        # We don't validate, as the structure is already enforced by the
-        # schema.
-        return data
+class JSONValueFilterField(CompositeFieldClass):
+    pass
 
 
 class JSONValueFilter(Filter):

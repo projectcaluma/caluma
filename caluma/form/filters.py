@@ -13,6 +13,7 @@ from graphene_django.registry import get_global_registry
 
 from ..core.filters import (
     GlobalIDFilter,
+    CompositeFieldClass,
     GlobalIDMultipleChoiceFilter,
     MetaFilterSet,
     OrderingFilter,
@@ -84,15 +85,8 @@ class HasAnswerFilterType(InputObjectType):
     hierarchy = AnswerHierarchyMode()
 
 
-class HasAnswerFilterField(forms.MultiValueField):
-    def __init__(self, label, **kwargs):
-        super().__init__(fields=(forms.CharField(), forms.CharField()))
-
-    def clean(self, data):
-        # override parent clean() which would reject our data structure.
-        # We don't validate, as the structure is already enforced by the
-        # schema.
-        return data
+class HasAnswerFilterField(CompositeFieldClass):
+    pass
 
 
 class HasAnswerFilter(Filter):
@@ -229,15 +223,8 @@ class SearchAnswersFilterType(InputObjectType):
     lookup = SearchLookupMode(required=False)
 
 
-class SearchAnswersFilterField(forms.MultiValueField):
-    def __init__(self, label, **kwargs):
-        super().__init__(fields=(forms.CharField(), forms.CharField()))
-
-    def clean(self, data):
-        # override parent clean() which would reject our data structure.
-        # We don't validate, as the structure is already enforced by the
-        # schema.
-        return data
+class SearchAnswersFilterField(CompositeFieldClass):
+    pass
 
 
 class SearchAnswersFilter(Filter):
