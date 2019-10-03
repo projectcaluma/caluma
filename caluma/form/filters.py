@@ -1,7 +1,6 @@
 from functools import reduce
 
 import graphene
-from django import forms
 from django.core import exceptions
 from django.db import ProgrammingError
 from django.db.models import Q
@@ -12,8 +11,8 @@ from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
 
 from ..core.filters import (
-    GlobalIDFilter,
     CompositeFieldClass,
+    GlobalIDFilter,
     GlobalIDMultipleChoiceFilter,
     MetaFilterSet,
     OrderingFilter,

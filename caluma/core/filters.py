@@ -121,24 +121,11 @@ def FilterCollectionFactory(filterset_class):
 
         _filter_coll = filterset_class()
 
-        def _get_or_make_field(filt):
-
-            cache_key = (str(type(field)), str(filt.field_name))
-            cached = FilterCollectionFactory._cache.get(cache_key, None)
-            if cached:
-                print(cache_key, "-cached-")
-                return cached
-
-            FilterCollectionFactory._cache[cache_key] = convert_form_field(filt.field)
-            registry.register_converted_field(
-                filt.field, FilterCollectionFactory._cache[cache_key]
-            )
-
-            print(cache_key, FilterCollectionFactory._cache[cache_key])
-            return FilterCollectionFactory._cache[cache_key]
+        def _get_or_make_field(name, filt):
+            return convert_form_field(filt.field)
 
         filter_fields = {
-            name: _get_or_make_field(filt)
+            name: _get_or_make_field(name, filt)
             for name, filt in _filter_coll.filters.items()
         }
 
@@ -153,11 +140,9 @@ def FilterCollectionFactory(filterset_class):
     return FilterCollection()
 
 
-FilterCollectionFactory._cache = {}
-
-
 def CollectionFilterSetFactory(filterset_class):
-    """Build a single-filter filterset class.
+    """
+    Build single-filter filterset classes.
 
     Use this in place of a regular filterset_class parametrisation.
 
@@ -173,14 +158,20 @@ def CollectionFilterSetFactory(filterset_class):
 
     ret = CollectionFilterSetFactory._cache[filterset_class.__name__] = type(
         f"{filterset_class.__name__}Collection",
-        (FilterSet,),
+        (filterset_class, FilterSet),
         {
             "filter": FilterCollectionFactory(filterset_class),
             "Meta": type(
-                "Meta", (), {"model": filterset_class.Meta.model, "fields": ["filter"]}
+                "Meta",
+                (filterset_class.Meta,),
+                {
+                    "model": filterset_class.Meta.model,
+                    "fields": filterset_class.Meta.fields + ("filter",),
+                },
             ),
         },
     )
+
     return ret
 
 
@@ -505,8 +496,12 @@ def convert_ordering_field_to_enum(field):
     """
     registry = get_global_registry()
     converted = registry.get_converted_field(field)
+
     if converted:
         return converted
+
+    if field.label in convert_ordering_field_to_enum._cache:
+        return convert_ordering_field_to_enum._cache[field.label]
 
     def get_choices(choices):
         for value, help_text in choices:
@@ -531,7 +526,11 @@ def convert_ordering_field_to_enum(field):
     converted = List(enum, description=field.help_text, required=field.required)
 
     registry.register_converted_field(field, converted)
+    convert_ordering_field_to_enum._cache[field.label] = converted
     return converted
+
+
+convert_ordering_field_to_enum._cache = {}
 
 
 @convert_form_field.register(forms.ChoiceField)
