@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2019 Adfinis SyGroup AG
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from graphene import List, String
 from graphene_django import forms
 from graphene_django.forms.converter import convert_form_field

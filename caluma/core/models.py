@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2019 Adfinis SyGroup AG
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 import uuid
 
 from django.db import models

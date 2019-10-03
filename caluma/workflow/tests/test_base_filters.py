@@ -1,3 +1,8 @@
+# SPDX-FileCopyrightText: 2019 Adfinis SyGroup AG
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
+
 def test_base_model_created_by_user_filter(db, work_item_factory, schema_executor):
     work_item_factory(created_by_user="Winston Smith")
     work_item_factory(created_by_user="Martin")

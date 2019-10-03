@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2019 Adfinis SyGroup AG
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from minio.error import BucketAlreadyExists, BucketAlreadyOwnedByYou, ResponseError

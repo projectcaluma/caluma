@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2019 Adfinis SyGroup AG
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from factory import Faker, LazyAttribute, Maybe, SubFactory, lazy_attribute
 
 from ..core.factories import DjangoModelFactory

@@ -1,0 +1,28 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: caluma
+Upstream-Contact: Adfinis SyGroup AG <info@adfinis-sygroup.ch>
+Source: https://github.com/projectcaluma/caluma
+
+# Files below the threshold of originality (metadata, config and project-information)
+Files:
+    .dockerignore
+    .editorconfig
+    .gitignore
+    .pre-commit-config.yaml
+    .travis.yml
+    CONTRIBUTING.md
+    Dockerfile
+    README.md
+    commit-msg
+    commitlint.config.js
+    docker-compose.override.yml
+    docker-compose.yml
+    manage.py
+    renovate.json
+    requirements-dev.txt
+    requirements.txt
+    setup.cfg
+    setup.py
+    uwsgi.ini
+Copyright: 2019 Adfinis SyGroup AG <info@adfinis-sygroup.ch>
+License: CC0-1.0

@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2019 Adfinis SyGroup AG
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from django.apps import AppConfig
 from django.conf import settings
 from django.utils.module_loading import import_string

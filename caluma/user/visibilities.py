@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2019 Adfinis SyGroup AG
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from ..core.types import Node
 from ..core.visibilities import BaseVisibility, filter_queryset_for
 

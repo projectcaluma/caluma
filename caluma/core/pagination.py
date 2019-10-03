@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2019 Adfinis SyGroup AG
+#
+# SPDX-License-Identifier: AGPL-3.0-or-later
+
 from graphql_relay.connection.arrayconnection import (
     get_offset_with_default,
     offset_to_cursor,
