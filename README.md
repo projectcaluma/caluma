@@ -123,6 +123,12 @@ If you wish to expose an API for querying previous revisions of documents, you n
 
 If you enable this, make sure to also configure [visibilities](#visibility-classes) and [permissions](#permission-classes) for historical types.
 
+##### Cleanup
+You may want to periodically cleanup the historical records. There are two commands available for this:
+
+ - `clean_duplicate_history`: Historical records are always created when `save()` has been called on a model. This command removes all duplicates.
+ - `cleanup_history`: Remove all historical records, or the ones that are older than specified.
+
 #### FormatValidators
 FormatValidator classes can validate input data for answers, based on rules set on the question.
 
