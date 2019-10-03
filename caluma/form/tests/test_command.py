@@ -21,7 +21,7 @@ def test_create_bucket_command(mocker):
 @pytest.mark.parametrize("dry", [True, False])
 @pytest.mark.parametrize("keep,kept", [("1 year", 2), ("1 day", 1), (None, 0)])
 def test_cleanup_history_command(db, dry, keep, kept):
-    # we need to override the rehistered models dict in order to get rid of the
+    # we need to override the registered models dict in order to get rid of the
     # fake models created in core tests
     cleanup_history.registered_models = {
         k: v for k, v in registered_models.items() if not k.startswith("core_")
