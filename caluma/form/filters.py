@@ -94,7 +94,7 @@ class HasAnswerFilter(Filter):
 
     def __init__(self, *args, **kwargs):
         self.document_id = kwargs.pop("document_id")
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     VALID_LOOKUPS = {
         "text": [
@@ -242,7 +242,7 @@ class SearchAnswersFilter(Filter):
 
     def __init__(self, *args, **kwargs):
         self.document_id = kwargs.pop("document_id")
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def filter(self, qs, value):
         if value in EMPTY_VALUES:
