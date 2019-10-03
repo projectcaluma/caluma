@@ -52,14 +52,139 @@ class CompositeFieldClass(forms.MultiValueField):
     function from `graphene_django.forms.converter`.
     """
 
-    def __init__(self, label, **kwargs):
-        super().__init__(fields=(forms.CharField(), forms.CharField()))
+    def __init__(self, label, *, fields=None, **kwargs):
+        fields = (forms.CharField(), forms.CharField())
+        super().__init__(fields=fields)
 
     def clean(self, data):
         # override parent clean() which would reject our data structure.
         # We don't validate, as the structure is already enforced by the
         # schema.
+
         return data
+
+
+def FilterCollectionFactory(filterset_class):
+    """
+    Build a single filter from a `FilterSet`.
+
+    This converts an arbitrary `FilterSet` class into a single filter that
+    allows chaining of filters as a list. In addition, this introduces
+    an optional `invert` parameter, allowing requestors to use
+    a filter for either inclusion or exclusion.
+
+    On the schema side, this generates a new type to represent the filter value
+    whose name is derived from the given filterset class.
+
+    Usage:
+    >>> class MyFilterSet(FilterSet):
+    ...     filter = FilterCollectionFactory(FilterSetWithActualFilters)
+
+    """
+
+    field_class_name = f"{filterset_class.__name__}Field"
+    field_type_name = f"{filterset_class.__name__}Type"
+
+    # The field class.
+    custom_field_class = type(field_class_name, (CompositeFieldClass,), {})
+
+    class FilterCollection(Filter):
+        field_class = custom_field_class
+
+        def filter(self, qs, value):
+            if value in EMPTY_VALUES:
+                return qs
+
+            filter_coll = filterset_class()
+            for flt in value:
+                invert = flt.pop("invert", False)
+                flt_key = list(flt.keys())[0]
+                flt_val = flt[flt_key]
+                filter = filter_coll.get_filters()[flt_key]
+
+                new_qs = filter.filter(qs, flt_val)
+
+                if invert:
+                    qs = qs.exclude(pk__in=new_qs)
+                else:
+                    qs = new_qs
+
+            return qs
+
+    @convert_form_field.register(custom_field_class)
+    def convert_field(field):
+
+        registry = get_global_registry()
+        converted = registry.get_converted_field(field)
+        if converted:
+            return converted
+
+        _filter_coll = filterset_class()
+
+        def _get_or_make_field(filt):
+
+            cache_key = (str(type(field)), str(filt.field_name))
+            cached = FilterCollectionFactory._cache.get(cache_key, None)
+            if cached:
+                print(cache_key, "-cached-")
+                return cached
+
+            FilterCollectionFactory._cache[cache_key] = convert_form_field(filt.field)
+            registry.register_converted_field(
+                filt.field, FilterCollectionFactory._cache[cache_key]
+            )
+
+            print(cache_key, FilterCollectionFactory._cache[cache_key])
+            return FilterCollectionFactory._cache[cache_key]
+
+        filter_fields = {
+            name: _get_or_make_field(filt)
+            for name, filt in _filter_coll.filters.items()
+        }
+
+        filter_fields["invert"] = graphene.Boolean(required=False, default=False)
+
+        filter_type = type(field_type_name, (InputObjectType,), filter_fields)
+
+        converted = List(filter_type)
+        registry.register_converted_field(field, converted)
+        return converted
+
+    return FilterCollection()
+
+
+FilterCollectionFactory._cache = {}
+
+
+def CollectionFilterSetFactory(filterset_class):
+    """Build a single-filter filterset class.
+
+    Use this in place of a regular filterset_class parametrisation.
+
+    Example:
+    >>> all_documents = DjangoFilterConnectionField(
+    ...    Document, filterset_class=CollectionFilterSetFactory(DocumentFilterSet)
+    ... )
+
+    """
+
+    if filterset_class.__name__ in CollectionFilterSetFactory._cache:
+        return CollectionFilterSetFactory._cache[filterset_class.__name__]
+
+    ret = CollectionFilterSetFactory._cache[filterset_class.__name__] = type(
+        f"{filterset_class.__name__}Collection",
+        (FilterSet,),
+        {
+            "filter": FilterCollectionFactory(filterset_class),
+            "Meta": type(
+                "Meta", (), {"model": filterset_class.Meta.model, "fields": ["filter"]}
+            ),
+        },
+    )
+    return ret
+
+
+CollectionFilterSetFactory._cache = {}
 
 
 class GlobalIDFilter(Filter):
@@ -264,6 +389,7 @@ class JSONValueFilter(Filter):
         for expr in value:
             if expr in EMPTY_VALUES:  # pragma: no cover
                 continue
+
             lookup_expr = expr.get("lookup", self.lookup_expr)
             # "contains" behaves differently on JSONFields as it does on TextFields.
             # That's why we annotate the queryset with the value.
