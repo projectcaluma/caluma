@@ -90,3 +90,28 @@ query foo {
 So the above query would return all documents that have a question named "foo"
 with the value "bar", but exclude all documents from that list where another
 question "baz" has the value "hello".
+
+We also intend to syntactically separate ordering from filtering, which
+"traditionally" was the same: In REST APIs, you would have query strings
+that could configure both filtering and sorting, like this:
+`?foo=bar&ordering=blah`. GrahpQL doesn't really provide independent syntax for
+this either: `allDocuments(hasAnswer:{question:"foo",value:"bar"},orderBy=MODIFIED_AT_ASC)`
+
+Our future interface will separate those two concerns in a clean syntactic
+manner:
+
+```graphql
+query foo {
+  allDocuments(
+    filter: [
+      {hasAnswer: {question: "foo", value: "bar"}},
+      ...
+    ],
+    ordering: [
+       ...
+    ]
+  ) {
+     ...
+  }
+}
+```

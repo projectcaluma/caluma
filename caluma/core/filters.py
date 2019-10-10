@@ -127,6 +127,7 @@ def FilterCollectionFactory(filterset_class):
         filter_fields = {
             name: _get_or_make_field(name, filt)
             for name, filt in _filter_coll.filters.items()
+            if not isinstance(filt, OrderingFilter)
         }
 
         filter_fields["invert"] = graphene.Boolean(required=False, default=False)
