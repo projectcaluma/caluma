@@ -66,6 +66,8 @@ Code released under the [MIT license](LICENSE).
 * [Workflow Concepts](docs/workflow-concepts.md) - How to use caluma workflows
 * [Historical Records](docs/historical-records.md) - Undo and audit trail
   functionality
+* [GraphQL](docs/graphql.md) - Further information on how to use the GraphQL
+  interface
 * [Validation](docs/validation.md) - Validation of user input
 * [Extending Caluma](docs/extending.md) - Extensions: Data visibility and
   permissions
