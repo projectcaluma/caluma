@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 252.59 77.59"
+   version="1.1"
+   id="svg235"
+   sodipodi:docname="exam-execution-3.svg"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14">
+  <metadata
+     id="metadata239">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1666"
+     inkscape:window-height="1065"
+     id="namedview237"
+     showgrid="false"
+     inkscape:lockguides="true"
+     inkscape:zoom="2.2962113"
+     inkscape:cx="-10.145421"
+     inkscape:cy="53.13043"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Ebene_1-2" />
+  <defs
+     id="defs161">
+    <style
+       id="style159">.cls-1{font-size:10px;font-family:Oxygen-Regular, Oxygen;}.cls-1,.cls-11{fill:#222221;}.cls-2,.cls-3,.cls-4,.cls-5,.cls-6{fill:none;stroke:#636363;}.cls-10,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6{stroke-miterlimit:10;}.cls-3{stroke-dasharray:9.46 3.78;}.cls-4{stroke-dasharray:8.13 3.25;}.cls-5{stroke-width:0.5px;}.cls-6{stroke-dasharray:5.52 2.21;}.cls-7,.cls-9{fill:#636363;}.cls-8{letter-spacing:-0.01em;}.cls-11,.cls-9{font-size:7px;}.cls-9{font-family:monospace;}.cls-10{fill:#fff;stroke:#020201;stroke-width:0.75px;}.cls-11{font-family:ZapfDingbatsITC, Zapf Dingbats;}</style>
+  </defs>
+  <title
+     id="title163">exam-execution-Element 4</title>
+  <g
+     id="Ebene_2"
+     data-name="Ebene 2">
+    <g
+       id="Ebene_1-2"
+       data-name="Ebene 1">
+      <text
+         class="cls-1"
+         transform="translate(42.35 41.86)"
+         id="text165"
+         style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;">Fill out exam</text>
+      <polyline
+         class="cls-2"
+         points="111.06 51.33 111.06 56.33 106.06 56.33"
+         id="polyline167" />
+      <line
+         class="cls-3"
+         x1="102.27"
+         y1="56.33"
+         x2="37.95"
+         y2="56.33"
+         id="line169" />
+      <polyline
+         class="cls-2"
+         points="36.06 56.33 31.06 56.33 31.06 51.33"
+         id="polyline171" />
+      <line
+         class="cls-4"
+         x1="31.06"
+         y1="48.08"
+         x2="31.06"
+         y2="26.96"
+         id="line173" />
+      <polyline
+         class="cls-2"
+         points="31.06 25.33 31.06 20.33 36.06 20.33"
+         id="polyline175" />
+      <line
+         class="cls-3"
+         x1="39.84"
+         y1="20.33"
+         x2="104.16"
+         y2="20.33"
+         id="line177" />
+      <polyline
+         class="cls-2"
+         points="106.06 20.33 111.06 20.33 111.06 25.33"
+         id="polyline179" />
+      <line
+         class="cls-4"
+         x1="111.06"
+         y1="28.58"
+         x2="111.06"
+         y2="49.71"
+         id="line181" />
+      <rect
+         class="cls-5"
+         x="0.25"
+         y="0.25"
+         width="246.75"
+         height="71.76"
+         id="rect183" />
+      <line
+         class="cls-2"
+         x1="111.06"
+         y1="38.33"
+         x2="116.06"
+         y2="38.33"
+         id="line185" />
+      <line
+         class="cls-6"
+         x1="118.26"
+         y1="38.33"
+         x2="124.89"
+         y2="38.33"
+         id="line187" />
+      <line
+         class="cls-2"
+         x1="125.99"
+         y1="38.33"
+         x2="130.99"
+         y2="38.33"
+         id="line189" />
+      <polygon
+         class="cls-7"
+         points="130.12 41.33 135.3 38.33 130.12 35.34 130.12 41.33"
+         id="polygon191" />
+      <text
+         class="cls-1"
+         transform="translate(145.19,41.86)"
+         id="text197"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:10px;font-family:sans-serif;-inkscape-font-specification:sans-serif;fill:#222221">Correct exam</text>
+      <polyline
+         class="cls-2"
+         points="215.21 51.33 215.21 56.33 210.21 56.33"
+         id="polyline199" />
+      <line
+         class="cls-3"
+         x1="206.43"
+         y1="56.33"
+         x2="142.1"
+         y2="56.33"
+         id="line201" />
+      <polyline
+         class="cls-2"
+         points="140.21 56.33 135.21 56.33 135.21 51.33"
+         id="polyline203" />
+      <line
+         class="cls-4"
+         x1="135.21"
+         y1="48.08"
+         x2="135.21"
+         y2="26.96"
+         id="line205" />
+      <polyline
+         class="cls-2"
+         points="135.21 25.33 135.21 20.33 140.21 20.33"
+         id="polyline207" />
+      <line
+         class="cls-3"
+         x1="143.99"
+         y1="20.33"
+         x2="208.32"
+         y2="20.33"
+         id="line209" />
+      <polyline
+         class="cls-2"
+         points="210.21 20.33 215.21 20.33 215.21 25.33"
+         id="polyline211" />
+      <line
+         class="cls-4"
+         x1="215.21"
+         y1="28.58"
+         x2="215.21"
+         y2="49.71"
+         id="line213" />
+      <text
+         class="cls-9"
+         transform="translate(32.84 27.95)"
+         id="text215"
+         style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;">Work Item</text>
+      <text
+         class="cls-9"
+         transform="translate(137.87 27.95)"
+         id="text217"
+         style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;">Work Item</text>
+      <text
+         class="cls-9"
+         transform="translate(4.62 9.92)"
+         id="text219"
+         style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;">Case</text>
+      <circle
+         class="cls-10"
+         cx="111.06"
+         cy="56.33"
+         r="5.21"
+         id="circle221" />
+      <text
+         class="cls-11"
+         transform="translate(108.09 58.91)"
+         id="text223">✔</text>
+      <circle
+         class="cls-10"
+         cx="215.21"
+         cy="56.33"
+         r="5.21"
+         id="circle225" />
+      <text
+         class="cls-11"
+         transform="translate(212.25 58.91)"
+         id="text227">✔</text>
+      <circle
+         class="cls-10"
+         cx="247"
+         cy="72.01"
+         r="5.21"
+         id="circle229" />
+      <text
+         class="cls-11"
+         transform="translate(244.04 74.58)"
+         id="text231">✔</text>
+    </g>
+  </g>
+</svg>

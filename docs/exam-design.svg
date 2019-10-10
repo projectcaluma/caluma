@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Ebene_1"
+   data-name="Ebene 1"
+   viewBox="0 0 247.25 80.35"
+   version="1.1"
+   sodipodi:docname="exam-design.svg"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14">
+  <metadata
+     id="metadata45">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1173"
+     id="namedview43"
+     showgrid="false"
+     inkscape:zoom="3.2717094"
+     inkscape:cx="166.71898"
+     inkscape:cy="19.639571"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Ebene_1" />
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1,.cls-5{font-size:10px;}.cls-1,.cls-4{fill:#222221;}.cls-1{font-family:Oxygen-Regular, Oxygen;}.cls-2,.cls-3,.cls-8{fill:none;stroke-miterlimit:10;}.cls-2{stroke:#222221;}.cls-3{stroke:#636363;}.cls-3,.cls-8{stroke-width:0.5px;}.cls-5{fill:#636363;font-family:sans-serif;}.cls-6{letter-spacing:-0.01em;}.cls-7{fill:#020201;}.cls-8{stroke:#fff;}</style>
+  </defs>
+  <title
+     id="title6">exam-design</title>
+  <text
+     class="cls-1"
+     transform="translate(42.35 49.95)"
+     id="text8">
+    <tspan
+       style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+       id="tspan4582">Fill out exam</tspan>
+  </text>
+  <rect
+     class="cls-2"
+     x="31.06"
+     y="28.43"
+     width="80"
+     height="36"
+     id="rect10" />
+  <rect
+     class="cls-3"
+     x="0.25"
+     y="0.25"
+     width="246.75"
+     height="79.85"
+     id="rect12" />
+  <line
+     class="cls-2"
+     x1="111.06"
+     y1="46.43"
+     x2="130.99"
+     y2="46.43"
+     id="line14" />
+  <polygon
+     class="cls-4"
+     points="130.12 49.42 135.3 46.43 130.12 43.44 130.12 49.42"
+     id="polygon16" />
+  <text
+     class="cls-5"
+     transform="translate(6.84 14.51)"
+     id="text18">
+    <tspan
+       style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+       id="tspan4586">Exam</tspan>
+  </text>
+  <text
+     class="cls-1"
+     transform="translate(145.19 49.95)"
+     id="text24">
+    <tspan
+       style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+       id="tspan4584">Correct exam</tspan>
+  </text>
+  <rect
+     class="cls-2"
+     x="135.21"
+     y="28.43"
+     width="80"
+     height="36"
+     id="rect26" />
+  <circle
+     class="cls-7"
+     cx="11.72"
+     cy="46.06"
+     r="4.89"
+     id="circle28" />
+  <circle
+     class="cls-7"
+     cx="236.15"
+     cy="46.43"
+     r="4.89"
+     id="circle30" />
+  <line
+     class="cls-2"
+     x1="9.48"
+     y1="46.06"
+     x2="26.75"
+     y2="46.06"
+     id="line32" />
+  <polygon
+     class="cls-4"
+     points="25.88 49.05 31.06 46.06 25.88 43.07 25.88 49.05"
+     id="polygon34" />
+  <line
+     class="cls-2"
+     x1="215.21"
+     y1="46.43"
+     x2="226.94"
+     y2="46.43"
+     id="line36" />
+  <polygon
+     class="cls-4"
+     points="226.06 49.42 231.24 46.43 226.06 43.44 226.06 49.42"
+     id="polygon38" />
+  <circle
+     class="cls-8"
+     cx="236.15"
+     cy="46.43"
+     r="4.17"
+     id="circle40" />
+</svg>
