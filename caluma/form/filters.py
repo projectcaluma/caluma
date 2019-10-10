@@ -1,7 +1,6 @@
 from functools import reduce
 
 import graphene
-from django import forms
 from django.core import exceptions
 from django.db import ProgrammingError
 from django.db.models import Q
@@ -12,6 +11,7 @@ from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
 
 from ..core.filters import (
+    CompositeFieldClass,
     GlobalIDFilter,
     GlobalIDMultipleChoiceFilter,
     MetaFilterSet,
@@ -84,15 +84,8 @@ class HasAnswerFilterType(InputObjectType):
     hierarchy = AnswerHierarchyMode()
 
 
-class HasAnswerFilterField(forms.MultiValueField):
-    def __init__(self, label, **kwargs):
-        super().__init__(fields=(forms.CharField(), forms.CharField()))
-
-    def clean(self, data):
-        # override parent clean() which would reject our data structure.
-        # We don't validate, as the structure is already enforced by the
-        # schema.
-        return data
+class HasAnswerFilterField(CompositeFieldClass):
+    pass
 
 
 class HasAnswerFilter(Filter):
@@ -100,7 +93,7 @@ class HasAnswerFilter(Filter):
 
     def __init__(self, *args, **kwargs):
         self.document_id = kwargs.pop("document_id")
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     VALID_LOOKUPS = {
         "text": [
@@ -229,15 +222,8 @@ class SearchAnswersFilterType(InputObjectType):
     lookup = SearchLookupMode(required=False)
 
 
-class SearchAnswersFilterField(forms.MultiValueField):
-    def __init__(self, label, **kwargs):
-        super().__init__(fields=(forms.CharField(), forms.CharField()))
-
-    def clean(self, data):
-        # override parent clean() which would reject our data structure.
-        # We don't validate, as the structure is already enforced by the
-        # schema.
-        return data
+class SearchAnswersFilterField(CompositeFieldClass):
+    pass
 
 
 class SearchAnswersFilter(Filter):
@@ -255,7 +241,7 @@ class SearchAnswersFilter(Filter):
 
     def __init__(self, *args, **kwargs):
         self.document_id = kwargs.pop("document_id")
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def filter(self, qs, value):
         if value in EMPTY_VALUES:

@@ -4,7 +4,11 @@ from graphene import relay
 from graphene.types import ObjectType, generic
 from graphene_django.rest_framework import serializer_converter
 
-from ..core.filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
+from ..core.filters import (
+    CollectionFilterSetFactory,
+    DjangoFilterConnectionField,
+    DjangoFilterSetConnectionField,
+)
 from ..core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..core.relay import extract_global_id
 from ..core.types import (
@@ -887,12 +891,15 @@ def validate_document(info, document_global_id):
 
 
 class Query:
-    all_forms = DjangoFilterConnectionField(Form, filterset_class=filters.FormFilterSet)
+    all_forms = DjangoFilterConnectionField(
+        Form, filterset_class=CollectionFilterSetFactory(filters.FormFilterSet)
+    )
     all_questions = DjangoFilterSetConnectionField(
-        QuestionConnection, filterset_class=filters.QuestionFilterSet
+        QuestionConnection,
+        filterset_class=CollectionFilterSetFactory(filters.QuestionFilterSet),
     )
     all_documents = DjangoFilterConnectionField(
-        Document, filterset_class=filters.DocumentFilterSet
+        Document, filterset_class=CollectionFilterSetFactory(filters.DocumentFilterSet)
     )
     all_format_validators = ConnectionField(FormatValidatorConnection)
 
