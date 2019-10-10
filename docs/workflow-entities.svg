@@ -1,1 +1,220 @@
-<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 204.15 126.55"><defs><style>.cls-1,.cls-4{fill:#222221;}.cls-2,.cls-3,.cls-7{fill:none;stroke-miterlimit:10;}.cls-2,.cls-3{stroke:#979a97;stroke-width:0.5px;}.cls-3{stroke-dasharray:4 2;}.cls-4{font-size:12px;font-family:Oxygen-Regular, Oxygen;}.cls-5{letter-spacing:-0.02em;}.cls-6{letter-spacing:0em;}.cls-7{stroke:#222221;}.cls-8{letter-spacing:-0.02em;}.cls-9{letter-spacing:-0.01em;}.cls-10{font-size:10px;fill:#5e605d;font-family:Oxygen-Light, Oxygen;}.cls-11{letter-spacing:-0.01em;}</style></defs><title>workflow-entities</title><line class="cls-1" x1="101.92" x2="101.92" y2="126.05"/><line class="cls-2" x1="101.92" x2="101.92" y2="2"/><line class="cls-3" x1="101.92" y1="4" x2="101.92" y2="123.05"/><line class="cls-2" x1="101.92" y1="124.05" x2="101.92" y2="126.05"/><text class="cls-4" transform="translate(14.15 46.58)"><tspan class="cls-5">W</tspan><tspan x="11.53" y="0">orkfl</tspan><tspan class="cls-6" x="36.29" y="0">o</tspan><tspan x="43.28" y="0">w</tspan></text><rect class="cls-7" x="0.5" y="25.05" width="80" height="36"/><text class="cls-4" transform="translate(150.62 46.58)">Case</text><rect class="cls-7" x="123.65" y="25.05" width="80" height="36"/><text class="cls-4" transform="translate(28.33 111.58)"><tspan class="cls-8">T</tspan><tspan x="6.22" y="0">ask</tspan></text><rect class="cls-7" x="0.5" y="90.05" width="80" height="36"/><text class="cls-4" transform="translate(135.57 111.58)"><tspan class="cls-5">W</tspan><tspan x="11.53" y="0">ork I</tspan><tspan class="cls-9" x="35.2" y="0">t</tspan><tspan x="39.29" y="0">em</tspan></text><rect class="cls-7" x="123.65" y="90.05" width="80" height="36"/><line class="cls-7" x1="40.5" y1="61.05" x2="40.5" y2="90.05"/><line class="cls-7" x1="163.65" y1="61.05" x2="163.65" y2="90.05"/><line class="cls-7" x1="80.5" y1="43.05" x2="123.65" y2="43.05"/><line class="cls-7" x1="80.35" y1="108.05" x2="123.5" y2="108.05"/><text class="cls-10" transform="translate(0.5 11.14)">Design</text><text class="cls-10" transform="translate(123.5 11.14)">E<tspan class="cls-11" x="5.58" y="0">x</tspan><tspan x="10.45" y="0">ecution</tspan></text></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="Ebene_1"
+   data-name="Ebene 1"
+   viewBox="0 0 204.15 126.55"
+   version="1.1"
+   sodipodi:docname="workflow-entities.svg"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14">
+  <metadata
+     id="metadata448">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1173"
+     id="namedview446"
+     showgrid="false"
+     inkscape:zoom="1.4205242"
+     inkscape:cx="-45.405775"
+     inkscape:cy="63.275002"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="Ebene_1" />
+  <defs
+     id="defs381">
+    <style
+       id="style379">.cls-1,.cls-4{fill:#222221;}.cls-2,.cls-3,.cls-7{fill:none;stroke-miterlimit:10;}.cls-2,.cls-3{stroke:#979a97;stroke-width:0.5px;}.cls-3{stroke-dasharray:4 2;}.cls-4{font-size:12px;font-family:Oxygen-Regular, Oxygen;}.cls-5{letter-spacing:-0.02em;}.cls-6{letter-spacing:0em;}.cls-7{stroke:#222221;}.cls-8{letter-spacing:-0.02em;}.cls-9{letter-spacing:-0.01em;}.cls-10{font-size:10px;fill:#5e605d;font-family:sans-serif;}.cls-11{letter-spacing:-0.01em;}</style>
+  </defs>
+  <title
+     id="title383">workflow-entities</title>
+  <line
+     class="cls-1"
+     x1="101.92"
+     x2="101.92"
+     y2="126.05"
+     id="line385"
+     style="" />
+  <line
+     class="cls-2"
+     x1="101.92"
+     x2="101.92"
+     y2="2"
+     id="line387"
+     style="" />
+  <line
+     class="cls-3"
+     x1="101.92"
+     y1="4"
+     x2="101.92"
+     y2="123.05"
+     id="line389"
+     style="" />
+  <line
+     class="cls-2"
+     x1="101.92"
+     y1="124.05"
+     x2="101.92"
+     y2="126.05"
+     id="line391"
+     style="" />
+  <text
+     class="cls-4"
+     transform="translate(14.15 46.58)"
+     id="text401"
+     style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">
+    <tspan
+       class="cls-5"
+       id="tspan393"
+       style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">W</tspan>
+    <tspan
+       x="11.53"
+       y="0"
+       id="tspan395"
+       style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">orkfl</tspan>
+    <tspan
+       class="cls-6"
+       x="36.29"
+       y="0"
+       id="tspan397"
+       style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">o</tspan>
+    <tspan
+       x="43.28"
+       y="0"
+       id="tspan399"
+       style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">w</tspan>
+  </text>
+  <rect
+     class="cls-7"
+     x="0.5"
+     y="25.05"
+     width="80"
+     height="36"
+     id="rect403"
+     style="" />
+  <text
+     class="cls-4"
+     transform="translate(150.62 46.58)"
+     id="text405"
+     style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">Case</text>
+  <rect
+     class="cls-7"
+     x="123.65"
+     y="25.05"
+     width="80"
+     height="36"
+     id="rect407"
+     style="" />
+  <text
+     class="cls-4"
+     transform="translate(28.33 111.58)"
+     id="text413"
+     style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">
+    <tspan
+       class="cls-8"
+       id="tspan409"
+       style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">T</tspan>
+    <tspan
+       x="6.22"
+       y="0"
+       id="tspan411"
+       style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">ask</tspan>
+  </text>
+  <rect
+     class="cls-7"
+     x="0.5"
+     y="90.05"
+     width="80"
+     height="36"
+     id="rect415"
+     style="" />
+  <text
+     class="cls-4"
+     transform="translate(135.57,111.58)"
+     id="text425"
+     style="font-size:11.33333333px;font-family:sans-serif;fill:#222221;-inkscape-font-specification:'sans-serif, Normal';font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">WorkItem</text>
+  <rect
+     class="cls-7"
+     x="123.65"
+     y="90.05"
+     width="80"
+     height="36"
+     id="rect427"
+     style="" />
+  <line
+     class="cls-7"
+     x1="40.5"
+     y1="61.05"
+     x2="40.5"
+     y2="90.05"
+     id="line429"
+     style="" />
+  <line
+     class="cls-7"
+     x1="163.65"
+     y1="61.05"
+     x2="163.65"
+     y2="90.05"
+     id="line431"
+     style="" />
+  <line
+     class="cls-7"
+     x1="80.5"
+     y1="43.05"
+     x2="123.65"
+     y2="43.05"
+     id="line433"
+     style="" />
+  <line
+     class="cls-7"
+     x1="80.35"
+     y1="108.05"
+     x2="123.5"
+     y2="108.05"
+     id="line435"
+     style="" />
+  <text
+     class="cls-10"
+     transform="translate(0.5 11.14)"
+     id="text437"
+     style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">Design</text>
+  <text
+     class="cls-10"
+     transform="translate(123.5 11.14)"
+     id="text443"
+     style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">E<tspan
+   class="cls-11"
+   x="5.58"
+   y="0"
+   id="tspan439"
+   style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">x</tspan>
+<tspan
+   x="10.45"
+   y="0"
+   id="tspan441"
+   style="-inkscape-font-specification:'sans-serif, Normal';font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal;font-size:11.33333333px;text-anchor:start;text-align:start;writing-mode:lr;font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;">ecution</tspan>
+</text>
+</svg>

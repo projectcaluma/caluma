@@ -1,1 +1,416 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 423.88 77.99"><defs><style>.cls-1,.cls-2,.cls-3,.cls-4,.cls-5,.cls-7{fill:none;stroke:#636363;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-5,.cls-7,.cls-9{stroke-miterlimit:10;}.cls-2{stroke-dasharray:10.87 4.35;}.cls-3{stroke-dasharray:8.13 3.25;}.cls-4{stroke-width:0.5px;}.cls-5{stroke-dasharray:5.52 2.21;}.cls-6,.cls-8{fill:#636363;}.cls-7{stroke-dasharray:10.39 4.16;}.cls-10,.cls-8{font-size:7px;}.cls-8{font-family:OxygenMono-Regular, Oxygen Mono;}.cls-9{fill:#fff;stroke:#020201;stroke-width:0.75px;}.cls-10{fill:#222221;font-family:ZapfDingbatsITC, Zapf Dingbats;}</style></defs><title>exam-execution-Element 7</title><g id="Ebene_2" data-name="Ebene 2"><g id="Ebene_1-2" data-name="Ebene 1"><polyline class="cls-1" points="54.36 51.73 54.36 56.73 49.36 56.73"/><line class="cls-2" x1="45.01" y1="56.73" x2="16.74" y2="56.73"/><polyline class="cls-1" points="14.57 56.73 9.57 56.73 9.57 51.73"/><line class="cls-3" x1="9.57" y1="48.48" x2="9.57" y2="27.36"/><polyline class="cls-1" points="9.57 25.73 9.57 20.73 14.57 20.73"/><line class="cls-2" x1="18.92" y1="20.73" x2="47.19" y2="20.73"/><polyline class="cls-1" points="49.36 20.73 54.36 20.73 54.36 25.73"/><line class="cls-3" x1="54.36" y1="28.98" x2="54.36" y2="50.11"/><rect class="cls-4" x="0.25" y="0.65" width="133.17" height="71.76"/><line class="cls-1" x1="54.36" y1="38.73" x2="59.36" y2="38.73"/><line class="cls-5" x1="61.57" y1="38.73" x2="68.2" y2="38.73"/><line class="cls-1" x1="69.3" y1="38.73" x2="74.3" y2="38.73"/><polygon class="cls-6" points="73.43 41.73 78.61 38.73 73.43 35.74 73.43 41.73"/><polyline class="cls-1" points="121.77 51.73 121.77 56.73 116.77 56.73"/><line class="cls-7" x1="112.62" y1="56.73" x2="85.59" y2="56.73"/><polyline class="cls-1" points="83.52 56.73 78.52 56.73 78.52 51.73"/><line class="cls-3" x1="78.52" y1="48.48" x2="78.52" y2="27.36"/><polyline class="cls-1" points="78.52 25.73 78.52 20.73 83.52 20.73"/><line class="cls-7" x1="87.67" y1="20.73" x2="114.7" y2="20.73"/><polyline class="cls-1" points="116.77 20.73 121.77 20.73 121.77 25.73"/><line class="cls-3" x1="121.77" y1="28.98" x2="121.77" y2="50.11"/><text class="cls-8" transform="translate(5.13 10.32)">Case #1</text><circle class="cls-9" cx="54.36" cy="56.73" r="5.21"/><text class="cls-10" transform="translate(51.4 59.31)">✔</text><circle class="cls-9" cx="121.77" cy="56.73" r="5.21"/><text class="cls-10" transform="translate(118.81 59.31)">✔</text><circle class="cls-9" cx="133.42" cy="72.4" r="5.21"/><text class="cls-10" transform="translate(130.46 74.98)">✔</text><polyline class="cls-1" points="199.97 51.73 199.97 56.73 194.97 56.73"/><line class="cls-2" x1="190.62" y1="56.73" x2="162.35" y2="56.73"/><polyline class="cls-1" points="160.18 56.73 155.18 56.73 155.18 51.73"/><line class="cls-3" x1="155.18" y1="48.48" x2="155.18" y2="27.36"/><polyline class="cls-1" points="155.18 25.73 155.18 20.73 160.18 20.73"/><line class="cls-2" x1="164.53" y1="20.73" x2="192.8" y2="20.73"/><polyline class="cls-1" points="194.97 20.73 199.97 20.73 199.97 25.73"/><line class="cls-3" x1="199.97" y1="28.98" x2="199.97" y2="50.11"/><rect class="cls-4" x="145.86" y="0.65" width="133.17" height="71.76"/><text class="cls-8" transform="translate(150.74 10.32)">Case #2</text><polyline class="cls-1" points="344.58 51.33 344.58 56.33 339.58 56.33"/><line class="cls-2" x1="335.23" y1="56.33" x2="306.96" y2="56.33"/><polyline class="cls-1" points="304.78 56.33 299.78 56.33 299.78 51.33"/><line class="cls-3" x1="299.78" y1="48.08" x2="299.78" y2="26.96"/><polyline class="cls-1" points="299.78 25.33 299.78 20.33 304.78 20.33"/><line class="cls-2" x1="309.13" y1="20.33" x2="337.4" y2="20.33"/><polyline class="cls-1" points="339.58 20.33 344.58 20.33 344.58 25.33"/><line class="cls-3" x1="344.58" y1="28.58" x2="344.58" y2="49.71"/><rect class="cls-4" x="290.47" y="0.25" width="133.17" height="71.76"/><line class="cls-1" x1="344.58" y1="38.33" x2="349.58" y2="38.33"/><line class="cls-5" x1="351.79" y1="38.33" x2="358.41" y2="38.33"/><line class="cls-1" x1="359.52" y1="38.33" x2="364.52" y2="38.33"/><polygon class="cls-6" points="363.64 41.33 368.82 38.33 363.64 35.34 363.64 41.33"/><polyline class="cls-1" points="411.99 51.33 411.99 56.33 406.99 56.33"/><line class="cls-7" x1="402.83" y1="56.33" x2="375.81" y2="56.33"/><polyline class="cls-1" points="373.73 56.33 368.73 56.33 368.73 51.33"/><line class="cls-3" x1="368.73" y1="48.08" x2="368.73" y2="26.96"/><polyline class="cls-1" points="368.73 25.33 368.73 20.33 373.73 20.33"/><line class="cls-7" x1="377.89" y1="20.33" x2="404.91" y2="20.33"/><polyline class="cls-1" points="406.99 20.33 411.99 20.33 411.99 25.33"/><line class="cls-3" x1="411.99" y1="28.58" x2="411.99" y2="49.71"/><text class="cls-8" transform="translate(295.35 9.92)">Case #3</text><circle class="cls-9" cx="344.58" cy="56.33" r="5.21"/><text class="cls-10" transform="translate(341.62 58.91)">✔</text></g></g></svg>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 423.88 77.99"
+   version="1.1"
+   id="svg373"
+   sodipodi:docname="exam-execution-4.svg"
+   inkscape:version="0.92.4 5da689c313, 2019-01-14">
+  <metadata
+     id="metadata377">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1416"
+     inkscape:window-height="943"
+     id="namedview375"
+     showgrid="false"
+     inkscape:zoom="1.9350851"
+     inkscape:cx="153.72923"
+     inkscape:cy="57.795266"
+     inkscape:window-x="504"
+     inkscape:window-y="254"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="Ebene_1-2" />
+  <defs
+     id="defs243">
+    <style
+       id="style241">.cls-1,.cls-2,.cls-3,.cls-4,.cls-5,.cls-7{fill:none;stroke:#636363;}.cls-1,.cls-2,.cls-3,.cls-4,.cls-5,.cls-7,.cls-9{stroke-miterlimit:10;}.cls-2{stroke-dasharray:10.87 4.35;}.cls-3{stroke-dasharray:8.13 3.25;}.cls-4{stroke-width:0.5px;}.cls-5{stroke-dasharray:5.52 2.21;}.cls-6,.cls-8{fill:#636363;}.cls-7{stroke-dasharray:10.39 4.16;}.cls-10,.cls-8{font-size:7px;}.cls-8{font-family:monospace;}.cls-9{fill:#fff;stroke:#020201;stroke-width:0.75px;}.cls-10{fill:#222221;font-family:ZapfDingbatsITC, Zapf Dingbats;}</style>
+  </defs>
+  <title
+     id="title245">exam-execution-Element 7</title>
+  <g
+     id="Ebene_2"
+     data-name="Ebene 2">
+    <g
+       id="Ebene_1-2"
+       data-name="Ebene 1">
+      <polyline
+         class="cls-1"
+         points="54.36 51.73 54.36 56.73 49.36 56.73"
+         id="polyline247" />
+      <line
+         class="cls-2"
+         x1="45.01"
+         y1="56.73"
+         x2="16.74"
+         y2="56.73"
+         id="line249" />
+      <polyline
+         class="cls-1"
+         points="14.57 56.73 9.57 56.73 9.57 51.73"
+         id="polyline251" />
+      <line
+         class="cls-3"
+         x1="9.57"
+         y1="48.48"
+         x2="9.57"
+         y2="27.36"
+         id="line253" />
+      <polyline
+         class="cls-1"
+         points="9.57 25.73 9.57 20.73 14.57 20.73"
+         id="polyline255" />
+      <line
+         class="cls-2"
+         x1="18.92"
+         y1="20.73"
+         x2="47.19"
+         y2="20.73"
+         id="line257" />
+      <polyline
+         class="cls-1"
+         points="49.36 20.73 54.36 20.73 54.36 25.73"
+         id="polyline259" />
+      <line
+         class="cls-3"
+         x1="54.36"
+         y1="28.98"
+         x2="54.36"
+         y2="50.11"
+         id="line261" />
+      <rect
+         class="cls-4"
+         x="0.25"
+         y="0.65"
+         width="133.17"
+         height="71.76"
+         id="rect263" />
+      <line
+         class="cls-1"
+         x1="54.36"
+         y1="38.73"
+         x2="59.36"
+         y2="38.73"
+         id="line265" />
+      <line
+         class="cls-5"
+         x1="61.57"
+         y1="38.73"
+         x2="68.2"
+         y2="38.73"
+         id="line267" />
+      <line
+         class="cls-1"
+         x1="69.3"
+         y1="38.73"
+         x2="74.3"
+         y2="38.73"
+         id="line269" />
+      <polygon
+         class="cls-6"
+         points="73.43 41.73 78.61 38.73 73.43 35.74 73.43 41.73"
+         id="polygon271" />
+      <polyline
+         class="cls-1"
+         points="121.77 51.73 121.77 56.73 116.77 56.73"
+         id="polyline273" />
+      <line
+         class="cls-7"
+         x1="112.62"
+         y1="56.73"
+         x2="85.59"
+         y2="56.73"
+         id="line275" />
+      <polyline
+         class="cls-1"
+         points="83.52 56.73 78.52 56.73 78.52 51.73"
+         id="polyline277" />
+      <line
+         class="cls-3"
+         x1="78.52"
+         y1="48.48"
+         x2="78.52"
+         y2="27.36"
+         id="line279" />
+      <polyline
+         class="cls-1"
+         points="78.52 25.73 78.52 20.73 83.52 20.73"
+         id="polyline281" />
+      <line
+         class="cls-7"
+         x1="87.67"
+         y1="20.73"
+         x2="114.7"
+         y2="20.73"
+         id="line283" />
+      <polyline
+         class="cls-1"
+         points="116.77 20.73 121.77 20.73 121.77 25.73"
+         id="polyline285" />
+      <line
+         class="cls-3"
+         x1="121.77"
+         y1="28.98"
+         x2="121.77"
+         y2="50.11"
+         id="line287" />
+      <text
+         class="cls-8"
+         transform="translate(5.13 10.32)"
+         id="text289">
+        <tspan
+           style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+           id="tspan4558">Case #1</tspan>
+      </text>
+      <circle
+         class="cls-9"
+         cx="54.36"
+         cy="56.73"
+         r="5.21"
+         id="circle291" />
+      <text
+         class="cls-10"
+         transform="translate(51.4 59.31)"
+         id="text293">✔</text>
+      <circle
+         class="cls-9"
+         cx="121.77"
+         cy="56.73"
+         r="5.21"
+         id="circle295" />
+      <text
+         class="cls-10"
+         transform="translate(118.81 59.31)"
+         id="text297">✔</text>
+      <circle
+         class="cls-9"
+         cx="133.42"
+         cy="72.4"
+         r="5.21"
+         id="circle299" />
+      <text
+         class="cls-10"
+         transform="translate(130.46 74.98)"
+         id="text301">✔</text>
+      <polyline
+         class="cls-1"
+         points="199.97 51.73 199.97 56.73 194.97 56.73"
+         id="polyline303" />
+      <line
+         class="cls-2"
+         x1="190.62"
+         y1="56.73"
+         x2="162.35"
+         y2="56.73"
+         id="line305" />
+      <polyline
+         class="cls-1"
+         points="160.18 56.73 155.18 56.73 155.18 51.73"
+         id="polyline307" />
+      <line
+         class="cls-3"
+         x1="155.18"
+         y1="48.48"
+         x2="155.18"
+         y2="27.36"
+         id="line309" />
+      <polyline
+         class="cls-1"
+         points="155.18 25.73 155.18 20.73 160.18 20.73"
+         id="polyline311" />
+      <line
+         class="cls-2"
+         x1="164.53"
+         y1="20.73"
+         x2="192.8"
+         y2="20.73"
+         id="line313" />
+      <polyline
+         class="cls-1"
+         points="194.97 20.73 199.97 20.73 199.97 25.73"
+         id="polyline315" />
+      <line
+         class="cls-3"
+         x1="199.97"
+         y1="28.98"
+         x2="199.97"
+         y2="50.11"
+         id="line317" />
+      <rect
+         class="cls-4"
+         x="145.86"
+         y="0.65"
+         width="133.17"
+         height="71.76"
+         id="rect319" />
+      <text
+         class="cls-8"
+         transform="translate(150.74 10.32)"
+         id="text321">
+        <tspan
+           style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+           id="tspan4560">Case #2</tspan>
+      </text>
+      <polyline
+         class="cls-1"
+         points="344.58 51.33 344.58 56.33 339.58 56.33"
+         id="polyline323" />
+      <line
+         class="cls-2"
+         x1="335.23"
+         y1="56.33"
+         x2="306.96"
+         y2="56.33"
+         id="line325" />
+      <polyline
+         class="cls-1"
+         points="304.78 56.33 299.78 56.33 299.78 51.33"
+         id="polyline327" />
+      <line
+         class="cls-3"
+         x1="299.78"
+         y1="48.08"
+         x2="299.78"
+         y2="26.96"
+         id="line329" />
+      <polyline
+         class="cls-1"
+         points="299.78 25.33 299.78 20.33 304.78 20.33"
+         id="polyline331" />
+      <line
+         class="cls-2"
+         x1="309.13"
+         y1="20.33"
+         x2="337.4"
+         y2="20.33"
+         id="line333" />
+      <polyline
+         class="cls-1"
+         points="339.58 20.33 344.58 20.33 344.58 25.33"
+         id="polyline335" />
+      <line
+         class="cls-3"
+         x1="344.58"
+         y1="28.58"
+         x2="344.58"
+         y2="49.71"
+         id="line337" />
+      <rect
+         class="cls-4"
+         x="290.47"
+         y="0.25"
+         width="133.17"
+         height="71.76"
+         id="rect339" />
+      <line
+         class="cls-1"
+         x1="344.58"
+         y1="38.33"
+         x2="349.58"
+         y2="38.33"
+         id="line341" />
+      <line
+         class="cls-5"
+         x1="351.79"
+         y1="38.33"
+         x2="358.41"
+         y2="38.33"
+         id="line343" />
+      <line
+         class="cls-1"
+         x1="359.52"
+         y1="38.33"
+         x2="364.52"
+         y2="38.33"
+         id="line345" />
+      <polygon
+         class="cls-6"
+         points="363.64 41.33 368.82 38.33 363.64 35.34 363.64 41.33"
+         id="polygon347" />
+      <polyline
+         class="cls-1"
+         points="411.99 51.33 411.99 56.33 406.99 56.33"
+         id="polyline349" />
+      <line
+         class="cls-7"
+         x1="402.83"
+         y1="56.33"
+         x2="375.81"
+         y2="56.33"
+         id="line351" />
+      <polyline
+         class="cls-1"
+         points="373.73 56.33 368.73 56.33 368.73 51.33"
+         id="polyline353" />
+      <line
+         class="cls-3"
+         x1="368.73"
+         y1="48.08"
+         x2="368.73"
+         y2="26.96"
+         id="line355" />
+      <polyline
+         class="cls-1"
+         points="368.73 25.33 368.73 20.33 373.73 20.33"
+         id="polyline357" />
+      <line
+         class="cls-7"
+         x1="377.89"
+         y1="20.33"
+         x2="404.91"
+         y2="20.33"
+         id="line359" />
+      <polyline
+         class="cls-1"
+         points="406.99 20.33 411.99 20.33 411.99 25.33"
+         id="polyline361" />
+      <line
+         class="cls-3"
+         x1="411.99"
+         y1="28.58"
+         x2="411.99"
+         y2="49.71"
+         id="line363" />
+      <text
+         class="cls-8"
+         transform="translate(295.35 9.92)"
+         id="text365">
+        <tspan
+           style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
+           id="tspan4562">Case #3</tspan>
+      </text>
+      <circle
+         class="cls-9"
+         cx="344.58"
+         cy="56.33"
+         r="5.21"
+         id="circle367" />
+      <text
+         class="cls-10"
+         transform="translate(341.62 58.91)"
+         id="text369">✔</text>
+    </g>
+  </g>
+</svg>
