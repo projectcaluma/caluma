@@ -1,242 +1,102 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   viewBox="0 0 247.25 72.26"
-   version="1.1"
-   id="svg153"
-   sodipodi:docname="exam-execution-2.svg"
-   inkscape:version="0.92.4 5da689c313, 2019-01-14">
-  <metadata
-     id="metadata157">
-    <rdf:RDF>
-      <cc:Work
-         rdf:about="">
-        <dc:format>image/svg+xml</dc:format>
-        <dc:type
-           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-      </cc:Work>
-    </rdf:RDF>
-  </metadata>
-  <sodipodi:namedview
-     pagecolor="#ffffff"
-     bordercolor="#666666"
-     borderopacity="1"
-     objecttolerance="10"
-     gridtolerance="10"
-     guidetolerance="10"
-     inkscape:pageopacity="0"
-     inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1173"
-     id="namedview155"
-     showgrid="false"
-     inkscape:zoom="2.3458038"
-     inkscape:cx="143.87048"
-     inkscape:cy="-13.210397"
-     inkscape:window-x="0"
-     inkscape:window-y="24"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="Ebene_1-2" />
-  <defs
-     id="defs87">
-    <style
-       id="style85">.cls-1{font-size:10px;font-family:Oxygen-Regular, Oxygen;}.cls-1,.cls-11{fill:#222221;}.cls-2,.cls-3,.cls-4,.cls-5,.cls-6{fill:none;stroke:#636363;}.cls-10,.cls-2,.cls-3,.cls-4,.cls-5,.cls-6{stroke-miterlimit:10;}.cls-3{stroke-dasharray:9.46 3.78;}.cls-4{stroke-dasharray:8.13 3.25;}.cls-5{stroke-width:0.5px;}.cls-6{stroke-dasharray:5.52 2.21;}.cls-7,.cls-9{fill:#636363;}.cls-8{letter-spacing:-0.01em;}.cls-11,.cls-9{font-size:7px;}.cls-9{font-family:monospace;}.cls-10{fill:#fff;stroke:#020201;stroke-width:0.75px;}.cls-11{font-family:ZapfDingbatsITC, Zapf Dingbats;}</style>
+<svg xmlns="http://www.w3.org/2000/svg" width="353.15" height="103.05" viewBox="0 0 353.15 103.05">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 14px;
+        font-family: ArialMT, Arial;
+      }
+
+      .cls-1, .cls-10 {
+        fill: #222221;
+      }
+
+      .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
+        fill: none;
+        stroke: #636362;
+      }
+
+      .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-9 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-3 {
+        stroke-dasharray: 10.23 4.09;
+      }
+
+      .cls-4 {
+        stroke-dasharray: 9.01 3.6;
+      }
+
+      .cls-5 {
+        stroke-width: 0.5px;
+      }
+
+      .cls-6 {
+        stroke-dasharray: 11.3 4.52;
+      }
+
+      .cls-7, .cls-8 {
+        fill: #636362;
+      }
+
+      .cls-10, .cls-8 {
+        font-size: 10px;
+      }
+
+      .cls-8 {
+        font-family: Courier, Courier;
+      }
+
+      .cls-9 {
+        fill: #fff;
+        stroke: #000;
+        stroke-width: 0.75px;
+      }
+
+      .cls-10 {
+        font-family: ZapfDingbatsITC, Zapf Dingbats;
+      }
+    </style>
   </defs>
-  <title
-     id="title89">exam-executionElement 3</title>
-  <g
-     id="Ebene_2"
-     data-name="Ebene 2">
-    <g
-       id="Ebene_1-2"
-       data-name="Ebene 1">
-      <text
-         class="cls-1"
-         transform="translate(42.35 41.86)"
-         id="text91">
-        <tspan
-           style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
-           id="tspan4568">Fill out exam</tspan>
-      </text>
-      <polyline
-         class="cls-2"
-         points="111.06 51.33 111.06 56.33 106.06 56.33"
-         id="polyline93" />
-      <line
-         class="cls-3"
-         x1="102.27"
-         y1="56.33"
-         x2="37.95"
-         y2="56.33"
-         id="line95" />
-      <polyline
-         class="cls-2"
-         points="36.06 56.33 31.06 56.33 31.06 51.33"
-         id="polyline97" />
-      <line
-         class="cls-4"
-         x1="31.06"
-         y1="48.08"
-         x2="31.06"
-         y2="26.96"
-         id="line99" />
-      <polyline
-         class="cls-2"
-         points="31.06 25.33 31.06 20.33 36.06 20.33"
-         id="polyline101" />
-      <line
-         class="cls-3"
-         x1="39.84"
-         y1="20.33"
-         x2="104.16"
-         y2="20.33"
-         id="line103" />
-      <polyline
-         class="cls-2"
-         points="106.06 20.33 111.06 20.33 111.06 25.33"
-         id="polyline105" />
-      <line
-         class="cls-4"
-         x1="111.06"
-         y1="28.58"
-         x2="111.06"
-         y2="49.71"
-         id="line107" />
-      <rect
-         class="cls-5"
-         x="0.25"
-         y="0.25"
-         width="246.75"
-         height="71.76"
-         id="rect109" />
-      <line
-         class="cls-2"
-         x1="111.06"
-         y1="38.33"
-         x2="116.06"
-         y2="38.33"
-         id="line111" />
-      <line
-         class="cls-6"
-         x1="118.26"
-         y1="38.33"
-         x2="124.89"
-         y2="38.33"
-         id="line113" />
-      <line
-         class="cls-2"
-         x1="125.99"
-         y1="38.33"
-         x2="130.99"
-         y2="38.33"
-         id="line115" />
-      <polygon
-         class="cls-7"
-         points="130.12 41.33 135.3 38.33 130.12 35.34 130.12 41.33"
-         id="polygon117" />
-      <text
-         class="cls-1"
-         transform="translate(145.19,41.86)"
-         id="text123"
-         style="font-size:10px;font-family:Oxygen-Regular, Oxygen;fill:#222221">
-        <tspan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:sans-serif;-inkscape-font-specification:sans-serif"
-           id="tspan4572">Correct exam</tspan>
-      </text>
-      <polyline
-         class="cls-2"
-         points="215.21 51.33 215.21 56.33 210.21 56.33"
-         id="polyline125" />
-      <line
-         class="cls-3"
-         x1="206.43"
-         y1="56.33"
-         x2="142.1"
-         y2="56.33"
-         id="line127" />
-      <polyline
-         class="cls-2"
-         points="140.21 56.33 135.21 56.33 135.21 51.33"
-         id="polyline129" />
-      <line
-         class="cls-4"
-         x1="135.21"
-         y1="48.08"
-         x2="135.21"
-         y2="26.96"
-         id="line131" />
-      <polyline
-         class="cls-2"
-         points="135.21 25.33 135.21 20.33 140.21 20.33"
-         id="polyline133" />
-      <line
-         class="cls-3"
-         x1="143.99"
-         y1="20.33"
-         x2="208.32"
-         y2="20.33"
-         id="line135" />
-      <polyline
-         class="cls-2"
-         points="210.21 20.33 215.21 20.33 215.21 25.33"
-         id="polyline137" />
-      <line
-         class="cls-4"
-         x1="215.21"
-         y1="28.58"
-         x2="215.21"
-         y2="49.71"
-         id="line139" />
-      <text
-         class="cls-9"
-         transform="translate(32.84 27.95)"
-         id="text141">
-        <tspan
-           style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
-           id="tspan4566">Work Item</tspan>
-      </text>
-      <text
-         class="cls-9"
-         transform="translate(137.87 27.95)"
-         id="text143">
-        <tspan
-           style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
-           id="tspan4570">Work Item</tspan>
-      </text>
-      <text
-         class="cls-9"
-         transform="translate(4.62 9.92)"
-         id="text145">
-        <tspan
-           style="-inkscape-font-specification:sans-serif;font-family:sans-serif;font-weight:normal;font-style:normal;font-stretch:normal;font-variant:normal"
-           id="tspan4564">Case</tspan>
-      </text>
-      <circle
-         class="cls-10"
-         cx="111.06"
-         cy="56.33"
-         r="5.21"
-         id="circle147" />
-      <text
-         class="cls-11"
-         transform="translate(108.09 58.91)"
-         id="text149">✔</text>
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:20px;line-height:25px;font-family:Sans;-inkscape-font-specification:'Sans, Normal';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-         x="181.61443"
-         y="39.855766"
-         id="text4576"><tspan
-           sodipodi:role="line"
-           id="tspan4574"
-           x="181.61443"
-           y="39.855766"> </tspan></text>
+  <title>exam-Element 3</title>
+  <g id="Ebene_2" data-name="Ebene 2">
+    <g id="Ebene_1-2" data-name="Ebene 1">
+      <text class="cls-1" transform="translate(61.76 59.71)">Fill out exam</text>
+      <g>
+        <polyline class="cls-2" points="158.61 75.4 158.61 80.4 153.61 80.4"/>
+        <line class="cls-3" x1="149.52" y1="80.4" x2="51.32" y2="80.4"/>
+        <polyline class="cls-2" points="49.28 80.4 44.28 80.4 44.28 75.4"/>
+        <line class="cls-4" x1="44.28" y1="71.8" x2="44.28" y2="35.75"/>
+        <polyline class="cls-2" points="44.28 33.95 44.28 28.95 49.28 28.95"/>
+        <line class="cls-3" x1="53.37" y1="28.95" x2="151.56" y2="28.95"/>
+        <polyline class="cls-2" points="153.61 28.95 158.61 28.95 158.61 33.95"/>
+        <line class="cls-4" x1="158.61" y1="37.56" x2="158.61" y2="73.6"/>
+      </g>
+      <rect class="cls-5" x="0.25" y="0.25" width="352.65" height="102.55"/>
+      <g>
+        <line class="cls-2" x1="158.61" y1="54.68" x2="163.61" y2="54.68"/>
+        <line class="cls-6" x1="168.13" y1="54.68" x2="181.69" y2="54.68"/>
+        <line class="cls-2" x1="183.95" y1="54.68" x2="188.95" y2="54.68"/>
+        <polygon class="cls-7" points="188.08 57.67 193.26 54.68 188.08 51.69 188.08 57.67"/>
+      </g>
+      <text class="cls-1" transform="translate(208.29 59.71)">Correct exam</text>
+      <g>
+        <polyline class="cls-2" points="307.46 75.4 307.46 80.4 302.46 80.4"/>
+        <line class="cls-3" x1="298.37" y1="80.4" x2="200.18" y2="80.4"/>
+        <polyline class="cls-2" points="198.13 80.4 193.13 80.4 193.13 75.4"/>
+        <line class="cls-4" x1="193.13" y1="71.8" x2="193.13" y2="35.75"/>
+        <polyline class="cls-2" points="193.13 33.95 193.13 28.95 198.13 28.95"/>
+        <line class="cls-3" x1="202.22" y1="28.95" x2="300.42" y2="28.95"/>
+        <polyline class="cls-2" points="302.46 28.95 307.46 28.95 307.46 33.95"/>
+        <line class="cls-4" x1="307.46" y1="37.56" x2="307.46" y2="73.6"/>
+      </g>
+      <text class="cls-8" transform="translate(46.83 39.84)">Work Item</text>
+      <text class="cls-8" transform="translate(196.94 39.84)">Work Item</text>
+      <text class="cls-8" transform="translate(6.5 14.07)">Case</text>
+      <g>
+        <circle class="cls-9" cx="158.61" cy="80.4" r="7.45"/>
+        <text class="cls-10" transform="translate(154.38 84.09)">✔</text>
+      </g>
     </g>
   </g>
 </svg>
