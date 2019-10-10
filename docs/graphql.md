@@ -1,6 +1,6 @@
 # GraphQL
 
-As noteds before, Caluma uses a GraphQL API for communication between
+As noted before, Caluma uses a GraphQL API for communication between
 frontends, other services, and the Caluma service itself.
 
 The easiest way to get to know Caluma's data
