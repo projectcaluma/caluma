@@ -28,14 +28,17 @@ The way the tasks are connected defines the order in which they are executed, i.
 Now that we know about the workflow's design, let's imagine this workflow being executed and visualize the different steps it passes through:
 
 1. When a new "exam" case is started, Caluma creates a new "fill out exam" work item.
-  ![Exam case with one work item](exam-execution-1.svg)
+
+    ![Exam case with one work item](exam-execution-1.svg)
 
 
 2. The exam is filled out, and the corresponding work item is completed. Caluma creates a new work item for the "correct exam" task.
-  ![Exam case with one work item](exam-execution-2.svg)
+
+    ![Exam case with one work item](exam-execution-2.svg)
 
 3. The exam is corrected, and just as before the corresponding work item is completed. Since there are no more tasks following in the workflow's design, the whole case is marked as "complete".
-  ![Exam case with one work item](exam-execution-3.svg)
+
+    ![Exam case with one work item](exam-execution-3.svg)
 
 The separation of _Design_ and _Execution_ allows having many "exam" cases  in different states at the same time:
 
