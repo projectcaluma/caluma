@@ -2,7 +2,7 @@ import pytest
 from rest_framework.exceptions import ValidationError
 
 from ...core.tests import extract_serializer_input_fields
-from ...form.models import Question
+from ...form.models import Answer, Question
 from .. import serializers
 from ..jexl import QuestionMissing
 from ..validators import DocumentValidator, QuestionValidator
@@ -47,15 +47,16 @@ def test_validate_special_fields(
 
 
 @pytest.mark.parametrize(
-    "question__data_source,value,valid",
+    "question__data_source,value,valid,delete",
     [
-        ("MyDataSource", "5.5", True),
-        ("MyDataSource", 5.5, False),
-        ("MyOtherDataSource", "5.5", True),
-        ("MyOtherDataSource", 5.5, False),
-        ("MyOtherDataSource", 23, False),
-        ("MyDataSource", "not in data", False),
-        ("MyOtherDataSource", "not in data", True),
+        ("MyDataSource", "5.5", True, False),
+        ("MyDataSource", 5.5, False, False),
+        ("MyOtherDataSource", "5.5", True, False),
+        ("MyOtherDataSource", 5.5, False, False),
+        ("MyOtherDataSource", 23, False, False),
+        ("MyDataSource", "not in data", False, False),
+        ("MyDataSource", "not in data", True, True),
+        ("MyOtherDataSource", "not in data", True, False),
     ],
 )
 @pytest.mark.parametrize(
@@ -68,6 +69,7 @@ def test_validate_dynamic_options(
     question,
     value,
     valid,
+    delete,
     document_factory,
     answer_factory,
     info,
@@ -81,7 +83,12 @@ def test_validate_dynamic_options(
         value = [value]
 
     document = document_factory(form=form_question.form)
-    answer_factory(value=value, document=document, question=question)
+    answer = Answer.objects.create(value=value, document=document, question=question)
+
+    if delete:
+        answer.delete()
+        Answer.objects.create(value=value, document=document, question=question)
+
     if valid:
         DocumentValidator().validate(document, info)
     else:

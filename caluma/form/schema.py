@@ -296,11 +296,18 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
-    options = ConnectionField(DataSourceDataConnection)
+    options = ConnectionField(
+        DataSourceDataConnection, args={"document_id": graphene.ID()}
+    )
     data_source = graphene.String(required=True)
 
-    def resolve_options(self, info, *args):
-        return get_data_source_data(info, self.data_source)
+    def resolve_options(self, info, document_id=None, *args):
+        answer_value = None
+        if document_id:
+            answer_value = models.Answer.objects.get(
+                document_id=document_id, question=self
+            ).value
+        return get_data_source_data(info, self.data_source, answer_value)
 
     class Meta:
         model = models.Question
@@ -319,11 +326,18 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
-    options = ConnectionField(DataSourceDataConnection)
+    options = ConnectionField(
+        DataSourceDataConnection, args={"document_id": graphene.ID()}
+    )
     data_source = graphene.String(required=True)
 
-    def resolve_options(self, info, *args):
-        return get_data_source_data(info, self.data_source)
+    def resolve_options(self, info, document_id=None, *args):
+        answer_value = None
+        if document_id:
+            answer_value = models.Answer.objects.get(
+                document_id=document_id, question=self
+            ).value
+        return get_data_source_data(info, self.data_source, answer_value)
 
     class Meta:
         model = models.Question

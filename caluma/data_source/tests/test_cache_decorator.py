@@ -10,14 +10,14 @@ def test_set_cache(info):
     ds = MyDataSource()
     result = ds.get_data_test_string(info)
     assert result == "test string"
-    assert cache.get("data_source_MyDataSource") == "test string"
+    assert cache.get("data_source_MyDataSource_None") == "test string"
 
 
 def test_get_from_cache(info):
     cache.clear()
     ds = MyDataSource()
     ds.get_data_uuid(info)
-    cached_result = cache.get("data_source_MyDataSource")
+    cached_result = cache.get("data_source_MyDataSource_None")
     new_result = ds.get_data_uuid(info)
     assert cached_result == new_result
 
@@ -26,7 +26,7 @@ def test_expired_cache(info):
     cache.clear()
     ds = MyDataSource()
     ds.get_data_expire(info)
-    cached_result = cache.get("data_source_MyDataSource")
+    cached_result = cache.get("data_source_MyDataSource_None")
 
     sleep(1.1)
     new_result = ds.get_data_uuid(info)
