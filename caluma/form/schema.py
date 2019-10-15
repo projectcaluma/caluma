@@ -694,7 +694,10 @@ class AnswerConnection(CountableConnectionBase):
 
 class Document(FormDjangoObjectType):
     answers = DjangoFilterSetConnectionField(
-        AnswerConnection, filterset_class=filters.AnswerFilterSet
+        AnswerConnection,
+        filterset_class=CollectionFilterSetFactory(
+            filters.AnswerFilterSet, orderset_class=filters.AnswerOrderSet
+        ),
     )
     meta = generic.GenericScalar()
 
@@ -892,14 +895,22 @@ def validate_document(info, document_global_id):
 
 class Query:
     all_forms = DjangoFilterConnectionField(
-        Form, filterset_class=CollectionFilterSetFactory(filters.FormFilterSet)
+        Form,
+        filterset_class=CollectionFilterSetFactory(
+            filters.FormFilterSet, orderset_class=filters.FormOrderSet
+        ),
     )
     all_questions = DjangoFilterSetConnectionField(
         QuestionConnection,
-        filterset_class=CollectionFilterSetFactory(filters.QuestionFilterSet),
+        filterset_class=CollectionFilterSetFactory(
+            filters.QuestionFilterSet, orderset_class=filters.QuestionOrderSet
+        ),
     )
     all_documents = DjangoFilterConnectionField(
-        Document, filterset_class=CollectionFilterSetFactory(filters.DocumentFilterSet)
+        Document,
+        filterset_class=CollectionFilterSetFactory(
+            filters.DocumentFilterSet, filters.DocumentOrderSet
+        ),
     )
     all_format_validators = ConnectionField(FormatValidatorConnection)
 
