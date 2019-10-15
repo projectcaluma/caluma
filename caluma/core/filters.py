@@ -37,6 +37,7 @@ from .forms import (
     GlobalIDMultipleChoiceField,
     SlugMultipleChoiceField,
 )
+from .ordering import CalumaOrdering
 from .relay import extract_global_id
 from .types import DjangoConnectionField
 
@@ -64,7 +65,73 @@ class CompositeFieldClass(forms.MultiValueField):
         return data
 
 
-def FilterCollectionFactory(filterset_class):
+class AscDesc(Enum):
+    ASC = "ASC"
+    DESC = "DESC"
+
+
+class FilterCollectionFilter(Filter):
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES:
+            return qs
+
+        filter_coll = self.filterset_class()
+        for flt in value:
+            invert = flt.pop("invert", False)
+            flt_key = list(flt.keys())[0]
+            flt_val = flt[flt_key]
+            filter = filter_coll.get_filters()[flt_key]
+
+            new_qs = filter.filter(qs, flt_val)
+
+            if invert:
+                qs = qs.exclude(pk__in=new_qs)
+            else:
+                qs = new_qs
+
+        return qs
+
+
+class FilterCollectionOrdering(Filter):
+    def _order_part(self, qs, ord, filter_coll):
+        direction = ord.pop("direction", "ASC")
+
+        assert len(ord) == 1
+        filt_name = list(ord.keys())[0]
+        filter = filter_coll.get_filters()[filt_name]
+        qs, field = filter.get_ordering_value(qs, ord[filt_name])
+
+        # Normally, people use ascending order, and in this context it seems
+        # natural to have NULL entries at the end.
+        # Making the `nulls_first`/`nulls_last` parameter accessible in the
+        # GraphQL interface would be overkill, at least for now.
+        return (
+            qs,
+            OrderBy(
+                field,
+                descending=(direction == "DESC"),
+                nulls_first=(direction == "DESC"),
+                nulls_last=(direction == "ASC"),
+            ),
+        )
+
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES:
+            return qs
+        filter_coll = self.filterset_class()
+
+        order_by = []
+        for ord in value:
+            qs, order_field = self._order_part(qs, ord, filter_coll)
+            order_by.append(order_field)
+
+        if order_by:
+            qs = qs.order_by(*order_by)
+
+        return qs
+
+
+def FilterCollectionFactory(filterset_class, ordering):  # noqa:C901
     """
     Build a single filter from a `FilterSet`.
 
@@ -78,38 +145,16 @@ def FilterCollectionFactory(filterset_class):
 
     Usage:
     >>> class MyFilterSet(FilterSet):
-    ...     filter = FilterCollectionFactory(FilterSetWithActualFilters)
+    ...     filter = FilterCollectionFactory(FilterSetWithActualFilters, ordering=False)
 
     """
 
     field_class_name = f"{filterset_class.__name__}Field"
     field_type_name = f"{filterset_class.__name__}Type"
+    collection_name = f"{filterset_class.__name__}Collection"
 
     # The field class.
     custom_field_class = type(field_class_name, (CompositeFieldClass,), {})
-
-    class FilterCollection(Filter):
-        field_class = custom_field_class
-
-        def filter(self, qs, value):
-            if value in EMPTY_VALUES:
-                return qs
-
-            filter_coll = filterset_class()
-            for flt in value:
-                invert = flt.pop("invert", False)
-                flt_key = list(flt.keys())[0]
-                flt_val = flt[flt_key]
-                filter = filter_coll.get_filters()[flt_key]
-
-                new_qs = filter.filter(qs, flt_val)
-
-                if invert:
-                    qs = qs.exclude(pk__in=new_qs)
-                else:
-                    qs = new_qs
-
-            return qs
 
     @convert_form_field.register(custom_field_class)
     def convert_field(field):
@@ -124,13 +169,23 @@ def FilterCollectionFactory(filterset_class):
         def _get_or_make_field(name, filt):
             return convert_form_field(filt.field)
 
+        def _should_include_filter(filt):
+            # if we're in ordering mode, we want
+            # to return True for all CalumaOrdering types,
+            # and if it's false, we want the opposite
+            return ordering == isinstance(filt, CalumaOrdering)
+
         filter_fields = {
             name: _get_or_make_field(name, filt)
             for name, filt in _filter_coll.filters.items()
-            if not isinstance(filt, OrderingFilter)
+            # exclude orderBy in our fields. We want only new-style order filters
+            if _should_include_filter(filt) and name != "orderBy"
         }
 
-        filter_fields["invert"] = graphene.Boolean(required=False, default=False)
+        if ordering:
+            filter_fields["direction"] = AscDesc(default=AscDesc.ASC, required=False)
+        else:
+            filter_fields["invert"] = graphene.Boolean(required=False, default=False)
 
         filter_type = type(field_type_name, (InputObjectType,), filter_fields)
 
@@ -138,14 +193,26 @@ def FilterCollectionFactory(filterset_class):
         registry.register_converted_field(field, converted)
         return converted
 
-    return FilterCollection()
+    filter_impl = FilterCollectionOrdering if ordering else FilterCollectionFilter
+
+    filter_coll = type(
+        collection_name,
+        (filter_impl,),
+        {"field_class": custom_field_class, "filterset_class": filterset_class},
+    )
+    return filter_coll()
 
 
-def CollectionFilterSetFactory(filterset_class):
+def CollectionFilterSetFactory(filterset_class, orderset_class=None):
     """
     Build single-filter filterset classes.
 
-    Use this in place of a regular filterset_class parametrisation.
+    Use this in place of a regular filterset_class parametrisation in
+    the serializers.
+    If you pass the optional `orderset_class` parameter, it is used for
+    an `order` filter. The filters defined in the `orderset_class` must
+    inherit from `caluma.core.ordering.CalumaOrdering` and provide a
+    `get_ordering_value()` method.
 
     Example:
     >>> all_documents = DjangoFilterConnectionField(
@@ -154,20 +221,27 @@ def CollectionFilterSetFactory(filterset_class):
 
     """
 
-    if filterset_class.__name__ in CollectionFilterSetFactory._cache:
-        return CollectionFilterSetFactory._cache[filterset_class.__name__]
+    suffix = "" if orderset_class else "NoOrdering"
+    cache_key = filterset_class.__name__ + suffix
 
-    ret = CollectionFilterSetFactory._cache[filterset_class.__name__] = type(
+    if cache_key in CollectionFilterSetFactory._cache:
+        return CollectionFilterSetFactory._cache[cache_key]
+
+    coll_fields = {"filter": FilterCollectionFactory(filterset_class, ordering=False)}
+    if orderset_class:
+        coll_fields["order"] = FilterCollectionFactory(orderset_class, ordering=True)
+
+    ret = CollectionFilterSetFactory._cache[cache_key] = type(
         f"{filterset_class.__name__}Collection",
         (filterset_class, FilterSet),
         {
-            "filter": FilterCollectionFactory(filterset_class),
+            **coll_fields,
             "Meta": type(
                 "Meta",
                 (filterset_class.Meta,),
                 {
                     "model": filterset_class.Meta.model,
-                    "fields": filterset_class.Meta.fields + ("filter",),
+                    "fields": filterset_class.Meta.fields + tuple(coll_fields.keys()),
                 },
             ),
         },
