@@ -176,7 +176,10 @@ class WorkItem(DjangoObjectType):
 
 class Case(DjangoObjectType):
     work_items = DjangoFilterConnectionField(
-        WorkItem, filterset_class=CollectionFilterSetFactory(filters.WorkItemFilterSet)
+        WorkItem,
+        filterset_class=CollectionFilterSetFactory(
+            filters.WorkItemFilterSet, orderset_class=filters.WorkItemOrderSet
+        ),
     )
     meta = generic.GenericScalar()
 
@@ -295,15 +298,27 @@ class Mutation(object):
 
 class Query(object):
     all_workflows = DjangoFilterConnectionField(
-        Workflow, filterset_class=CollectionFilterSetFactory(filters.WorkflowFilterSet)
+        Workflow,
+        filterset_class=CollectionFilterSetFactory(
+            filters.WorkflowFilterSet, orderset_class=filters.WorkflowOrderSet
+        ),
     )
     all_tasks = DjangoFilterSetConnectionField(
         TaskConnection,
-        filterset_class=CollectionFilterSetFactory(filters.TaskFilterSet),
+        filterset_class=CollectionFilterSetFactory(
+            filters.TaskFilterSet, orderset_class=filters.TaskOrderSet
+        ),
     )
     all_cases = DjangoFilterConnectionField(
-        Case, filterset_class=CollectionFilterSetFactory(filters.CaseFilterSet)
+        Case,
+        filterset_class=CollectionFilterSetFactory(
+            filters.CaseFilterSet, orderset_class=filters.CaseOrderSet
+        ),
     )
+
     all_work_items = DjangoFilterConnectionField(
-        WorkItem, filterset_class=CollectionFilterSetFactory(filters.WorkItemFilterSet)
+        WorkItem,
+        filterset_class=CollectionFilterSetFactory(
+            filters.WorkItemFilterSet, orderset_class=filters.WorkItemOrderSet
+        ),
     )
