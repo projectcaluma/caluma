@@ -90,3 +90,28 @@ query foo {
 So the above query would return all documents that have a question named "foo"
 with the value "bar", but exclude all documents from that list where another
 question "baz" has the value "hello".
+
+#### Sorting
+
+The ordering/sorting functionality is also separated from filtering in a
+syntactic manner. This allows us to do "chained" ordering, for example
+sorting by field A, and if the values are equal, sorting by field B as
+well (potentially in another direction).
+
+For example, if you have documents whose form has a "first-name" and
+"last-name" question, you could do the following to sort by last name
+first, and then backwards by first name:
+
+```graphql
+query foo {
+  allDocuments(
+    filter: [ ... ],
+    order: [
+      {answerValue: "last-name",  direction:ASC},
+      {answerValue: "first-name", direction:DESC}
+    ]
+  ) {
+     ...
+  }
+}
+```
