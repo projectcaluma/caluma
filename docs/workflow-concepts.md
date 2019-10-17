@@ -47,7 +47,7 @@ The separation of _Design_ and _Execution_ allows having many "exam" cases  in d
 Most workflows needed in real applications are more complex than the "exam" workflow we looked at in this example. To handle complex workflows, more building blocks are needed. The building blocks for workflows are called _Worfklow Patterns_, and you'll find all the patterns which are supported in Caluma in the docs (currently WIP).
 
 ---
-> Note: Workflow Patterns and Standardization
+> **Workflow Patterns and Standardization**
 >
 > Workflow Patterns in software applications are their very own field of research: The [Workflow Patterns initiative](http://www.workflowpatterns.com/) categorizes, visualizes and explains known patterns and compares their support in various software applications.
 >
