@@ -37,8 +37,220 @@ from .forms import (
     GlobalIDMultipleChoiceField,
     SlugMultipleChoiceField,
 )
+from .ordering import CalumaOrdering
 from .relay import extract_global_id
 from .types import DjangoConnectionField
+
+
+class CompositeFieldClass(forms.MultiValueField):
+    """Mixin to build complex field classes.
+
+    This is just to pretend to Graphene that it's a composite type.
+    It's the base of the internal representation that only passes
+    values from the request down to the filters (or similar).
+
+    The actual schema type is generated via the `convert_form_field()`
+    function from `graphene_django.forms.converter`.
+    """
+
+    def __init__(self, label, *, fields=None, **kwargs):
+        fields = (forms.CharField(), forms.CharField())
+        super().__init__(fields=fields)
+
+    def clean(self, data):
+        # override parent clean() which would reject our data structure.
+        # We don't validate, as the structure is already enforced by the
+        # schema.
+
+        return data
+
+
+class AscDesc(Enum):
+    ASC = "ASC"
+    DESC = "DESC"
+
+
+class FilterCollectionFilter(Filter):
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES:
+            return qs
+
+        filter_coll = self.filterset_class()
+        for flt in value:
+            invert = flt.pop("invert", False)
+            flt_key = list(flt.keys())[0]
+            flt_val = flt[flt_key]
+            filter = filter_coll.get_filters()[flt_key]
+
+            new_qs = filter.filter(qs, flt_val)
+
+            if invert:
+                qs = qs.exclude(pk__in=new_qs)
+            else:
+                qs = new_qs
+
+        return qs
+
+
+class FilterCollectionOrdering(Filter):
+    def _order_part(self, qs, ord, filter_coll):
+        direction = ord.pop("direction", "ASC")
+
+        assert len(ord) == 1
+        filt_name = list(ord.keys())[0]
+        filter = filter_coll.get_filters()[filt_name]
+        qs, field = filter.get_ordering_value(qs, ord[filt_name])
+
+        # Normally, people use ascending order, and in this context it seems
+        # natural to have NULL entries at the end.
+        # Making the `nulls_first`/`nulls_last` parameter accessible in the
+        # GraphQL interface would be overkill, at least for now.
+        return (
+            qs,
+            OrderBy(
+                field,
+                descending=(direction == "DESC"),
+                nulls_first=(direction == "DESC"),
+                nulls_last=(direction == "ASC"),
+            ),
+        )
+
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES:
+            return qs
+        filter_coll = self.filterset_class()
+
+        order_by = []
+        for ord in value:
+            qs, order_field = self._order_part(qs, ord, filter_coll)
+            order_by.append(order_field)
+
+        if order_by:
+            qs = qs.order_by(*order_by)
+
+        return qs
+
+
+def FilterCollectionFactory(filterset_class, ordering):  # noqa:C901
+    """
+    Build a single filter from a `FilterSet`.
+
+    This converts an arbitrary `FilterSet` class into a single filter that
+    allows chaining of filters as a list. In addition, this introduces
+    an optional `invert` parameter, allowing requestors to use
+    a filter for either inclusion or exclusion.
+
+    On the schema side, this generates a new type to represent the filter value
+    whose name is derived from the given filterset class.
+
+    Usage:
+    >>> class MyFilterSet(FilterSet):
+    ...     filter = FilterCollectionFactory(FilterSetWithActualFilters, ordering=False)
+
+    """
+
+    field_class_name = f"{filterset_class.__name__}Field"
+    field_type_name = f"{filterset_class.__name__}Type"
+    collection_name = f"{filterset_class.__name__}Collection"
+
+    # The field class.
+    custom_field_class = type(field_class_name, (CompositeFieldClass,), {})
+
+    @convert_form_field.register(custom_field_class)
+    def convert_field(field):
+
+        registry = get_global_registry()
+        converted = registry.get_converted_field(field)
+        if converted:
+            return converted
+
+        _filter_coll = filterset_class()
+
+        def _get_or_make_field(name, filt):
+            return convert_form_field(filt.field)
+
+        def _should_include_filter(filt):
+            # if we're in ordering mode, we want
+            # to return True for all CalumaOrdering types,
+            # and if it's false, we want the opposite
+            return ordering == isinstance(filt, CalumaOrdering)
+
+        filter_fields = {
+            name: _get_or_make_field(name, filt)
+            for name, filt in _filter_coll.filters.items()
+            # exclude orderBy in our fields. We want only new-style order filters
+            if _should_include_filter(filt) and name != "orderBy"
+        }
+
+        if ordering:
+            filter_fields["direction"] = AscDesc(default=AscDesc.ASC, required=False)
+        else:
+            filter_fields["invert"] = graphene.Boolean(required=False, default=False)
+
+        filter_type = type(field_type_name, (InputObjectType,), filter_fields)
+
+        converted = List(filter_type)
+        registry.register_converted_field(field, converted)
+        return converted
+
+    filter_impl = FilterCollectionOrdering if ordering else FilterCollectionFilter
+
+    filter_coll = type(
+        collection_name,
+        (filter_impl,),
+        {"field_class": custom_field_class, "filterset_class": filterset_class},
+    )
+    return filter_coll()
+
+
+def CollectionFilterSetFactory(filterset_class, orderset_class=None):
+    """
+    Build single-filter filterset classes.
+
+    Use this in place of a regular filterset_class parametrisation in
+    the serializers.
+    If you pass the optional `orderset_class` parameter, it is used for
+    an `order` filter. The filters defined in the `orderset_class` must
+    inherit from `caluma.core.ordering.CalumaOrdering` and provide a
+    `get_ordering_value()` method.
+
+    Example:
+    >>> all_documents = DjangoFilterConnectionField(
+    ...    Document, filterset_class=CollectionFilterSetFactory(DocumentFilterSet)
+    ... )
+
+    """
+
+    suffix = "" if orderset_class else "NoOrdering"
+    cache_key = filterset_class.__name__ + suffix
+
+    if cache_key in CollectionFilterSetFactory._cache:
+        return CollectionFilterSetFactory._cache[cache_key]
+
+    coll_fields = {"filter": FilterCollectionFactory(filterset_class, ordering=False)}
+    if orderset_class:
+        coll_fields["order"] = FilterCollectionFactory(orderset_class, ordering=True)
+
+    ret = CollectionFilterSetFactory._cache[cache_key] = type(
+        f"{filterset_class.__name__}Collection",
+        (filterset_class, FilterSet),
+        {
+            **coll_fields,
+            "Meta": type(
+                "Meta",
+                (filterset_class.Meta,),
+                {
+                    "model": filterset_class.Meta.model,
+                    "fields": filterset_class.Meta.fields + tuple(coll_fields.keys()),
+                },
+            ),
+        },
+    )
+
+    return ret
+
+
+CollectionFilterSetFactory._cache = {}
 
 
 class GlobalIDFilter(Filter):
@@ -229,15 +441,8 @@ class JSONValueFilterType(InputObjectType):
     lookup = JSONLookupMode()
 
 
-class JSONValueFilterField(forms.MultiValueField):
-    def __init__(self, label, **kwargs):
-        super().__init__(fields=(forms.CharField(), forms.CharField()))
-
-    def clean(self, data):
-        # override parent clean() which would reject our data structure.
-        # We don't validate, as the structure is already enforced by the
-        # schema.
-        return data
+class JSONValueFilterField(CompositeFieldClass):
+    pass
 
 
 class JSONValueFilter(Filter):
@@ -250,6 +455,7 @@ class JSONValueFilter(Filter):
         for expr in value:
             if expr in EMPTY_VALUES:  # pragma: no cover
                 continue
+
             lookup_expr = expr.get("lookup", self.lookup_expr)
             # "contains" behaves differently on JSONFields as it does on TextFields.
             # That's why we annotate the queryset with the value.
@@ -365,8 +571,12 @@ def convert_ordering_field_to_enum(field):
     """
     registry = get_global_registry()
     converted = registry.get_converted_field(field)
+
     if converted:
         return converted
+
+    if field.label in convert_ordering_field_to_enum._cache:
+        return convert_ordering_field_to_enum._cache[field.label]
 
     def get_choices(choices):
         for value, help_text in choices:
@@ -391,7 +601,11 @@ def convert_ordering_field_to_enum(field):
     converted = List(enum, description=field.help_text, required=field.required)
 
     registry.register_converted_field(field, converted)
+    convert_ordering_field_to_enum._cache[field.label] = converted
     return converted
+
+
+convert_ordering_field_to_enum._cache = {}
 
 
 @convert_form_field.register(forms.ChoiceField)

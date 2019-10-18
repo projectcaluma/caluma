@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="605.59" height="111.19" viewBox="0 0 605.59 111.19">
+  <defs>
+    <style>
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-7 {
+        fill: none;
+        stroke: #636362;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-7, .cls-9 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        stroke-dasharray: 9 3.6;
+      }
+
+      .cls-3 {
+        stroke-dasharray: 9.01 3.6;
+      }
+
+      .cls-4 {
+        stroke-width: 0.5px;
+      }
+
+      .cls-5 {
+        stroke-dasharray: 11.3 4.52;
+      }
+
+      .cls-6, .cls-8 {
+        fill: #636362;
+      }
+
+      .cls-7 {
+        stroke-dasharray: 11.27 4.51;
+      }
+
+      .cls-10, .cls-8 {
+        font-size: 10px;
+      }
+
+      .cls-8 {
+        font-family: Courier, Courier;
+      }
+
+      .cls-9 {
+        fill: #fff;
+        stroke: #000;
+        stroke-width: 0.75px;
+      }
+
+      .cls-10 {
+        fill: #222221;
+        font-family: ZapfDingbatsITC, Zapf Dingbats;
+      }
+    </style>
+  </defs>
+  <title>exam-Element 5</title>
+  <g id="Ebene_2" data-name="Ebene 2">
+    <g id="Ebene_1-2" data-name="Ebene 1">
+      <g>
+        <polyline class="cls-1" points="77.58 75.97 77.58 80.97 72.58 80.97"/>
+        <line class="cls-2" x1="68.98" y1="80.97" x2="20.37" y2="80.97"/>
+        <polyline class="cls-1" points="18.57 80.97 13.57 80.97 13.57 75.97"/>
+        <line class="cls-3" x1="13.57" y1="72.37" x2="13.57" y2="36.33"/>
+        <polyline class="cls-1" points="13.57 34.52 13.57 29.52 18.57 29.52"/>
+        <line class="cls-2" x1="22.17" y1="29.52" x2="70.78" y2="29.52"/>
+        <polyline class="cls-1" points="72.58 29.52 77.58 29.52 77.58 34.52"/>
+        <line class="cls-3" x1="77.59" y1="38.13" x2="77.59" y2="74.17"/>
+      </g>
+      <rect class="cls-4" x="0.25" y="0.82" width="190.32" height="102.55"/>
+      <g>
+        <line class="cls-1" x1="77.59" y1="55.25" x2="82.59" y2="55.25"/>
+        <line class="cls-5" x1="87.11" y1="55.25" x2="100.67" y2="55.25"/>
+        <line class="cls-1" x1="102.93" y1="55.25" x2="107.93" y2="55.25"/>
+        <polygon class="cls-6" points="107.05 58.24 112.23 55.25 107.05 52.26 107.05 58.24"/>
+      </g>
+      <g>
+        <polyline class="cls-1" points="173.93 75.97 173.93 80.97 168.93 80.97"/>
+        <line class="cls-7" x1="164.42" y1="80.97" x2="119.36" y2="80.97"/>
+        <polyline class="cls-1" points="117.11 80.97 112.11 80.97 112.11 75.97"/>
+        <line class="cls-3" x1="112.1" y1="72.37" x2="112.1" y2="36.33"/>
+        <polyline class="cls-1" points="112.11 34.52 112.11 29.52 117.11 29.52"/>
+        <line class="cls-7" x1="121.61" y1="29.52" x2="166.68" y2="29.52"/>
+        <polyline class="cls-1" points="168.93 29.52 173.93 29.52 173.93 34.52"/>
+        <line class="cls-3" x1="173.93" y1="38.13" x2="173.93" y2="74.17"/>
+      </g>
+      <text class="cls-8" transform="translate(7.23 14.65)">Case #1</text>
+      <g>
+        <circle class="cls-9" cx="77.59" cy="80.97" r="7.45"/>
+        <text class="cls-10" transform="translate(73.35 84.66)">✔</text>
+      </g>
+      <g>
+        <circle class="cls-9" cx="173.93" cy="80.97" r="7.45"/>
+        <text class="cls-10" transform="translate(169.69 84.66)">✔</text>
+      </g>
+      <g>
+        <circle class="cls-9" cx="190.57" cy="103.37" r="7.45"/>
+        <text class="cls-10" transform="translate(186.34 107.06)">✔</text>
+      </g>
+      <g>
+        <polyline class="cls-1" points="285.68 75.97 285.68 80.97 280.68 80.97"/>
+        <line class="cls-2" x1="277.08" y1="80.97" x2="228.47" y2="80.97"/>
+        <polyline class="cls-1" points="226.67 80.97 221.67 80.97 221.67 75.97"/>
+        <line class="cls-3" x1="221.67" y1="72.37" x2="221.67" y2="36.33"/>
+        <polyline class="cls-1" points="221.67 34.52 221.67 29.52 226.67 29.52"/>
+        <line class="cls-2" x1="230.27" y1="29.52" x2="278.88" y2="29.52"/>
+        <polyline class="cls-1" points="280.68 29.52 285.68 29.52 285.68 34.52"/>
+        <line class="cls-3" x1="285.68" y1="38.13" x2="285.68" y2="74.17"/>
+      </g>
+      <rect class="cls-4" x="208.35" y="0.82" width="190.32" height="102.55"/>
+      <text class="cls-8" transform="translate(215.33 14.65)">Case #2</text>
+      <g>
+        <polyline class="cls-1" points="492.35 75.4 492.35 80.4 487.35 80.4"/>
+        <line class="cls-2" x1="483.75" y1="80.4" x2="435.14" y2="80.4"/>
+        <polyline class="cls-1" points="433.33 80.4 428.33 80.4 428.33 75.4"/>
+        <line class="cls-3" x1="428.33" y1="71.8" x2="428.33" y2="35.75"/>
+        <polyline class="cls-1" points="428.33 33.95 428.33 28.95 433.33 28.95"/>
+        <line class="cls-2" x1="436.94" y1="28.95" x2="485.55" y2="28.95"/>
+        <polyline class="cls-1" points="487.35 28.95 492.35 28.95 492.35 33.95"/>
+        <line class="cls-3" x1="492.35" y1="37.56" x2="492.35" y2="73.6"/>
+      </g>
+      <rect class="cls-4" x="415.02" y="0.25" width="190.32" height="102.55"/>
+      <g>
+        <line class="cls-1" x1="492.35" y1="54.68" x2="497.35" y2="54.68"/>
+        <line class="cls-5" x1="501.87" y1="54.68" x2="515.44" y2="54.68"/>
+        <line class="cls-1" x1="517.7" y1="54.68" x2="522.7" y2="54.68"/>
+        <polygon class="cls-6" points="521.82 57.67 527 54.68 521.82 51.69 521.82 57.67"/>
+      </g>
+      <g>
+        <polyline class="cls-1" points="588.7 75.4 588.7 80.4 583.7 80.4"/>
+        <line class="cls-7" x1="579.19" y1="80.4" x2="534.12" y2="80.4"/>
+        <polyline class="cls-1" points="531.87 80.4 526.87 80.4 526.87 75.4"/>
+        <line class="cls-3" x1="526.87" y1="71.8" x2="526.87" y2="35.75"/>
+        <polyline class="cls-1" points="526.87 33.95 526.87 28.95 531.87 28.95"/>
+        <line class="cls-7" x1="536.38" y1="28.95" x2="581.44" y2="28.95"/>
+        <polyline class="cls-1" points="583.7 28.95 588.7 28.95 588.7 33.95"/>
+        <line class="cls-3" x1="588.69" y1="37.56" x2="588.69" y2="73.6"/>
+      </g>
+      <text class="cls-8" transform="translate(421.99 14.08)">Case #3</text>
+      <g>
+        <circle class="cls-9" cx="492.35" cy="80.4" r="7.45"/>
+        <text class="cls-10" transform="translate(488.12 84.09)">✔</text>
+      </g>
+    </g>
+  </g>
+</svg>

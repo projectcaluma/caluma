@@ -10,7 +10,7 @@ class MyDataSource(BaseDataSource):
     validate = True
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info):
+    def get_data(self, info, answer_value=None):
         return [
             1,
             5.5,
@@ -24,15 +24,15 @@ class MyDataSource(BaseDataSource):
         ]
 
     @data_source_cache(timeout=60)
-    def get_data_test_string(self, info):
+    def get_data_test_string(self, info, answer_value=None):
         return "test string"
 
     @data_source_cache(timeout=60)
-    def get_data_uuid(self, info):
+    def get_data_uuid(self, info, answer_value=None):
         return str(uuid4())
 
     @data_source_cache(timeout=1)
-    def get_data_expire(self, info):
+    def get_data_expire(self, info, answer_value=None):
         return str(uuid4())
 
 
@@ -45,7 +45,7 @@ class MyFaultyDataSource(BaseDataSource):
     default = None
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info):
+    def get_data(self, info, answer_value=None):
         return "just a string"
 
 
@@ -54,7 +54,7 @@ class MyOtherFaultyDataSource(BaseDataSource):
     default = None
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info):
+    def get_data(self, info, answer_value=None):
         return [["just", "some", "strings"]]
 
 
@@ -63,7 +63,7 @@ class MyBrokenDataSource(BaseDataSource):
     default = [1, 2, 3]
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info):
+    def get_data(self, info, answer_value=None):
         raise Exception()
 
 
@@ -72,5 +72,5 @@ class MyOtherBrokenDataSource(BaseDataSource):
     default = None
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info):
+    def get_data(self, info, answer_value=None):
         raise Exception()

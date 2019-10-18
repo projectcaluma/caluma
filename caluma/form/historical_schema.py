@@ -151,6 +151,10 @@ class HistoricalDocument(FormDjangoObjectType):
     history_user_id = graphene.String()
     history_type = graphene.String()
     meta = generic.GenericScalar()
+    document_id = graphene.UUID()
+
+    def resolve_document_id(self, info, *args):
+        return self.id
 
     def resolve_historical_answers(self, info, as_of, *args):
         answers = [

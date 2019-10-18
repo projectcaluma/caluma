@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="353.15" height="103.05" viewBox="0 0 353.15 103.05">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 14px;
+        font-family: ArialMT, Arial;
+      }
+
+      .cls-1, .cls-4 {
+        fill: #222221;
+      }
+
+      .cls-2, .cls-3, .cls-5 {
+        fill: none;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2 {
+        stroke: #222221;
+      }
+
+      .cls-3 {
+        stroke: #636362;
+      }
+
+      .cls-3, .cls-5 {
+        stroke-width: 0.5px;
+      }
+
+      .cls-5 {
+        stroke: #fff;
+      }
+
+      .cls-6 {
+        font-size: 10px;
+        fill: #636362;
+        font-family: Courier, Courier;
+      }
+    </style>
+  </defs>
+  <title>exam-Element 1</title>
+  <g id="Ebene_2" data-name="Ebene 2">
+    <g id="Ebene_1-2" data-name="Ebene 1">
+      <text class="cls-1" transform="translate(61.76 59.71)">Fill out exam</text>
+      <rect class="cls-2" x="44.28" y="28.95" width="114.33" height="51.45"/>
+      <rect class="cls-3" x="0.25" y="0.25" width="352.65" height="102.55"/>
+      <g>
+        <line class="cls-2" x1="158.61" y1="54.68" x2="188.95" y2="54.68"/>
+        <polygon class="cls-4" points="188.08 57.67 193.26 54.68 188.08 51.69 188.08 57.67"/>
+      </g>
+      <text class="cls-1" transform="translate(208.29 59.71)">Correct exam</text>
+      <rect class="cls-2" x="193.13" y="28.95" width="114.33" height="51.45"/>
+      <circle cx="16.65" cy="54.16" r="6.98"/>
+      <g>
+        <line class="cls-2" x1="13.44" y1="54.16" x2="39.97" y2="54.16"/>
+        <polygon class="cls-4" points="39.1 57.15 44.28 54.16 39.1 51.16 39.1 57.15"/>
+      </g>
+      <g>
+        <line class="cls-2" x1="307.46" y1="54.68" x2="326.07" y2="54.68"/>
+        <polygon class="cls-4" points="325.19 57.67 330.38 54.68 325.19 51.69 325.19 57.67"/>
+      </g>
+      <g>
+        <circle cx="337.39" cy="54.68" r="6.98"/>
+        <circle class="cls-5" cx="337.39" cy="54.68" r="5.96"/>
+      </g>
+      <text class="cls-6" transform="translate(46.83 39.84)">Task</text>
+      <text class="cls-6" transform="translate(196.94 39.84)">Task</text>
+      <text class="cls-6" transform="translate(6.5 14.07)">Workflow</text>
+    </g>
+  </g>
+</svg>

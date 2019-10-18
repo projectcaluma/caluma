@@ -16,3 +16,9 @@ repos:
       language: system
       entry: flake8
       types: [python]
+    - id: reuse
+      name: reuse
+      description: Check licenses
+      entry: reuse lint
+      pass_filenames: false
+      language: system

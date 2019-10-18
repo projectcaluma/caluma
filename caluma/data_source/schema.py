@@ -27,7 +27,7 @@ class DataSourceDataConnection(CountableConnectionBase):
 
 class Query(object):
     all_data_sources = ConnectionField(DataSourceConnection)
-    data_source = ConnectionField(DataSourceDataConnection, name=String())
+    data_source = ConnectionField(DataSourceDataConnection, name=String(required=True))
 
     def resolve_all_data_sources(self, info):
         return get_data_sources()

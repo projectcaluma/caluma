@@ -12,8 +12,10 @@ from ..core.filters import (
     StringListFilter,
     generate_list_filter_class,
 )
+from ..core.ordering import AttributeOrderingFactory, MetaFieldOrdering
 from ..form.filters import HasAnswerFilter, SearchAnswersFilter
 from ..form.models import Answer, Question
+from ..form.ordering import AnswerValueOrdering
 from . import models
 
 
@@ -42,6 +44,27 @@ class WorkflowFilterSet(MetaFilterSet):
     class Meta:
         model = models.Workflow
         fields = ("slug", "name", "description", "is_published", "is_archived")
+
+
+class WorkflowOrderSet(FilterSet):
+    meta = MetaFieldOrdering()
+    attribute = AttributeOrderingFactory(
+        models.Workflow,
+        fields=[
+            "allow_all_forms",
+            "created_by_group",
+            "created_by_user",
+            "description",
+            "is_archived",
+            "is_published",
+            "name",
+            "slug",
+        ],
+    )
+
+    class Meta:
+        model = models.Workflow
+        fields = ("meta", "attribute")
 
 
 class FlowFilterSet(FilterSet):
@@ -104,6 +127,29 @@ class CaseFilterSet(MetaFilterSet):
         fields = ("workflow",)
 
 
+class CaseOrderSet(FilterSet):
+    meta = MetaFieldOrdering()
+    attribute = AttributeOrderingFactory(
+        models.Case,
+        fields=[
+            "allow_all_forms",
+            "created_by_group",
+            "created_by_user",
+            "description",
+            "is_archived",
+            "is_published",
+            "name",
+            "status",
+            "slug",
+        ],
+    )
+    document_answer = AnswerValueOrdering(document_via="document")
+
+    class Meta:
+        model = models.Case
+        fields = ("meta", "attribute", "document_answer")
+
+
 class TaskFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
     order_by = OrderingFilter(
@@ -113,6 +159,30 @@ class TaskFilterSet(MetaFilterSet):
     class Meta:
         model = models.Task
         fields = ("slug", "name", "description", "type", "is_archived")
+
+
+class TaskOrderSet(FilterSet):
+    meta = MetaFieldOrdering()
+    attribute = AttributeOrderingFactory(
+        models.Task,
+        fields=[
+            "allow_all_forms",
+            "address_groups",
+            "lead_time",
+            "type",
+            "created_by_group",
+            "created_by_user",
+            "description",
+            "is_archived",
+            "is_published",
+            "name",
+            "slug",
+        ],
+    )
+
+    class Meta:
+        model = models.Task
+        fields = ("meta", "attribute")
 
 
 class WorkItemFilterSet(MetaFilterSet):
@@ -126,3 +196,34 @@ class WorkItemFilterSet(MetaFilterSet):
     class Meta:
         model = models.WorkItem
         fields = ("status", "task", "case")
+
+
+class WorkItemOrderSet(FilterSet):
+    meta = MetaFieldOrdering()
+    case_meta = MetaFieldOrdering(field_name="case__meta")
+    attribute = AttributeOrderingFactory(
+        models.WorkItem,
+        fields=[
+            "allow_all_forms",
+            "created_by_group",
+            "created_by_user",
+            "description",
+            "is_archived",
+            "is_published",
+            "name",
+            "status",
+            "slug",
+        ],
+    )
+    document_answer = AnswerValueOrdering(document_via="document")
+    case_document_answer = AnswerValueOrdering(document_via="case__document")
+
+    class Meta:
+        model = models.WorkItem
+        fields = (
+            "meta",
+            "case_meta",
+            "attribute",
+            "document_answer",
+            "case_document_answer",
+        )

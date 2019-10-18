@@ -4,7 +4,11 @@ from graphene import relay
 from graphene.types import ObjectType, generic
 from graphene_django.rest_framework import serializer_converter
 
-from ..core.filters import DjangoFilterConnectionField, DjangoFilterSetConnectionField
+from ..core.filters import (
+    CollectionFilterSetFactory,
+    DjangoFilterConnectionField,
+    DjangoFilterSetConnectionField,
+)
 from ..core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..core.relay import extract_global_id
 from ..core.types import (
@@ -292,11 +296,18 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
-    options = ConnectionField(DataSourceDataConnection)
+    options = ConnectionField(
+        DataSourceDataConnection, args={"document_id": graphene.ID()}
+    )
     data_source = graphene.String(required=True)
 
-    def resolve_options(self, info, *args):
-        return get_data_source_data(info, self.data_source)
+    def resolve_options(self, info, document_id=None, *args):
+        answer_value = None
+        if document_id:
+            answer_value = models.Answer.objects.get(
+                document_id=document_id, question=self
+            ).value
+        return get_data_source_data(info, self.data_source, answer_value)
 
     class Meta:
         model = models.Question
@@ -315,11 +326,18 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
-    options = ConnectionField(DataSourceDataConnection)
+    options = ConnectionField(
+        DataSourceDataConnection, args={"document_id": graphene.ID()}
+    )
     data_source = graphene.String(required=True)
 
-    def resolve_options(self, info, *args):
-        return get_data_source_data(info, self.data_source)
+    def resolve_options(self, info, document_id=None, *args):
+        answer_value = None
+        if document_id:
+            answer_value = models.Answer.objects.get(
+                document_id=document_id, question=self
+            ).value
+        return get_data_source_data(info, self.data_source, answer_value)
 
     class Meta:
         model = models.Question
@@ -690,7 +708,10 @@ class AnswerConnection(CountableConnectionBase):
 
 class Document(FormDjangoObjectType):
     answers = DjangoFilterSetConnectionField(
-        AnswerConnection, filterset_class=filters.AnswerFilterSet
+        AnswerConnection,
+        filterset_class=CollectionFilterSetFactory(
+            filters.AnswerFilterSet, orderset_class=filters.AnswerOrderSet
+        ),
     )
     meta = generic.GenericScalar()
 
@@ -887,12 +908,23 @@ def validate_document(info, document_global_id):
 
 
 class Query:
-    all_forms = DjangoFilterConnectionField(Form, filterset_class=filters.FormFilterSet)
+    all_forms = DjangoFilterConnectionField(
+        Form,
+        filterset_class=CollectionFilterSetFactory(
+            filters.FormFilterSet, orderset_class=filters.FormOrderSet
+        ),
+    )
     all_questions = DjangoFilterSetConnectionField(
-        QuestionConnection, filterset_class=filters.QuestionFilterSet
+        QuestionConnection,
+        filterset_class=CollectionFilterSetFactory(
+            filters.QuestionFilterSet, orderset_class=filters.QuestionOrderSet
+        ),
     )
     all_documents = DjangoFilterConnectionField(
-        Document, filterset_class=filters.DocumentFilterSet
+        Document,
+        filterset_class=CollectionFilterSetFactory(
+            filters.DocumentFilterSet, filters.DocumentOrderSet
+        ),
     )
     all_format_validators = ConnectionField(FormatValidatorConnection)
 

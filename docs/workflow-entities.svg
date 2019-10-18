@@ -1,0 +1,78 @@
+<svg id="Ebene_1" data-name="Ebene 1" xmlns="http://www.w3.org/2000/svg" height="200px" viewBox="0 0 204.15 126.55">
+  <defs>
+    <style>
+      .cls-1, .cls-4 {
+        fill: #222221;
+      }
+
+      .cls-2, .cls-3, .cls-6 {
+        fill: none;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-2, .cls-3 {
+        stroke: #979a97;
+        stroke-width: 0.5px;
+      }
+
+      .cls-3 {
+        stroke-dasharray: 4 2;
+      }
+
+      .cls-4 {
+        font-size: 12px;
+        font-family: ArialMT, Arial;
+      }
+
+      .cls-5 {
+        letter-spacing: -0.02em;
+      }
+
+      .cls-6 {
+        stroke: #222221;
+      }
+
+      .cls-7 {
+        letter-spacing: -0.11em;
+      }
+
+      .cls-8 {
+        font-size: 10px;
+        fill: #5e605d;
+        font-family: Arial-ItalicMT, Arial;
+        font-style: italic;
+      }
+    </style>
+  </defs>
+  <title>workflow-entities</title>
+  <g>
+    <line class="cls-1" x1="101.92" x2="101.92" y2="126.05"/>
+    <g>
+      <line class="cls-2" x1="101.92" x2="101.92" y2="2"/>
+      <line class="cls-3" x1="101.92" y1="4" x2="101.92" y2="123.05"/>
+      <line class="cls-2" x1="101.92" y1="124.05" x2="101.92" y2="126.05"/>
+    </g>
+  </g>
+  <g>
+    <text class="cls-4" transform="translate(15.94 46.58)"><tspan class="cls-5">W</tspan><tspan x="11.11" y="0">orkflow</tspan></text>
+    <rect class="cls-6" x="0.5" y="25.05" width="80" height="36"/>
+  </g>
+  <g>
+    <text class="cls-4" transform="translate(149.65 46.58)">Case</text>
+    <rect class="cls-6" x="123.65" y="25.05" width="80" height="36"/>
+  </g>
+  <g>
+    <text class="cls-4" transform="translate(28.16 111.58)"><tspan class="cls-7">T</tspan><tspan x="6" y="0">ask</tspan></text>
+    <rect class="cls-6" x="0.5" y="90.05" width="80" height="36"/>
+    <g>
+      <text class="cls-4" transform="translate(136.43 111.58)"><tspan class="cls-5">W</tspan><tspan x="11.11" y="0">ork Item</tspan></text>
+      <rect class="cls-6" x="123.65" y="90.05" width="80" height="36"/>
+    </g>
+  </g>
+  <line class="cls-6" x1="40.5" y1="61.05" x2="40.5" y2="90.05"/>
+  <line class="cls-6" x1="163.65" y1="61.05" x2="163.65" y2="90.05"/>
+  <line class="cls-6" x1="80.5" y1="43.05" x2="123.65" y2="43.05"/>
+  <line class="cls-6" x1="80.35" y1="108.05" x2="123.5" y2="108.05"/>
+  <text class="cls-8" transform="translate(0.5 11.14)">Design</text>
+  <text class="cls-8" transform="translate(123.5 11.14)">Execution</text>
+</svg>

@@ -1,17 +1,17 @@
 from functools import reduce
 
 import graphene
-from django import forms
 from django.core import exceptions
 from django.db import ProgrammingError
 from django.db.models import Q
 from django_filters.constants import EMPTY_VALUES
-from django_filters.rest_framework import CharFilter, Filter
+from django_filters.rest_framework import CharFilter, Filter, FilterSet
 from graphene import Enum, InputObjectType, List
 from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
 
 from ..core.filters import (
+    CompositeFieldClass,
     GlobalIDFilter,
     GlobalIDMultipleChoiceFilter,
     MetaFilterSet,
@@ -19,7 +19,9 @@ from ..core.filters import (
     SearchFilter,
     SlugMultipleChoiceFilter,
 )
+from ..core.ordering import AttributeOrderingFactory, MetaFieldOrdering
 from ..form.models import Answer, Question
+from ..form.ordering import AnswerValueOrdering
 from . import models
 
 
@@ -33,6 +35,28 @@ class FormFilterSet(MetaFilterSet):
     class Meta:
         model = models.Form
         fields = ("slug", "name", "description", "is_published", "is_archived")
+
+
+class FormOrderSet(FilterSet):
+    meta = MetaFieldOrdering()
+    attribute = AttributeOrderingFactory(
+        models.Form,
+        fields=[
+            "created_at",
+            "modified_at",
+            "created_by_user",
+            "created_by_group",
+            "slug",
+            "name",
+            "description",
+            "is_published",
+            "is_archived",
+        ],
+    )
+
+    class Meta:
+        model = models.Form
+        fields = ("meta", "attribute")
 
 
 class OptionFilterSet(MetaFilterSet):
@@ -55,6 +79,27 @@ class QuestionFilterSet(MetaFilterSet):
     class Meta:
         model = models.Question
         fields = ("slug", "label", "is_required", "is_hidden", "is_archived")
+
+
+class QuestionOrderSet(FilterSet):
+    meta = MetaFieldOrdering()
+    attribute = AttributeOrderingFactory(
+        models.Question,
+        exclude_fields=[
+            "configuration",
+            "data_source",
+            "format_validators",
+            "meta",
+            "row_form",
+            "source",
+            "static_content",
+            "sub_form",
+        ],
+    )
+
+    class Meta:
+        model = models.Question
+        fields = ("meta", "attribute")
 
 
 class AnswerLookupMode(Enum):
@@ -84,15 +129,8 @@ class HasAnswerFilterType(InputObjectType):
     hierarchy = AnswerHierarchyMode()
 
 
-class HasAnswerFilterField(forms.MultiValueField):
-    def __init__(self, label, **kwargs):
-        super().__init__(fields=(forms.CharField(), forms.CharField()))
-
-    def clean(self, data):
-        # override parent clean() which would reject our data structure.
-        # We don't validate, as the structure is already enforced by the
-        # schema.
-        return data
+class HasAnswerFilterField(CompositeFieldClass):
+    pass
 
 
 class HasAnswerFilter(Filter):
@@ -100,7 +138,7 @@ class HasAnswerFilter(Filter):
 
     def __init__(self, *args, **kwargs):
         self.document_id = kwargs.pop("document_id")
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     VALID_LOOKUPS = {
         "text": [
@@ -229,15 +267,8 @@ class SearchAnswersFilterType(InputObjectType):
     lookup = SearchLookupMode(required=False)
 
 
-class SearchAnswersFilterField(forms.MultiValueField):
-    def __init__(self, label, **kwargs):
-        super().__init__(fields=(forms.CharField(), forms.CharField()))
-
-    def clean(self, data):
-        # override parent clean() which would reject our data structure.
-        # We don't validate, as the structure is already enforced by the
-        # schema.
-        return data
+class SearchAnswersFilterField(CompositeFieldClass):
+    pass
 
 
 class SearchAnswersFilter(Filter):
@@ -255,7 +286,7 @@ class SearchAnswersFilter(Filter):
 
     def __init__(self, *args, **kwargs):
         self.document_id = kwargs.pop("document_id")
-        super().__init__(self, *args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def filter(self, qs, value):
         if value in EMPTY_VALUES:
@@ -348,6 +379,18 @@ class DocumentFilterSet(MetaFilterSet):
         fields = ("form", "forms", "search", "id")
 
 
+class DocumentOrderSet(FilterSet):
+    meta = MetaFieldOrdering()
+    answer_value = AnswerValueOrdering()
+    attribute = AttributeOrderingFactory(
+        models.Document, exclude_fields=["meta", "family", "id"]
+    )
+
+    class Meta:
+        model = models.Document
+        fields = ("meta",)
+
+
 class AnswerFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("value", "file__name"))
     order_by = OrderingFilter(label="AnswerOrdering")
@@ -356,3 +399,12 @@ class AnswerFilterSet(MetaFilterSet):
     class Meta:
         model = models.Answer
         fields = ("question", "search")
+
+
+class AnswerOrderSet(FilterSet):
+    meta = MetaFieldOrdering()
+    attribute = AttributeOrderingFactory(models.Answer, exclude_fields=["meta", "id"])
+
+    class Meta:
+        model = models.Answer
+        fields = ("meta",)

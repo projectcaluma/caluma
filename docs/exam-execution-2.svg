@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="353.15" height="103.05" viewBox="0 0 353.15 103.05">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 14px;
+        font-family: ArialMT, Arial;
+      }
+
+      .cls-1, .cls-10 {
+        fill: #222221;
+      }
+
+      .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
+        fill: none;
+        stroke: #636362;
+      }
+
+      .cls-2, .cls-3, .cls-4, .cls-5, .cls-6, .cls-9 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-3 {
+        stroke-dasharray: 10.23 4.09;
+      }
+
+      .cls-4 {
+        stroke-dasharray: 9.01 3.6;
+      }
+
+      .cls-5 {
+        stroke-width: 0.5px;
+      }
+
+      .cls-6 {
+        stroke-dasharray: 11.3 4.52;
+      }
+
+      .cls-7, .cls-8 {
+        fill: #636362;
+      }
+
+      .cls-10, .cls-8 {
+        font-size: 10px;
+      }
+
+      .cls-8 {
+        font-family: Courier, Courier;
+      }
+
+      .cls-9 {
+        fill: #fff;
+        stroke: #000;
+        stroke-width: 0.75px;
+      }
+
+      .cls-10 {
+        font-family: ZapfDingbatsITC, Zapf Dingbats;
+      }
+    </style>
+  </defs>
+  <title>exam-Element 3</title>
+  <g id="Ebene_2" data-name="Ebene 2">
+    <g id="Ebene_1-2" data-name="Ebene 1">
+      <text class="cls-1" transform="translate(61.76 59.71)">Fill out exam</text>
+      <g>
+        <polyline class="cls-2" points="158.61 75.4 158.61 80.4 153.61 80.4"/>
+        <line class="cls-3" x1="149.52" y1="80.4" x2="51.32" y2="80.4"/>
+        <polyline class="cls-2" points="49.28 80.4 44.28 80.4 44.28 75.4"/>
+        <line class="cls-4" x1="44.28" y1="71.8" x2="44.28" y2="35.75"/>
+        <polyline class="cls-2" points="44.28 33.95 44.28 28.95 49.28 28.95"/>
+        <line class="cls-3" x1="53.37" y1="28.95" x2="151.56" y2="28.95"/>
+        <polyline class="cls-2" points="153.61 28.95 158.61 28.95 158.61 33.95"/>
+        <line class="cls-4" x1="158.61" y1="37.56" x2="158.61" y2="73.6"/>
+      </g>
+      <rect class="cls-5" x="0.25" y="0.25" width="352.65" height="102.55"/>
+      <g>
+        <line class="cls-2" x1="158.61" y1="54.68" x2="163.61" y2="54.68"/>
+        <line class="cls-6" x1="168.13" y1="54.68" x2="181.69" y2="54.68"/>
+        <line class="cls-2" x1="183.95" y1="54.68" x2="188.95" y2="54.68"/>
+        <polygon class="cls-7" points="188.08 57.67 193.26 54.68 188.08 51.69 188.08 57.67"/>
+      </g>
+      <text class="cls-1" transform="translate(208.29 59.71)">Correct exam</text>
+      <g>
+        <polyline class="cls-2" points="307.46 75.4 307.46 80.4 302.46 80.4"/>
+        <line class="cls-3" x1="298.37" y1="80.4" x2="200.18" y2="80.4"/>
+        <polyline class="cls-2" points="198.13 80.4 193.13 80.4 193.13 75.4"/>
+        <line class="cls-4" x1="193.13" y1="71.8" x2="193.13" y2="35.75"/>
+        <polyline class="cls-2" points="193.13 33.95 193.13 28.95 198.13 28.95"/>
+        <line class="cls-3" x1="202.22" y1="28.95" x2="300.42" y2="28.95"/>
+        <polyline class="cls-2" points="302.46 28.95 307.46 28.95 307.46 33.95"/>
+        <line class="cls-4" x1="307.46" y1="37.56" x2="307.46" y2="73.6"/>
+      </g>
+      <text class="cls-8" transform="translate(46.83 39.84)">Work Item</text>
+      <text class="cls-8" transform="translate(196.94 39.84)">Work Item</text>
+      <text class="cls-8" transform="translate(6.5 14.07)">Case</text>
+      <g>
+        <circle class="cls-9" cx="158.61" cy="80.4" r="7.45"/>
+        <text class="cls-10" transform="translate(154.38 84.09)">✔</text>
+      </g>
+    </g>
+  </g>
+</svg>

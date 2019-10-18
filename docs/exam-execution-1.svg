@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="353.15" height="103.05" viewBox="0 0 353.15 103.05">
+  <defs>
+    <style>
+      .cls-1 {
+        font-size: 14px;
+        fill: #222221;
+        font-family: ArialMT, Arial;
+      }
+
+      .cls-2, .cls-3, .cls-4, .cls-5 {
+        fill: none;
+        stroke: #636362;
+        stroke-miterlimit: 10;
+      }
+
+      .cls-3 {
+        stroke-dasharray: 10.23 4.09;
+      }
+
+      .cls-4 {
+        stroke-dasharray: 9.01 3.6;
+      }
+
+      .cls-5 {
+        stroke-width: 0.5px;
+      }
+
+      .cls-6 {
+        font-size: 10px;
+        fill: #636362;
+        font-family: Courier, Courier;
+      }
+    </style>
+  </defs>
+  <title>exam-Element 4</title>
+  <g id="Ebene_2" data-name="Ebene 2">
+    <g id="Ebene_1-2" data-name="Ebene 1">
+      <text class="cls-1" transform="translate(61.76 59.71)">Fill out exam</text>
+      <g>
+        <polyline class="cls-2" points="158.61 75.4 158.61 80.4 153.61 80.4"/>
+        <line class="cls-3" x1="149.52" y1="80.4" x2="51.32" y2="80.4"/>
+        <polyline class="cls-2" points="49.28 80.4 44.28 80.4 44.28 75.4"/>
+        <line class="cls-4" x1="44.28" y1="71.8" x2="44.28" y2="35.75"/>
+        <polyline class="cls-2" points="44.28 33.95 44.28 28.95 49.28 28.95"/>
+        <line class="cls-3" x1="53.37" y1="28.95" x2="151.56" y2="28.95"/>
+        <polyline class="cls-2" points="153.61 28.95 158.61 28.95 158.61 33.95"/>
+        <line class="cls-4" x1="158.61" y1="37.56" x2="158.61" y2="73.6"/>
+      </g>
+      <rect class="cls-5" x="0.25" y="0.25" width="352.65" height="102.55"/>
+      <text class="cls-6" transform="translate(46.83 39.84)">Work Item</text>
+      <text class="cls-6" transform="translate(6.5 14.08)">Case</text>
+    </g>
+  </g>
+</svg>
