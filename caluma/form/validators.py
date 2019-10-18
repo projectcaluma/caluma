@@ -97,7 +97,9 @@ class AnswerValidator:
                 slugs=[question.slug],
             )
 
-    def _validate_question_dynamic_choice(self, question, value, info, **kwargs):
+    def _validate_question_dynamic_choice(
+        self, question, value, info, document, **kwargs
+    ):
         data_source = get_data_sources(dic=True)[question.data_source]
         if not data_source.validate:
             if not isinstance(value, str):
@@ -105,6 +107,17 @@ class AnswerValidator:
                     f'Invalid value: "{value}". Must be of type str',
                     slugs=[question.slug],
                 )
+            return
+
+        historical_answers = Answer.history.filter(
+            question=question, document=document, value=value
+        ).exclude(history_type="-")
+
+        answer = document.answers.filter(question=question, value=value).first()
+        if answer:
+            historical_answers = historical_answers.exclude(id=answer.pk)
+
+        if historical_answers:
             return
 
         data = get_data_source_data(info, question.data_source)
@@ -118,28 +131,42 @@ class AnswerValidator:
             )
 
     def _validate_question_dynamic_multiple_choice(
-        self, question, value, info, **kwargs
+        self, question, value, info, document, **kwargs
     ):
-        data_source = get_data_sources(dic=True)[question.data_source]
-        if not data_source.validate:
-            if not isinstance(value, list):
-                raise CustomValidationError(
-                    f'Invalid value: "{value}". Must be of type list',
-                    slugs=[question.slug],
-                )
-            for v in value:
-                if not isinstance(v, str):
-                    raise CustomValidationError(
-                        f'Invalid value: "{v}". Must be of type string',
-                        slugs=[question.slug],
-                    )
-            return
-        data = get_data_source_data(info, question.data_source)
-        options = [d.slug for d in data]
         if not isinstance(value, list):
             raise CustomValidationError(
                 f'Invalid value: "{value}". Must be of type list', slugs=[question.slug]
             )
+
+        data_source = get_data_sources(dic=True)[question.data_source]
+        for v in value:
+            if not isinstance(v, str):
+                raise CustomValidationError(
+                    f'Invalid value: "{v}". Must be of type string',
+                    slugs=[question.slug],
+                )
+
+        if not data_source.validate:
+            return
+
+        exist = True
+        answer = document.answers.filter(question=question, value=value).first()
+        for v in value:
+            historical_answers = Answer.history.filter(
+                question=question, document=document, value__contains=v
+            ).exclude(history_type="-")
+
+            if answer:
+                historical_answers = historical_answers.exclude(id=answer.pk)
+
+            if not historical_answers:
+                exist = False
+
+        if exist:
+            return
+
+        data = get_data_source_data(info, question.data_source)
+        options = [d.slug for d in data]
         invalid_options = set(value) - set(options)
         if invalid_options:
             raise CustomValidationError(

@@ -1,5 +1,7 @@
 import pytest
 
+from caluma.data_source.tests.data_sources import MyDataSource
+
 from ...core.tests import (
     extract_global_id_input_fields,
     extract_serializer_input_fields,
@@ -674,3 +676,68 @@ def test_save_static_question(db, snapshot, question, schema_executor):
     result = schema_executor(query, variables=inp)
     assert not bool(result.errors)
     snapshot.assert_match(result.data)
+
+
+@pytest.mark.parametrize(
+    "question__type,question__data_source,answer__value",
+    [
+        (models.Question.TYPE_DYNAMIC_CHOICE, "MyDataSource", "answer_value"),
+        (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, "MyDataSource", ["foo", "bar"]),
+    ],
+)
+def test_question_with_answer_value(
+    schema_executor,
+    db,
+    question,
+    answer,
+    form,
+    form_question_factory,
+    question_option,
+    data_source_settings,
+    mocker,
+):
+    form_question_factory.create(form=form)
+
+    query = """
+        query DynamicQuestionsWithAnswerQuery($search: String, $forms: [ID], $documentId: ID) {
+          allQuestions(isArchived: false, search: $search, excludeForms: $forms) {
+            edges {
+              node {
+                ... on DynamicMultipleChoiceQuestion {
+                  options (documentId: $documentId) {
+                    edges {
+                      node {
+                        slug
+                      }
+                    }
+                  }
+                }
+                ... on DynamicChoiceQuestion {
+                  options (documentId: $documentId) {
+                    edges {
+                      node {
+                        slug
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    get_data_mock = mocker.patch.object(MyDataSource, "get_data")
+    get_data_mock.return_value = ["test"]
+
+    result = schema_executor(
+        query,
+        variables={
+            "search": question.label,
+            "forms": [extract_global_id_input_fields(form)["id"]],
+            "documentId": answer.document.pk,
+        },
+    )
+
+    assert not result.errors
+    assert get_data_mock.mock_calls[0][1][1] == answer.value

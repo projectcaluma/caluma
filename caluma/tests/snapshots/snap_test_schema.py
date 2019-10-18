@@ -490,7 +490,7 @@ type DynamicChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+  options(documentId: ID, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   dataSource: String!
   id: ID!
 }
@@ -509,7 +509,7 @@ type DynamicMultipleChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+  options(documentId: ID, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   dataSource: String!
   id: ID!
 }
@@ -1077,7 +1077,7 @@ type PageInfo {
 type Query {
   documentAsOf(id: ID!, asOf: DateTime!): HistoricalDocument
   allDataSources(before: String, after: String, first: Int, last: Int): DataSourceConnection
-  dataSource(name: String, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+  dataSource(name: String!, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   allWorkflows(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, orderBy: [WorkflowOrdering], filter: [WorkflowFilterSetType], order: [WorkflowOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): WorkflowConnection
   allTasks(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, orderBy: [TaskOrdering], filter: [TaskFilterSetType], order: [TaskOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): TaskConnection
   allCases(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], workflow: ID, orderBy: [CaseOrdering], filter: [CaseFilterSetType], order: [CaseOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, documentForm: String, hasAnswer: [HasAnswerFilterType], searchAnswers: [SearchAnswersFilterType], status: [CaseStatusArgument], orderByQuestionAnswerValue: String): CaseConnection
