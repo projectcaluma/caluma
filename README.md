@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/projectcaluma/caluma.svg?branch=master)](https://travis-ci.com/projectcaluma/caluma)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/projectcaluma/caluma/blob/master/.coveragerc#L5)
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
-[![License: AGPL-3.0](https://img.shields.io/github/license/projectcaluma/caluma](https://opensource.org/licenses/AGPL-3.0)
+[![License: AGPL-3.0](https://img.shields.io/github/license/projectcaluma/caluma)](https://opensource.org/licenses/AGPL-3.0)
 
 A collaborative form editing service.
 
