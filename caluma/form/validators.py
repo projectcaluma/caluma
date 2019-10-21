@@ -205,7 +205,7 @@ class AnswerValidator:
 class DocumentValidator:
     def validate(self, document, info, **kwargs):
         answers = self.get_document_answers(document)
-        visible_questions = self._validate_required(document, answers)
+        visible_questions = self._validate_required(document, document.form, answers)
 
         for answer in document.answers.filter(question_id__in=visible_questions):
             validator = AnswerValidator()
@@ -283,7 +283,7 @@ class DocumentValidator:
         else:  # pragma: no cover
             raise Exception(f"unhandled question type mapping {answer.question.type}")
 
-    def _validate_required(self, document, answers):
+    def _validate_required(self, document, form, answers):
         """Validate the 'requiredness' of the given answers.
 
         Raise exceptions if a required question is not answered.
@@ -291,12 +291,10 @@ class DocumentValidator:
         Since we're iterating and evaluating `is_hidden` as well for this
         purpose, we help our call site by returning a list of *non-hidden*
         question slugs.
-
-
         """
         required_but_empty = []
         visible_questions = []
-        for question in document.form.all_questions():
+        for question in form.questions.all():
             # TODO: can we iterate over questions of answers via answers?
             try:
                 expr = "is_hidden"
@@ -314,7 +312,14 @@ class DocumentValidator:
                     if is_required and answers.get(question.slug) in EMPTY_VALUES:
                         required_but_empty.append(question.slug)
 
-            except jexl.QuestionMissing:
+                    if question.type == Question.TYPE_FORM:
+                        visible_questions.extend(
+                            self._validate_required(
+                                document, question.sub_form, answers
+                            )
+                        )
+
+            except (jexl.QuestionMissing, exceptions.ValidationError):
                 raise
             except Exception as exc:
                 expr_jexl = getattr(question, expr)
