@@ -343,3 +343,24 @@ def test_validate_required_integer_0(
     answer_factory(document=document, value=0, question=form_question.question)
 
     DocumentValidator().validate(document, info)
+
+
+@pytest.mark.parametrize("question__is_hidden", ["true", "false"])
+@pytest.mark.parametrize(
+    "question__type,question__configuration",
+    [[Question.TYPE_FLOAT, {"min_value": 0, "max_value": 3}]],
+)
+def test_validate_hidden_field(
+    db, form_question, document_factory, answer_factory, info
+):
+    question = form_question.question
+    document = document_factory(form=form_question.form)
+
+    # answer is out of validation range so should fail
+    answer_factory(question=question, document=document, value=4)
+
+    if question.is_hidden == "true":
+        assert DocumentValidator().validate(document, info) is None
+    else:
+        with pytest.raises(ValidationError):
+            DocumentValidator().validate(document, info)

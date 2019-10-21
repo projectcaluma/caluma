@@ -176,6 +176,7 @@ class AnswerValidator:
             )
 
     def _validate_question_table(self, question, value, document, info, **kwargs):
+
         for _document in value:
             DocumentValidator().validate(_document, info=info)
 
@@ -204,11 +205,9 @@ class AnswerValidator:
 class DocumentValidator:
     def validate(self, document, info, **kwargs):
         answers = self.get_document_answers(document)
-        self.validate_required(document, answers)
+        visible_questions = self._validate_required(document, answers)
 
-        # TODO: can we iterate over the entries in answer_tree here
-        # so the loop doesn't hit the DB?
-        for answer in document.answers.all():
+        for answer in document.answers.filter(question_id__in=visible_questions):
             validator = AnswerValidator()
             validator.validate(
                 document=document,
@@ -284,9 +283,19 @@ class DocumentValidator:
         else:  # pragma: no cover
             raise Exception(f"unhandled question type mapping {answer.question.type}")
 
-    def validate_required(self, document, answers):
+    def _validate_required(self, document, answers):
+        """Validate the 'requiredness' of the given answers.
+
+        Raise exceptions if a required question is not answered.
+
+        Since we're iterating and evaluating `is_hidden` as well for this
+        purpose, we help our call site by returning a list of *non-hidden*
+        question slugs.
+
+
+        """
         required_but_empty = []
-        required_questions = []
+        visible_questions = []
         for question in document.form.all_questions():
             # TODO: can we iterate over questions of answers via answers?
             try:
@@ -296,7 +305,7 @@ class DocumentValidator:
                 )
 
                 if not is_hidden:
-                    required_questions.append(question.slug)
+                    visible_questions.append(question.slug)
                     expr = "is_required"
                     is_required = jexl.QuestionJexl(
                         answers, document.form.slug
@@ -324,7 +333,7 @@ class DocumentValidator:
                 slugs=required_but_empty,
             )
 
-        return required_questions
+        return visible_questions
 
 
 class QuestionValidator:
