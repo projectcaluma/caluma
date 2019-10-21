@@ -286,35 +286,35 @@ class DocumentValidator:
 
     def validate_required(self, document, answers):
         required_but_empty = []
-        for question in document.form.all_questions().values(
-            "slug", "is_required", "is_hidden"
-        ):
+        required_questions = []
+        for question in document.form.all_questions():
             # TODO: can we iterate over questions of answers via answers?
             try:
                 expr = "is_hidden"
                 is_hidden = jexl.QuestionJexl(answers, document.form.slug).evaluate(
-                    question["is_hidden"]
+                    question.is_hidden
                 )
 
                 if not is_hidden:
+                    required_questions.append(question.slug)
                     expr = "is_required"
                     is_required = jexl.QuestionJexl(
                         answers, document.form.slug
-                    ).evaluate(question["is_required"])
+                    ).evaluate(question.is_required)
 
-                    if is_required and answers.get(question["slug"]) in EMPTY_VALUES:
-                        required_but_empty.append(question["slug"])
+                    if is_required and answers.get(question.slug) in EMPTY_VALUES:
+                        required_but_empty.append(question.slug)
 
             except jexl.QuestionMissing:
                 raise
             except Exception as exc:
-                expr_jexl = question.get(expr)
+                expr_jexl = getattr(question, expr)
                 log.error(
-                    f"Error while evaluating {expr} expression on question {question['slug']}: "
+                    f"Error while evaluating {expr} expression on question {question.slug}: "
                     f"{expr_jexl}: {str(exc)}"
                 )
                 raise RuntimeError(
-                    f"Error while evaluating '{expr}' expression on question {question['slug']}: "
+                    f"Error while evaluating '{expr}' expression on question {question.slug}: "
                     f"{expr_jexl}. The system log contains more information"
                 )
 
@@ -323,6 +323,8 @@ class DocumentValidator:
                 f"Questions {','.join(required_but_empty)} are required but not provided.",
                 slugs=required_but_empty,
             )
+
+        return required_questions
 
 
 class QuestionValidator:
