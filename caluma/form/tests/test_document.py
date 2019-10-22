@@ -735,12 +735,6 @@ def test_save_document_answer(
         # delete answer to force create test instead of update
         Answer.objects.filter(pk=answer.pk).delete()
 
-        if question.type in [
-            Question.TYPE_DYNAMIC_CHOICE,
-            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
-        ]:
-            answer.history.all().delete()
-
     result = schema_executor(query, variables=inp)
 
     assert not bool(result.errors) == success
