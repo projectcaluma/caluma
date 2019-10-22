@@ -54,7 +54,40 @@ an example.
 
 
 ## License
-Code released under the [MIT license](LICENSE).
+
+Code released under the [AGPL v3 license](LICENSE).
+
+Some words regarding the license choice:
+
+The AGPL is a rather strict license. In addition to the GNU GPL, you are
+required to provide your changes in the source code not only to the "direct"
+user, but to users accessing the software via a network as well.
+
+For you as a user or integrator, this does not affect you too much: As long
+as you don't modify Caluma itself, you don't need to treat it in any other
+way than how you would other software, as the source is readily available on
+Github.
+
+What it does is that it gives us the motivation to use the official interfaces
+that Caluma provides. We want to keep clean interfaces, and want to motivate
+other users to do the same, despite that it would sometimes be easier to hack
+into the code directly to make it do what you want.
+
+It also protects the project against a large-scale SaaS provider "taking"
+Caluma, modifying it and providing an enhanced, incompatible version of it,
+making money off of it without giving back to the community
+([SaaS
+loophole](https://resources.whitesourcesoftware.com/blog-whitesource/the-saas-loophole-in-gpl-open-source-licenses))
+
+While we explicitly don't mind you making a living off your Caluma offering, we
+want the project to profit if you add some enhancements, so everybody can enjoy
+them.
+
+One could argue that the extensions (like visibility, permissions, etc) are
+"linked" and thus would need to be shared to the end user. This would not be in your
+interest however. We consider those modules as configuration. Sharing these is
+not required.
+
 
 ## Further reading
 
