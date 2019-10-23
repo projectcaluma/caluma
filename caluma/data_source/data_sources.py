@@ -35,7 +35,7 @@ class BaseDataSource:
     ...     info = 'User choices from "someapi"'
     ...
     ...     @data_source_cache(timeout=3600)
-    ...     def get_data(self, info, answer_value=None):
+    ...     def get_data(self, info):
     ...         response = requests.get(
     ...             f"https://someapi/?user={info.context.request.user.username}"
     ...         )
@@ -51,12 +51,12 @@ class BaseDataSource:
     def __init__(self):
         pass
 
-    def get_data(self, info, answer_value=None):  # pragma: no cover
+    def get_data(self, info):  # pragma: no cover
         raise NotImplementedError()
 
-    def try_get_data_with_fallback(self, info, answer_value=None):
+    def try_get_data_with_fallback(self, info):
         try:
-            new_data = self.get_data(info, answer_value)
+            new_data = self.get_data(info)
         except Exception as e:
             logger.exception(
                 f"Executing {type(self).__name__}.get_data() failed:"
