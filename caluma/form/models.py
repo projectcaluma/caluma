@@ -295,3 +295,10 @@ class AnswerDocument(UUIDModel):
     class Meta:
         ordering = ("-sort",)
         unique_together = ("answer", "document")
+
+
+class DynamicOption(UUIDModel):
+    value = models.CharField(max_length=255, blank=True, null=True)
+    label = LocalizedField(blank=False, null=False, required=False)
+    document = models.ForeignKey("Document", on_delete=models.CASCADE)
+    question = models.ForeignKey("Question", on_delete=models.CASCADE)

@@ -50,3 +50,26 @@ def test_copy_option(db, option, schema_executor):
     assert new_option.label == "Test Option"
     assert new_option.meta == option.meta
     assert new_option.source == option
+
+
+def test_dynamic_option(db, schema_executor, dynamic_option_factory):
+    query = """
+        query dynamicOptions ($filter:[DynamicOptionFilterSetType]) {
+          allUsedDynamicOptions(filter: $filter){
+            edges{
+              node{
+                value
+                label
+              }
+            }
+          }
+        }
+    """
+
+    dynamic_option = dynamic_option_factory()
+    inp = {"filter": [{"document": dynamic_option.id}]}
+    result = schema_executor(query, variables=inp)
+
+    assert not result.errors
+    assert dynamic_option.value == "service-bank-arm"
+    assert dynamic_option.label["en"] == "Calvin Graham"
