@@ -4,14 +4,11 @@ from logging import getLogger
 from django_filters.constants import EMPTY_VALUES
 from rest_framework import exceptions
 
-from caluma.data_source.data_source_handlers import (
-    get_data_source_data,
-    get_data_sources,
-)
+from caluma.data_source.data_source_handlers import get_data_sources
 
 from . import jexl
 from .format_validators import get_format_validators
-from .models import Answer, Question
+from .models import Answer, DynamicOption, Question
 
 log = getLogger()
 
@@ -97,56 +94,49 @@ class AnswerValidator:
                 slugs=[question.slug],
             )
 
-    def _validate_question_dynamic_choice(self, question, value, info, **kwargs):
+    def _validate_question_dynamic_choice(
+        self, question, value, document, info, **kwargs
+    ):
+        if not isinstance(value, str):
+            raise CustomValidationError(
+                f'Invalid value "{value}". Must be of type str.', slugs=[question.slug]
+            )
+        self._validate_option(question, document, value, info)
+
+    def _validate_option(self, question, document, option, info):
         data_source = get_data_sources(dic=True)[question.data_source]
-        if not data_source.validate:
-            if not isinstance(value, str):
-                raise CustomValidationError(
-                    f'Invalid value: "{value}". Must be of type str',
-                    slugs=[question.slug],
-                )
+        data_source_object = data_source()
+
+        if DynamicOption.objects.filter(
+            document=document, question=question, value=option
+        ).exists():
             return
 
-        data = get_data_source_data(info, question.data_source)
-        options = [d.slug for d in data]
-
-        if not isinstance(value, str) or value not in options:
+        valid_label = data_source_object.validate_answer_value(option, document, info)
+        if valid_label is False:
             raise CustomValidationError(
-                f'Invalid value "{value}". '
-                f"Must be of type str and one of the options \"{', '.join(options)}\"",
-                slugs=[question.slug],
+                f'Invalid value "{option}". Not a valid option.', slugs=[question.slug]
             )
 
+        DynamicOption.objects.get_or_create(
+            document=document, question=question, value=option, label=valid_label
+        )
+
     def _validate_question_dynamic_multiple_choice(
-        self, question, value, info, **kwargs
+        self, question, value, document, info, **kwargs
     ):
-        data_source = get_data_sources(dic=True)[question.data_source]
-        if not data_source.validate:
-            if not isinstance(value, list):
-                raise CustomValidationError(
-                    f'Invalid value: "{value}". Must be of type list',
-                    slugs=[question.slug],
-                )
-            for v in value:
-                if not isinstance(v, str):
-                    raise CustomValidationError(
-                        f'Invalid value: "{v}". Must be of type string',
-                        slugs=[question.slug],
-                    )
-            return
-        data = get_data_source_data(info, question.data_source)
-        options = [d.slug for d in data]
         if not isinstance(value, list):
             raise CustomValidationError(
                 f'Invalid value: "{value}". Must be of type list', slugs=[question.slug]
             )
-        invalid_options = set(value) - set(options)
-        if invalid_options:
-            raise CustomValidationError(
-                f'Invalid options "{invalid_options}". '
-                f"Should be one of the options \"[{', '.join(options)}]\"",
-                slugs=[question.slug],
-            )
+
+        for v in value:
+            if not isinstance(v, str):
+                raise CustomValidationError(
+                    f'Invalid value: "{v}". Must be of type string',
+                    slugs=[question.slug],
+                )
+            self._validate_option(question, document, v, info)
 
     def _validate_question_table(self, question, value, document, info, **kwargs):
         for _document in value:

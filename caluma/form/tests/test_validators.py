@@ -2,7 +2,7 @@ import pytest
 from rest_framework.exceptions import ValidationError
 
 from ...core.tests import extract_serializer_input_fields
-from ...form.models import Question
+from ...form.models import DynamicOption, Question
 from .. import serializers
 from ..jexl import QuestionMissing
 from ..validators import DocumentValidator, QuestionValidator
@@ -77,6 +77,7 @@ def test_validate_dynamic_options(
         "caluma.data_source.tests.data_sources.MyDataSource",
         "caluma.data_source.tests.data_sources.MyOtherDataSource",
     ]
+    lookup_value = value
     if question.type == Question.TYPE_DYNAMIC_MULTIPLE_CHOICE and not value == 23:
         value = [value]
 
@@ -85,6 +86,9 @@ def test_validate_dynamic_options(
 
     if valid:
         DocumentValidator().validate(document, info)
+        assert DynamicOption.objects.get(
+            document=document, question=question, value=lookup_value
+        )
     else:
         with pytest.raises(ValidationError):
             DocumentValidator().validate(document, info)
