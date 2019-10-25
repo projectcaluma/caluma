@@ -53,9 +53,10 @@ class AnswerValueOrdering(CalumaOrdering):
             )
 
         answers_subquery = Subquery(
-            Answer.objects.filter(question=question, document=OuterRef("pk")).values(
-                value_field
-            )
+            Answer.objects.filter(
+                question=question,
+                document=OuterRef(f"{self._document_locator_prefix}pk"),
+            ).values(value_field)
         )
         ann_name = f"order_{value}"
 
