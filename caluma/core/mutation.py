@@ -78,13 +78,16 @@ class Mutation(ClientIDMutation):
         lookup_input_kwarg=None,
         serializer_class=None,
         model_class=None,
-        model_operations=["create", "update"],
+        model_operations=None,
         fields=(),
         exclude=(),
         return_field_name=None,
         return_field_type=None,
         **options
     ):
+        model_operations = (
+            model_operations if model_operations else ["create", "update"]
+        )
         if not serializer_class:
             raise Exception("serializer_class is required for the Mutation")
 

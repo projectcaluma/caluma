@@ -22,7 +22,7 @@ Faker.add_provider(MultilangProvider)
 
 
 def register_module(module):
-    for name, obj in inspect.getmembers(module):
+    for _, obj in inspect.getmembers(module):
         if isinstance(obj, FactoryMetaClass) and not obj._meta.abstract:
             register(obj)
 
