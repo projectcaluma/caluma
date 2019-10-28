@@ -24,4 +24,4 @@ pytest-randomly==3.1.0
 python-semantic-release==4.3.1
 requests-mock==1.7.0
 snapshottest==0.5.1
-fsfe-reuse==0.5.0
+fsfe-reuse==0.5.2
