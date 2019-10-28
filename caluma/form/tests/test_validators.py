@@ -337,3 +337,66 @@ def test_validate_required_integer_0(
     answer_factory(document=document, value=0, question=form_question.question)
 
     DocumentValidator().validate(document, info)
+
+
+@pytest.mark.parametrize("question__is_hidden", ["true", "false"])
+@pytest.mark.parametrize(
+    "question__type,question__configuration",
+    [[Question.TYPE_FLOAT, {"min_value": 0, "max_value": 3}]],
+)
+def test_validate_hidden_field(
+    db, form_question, document_factory, answer_factory, info
+):
+    question = form_question.question
+    document = document_factory(form=form_question.form)
+
+    # answer is out of validation range so should fail
+    answer_factory(question=question, document=document, value=4)
+
+    if question.is_hidden == "true":
+        assert DocumentValidator().validate(document, info) is None
+    else:
+        with pytest.raises(ValidationError):
+            DocumentValidator().validate(document, info)
+
+
+@pytest.mark.parametrize("hide_formquestion", [True, False])
+def test_validate_hidden_subform(
+    db,
+    question_factory,
+    form_factory,
+    document_factory,
+    form_question_factory,
+    answer_factory,
+    info,
+    hide_formquestion,
+):
+    # First, build our nested form:
+    #     top_form
+    #       \__ form_question # hidden or not/parametrized
+    #            \__ sub_form
+    #                 \__ sub_question
+    top_form = form_factory()
+    sub_form = form_factory()
+    form_question = question_factory(
+        type=Question.TYPE_FORM,
+        sub_form=sub_form,
+        is_hidden=str(hide_formquestion).lower(),
+    )
+    top_form.questions.add(form_question)
+    sub_question = question_factory(
+        type=Question.TYPE_FLOAT, configuration={"min_value": 0, "max_value": 3}
+    )
+    # TODO: why does  `sub_form.questions.add(sub_question)` not work?
+    form_question_factory(form=sub_form, question=sub_question)
+
+    # Second, make a document. The answer for the sub_question should
+    # be invalid to test if the hidden form question masks it properly
+    document = document_factory(form=top_form)
+    answer_factory(question=sub_question, document=document, value=4)
+
+    if hide_formquestion:
+        assert DocumentValidator().validate(document, info) is None
+    else:
+        with pytest.raises(ValidationError):
+            DocumentValidator().validate(document, info)

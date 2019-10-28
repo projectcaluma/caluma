@@ -150,6 +150,7 @@ class AnswerValidator:
             )
 
     def _validate_question_table(self, question, value, document, info, **kwargs):
+
         for _document in value:
             DocumentValidator().validate(_document, info=info)
 
@@ -178,11 +179,9 @@ class AnswerValidator:
 class DocumentValidator:
     def validate(self, document, info, **kwargs):
         answers = self.get_document_answers(document)
-        self.validate_required(document, answers)
+        visible_questions = self._validate_required(document, document.form, answers)
 
-        # TODO: can we iterate over the entries in answer_tree here
-        # so the loop doesn't hit the DB?
-        for answer in document.answers.all():
+        for answer in document.answers.filter(question_id__in=visible_questions):
             validator = AnswerValidator()
             validator.validate(
                 document=document,
@@ -258,37 +257,52 @@ class DocumentValidator:
         else:  # pragma: no cover
             raise Exception(f"unhandled question type mapping {answer.question.type}")
 
-    def validate_required(self, document, answers):
+    def _validate_required(self, document, form, answers):
+        """Validate the 'requiredness' of the given answers.
+
+        Raise exceptions if a required question is not answered.
+
+        Since we're iterating and evaluating `is_hidden` as well for this
+        purpose, we help our call site by returning a list of *non-hidden*
+        question slugs.
+        """
         required_but_empty = []
-        for question in document.form.all_questions().values(
-            "slug", "is_required", "is_hidden"
-        ):
+        visible_questions = []
+        for question in form.questions.all():
             # TODO: can we iterate over questions of answers via answers?
             try:
                 expr = "is_hidden"
                 is_hidden = jexl.QuestionJexl(answers, document.form.slug).evaluate(
-                    question["is_hidden"]
+                    question.is_hidden
                 )
 
                 if not is_hidden:
+                    visible_questions.append(question.slug)
                     expr = "is_required"
                     is_required = jexl.QuestionJexl(
                         answers, document.form.slug
-                    ).evaluate(question["is_required"])
+                    ).evaluate(question.is_required)
 
-                    if is_required and answers.get(question["slug"]) in EMPTY_VALUES:
-                        required_but_empty.append(question["slug"])
+                    if is_required and answers.get(question.slug) in EMPTY_VALUES:
+                        required_but_empty.append(question.slug)
 
-            except jexl.QuestionMissing:
+                    if question.type == Question.TYPE_FORM:
+                        visible_questions.extend(
+                            self._validate_required(
+                                document, question.sub_form, answers
+                            )
+                        )
+
+            except (jexl.QuestionMissing, exceptions.ValidationError):
                 raise
             except Exception as exc:
-                expr_jexl = question.get(expr)
+                expr_jexl = getattr(question, expr)
                 log.error(
-                    f"Error while evaluating {expr} expression on question {question['slug']}: "
+                    f"Error while evaluating {expr} expression on question {question.slug}: "
                     f"{expr_jexl}: {str(exc)}"
                 )
                 raise RuntimeError(
-                    f"Error while evaluating '{expr}' expression on question {question['slug']}: "
+                    f"Error while evaluating '{expr}' expression on question {question.slug}: "
                     f"{expr_jexl}. The system log contains more information"
                 )
 
@@ -297,6 +311,8 @@ class DocumentValidator:
                 f"Questions {','.join(required_but_empty)} are required but not provided.",
                 slugs=required_but_empty,
             )
+
+        return visible_questions
 
 
 class QuestionValidator:
