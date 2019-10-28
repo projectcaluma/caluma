@@ -1778,6 +1778,7 @@ enum SortableWorkItemAttributes {
   IS_ARCHIVED
   IS_PUBLISHED
   NAME
+  DEADLINE
   STATUS
   SLUG
 }

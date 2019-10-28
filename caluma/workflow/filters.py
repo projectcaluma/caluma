@@ -211,6 +211,7 @@ class WorkItemOrderSet(FilterSet):
             "is_archived",
             "is_published",
             "name",
+            "deadline",
             "status",
             "slug",
         ],
