@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -215,6 +216,7 @@ type ChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   options(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, label: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, orderBy: [OptionOrdering]): OptionConnection
   id: ID!
 }
@@ -377,6 +379,7 @@ type DateQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   id: ID!
 }
 
@@ -412,6 +415,7 @@ type Document implements Node {
   form: Form!
   meta: GenericScalar
   answers(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], question: ID, search: String, orderBy: [AnswerOrdering], filter: [AnswerFilterSetType], order: [AnswerOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, questions: [ID]): AnswerConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   case: Case
   workItem: WorkItem
 }
@@ -490,6 +494,7 @@ type DynamicChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   dataSource: String!
   id: ID!
@@ -509,9 +514,39 @@ type DynamicMultipleChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   dataSource: String!
   id: ID!
+}
+
+type DynamicOption implements Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  value: String
+  label: String!
+  document: Document!
+  question: StaticQuestion!
+}
+
+type DynamicOptionConnection {
+  pageInfo: PageInfo!
+  edges: [DynamicOptionEdge]!
+  totalCount: Int
+}
+
+type DynamicOptionEdge {
+  node: DynamicOption
+  cursor: String!
+}
+
+input DynamicOptionFilterSetType {
+  question: ID
+  document: ID
+  invert: Boolean
 }
 
 type File implements Node {
@@ -553,6 +588,7 @@ type FileQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   id: ID!
 }
 
@@ -582,6 +618,7 @@ type FloatQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   id: ID!
   minValue: Float
   maxValue: Float
@@ -698,6 +735,7 @@ type FormQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   subForm: Form
   id: ID!
 }
@@ -922,6 +960,7 @@ type IntegerQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   id: ID!
   maxValue: Int
   minValue: Int
@@ -971,6 +1010,7 @@ type MultipleChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   options(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [OptionOrdering], slug: String, label: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): OptionConnection
   staticContent: String
   id: ID!
@@ -1086,6 +1126,7 @@ type Query {
   allQuestions(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, filter: [QuestionFilterSetType], order: [QuestionOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, excludeForms: [ID], search: String, slugs: [String]): QuestionConnection
   allDocuments(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], form: ID, forms: [ID], search: String, id: ID, orderBy: [DocumentOrdering], filter: [DocumentFilterSetType], order: [DocumentOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, rootDocument: ID, hasAnswer: [HasAnswerFilterType], searchAnswers: [SearchAnswersFilterType]): DocumentConnection
   allFormatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
+  allUsedDynamicOptions(before: String, after: String, first: Int, last: Int, question: ID, document: ID, filter: [DynamicOptionFilterSetType], createdByUser: String, createdByGroup: String): DynamicOptionConnection
   documentValidity(id: ID!, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
   node(id: ID!): Node
   _debug: DjangoDebug
@@ -1820,6 +1861,7 @@ type StaticQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   staticContent: String
   dataSource: String
   id: ID!
@@ -1869,6 +1911,7 @@ type TableQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   rowForm: Form
   id: ID!
 }
@@ -1969,6 +2012,7 @@ type TextQuestion implements Question, Node {
   source: Question
   formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   id: ID!
   maxLength: Int
 }
@@ -1989,6 +2033,7 @@ type TextareaQuestion implements Question, Node {
   source: Question
   formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
+  dynamicoptionSet(before: String, after: String, first: Int, last: Int): DynamicOptionConnection!
   id: ID!
   maxLength: Int
 }

@@ -341,6 +341,13 @@ class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType)
         interfaces = (Question, graphene.Node)
 
 
+class DynamicOption(DjangoObjectType):
+    class Meta:
+        model = models.DynamicOption
+        interfaces = (relay.Node,)
+        connection_class = CountableConnectionBase
+
+
 class IntegerQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     max_value = graphene.Int()
     min_value = graphene.Int()
@@ -913,6 +920,10 @@ class Query:
         ),
     )
     all_format_validators = ConnectionField(FormatValidatorConnection)
+    all_used_dynamic_options = DjangoFilterConnectionField(
+        DynamicOption,
+        filterset_class=CollectionFilterSetFactory(filters.DynamicOptionFilterSet),
+    )
 
     document_validity = ConnectionField(
         DocumentValidityConnection, id=graphene.ID(required=True)

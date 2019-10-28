@@ -2,7 +2,7 @@ import pytest
 from rest_framework.exceptions import ValidationError
 
 from ...core.tests import extract_serializer_input_fields
-from ...form.models import Question
+from ...form.models import DynamicOption, Question
 from .. import serializers
 from ..jexl import QuestionMissing
 from ..validators import DocumentValidator, QuestionValidator
@@ -77,6 +77,7 @@ def test_validate_dynamic_options(
         "caluma.data_source.tests.data_sources.MyDataSource",
         "caluma.data_source.tests.data_sources.MyOtherDataSource",
     ]
+    lookup_value = value
     if question.type == Question.TYPE_DYNAMIC_MULTIPLE_CHOICE and not value == 23:
         value = [value]
 
@@ -85,6 +86,9 @@ def test_validate_dynamic_options(
 
     if valid:
         DocumentValidator().validate(document, info)
+        assert DynamicOption.objects.get(
+            document=document, value=lookup_value, question=question
+        )
     else:
         with pytest.raises(ValidationError):
             DocumentValidator().validate(document, info)
@@ -400,3 +404,35 @@ def test_validate_hidden_subform(
     else:
         with pytest.raises(ValidationError):
             DocumentValidator().validate(document, info)
+
+
+@pytest.mark.parametrize(
+    "question__type",
+    [Question.TYPE_DYNAMIC_CHOICE, Question.TYPE_DYNAMIC_MULTIPLE_CHOICE],
+)
+@pytest.mark.parametrize("question__data_source", ["MyNonValidationDataSource"])
+def test_validate_dynamic_option_exists(
+    db,
+    form_question,
+    question,
+    answer_factory,
+    document_factory,
+    dynamic_option_factory,
+    info,
+    settings,
+):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.data_source.tests.data_sources.MyNonValidationDataSource"
+    ]
+
+    value = "foobar"
+    document = document_factory(form=form_question.form)
+    dynamic_option = dynamic_option_factory(
+        document=document, question=question, value=value, label="test"
+    )
+
+    if question.type == Question.TYPE_DYNAMIC_MULTIPLE_CHOICE:
+        value = [value]
+    answer_factory(question=question, value=value, document=document)
+
+    assert DocumentValidator().validate(dynamic_option.document, info) is None
