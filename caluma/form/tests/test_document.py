@@ -308,7 +308,7 @@ def test_query_all_documents_filter_answers_by_questions(
     answers = []
     questions = []
 
-    for i in range(3):
+    for _ in range(3):
         documents.append(document_factory())
         questions.append(question_factory())
         answers.append(answer_factory(document=documents[-1], question=questions[-1]))

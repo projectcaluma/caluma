@@ -23,7 +23,8 @@ class CustomValidationError(exceptions.ValidationError):
     query can show more useful information.
     """
 
-    def __init__(self, detail, code=None, slugs=[]):
+    def __init__(self, detail, code=None, slugs=None):
+        slugs = slugs if slugs else []
         super().__init__(detail, code)
         self.slugs = slugs
 

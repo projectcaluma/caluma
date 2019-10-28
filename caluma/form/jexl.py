@@ -17,7 +17,8 @@ class QuestionValidatingAnalyzer(ValidatingAnalyzer):
 
 
 class QuestionJexl(JEXL):
-    def __init__(self, answer_by_question={}, form=None, **kwargs):
+    def __init__(self, answer_by_question=None, form=None, **kwargs):
+        answer_by_question = answer_by_question if answer_by_question else {}
         super().__init__(**kwargs)
 
         self.context = Context({"form": form})
