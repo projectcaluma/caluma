@@ -674,3 +674,38 @@ def test_save_static_question(db, snapshot, question, schema_executor):
     result = schema_executor(query, variables=inp)
     assert not bool(result.errors)
     snapshot.assert_match(result.data)
+
+
+def test_all_questions_slug_filter(
+    db,
+    schema_executor,
+    question_option_factory,
+    question_factory,
+    form_factory,
+    form_question_factory,
+    option_factory,
+):
+    query = """
+        query FilteredQuestions {
+          allQuestions {
+            edges {
+              node {
+                slug
+              }
+            }
+          }
+        }
+    """
+    questions = question_factory.create_batch(4)
+
+    forms = form_factory.create_batch(2)
+
+    for question in questions:
+        for form in forms:
+            question.forms.through.objects.create(form=form, question=question)
+
+    num_questions = models.Question.objects.all().count()
+    result = schema_executor(query)
+
+    assert not result.errors
+    assert len(result.data["allQuestions"]["edges"]) == num_questions
