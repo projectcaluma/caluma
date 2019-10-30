@@ -31,4 +31,4 @@ License: CC0-1.0
 # Source code of caluma
 Files: caluma/*.py docs/*
 Copyright: 2019 Adfinis SyGroup AG <info@adfinis-sygroup.ch>
-License: AGPL-3.0-or-later
+License: GPL-3.0-or-later
