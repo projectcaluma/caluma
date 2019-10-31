@@ -95,6 +95,38 @@ def test_validate_dynamic_options(
 
 
 @pytest.mark.parametrize(
+    "question__type",
+    [Question.TYPE_DYNAMIC_CHOICE, Question.TYPE_DYNAMIC_MULTIPLE_CHOICE],
+)
+@pytest.mark.parametrize("question__data_source", ["MyDataSource"])
+def test_validate_dynamic_option_exists(
+    db,
+    form_question,
+    question,
+    answer_factory,
+    document_factory,
+    dynamic_option_factory,
+    info,
+    settings,
+):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.data_source.tests.data_sources.MyDataSource"
+    ]
+
+    value = "foobar"
+    document = document_factory(form=form_question.form)
+    dynamic_option = dynamic_option_factory(
+        document=document, question=question, slug=value, label="test"
+    )
+
+    if question.type == Question.TYPE_DYNAMIC_MULTIPLE_CHOICE:
+        value = [value]
+    answer_factory(question=question, value=value, document=document)
+
+    assert DocumentValidator().validate(dynamic_option.document, info) is None
+
+
+@pytest.mark.parametrize(
     "required_jexl,should_throw", [("true", True), ("false", False)]
 )
 def test_validate_nested_form(
@@ -404,35 +436,3 @@ def test_validate_hidden_subform(
     else:
         with pytest.raises(ValidationError):
             DocumentValidator().validate(document, info)
-
-
-@pytest.mark.parametrize(
-    "question__type",
-    [Question.TYPE_DYNAMIC_CHOICE, Question.TYPE_DYNAMIC_MULTIPLE_CHOICE],
-)
-@pytest.mark.parametrize("question__data_source", ["MyNonValidationDataSource"])
-def test_validate_dynamic_option_exists(
-    db,
-    form_question,
-    question,
-    answer_factory,
-    document_factory,
-    dynamic_option_factory,
-    info,
-    settings,
-):
-    settings.DATA_SOURCE_CLASSES = [
-        "caluma.data_source.tests.data_sources.MyNonValidationDataSource"
-    ]
-
-    value = "foobar"
-    document = document_factory(form=form_question.form)
-    dynamic_option = dynamic_option_factory(
-        document=document, question=question, slug=value, label="test"
-    )
-
-    if question.type == Question.TYPE_DYNAMIC_MULTIPLE_CHOICE:
-        value = [value]
-    answer_factory(question=question, value=value, document=document)
-
-    assert DocumentValidator().validate(dynamic_option.document, info) is None
