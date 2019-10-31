@@ -136,8 +136,10 @@ class Question(Node, graphene.Interface):
     @classmethod
     def get_queryset(cls, queryset, info):
         queryset = super().get_queryset(queryset, info)
-        return queryset.select_related("sub_form", "row_form").order_by(
-            "-formquestion__sort"
+        return (
+            queryset.select_related("sub_form", "row_form")
+            .order_by("-formquestion__sort")
+            .distinct()
         )
 
     @classmethod
