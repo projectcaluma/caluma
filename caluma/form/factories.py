@@ -163,7 +163,7 @@ class AnswerDocumentFactory(DjangoModelFactory):
 
 
 class DynamicOptionFactory(DjangoModelFactory):
-    value = Faker("slug")
+    slug = Faker("slug")
     label = Faker("multilang", faker_provider="name")
     document = SubFactory(DocumentFactory)
     question = SubFactory(QuestionFactory)

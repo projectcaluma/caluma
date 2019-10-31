@@ -520,7 +520,7 @@ type DynamicOption implements Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: String
+  slug: String!
   label: String!
   document: Document!
   question: StaticQuestion!
