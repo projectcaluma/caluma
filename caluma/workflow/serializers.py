@@ -298,31 +298,36 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
         data["closed_by_group"] = user.group
         return super().validate(data)
 
+    def _can_continue(self, instance, task):
+        # If a "multiple instance" task has running siblings, the task is not completed
+        if task.is_multiple_instance:
+            return not instance.case.work_items.filter(
+                task=task, status=models.WorkItem.STATUS_READY
+            ).exists()
+        return instance.case.work_items.filter(
+            task=task,
+            status__in=(
+                models.WorkItem.STATUS_COMPLETED,
+                models.WorkItem.STATUS_SKIPPED,
+            ),
+        ).exists()
+
     @transaction.atomic
     def update(self, instance, validated_data):
-        def is_completed(task):
-            # If a "multiple instance" task has running siblings, the task is not completed
-            if task.is_multiple_instance:
-                return not instance.case.work_items.filter(
-                    task=task, status=models.WorkItem.STATUS_READY
-                ).exists()
-            return instance.case.work_items.filter(
-                task=task, status=models.WorkItem.STATUS_COMPLETED
-            ).exists()
 
         instance = super().update(instance, validated_data)
         user = self.context["request"].user
         case = instance.case
 
-        if not is_completed(instance.task):
+        if not self._can_continue(instance, instance.task):
             return instance
 
         flow = models.Flow.objects.filter(task_flows__task=instance.task_id).first()
         flow_referenced_tasks = models.Task.objects.filter(task_flows__flow=flow)
 
-        all_complete = False not in [
-            is_completed(task) for task in flow_referenced_tasks
-        ]
+        all_complete = all(
+            self._can_continue(instance, task) for task in flow_referenced_tasks
+        )
 
         if flow and all_complete:
             jexl = FlowJexl()
