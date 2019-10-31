@@ -87,7 +87,7 @@ def test_validate_dynamic_options(
     if valid:
         DocumentValidator().validate(document, info)
         assert DynamicOption.objects.get(
-            document=document, value=lookup_value, question=question
+            document=document, slug=lookup_value, question=question
         )
     else:
         with pytest.raises(ValidationError):
@@ -428,7 +428,7 @@ def test_validate_dynamic_option_exists(
     value = "foobar"
     document = document_factory(form=form_question.form)
     dynamic_option = dynamic_option_factory(
-        document=document, question=question, value=value, label="test"
+        document=document, question=question, slug=value, label="test"
     )
 
     if question.type == Question.TYPE_DYNAMIC_MULTIPLE_CHOICE:

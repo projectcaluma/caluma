@@ -58,7 +58,7 @@ def test_dynamic_option(db, schema_executor, dynamic_option_factory):
           allUsedDynamicOptions(filter: $filter){
             edges{
               node{
-                value
+                slug
                 label
               }
             }
@@ -71,5 +71,5 @@ def test_dynamic_option(db, schema_executor, dynamic_option_factory):
     result = schema_executor(query, variables=inp)
 
     assert not result.errors
-    assert dynamic_option.value == "service-bank-arm"
+    assert dynamic_option.slug == "service-bank-arm"
     assert dynamic_option.label["en"] == "Calvin Graham"

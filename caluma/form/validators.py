@@ -109,7 +109,7 @@ class AnswerValidator:
         data_source_object = data_source()
 
         if DynamicOption.objects.filter(
-            document=document, question=question, value=option
+            document=document, question=question, slug=option
         ).exists():
             return
 
@@ -120,7 +120,7 @@ class AnswerValidator:
             )
 
         DynamicOption.objects.get_or_create(
-            document=document, question=question, value=option, label=valid_label
+            document=document, question=question, slug=option, label=valid_label
         )
 
     def _validate_question_dynamic_multiple_choice(

@@ -298,7 +298,7 @@ class AnswerDocument(UUIDModel):
 
 
 class DynamicOption(UUIDModel):
-    value = models.CharField(max_length=255, blank=True, null=True)
+    slug = models.CharField(max_length=255)
     label = LocalizedField(blank=False, null=False, required=False)
     document = models.ForeignKey("Document", on_delete=models.CASCADE)
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
