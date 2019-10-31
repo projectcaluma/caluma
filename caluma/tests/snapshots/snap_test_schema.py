@@ -1016,6 +1016,7 @@ type Mutation {
   saveCase(input: SaveCaseInput!): SaveCasePayload
   cancelCase(input: CancelCaseInput!): CancelCasePayload
   completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
+  skipWorkItem(input: SkipWorkItemInput!): SkipWorkItemPayload
   saveWorkItem(input: SaveWorkItemInput!): SaveWorkItemPayload
   createWorkItem(input: CreateWorkItemInput!): CreateWorkItemPayload
   saveForm(input: SaveFormInput!): SaveFormPayload
@@ -1725,6 +1726,16 @@ type SimpleTask implements Task, Node {
   leadTime: Int
   isMultipleInstance: Boolean!
   id: ID!
+}
+
+input SkipWorkItemInput {
+  id: ID!
+  clientMutationId: String
+}
+
+type SkipWorkItemPayload {
+  workItem: WorkItem
+  clientMutationId: String
 }
 
 enum SortableAnswerAttributes {

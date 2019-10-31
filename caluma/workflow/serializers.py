@@ -374,6 +374,22 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
         fields = ("id",)
 
 
+class SkipWorkItemSerializer(CompleteWorkItemSerializer):
+    def validate(self, data):
+        if self.instance.status != models.WorkItem.STATUS_READY:
+            raise exceptions.ValidationError("Only READY work items can be skipped")
+
+        user = self.context["request"].user
+        data["status"] = models.WorkItem.STATUS_SKIPPED
+        data["closed_at"] = timezone.now()
+        data["closed_by_user"] = user.username
+        data["closed_by_group"] = user.group
+        # We skip parent validation, as the work item is now "skipped",
+        # meaning no other conditions need apply
+
+        return data
+
+
 class SaveWorkItemSerializer(serializers.ModelSerializer):
     work_item = serializers.GlobalIDField(source="id")
 
