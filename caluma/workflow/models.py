@@ -140,12 +140,14 @@ class WorkItem(UUIDModel):
     STATUS_READY = "ready"
     STATUS_COMPLETED = "completed"
     STATUS_CANCELED = "canceled"
+    STATUS_SKIPPED = "skipped"
 
     STATUS_CHOICES = (STATUS_READY, STATUS_COMPLETED, STATUS_CANCELED)
     STATUS_CHOICE_TUPLE = (
         (STATUS_READY, "Task is ready to be processed."),
         (STATUS_COMPLETED, "Task is done."),
         (STATUS_CANCELED, "Task is cancelled."),
+        (STATUS_SKIPPED, "Task is skipped."),
     )
 
     closed_at = models.DateTimeField(

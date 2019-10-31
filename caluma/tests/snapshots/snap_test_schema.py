@@ -1860,6 +1860,7 @@ enum Status {
   READY
   COMPLETED
   CANCELED
+  SKIPPED
 }
 
 type StringAnswer implements Answer, Node {
@@ -2121,12 +2122,14 @@ enum WorkItemStatus {
   READY
   COMPLETED
   CANCELED
+  SKIPPED
 }
 
 enum WorkItemStatusArgument {
   READY
   COMPLETED
   CANCELED
+  SKIPPED
 }
 
 type Workflow implements Node {
