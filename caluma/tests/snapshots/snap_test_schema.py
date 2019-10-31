@@ -1016,6 +1016,7 @@ type Mutation {
   saveCase(input: SaveCaseInput!): SaveCasePayload
   cancelCase(input: CancelCaseInput!): CancelCasePayload
   completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
+  skipWorkItem(input: SkipWorkItemInput!): SkipWorkItemPayload
   saveWorkItem(input: SaveWorkItemInput!): SaveWorkItemPayload
   createWorkItem(input: CreateWorkItemInput!): CreateWorkItemPayload
   saveForm(input: SaveFormInput!): SaveFormPayload
@@ -1727,6 +1728,16 @@ type SimpleTask implements Task, Node {
   id: ID!
 }
 
+input SkipWorkItemInput {
+  id: ID!
+  clientMutationId: String
+}
+
+type SkipWorkItemPayload {
+  workItem: WorkItem
+  clientMutationId: String
+}
+
 enum SortableAnswerAttributes {
   CREATED_AT
   MODIFIED_AT
@@ -1860,6 +1871,7 @@ enum Status {
   READY
   COMPLETED
   CANCELED
+  SKIPPED
 }
 
 type StringAnswer implements Answer, Node {
@@ -2121,12 +2133,14 @@ enum WorkItemStatus {
   READY
   COMPLETED
   CANCELED
+  SKIPPED
 }
 
 enum WorkItemStatusArgument {
   READY
   COMPLETED
   CANCELED
+  SKIPPED
 }
 
 type Workflow implements Node {
