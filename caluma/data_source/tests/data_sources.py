@@ -36,7 +36,7 @@ class MyDataSource(BaseDataSource):
 
 
 class MyOtherDataSource(MyDataSource):
-    def validate_answer_value(self, value, document, info):
+    def validate_answer_value(self, value, document, question, info):
         return "Test 123"
 
 
@@ -74,8 +74,3 @@ class MyOtherBrokenDataSource(BaseDataSource):
     @data_source_cache(timeout=3600)
     def get_data(self, info):
         raise Exception()
-
-
-class MyNonValidationDataSource(BaseDataSource):
-    def validate_answer_value(self, value, document, info):  # pragma: no cover
-        return False

@@ -108,12 +108,9 @@ class AnswerValidator:
         data_source = get_data_sources(dic=True)[question.data_source]
         data_source_object = data_source()
 
-        if DynamicOption.objects.filter(
-            document=document, question=question, slug=option
-        ).exists():
-            return
-
-        valid_label = data_source_object.validate_answer_value(option, document, info)
+        valid_label = data_source_object.validate_answer_value(
+            option, document, question, info
+        )
         if valid_label is False:
             raise CustomValidationError(
                 f'Invalid value "{option}". Not a valid option.', slugs=[question.slug]

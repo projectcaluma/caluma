@@ -177,18 +177,6 @@ class CustomDataSource(BaseDataSource):
             f"https://someapi/?user={info.context.user.username}"
         )
         return [result["value"] for result in response.json()["results"]]
-
-    def validate_answer_value(self, value, document, info):
-        for data in self.get_data(info):
-            label = data
-            if isinstance(data, list):
-                label = data[-1]
-                data = data[0]
-            if str(data) == value:
-                if not isinstance(label, dict):
-                    label = str(label)
-                return label
-        return False
 ```
 
 This class needs also to be added to the `DATA_SOURCE_CLASSES` environment variable.
@@ -208,9 +196,10 @@ this value will also be used as label.
 For the label, it's possible to use a dict with translated values.
 
 ### `validate_answer_value`-method
-The `validate_answer_value`-method checks if each value in `self.get_data(info)` equals the value
-of the parameter `value`. If this is correct the method returns the label as a String
-and otherwise the method returns `False`. The method can be overwritten.
+
+The default `validate_answer_value()`-method checks first if the value is contained in the output of `self.get_data()`. If it is, it returns the label. Else it makes a DB lookup to see if there is a `DynamicOption` with the same `document`, `question` and `slug` (that's the value). If there is at least one, it returns the label of the first one. Else it returns `False`.
+
+If you override this method, make sure to return the label if valid, else `False`.
 
 ### `data_source_cache` decorator
 This decorator allows for caching the data based on the DataSource name.

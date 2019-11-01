@@ -1,5 +1,7 @@
 import logging
 
+from caluma.form.models import DynamicOption
+
 logger = logging.getLogger(__name__)
 
 
@@ -55,7 +57,7 @@ class BaseDataSource:
     def get_data(self, info):  # pragma: no cover
         raise NotImplementedError()
 
-    def validate_answer_value(self, value, document, info):
+    def validate_answer_value(self, value, document, question, info):
         for data in self.get_data(info):
             label = data
             if isinstance(data, list):
@@ -65,6 +67,11 @@ class BaseDataSource:
                 if not isinstance(label, dict):
                     label = str(label)
                 return label
+        dynamic_option = DynamicOption.objects.filter(
+            document=document, question=question, slug=value
+        ).first()
+        if dynamic_option:
+            return dynamic_option.label
         return False
 
     def try_get_data_with_fallback(self, info):
