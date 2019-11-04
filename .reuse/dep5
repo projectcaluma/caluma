@@ -11,9 +11,7 @@ Files:
     .pre-commit-config.yaml
     .flake8
     .travis.yml
-    CONTRIBUTING.md
     Dockerfile
-    README.md
     commit-msg
     commitlint.config.js
     docker-compose.override.yml
@@ -29,6 +27,14 @@ Copyright: 2019 Adfinis SyGroup AG <info@adfinis-sygroup.ch>
 License: CC0-1.0
 
 # Source code of caluma
-Files: caluma/*.py docs/*
+Files: caluma/*.py
 Copyright: 2019 Adfinis SyGroup AG <info@adfinis-sygroup.ch>
 License: GPL-3.0-or-later
+
+# Documentation of caluma
+Files:
+    docs/*
+    README.md
+    CONTRIBUTING.md
+Copyright: 2019 Adfinis SyGroup AG <info@adfinis-sygroup.ch>
+License: GFDL-1.3-or-later
