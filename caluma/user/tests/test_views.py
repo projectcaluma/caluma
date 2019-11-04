@@ -78,3 +78,17 @@ def test_authentication_view_improperly_configured(rf, settings):
     request = rf.get("/graphql", HTTP_AUTHORIZATION="Bearer Token")
     with pytest.raises(ImproperlyConfigured):
         views.AuthenticationGraphQLView.as_view()(request)
+
+
+def test_no_client_id(rf, requests_mock, settings):
+    cache.clear()
+    authentication_header = "Bearer Token"
+    userinfo = {"sub": "1"}
+    requests_mock.get(
+        settings.OIDC_USERINFO_ENDPOINT, text=json.dumps(userinfo), status_code=401
+    )
+    requests_mock.post(settings.OIDC_INTROSPECT_ENDPOINT, text=json.dumps(userinfo))
+
+    request = rf.get("/graphql", HTTP_AUTHORIZATION=authentication_header)
+    response = views.AuthenticationGraphQLView.as_view()(request)
+    assert response.status_code == status.HTTP_401_UNAUTHORIZED
