@@ -117,7 +117,12 @@ class AnswerValidator:
             )
 
         DynamicOption.objects.get_or_create(
-            document=document, question=question, slug=option, label=valid_label
+            document=document,
+            question=question,
+            slug=option,
+            label=valid_label,
+            created_by_user=info.context.user.username,
+            created_by_group=info.context.user.group,
         )
 
     def _validate_question_dynamic_multiple_choice(
