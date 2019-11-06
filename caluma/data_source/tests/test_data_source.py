@@ -2,6 +2,9 @@ import pytest
 from django.core.cache import cache
 from django.utils import translation
 
+from caluma.form.models import DynamicOption, Question
+from caluma.user.models import BaseUser
+
 
 def test_fetch_data_sources(snapshot, schema_executor, settings):
     settings.DATA_SOURCE_CLASSES = [
@@ -64,7 +67,7 @@ def test_fetch_data_from_data_source(snapshot, schema_executor, data_source_sett
     result = schema_executor(query)
     assert not result.errors
     snapshot.assert_match(result.data)
-    assert cache.get("data_source_MyDataSource_None") == [
+    assert cache.get("data_source_MyDataSource") == [
         1,
         5.5,
         "sdkj",
@@ -198,3 +201,54 @@ def test_fetch_data_from_non_existing_data_source(schema_executor, settings, con
 
     result = schema_executor(query)
     assert result.errors
+
+
+@pytest.mark.parametrize(
+    "question__type,question__data_source",
+    [(Question.TYPE_DYNAMIC_CHOICE, "MyDataSource")],
+)
+def test_data_sources_stores_user(
+    db, schema_executor, info, settings, form, question, document
+):
+    class FakeUser(BaseUser):
+        def __init__(self):
+            self.groups = ["foobar"]
+            self.username = "asdf"
+
+        @property
+        def group(self):
+            return "foobar"
+
+        def __str__(self):
+            return "asdf"
+
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.data_source.tests.data_sources.MyDataSource"
+    ]
+    query = """
+      mutation createAnswer($input:SaveDocumentStringAnswerInput!){
+        saveDocumentStringAnswer(input:$input){
+          answer{
+            id
+          }
+        }
+      }
+    """
+    info.context.user = FakeUser()
+    variables = {
+        "input": {
+            "question": question.slug,
+            "document": document.id,
+            "value": "something",
+        }
+    }
+    assert not DynamicOption.objects.exists()
+    result = schema_executor(query, variables=variables, info=info)
+    assert not result.errors
+    assert DynamicOption.objects.filter(
+        document=document,
+        question=question,
+        slug="something",
+        created_by_user="asdf",
+        created_by_group="foobar",
+    ).exists()

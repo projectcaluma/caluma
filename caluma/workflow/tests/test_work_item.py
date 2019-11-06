@@ -713,3 +713,116 @@ def test_query_all_work_items_filter_case_meta_value(
 
     assert not result.errors
     assert len(result.data["allWorkItems"]["edges"]) == len_results
+
+
+@pytest.mark.parametrize(
+    "work_item__status,work_item__child_case,case__status,task__type,case__document",
+    [
+        (
+            models.WorkItem.STATUS_READY,
+            None,
+            models.Case.STATUS_RUNNING,
+            models.Task.TYPE_COMPLETE_TASK_FORM,
+            None,
+        )
+    ],
+)
+@pytest.mark.parametrize(
+    "question__type,answer__value",
+    [(Question.TYPE_INTEGER, 1), (Question.TYPE_CHOICE, "")],
+)
+def test_skip_task_form_work_item(
+    db, work_item, answer, form_question, schema_executor
+):
+    query = """
+        mutation SkipWorkItem($input: SkipWorkItemInput!) {
+          skipWorkItem(input: $input) {
+            workItem {
+              status
+              case {
+                status
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {"input": {"id": work_item.pk}}
+    result = schema_executor(query, variables=inp)
+
+    # when skipping, both valid and invalid forms don't matter (contrary
+    # to completion, where it DOES matter)
+    assert not bool(result.errors)
+    assert result.data["skipWorkItem"]["workItem"]["status"] == to_const(
+        models.WorkItem.STATUS_SKIPPED
+    )
+    assert result.data["skipWorkItem"]["workItem"]["case"]["status"] == to_const(
+        models.Case.STATUS_COMPLETED
+    )
+
+
+@pytest.mark.parametrize(
+    "work_item_status,success",
+    [
+        (models.WorkItem.STATUS_COMPLETED, False),
+        (models.WorkItem.STATUS_CANCELED, False),
+        (models.WorkItem.STATUS_SKIPPED, False),
+        (models.WorkItem.STATUS_READY, True),
+    ],
+)
+@pytest.mark.parametrize("question__type,answer__value", [(Question.TYPE_INTEGER, 1)])
+def test_skip_multiple_instance_task_form_work_item(
+    db,
+    task_factory,
+    work_item_factory,
+    answer,
+    form_question,
+    work_item_status,
+    success,
+    schema_executor,
+):
+    task = task_factory(is_multiple_instance=True)
+    work_item_1 = work_item_factory(task=task, child_case=None, status=work_item_status)
+    work_item_2 = work_item_factory(task=task, child_case=None, case=work_item_1.case)
+    query = """
+        mutation SkipWorkItem($input: SkipWorkItemInput!) {
+          skipWorkItem(input: $input) {
+            workItem {
+              status
+              case {
+                status
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {"input": {"id": work_item_1.pk}}
+    result = schema_executor(query, variables=inp)
+
+    assert bool(result.errors) != success
+
+    if not success:
+        assert "Only READY work items can be skipped" in str(result.errors[0])
+
+    else:
+
+        assert result.data["skipWorkItem"]["workItem"]["status"] == to_const(
+            models.WorkItem.STATUS_SKIPPED
+        )
+        assert result.data["skipWorkItem"]["workItem"]["case"]["status"] == to_const(
+            models.Case.STATUS_RUNNING
+        )
+
+        inp = {"input": {"id": work_item_2.pk}}
+        result = schema_executor(query, variables=inp)
+
+        assert not bool(result.errors)
+        assert result.data["skipWorkItem"]["workItem"]["status"] == to_const(
+            models.WorkItem.STATUS_SKIPPED
+        )
+        assert result.data["skipWorkItem"]["workItem"]["case"]["status"] == to_const(
+            models.Case.STATUS_COMPLETED
+        )

@@ -308,7 +308,7 @@ def test_query_all_documents_filter_answers_by_questions(
     answers = []
     questions = []
 
-    for i in range(3):
+    for _ in range(3):
         documents.append(document_factory())
         questions.append(question_factory())
         answers.append(answer_factory(document=documents[-1], question=questions[-1]))
@@ -734,12 +734,6 @@ def test_save_document_answer(
     if delete_answer:
         # delete answer to force create test instead of update
         Answer.objects.filter(pk=answer.pk).delete()
-
-        if question.type in [
-            Question.TYPE_DYNAMIC_CHOICE,
-            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
-        ]:
-            answer.history.all().delete()
 
     result = schema_executor(query, variables=inp)
 

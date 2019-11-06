@@ -160,3 +160,13 @@ class AnswerDocumentFactory(DjangoModelFactory):
 
     class Meta:
         model = models.AnswerDocument
+
+
+class DynamicOptionFactory(DjangoModelFactory):
+    slug = Faker("slug")
+    label = Faker("multilang", faker_provider="name")
+    document = SubFactory(DocumentFactory)
+    question = SubFactory(QuestionFactory)
+
+    class Meta:
+        model = models.DynamicOption

@@ -490,7 +490,7 @@ type DynamicChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  options(documentId: ID, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+  options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   dataSource: String!
   id: ID!
 }
@@ -509,9 +509,38 @@ type DynamicMultipleChoiceQuestion implements Question, Node {
   meta: GenericScalar!
   source: Question
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
-  options(documentId: ID, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+  options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   dataSource: String!
   id: ID!
+}
+
+type DynamicOption implements Node {
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
+  id: ID!
+  slug: String!
+  label: String!
+  document: Document!
+  question: StaticQuestion!
+}
+
+type DynamicOptionConnection {
+  pageInfo: PageInfo!
+  edges: [DynamicOptionEdge]!
+  totalCount: Int
+}
+
+type DynamicOptionEdge {
+  node: DynamicOption
+  cursor: String!
+}
+
+input DynamicOptionFilterSetType {
+  question: ID
+  document: ID
+  invert: Boolean
 }
 
 type File implements Node {
@@ -725,7 +754,7 @@ scalar GenericScalar
 scalar GroupJexl
 
 input HasAnswerFilterType {
-  question: String!
+  question: ID!
   value: GenericScalar!
   lookup: AnswerLookupMode
   hierarchy: AnswerHierarchyMode
@@ -987,6 +1016,7 @@ type Mutation {
   saveCase(input: SaveCaseInput!): SaveCasePayload
   cancelCase(input: CancelCaseInput!): CancelCasePayload
   completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
+  skipWorkItem(input: SkipWorkItemInput!): SkipWorkItemPayload
   saveWorkItem(input: SaveWorkItemInput!): SaveWorkItemPayload
   createWorkItem(input: CreateWorkItemInput!): CreateWorkItemPayload
   saveForm(input: SaveFormInput!): SaveFormPayload
@@ -1086,6 +1116,7 @@ type Query {
   allQuestions(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, filter: [QuestionFilterSetType], order: [QuestionOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, excludeForms: [ID], search: String, slugs: [String]): QuestionConnection
   allDocuments(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], form: ID, forms: [ID], search: String, id: ID, orderBy: [DocumentOrdering], filter: [DocumentFilterSetType], order: [DocumentOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, rootDocument: ID, hasAnswer: [HasAnswerFilterType], searchAnswers: [SearchAnswersFilterType]): DocumentConnection
   allFormatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
+  allUsedDynamicOptions(before: String, after: String, first: Int, last: Int, question: ID, document: ID, filter: [DynamicOptionFilterSetType], createdByUser: String, createdByGroup: String): DynamicOptionConnection
   documentValidity(id: ID!, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
   node(id: ID!): Node
   _debug: DjangoDebug
@@ -1669,7 +1700,7 @@ type SaveWorkflowPayload {
 }
 
 input SearchAnswersFilterType {
-  questions: [String]
+  questions: [ID]
   value: GenericScalar!
   lookup: SearchLookupMode
 }
@@ -1695,6 +1726,16 @@ type SimpleTask implements Task, Node {
   leadTime: Int
   isMultipleInstance: Boolean!
   id: ID!
+}
+
+input SkipWorkItemInput {
+  id: ID!
+  clientMutationId: String
+}
+
+type SkipWorkItemPayload {
+  workItem: WorkItem
+  clientMutationId: String
 }
 
 enum SortableAnswerAttributes {
@@ -1778,6 +1819,7 @@ enum SortableWorkItemAttributes {
   IS_ARCHIVED
   IS_PUBLISHED
   NAME
+  DEADLINE
   STATUS
   SLUG
 }
@@ -1829,6 +1871,7 @@ enum Status {
   READY
   COMPLETED
   CANCELED
+  SKIPPED
 }
 
 type StringAnswer implements Answer, Node {
@@ -2090,12 +2133,14 @@ enum WorkItemStatus {
   READY
   COMPLETED
   CANCELED
+  SKIPPED
 }
 
 enum WorkItemStatusArgument {
   READY
   COMPLETED
   CANCELED
+  SKIPPED
 }
 
 type Workflow implements Node {

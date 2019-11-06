@@ -4,14 +4,11 @@ from logging import getLogger
 from django_filters.constants import EMPTY_VALUES
 from rest_framework import exceptions
 
-from caluma.data_source.data_source_handlers import (
-    get_data_source_data,
-    get_data_sources,
-)
+from caluma.data_source.data_source_handlers import get_data_sources
 
 from . import jexl
 from .format_validators import get_format_validators
-from .models import Answer, Question
+from .models import Answer, DynamicOption, Question
 
 log = getLogger()
 
@@ -23,7 +20,8 @@ class CustomValidationError(exceptions.ValidationError):
     query can show more useful information.
     """
 
-    def __init__(self, detail, code=None, slugs=[]):
+    def __init__(self, detail, code=None, slugs=None):
+        slugs = slugs if slugs else []
         super().__init__(detail, code)
         self.slugs = slugs
 
@@ -98,84 +96,53 @@ class AnswerValidator:
             )
 
     def _validate_question_dynamic_choice(
-        self, question, value, info, document, **kwargs
+        self, question, value, document, info, **kwargs
     ):
-        data_source = get_data_sources(dic=True)[question.data_source]
-        if not data_source.validate:
-            if not isinstance(value, str):
-                raise CustomValidationError(
-                    f'Invalid value: "{value}". Must be of type str',
-                    slugs=[question.slug],
-                )
-            return
-
-        historical_answers = Answer.history.filter(
-            question=question, document=document, value=value
-        ).exclude(history_type="-")
-
-        answer = document.answers.filter(question=question, value=value).first()
-        if answer:
-            historical_answers = historical_answers.exclude(id=answer.pk)
-
-        if historical_answers:
-            return
-
-        data = get_data_source_data(info, question.data_source)
-        options = [d.slug for d in data]
-
-        if not isinstance(value, str) or value not in options:
+        if not isinstance(value, str):
             raise CustomValidationError(
-                f'Invalid value "{value}". '
-                f"Must be of type str and one of the options \"{', '.join(options)}\"",
-                slugs=[question.slug],
+                f'Invalid value "{value}". Must be of type str.', slugs=[question.slug]
+            )
+        self._validate_dynamic_option(question, document, value, info)
+
+    def _validate_dynamic_option(self, question, document, option, info):
+        data_source = get_data_sources(dic=True)[question.data_source]
+        data_source_object = data_source()
+
+        valid_label = data_source_object.validate_answer_value(
+            option, document, question, info
+        )
+        if valid_label is False:
+            raise CustomValidationError(
+                f'Invalid value "{option}". Not a valid option.', slugs=[question.slug]
             )
 
+        DynamicOption.objects.get_or_create(
+            document=document,
+            question=question,
+            slug=option,
+            label=valid_label,
+            created_by_user=info.context.user.username,
+            created_by_group=info.context.user.group,
+        )
+
     def _validate_question_dynamic_multiple_choice(
-        self, question, value, info, document, **kwargs
+        self, question, value, document, info, **kwargs
     ):
         if not isinstance(value, list):
             raise CustomValidationError(
                 f'Invalid value: "{value}". Must be of type list', slugs=[question.slug]
             )
 
-        data_source = get_data_sources(dic=True)[question.data_source]
         for v in value:
             if not isinstance(v, str):
                 raise CustomValidationError(
                     f'Invalid value: "{v}". Must be of type string',
                     slugs=[question.slug],
                 )
-
-        if not data_source.validate:
-            return
-
-        exist = True
-        answer = document.answers.filter(question=question, value=value).first()
-        for v in value:
-            historical_answers = Answer.history.filter(
-                question=question, document=document, value__contains=v
-            ).exclude(history_type="-")
-
-            if answer:
-                historical_answers = historical_answers.exclude(id=answer.pk)
-
-            if not historical_answers:
-                exist = False
-
-        if exist:
-            return
-
-        data = get_data_source_data(info, question.data_source)
-        options = [d.slug for d in data]
-        invalid_options = set(value) - set(options)
-        if invalid_options:
-            raise CustomValidationError(
-                f'Invalid options "{invalid_options}". '
-                f"Should be one of the options \"[{', '.join(options)}]\"",
-                slugs=[question.slug],
-            )
+            self._validate_dynamic_option(question, document, v, info)
 
     def _validate_question_table(self, question, value, document, info, **kwargs):
+
         for _document in value:
             DocumentValidator().validate(_document, info=info)
 
@@ -204,11 +171,9 @@ class AnswerValidator:
 class DocumentValidator:
     def validate(self, document, info, **kwargs):
         answers = self.get_document_answers(document)
-        self.validate_required(document, answers)
+        visible_questions = self._validate_required(document, document.form, answers)
 
-        # TODO: can we iterate over the entries in answer_tree here
-        # so the loop doesn't hit the DB?
-        for answer in document.answers.all():
+        for answer in document.answers.filter(question_id__in=visible_questions):
             validator = AnswerValidator()
             validator.validate(
                 document=document,
@@ -284,37 +249,52 @@ class DocumentValidator:
         else:  # pragma: no cover
             raise Exception(f"unhandled question type mapping {answer.question.type}")
 
-    def validate_required(self, document, answers):
+    def _validate_required(self, document, form, answers):
+        """Validate the 'requiredness' of the given answers.
+
+        Raise exceptions if a required question is not answered.
+
+        Since we're iterating and evaluating `is_hidden` as well for this
+        purpose, we help our call site by returning a list of *non-hidden*
+        question slugs.
+        """
         required_but_empty = []
-        for question in document.form.all_questions().values(
-            "slug", "is_required", "is_hidden"
-        ):
+        visible_questions = []
+        for question in form.questions.all():
             # TODO: can we iterate over questions of answers via answers?
             try:
                 expr = "is_hidden"
                 is_hidden = jexl.QuestionJexl(answers, document.form.slug).evaluate(
-                    question["is_hidden"]
+                    question.is_hidden
                 )
 
                 if not is_hidden:
+                    visible_questions.append(question.slug)
                     expr = "is_required"
                     is_required = jexl.QuestionJexl(
                         answers, document.form.slug
-                    ).evaluate(question["is_required"])
+                    ).evaluate(question.is_required)
 
-                    if is_required and answers.get(question["slug"]) in EMPTY_VALUES:
-                        required_but_empty.append(question["slug"])
+                    if is_required and answers.get(question.slug) in EMPTY_VALUES:
+                        required_but_empty.append(question.slug)
 
-            except jexl.QuestionMissing:
+                    if question.type == Question.TYPE_FORM:
+                        visible_questions.extend(
+                            self._validate_required(
+                                document, question.sub_form, answers
+                            )
+                        )
+
+            except (jexl.QuestionMissing, exceptions.ValidationError):
                 raise
             except Exception as exc:
-                expr_jexl = question.get(expr)
+                expr_jexl = getattr(question, expr)
                 log.error(
-                    f"Error while evaluating {expr} expression on question {question['slug']}: "
+                    f"Error while evaluating {expr} expression on question {question.slug}: "
                     f"{expr_jexl}: {str(exc)}"
                 )
                 raise RuntimeError(
-                    f"Error while evaluating '{expr}' expression on question {question['slug']}: "
+                    f"Error while evaluating '{expr}' expression on question {question.slug}: "
                     f"{expr_jexl}. The system log contains more information"
                 )
 
@@ -323,6 +303,8 @@ class DocumentValidator:
                 f"Questions {','.join(required_but_empty)} are required but not provided.",
                 slugs=required_but_empty,
             )
+
+        return visible_questions
 
 
 class QuestionValidator:
