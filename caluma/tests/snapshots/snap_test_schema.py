@@ -754,7 +754,7 @@ scalar GenericScalar
 scalar GroupJexl
 
 input HasAnswerFilterType {
-  question: String!
+  question: ID!
   value: GenericScalar!
   lookup: AnswerLookupMode
   hierarchy: AnswerHierarchyMode
@@ -1700,7 +1700,7 @@ type SaveWorkflowPayload {
 }
 
 input SearchAnswersFilterType {
-  questions: [String]
+  questions: [ID]
   value: GenericScalar!
   lookup: SearchLookupMode
 }

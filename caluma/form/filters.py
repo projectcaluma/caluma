@@ -123,7 +123,7 @@ class AnswerHierarchyMode(Enum):
 class HasAnswerFilterType(InputObjectType):
     """Lookup type to search document structures."""
 
-    question = graphene.String(required=True)
+    question = graphene.ID(required=True)
     value = graphene.types.generic.GenericScalar(required=True)
     lookup = AnswerLookupMode()
     hierarchy = AnswerHierarchyMode()
@@ -262,7 +262,7 @@ class SearchLookupMode(Enum):
 class SearchAnswersFilterType(InputObjectType):
     """Lookup type to search in answers."""
 
-    questions = List(graphene.String)
+    questions = List(graphene.ID)
     value = graphene.types.generic.GenericScalar(required=True)
     lookup = SearchLookupMode(required=False)
 
