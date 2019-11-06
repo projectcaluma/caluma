@@ -105,6 +105,9 @@ class AuthenticationGraphQLView(GraphQLView):
                         introspect_method,
                         timeout=settings.OIDC_BEARER_TOKEN_REVALIDATION_TIME,
                     )
+                    if "client_id" not in introspection:
+                        response = HttpResponse(status=401)
+                        raise HttpError(response)
                     return models.OIDCClient(token, introspection)
                 else:
                     raise e

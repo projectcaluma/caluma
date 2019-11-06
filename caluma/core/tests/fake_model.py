@@ -5,7 +5,9 @@ from django.db import connection, migrations, models
 from django.db.migrations.executor import MigrationExecutor
 
 
-def define_fake_model(fields={}, model_base=models.Model, options={}):
+def define_fake_model(fields=None, model_base=models.Model, options=None):
+    fields = fields if fields else {}
+    options = options if options else {}
     name = str(uuid.uuid4()).replace("-", "")[:8]
 
     meta_options = {"app_label": "core"}
@@ -23,7 +25,9 @@ def define_fake_model(fields={}, model_base=models.Model, options={}):
     return model
 
 
-def get_fake_model(fields={}, model_base=models.Model, options={}):
+def get_fake_model(fields=None, model_base=models.Model, options=None):
+    fields = fields if fields else {}
+    options = options if options else {}
     """Create fake model to use during unit tests."""
 
     model = define_fake_model(fields, model_base, options)

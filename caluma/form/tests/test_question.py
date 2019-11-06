@@ -1,7 +1,5 @@
 import pytest
 
-from caluma.data_source.tests.data_sources import MyDataSource
-
 from ...core.tests import (
     extract_global_id_input_fields,
     extract_serializer_input_fields,
@@ -678,66 +676,36 @@ def test_save_static_question(db, snapshot, question, schema_executor):
     snapshot.assert_match(result.data)
 
 
-@pytest.mark.parametrize(
-    "question__type,question__data_source,answer__value",
-    [
-        (models.Question.TYPE_DYNAMIC_CHOICE, "MyDataSource", "answer_value"),
-        (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, "MyDataSource", ["foo", "bar"]),
-    ],
-)
-def test_question_with_answer_value(
-    schema_executor,
+def test_all_questions_slug_filter(
     db,
-    question,
-    answer,
-    form,
+    schema_executor,
+    question_option_factory,
+    question_factory,
+    form_factory,
     form_question_factory,
-    question_option,
-    data_source_settings,
-    mocker,
+    option_factory,
 ):
-    form_question_factory.create(form=form)
-
     query = """
-        query DynamicQuestionsWithAnswerQuery($search: String, $forms: [ID], $documentId: ID) {
-          allQuestions(isArchived: false, search: $search, excludeForms: $forms) {
+        query FilteredQuestions {
+          allQuestions {
             edges {
               node {
-                ... on DynamicMultipleChoiceQuestion {
-                  options (documentId: $documentId) {
-                    edges {
-                      node {
-                        slug
-                      }
-                    }
-                  }
-                }
-                ... on DynamicChoiceQuestion {
-                  options (documentId: $documentId) {
-                    edges {
-                      node {
-                        slug
-                      }
-                    }
-                  }
-                }
+                slug
               }
             }
           }
         }
     """
+    questions = question_factory.create_batch(4)
 
-    get_data_mock = mocker.patch.object(MyDataSource, "get_data")
-    get_data_mock.return_value = ["test"]
+    forms = form_factory.create_batch(2)
 
-    result = schema_executor(
-        query,
-        variables={
-            "search": question.label,
-            "forms": [extract_global_id_input_fields(form)["id"]],
-            "documentId": answer.document.pk,
-        },
-    )
+    for question in questions:
+        for form in forms:
+            question.forms.through.objects.create(form=form, question=question)
+
+    num_questions = models.Question.objects.all().count()
+    result = schema_executor(query)
 
     assert not result.errors
-    assert get_data_mock.mock_calls[0][1][1] == answer.value
+    assert len(result.data["allQuestions"]["edges"]) == num_questions

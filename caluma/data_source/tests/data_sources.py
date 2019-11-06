@@ -7,10 +7,9 @@ from caluma.data_source.utils import data_source_cache
 class MyDataSource(BaseDataSource):
     info = {"en": "Nice test data source", "de": "Schöne Datenquelle"}
     default = [1, 2, 3]
-    validate = True
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info, answer_value=None):
+    def get_data(self, info):
         return [
             1,
             5.5,
@@ -24,20 +23,21 @@ class MyDataSource(BaseDataSource):
         ]
 
     @data_source_cache(timeout=60)
-    def get_data_test_string(self, info, answer_value=None):
+    def get_data_test_string(self, info):
         return "test string"
 
     @data_source_cache(timeout=60)
-    def get_data_uuid(self, info, answer_value=None):
+    def get_data_uuid(self, info):
         return str(uuid4())
 
     @data_source_cache(timeout=1)
-    def get_data_expire(self, info, answer_value=None):
+    def get_data_expire(self, info):
         return str(uuid4())
 
 
 class MyOtherDataSource(MyDataSource):
-    validate = False
+    def validate_answer_value(self, value, document, question, info):
+        return "Test 123"
 
 
 class MyFaultyDataSource(BaseDataSource):
@@ -45,7 +45,7 @@ class MyFaultyDataSource(BaseDataSource):
     default = None
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info, answer_value=None):
+    def get_data(self, info):
         return "just a string"
 
 
@@ -54,7 +54,7 @@ class MyOtherFaultyDataSource(BaseDataSource):
     default = None
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info, answer_value=None):
+    def get_data(self, info):
         return [["just", "some", "strings"]]
 
 
@@ -63,7 +63,7 @@ class MyBrokenDataSource(BaseDataSource):
     default = [1, 2, 3]
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info, answer_value=None):
+    def get_data(self, info):
         raise Exception()
 
 
@@ -72,5 +72,5 @@ class MyOtherBrokenDataSource(BaseDataSource):
     default = None
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info, answer_value=None):
+    def get_data(self, info):
         raise Exception()

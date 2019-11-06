@@ -84,8 +84,8 @@ class ExtractTransformSubjectAnalyzer(ValidatingAnalyzer):
     If no transforms are given all subjects of all transforms will be extracted.
     """
 
-    def __init__(self, config, transforms=[]):
-        self.transforms = transforms
+    def __init__(self, config, transforms=None):
+        self.transforms = transforms if transforms else []
         super().__init__(config)
 
     def visit_Transform(self, transform):

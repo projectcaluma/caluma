@@ -263,6 +263,12 @@ class CompleteWorkItem(Mutation):
         model_operations = ["update"]
 
 
+class SkipWorkItem(Mutation):
+    class Meta:
+        serializer_class = serializers.SkipWorkItemSerializer
+        model_operations = ["update"]
+
+
 class SaveWorkItem(Mutation):
     class Meta:
         serializer_class = serializers.SaveWorkItemSerializer
@@ -292,6 +298,7 @@ class Mutation(object):
     save_case = SaveCase().Field()
     cancel_case = CancelCase().Field()
     complete_work_item = CompleteWorkItem().Field()
+    skip_work_item = SkipWorkItem().Field()
     save_work_item = SaveWorkItem().Field()
     create_work_item = CreateWorkItem().Field()
 

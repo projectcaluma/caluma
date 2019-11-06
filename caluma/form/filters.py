@@ -408,3 +408,12 @@ class AnswerOrderSet(FilterSet):
     class Meta:
         model = models.Answer
         fields = ("meta",)
+
+
+class DynamicOptionFilterSet(FilterSet):
+    question = GlobalIDFilter()
+    document = GlobalIDFilter()
+
+    class Meta:
+        model = models.DynamicOption
+        fields = ("question", "document")

@@ -1,5 +1,7 @@
 import pytest
 
+from caluma.form.models import Question
+
 from ..relay import extract_global_id
 
 
@@ -70,3 +72,49 @@ def test_inversible_with_vars(db, schema_executor, document_factory, question):
         str(doc.id)
         for doc in sorted([doc_c, doc_b, doc_a], key=lambda doc: doc.form.slug)
     ]
+
+
+@pytest.mark.parametrize("direction", ["ASC", "DESC"])
+@pytest.mark.parametrize("question__type", [Question.TYPE_TEXT])
+def test_order_by_case_document_answer(
+    db, schema_executor, work_item_factory, direction, question
+):
+
+    w1, w2 = work_item_factory.create_batch(2)
+
+    w1.case.document.answers.create(question=question, value="aa")
+    w2.case.document.answers.create(question=question, value="bb")
+
+    assert w1.case.id != w2.case.id
+    assert w1.case.document.id != w2.case.document.id
+
+    query = """
+        query workitems {
+          allWorkItems(order: [{caseDocumentAnswer: "%s", direction: %s}]) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+    """ % (
+        question.slug,
+        direction,
+    )
+
+    result = schema_executor(query)
+
+    assert not result.errors
+    assert result.data["allWorkItems"]["edges"] is not None
+    assert len(result.data["allWorkItems"]["edges"]) == 2
+
+    work_items = [
+        extract_global_id(wi["node"]["id"])
+        for wi in result.data["allWorkItems"]["edges"]
+    ]
+
+    if direction == "ASC":
+        assert work_items == [str(w1.id), str(w2.id)]
+    else:
+        assert work_items == [str(w2.id), str(w1.id)]

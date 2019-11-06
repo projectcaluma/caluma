@@ -172,7 +172,7 @@ class CustomDataSource(BaseDataSource):
     info = 'User choices from "someapi"'
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info, answer_value=None):
+    def get_data(self, info):
         response = requests.get(
             f"https://someapi/?user={info.context.user.username}"
         )
@@ -186,8 +186,6 @@ This class needs also to be added to the `DATA_SOURCE_CLASSES` environment varia
 * `info`: Descriptive text for the data source (can also be a multilingual dict)
 * `default`: The default value to be returned if execution of `get_data()` fails. If
              this is `None`, the Exception won't be handled. Defaults to None.
-* `validate`: boolean that indicates if answers should be validated against the
-              current response from `get_data()`. Defaults to `True`.
 
 ### `get_data`-method
 Must return an iterable. This iterable can contain strings, ints, floats
@@ -196,6 +194,12 @@ will be used for the option slug, the second one for it's label. If only one val
 this value will also be used as label.
 
 For the label, it's possible to use a dict with translated values.
+
+### `validate_answer_value`-method
+
+The default `validate_answer_value()`-method checks first if the value is contained in the output of `self.get_data()`. If it is, it returns the label. Else it makes a DB lookup to see if there is a `DynamicOption` with the same `document`, `question` and `slug` (that's the value). If there is at least one, it returns the label of the first one. Else it returns `False`.
+
+If you override this method, make sure to return the label if valid, else `False`.
 
 ### `data_source_cache` decorator
 This decorator allows for caching the data based on the DataSource name.
@@ -215,37 +219,3 @@ conflicts.
 
 [['my-option'], ...]
 ```
-
-### Answer value
-If you would like to implement a dynamic data source in your project, there is a possibility
-to show old answer values in the question. For this case there is the answer_value parameter
-in the get_data method. If there is an answer id, we can access it inside the get_data
-method.
-
-as example the data_source could look like this:
-
-```python
-from caluma.data_source.data_sources import BaseDataSource
-from caluma.data_source.utils import data_source_cache
-from caluma.form.models import Document, Answer
-import os
-
-
-class CustomDataSource(BaseDataSource):
-    info = "List of documents for referencing in forms"
-
-    @data_source_cache(timeout=3600)
-    def get_data(self, info, answer_value=None):
-        slug_list = os.environ['DOCUMENT_SLUGS'].split(", ")
-        number_of_documents = int(os.environ['NUMBER_OF_DOCUMENTS'])
-
-        documents = Document.objects.filter(form_id__in=slug_list).order_by('-modified_at')[:number_of_documents]
-
-        ret_val = [[document.id, document.form.name] for document in documents]
-        if answer_value:
-            answer = Answer.objects.get(id=answer_value)
-            doc = Document.objects.get(id=answer.value)
-            ret_val.insert(0, [answer.value, doc.form.name])
-        return ret_val
-```
-
