@@ -1,7 +1,9 @@
+from functools import partial
+
 from pyjexl.analysis import ValidatingAnalyzer
 from pyjexl.evaluator import Context
 
-from ..core.jexl import JEXL
+from ..core.jexl import JEXL, ExtractTransformSubjectAnalyzer
 
 
 class QuestionMissing(Exception):
@@ -40,3 +42,47 @@ class QuestionJexl(JEXL):
 
     def validate(self, expression, **kwargs):
         return super().validate(expression, QuestionValidatingAnalyzer)
+
+    def extract_referenced_questions(self, expr):
+        transforms = ["answer", "mapby"]
+        yield from self.analyze(
+            expr, partial(ExtractTransformSubjectAnalyzer, transforms=transforms)
+        )
+
+    def is_hidden(self, question, all_questions):
+        """Return True if the given question is hidden.
+
+        This checks whether the dependency questions are hidden, then
+        evaluates the question's is_hidden expression itself.
+        """
+        # Check visibility of dependencies before actually evaluating the `is_hidden`
+        # expression. If all dependencies are hidden,
+        # there is no way to evaluate our own visibility, so we default to
+        # hidden state as well.
+        if not isinstance(all_questions, dict):
+            all_questions = {q.slug: q for q in all_questions}
+
+        deps = list(self.extract_referenced_questions(question.is_hidden))
+
+        # all() returns True for the empty set, thus we need to
+        # check that we have some deps at all first
+        all_deps_hidden = bool(deps) and all(
+            self.is_hidden(all_questions[dep], all_questions) for dep in deps
+        )
+
+        return all_deps_hidden or self.evaluate(question.is_hidden)
+
+    def is_required(self, question, all_questions):
+        if not isinstance(all_questions, dict):
+            all_questions = {q.slug: q for q in all_questions}
+
+        deps = list(self.extract_referenced_questions(question.is_required))
+
+        if bool(deps) and all(
+            self.is_hidden(all_questions[dep], all_questions) for dep in deps
+        ):
+            # all dependent questions are hidden. cannot evaluate,
+            # so assume requiredness to be False
+            return False
+
+        return self.evaluate(question.is_required)

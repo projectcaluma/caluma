@@ -260,21 +260,20 @@ class DocumentValidator:
         """
         required_but_empty = []
         visible_questions = []
-        for question in form.questions.all():
-            # TODO: can we iterate over questions of answers via answers?
+
+        all_questions = list(form.questions.all())
+
+        for question in all_questions:
             try:
                 expr = "is_hidden"
-                is_hidden = jexl.QuestionJexl(answers, document.form.slug).evaluate(
-                    question.is_hidden
-                )
+                q_jexl = jexl.QuestionJexl(answers, document.form.slug)
+                is_hidden = q_jexl.is_hidden(question, all_questions)
 
                 if not is_hidden:
                     visible_questions.append(question.slug)
                     expr = "is_required"
-                    is_required = jexl.QuestionJexl(
-                        answers, document.form.slug
-                    ).evaluate(question.is_required)
 
+                    is_required = q_jexl.is_required(question, all_questions)
                     if is_required and answers.get(question.slug) in EMPTY_VALUES:
                         required_but_empty.append(question.slug)
 

@@ -436,3 +436,45 @@ def test_validate_hidden_subform(
     else:
         with pytest.raises(ValidationError):
             DocumentValidator().validate(document, info)
+
+
+@pytest.mark.parametrize("answer_value", ["foo", "bar"])
+def test_dependent_question_is_hidden(
+    db,
+    question_factory,
+    form_factory,
+    document_factory,
+    form_question_factory,
+    answer_factory,
+    answer_value,
+    info,
+):
+    form = form_factory()
+    q1 = question_factory(is_hidden="false", type=Question.TYPE_TEXT)
+    q2 = question_factory(
+        is_hidden=f"'{q1.slug}'|answer=='foo'",
+        type=Question.TYPE_TEXT,
+        is_required="true",
+    )
+    q3 = question_factory(
+        is_hidden=f"'{q2.slug}'|answer=='bar'",
+        is_required="true",
+        type=Question.TYPE_TEXT,
+    )
+    form_question_factory(form=form, question=q1)
+    form_question_factory(form=form, question=q2)
+    form_question_factory(form=form, question=q3)
+
+    document = document_factory(form=form)
+    answer_factory(question=q1, document=document, value=answer_value)
+    answer_factory(question=q2, document=document, value="foo")
+
+    if answer_value == "foo":
+        # Answer to q1's value is "foo", so q2 is hidden. This means
+        # that q3 should be hidden and not required as well
+        assert DocumentValidator().validate(document, info) is None
+    else:
+        # a1's value is "bar", so q2 is visible. This means
+        # that q3 should also be visible and required
+        with pytest.raises(ValidationError):
+            DocumentValidator().validate(document, info)
