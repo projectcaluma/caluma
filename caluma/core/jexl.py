@@ -65,10 +65,6 @@ class JEXL(pyjexl.JEXL):
         )
         return parsed_expression
 
-    def analyze(self, expression, analyzer_class):
-        # some common shortcuts, no need to invoke JEXL engine for real
-        return super().analyze(expression, analyzer_class)
-
     def validate(self, expression, ValidatingAnalyzerClass=ValidatingAnalyzer):
         try:
             for res in self.analyze(expression, ValidatingAnalyzerClass):
