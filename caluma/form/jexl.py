@@ -19,11 +19,19 @@ class QuestionValidatingAnalyzer(ValidatingAnalyzer):
 
 
 class QuestionJexl(JEXL):
-    def __init__(self, answer_by_question=None, form=None, **kwargs):
-        answer_by_question = answer_by_question if answer_by_question else {}
+    def __init__(self, validation_context=None, **kwargs):
+        answer_by_question = validation_context["answers"] if validation_context else {}
+
         super().__init__(**kwargs)
 
-        self.context = Context({"form": form})
+        context_data = None
+        if validation_context:
+            context_data = {**validation_context}
+            form = validation_context.get("form")
+            if form:
+                context_data["form"] = form.slug
+
+        self.context = Context(context_data)
         self.answer_by_question = answer_by_question
 
         self.add_transform("answer", self.answer_transform)
@@ -35,7 +43,7 @@ class QuestionJexl(JEXL):
     def answer_transform(self, question):
         try:
             return self.answer_by_question[question]
-        except KeyError:
+        except KeyError:  # pragma: no cover
             raise QuestionMissing(
                 f"Question `{question}` could not be found in form {self.context['form']}"
             )
@@ -49,7 +57,17 @@ class QuestionJexl(JEXL):
             expr, partial(ExtractTransformSubjectAnalyzer, transforms=transforms)
         )
 
-    def is_hidden(self, question, all_questions):
+    def _question(self, slug):
+        question = self.context["questions"].get(
+            slug, self.context["all_questions"].get(slug)
+        )
+        if not question:
+            raise QuestionMissing(
+                f"Question `{slug}` could not be found in form {self.context['form']}"
+            )
+        return question
+
+    def is_hidden(self, question):
         """Return True if the given question is hidden.
 
         This checks whether the dependency questions are hidden, then
@@ -59,28 +77,21 @@ class QuestionJexl(JEXL):
         # expression. If all dependencies are hidden,
         # there is no way to evaluate our own visibility, so we default to
         # hidden state as well.
-        if not isinstance(all_questions, dict):
-            all_questions = {q.slug: q for q in all_questions}
 
         deps = list(self.extract_referenced_questions(question.is_hidden))
 
         # all() returns True for the empty set, thus we need to
         # check that we have some deps at all first
         all_deps_hidden = bool(deps) and all(
-            self.is_hidden(all_questions[dep], all_questions) for dep in deps
+            self.is_hidden(self._question(dep)) for dep in deps
         )
 
         return all_deps_hidden or self.evaluate(question.is_hidden)
 
-    def is_required(self, question, all_questions):
-        if not isinstance(all_questions, dict):
-            all_questions = {q.slug: q for q in all_questions}
-
+    def is_required(self, question):
         deps = list(self.extract_referenced_questions(question.is_required))
 
-        if bool(deps) and all(
-            self.is_hidden(all_questions[dep], all_questions) for dep in deps
-        ):
+        if bool(deps) and all(self.is_hidden(self._question(dep)) for dep in deps):
             # all dependent questions are hidden. cannot evaluate,
             # so assume requiredness to be False
             return False

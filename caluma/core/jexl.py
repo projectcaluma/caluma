@@ -86,5 +86,7 @@ class ExtractTransformSubjectAnalyzer(ValidatingAnalyzer):
 
     def visit_Transform(self, transform):
         if not self.transforms or transform.name in self.transforms:
-            yield transform.subject.value
+            # can only extract subject's value if subject is not a transform itself
+            if not isinstance(transform.subject, type(transform)):
+                yield transform.subject.value
         yield from self.generic_visit(transform)
