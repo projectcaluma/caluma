@@ -184,14 +184,10 @@ def test_validate_nested_form(
         ("true", "false", True),
         ("'other_q_1'|answer == 'something'", "false", False),
         ("false", "false", False),
-        ("'foo' in 'main_table_1'|answer|mapby('sub_1_question_a')", "false", True),
-        (
-            "'nothere' in 'main_table_1'|answer|mapby('sub_1_question_a')",
-            "false",
-            False,
-        ),
-        ("false", "'foo' == 'sub_1_question_a'|answer", True),
-        ("false", "'bar' == 'sub_1_question_a'|answer", False),
+        ("'foo' in 'main_table_1'|answer|mapby('sub_question_a')", "false", True),
+        ("'nothere' in 'main_table_1'|answer|mapby('sub_question_a')", "false", False),
+        ("false", "'foo' == 'sub_question_a'|answer", True),
+        ("false", "'bar' == 'sub_question_a'|answer", False),
         ("false", "'something' == 'other_q_1'|answer", True),
         ("false", "'fail' == 'no-question-slug'|answer", True),
     ],
@@ -208,6 +204,14 @@ def test_validate_table(
     answer_factory,
     info,
 ):
+
+    # F: main-form
+    #     Q: main_table_1: table
+    #        ROW_FORM
+    #           Q: sub_question_a
+    #           Q: sub_question_b
+    #     Q: other_q_1
+    #     Q: other_q_2
     main_table_question_1 = form_question_factory(
         form__slug="main-form",
         question__type=Question.TYPE_TABLE,
@@ -215,30 +219,20 @@ def test_validate_table(
         question__is_required="true",
     )
 
-    main_table_question_1.question.sub_form = form_factory()
+    main_table_question_1.question.row_form = form_factory()
+    main_table_question_1.question.save()
 
     sub_question_a = form_question_factory(
-        form=main_table_question_1.question.sub_form,
+        form=main_table_question_1.question.row_form,
         question__type=Question.TYPE_TEXT,
-        question__slug="sub_1_question_a",
+        question__slug="sub_question_a",
     )
     sub_question_b = form_question_factory(
-        form=main_table_question_1.question.sub_form,
+        form=main_table_question_1.question.row_form,
         question__type=Question.TYPE_TEXT,
         question__is_required=required_jexl_sub,
-        question__slug="sub_2_question_b",
+        question__slug="sub_qustion_b",
     )
-
-    main_document = document_factory(form=main_table_question_1.form)
-    table_answer = answer_factory(
-        document=main_document, question=main_table_question_1.question, value=None
-    )
-    row_document_1 = document_factory(form=main_table_question_1.question.sub_form)
-    answer_factory(
-        question=sub_question_a.question, document=row_document_1, value="foo"
-    )
-    answer_document_factory(document=row_document_1, answer=table_answer)
-
     other_q_1 = form_question_factory(
         form=main_table_question_1.form,
         question__type=Question.TYPE_TEXT,
@@ -252,6 +246,21 @@ def test_validate_table(
         question__slug="other_q_2",
         question__is_required=required_jexl_main,
     )
+
+    main_document = document_factory(form=main_table_question_1.form)
+    table_answer = answer_factory(
+        document=main_document, question=main_table_question_1.question, value=None
+    )
+    # MD
+    #   - TA
+    #       - RD1
+    #           sqa:"foo"
+
+    row_document_1 = document_factory(form=main_table_question_1.question.row_form)
+    answer_factory(
+        question=sub_question_a.question, document=row_document_1, value="foo"
+    )
+    answer_document_factory(document=row_document_1, answer=table_answer)
 
     answer_factory(
         question=other_q_1.question, document=row_document_1, value="something"
@@ -434,5 +443,47 @@ def test_validate_hidden_subform(
     if hide_formquestion:
         assert DocumentValidator().validate(document, info) is None
     else:
+        with pytest.raises(ValidationError):
+            DocumentValidator().validate(document, info)
+
+
+@pytest.mark.parametrize("answer_value", ["foo", "bar"])
+def test_dependent_question_is_hidden(
+    db,
+    question_factory,
+    form_factory,
+    document_factory,
+    form_question_factory,
+    answer_factory,
+    answer_value,
+    info,
+):
+    form = form_factory()
+    q1 = question_factory(is_hidden="false", type=Question.TYPE_TEXT)
+    q2 = question_factory(
+        is_hidden=f"'{q1.slug}'|answer=='foo'",
+        type=Question.TYPE_TEXT,
+        is_required="true",
+    )
+    q3 = question_factory(
+        is_hidden=f"'{q2.slug}'|answer=='bar'",
+        is_required="true",
+        type=Question.TYPE_TEXT,
+    )
+    form_question_factory(form=form, question=q1)
+    form_question_factory(form=form, question=q2)
+    form_question_factory(form=form, question=q3)
+
+    document = document_factory(form=form)
+    answer_factory(question=q1, document=document, value=answer_value)
+    answer_factory(question=q2, document=document, value="foo")
+
+    if answer_value == "foo":
+        # Answer to q1's value is "foo", so q2 is hidden. This means
+        # that q3 should be hidden and not required as well
+        assert DocumentValidator().validate(document, info) is None
+    else:
+        # a1's value is "bar", so q2 is visible. This means
+        # that q3 should also be visible and required
         with pytest.raises(ValidationError):
             DocumentValidator().validate(document, info)
