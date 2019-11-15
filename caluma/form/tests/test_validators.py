@@ -313,8 +313,16 @@ def test_validate_data_source(
     [
         (Question.TYPE_MULTIPLE_CHOICE, None, []),
         (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, None, []),
+        (Question.TYPE_TEXT, None, None),
+        (Question.TYPE_TEXT, "", ""),
+        (Question.TYPE_INTEGER, None, None),
+        (Question.TYPE_FLOAT, None, None),
+        (Question.TYPE_DATE, None, None),
+        (Question.TYPE_FILE, None, None),
+        (Question.TYPE_TEXTAREA, None, None),
     ],
 )
+@pytest.mark.parametrize("answer__date,answer__file", [(None, None)])
 def test_validate_empty_answers(
     db,
     form_question,
@@ -382,6 +390,36 @@ def test_validate_required_integer_0(
     answer_factory(document=document, value=0, question=form_question.question)
 
     DocumentValidator().validate(document, info)
+
+
+@pytest.mark.parametrize(
+    "question__type,answer__value",
+    [
+        (Question.TYPE_MULTIPLE_CHOICE, None),
+        (Question.TYPE_MULTIPLE_CHOICE, []),
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, None),
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, []),
+        (Question.TYPE_TEXT, None),
+        (Question.TYPE_TEXT, ""),
+        (Question.TYPE_INTEGER, None),
+        (Question.TYPE_FLOAT, None),
+        (Question.TYPE_DATE, None),
+        (Question.TYPE_FILE, None),
+        (Question.TYPE_TEXTAREA, None),
+        (Question.TYPE_TABLE, None),
+        (Question.TYPE_TABLE, []),
+        (Question.TYPE_CHOICE, None),
+        (Question.TYPE_DYNAMIC_CHOICE, None),
+    ],
+)
+@pytest.mark.parametrize(
+    "answer__date,answer__file,question__is_required", [(None, None, "true")]
+)
+def test_validate_required_empty_answers(
+    db, info, form_question, document, answer, question
+):
+    with pytest.raises(ValidationError):
+        DocumentValidator().validate(document, info)
 
 
 @pytest.mark.parametrize("question__is_hidden", ["true", "false"])
