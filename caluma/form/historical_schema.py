@@ -189,14 +189,21 @@ class HistoricalTableAnswer(TableAnswer):
 
         answerdocuments.sort(key=lambda x: x.sort)
 
+        # Since python 3.6, `list(dict.fromkeys(somelist))` is the most performant way
+        # to remove duplicates from a list, while retaining it's order.
+        # In python 3.6 this is an implementation detail. From python 3.7 onwards it is
+        # a language feature.
+        # Luckily django model instances are hashable, so we're able to make use of
+        # this.
+
         documents = [
-            models.Document.history.filter(id=ad.document_id).filter(
-                history_date__lte=as_of
-            )[0]
-            for ad in answerdocuments
+            models.Document.history.filter(
+                id=ad.document_id, history_date__lte=as_of
+            ).latest("history_date")
+            for ad in list(dict.fromkeys(answerdocuments))
         ]
 
-        return documents
+        return list(dict.fromkeys(documents))
 
     class Meta:
         model = models.Answer.history.model
