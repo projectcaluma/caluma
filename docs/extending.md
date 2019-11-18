@@ -195,6 +195,11 @@ this value will also be used as label.
 
 For the label, it's possible to use a dict with translated values.
 
+Note: If the labels returned from`get_data()` depend on the current user's language,
+you need to return a `dict` with the language code as keys instead of translating the
+value yourself. Returning already translated values is not supported, as it would break
+caching and validation.
+
 ### `validate_answer_value`-method
 
 The default `validate_answer_value()`-method checks first if the value is contained in the output of `self.get_data()`. If it is, it returns the label. Else it makes a DB lookup to see if there is a `DynamicOption` with the same `document`, `question` and `slug` (that's the value). If there is at least one, it returns the label of the first one. Else it returns `False`.

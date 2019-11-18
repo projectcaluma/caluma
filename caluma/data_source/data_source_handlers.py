@@ -2,8 +2,7 @@ from collections import namedtuple
 
 from django.conf import settings
 from django.utils.module_loading import import_string
-
-from caluma.core.utils import translate_value
+from localized_fields.value import LocalizedValue
 
 DataSource = namedtuple("DataSource", ["name", "info"])
 
@@ -32,10 +31,8 @@ class Data:
             elif len(self.data) == 1:
                 return str(self.data[0]), str(self.data[0])
             elif isinstance(self.data[1], dict):
-                return (
-                    str(self.data[0]),
-                    str(translate_value(self.data[1]) or self.data[0]),
-                )
+                label = LocalizedValue(self.data[1])
+                return (str(self.data[0]), str(label.translate()))
             return str(self.data[0]), str(self.data[1])
 
         return str(self.data), str(self.data)
@@ -52,7 +49,12 @@ def get_data_sources(dic=False):
     if dic:
         return {ds.__name__: ds for ds in data_source_classes}
     return [
-        DataSource(name=ds.__name__, info=translate_value(ds.info))
+        DataSource(
+            name=ds.__name__,
+            info=LocalizedValue(ds.info).translate()
+            if isinstance(ds.info, dict)
+            else ds.info,
+        )
         for ds in data_source_classes
     ]
 
