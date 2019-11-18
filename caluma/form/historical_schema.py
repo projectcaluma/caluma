@@ -125,7 +125,7 @@ class HistoricalFile(ObjectType):
 class HistoricalFileAnswer(FileAnswer):
     value = graphene.Field(
         HistoricalFile,
-        required=True,
+        required=False,
         as_of=graphene.types.datetime.DateTime(required=True),
     )
 
@@ -175,7 +175,7 @@ class HistoricalDocument(FormDjangoObjectType):
 class HistoricalTableAnswer(TableAnswer):
     value = graphene.List(
         HistoricalDocument,
-        required=True,
+        required=False,
         as_of=graphene.types.datetime.DateTime(required=True),
     )
 

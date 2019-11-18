@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots["test_query_all_questions[multiple_choice-search_value0-matching-None] 1"] = {
@@ -4786,6 +4785,460 @@ snapshots["test_query_all_questions[choice-a-nomatch-INTERSECTS] 1"] = {
     """,
         "variables": {
             "hasAnswer": [{"lookup": "INTERSECTS", "question": "choice", "value": "a"}]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots[
+    "test_query_all_questions[multiple_choice-search_value0-matching-ISNULL] 1"
+] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {"lookup": "ISNULL", "question": "multiple_choice", "value": ["a", "b"]}
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots[
+    "test_query_all_questions[multiple_choice-search_value0-nomatch-ISNULL] 1"
+] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {"lookup": "ISNULL", "question": "multiple_choice", "value": ["a", "b"]}
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots["test_query_all_questions[integer-10-matching-ISNULL] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "ISNULL",
+                    "question": "integer",
+                    "value": 10,
+                }
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots["test_query_all_questions[integer-10-nomatch-ISNULL] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "ISNULL",
+                    "question": "integer",
+                    "value": 10,
+                }
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots["test_query_all_questions[text-foo-matching-ISNULL] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "ISNULL",
+                    "question": "text",
+                    "value": "foo",
+                }
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots["test_query_all_questions[text-foo-nomatch-ISNULL] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "ISNULL",
+                    "question": "text",
+                    "value": "foo",
+                }
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots["test_query_all_questions[textarea-foo-matching-ISNULL] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "FAMILY",
+                    "lookup": "ISNULL",
+                    "question": "textarea",
+                    "value": "foo",
+                }
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots["test_query_all_questions[textarea-foo-nomatch-ISNULL] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "FAMILY",
+                    "lookup": "ISNULL",
+                    "question": "textarea",
+                    "value": "foo",
+                }
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots["test_query_all_questions[float-11.5-matching-ISNULL] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "FAMILY",
+                    "lookup": "ISNULL",
+                    "question": "float",
+                    "value": 11.5,
+                }
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots["test_query_all_questions[float-11.5-nomatch-ISNULL] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "FAMILY",
+                    "lookup": "ISNULL",
+                    "question": "float",
+                    "value": 11.5,
+                }
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots[
+    "test_query_all_questions[datetime-2018-05-09T14:54:51.728786-matching-ISNULL] 1"
+] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "FAMILY",
+                    "lookup": "ISNULL",
+                    "question": "datetime",
+                    "value": "2018-05-09T14:54:51.728786",
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError('Question matching query does not exist.',)]",
+    },
+}
+
+snapshots[
+    "test_query_all_questions[datetime-2018-05-09T14:54:51.728786-nomatch-ISNULL] 1"
+] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "FAMILY",
+                    "lookup": "ISNULL",
+                    "question": "datetime",
+                    "value": "2018-05-09T14:54:51.728786",
+                }
+            ]
+        },
+    },
+    "response": {
+        "data": {"allDocuments": None},
+        "errors": "[GraphQLLocatedError('Question matching query does not exist.',)]",
+    },
+}
+
+snapshots["test_query_all_questions[date-2018-05-09-matching-ISNULL] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "ISNULL",
+                    "question": "date",
+                    "value": "2018-05-09",
+                }
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots["test_query_all_questions[date-2018-05-09-nomatch-ISNULL] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [
+                {
+                    "hierarchy": "DIRECT",
+                    "lookup": "ISNULL",
+                    "question": "date",
+                    "value": "2018-05-09",
+                }
+            ]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots["test_query_all_questions[choice-a-matching-ISNULL] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [{"lookup": "ISNULL", "question": "choice", "value": "a"}]
+        },
+    },
+    "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},
+}
+
+snapshots["test_query_all_questions[choice-a-nomatch-ISNULL] 1"] = {
+    "request": {
+        "query": """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(hasAnswer: $hasAnswer) {
+            edges {
+              node {
+                form {
+                  slug
+                }
+              }
+            }
+          }
+        }
+    """,
+        "variables": {
+            "hasAnswer": [{"lookup": "ISNULL", "question": "choice", "value": "a"}]
         },
     },
     "response": {"data": {"allDocuments": {"edges": []}}, "errors": "None"},

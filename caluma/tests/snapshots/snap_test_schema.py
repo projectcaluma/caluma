@@ -80,6 +80,7 @@ enum AnswerLookupMode {
   CONTAINS
   ICONTAINS
   INTERSECTS
+  ISNULL
   GTE
   GT
   LTE
@@ -358,7 +359,7 @@ type DateAnswer implements Answer, Node {
   createdByGroup: String
   id: ID!
   question: Question!
-  value: Date!
+  value: Date
   meta: GenericScalar!
   date: Date
 }
@@ -592,7 +593,7 @@ type FloatAnswer implements Answer, Node {
   createdByGroup: String
   id: ID!
   question: Question!
-  value: Float!
+  value: Float
   meta: GenericScalar!
 }
 
@@ -755,7 +756,7 @@ scalar GroupJexl
 
 input HasAnswerFilterType {
   question: ID!
-  value: GenericScalar!
+  value: GenericScalar
   lookup: AnswerLookupMode
   hierarchy: AnswerHierarchyMode
 }
@@ -790,7 +791,7 @@ type HistoricalDateAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: Date!
+  value: Date
   meta: GenericScalar!
   date: Date
   historyUserId: String
@@ -833,7 +834,7 @@ type HistoricalFileAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value(asOf: DateTime!): HistoricalFile!
+  value(asOf: DateTime!): HistoricalFile
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -850,7 +851,7 @@ type HistoricalFloatAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: Float!
+  value: Float
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -866,7 +867,7 @@ type HistoricalIntegerAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: Int!
+  value: Int
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -882,7 +883,7 @@ type HistoricalListAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: [String]!
+  value: [String]
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -898,7 +899,7 @@ type HistoricalStringAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: String!
+  value: String
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -914,7 +915,7 @@ type HistoricalTableAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value(asOf: DateTime!): [HistoricalDocument]!
+  value(asOf: DateTime!): [HistoricalDocument]
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -932,7 +933,7 @@ type IntegerAnswer implements Answer, Node {
   createdByGroup: String
   id: ID!
   question: Question!
-  value: Int!
+  value: Int
   meta: GenericScalar!
 }
 
@@ -982,7 +983,7 @@ type ListAnswer implements Answer, Node {
   createdByGroup: String
   id: ID!
   question: Question!
-  value: [String]!
+  value: [String]
   meta: GenericScalar!
 }
 
@@ -1330,7 +1331,7 @@ input SaveDocumentDateAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: Date!
+  value: Date
   clientMutationId: String
 }
 
@@ -1343,7 +1344,7 @@ input SaveDocumentFileAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: String!
+  value: String
   valueId: ID
   clientMutationId: String
 }
@@ -1357,7 +1358,7 @@ input SaveDocumentFloatAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: Float!
+  value: Float
   clientMutationId: String
 }
 
@@ -1377,7 +1378,7 @@ input SaveDocumentIntegerAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: Int!
+  value: Int
   clientMutationId: String
 }
 
@@ -1390,7 +1391,7 @@ input SaveDocumentListAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: [String]!
+  value: [String]
   clientMutationId: String
 }
 
@@ -1408,7 +1409,7 @@ input SaveDocumentStringAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: String!
+  value: String
   clientMutationId: String
 }
 
@@ -1421,7 +1422,7 @@ input SaveDocumentTableAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: [ID]!
+  value: [ID]
   clientMutationId: String
 }
 
@@ -1881,7 +1882,7 @@ type StringAnswer implements Answer, Node {
   createdByGroup: String
   id: ID!
   question: Question!
-  value: String!
+  value: String
   meta: GenericScalar!
 }
 
@@ -1892,7 +1893,7 @@ type TableAnswer implements Answer, Node {
   createdByGroup: String
   id: ID!
   question: Question!
-  value: [Document]!
+  value: [Document]
   meta: GenericScalar!
   document: Document!
 }

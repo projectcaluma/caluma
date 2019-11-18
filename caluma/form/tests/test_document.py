@@ -742,6 +742,45 @@ def test_save_document_answer(
         snapshot.assert_match(result.data)
 
 
+@pytest.mark.parametrize("delete_answer", [True, False])
+@pytest.mark.parametrize(
+    "question__type,question__is_required,answer__value",
+    [(Question.TYPE_TEXT, "false", None)],
+)
+def test_save_document_answer_empty(
+    db, snapshot, question, answer, schema_executor, delete_answer
+):
+    query = f"""
+        mutation saveDocumentStringAnswer($input: SaveDocumentStringAnswerInput!) {{
+          saveDocumentStringAnswer(input: $input) {{
+            answer {{
+              __typename
+              ... on StringAnswer {{
+                stringValue: value
+              }}
+            }}
+            clientMutationId
+          }}
+        }}
+    """
+
+    inp = {
+        "input": {
+            "document": to_global_id("StringAnswer", answer.document.pk),
+            "question": to_global_id("StringAnswer", answer.question.pk),
+        }
+    }
+
+    if delete_answer:
+        # delete answer to force create test instead of update
+        Answer.objects.filter(pk=answer.pk).delete()
+
+    result = schema_executor(query, variables=inp)
+
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
 @pytest.mark.parametrize("question__type", [Question.TYPE_TABLE])
 def test_save_document_table_answer_invalid_row_form(
     db, schema_executor, answer, document_factory

@@ -6,258 +6,6 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots[
-    "test_save_document_answer[integer-question__configuration0-None-question__format_validators0-1-None-SaveDocumentIntegerAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentIntegerAnswer": {
-        "answer": {"__typename": "IntegerAnswer", "integerValue": 1},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[integer-question__configuration0-None-question__format_validators0-1-None-SaveDocumentIntegerAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentIntegerAnswer": {
-        "answer": {"__typename": "IntegerAnswer", "integerValue": 1},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentFloatAnswer": {
-        "answer": {"__typename": "FloatAnswer", "floatValue": 2.1},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentFloatAnswer": {
-        "answer": {"__typename": "FloatAnswer", "floatValue": 2.1},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[text-question__configuration4-None-question__format_validators4-Test-None-SaveDocumentStringAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"__typename": "StringAnswer", "stringValue": "Test"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[text-question__configuration4-None-question__format_validators4-Test-None-SaveDocumentStringAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"__typename": "StringAnswer", "stringValue": "Test"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[date-question__configuration7-None-question__format_validators7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentDateAnswer": {
-        "answer": {"__typename": "DateAnswer", "dateValue": "2019-02-22"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[date-question__configuration7-None-question__format_validators7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentDateAnswer": {
-        "answer": {"__typename": "DateAnswer", "dateValue": "2019-02-22"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentFileAnswer": {
-        "answer": {
-            "__typename": "FileAnswer",
-            "fileValue": {
-                "name": "some-file.pdf",
-                "uploadUrl": "http://minio/upload-url",
-            },
-        },
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentFileAnswer": {
-        "answer": {
-            "__typename": "FileAnswer",
-            "fileValue": {
-                "name": "some-file.pdf",
-                "uploadUrl": "http://minio/upload-url",
-            },
-        },
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentFileAnswer": {
-        "answer": {
-            "__typename": "FileAnswer",
-            "fileValue": {
-                "name": "not-exist.pdf",
-                "uploadUrl": "http://minio/upload-url",
-            },
-        },
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentFileAnswer": {
-        "answer": {
-            "__typename": "FileAnswer",
-            "fileValue": {
-                "name": "not-exist.pdf",
-                "uploadUrl": "http://minio/upload-url",
-            },
-        },
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[table-question__configuration12-None-question__format_validators12-None-None-SaveDocumentTableAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentTableAnswer": {
-        "answer": {
-            "__typename": "TableAnswer",
-            "table_value": [
-                {"form": {"slug": "suggest-traditional"}},
-                {"form": {"slug": "suggest-traditional"}},
-            ],
-        },
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[table-question__configuration12-None-question__format_validators12-None-None-SaveDocumentTableAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentTableAnswer": {
-        "answer": {
-            "__typename": "TableAnswer",
-            "table_value": [
-                {"form": {"slug": "suggest-traditional"}},
-                {"form": {"slug": "suggest-traditional"}},
-            ],
-        },
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"__typename": "StringAnswer", "stringValue": "Test"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"__typename": "StringAnswer", "stringValue": "Test"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[multiple_choice-question__configuration15-None-question__format_validators15-answer__value15-None-SaveDocumentListAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentListAnswer": {
-        "answer": {"__typename": "ListAnswer", "listValue": ["option-slug"]},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[multiple_choice-question__configuration15-None-question__format_validators15-answer__value15-None-SaveDocumentListAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentListAnswer": {
-        "answer": {"__typename": "ListAnswer", "listValue": ["option-slug"]},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[choice-question__configuration17-None-question__format_validators17-option-slug-None-SaveDocumentStringAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"__typename": "StringAnswer", "stringValue": "option-slug"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[choice-question__configuration17-None-question__format_validators17-option-slug-None-SaveDocumentStringAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"__typename": "StringAnswer", "stringValue": "option-slug"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[text-question__configuration24-None-question__format_validators24-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"__typename": "StringAnswer", "stringValue": "test@example.com"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[text-question__configuration24-None-question__format_validators24-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"__typename": "StringAnswer", "stringValue": "test@example.com"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"__typename": "StringAnswer", "stringValue": "test@example.com"},
-        "clientMutationId": "testid",
-    }
-}
-
-snapshots[
-    "test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-False] 1"
-] = {
-    "saveDocumentStringAnswer": {
-        "answer": {"__typename": "StringAnswer", "stringValue": "test@example.com"},
-        "clientMutationId": "testid",
-    }
-}
-
 snapshots["test_query_all_documents[integer-None-1-None] 1"] = {
     "allDocuments": {
         "edges": [
@@ -591,6 +339,222 @@ snapshots[
 }
 
 snapshots[
+    "test_save_document_answer[integer-question__configuration0-None-question__format_validators0-1-None-SaveDocumentIntegerAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentIntegerAnswer": {
+        "answer": {"__typename": "IntegerAnswer", "integerValue": 1},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[integer-question__configuration0-None-question__format_validators0-1-None-SaveDocumentIntegerAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentIntegerAnswer": {
+        "answer": {"__typename": "IntegerAnswer", "integerValue": 1},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentFloatAnswer": {
+        "answer": {"__typename": "FloatAnswer", "floatValue": 2.1},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentFloatAnswer": {
+        "answer": {"__typename": "FloatAnswer", "floatValue": 2.1},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[text-question__configuration4-None-question__format_validators4-Test-None-SaveDocumentStringAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"__typename": "StringAnswer", "stringValue": "Test"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[text-question__configuration4-None-question__format_validators4-Test-None-SaveDocumentStringAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"__typename": "StringAnswer", "stringValue": "Test"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[date-question__configuration7-None-question__format_validators7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentDateAnswer": {
+        "answer": {"__typename": "DateAnswer", "dateValue": "2019-02-22"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[date-question__configuration7-None-question__format_validators7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentDateAnswer": {
+        "answer": {"__typename": "DateAnswer", "dateValue": "2019-02-22"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentFileAnswer": {
+        "answer": {
+            "__typename": "FileAnswer",
+            "fileValue": {
+                "name": "some-file.pdf",
+                "uploadUrl": "http://minio/upload-url",
+            },
+        },
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentFileAnswer": {
+        "answer": {
+            "__typename": "FileAnswer",
+            "fileValue": {
+                "name": "some-file.pdf",
+                "uploadUrl": "http://minio/upload-url",
+            },
+        },
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentFileAnswer": {
+        "answer": {
+            "__typename": "FileAnswer",
+            "fileValue": {
+                "name": "not-exist.pdf",
+                "uploadUrl": "http://minio/upload-url",
+            },
+        },
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentFileAnswer": {
+        "answer": {
+            "__typename": "FileAnswer",
+            "fileValue": {
+                "name": "not-exist.pdf",
+                "uploadUrl": "http://minio/upload-url",
+            },
+        },
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[table-question__configuration12-None-question__format_validators12-None-None-SaveDocumentTableAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentTableAnswer": {
+        "answer": {
+            "__typename": "TableAnswer",
+            "table_value": [
+                {"form": {"slug": "suggest-traditional"}},
+                {"form": {"slug": "suggest-traditional"}},
+            ],
+        },
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[table-question__configuration12-None-question__format_validators12-None-None-SaveDocumentTableAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentTableAnswer": {
+        "answer": {
+            "__typename": "TableAnswer",
+            "table_value": [
+                {"form": {"slug": "suggest-traditional"}},
+                {"form": {"slug": "suggest-traditional"}},
+            ],
+        },
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"__typename": "StringAnswer", "stringValue": "Test"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"__typename": "StringAnswer", "stringValue": "Test"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[multiple_choice-question__configuration15-None-question__format_validators15-answer__value15-None-SaveDocumentListAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentListAnswer": {
+        "answer": {"__typename": "ListAnswer", "listValue": ["option-slug"]},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[multiple_choice-question__configuration15-None-question__format_validators15-answer__value15-None-SaveDocumentListAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentListAnswer": {
+        "answer": {"__typename": "ListAnswer", "listValue": ["option-slug"]},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[choice-question__configuration17-None-question__format_validators17-option-slug-None-SaveDocumentStringAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"__typename": "StringAnswer", "stringValue": "option-slug"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[choice-question__configuration17-None-question__format_validators17-option-slug-None-SaveDocumentStringAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"__typename": "StringAnswer", "stringValue": "option-slug"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
     "test_save_document_answer[dynamic_multiple_choice-question__configuration19-MyDataSource-question__format_validators19-answer__value19-None-SaveDocumentListAnswer-True-option-slug-True] 1"
 ] = {
     "saveDocumentListAnswer": {
@@ -623,5 +587,55 @@ snapshots[
     "saveDocumentStringAnswer": {
         "answer": {"__typename": "StringAnswer", "stringValue": "5.5"},
         "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[text-question__configuration24-None-question__format_validators24-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"__typename": "StringAnswer", "stringValue": "test@example.com"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[text-question__configuration24-None-question__format_validators24-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"__typename": "StringAnswer", "stringValue": "test@example.com"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"__typename": "StringAnswer", "stringValue": "test@example.com"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots[
+    "test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-False] 1"
+] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"__typename": "StringAnswer", "stringValue": "test@example.com"},
+        "clientMutationId": "testid",
+    }
+}
+
+snapshots["test_save_document_answer_empty[text-false-None-True] 1"] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"__typename": "StringAnswer", "stringValue": None},
+        "clientMutationId": None,
+    }
+}
+
+snapshots["test_save_document_answer_empty[text-false-None-False] 1"] = {
+    "saveDocumentStringAnswer": {
+        "answer": {"__typename": "StringAnswer", "stringValue": None},
+        "clientMutationId": None,
     }
 }

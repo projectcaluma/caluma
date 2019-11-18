@@ -249,7 +249,8 @@ class DocumentValidator:
             ]
 
         elif answer.question.type == Question.TYPE_FILE:
-            return answer.file.name
+            if answer.file:
+                return answer.file.name
         elif answer.question.type == Question.TYPE_DATE:
             return answer.date
 
