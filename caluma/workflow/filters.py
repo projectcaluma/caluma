@@ -195,7 +195,7 @@ class WorkItemFilterSet(MetaFilterSet):
 
     class Meta:
         model = models.WorkItem
-        fields = ("status", "task", "case")
+        fields = ("status", "task", "case", "created_at", "closed_at", "modified_at")
 
 
 class WorkItemOrderSet(FilterSet):
@@ -208,6 +208,9 @@ class WorkItemOrderSet(FilterSet):
             "created_by_group",
             "created_by_user",
             "description",
+            "created_at",
+            "modified_at",
+            "closed_at",
             "is_archived",
             "is_published",
             "name",
