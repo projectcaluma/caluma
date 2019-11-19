@@ -71,9 +71,19 @@ pre-commit install
 ```
 
 ### Setup commit-msg hook
+
 If you want to have your commit message automatically linted, execute below commands:
 
 ```bash
 npm install @commitlint/{config-conventional,cli}
 ln -s "$(pwd)/commit-msg" .git/hooks/commit-msg
+```
+
+### Using pipenv
+
+We won't update to pipenv soon, but pipenv still works well:
+
+```bash
+pipenv --three install -r requirements.txt
+pipenv install -d -r requirements-dev.txt
 ```
