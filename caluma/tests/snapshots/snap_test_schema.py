@@ -135,7 +135,7 @@ type Case implements Node {
   status: CaseStatus!
   meta: GenericScalar
   document: Document
-  workItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, task: ID, case: ID, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, addressedGroups: [String], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType]): WorkItemConnection
+  workItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, task: ID, case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, addressedGroups: [String], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType]): WorkItemConnection
   parentWorkItem: WorkItem
 }
 
@@ -1111,7 +1111,7 @@ type Query {
   allWorkflows(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, orderBy: [WorkflowOrdering], filter: [WorkflowFilterSetType], order: [WorkflowOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): WorkflowConnection
   allTasks(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, orderBy: [TaskOrdering], filter: [TaskFilterSetType], order: [TaskOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): TaskConnection
   allCases(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], workflow: ID, orderBy: [CaseOrdering], filter: [CaseFilterSetType], order: [CaseOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, documentForm: String, hasAnswer: [HasAnswerFilterType], searchAnswers: [SearchAnswersFilterType], status: [CaseStatusArgument], orderByQuestionAnswerValue: String): CaseConnection
-  allWorkItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], task: ID, case: ID, createdByUser: String, createdByGroup: String, metaHasKey: String, addressedGroups: [String]): WorkItemConnection
+  allWorkItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], task: ID, case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, createdByUser: String, createdByGroup: String, metaHasKey: String, addressedGroups: [String]): WorkItemConnection
   allForms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, filter: [FormFilterSetType], order: [FormOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
   allQuestions(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, filter: [QuestionFilterSetType], order: [QuestionOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, excludeForms: [ID], search: String, slugs: [String]): QuestionConnection
   allDocuments(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], form: ID, forms: [ID], search: String, id: ID, orderBy: [DocumentOrdering], filter: [DocumentFilterSetType], order: [DocumentOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, rootDocument: ID, hasAnswer: [HasAnswerFilterType], searchAnswers: [SearchAnswersFilterType]): DocumentConnection
@@ -1816,6 +1816,9 @@ enum SortableWorkItemAttributes {
   CREATED_BY_GROUP
   CREATED_BY_USER
   DESCRIPTION
+  CREATED_AT
+  MODIFIED_AT
+  CLOSED_AT
   IS_ARCHIVED
   IS_PUBLISHED
   NAME
@@ -2089,6 +2092,9 @@ input WorkItemFilterSetType {
   status: Status
   task: ID
   case: ID
+  createdAt: DateTime
+  closedAt: DateTime
+  modifiedAt: DateTime
   createdByUser: String
   createdByGroup: String
   metaHasKey: String
