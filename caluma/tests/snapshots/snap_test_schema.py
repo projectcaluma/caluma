@@ -80,6 +80,7 @@ enum AnswerLookupMode {
   CONTAINS
   ICONTAINS
   INTERSECTS
+  ISNULL
   GTE
   GT
   LTE
@@ -135,7 +136,7 @@ type Case implements Node {
   status: CaseStatus!
   meta: GenericScalar
   document: Document
-  workItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, task: ID, case: ID, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, addressedGroups: [String], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType]): WorkItemConnection
+  workItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, task: ID, case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, addressedGroups: [String], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType]): WorkItemConnection
   parentWorkItem: WorkItem
 }
 
@@ -358,7 +359,7 @@ type DateAnswer implements Answer, Node {
   createdByGroup: String
   id: ID!
   question: Question!
-  value: Date!
+  value: Date
   meta: GenericScalar!
   date: Date
 }
@@ -592,7 +593,7 @@ type FloatAnswer implements Answer, Node {
   createdByGroup: String
   id: ID!
   question: Question!
-  value: Float!
+  value: Float
   meta: GenericScalar!
 }
 
@@ -755,7 +756,7 @@ scalar GroupJexl
 
 input HasAnswerFilterType {
   question: ID!
-  value: GenericScalar!
+  value: GenericScalar
   lookup: AnswerLookupMode
   hierarchy: AnswerHierarchyMode
 }
@@ -790,7 +791,7 @@ type HistoricalDateAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: Date!
+  value: Date
   meta: GenericScalar!
   date: Date
   historyUserId: String
@@ -833,7 +834,7 @@ type HistoricalFileAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value(asOf: DateTime!): HistoricalFile!
+  value(asOf: DateTime!): HistoricalFile
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -850,7 +851,7 @@ type HistoricalFloatAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: Float!
+  value: Float
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -866,7 +867,7 @@ type HistoricalIntegerAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: Int!
+  value: Int
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -882,7 +883,7 @@ type HistoricalListAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: [String]!
+  value: [String]
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -898,7 +899,7 @@ type HistoricalStringAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value: String!
+  value: String
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -914,7 +915,7 @@ type HistoricalTableAnswer implements HistoricalAnswer, Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
-  value(asOf: DateTime!): [HistoricalDocument]!
+  value(asOf: DateTime!): [HistoricalDocument]
   meta: GenericScalar!
   historyUserId: String
   question: Question!
@@ -932,7 +933,7 @@ type IntegerAnswer implements Answer, Node {
   createdByGroup: String
   id: ID!
   question: Question!
-  value: Int!
+  value: Int
   meta: GenericScalar!
 }
 
@@ -982,7 +983,7 @@ type ListAnswer implements Answer, Node {
   createdByGroup: String
   id: ID!
   question: Question!
-  value: [String]!
+  value: [String]
   meta: GenericScalar!
 }
 
@@ -1111,7 +1112,7 @@ type Query {
   allWorkflows(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, orderBy: [WorkflowOrdering], filter: [WorkflowFilterSetType], order: [WorkflowOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): WorkflowConnection
   allTasks(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, orderBy: [TaskOrdering], filter: [TaskFilterSetType], order: [TaskOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, search: String): TaskConnection
   allCases(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], workflow: ID, orderBy: [CaseOrdering], filter: [CaseFilterSetType], order: [CaseOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, documentForm: String, hasAnswer: [HasAnswerFilterType], searchAnswers: [SearchAnswersFilterType], status: [CaseStatusArgument], orderByQuestionAnswerValue: String): CaseConnection
-  allWorkItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], task: ID, case: ID, createdByUser: String, createdByGroup: String, metaHasKey: String, addressedGroups: [String]): WorkItemConnection
+  allWorkItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], task: ID, case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, createdByUser: String, createdByGroup: String, metaHasKey: String, addressedGroups: [String]): WorkItemConnection
   allForms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, filter: [FormFilterSetType], order: [FormOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
   allQuestions(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, filter: [QuestionFilterSetType], order: [QuestionOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, excludeForms: [ID], search: String, slugs: [String]): QuestionConnection
   allDocuments(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], form: ID, forms: [ID], search: String, id: ID, orderBy: [DocumentOrdering], filter: [DocumentFilterSetType], order: [DocumentOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, rootDocument: ID, hasAnswer: [HasAnswerFilterType], searchAnswers: [SearchAnswersFilterType]): DocumentConnection
@@ -1330,7 +1331,7 @@ input SaveDocumentDateAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: Date!
+  value: Date
   clientMutationId: String
 }
 
@@ -1343,7 +1344,7 @@ input SaveDocumentFileAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: String!
+  value: String
   valueId: ID
   clientMutationId: String
 }
@@ -1357,7 +1358,7 @@ input SaveDocumentFloatAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: Float!
+  value: Float
   clientMutationId: String
 }
 
@@ -1377,7 +1378,7 @@ input SaveDocumentIntegerAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: Int!
+  value: Int
   clientMutationId: String
 }
 
@@ -1390,7 +1391,7 @@ input SaveDocumentListAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: [String]!
+  value: [String]
   clientMutationId: String
 }
 
@@ -1408,7 +1409,7 @@ input SaveDocumentStringAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: String!
+  value: String
   clientMutationId: String
 }
 
@@ -1421,7 +1422,7 @@ input SaveDocumentTableAnswerInput {
   question: ID!
   document: ID!
   meta: JSONString
-  value: [ID]!
+  value: [ID]
   clientMutationId: String
 }
 
@@ -1816,6 +1817,9 @@ enum SortableWorkItemAttributes {
   CREATED_BY_GROUP
   CREATED_BY_USER
   DESCRIPTION
+  CREATED_AT
+  MODIFIED_AT
+  CLOSED_AT
   IS_ARCHIVED
   IS_PUBLISHED
   NAME
@@ -1881,7 +1885,7 @@ type StringAnswer implements Answer, Node {
   createdByGroup: String
   id: ID!
   question: Question!
-  value: String!
+  value: String
   meta: GenericScalar!
 }
 
@@ -1892,7 +1896,7 @@ type TableAnswer implements Answer, Node {
   createdByGroup: String
   id: ID!
   question: Question!
-  value: [Document]!
+  value: [Document]
   meta: GenericScalar!
   document: Document!
 }
@@ -2089,6 +2093,9 @@ input WorkItemFilterSetType {
   status: Status
   task: ID
   case: ID
+  createdAt: DateTime
+  closedAt: DateTime
+  modifiedAt: DateTime
   createdByUser: String
   createdByGroup: String
   metaHasKey: String

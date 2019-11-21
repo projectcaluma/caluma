@@ -3,9 +3,8 @@ from collections import namedtuple
 
 from django.conf import settings
 from django.utils.module_loading import import_string
+from localized_fields.value import LocalizedValue
 from rest_framework.exceptions import ValidationError
-
-from caluma.core.utils import translate_value
 
 
 class BaseFormatValidator:
@@ -22,8 +21,10 @@ class BaseFormatValidator:
     ...     regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
     ...     error_msg = {"en": "Not an e-mail address", "de": "Keine E-Mail adresse"}
     ```
-
     """
+
+    # `name` and `error_msg` are just dicts and get cast to `LocalizedValue` when needed.
+    #  This is to not break with the existing API.
 
     def __init__(self):
         if not all(
@@ -33,7 +34,7 @@ class BaseFormatValidator:
 
     def validate(self, value, document):
         if not re.match(self.regex, value):
-            raise ValidationError(translate_value(self.error_msg))
+            raise ValidationError(LocalizedValue(self.error_msg).translate())
 
 
 class EMailFormatValidator(BaseFormatValidator):
@@ -84,9 +85,9 @@ def get_format_validators(include=None, dic=False):
     return [
         FormatValidator(
             slug=ds.slug,
-            name=translate_value(ds.name),
+            name=LocalizedValue(ds.name).translate(),
             regex=ds.regex,
-            error_msg=translate_value(ds.error_msg),
+            error_msg=LocalizedValue(ds.error_msg).translate(),
         )
         for ds in format_validator_classes
     ]

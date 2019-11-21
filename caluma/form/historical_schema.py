@@ -24,18 +24,18 @@ from .storage_clients import client
 def historical_qs_as_of(queryset, date, pk_attr):
     """Get history revision as of `date` for queryset.
 
-    :param queryset: history qs
+    :param queryset: history Queryset()
     :param date: aware datetime()
     :param pk_attr: str (pk field name)
+    :return: Queryset()
     """
-    # TODO: This could be optimised with some sql magic in order to return a queryset.
     # This could become unnecessary as soon as
     # https://github.com/treyhunner/django-simple-history/issues/397 is resolved.
-    queryset = queryset.filter(history_date__lte=date)
-    for original_pk in set(queryset.values_list(pk_attr, flat=True)):
-        changes = queryset.filter(**{pk_attr: original_pk})
-        last_change = changes.latest("history_date")
-        yield last_change
+    return (
+        queryset.filter(history_date__lte=date)
+        .order_by(pk_attr, "-history_date")
+        .distinct(pk_attr)
+    )
 
 
 def resolve_historical_answer(answer):
@@ -125,7 +125,7 @@ class HistoricalFile(ObjectType):
 class HistoricalFileAnswer(FileAnswer):
     value = graphene.Field(
         HistoricalFile,
-        required=True,
+        required=False,
         as_of=graphene.types.datetime.DateTime(required=True),
     )
 
@@ -157,13 +157,9 @@ class HistoricalDocument(FormDjangoObjectType):
         return self.id
 
     def resolve_historical_answers(self, info, as_of, *args):
-        answers = [
-            a
-            for a in historical_qs_as_of(
-                models.Answer.history.filter(document_id=self.id), as_of, "id"
-            )
-        ]
-        return answers
+        return historical_qs_as_of(
+            models.Answer.history.filter(document_id=self.id), as_of, "id"
+        )
 
     class Meta:
         model = models.Document.history.model
@@ -175,28 +171,34 @@ class HistoricalDocument(FormDjangoObjectType):
 class HistoricalTableAnswer(TableAnswer):
     value = graphene.List(
         HistoricalDocument,
-        required=True,
+        required=False,
         as_of=graphene.types.datetime.DateTime(required=True),
     )
 
     def resolve_value(self, info, as_of, *args):
-        answerdocuments = [
-            ad
-            for ad in historical_qs_as_of(
-                models.AnswerDocument.history.filter(answer_id=self.id), as_of, "id"
-            )
-        ]
+        answerdocuments_unordered = historical_qs_as_of(
+            models.AnswerDocument.history.filter(answer_id=self.id), as_of, "id"
+        )
 
-        answerdocuments.sort(key=lambda x: x.sort)
+        # ordering has to happen in a separate query because of the use of `distinct()`
+        answerdocuments = models.AnswerDocument.history.filter(
+            pk__in=answerdocuments_unordered
+        ).order_by("sort")
 
         documents = [
-            models.Document.history.filter(id=ad.document_id).filter(
-                history_date__lte=as_of
-            )[0]
+            models.Document.history.filter(
+                id=ad.document_id, history_date__lte=as_of
+            ).latest("history_date")
             for ad in answerdocuments
         ]
 
-        return documents
+        # Since python 3.6, `list(dict.fromkeys(somelist))` is the most performant way
+        # to remove duplicates from a list, while retaining it's order.
+        # In python 3.6 this is an implementation detail. From python 3.7 onwards it is
+        # a language feature.
+        # Luckily django model instances are hashable, so we're able to make use of
+        # this.
+        return list(dict.fromkeys(documents))
 
     class Meta:
         model = models.Answer.history.model

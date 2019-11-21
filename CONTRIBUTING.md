@@ -71,9 +71,20 @@ pre-commit install
 ```
 
 ### Setup commit-msg hook
+
 If you want to have your commit message automatically linted, execute below commands:
 
 ```bash
 npm install @commitlint/{config-conventional,cli}
 ln -s "$(pwd)/commit-msg" .git/hooks/commit-msg
+```
+
+### Using pipenv
+
+Docker is the way to run and test caluma, but you can install the requirements
+for your IDE/editor using pipenv:
+
+```bash
+pipenv --three install -r requirements.txt
+pipenv install -d -r requirements-dev.txt
 ```

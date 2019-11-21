@@ -1,6 +1,6 @@
 dateparser==0.7.2
-django==2.2.6
-django-cors-headers==3.1.1
+django==2.2.7
+django-cors-headers==3.2.0
 django-environ==0.4.5
 django-extensions==2.2.5
 django-filter==2.2.0
@@ -13,10 +13,10 @@ graphene-django==2.6.0
 graphql-core==2.2.1
 graphql-relay==2.0.0
 idna==2.8
-minio==5.0.4
+minio==5.0.5
 psycopg2-binary==2.8.4
 pyjexl==0.2.3
 python-memcached==1.59
 requests==2.22.0
-urllib3==1.25.6
+urllib3==1.25.7
 uwsgi==2.0.18

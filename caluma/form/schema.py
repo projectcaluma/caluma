@@ -657,7 +657,7 @@ class AnswerQuerysetMixin(object):
 
 
 class IntegerAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
-    value = graphene.Int(required=True)
+    value = graphene.Int()
 
     class Meta:
         model = models.Answer
@@ -667,7 +667,7 @@ class IntegerAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
 
 class FloatAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
-    value = graphene.Float(required=True)
+    value = graphene.Float()
 
     class Meta:
         model = models.Answer
@@ -677,7 +677,7 @@ class FloatAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
 
 class DateAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
-    value = graphene.types.datetime.Date(required=True)
+    value = graphene.types.datetime.Date()
 
     def resolve_value(self, info, **args):
         return self.date
@@ -690,7 +690,7 @@ class DateAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
 
 class StringAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
-    value = graphene.String(required=True)
+    value = graphene.String()
 
     class Meta:
         model = models.Answer
@@ -700,7 +700,7 @@ class StringAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
 
 class ListAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
-    value = graphene.List(graphene.String, required=True)
+    value = graphene.List(graphene.String)
 
     class Meta:
         model = models.Answer
@@ -731,7 +731,7 @@ class Document(FormDjangoObjectType):
 
 
 class TableAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
-    value = graphene.List(Document, required=True)
+    value = graphene.List(Document)
 
     def resolve_value(self, info, **args):
         return self.documents.order_by("-answerdocument__sort")

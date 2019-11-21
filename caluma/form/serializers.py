@@ -464,6 +464,8 @@ class DocumentSerializer(serializers.ModelSerializer):
 
 class SaveAnswerSerializer(serializers.ModelSerializer):
     def validate(self, data):
+        if "value" not in data:
+            data["value"] = None
         validators.AnswerValidator().validate(**data, info=self.context["info"])
         return super().validate(data)
 
@@ -473,35 +475,35 @@ class SaveAnswerSerializer(serializers.ModelSerializer):
 
 
 class SaveDocumentStringAnswerSerializer(SaveAnswerSerializer):
-    value = CharField(trim_whitespace=False, allow_blank=True)
+    value = CharField(trim_whitespace=False, allow_blank=True, required=False)
 
     class Meta(SaveAnswerSerializer.Meta):
         pass
 
 
 class SaveDocumentListAnswerSerializer(SaveAnswerSerializer):
-    value = ListField(child=CharField())
+    value = ListField(child=CharField(), required=False)
 
     class Meta(SaveAnswerSerializer.Meta):
         pass
 
 
 class SaveDocumentIntegerAnswerSerializer(SaveAnswerSerializer):
-    value = IntegerField()
+    value = IntegerField(required=False)
 
     class Meta(SaveAnswerSerializer.Meta):
         pass
 
 
 class SaveDocumentFloatAnswerSerializer(SaveAnswerSerializer):
-    value = FloatField()
+    value = FloatField(required=False)
 
     class Meta(SaveAnswerSerializer.Meta):
         pass
 
 
 class SaveDocumentDateAnswerSerializer(SaveAnswerSerializer):
-    value = DateField(source="date")
+    value = DateField(source="date", required=False)
 
     class Meta(SaveAnswerSerializer.Meta):
         pass
@@ -512,7 +514,7 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         source="documents",
         queryset=models.Document.objects,
         many=True,
-        required=True,
+        required=False,
         help_text="List of document IDs representing the rows in the table.",
     )
 
@@ -598,8 +600,8 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
 
 
 class SaveDocumentFileAnswerSerializer(SaveAnswerSerializer):
-    value = CharField(write_only=True, source="file")
-    value_id = PrimaryKeyRelatedField(read_only=True, source="file")
+    value = CharField(write_only=True, source="file", required=False)
+    value_id = PrimaryKeyRelatedField(read_only=True, source="file", required=False)
 
     def set_file(self, validated_data):
         file_name = validated_data.get("file")

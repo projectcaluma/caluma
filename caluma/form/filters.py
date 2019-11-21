@@ -108,6 +108,7 @@ class AnswerLookupMode(Enum):
     CONTAINS = "contains"
     ICONTAINS = "icontains"
     INTERSECTS = "intersects"
+    ISNULL = "isnull"
 
     GTE = "gte"
     GT = "gt"
@@ -121,10 +122,14 @@ class AnswerHierarchyMode(Enum):
 
 
 class HasAnswerFilterType(InputObjectType):
-    """Lookup type to search document structures."""
+    """
+    Lookup type to search document structures.
+
+    When using lookup `ISNULL`, the provided `value` will be ignored.
+    """
 
     question = graphene.ID(required=True)
-    value = graphene.types.generic.GenericScalar(required=True)
+    value = graphene.types.generic.GenericScalar(required=False)
     lookup = AnswerLookupMode()
     hierarchy = AnswerHierarchyMode()
 
@@ -146,6 +151,7 @@ class HasAnswerFilter(Filter):
             AnswerLookupMode.STARTSWITH,
             AnswerLookupMode.CONTAINS,
             AnswerLookupMode.ICONTAINS,
+            AnswerLookupMode.ISNULL,
         ],
         "integer": [
             AnswerLookupMode.EXACT,
@@ -153,11 +159,13 @@ class HasAnswerFilter(Filter):
             AnswerLookupMode.LTE,
             AnswerLookupMode.GT,
             AnswerLookupMode.GTE,
+            AnswerLookupMode.ISNULL,
         ],
         "multiple_choice": [
             AnswerLookupMode.EXACT,
             AnswerLookupMode.CONTAINS,
             AnswerLookupMode.INTERSECTS,
+            AnswerLookupMode.ISNULL,
         ],
     }
     VALID_LOOKUPS["date"] = VALID_LOOKUPS["integer"]
@@ -177,10 +185,13 @@ class HasAnswerFilter(Filter):
         return qs
 
     def apply_expr(self, qs, expr):
-        question_slug = expr["question"]
-        match_value = expr["value"]
-
         lookup = expr.get("lookup", self.lookup_expr)
+
+        question_slug = expr["question"]
+        match_value = expr.get("value")
+        if lookup == AnswerLookupMode.ISNULL:
+            match_value = True
+
         hierarchy = expr.get("hierarchy", AnswerHierarchyMode.FAMILY)
 
         question = models.Question.objects.get(slug=question_slug)

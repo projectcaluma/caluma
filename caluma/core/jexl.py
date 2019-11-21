@@ -65,10 +65,6 @@ class JEXL(pyjexl.JEXL):
         )
         return parsed_expression
 
-    def analyze(self, expression, analyzer_class):
-        # some common shortcuts, no need to invoke JEXL engine for real
-        return super().analyze(expression, analyzer_class)
-
     def validate(self, expression, ValidatingAnalyzerClass=ValidatingAnalyzer):
         try:
             for res in self.analyze(expression, ValidatingAnalyzerClass):
@@ -90,5 +86,7 @@ class ExtractTransformSubjectAnalyzer(ValidatingAnalyzer):
 
     def visit_Transform(self, transform):
         if not self.transforms or transform.name in self.transforms:
-            yield transform.subject.value
+            # can only extract subject's value if subject is not a transform itself
+            if not isinstance(transform.subject, type(transform)):
+                yield transform.subject.value
         yield from self.generic_visit(transform)

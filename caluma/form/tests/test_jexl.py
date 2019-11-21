@@ -38,13 +38,34 @@ def test_intersects_operator(expression, result):
     assert QuestionJexl().evaluate(expression) == result
 
 
-def test_jexl_form():
+@pytest.mark.parametrize("form__slug", ["f-main-slug"])
+def test_jexl_form(db, form):
     answer_by_question = {
-        "a1": {"value": "A1", "form": "f-main-slug"},
-        "b1": {"value": "B1", "form": "f-main-slug"},
+        "a1": {"value": "A1", "form": form},
+        "b1": {"value": "B1", "form": form},
     }
 
     assert (
-        QuestionJexl(answer_by_question, "f-main-slug").evaluate("form")
+        QuestionJexl({"answers": answer_by_question, "form": form}).evaluate("form")
         == "f-main-slug"
     )
+
+
+def test_all_deps_hidden(db, form, document_factory, form_question_factory):
+    q1 = form_question_factory(form=form, question__is_hidden="true").question
+    q2 = form_question_factory(
+        form=form,
+        question__is_hidden=f"'{q1.slug}'|answer=='blah'",
+        question__is_required=f"'{q1.slug}'|answer=='blah'",
+    ).question
+
+    qj = QuestionJexl(
+        {
+            "answers": {},
+            "form": form,
+            "questions": {q1.slug: q1, q2.slug: q2},
+            "all_questions": {q1.slug: q1, q2.slug: q2},
+        }
+    )
+    assert qj.is_hidden(q2)
+    assert not qj.is_required(q2)
