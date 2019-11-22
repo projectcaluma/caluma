@@ -1,5 +1,4 @@
 import inspect
-from functools import wraps
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -10,12 +9,10 @@ def permission_for(mutation):
     """Decorate function to overwriting permission of specific mutation."""
 
     def decorate(fn):
-        @wraps(fn)
-        def _decorated(self, mutation, info):
-            return fn(self, mutation, info)
-
-        _decorated._permission = mutation
-        return _decorated
+        if not hasattr(fn, "_permissions"):
+            fn._permissions = []
+        fn._permissions.append(mutation)
+        return fn
 
     return decorate
 
@@ -24,12 +21,10 @@ def object_permission_for(mutation):
     """Decorate function to overwriting object permission of specific mutation."""
 
     def decorate(fn):
-        @wraps(fn)
-        def _decorated(self, mutation, info, instance):
-            return fn(self, mutation, info, instance)
-
-        _decorated._object_permission = mutation
-        return _decorated
+        if not hasattr(fn, "_object_permissions"):
+            fn._object_permissions = []
+        fn._object_permissions.append(mutation)
+        return fn
 
     return decorate
 
@@ -65,27 +60,39 @@ class BasePermission(object):
     """
 
     def __init__(self):
-        perm_fns = inspect.getmembers(self, lambda m: hasattr(m, "_permission"))
-        perm_muts = [fn._permission.__name__ for _, fn in perm_fns]
+        perm_fns = inspect.getmembers(self, lambda m: hasattr(m, "_permissions"))
+        perm_muts = [
+            permission.__name__ for _, fn in perm_fns for permission in fn._permissions
+        ]
         perm_muts_dups = list_duplicates(perm_muts)
         if perm_muts_dups:
             raise ImproperlyConfigured(
                 f"`permission_for` defined multiple times for "
                 f"{', '.join(perm_muts_dups)} in {str(self)}"
             )
-        self._permissions = {fn._permission: fn for _, fn in perm_fns}
+        self._permissions = {
+            permission: fn for _, fn in perm_fns for permission in fn._permissions
+        }
 
         obj_perm_fns = inspect.getmembers(
-            self, lambda m: hasattr(m, "_object_permission")
+            self, lambda m: hasattr(m, "_object_permissions")
         )
-        obj_perm_muts = [fn._object_permission.__name__ for _, fn in obj_perm_fns]
+        obj_perm_muts = [
+            permission.__name__
+            for _, fn in obj_perm_fns
+            for permission in fn._object_permissions
+        ]
         obj_perm_muts_dups = list_duplicates(obj_perm_muts)
         if obj_perm_muts_dups:
             raise ImproperlyConfigured(
                 f"`object_permission_for` defined multiple times for "
                 f"{', '.join(obj_perm_muts_dups)} in {str(self)}"
             )
-        self._object_permissions = {fn._object_permission: fn for _, fn in obj_perm_fns}
+        self._object_permissions = {
+            permission: fn
+            for _, fn in obj_perm_fns
+            for permission in fn._object_permissions
+        }
 
     def has_permission(self, mutation, info):
         for cls in mutation.mro():
