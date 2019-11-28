@@ -6,7 +6,7 @@ from django.db import ProgrammingError
 from django.db.models import Q
 from django_filters.constants import EMPTY_VALUES
 from django_filters.rest_framework import CharFilter, Filter, FilterSet
-from graphene import Enum, InputObjectType, List
+from graphene import Boolean, Enum, InputObjectType, List
 from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
 
@@ -22,7 +22,7 @@ from ..core.filters import (
 from ..core.ordering import AttributeOrderingFactory, MetaFieldOrdering
 from ..form.models import Answer, Question
 from ..form.ordering import AnswerValueOrdering
-from . import models
+from . import models, validators
 
 
 class FormFilterSet(MetaFilterSet):
@@ -402,10 +402,25 @@ class DocumentOrderSet(FilterSet):
         fields = ("meta",)
 
 
+class VisibleAnswerFilter(Filter):
+    field_class = Boolean
+
+    def filter(self, qs, value):
+        if not value or not qs.exists():
+            return qs
+
+        # assuming qs can only ever be in the context of a single document
+        document = qs.first().document
+        validator = validators.DocumentValidator()
+        return qs.filter(slug__in=validator.visible_questions(document))
+
+
 class AnswerFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("value", "file__name"))
     order_by = OrderingFilter(label="AnswerOrdering")
     questions = GlobalIDMultipleChoiceFilter(field_name="question")
+
+    visible_in_context = VisibleAnswerFilter()
 
     class Meta:
         model = models.Answer
