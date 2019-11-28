@@ -459,30 +459,62 @@ def test_validate_hidden_subform(
     #       \__ form_question # hidden or not/parametrized
     #            \__ sub_form
     #                 \__ sub_question
+    #                 \__ sub_sub_fq  # always hidden. sub_sub_question should never be checked
+    #                      \__ sub_sub_form
+    #                          \__ sub_sub_question # rquired = true
     top_form = form_factory()
     sub_form = form_factory()
     form_question = question_factory(
         type=Question.TYPE_FORM,
         sub_form=sub_form,
         is_hidden=str(hide_formquestion).lower(),
+        slug="form_question",
     )
     top_form.questions.add(form_question)
     sub_question = question_factory(
-        type=Question.TYPE_FLOAT, configuration={"min_value": 0, "max_value": 3}
+        type=Question.TYPE_FLOAT,
+        configuration={"min_value": 0, "max_value": 3},
+        slug="sub_question",
     )
-    # TODO: why does  `sub_form.questions.add(sub_question)` not work?
     form_question_factory(form=sub_form, question=sub_question)
 
+    sub_sub_form = form_factory(slug="sub_sub_form")
+    sub_sub_fq = question_factory(
+        type=Question.TYPE_FORM,
+        sub_form=sub_sub_form,
+        is_hidden="true",
+        slug="sub_sub_fq",
+    )
+    form_question_factory(form=sub_form, question=sub_sub_fq)
+
+    sub_sub_question = question_factory(
+        is_required="true",
+        is_hidden="false",
+        slug="sub_sub_question",
+        type=Question.TYPE_FLOAT,
+        configuration={"min_value": 0, "max_value": 3},
+    )
+    form_question_factory(form=sub_sub_form, question=sub_sub_question)
+
     # Second, make a document. The answer for the sub_question should
-    # be invalid to test if the hidden form question masks it properly
+    # be invalid to test if the hidden form question masks it properly.
+    # We never answer sub_sub_question, thus making the document invalid
+    # if it's wrongfully validated
     document = document_factory(form=top_form)
     answer_factory(question=sub_question, document=document, value=4)
 
     if hide_formquestion:
         assert DocumentValidator().validate(document, info) is None
     else:
-        with pytest.raises(ValidationError):
+        with pytest.raises(ValidationError) as excinfo:
             DocumentValidator().validate(document, info)
+        # Verify that the sub_sub_question is not the cause of the exception:
+        # it should not be checked at all because it's parent is always hidden
+        assert excinfo.match(r"form_question\s.* required but not provided.")
+
+        # can't do `not excinfo.match()` as it throws an AssertionError itself
+        # if it can't match :()
+        assert "sub_sub_question" not in str(excinfo.value.detail)
 
 
 @pytest.mark.parametrize("answer_value", ["foo", "bar"])
