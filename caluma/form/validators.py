@@ -303,7 +303,7 @@ class DocumentValidator:
                             **validation_context,
                             "form": question.sub_form,
                             "questions": {
-                                q.slug: q for q in question.sub_form.all_questions()
+                                q.slug: q for q in question.sub_form.questions.all()
                             },
                         }
                         visible_questions.extend(self._validate_required(sub_context))
