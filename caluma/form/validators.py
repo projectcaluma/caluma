@@ -203,7 +203,7 @@ class DocumentValidator:
             "answers": self.get_document_answers(document),
         }
 
-    def visible_questions(self, document, validation_context):
+    def visible_questions(self, document, validation_context=None):
         if not validation_context:
             validation_context = self._validation_context(document)
 

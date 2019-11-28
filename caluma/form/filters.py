@@ -4,6 +4,7 @@ import graphene
 from django.core import exceptions
 from django.db import ProgrammingError
 from django.db.models import Q
+from django.forms import BooleanField
 from django_filters.constants import EMPTY_VALUES
 from django_filters.rest_framework import CharFilter, Filter, FilterSet
 from graphene import Enum, InputObjectType, List
@@ -20,9 +21,9 @@ from ..core.filters import (
     SlugMultipleChoiceFilter,
 )
 from ..core.ordering import AttributeOrderingFactory, MetaFieldOrdering
-from ..form.models import Answer, Question
+from ..form.models import Answer, Document, Question
 from ..form.ordering import AnswerValueOrdering
-from . import models
+from . import models, validators
 
 
 class FormFilterSet(MetaFilterSet):
@@ -402,10 +403,25 @@ class DocumentOrderSet(FilterSet):
         fields = ("meta",)
 
 
+class VisibleAnswerFilter(Filter):
+    field_class = BooleanField
+
+    def filter(self, qs, value):
+        if not value or not qs.exists():
+            return qs
+
+        # assuming qs can only ever be in the context of a single document
+        document = Document.objects.get(pk=qs.first().document.family)
+        validator = validators.DocumentValidator()
+        return qs.filter(question__slug__in=validator.visible_questions(document))
+
+
 class AnswerFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("value", "file__name"))
     order_by = OrderingFilter(label="AnswerOrdering")
     questions = GlobalIDMultipleChoiceFilter(field_name="question")
+
+    visible_in_context = VisibleAnswerFilter()
 
     class Meta:
         model = models.Answer
