@@ -9,7 +9,7 @@ django-postgres-extra==1.22
 djangorestframework==3.10.3
 django_simple_history==2.7.3
 graphene==2.1.8
-graphene-django==2.6.0
+graphene-django==2.7.1
 graphql-core==2.2.1
 graphql-relay==2.0.0
 idna==2.8
