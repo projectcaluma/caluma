@@ -23,7 +23,7 @@ services:
     # example for profiling
     # command: ./manage.py runprofileserver --use-cprofile 0.0.0.0:8000 --nothreading --prof-path /app
     environment:
-      - ENV=dev
+      - ENV=development
   minio:
     image: minio/minio:latest@sha256:36f0f2af4e9d9974db1a22f80bde0547727936f521e99254c657e0bc03ca138b
     volumes:
