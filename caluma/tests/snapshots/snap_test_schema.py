@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -66,6 +67,7 @@ input AnswerFilterSetType {
   metaValue: [JSONValueFilterType]
   orderBy: [AnswerOrdering]
   questions: [ID]
+  visibleInContext: Boolean
   invert: Boolean
 }
 
@@ -412,7 +414,7 @@ type Document implements Node {
   id: ID!
   form: Form!
   meta: GenericScalar
-  answers(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], question: ID, search: String, orderBy: [AnswerOrdering], filter: [AnswerFilterSetType], order: [AnswerOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, questions: [ID]): AnswerConnection
+  answers(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], question: ID, search: String, orderBy: [AnswerOrdering], filter: [AnswerFilterSetType], order: [AnswerOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, questions: [ID], visibleInContext: Boolean): AnswerConnection
   case: Case
   workItem: WorkItem
 }

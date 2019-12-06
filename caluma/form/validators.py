@@ -176,23 +176,12 @@ class AnswerValidator:
 
 class DocumentValidator:
     def validate(self, document, info, validation_context=None, **kwargs):
-
         if not validation_context:
-            all_questions = {q.slug: q for q in document.form.all_questions()}
-            questions = {q.slug: q for q in document.form.questions.all()}
-            validation_context = {
-                "form": document.form,
-                "document": document,
-                "all_questions": all_questions,
-                "questions": questions,
-                "answers": self.get_document_answers(document),
-            }
+            validation_context = self._validation_context(document)
 
-        visible_questions = self._validate_required(
-            validation_context=validation_context
-        )
-
-        for answer in document.answers.filter(question_id__in=visible_questions):
+        for answer in document.answers.filter(
+            question_id__in=self.visible_questions(document, validation_context)
+        ):
             validator = AnswerValidator()
             validator.validate(
                 document=document,
@@ -202,6 +191,23 @@ class DocumentValidator:
                 info=info,
                 validation_context=validation_context,
             )
+
+    def _validation_context(self, document):
+        all_questions = {q.slug: q for q in document.form.all_questions()}
+        questions = {q.slug: q for q in document.form.questions.all()}
+        return {
+            "form": document.form,
+            "document": document,
+            "all_questions": all_questions,
+            "questions": questions,
+            "answers": self.get_document_answers(document),
+        }
+
+    def visible_questions(self, document, validation_context=None):
+        if not validation_context:
+            validation_context = self._validation_context(document)
+
+        return self._validate_required(validation_context=validation_context)
 
     def get_document_answers(self, document):
         doc_answers = document.answers.select_related("question").prefetch_related(

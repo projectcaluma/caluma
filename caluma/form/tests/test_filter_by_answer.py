@@ -198,3 +198,34 @@ def test_has_answer_intersect(
     expect_count = 1 if expect_find else 0
 
     assert len(result.data["allDocuments"]["edges"]) == expect_count
+
+
+@pytest.mark.parametrize("question__is_hidden,expected", [("false", 1), ("true", 0)])
+def test_visible_in_context(
+    schema_executor, db, document, form, question, form_question, answer, expected
+):
+    query = """
+        query asdf ($visible: Boolean!) {
+          allDocuments {
+            edges {
+              node {
+                answers(visibleInContext: $visible) {
+                  edges {
+                    node {
+                      id
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+    variables = {"visible": True}
+
+    result = schema_executor(query, variables=variables)
+    assert not result.errors
+    assert (
+        len(result.data["allDocuments"]["edges"][0]["node"]["answers"]["edges"])
+        == expected
+    )
