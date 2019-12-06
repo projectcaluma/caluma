@@ -499,27 +499,8 @@ class DjangoFilterConnectionField(
         return self._provided_filterset_class
 
     @classmethod
-    def merge_querysets(cls, default_queryset, queryset):
-        queryset = super().merge_querysets(default_queryset, queryset)
-        # avoid query explosion of single relationships
-        # may be removed once following issue is fixed:
-        # https://github.com/graphql-python/graphene-django/issues/57
-        queryset.query.select_related = default_queryset.query.select_related
-        return queryset
-
-    @classmethod
-    def connection_resolver(
-        cls,
-        resolver,
-        connection,
-        default_manager,
-        max_limit,
-        enforce_first_or_last,
-        filterset_class,
-        filtering_args,
-        root,
-        info,
-        **args,
+    def resolve_queryset(
+        cls, connection, iterable, info, args, filtering_args, filterset_class
     ):
         # building form within filterset class is a performance hit
         # and should only be done if there are actual filter arguments
@@ -527,28 +508,11 @@ class DjangoFilterConnectionField(
         if not filter_kwargs:
             # skip parent DjangoFilterConnetionField which does filtering and directly
             # go to its parent
-            return super(filter.DjangoFilterConnectionField, cls).connection_resolver(
-                resolver,
-                connection,
-                default_manager.get_queryset(),
-                max_limit,
-                enforce_first_or_last,
-                root,
-                info,
-                **args,
+            return super(DjangoConnectionField, cls).resolve_queryset(
+                connection, iterable, info, args
             )
-
-        return super().connection_resolver(
-            resolver,
-            connection,
-            default_manager,
-            max_limit,
-            enforce_first_or_last,
-            filterset_class,
-            filtering_args,
-            root,
-            info,
-            **args,
+        return super().resolve_queryset(
+            connection, iterable, info, args, filtering_args, filterset_class
         )
 
 
