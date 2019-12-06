@@ -7,6 +7,7 @@ Different environment variable types are explained at [django-environ](https://g
 
 A list of configuration options which you might need to configure to get Caluma started in your environment.
 
+* `UID`: The user ID used in the container
 * `SECRET_KEY`: A secret key used for cryptography. This needs to be a random string of a certain length. See [more](https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-SECRET_KEY).
 * `ALLOWED_HOSTS`: A list of hosts/domains your service will be served from. See [more](https://docs.djangoproject.com/en/2.1/ref/settings/#allowed-hosts).
 * `DATABASE_HOST`: Host to use when connecting to database (default: localhost)

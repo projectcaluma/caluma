@@ -24,6 +24,12 @@ services:
       - ENV=development
 ```
 
+Set the UID of the user inside the container::
+
+```bash
+echo "UID=$(id --user)" > .env
+```
+
 Afterwards, start the containers by running
 
 ```bash
