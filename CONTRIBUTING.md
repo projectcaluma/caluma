@@ -49,6 +49,15 @@ pip install --user pdbpp
 
 Writing of code can still happen outside the docker container of course.
 
+We run pytests in parallel with xdist by default. pytest-django will create
+a database per xdist-worker.
+
+To disable xdist completely run:
+
+```bash
+pytest -n 0
+```
+
 ### Install new requirements
 
 In case you're adding new requirements you simply need to build the docker container
