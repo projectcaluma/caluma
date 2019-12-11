@@ -3,6 +3,7 @@ import inspect
 import time
 
 import pytest
+from django.apps import apps
 from django.core.cache import cache
 from factory import Faker
 from factory.base import FactoryMetaClass
@@ -167,3 +168,20 @@ def simple_case(case_factory, document_factory, question_factory, answer_factory
     case = case_factory(document=document)
 
     return case
+
+
+@pytest.fixture
+def permission_classes(settings):
+    # TODO: replicate this for other globally-configured class lists
+    # such as VISIBILITY_CLASSES and VALIDATION_CLASSES
+    config = apps.get_app_config("core")
+
+    old_permissions = settings.PERMISSION_CLASSES
+
+    def set_permission_classes(class_names):
+        settings.PERMISSION_CLASSES = class_names
+        config.ready()
+
+    yield set_permission_classes
+    settings.PERMISSION_CLASSES = old_permissions
+    config.ready()
