@@ -92,6 +92,20 @@ see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/doc
 
 Afterwards you can configure it in `PERMISSION_CLASSES` as `caluma.extensions.permissions.CustomPermission`.
 
+If your permissions depend on the content of the mutation, you can access those
+values via the `get_params()` method on the mutation, like the following
+example shows:
+
+```python
+class CustomPermission(BasePermission):
+    @permission_for(SaveTextQuestionInput)
+    def hsa_question_save_permission(self, mutation, info):
+        params = mutation.get_params(info)
+        # hypothetical permission: disallow saving
+        # questions whose label contains the word "blah"
+        return "blah" not in params['input']['label']
+```
+
 ## Validation classes
 
 Validation classes can validate or amend input data of any mutation. Each mutation is processed in two steps:
