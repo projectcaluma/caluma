@@ -498,59 +498,6 @@ class DjangoFilterConnectionField(
     def filterset_class(self):
         return self._provided_filterset_class
 
-    @classmethod
-    def merge_querysets(cls, default_queryset, queryset):
-        queryset = super().merge_querysets(default_queryset, queryset)
-        # avoid query explosion of single relationships
-        # may be removed once following issue is fixed:
-        # https://github.com/graphql-python/graphene-django/issues/57
-        queryset.query.select_related = default_queryset.query.select_related
-        return queryset
-
-    @classmethod
-    def connection_resolver(
-        cls,
-        resolver,
-        connection,
-        default_manager,
-        max_limit,
-        enforce_first_or_last,
-        filterset_class,
-        filtering_args,
-        root,
-        info,
-        **args,
-    ):
-        # building form within filterset class is a performance hit
-        # and should only be done if there are actual filter arguments
-        filter_kwargs = {k: v for k, v in args.items() if k in filtering_args}
-        if not filter_kwargs:
-            # skip parent DjangoFilterConnetionField which does filtering and directly
-            # go to its parent
-            return super(filter.DjangoFilterConnectionField, cls).connection_resolver(
-                resolver,
-                connection,
-                default_manager.get_queryset(),
-                max_limit,
-                enforce_first_or_last,
-                root,
-                info,
-                **args,
-            )
-
-        return super().connection_resolver(
-            resolver,
-            connection,
-            default_manager,
-            max_limit,
-            enforce_first_or_last,
-            filterset_class,
-            filtering_args,
-            root,
-            info,
-            **args,
-        )
-
 
 class DjangoFilterSetConnectionField(DjangoFilterConnectionField):
     @property
