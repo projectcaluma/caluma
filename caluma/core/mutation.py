@@ -1,4 +1,5 @@
 from collections import OrderedDict
+from functools import singledispatch
 
 import graphene
 from django.core.exceptions import ImproperlyConfigured
@@ -11,10 +12,56 @@ from graphene.types.objecttype import yank_fields_from_attrs
 from graphene_django.converter import convert_django_field, convert_field_to_string
 from graphene_django.registry import get_global_registry
 from graphene_django.rest_framework.mutation import fields_for_serializer
+from graphql.language import ast
 from localized_fields.fields import LocalizedField
 from rest_framework import exceptions
 
 from .relay import extract_global_id
+
+
+class ASTAnalyzer:
+    @staticmethod
+    def get_mutation_params(info):
+        @singledispatch
+        def _parse_ast_value(arg, info):  # pragma: no cover
+            raise RuntimeError(f"Unknown arg {arg}")
+
+        @_parse_ast_value.register(ast.ObjectValue)
+        def _(arg, info):
+            return {
+                field.name.value: _parse_ast_value(field.value, info)
+                for field in arg.fields
+            }
+
+        @_parse_ast_value.register(ast.ListValue)
+        def _(arg, info):
+            return [_parse_ast_value(val, info) for val in arg.values]
+
+        @_parse_ast_value.register(ast.StringValue)
+        def _(arg, info):
+            return arg.value
+
+        @_parse_ast_value.register(ast.Variable)
+        def _(arg, info):
+            return info.variable_values[arg.name.value]
+
+        # No need to keep the registered singledispatch implementation
+        # in the namespace
+        del _
+
+        current_sel = [
+            sel
+            for sel in info.operation.selection_set.selections
+            if sel.name.value == info.field_name
+            # if aliases are used, we need to compare them as well
+            and (sel.alias is None or sel.alias.value == info.path[0])
+        ][0]
+
+        return {
+            arg.name.value: _parse_ast_value(arg.value, info)
+            for arg in current_sel.arguments
+        }
+
 
 convert_django_field.register(LocalizedField, convert_field_to_string)
 
@@ -83,7 +130,7 @@ class Mutation(ClientIDMutation):
         exclude=(),
         return_field_name=None,
         return_field_type=None,
-        **options
+        **options,
     ):
         model_operations = (
             model_operations if model_operations else ["create", "update"]
@@ -146,7 +193,7 @@ class Mutation(ClientIDMutation):
                 return_field_type.get_queryset(
                     model_class.objects.select_related(), info
                 ),
-                **input
+                **input,
             )
             return {
                 "instance": instance,
@@ -217,6 +264,10 @@ class Mutation(ClientIDMutation):
         if cls._meta.return_field_name:
             kwargs[cls._meta.return_field_name] = obj
         return cls(**kwargs)
+
+    @classmethod
+    def get_params(cls, info):
+        return ASTAnalyzer.get_mutation_params(info)
 
 
 class UserDefinedPrimaryKeyMixin(object):
