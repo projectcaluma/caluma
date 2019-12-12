@@ -6,7 +6,7 @@ django-extensions==2.2.5
 django-filter==2.2.0
 django-localized-fields==5.4.1
 django-postgres-extra==1.22
-djangorestframework==3.10.3
+djangorestframework==3.11.0
 django_simple_history==2.8.0
 graphene==2.1.8
 graphene-django==2.7.1
