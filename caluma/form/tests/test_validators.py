@@ -127,7 +127,8 @@ def test_validate_dynamic_option_exists(
 
 
 @pytest.mark.parametrize(
-    "required_jexl,should_throw", [("true", True), ("false", False)]
+    "required_jexl,should_throw",
+    [("true", True), ("false", False), ("form == 'main'", True)],
 )
 def test_validate_nested_form(
     db,
@@ -151,6 +152,7 @@ def test_validate_nested_form(
     )
 
     main_form_question_1 = form_question_factory(
+        form__slug="main",
         question__type=Question.TYPE_FORM,
         question__sub_form=sub_form_question_1.form,
         question__slug="sub_1",
