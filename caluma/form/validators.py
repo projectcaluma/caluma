@@ -307,7 +307,6 @@ class DocumentValidator:
                         # form questions's answers are still in the top level document
                         sub_context = {
                             **validation_context,
-                            "form": question.sub_form,
                             "questions": {
                                 q.slug: q for q in question.sub_form.questions.all()
                             },
@@ -324,7 +323,6 @@ class DocumentValidator:
                             "questions": {
                                 q.slug: q for q in question.row_form.all_questions()
                             },
-                            "form": question.row_form,
                         }
                         for row in validation_context["answers"][question.slug]:
                             sub_context = {
