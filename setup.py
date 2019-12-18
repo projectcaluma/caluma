@@ -20,6 +20,16 @@ pipenv install -d -r requirements-dev.txt
 """.strip().splitlines()
 
 
+def deps_from_file(filename):
+    lines = [line.strip().split("#")[0] for line in open(filename).readlines()]
+    # filter out comment lines
+    return [line for line in lines if line]
+
+
+dependencies = deps_from_file("requirements.txt")
+dev_dependencies = deps_from_file("requirements-dev.txt")
+
+
 class PipenvCommand(distutils.cmd.Command):
     description = "setup local development with pipenv"
     user_options = []
@@ -47,4 +57,5 @@ setup(
     url="https://projectcaluma.github.io/",
     license="License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     packages=find_packages(),
+    install_requires=dependencies,
 )
