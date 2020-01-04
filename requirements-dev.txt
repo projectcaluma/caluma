@@ -19,7 +19,7 @@ pytest-cov==2.8.1
 pytest-django==3.7.0
 pytest-env==0.6.2
 pytest-factoryboy==2.0.3
-pytest-mock==1.13.0
+pytest-mock==2.0.0
 pytest-randomly==3.2.0
 pytest-xdist==1.30.0
 python-semantic-release==4.3.4
