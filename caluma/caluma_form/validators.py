@@ -1,4 +1,5 @@
 import sys
+from collections import defaultdict
 from logging import getLogger
 
 from django_filters.constants import EMPTY_VALUES
@@ -179,8 +180,10 @@ class DocumentValidator:
         if not validation_context:
             validation_context = self._validation_context(document)
 
+        self._validate_required(validation_context)
+
         for answer in document.answers.filter(
-            question_id__in=self.visible_questions(document, validation_context)
+            question_id__in=validation_context["visible_questions"]
         ):
             validator = AnswerValidator()
             validator.validate(
@@ -195,19 +198,92 @@ class DocumentValidator:
     def _validation_context(self, document):
         all_questions = {q.slug: q for q in document.form.all_questions()}
         questions = {q.slug: q for q in document.form.questions.all()}
-        return {
+        # we need to build the context in two steps (for now), as
+        # `self.visible_questions()` already needs a context to evaluate
+        # `is_hidden` expressions
+        intermediate_context = {
             "form": document.form,
             "document": document,
             "all_questions": all_questions,
             "questions": questions,
             "answers": self.get_document_answers(document),
+            "visible_questions": None,
+            "jexl_cache": defaultdict(dict),
         }
 
+        intermediate_context["visible_questions"] = self.visible_questions(
+            document, intermediate_context
+        )
+        return intermediate_context
+
     def visible_questions(self, document, validation_context=None):
+        """Evaluate the visibility of the questions for the given context.
+
+        This evaluates the `is_hidden` expression for each question to decide
+        if the question is visible.
+        Return a list of question slugs that are visible.
+        """
         if not validation_context:
             validation_context = self._validation_context(document)
+        visible_questions = []
 
-        return self._validate_required(validation_context=validation_context)
+        q_jexl = jexl.QuestionJexl(validation_context)
+        for question in validation_context["questions"].values():
+            try:
+                is_hidden = q_jexl.is_hidden(question)
+
+                if is_hidden:
+                    # no need to descend further
+                    continue
+
+                visible_questions.append(question.slug)
+                if question.type == Question.TYPE_FORM:
+                    # answers to questions in subforms are still in
+                    # the top level document
+                    sub_context = {
+                        **validation_context,
+                        "questions": {
+                            q.slug: q for q in question.sub_form.questions.all()
+                        },
+                    }
+                    visible_questions.extend(
+                        self.visible_questions(document, sub_context)
+                    )
+
+                elif question.type == Question.TYPE_TABLE:
+                    # all_questions does not descend into table questions, so
+                    # we need to extend the context here so we can check for
+                    # hiddenness.
+                    row_visibles = set()
+                    row_context = {
+                        **validation_context,
+                        "questions": {
+                            q.slug: q for q in question.row_form.all_questions()
+                        },
+                    }
+                    for row in validation_context["answers"][question.slug]:
+                        sub_context = {
+                            **row_context,
+                            "answers": {**validation_context["answers"], **row},
+                        }
+                        row_visibles.update(
+                            self.visible_questions(document, sub_context)
+                        )
+                    visible_questions.extend(row_visibles)
+
+            except (jexl.QuestionMissing, exceptions.ValidationError):
+                raise
+            except Exception as exc:
+
+                log.error(
+                    f"Error while evaluating `is_hidden` expression on question {question.slug}: "
+                    f"{question.is_hidden}: {str(exc)}"
+                )
+                raise RuntimeError(
+                    f"Error while evaluating `is_hidden` expression on question {question.slug}: "
+                    f"{question.is_hidden}. The system log contains more information"
+                )
+        return visible_questions
 
     def get_document_answers(self, document):
         doc_answers = document.answers.select_related("question").prefetch_related(
@@ -285,67 +361,55 @@ class DocumentValidator:
         question slugs.
         """
         required_but_empty = []
-        visible_questions = []
 
         answers = validation_context["answers"]
 
         q_jexl = jexl.QuestionJexl(validation_context)
         for question in validation_context["questions"].values():
             try:
-                expr = "is_hidden"
-                is_hidden = q_jexl.is_hidden(question)
+                if question.slug not in validation_context["visible_questions"]:
+                    continue
+                is_required = q_jexl.is_required(question)
+                if is_required and answers.get(question.slug) in EMPTY_VALUES:
+                    required_but_empty.append(question.slug)
 
-                if not is_hidden:
-                    visible_questions.append(question.slug)
-                    expr = "is_required"
-
-                    is_required = q_jexl.is_required(question)
-                    if is_required and answers.get(question.slug) in EMPTY_VALUES:
-                        required_but_empty.append(question.slug)
-
-                    if question.type == Question.TYPE_FORM:
-                        # form questions's answers are still in the top level document
+                if question.type == Question.TYPE_FORM:
+                    # form questions's answers are still in the top level document
+                    sub_context = {
+                        **validation_context,
+                        "questions": {
+                            q.slug: q for q in question.sub_form.questions.all()
+                        },
+                    }
+                    self._validate_required(sub_context)
+                elif question.type == Question.TYPE_TABLE and is_required:
+                    # all_questions does not descend into table questions, so
+                    # we need to extend the context here.
+                    # We need to validate presence in at least one row, but only
+                    # if the table question is required.
+                    row_context = {
+                        **validation_context,
+                        "questions": {
+                            q.slug: q for q in question.row_form.all_questions()
+                        },
+                    }
+                    for row in validation_context["answers"][question.slug]:
                         sub_context = {
-                            **validation_context,
-                            "questions": {
-                                q.slug: q for q in question.sub_form.questions.all()
-                            },
+                            **row_context,
+                            "answers": {**validation_context["answers"], **row},
                         }
-                        visible_questions.extend(self._validate_required(sub_context))
-                    elif question.type == Question.TYPE_TABLE and is_required:
-                        # all_questions does not descend into table questions, so
-                        # we need to extend the context here.
-                        # We need to validate presence in at least one row, but only
-                        # if the table question is required.
-                        row_visibles = set()
-                        row_context = {
-                            **validation_context,
-                            "questions": {
-                                q.slug: q for q in question.row_form.all_questions()
-                            },
-                        }
-                        for row in validation_context["answers"][question.slug]:
-                            sub_context = {
-                                **row_context,
-                                "answers": {**validation_context["answers"], **row},
-                            }
-                            row_visibles.update(self._validate_required(sub_context))
-                        # TODO are table row questions "visible questions"?
-                        # in other words - do we need to add the row questions to the visible questions here?
-                        visible_questions.extend(row_visibles)
+                        self._validate_required(sub_context)
 
             except (jexl.QuestionMissing, exceptions.ValidationError):
                 raise
             except Exception as exc:
-                expr_jexl = getattr(question, expr)
-
                 log.error(
-                    f"Error while evaluating {expr} expression on question {question.slug}: "
-                    f"{expr_jexl}: {str(exc)}"
+                    f"Error while evaluating `is_required` expression on question {question.slug}: "
+                    f"{question.is_required}: {str(exc)}"
                 )
                 raise RuntimeError(
-                    f"Error while evaluating '{expr}' expression on question {question.slug}: "
-                    f"{expr_jexl}. The system log contains more information"
+                    f"Error while evaluating `is_required` expression on question {question.slug}: "
+                    f"{question.is_required}. The system log contains more information"
                 )
 
         if required_but_empty:
@@ -353,8 +417,6 @@ class DocumentValidator:
                 f"Questions {','.join(required_but_empty)} are required but not provided.",
                 slugs=required_but_empty,
             )
-
-        return visible_questions
 
 
 class QuestionValidator:
