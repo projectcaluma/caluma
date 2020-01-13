@@ -37,11 +37,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "graphene_django",
     "simple_history",
-    "caluma.core.apps.DefaultConfig",
-    "caluma.user.apps.DefaultConfig",
-    "caluma.form.apps.DefaultConfig",
-    "caluma.workflow.apps.DefaultConfig",
-    "caluma.data_source.apps.DefaultConfig",
+    "caluma.caluma_core.apps.DefaultConfig",
+    "caluma.caluma_user.apps.DefaultConfig",
+    "caluma.caluma_form.apps.DefaultConfig",
+    "caluma.caluma_workflow.apps.DefaultConfig",
+    "caluma.caluma_data_source.apps.DefaultConfig",
 ]
 
 if DEBUG:
@@ -179,11 +179,11 @@ OIDC_INTROSPECT_CLIENT_SECRET = env.str("OIDC_INTROSPECT_CLIENT_SECRET", default
 # Extensions
 
 VISIBILITY_CLASSES = env.list(
-    "VISIBILITY_CLASSES", default=default(["caluma.core.visibilities.Any"])
+    "VISIBILITY_CLASSES", default=default(["caluma.caluma_core.visibilities.Any"])
 )
 
 PERMISSION_CLASSES = env.list(
-    "PERMISSION_CLASSES", default=default(["caluma.core.permissions.AllowAny"])
+    "PERMISSION_CLASSES", default=default(["caluma.caluma_core.permissions.AllowAny"])
 )
 
 VALIDATION_CLASSES = env.list("VALIDATION_CLASSES", default=[])
