@@ -11,20 +11,20 @@ The visibility part defines what you can see at all. Anything you cannot see, yo
 Visibility classes are configured as `VISIBILITY_CLASSES`.
 
 Following pre-defined classes are available:
-* `caluma.core.visibilities.Any`: Allow any user without any filtering
-* `caluma.core.visibilities.Union`: Union result of a list of configured visibility classes. May only be used as base class.
-* `caluma.user.visibilities.Authenticated`: Only show data to authenticated users
-* `caluma.user.visibilities.CreatedByGroup`: Only show data that belongs to the same group as the current user
-* `caluma.workflow.visibilities.AddressedGroups`: Only show case, work item and document to addressed users through group
+* `caluma.caluma_core.visibilities.Any`: Allow any user without any filtering
+* `caluma.caluma_core.visibilities.Union`: Union result of a list of configured visibility classes. May only be used as base class.
+* `caluma.caluma_user.visibilities.Authenticated`: Only show data to authenticated users
+* `caluma.caluma_user.visibilities.CreatedByGroup`: Only show data that belongs to the same group as the current user
+* `caluma.caluma_workflow.visibilities.AddressedGroups`: Only show case, work item and document to addressed users through group
 
 In case this default classes do not cover your use case, it is also possible to create your custom
 visibility class defining per node how to filter.
 
 Example:
 ```python
-from caluma.core.visibilities import BaseVisibility, filter_queryset_for
-from caluma.core.types import Node
-from caluma.form.schema import Form
+from caluma.caluma_core.visibilities import BaseVisibility, filter_queryset_for
+from caluma.caluma_core.types import Node
+from caluma.caluma_form.schema import Form
 
 
 class CustomVisibility(BaseVisibility):
@@ -52,18 +52,18 @@ Afterwards you can configure it in `VISIBILITY_CLASSES` as `caluma.extensions.vi
 Permission classes define who may perform which mutation. Such can be configured as `PERMISSION_CLASSES`.
 
 Following pre-defined classes are available:
-* `caluma.user.permissions.IsAuthenticated`: only allow authenticated users
-* `caluma.core.permissions.AllowAny`: allow any users to perform any mutation.
-* `caluma.user.permissions.CreatedByGroup`: Only allow mutating data that belongs to same group as current user
+* `caluma.caluma_user.permissions.IsAuthenticated`: only allow authenticated users
+* `caluma.caluma_core.permissions.AllowAny`: allow any users to perform any mutation.
+* `caluma.caluma_user.permissions.CreatedByGroup`: Only allow mutating data that belongs to same group as current user
 
 In case this default classes do not cover your use case, it is also possible to create your custom
 permission class defining per mutation and mutation object what is allowed.
 
 Example:
 ```python
-from caluma.core.permissions import BasePermission, permission_for, object_permission_for
-from caluma.form.schema import SaveForm
-from caluma.core.mutation import Mutation
+from caluma.caluma_core.permissions import BasePermission, permission_for, object_permission_for
+from caluma.caluma_form.schema import SaveForm
+from caluma.caluma_core.mutation import Mutation
 
 
 class CustomPermission(BasePermission):
@@ -116,9 +116,9 @@ Validation classes can validate or amend input data of any mutation. Each mutati
 A custom validation class defining validations for various mutations looks like this:
 
 ```python
-from caluma.core.validations import BaseValidation, validation_for
-from caluma.form.schema import SaveForm
-from caluma.core.mutation import Mutation
+from caluma.caluma_core.validations import BaseValidation, validation_for
+from caluma.caluma_form.schema import SaveForm
+from caluma.caluma_core.mutation import Mutation
 from rest_framework import exceptions
 
 
@@ -155,7 +155,7 @@ There are some [core FormatValidators](#formatvalidators) you can use.
 A custom FormatValidator looks like this:
 
 ```python
-from caluma.form.format_validators import BaseFormatValidator
+from caluma.caluma_form.format_validators import BaseFormatValidator
 
 
 class MyFormatValidator(BaseFormatValidator):
@@ -178,8 +178,8 @@ For this you can use the data_source extension point.
 An example data_source looks like this:
 
  ```python
-from caluma.data_source.data_sources import BaseDataSource
-from caluma.data_source.utils import data_source_cache
+from caluma.caluma_data_source.data_sources import BaseDataSource
+from caluma.caluma_data_source.utils import data_source_cache
 import requests
 
 class CustomDataSource(BaseDataSource):

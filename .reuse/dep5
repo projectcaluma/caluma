@@ -23,7 +23,7 @@ Files:
     setup.cfg
     setup.py
     uwsgi.ini
-    caluma/form/fixtures/form-fixture.json
+    caluma/caluma_form/fixtures/form-fixture.json
 Copyright: 2019 Adfinis SyGroup AG <info@adfinis-sygroup.ch>
 License: CC0-1.0
 

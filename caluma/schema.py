@@ -5,9 +5,12 @@ from graphene_django.converter import convert_django_field, convert_field_to_str
 from graphene_django.debug import DjangoDebug
 from localized_fields.fields import LocalizedField
 
-from .data_source import schema as data_source_schema
-from .form import historical_schema as form_historical_schema, schema as form_schema
-from .workflow import schema as workflow_schema
+from .caluma_data_source import schema as data_source_schema
+from .caluma_form import (
+    historical_schema as form_historical_schema,
+    schema as form_schema,
+)
+from .caluma_workflow import schema as workflow_schema
 
 convert_django_field.register(LocalizedField, convert_field_to_string)
 

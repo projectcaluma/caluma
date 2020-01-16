@@ -12,12 +12,12 @@ from minio import Minio
 from minio.definitions import Object as MinioStatObject
 from pytest_factoryboy import register
 
-from .core.faker import MultilangProvider
-from .core.models import HistoricalRecords
-from .form import factories as form_factories
+from .caluma_core.faker import MultilangProvider
+from .caluma_core.models import HistoricalRecords
+from .caluma_form import factories as form_factories
+from .caluma_user.models import AnonymousUser, OIDCUser
+from .caluma_workflow import factories as workflow_factories
 from .schema import schema
-from .user.models import AnonymousUser, OIDCUser
-from .workflow import factories as workflow_factories
 
 Faker.add_provider(MultilangProvider)
 
@@ -151,7 +151,7 @@ def minio_mock(mocker):
 @pytest.fixture
 def data_source_settings(settings):
     settings.DATA_SOURCE_CLASSES = [
-        "caluma.data_source.tests.data_sources.MyDataSource"
+        "caluma.caluma_data_source.tests.data_sources.MyDataSource"
     ]
 
 
@@ -174,7 +174,7 @@ def simple_case(case_factory, document_factory, question_factory, answer_factory
 def permission_classes(settings):
     # TODO: replicate this for other globally-configured class lists
     # such as VISIBILITY_CLASSES and VALIDATION_CLASSES
-    config = apps.get_app_config("core")
+    config = apps.get_app_config("caluma_core")
 
     old_permissions = settings.PERMISSION_CLASSES
 
