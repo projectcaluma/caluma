@@ -188,6 +188,7 @@ class TaskOrderSet(FilterSet):
 class WorkItemFilterSet(MetaFilterSet):
     order_by = OrderingFilter(label="WorkItemOrdering", fields=("status", "deadline"))
     addressed_groups = StringListFilter(lookup_expr="overlap")
+    assigned_users = StringListFilter(lookup_expr="overlap")
 
     document_has_answer = HasAnswerFilter(document_id="document__pk")
     case_document_has_answer = HasAnswerFilter(document_id="case__document__pk")
