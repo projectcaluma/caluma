@@ -1,3 +1,19 @@
+# v5.0.0 (22 Jan 2020)
+
+
+### Feature
+* add assigned users filter (93badb4a55e91f7ffc6a3fc5828b18765cae9564)
+* prefix all apps with "caluma_" (928146577f3cb2f76a4e715ba29ae4e1eb547907)
+  (BREAKING CHANGE: Extension code must be updated)
+
+### Fix
+* correctly handle indirectly hidden questions (cfe616684980d732fe667099a74461d6dbfaa732)
+* version bump (d2a4755c4e06d7f683165e582780ec3e5121c835)
+
+### Documentation
+* add maintainer's handbook (9f64fc4837bb5974fb7cd3caa67bb6c32bf2661e)
+
+
 # v4.3.0 (18 Dec 2019)
 
 ### Feature
