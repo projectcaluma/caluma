@@ -74,4 +74,5 @@ For further information on our license choice, you can read up on the [correspon
 * [Validation](docs/validation.md) - Validation of user input
 * [Extending Caluma](docs/extending.md) - Extensions: Data visibility and
   permissions
-
+* [Maintainer's Handbook](docs/maintainers.md) - HOWTO for various maintainer's
+  tasks
