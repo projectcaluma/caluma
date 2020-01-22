@@ -1,6 +1,8 @@
 import pytest
 
-from ..jexl import QuestionJexl
+from .. import validators
+from ..jexl import QuestionJexl, QuestionMissing
+from ..models import Question
 
 
 @pytest.mark.parametrize(
@@ -61,6 +63,7 @@ def test_all_deps_hidden(db, form, document_factory, form_question_factory):
 
     qj = QuestionJexl(
         {
+            "document": document_factory(),
             "answers": {},
             "form": form,
             "questions": {q1.slug: q1, q2.slug: q2},
@@ -69,3 +72,85 @@ def test_all_deps_hidden(db, form, document_factory, form_question_factory):
     )
     assert qj.is_hidden(q2)
     assert not qj.is_required(q2)
+
+
+@pytest.mark.parametrize("fq_is_hidden", ["true", "false"])
+def test_indirectly_hidden_dependency(
+    db,
+    form_question_factory,
+    form_factory,
+    question_factory,
+    document_factory,
+    answer_factory,
+    info,
+    fq_is_hidden,
+):
+    # Questions can not only be hidden by evaluating their is_hidden expression
+    # but also if they're part of a subform, where the containing form question
+    # is hidden.
+    #
+    # Showcase form to demonstrate this (f: form, q:question, d:document, a:answer):
+    # f:topform
+    #   q:formquestion - hidden=true
+    #      f:subform
+    #         q:subquestion - hidden=false
+    #   q:depquestion - required = subquestion|answer=='blah'
+    #
+    # d:topdoc f=topform
+    #    a:subanswer q=subquestion, value='blah'
+    #    (depquestion has no answer, as it's indirectly not required)
+    #
+    # Note: The above structure shows the actual "feature" case.
+    # We also test with `subquestion` not hidden, to ensure both ways
+    # work correctly
+
+    # Build the form first...
+    topform = form_factory(slug="top")
+    subform = form_factory(slug="subform")
+
+    formquestion = question_factory(
+        type=Question.TYPE_FORM, is_hidden=fq_is_hidden, sub_form=subform
+    )
+    subquestion = question_factory(
+        type=Question.TYPE_INTEGER, is_hidden="false", slug="subquestion"
+    )
+    depquestion = question_factory(
+        type=Question.TYPE_INTEGER, is_required="'subquestion'|answer=='blah'"
+    )
+    form_question_factory(form=topform, question=formquestion)
+    form_question_factory(form=topform, question=depquestion)
+
+    form_question_factory(form=subform, question=subquestion)
+
+    # ... then build the document
+    topdoc = document_factory(form=topform)
+    answer_factory(document=topdoc, question=subquestion, value="blah")
+
+    validator = validators.DocumentValidator()
+
+    if fq_is_hidden == "true":
+        # parent is hidden, required question cannot be
+        # shown, thus is implicitly hidden
+        validator.validate(topdoc, info)
+        assert True  # above did not fail
+    else:
+        with pytest.raises(validators.CustomValidationError):
+            validator.validate(topdoc, info)
+
+
+def test_reference_missing_question(
+    db, form_question_factory, form_factory, question_factory, document_factory, info
+):
+    topform = form_factory(slug="top")
+
+    depquestion = question_factory(
+        type=Question.TYPE_INTEGER, is_hidden="'subquestion-missing'|answer=='blah'"
+    )
+    form_question_factory(form=topform, question=depquestion)
+
+    # ... then build the document
+    topdoc = document_factory(form=topform)
+    validator = validators.DocumentValidator()
+
+    with pytest.raises(QuestionMissing):
+        validator.validate(topdoc, info)

@@ -349,7 +349,7 @@ def test_validate_empty_answers(
             "'foo' in blah",
             "false",
             "",
-            "Error while evaluating 'is_required' expression on question q-slug: 'foo' in blah. The system log contains more information",
+            "Error while evaluating `is_required` expression on question q-slug: 'foo' in blah. The system log contains more information",
         ),
         (
             "q-slug",
@@ -357,7 +357,7 @@ def test_validate_empty_answers(
             "true",
             "'foo' in blah",
             "",
-            "Error while evaluating 'is_hidden' expression on question q-slug: 'foo' in blah. The system log contains more information",
+            "Error while evaluating `is_hidden` expression on question q-slug: 'foo' in blah. The system log contains more information",
         ),
         (
             "q-slug",
