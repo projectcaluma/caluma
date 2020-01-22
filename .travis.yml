@@ -41,11 +41,6 @@ jobs:
         - docker-compose exec caluma ./manage.py makemigrations --check --dry-run --no-input
         - docker-compose exec caluma pytest --no-cov-on-fail --cov --create-db -vv
         - docker-compose exec caluma reuse lint
-      after_success:
-        - git config --global user.name "semantic-release (via TravisCI)"
-        - git config --global user.email "semantic-release@travis"
-        - pip install python-semantic-release
-        - semantic-release publish
     - env:
         BUILD_TYPE=pipenv
         PIPENV_IGNORE_VIRTUALENVS=1
