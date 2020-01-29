@@ -184,13 +184,15 @@ def test_validate_nested_form(
     "required_jexl_main,required_jexl_sub,should_throw",
     [
         ("true", "false", True),
-        ("'other_q_1'|answer == 'something'", "false", False),
+        ("'other_q_1'|answer == 'something'", "false", True),
+        ("'other_q_1'|answer == 'something else'", "false", False),
         ("false", "false", False),
         ("'foo' in 'main_table_1'|answer|mapby('sub_question_a')", "false", True),
         ("'nothere' in 'main_table_1'|answer|mapby('sub_question_a')", "false", False),
         ("false", "'foo' == 'sub_question_a'|answer", True),
         ("false", "'bar' == 'sub_question_a'|answer", False),
-        ("false", "'something' == 'other_q_1'|answer", True),
+        ("false", "'other_q_1'|answer == 'something'", True),
+        ("false", "'other_q_1'|answer == 'something else'", False),
         ("false", "'fail' == 'no-question-slug'|answer", True),
     ],
 )
@@ -211,11 +213,13 @@ def test_validate_table(
     #     Q: main_table_1: table
     #        ROW_FORM
     #           Q: sub_question_a
-    #           Q: sub_question_b
+    #           Q: sub_question_b (required_jexl_sub)
     #     Q: other_q_1
-    #     Q: other_q_2
+    #     Q: other_q_2 (required_jexl_main)
+
+    main_form = form_factory(slug="main-form")
     main_table_question_1 = form_question_factory(
-        form__slug="main-form",
+        form=main_form,
         question__type=Question.TYPE_TABLE,
         question__slug="main_table_1",
         question__is_required="true",
@@ -233,39 +237,41 @@ def test_validate_table(
         form=main_table_question_1.question.row_form,
         question__type=Question.TYPE_TEXT,
         question__is_required=required_jexl_sub,
-        question__slug="sub_qustion_b",
+        question__slug="sub_question_b",
     )
     other_q_1 = form_question_factory(
-        form=main_table_question_1.form,
+        form=main_form,
         question__type=Question.TYPE_TEXT,
         question__slug="other_q_1",
         question__is_required="false",
     )
 
     other_q_2 = form_question_factory(
-        form=main_table_question_1.form,
+        form=main_form,
         question__type=Question.TYPE_TEXT,
         question__slug="other_q_2",
         question__is_required=required_jexl_main,
     )
 
-    main_document = document_factory(form=main_table_question_1.form)
-    table_answer = answer_factory(
-        document=main_document, question=main_table_question_1.question, value=None
-    )
     # MD
     #   - TA
     #       - RD1
     #           sqa:"foo"
+    #   oq1:"something"
+
+    main_document = document_factory(form=main_form)
+    table_answer = answer_factory(
+        document=main_document, question=main_table_question_1.question, value=None
+    )
 
     row_document_1 = document_factory(form=main_table_question_1.question.row_form)
-    answer_factory(
-        question=sub_question_a.question, document=row_document_1, value="foo"
-    )
     answer_document_factory(document=row_document_1, answer=table_answer)
 
     answer_factory(
-        question=other_q_1.question, document=row_document_1, value="something"
+        question=sub_question_a.question, document=row_document_1, value="foo"
+    )
+    answer_factory(
+        question=other_q_1.question, document=main_document, value="something"
     )
 
     if should_throw and required_jexl_sub.startswith("'fail'"):
@@ -463,7 +469,7 @@ def test_validate_hidden_subform(
     #                 \__ sub_question
     #                 \__ sub_sub_fq  # always hidden. sub_sub_question should never be checked
     #                      \__ sub_sub_form
-    #                          \__ sub_sub_question # rquired = true
+    #                          \__ sub_sub_question # required = true
     top_form = form_factory()
     sub_form = form_factory()
     form_question = question_factory(
