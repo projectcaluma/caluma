@@ -9,7 +9,7 @@ from caluma.caluma_data_source.data_source_handlers import get_data_sources
 
 from . import jexl, structure
 from .format_validators import get_format_validators
-from .models import Answer, DynamicOption, Question
+from .models import DynamicOption, Question
 
 log = getLogger()
 
@@ -202,10 +202,9 @@ class DocumentValidator:
         intermediate_context = {
             "form": document.form,
             "document": document,
-            # "answers": self.get_document_answers(document),
             "visible_questions": None,
             "jexl_cache": defaultdict(dict),
-            "structure": structure.DocForm(document, document.form),
+            "structure": structure.FieldSet(document, document.form),
         }
 
         intermediate_context["visible_questions"] = self.visible_questions(
@@ -225,8 +224,8 @@ class DocumentValidator:
         visible_questions = []
 
         q_jexl = jexl.QuestionJexl(validation_context)
-        for ans_question in validation_context["structure"].children():
-            question = ans_question.question
+        for field in validation_context["structure"].children():
+            question = field.question
             try:
                 is_hidden = q_jexl.is_hidden(question)
 
@@ -239,19 +238,15 @@ class DocumentValidator:
                     # answers to questions in subforms are still in
                     # the top level document
 
-                    sub_context = {**validation_context, "structure": ans_question}
+                    sub_context = {**validation_context, "structure": field}
                     visible_questions.extend(
                         self.visible_questions(document, sub_context)
                     )
 
                 elif question.type == Question.TYPE_TABLE:
-                    # all_questions does not descend into table questions, so
-                    # we need to extend the context here so we can check for
-                    # hiddenness.
                     row_visibles = set()
-
                     row_context = {**validation_context, "form": question.row_form}
-                    for row in ans_question.children():
+                    for row in field.children():
                         sub_context = {**row_context, "structure": row}
                         row_visibles.update(
                             self.visible_questions(document, sub_context)
@@ -272,72 +267,6 @@ class DocumentValidator:
                 )
         return visible_questions
 
-    def get_document_answers(self, document):
-        doc_answers = document.answers.select_related("question").prefetch_related(
-            "question__options"
-        )
-
-        answers = {
-            ans.question_id: self._get_answer_value(ans, document)
-            for ans in doc_answers
-        }
-
-        # Create answer values for questions in the form that don't have
-        # answers (yet)
-        questions = document.form.all_questions().values("slug", "type")
-        unanswered = {
-            q["slug"]: self._get_answer_value(
-                Answer(question_id=q["slug"], document=document), document
-            )
-            for q in questions
-            if q["slug"] not in answers
-            and q["type"] not in [Question.TYPE_FORM, Question.TYPE_STATIC]
-        }
-
-        answers.update(unanswered)
-        return answers
-
-    def _get_answer_value(self, answer, document):
-
-        if answer.value is not None:
-            return answer.value
-
-        if answer.question.type in (
-            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
-            Question.TYPE_MULTIPLE_CHOICE,
-        ):
-            # Unanswered multiple choice should return empty list
-            # to denote emptyness
-            return []
-
-        elif answer.question.type == Question.TYPE_TABLE:
-            # table type maps to list of dicts
-            return [
-                self.get_document_answers(document)
-                for document in answer.documents.all()
-            ]
-
-        elif answer.question.type == Question.TYPE_FILE:
-            if answer.file:
-                return answer.file.name
-        elif answer.question.type == Question.TYPE_DATE:
-            return answer.date
-
-        # Simple scalar types' value default to None in validation context
-        elif answer.question.type in (
-            Question.TYPE_INTEGER,
-            Question.TYPE_FLOAT,
-            Question.TYPE_TEXTAREA,
-            Question.TYPE_TEXT,
-            Question.TYPE_STATIC,
-            Question.TYPE_DYNAMIC_CHOICE,
-            Question.TYPE_CHOICE,
-        ):
-            return None
-
-        else:  # pragma: no cover
-            raise Exception(f"unhandled question type mapping {answer.question.type}")
-
     def _validate_required(self, validation_context):  # noqa: C901
         """Validate the 'requiredness' of the given answers.
 
@@ -350,42 +279,39 @@ class DocumentValidator:
         required_but_empty = []
 
         q_jexl = jexl.QuestionJexl(validation_context)
-        for ans_question in validation_context["structure"].children():
-            question = ans_question.question
+        for field in validation_context["structure"].children():
+            question = field.question
             try:
-                if question.slug not in validation_context["visible_questions"]:
+                is_hidden = question.slug not in validation_context["visible_questions"]
+
+                if is_hidden:
                     continue
 
                 is_required = q_jexl.is_required(question)
-                ans_value = ans_question.ans_value()
-                if (
-                    is_required
-                    and ans_value in EMPTY_VALUES
-                    # form questions don't have values but can still be required
-                    # TODO: is this valid assumtion? thi breaks a test as we don't
-                    # validate "presence" anymore (because we cant)
-                    and question.type != Question.TYPE_FORM
-                ):
-                    required_but_empty.append(question.slug)
 
                 if question.type == Question.TYPE_FORM:
                     # form questions's answers are still in the top level document
-                    sub_context = {**validation_context, "structure": ans_question}
+                    sub_context = {**validation_context, "structure": field}
                     self._validate_required(sub_context)
-                elif question.type == Question.TYPE_TABLE and is_required:
-                    # all_questions does not descend into table questions, so
-                    # we need to extend the context here.
+
+                elif question.type == Question.TYPE_TABLE:
                     # We need to validate presence in at least one row, but only
                     # if the table question is required.
-                    row_context = {
-                        **validation_context,
-                        "questions": {
-                            q.slug: q for q in question.row_form.all_questions()
-                        },
-                    }
-                    for row in ans_question.children():
-                        sub_context = {**row_context, "structure": row}
+                    if not field.children():
+                        raise CustomValidationError(
+                            f"no rows in {question.slug}", slugs=[question.slug]
+                        )
+                    for row in field.children():
+                        sub_context = {**validation_context, "structure": row}
                         self._validate_required(sub_context)
+                else:
+                    value = field.value()
+                    if value in EMPTY_VALUES and is_required:
+                        required_but_empty.append(question.slug)
+
+            except CustomValidationError as exc:
+                if is_required:
+                    required_but_empty.extend(exc.slugs)
 
             except (jexl.QuestionMissing, exceptions.ValidationError):
                 raise

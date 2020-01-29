@@ -6,19 +6,19 @@ from typing import Optional
 from .models import Question
 
 
-def object_local_memoise(meth):
-    def new_meth(self, *args, **kwargs):
+def object_local_memoise(method):
+    def new_method(self, *args, **kwargs):
         if not hasattr(self, "_memoise"):
             self._memoise = {}
 
-        key = str([args, kwargs, meth])
+        key = str([args, kwargs, method])
         if key in self._memoise:
             return self._memoise[key]
-        ret = meth(self, *args, **kwargs)
+        ret = method(self, *args, **kwargs)
         self._memoise[key] = ret
         return ret
 
-    return new_meth
+    return new_method
 
 
 class Element:
@@ -32,7 +32,7 @@ class Element:
         return []
 
 
-class AnsQuestion(Element):
+class Field(Element):
     def __init__(self, document, form, question, answer=None, parent=None):
         super().__init__(parent)
         self.document = document
@@ -43,11 +43,11 @@ class AnsQuestion(Element):
     @classmethod
     def factory(cls, document, form, question, answer=None, parent=None):
         if question.type == Question.TYPE_FORM:
-            return DocForm(
+            return FieldSet(
                 document, form=question.sub_form, question=question, parent=parent
             )
         elif question.type == Question.TYPE_TABLE:
-            return RowAnsQuestion(
+            return RowField(
                 document,
                 form=question.row_form,
                 question=question,
@@ -55,41 +55,45 @@ class AnsQuestion(Element):
                 parent=parent,
             )
 
-        return AnsQuestion(document, form, question, answer, parent=parent)
+        return Field(document, form, question, answer, parent=parent)
 
-    def ans_value(self):
+    def value(self):
         if self.answer is None:
             # no answer object at all - return empty in every case
             return self.question.empty_value()
 
-        if self.answer.value is not None:
+        elif self.answer.value is not None:
             return self.answer.value
 
         elif self.question.type == Question.TYPE_TABLE:
             return [
-                {cell.question.slug: cell.ans_value() for cell in row.children()}
+                {cell.question.slug: cell.value() for cell in row.children()}
                 for row in self.children()
             ]
-        elif self.question.type == Question.TYPE_FORM:
-            # forms never have values themselves
-            return None
-            return [
-                {cell.question.slug: cell.ans_value() for cell in row.children()}
-                for row in self.children()
-            ]
+
+        elif self.question.type == Question.TYPE_DATE:
+            return self.answer.date
+        elif self.question.type in (
+            Question.TYPE_MULTIPLE_CHOICE,
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+        ):
+            return []
+
+        # no value, no special handling
+        return None
 
     def __repr__(self):
-        return f"<AnsQuestion question={self.question.slug}, value={self.ans_value()} hidden=({self.question.is_hidden}) req=({self.question.is_required})>"
+        return f"<Field question={self.question.slug}, value={self.value()} hidden=({self.question.is_hidden}) req=({self.question.is_required})>"
 
 
-class RowAnsQuestion(AnsQuestion):
+class RowField(Field):
     @object_local_memoise
     def children(self):
         if not self.answer:
-            return []
+            return []  # pragma: no cover
 
         return [
-            DocForm(
+            FieldSet(
                 row_doc,
                 self.question.row_form,
                 question=self.question,
@@ -99,50 +103,49 @@ class RowAnsQuestion(AnsQuestion):
         ]
 
 
-class DocForm(Element):
+class FieldSet(Element):
     def __init__(self, document, form, question=None, parent=None):
         super().__init__(parent)
         self.document = document
         self.form = form
         self.question = question
-        self._ans_questions = None
+        self._fields = None
         self._sub_forms = None
 
-    def ans_value(self):
-        return None
+    @property
+    def fields(self):
+        if self._fields is None:
+            self._fields = {field.question.slug: field for field in self.children()}
+        return self._fields
 
-    def _build_ans_questions(self):
-        if self._ans_questions is None:
-            self._ans_questions = {aq.question.slug: aq for aq in self.children()}
+    @property
+    def sub_forms(self):
         if self._sub_forms is None:
             self._sub_forms = {
-                aq.question.slug: aq
-                for aq in self.children()
-                if aq.question.type == Question.TYPE_FORM
+                field.question.slug: field
+                for field in self.children()
+                if field.question.type == Question.TYPE_FORM
             }
+        return self._sub_forms
 
-    def get_ans_question(
-        self, question_slug: str, allow_check_parent: bool = True
-    ) -> Optional[AnsQuestion]:
+    def get_field(
+        self, question_slug: str, check_parent: bool = True
+    ) -> Optional[Field]:
 
-        self._build_ans_questions()
+        field = self.fields.get(question_slug)
 
-        ans_question = self._ans_questions.get(question_slug)
-
-        if not ans_question and allow_check_parent:
-            ans_question = (
-                self.parent().get_ans_question(question_slug) if self.parent() else None
-            )
-        if ans_question:
-            return ans_question
+        if not field and check_parent:
+            field = self.parent().get_field(question_slug) if self.parent() else None
+        if field:
+            return field
 
         # OK start looking in subforms / row forms below our level.
         # Since we're looking down, we're disallowing recursing to outer context
         # to avoid recursing back to where we are
-        for subform in self._sub_forms.values():
-            sub_aq = subform.get_ans_question(question_slug, allow_check_parent=False)
-            if sub_aq:
-                return sub_aq
+        for subform in self.sub_forms.values():
+            sub_field = subform.get_field(question_slug, check_parent=False)
+            if sub_field:
+                return sub_field
         # if we reach this line, we didn't find the question
         return None
 
@@ -150,7 +153,7 @@ class DocForm(Element):
     def children(self):
         answers = {ans.question_id: ans for ans in self.document.answers.all()}
         return [
-            AnsQuestion.factory(
+            Field.factory(
                 document=self.document,
                 form=self.form,
                 question=question,
@@ -160,12 +163,33 @@ class DocForm(Element):
             for question in self.form.questions.all()
         ]
 
+    @object_local_memoise
+    def paths_to_question(self, slug):
+        res = []
+        prefix = [self.question] if self.question else []
+
+        if slug in self.fields:
+            res.append(prefix + [self.fields[slug].question])
+        for field in self.children():
+
+            if field.question.type == Question.TYPE_FORM:
+                for sub_path in field.paths_to_question(slug):
+                    res.append(prefix + sub_path)
+
+            elif field.question.type == Question.TYPE_TABLE:
+                for child in field.children():
+                    for sub_path in child.paths_to_question(slug):
+                        # TODO: This should be covered, but is a case that will probably
+                        # never happen in real life
+                        res.append(prefix + sub_path)  # pragma: no cover
+        return res
+
     def __repr__(self):
         q_slug = self.question.slug if self.question else None
         if q_slug:
-            return f"<DocForm fq={q_slug}, doc={self.document.pk} hidden=({self.question.is_hidden}) req=({self.question.is_required})>"
+            return f"<FieldSet fq={q_slug}, doc={self.document.pk} hidden=({self.question.is_hidden}) req=({self.question.is_required})>"
 
-        return f"<DocForm form={self.form.slug}, doc={self.document.pk}>"
+        return f"<FieldSet form={self.form.slug}, doc={self.document.pk}>"
 
 
 def print_document_structure(document):  # pragma: no cover
@@ -188,5 +212,5 @@ def print_document_structure(document):  # pragma: no cover
             visit(c)
         ind["i"] -= 1
 
-    struc = DocForm(document, document.form)
+    struc = FieldSet(document, document.form)
     visit(struc)

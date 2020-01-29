@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 
 from ...caluma_core.tests import extract_serializer_input_fields
 from ...caluma_form.models import DynamicOption, Question
-from .. import serializers
+from .. import serializers, structure
 from ..jexl import QuestionMissing
 from ..validators import DocumentValidator, QuestionValidator
 
@@ -124,60 +124,6 @@ def test_validate_dynamic_option_exists(
     answer_factory(question=question, value=value, document=document)
 
     assert DocumentValidator().validate(dynamic_option.document, info) is None
-
-
-@pytest.mark.parametrize(
-    "required_jexl,should_throw",
-    [("true", True), ("false", False), ("form == 'main'", True)],
-)
-def test_validate_nested_form(
-    db,
-    required_jexl,
-    should_throw,
-    form_question_factory,
-    document_factory,
-    answer_factory,
-    info,
-):
-    sub_form_question_1 = form_question_factory(
-        form__slug="sub_1",
-        question__type=Question.TYPE_TEXT,
-        question__slug="sub_1_question_1",
-    )
-    sub_form_question_2 = form_question_factory(
-        form__slug="sub_2",
-        question__type=Question.TYPE_TEXT,
-        question__is_required=required_jexl,
-        question__slug="sub_2_question_1",
-    )
-
-    main_form_question_1 = form_question_factory(
-        form__slug="main",
-        question__type=Question.TYPE_FORM,
-        question__sub_form=sub_form_question_1.form,
-        question__slug="sub_1",
-        question__is_required="false",
-    )
-    form_question_factory(
-        form=main_form_question_1.form,
-        question__type=Question.TYPE_FORM,
-        question__sub_form=sub_form_question_2.form,
-        question__slug="sub_2",
-        question__is_required="false",
-    )
-
-    main_document = document_factory(form=main_form_question_1.form)
-
-    answer_factory(
-        document=main_document, question=sub_form_question_1.question, value="foo"
-    )
-
-    if should_throw:
-        error_msg = f"Questions {sub_form_question_2.question.slug} are required but not provided"
-        with pytest.raises(ValidationError, match=error_msg):
-            DocumentValidator().validate(main_document, info)
-    else:
-        DocumentValidator().validate(main_document, info)
 
 
 @pytest.mark.parametrize(
@@ -340,9 +286,12 @@ def test_validate_empty_answers(
     document_factory,
     answer_factory,
     expected_value,
+    info,
 ):
 
-    answer_value = DocumentValidator()._get_answer_value(answer, document)
+    struct = structure.FieldSet(document, document.form)
+    field = struct.get_field(question.slug)
+    answer_value = field.value() if field else field
     assert answer_value == expected_value
 
 

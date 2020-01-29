@@ -67,7 +67,7 @@ def test_all_deps_hidden(db, form, document_factory, form_question_factory):
             "document": document,
             "answers": {},
             "form": form,
-            "structure": structure.DocForm(document, document.form),
+            "structure": structure.FieldSet(document, document.form),
         }
     )
     assert qj.is_hidden(q2)

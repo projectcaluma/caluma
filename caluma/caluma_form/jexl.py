@@ -1,12 +1,10 @@
 from collections import defaultdict
 from functools import partial
 
-from django.db.models import Q
 from pyjexl.analysis import ValidatingAnalyzer
 from pyjexl.evaluator import Context
 
 from ..caluma_core.jexl import JEXL, ExtractTransformSubjectAnalyzer
-from .models import Question
 
 
 class QuestionMissing(Exception):
@@ -49,14 +47,7 @@ class QuestionJexl(JEXL):
         )
 
     def answer_transform(self, question):
-
-        aq = self.context["structure"].get_ans_question(question)
-        if aq is None:
-            raise QuestionMissing(
-                f"Question `{question}` could not be found in form {self.context['form']}"
-            )
-
-        return aq.ans_value()
+        return self.context["structure"].get_field(question).value()
 
     def validate(self, expression, **kwargs):
         return super().validate(expression, QuestionValidatingAnalyzer)
@@ -68,41 +59,13 @@ class QuestionJexl(JEXL):
         )
 
     def _question(self, slug):
-        ans_question = self.context["structure"].get_ans_question(slug)
-        if ans_question:
-            return ans_question.question
+        field = self.context["structure"].get_field(slug)
+        if field:
+            return field.question
 
         raise QuestionMissing(
             f"Question `{slug}` could not be found in form {self.context['form']}"
         )
-
-    def _paths_to_question(self, question, doc_form):
-        """Return all paths from the doc form to the given question."""
-        cache = self._cache["containers_hidden_paths"]
-        cache_key = (doc_form.slug, question.slug)
-
-        if cache_key in cache:
-            return cache[cache_key]
-
-        res = []
-        if doc_form in question.forms.all():
-            # found a path - add it to our result list
-            res.append([question])
-
-        parent_questions = Question.objects.filter(
-            Q(type=Question.TYPE_FORM) | Q(type=Question.TYPE_TABLE),
-            Q(sub_form__questions__pk=question) | Q(row_form__questions__pk=question),
-        )
-        for parent_question in parent_questions:
-            res.extend(
-                [
-                    path + [question]
-                    for path in self._paths_to_question(parent_question, doc_form)
-                ]
-            )
-
-        cache[cache_key] = res
-        return res
 
     def _all_containers_hidden(self, question):
         """Check whether all containers of the given question are hidden.
@@ -114,7 +77,7 @@ class QuestionJexl(JEXL):
         If all subforms are hidden where the question shows up,
         the question shall be hidden as well.
         """
-        paths = self._paths_to_question(question, self.context.get("document").form)
+        paths = self.context.get("structure").paths_to_question(question.slug)
 
         res = bool(paths) and all(
             # the "inner" check here represents a single path. If any
@@ -135,6 +98,7 @@ class QuestionJexl(JEXL):
         This checks whether the dependency questions are hidden, then
         evaluates the question's is_hidden expression itself.
         """
+
         if question.pk in self._cache["hidden"]:
             return self._cache["hidden"][question.pk]
         # Check visibility of dependencies before actually evaluating the `is_hidden`

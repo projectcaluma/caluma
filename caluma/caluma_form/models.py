@@ -27,13 +27,6 @@ class Form(SlugModel):
         on_delete=models.SET_NULL,
     )
 
-    def all_questions(self):
-        questions = self.questions.all()
-        for q in self.questions.filter(type=Question.TYPE_FORM):
-            questions = questions.union(q.sub_form.all_questions())
-
-        return questions
-
     class Meta:
         indexes = [GinIndex(fields=["meta"])]
 
