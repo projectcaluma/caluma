@@ -150,6 +150,16 @@ class Question(SlugModel):
     def min_value(self, value):
         self.configuration["min_value"] = value
 
+    def empty_value(self):
+        """Return empty value for this question type."""
+
+        empties = {
+            Question.TYPE_MULTIPLE_CHOICE: [],
+            Question.TYPE_TABLE: [],
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: [],
+        }
+        return empties.get(self.type, None)
+
     class Meta:
         indexes = [GinIndex(fields=["meta"])]
 

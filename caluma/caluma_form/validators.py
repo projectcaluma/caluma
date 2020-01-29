@@ -7,7 +7,7 @@ from rest_framework import exceptions
 
 from caluma.caluma_data_source.data_source_handlers import get_data_sources
 
-from . import jexl
+from . import jexl, structure
 from .format_validators import get_format_validators
 from .models import Answer, DynamicOption, Question
 
@@ -196,19 +196,16 @@ class DocumentValidator:
             )
 
     def _validation_context(self, document):
-        all_questions = {q.slug: q for q in document.form.all_questions()}
-        questions = {q.slug: q for q in document.form.questions.all()}
         # we need to build the context in two steps (for now), as
         # `self.visible_questions()` already needs a context to evaluate
         # `is_hidden` expressions
         intermediate_context = {
             "form": document.form,
             "document": document,
-            "all_questions": all_questions,
-            "questions": questions,
-            "answers": self.get_document_answers(document),
+            # "answers": self.get_document_answers(document),
             "visible_questions": None,
             "jexl_cache": defaultdict(dict),
+            "structure": structure.DocForm(document, document.form),
         }
 
         intermediate_context["visible_questions"] = self.visible_questions(
@@ -228,7 +225,8 @@ class DocumentValidator:
         visible_questions = []
 
         q_jexl = jexl.QuestionJexl(validation_context)
-        for question in validation_context["questions"].values():
+        for ans_question in validation_context["structure"].children():
+            question = ans_question.question
             try:
                 is_hidden = q_jexl.is_hidden(question)
 
@@ -240,12 +238,8 @@ class DocumentValidator:
                 if question.type == Question.TYPE_FORM:
                     # answers to questions in subforms are still in
                     # the top level document
-                    sub_context = {
-                        **validation_context,
-                        "questions": {
-                            q.slug: q for q in question.sub_form.questions.all()
-                        },
-                    }
+
+                    sub_context = {**validation_context, "structure": ans_question}
                     visible_questions.extend(
                         self.visible_questions(document, sub_context)
                     )
@@ -255,17 +249,10 @@ class DocumentValidator:
                     # we need to extend the context here so we can check for
                     # hiddenness.
                     row_visibles = set()
-                    row_context = {
-                        **validation_context,
-                        "questions": {
-                            q.slug: q for q in question.row_form.all_questions()
-                        },
-                    }
-                    for row in validation_context["answers"][question.slug]:
-                        sub_context = {
-                            **row_context,
-                            "answers": {**validation_context["answers"], **row},
-                        }
+
+                    row_context = {**validation_context, "form": question.row_form}
+                    for row in ans_question.children():
+                        sub_context = {**row_context, "structure": row}
                         row_visibles.update(
                             self.visible_questions(document, sub_context)
                         )
@@ -362,25 +349,28 @@ class DocumentValidator:
         """
         required_but_empty = []
 
-        answers = validation_context["answers"]
-
         q_jexl = jexl.QuestionJexl(validation_context)
-        for question in validation_context["questions"].values():
+        for ans_question in validation_context["structure"].children():
+            question = ans_question.question
             try:
                 if question.slug not in validation_context["visible_questions"]:
                     continue
+
                 is_required = q_jexl.is_required(question)
-                if is_required and answers.get(question.slug) in EMPTY_VALUES:
+                ans_value = ans_question.ans_value()
+                if (
+                    is_required
+                    and ans_value in EMPTY_VALUES
+                    # form questions don't have values but can still be required
+                    # TODO: is this valid assumtion? thi breaks a test as we don't
+                    # validate "presence" anymore (because we cant)
+                    and question.type != Question.TYPE_FORM
+                ):
                     required_but_empty.append(question.slug)
 
                 if question.type == Question.TYPE_FORM:
                     # form questions's answers are still in the top level document
-                    sub_context = {
-                        **validation_context,
-                        "questions": {
-                            q.slug: q for q in question.sub_form.questions.all()
-                        },
-                    }
+                    sub_context = {**validation_context, "structure": ans_question}
                     self._validate_required(sub_context)
                 elif question.type == Question.TYPE_TABLE and is_required:
                     # all_questions does not descend into table questions, so
@@ -393,11 +383,8 @@ class DocumentValidator:
                             q.slug: q for q in question.row_form.all_questions()
                         },
                     }
-                    for row in validation_context["answers"][question.slug]:
-                        sub_context = {
-                            **row_context,
-                            "answers": {**validation_context["answers"], **row},
-                        }
+                    for row in ans_question.children():
+                        sub_context = {**row_context, "structure": row}
                         self._validate_required(sub_context)
 
             except (jexl.QuestionMissing, exceptions.ValidationError):
@@ -407,6 +394,7 @@ class DocumentValidator:
                     f"Error while evaluating `is_required` expression on question {question.slug}: "
                     f"{question.is_required}: {str(exc)}"
                 )
+
                 raise RuntimeError(
                     f"Error while evaluating `is_required` expression on question {question.slug}: "
                     f"{question.is_required}. The system log contains more information"

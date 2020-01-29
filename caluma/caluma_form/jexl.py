@@ -23,7 +23,6 @@ class QuestionValidatingAnalyzer(ValidatingAnalyzer):
 
 class QuestionJexl(JEXL):
     def __init__(self, validation_context=None, **kwargs):
-        answer_by_question = validation_context["answers"] if validation_context else {}
 
         if validation_context:
             if "jexl_cache" not in validation_context:
@@ -42,7 +41,6 @@ class QuestionJexl(JEXL):
                 context_data["form"] = form.slug
 
         self.context = Context(context_data)
-        self.answer_by_question = answer_by_question
 
         self.add_transform("answer", self.answer_transform)
         self.add_transform("mapby", lambda arr, key: [obj[key] for obj in arr])
@@ -51,12 +49,14 @@ class QuestionJexl(JEXL):
         )
 
     def answer_transform(self, question):
-        try:
-            return self.answer_by_question[question]
-        except KeyError:  # pragma: no cover
+
+        aq = self.context["structure"].get_ans_question(question)
+        if aq is None:
             raise QuestionMissing(
                 f"Question `{question}` could not be found in form {self.context['form']}"
             )
+
+        return aq.ans_value()
 
     def validate(self, expression, **kwargs):
         return super().validate(expression, QuestionValidatingAnalyzer)
@@ -68,14 +68,13 @@ class QuestionJexl(JEXL):
         )
 
     def _question(self, slug):
-        question = self.context["questions"].get(
-            slug, self.context["all_questions"].get(slug)
+        ans_question = self.context["structure"].get_ans_question(slug)
+        if ans_question:
+            return ans_question.question
+
+        raise QuestionMissing(
+            f"Question `{slug}` could not be found in form {self.context['form']}"
         )
-        if not question:
-            raise QuestionMissing(
-                f"Question `{slug}` could not be found in form {self.context['form']}"
-            )
-        return question
 
     def _paths_to_question(self, question, doc_form):
         """Return all paths from the doc form to the given question."""

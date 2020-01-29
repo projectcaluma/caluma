@@ -500,7 +500,7 @@ def test_validate_hidden_subform(
         is_hidden="false",
         slug="sub_sub_question",
         type=Question.TYPE_FLOAT,
-        configuration={"min_value": 0, "max_value": 3},
+        configuration={"min_value": 1, "max_value": 3},
     )
     form_question_factory(form=sub_sub_form, question=sub_sub_question)
 
@@ -509,7 +509,7 @@ def test_validate_hidden_subform(
     # We never answer sub_sub_question, thus making the document invalid
     # if it's wrongfully validated
     document = document_factory(form=top_form)
-    answer_factory(question=sub_question, document=document, value=4)
+    answer_factory(question=sub_sub_question, document=document, value=4)
 
     if hide_formquestion:
         assert DocumentValidator().validate(document, info) is None
@@ -518,7 +518,7 @@ def test_validate_hidden_subform(
             DocumentValidator().validate(document, info)
         # Verify that the sub_sub_question is not the cause of the exception:
         # it should not be checked at all because it's parent is always hidden
-        assert excinfo.match(r"form_question\s.* required but not provided.")
+        assert excinfo.match(r"Questions \bsub_question\s.* required but not provided.")
 
         # can't do `not excinfo.match()` as it throws an AssertionError itself
         # if it can't match :()
