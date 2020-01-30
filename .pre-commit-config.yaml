@@ -2,23 +2,34 @@ repos:
 -   repo: local
     hooks:
     - id: black
+      stages: [commit]
       name: black
       language: system
       entry: black
       types: [python]
     - id: isort
+      stages: [commit]
       name: isort
       language: system
       entry: isort -y
       types: [python]
     - id: flake8
+      stages: [commit]
       name: flake8
       language: system
       entry: flake8
       types: [python]
     - id: reuse
+      stages: [commit]
       name: reuse
       description: Check licenses
       entry: reuse lint
       pass_filenames: false
       language: system
+    - id: gitlint
+      stages: [commit-msg]
+      name: gitlint
+      description: Validate commit lint
+      entry: gitlint --msg-filename
+      language: system
+

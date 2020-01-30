@@ -32,12 +32,11 @@ jobs:
     - env: BUILD_TYPE=standard
       install:
         - docker-compose up -d --build
-        - npm install @commitlint/{config-conventional,travis-cli}
 
       script:
         - docker-compose exec caluma black --check .
         - docker-compose exec caluma flake8
-        - ./node_modules/.bin/commitlint-travis
+        - docker-compose exec caluma gitlint --commits ${TRAVIS_BRANCH}..HEAD lint
         - docker-compose exec caluma ./manage.py makemigrations --check --dry-run --no-input
         - docker-compose exec caluma pytest --no-cov-on-fail --cov --create-db -vv
         - docker-compose exec caluma reuse lint
