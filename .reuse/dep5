@@ -11,6 +11,7 @@ Files:
     .pre-commit-config.yaml
     .flake8
     .travis.yml
+    .gitlint
     Dockerfile
     commit-msg
     commitlint.config.js

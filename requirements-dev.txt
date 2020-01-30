@@ -26,3 +26,4 @@ python-semantic-release==4.4.0
 requests-mock==1.7.0
 snapshottest==0.5.1
 reuse==0.8.0
+gitlint==0.12.0
