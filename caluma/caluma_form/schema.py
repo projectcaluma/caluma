@@ -781,6 +781,12 @@ class SaveDocument(Mutation):
         model_operations = ["create", "update"]
 
 
+class CopyDocument(Mutation):
+    class Meta:
+        serializer_class = serializers.CopyDocumentSerializer
+        model_operations = ["create"]
+
+
 class SaveDocumentAnswer(Mutation):
     @classmethod
     def get_object(cls, root, info, queryset, **input):
@@ -875,6 +881,7 @@ class Mutation(object):
     save_file_question = SaveFileQuestion().Field()
     save_static_question = SaveStaticQuestion().Field()
 
+    copy_document = CopyDocument().Field()
     save_document = SaveDocument().Field()
     save_document_string_answer = SaveDocumentStringAnswer().Field()
     save_document_integer_answer = SaveDocumentIntegerAnswer().Field()

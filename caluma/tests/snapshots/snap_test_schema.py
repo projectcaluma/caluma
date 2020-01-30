@@ -268,6 +268,16 @@ type CompleteWorkflowFormTask implements Task, Node {
   id: ID!
 }
 
+input CopyDocumentInput {
+  source: ID!
+  clientMutationId: String
+}
+
+type CopyDocumentPayload {
+  document: Document
+  clientMutationId: String
+}
+
 input CopyFormInput {
   slug: String!
   name: String!
@@ -414,7 +424,9 @@ type Document implements Node {
   createdByGroup: String
   id: ID!
   form: Form!
+  source: Document
   meta: GenericScalar
+  copies(before: String, after: String, first: Int, last: Int): DocumentConnection!
   answers(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], question: ID, search: String, orderBy: [AnswerOrdering], filter: [AnswerFilterSetType], order: [AnswerOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, questions: [ID], visibleInContext: Boolean): AnswerConnection
   case: Case
   workItem: WorkItem
@@ -814,6 +826,7 @@ type HistoricalDocument implements Node {
   meta: GenericScalar
   historyUserId: String
   form: Form
+  source: Document
   historyDate: DateTime!
   historyType: String
   historicalAnswers(asOf: DateTime!, before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
@@ -1044,6 +1057,7 @@ type Mutation {
   saveFormQuestion(input: SaveFormQuestionInput!): SaveFormQuestionPayload
   saveFileQuestion(input: SaveFileQuestionInput!): SaveFileQuestionPayload
   saveStaticQuestion(input: SaveStaticQuestionInput!): SaveStaticQuestionPayload
+  copyDocument(input: CopyDocumentInput!): CopyDocumentPayload
   saveDocument(input: SaveDocumentInput!): SaveDocumentPayload
   saveDocumentStringAnswer(input: SaveDocumentStringAnswerInput!): SaveDocumentStringAnswerPayload
   saveDocumentIntegerAnswer(input: SaveDocumentIntegerAnswerInput!): SaveDocumentIntegerAnswerPayload
@@ -1774,6 +1788,7 @@ enum SortableDocumentAttributes {
   CREATED_BY_USER
   CREATED_BY_GROUP
   FORM
+  SOURCE
 }
 
 enum SortableFormAttributes {
