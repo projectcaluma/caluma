@@ -1,3 +1,16 @@
+# v5.1.0 (31 Jan 2020)
+
+### Feature
+
+* add hierarchical inspection classes (0d746594d9d14e23b7d90b359c8869b8d3ab7afc)
+  Useful for extension points and caluma-as-django-app
+
+### Fix
+
+* validation performance vastly improved (25570a9b220d773b5a1517bb4e0b40d27ed306f1)
+  form validation query count is roughly 10% of what it used to be
+
+
 # v5.0.0 (22 Jan 2020)
 
 
