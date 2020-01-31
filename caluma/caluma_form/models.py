@@ -27,13 +27,6 @@ class Form(SlugModel):
         on_delete=models.SET_NULL,
     )
 
-    def all_questions(self):
-        questions = self.questions.all()
-        for q in self.questions.filter(type=Question.TYPE_FORM):
-            questions = questions.union(q.sub_form.all_questions())
-
-        return questions
-
     class Meta:
         indexes = [GinIndex(fields=["meta"])]
 
@@ -149,6 +142,16 @@ class Question(SlugModel):
     @min_value.setter
     def min_value(self, value):
         self.configuration["min_value"] = value
+
+    def empty_value(self):
+        """Return empty value for this question type."""
+
+        empties = {
+            Question.TYPE_MULTIPLE_CHOICE: [],
+            Question.TYPE_TABLE: [],
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: [],
+        }
+        return empties.get(self.type, None)
 
     class Meta:
         indexes = [GinIndex(fields=["meta"])]

@@ -1,6 +1,6 @@
 import pytest
 
-from .. import validators
+from .. import structure, validators
 from ..jexl import QuestionJexl, QuestionMissing
 from ..models import Question
 
@@ -60,14 +60,14 @@ def test_all_deps_hidden(db, form, document_factory, form_question_factory):
         question__is_hidden=f"'{q1.slug}'|answer=='blah'",
         question__is_required=f"'{q1.slug}'|answer=='blah'",
     ).question
+    document = document_factory(form=form)
 
     qj = QuestionJexl(
         {
-            "document": document_factory(),
+            "document": document,
             "answers": {},
             "form": form,
-            "questions": {q1.slug: q1, q2.slug: q2},
-            "all_questions": {q1.slug: q1, q2.slug: q2},
+            "structure": structure.FieldSet(document, document.form),
         }
     )
     assert qj.is_hidden(q2)
