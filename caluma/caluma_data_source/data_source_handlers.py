@@ -4,19 +4,13 @@ from django.conf import settings
 from django.utils.module_loading import import_string
 from localized_fields.value import LocalizedValue
 
+from caluma.utils import is_iterable_and_no_string
+
 DataSource = namedtuple("DataSource", ["name", "info"])
 
 
 class DataSourceException(Exception):
     pass
-
-
-def is_iterable_and_no_string(value):
-    try:
-        iter(value)
-        return not isinstance(value, str)
-    except TypeError:
-        return False
 
 
 class Data:
