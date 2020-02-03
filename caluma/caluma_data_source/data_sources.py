@@ -1,6 +1,7 @@
 import logging
 
 from caluma.caluma_form.models import DynamicOption
+from caluma.utils import is_iterable_and_no_string
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +61,7 @@ class BaseDataSource:
     def validate_answer_value(self, value, document, question, info):
         for data in self.get_data(info):
             label = data
-            if isinstance(data, list):
+            if is_iterable_and_no_string(data):
                 label = data[-1]
                 data = data[0]
             if str(data) == value:

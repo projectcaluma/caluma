@@ -69,9 +69,9 @@ def test_fetch_data_from_data_source(snapshot, schema_executor, data_source_sett
     snapshot.assert_match(result.data)
     assert cache.get("data_source_MyDataSource") == [
         1,
-        5.5,
+        (5.5,),
         "sdkj",
-        ["value", "info"],
+        ("value", "info"),
         ["something"],
         [
             "translated_value",

@@ -12,9 +12,9 @@ class MyDataSource(BaseDataSource):
     def get_data(self, info):
         return [
             1,
-            5.5,
+            (5.5,),
             "sdkj",
-            ["value", "info"],
+            ("value", "info"),
             ["something"],
             [
                 "translated_value",
