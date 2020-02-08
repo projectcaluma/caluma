@@ -22,7 +22,7 @@ pytest-factoryboy==2.0.3
 pytest-mock==2.0.0
 pytest-randomly==3.2.1
 pytest-xdist==1.31.0
-python-semantic-release==4.4.0
+python-semantic-release==4.5.0
 requests-mock==1.7.0
 snapshottest==0.5.1
 reuse==0.8.0
