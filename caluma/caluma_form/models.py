@@ -208,6 +208,14 @@ class Document(UUIDModel):
     form = models.ForeignKey(
         "caluma_form.Form", on_delete=models.DO_NOTHING, related_name="documents"
     )
+    source = models.ForeignKey(
+        "self",
+        blank=True,
+        null=True,
+        help_text="Reference this document has been copied from",
+        related_name="+",
+        on_delete=models.SET_NULL,
+    )
     meta = JSONField(default=dict)
 
     class Meta:

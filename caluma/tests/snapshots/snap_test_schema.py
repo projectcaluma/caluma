@@ -413,6 +413,7 @@ type Document implements Node {
   createdByGroup: String
   id: ID!
   form: Form!
+  source: Document
   meta: GenericScalar
   answers(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], question: ID, search: String, orderBy: [AnswerOrdering], filter: [AnswerFilterSetType], order: [AnswerOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, questions: [ID], visibleInContext: Boolean): AnswerConnection
   case: Case
@@ -813,6 +814,7 @@ type HistoricalDocument implements Node {
   meta: GenericScalar
   historyUserId: String
   form: Form
+  source: Document
   historyDate: DateTime!
   historyType: String
   historicalAnswers(asOf: DateTime!, before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
@@ -1771,6 +1773,7 @@ enum SortableDocumentAttributes {
   CREATED_BY_USER
   CREATED_BY_GROUP
   FORM
+  SOURCE
 }
 
 enum SortableFormAttributes {
