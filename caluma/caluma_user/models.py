@@ -1,3 +1,5 @@
+from warnings import warn
+
 from django.conf import settings
 
 
@@ -6,12 +8,21 @@ class BaseUser:  # pragma: no cover
         self.username = None
         self.groups = []
         self.token = None
-        self.userinfo = {}
+        self.claims = {}
         self.is_authenticated = False
 
     @property
     def group(self):
         raise NotImplementedError
+
+    def __getattribute__(self, name):
+        if name in ["userinfo", "introspection"]:
+            warn(
+                f'"{name}" is deprecated. Use the new "claims" attribute',
+                DeprecationWarning,
+            )
+            return self.claims
+        return super().__getattribute__(name)
 
     def __str__(self):
         raise NotImplementedError
@@ -27,31 +38,28 @@ class AnonymousUser(BaseUser):
 
 
 class OIDCUser(BaseUser):
-    def __init__(self, token, userinfo):
+    def __init__(self, token: str, userinfo: dict = None, introspection: dict = None):
+        super().__init__()
+
+        self.claims, self.claims_source = self._get_claims(userinfo, introspection)
+        self.username = self.claims[settings.OIDC_USERNAME_CLAIM]
+        self.groups = self.claims.get(settings.OIDC_GROUPS_CLAIM)
         self.token = token
-        self.username = userinfo["sub"]
-        self.userinfo = userinfo
-        self.groups = userinfo.get(settings.OIDC_GROUPS_CLAIM) or []
         self.is_authenticated = True
+
+    def _get_claims(self, userinfo, introspection):
+        result = (userinfo, "userinfo")
+        if all([userinfo, introspection]):  # pragma: no cover
+            raise AttributeError("You can't set userinfo AND introspection.")
+        elif not any([userinfo, introspection]):  # pragma: no cover
+            raise AttributeError("You must provide either userinfo or introspection.")
+        elif introspection is not None:
+            result = (introspection, "introspection")
+        return result
 
     @property
     def group(self):
         return self.groups[0] if self.groups else None
-
-    def __str__(self):
-        return self.username
-
-
-class OIDCClient(BaseUser):
-    def __init__(self, token, introspection):
-        self.token = token
-        self.username = f"system-{introspection['client_id']}"
-        self.introspection = introspection
-        self.is_authenticated = True
-
-    @property
-    def group(self):  # pragma: no cover
-        return None
 
     def __str__(self):
         return self.username
