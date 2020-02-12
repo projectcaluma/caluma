@@ -438,3 +438,50 @@ def test_document_form(
     document = result.data["allCases"]["edges"][0]["node"]["document"]
 
     assert extract_global_id(document["form"]["id"]) == form_a.slug
+
+
+@pytest.mark.parametrize("question__slug,question__type", [("asdf", "text")])
+@pytest.mark.parametrize("form__slug", ["theform"])
+@pytest.mark.parametrize(
+    "doc_val,workitem_val,result_count", [("hello", "blah", 0), ("blah", "hello", 1)]
+)
+def test_work_item_document(
+    db,
+    case,
+    form,
+    work_item_factory,
+    answer_factory,
+    question,
+    schema_executor,
+    doc_val,
+    workitem_val,
+    result_count,
+):
+    work_item = work_item_factory(document__form=form, case=case)
+    answer_factory(document=work_item.document, question=question, value=workitem_val)
+    answer_factory(document=case.document, question=question, value=doc_val)
+
+    query = """
+        query workitems ($filter: HasAnswerFilterType){
+          allCases(filter: [
+            {workItemDocumentHasAnswer: [$filter]}
+          ]) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+
+    """
+    result = schema_executor(
+        query,
+        variables={
+            "filter": {"question": question.slug, "value": "hello", "lookup": "EXACT"}
+        },
+    )
+
+    assert not result.errors
+
+    assert len(result.data["allCases"]["edges"]) == result_count
