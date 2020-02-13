@@ -71,8 +71,12 @@ class Field(Element):
                 for row in self.children()
             ]
 
+        elif self.question.type == Question.TYPE_FILE:
+            return self.answer.file
+
         elif self.question.type == Question.TYPE_DATE:
             return self.answer.date
+
         elif self.question.type in (
             Question.TYPE_MULTIPLE_CHOICE,
             Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
