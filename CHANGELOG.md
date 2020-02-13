@@ -1,3 +1,18 @@
+# v5.2.0 (13 Feb 2020)
+
+### Feature
+* new filter on cases to check for answers in work items (827399264e275784ec45643143a4ceb7a05751b2)
+* add indexes on timestamps and user fields (0ad0c41d79d6dddd08662a4e547094b2e5c82c3f)
+
+### Fix
+* file answers need special treatment (65e1a3787d5dcefa171694f538f69019e7d6b02d)
+* fix user object creation (6ed82c6ef865e5fc203733ec35eab209ca8781fd)
+* fix validation of dynamic answers (88431eaf61cf3f2c689c1417408873a1d7de055c)
+
+### Documentation
+* add guide on workflow implementation (WIP) (515add093009f9abb668e26eef00da434f176c57)
+
+
 # v5.1.0 (31 Jan 2020)
 
 ### Feature
