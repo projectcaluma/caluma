@@ -514,3 +514,30 @@ def test_dependent_question_is_hidden(
         # that q3 should also be visible and required
         with pytest.raises(ValidationError):
             DocumentValidator().validate(document, info)
+
+
+@pytest.mark.parametrize("question__type", ["file"])
+@pytest.mark.parametrize("question__is_required", ["true"])
+@pytest.mark.parametrize("question__is_hidden", ["false"])
+def test_required_file(db, question, form, document, answer, info, form_question):
+    # verify some assumptions
+    assert document.form == form
+    assert answer.document == document
+    assert form in question.forms.all()
+    assert answer.file
+
+    # remove the file
+    the_file = answer.file
+    answer.file = None
+    answer.save()
+
+    # ensure validation fails with no `file` value
+    with pytest.raises(ValidationError):
+        DocumentValidator().validate(document, info)
+
+    # put the file back
+    answer.file = the_file
+    answer.save()
+
+    # then, validation must pass
+    assert DocumentValidator().validate(document, info) is None
