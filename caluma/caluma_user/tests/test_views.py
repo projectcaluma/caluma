@@ -33,7 +33,7 @@ def test_authentication_view(
     requests_mock.get(settings.OIDC_USERINFO_ENDPOINT, text=json.dumps(userinfo))
 
     if not is_id_token:
-        userinfo = {"client_id": "test_client"}
+        userinfo = {"client_id": "test_client", "sub": "service-account-foo-bar"}
         requests_mock.get(settings.OIDC_USERINFO_ENDPOINT, status_code=401)
         requests_mock.post(settings.OIDC_INTROSPECT_ENDPOINT, text=json.dumps(userinfo))
 

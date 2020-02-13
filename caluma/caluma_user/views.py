@@ -90,7 +90,7 @@ class AuthenticationGraphQLView(GraphQLView):
                 userinfo_method,
                 timeout=settings.OIDC_BEARER_TOKEN_REVALIDATION_TIME,
             )
-            return models.OIDCUser(token, userinfo)
+            return models.OIDCUser(token=token, userinfo=userinfo)
         except requests.HTTPError as e:
             try:
                 if (
@@ -108,7 +108,7 @@ class AuthenticationGraphQLView(GraphQLView):
                     if "client_id" not in introspection:
                         response = HttpResponse(status=401)
                         raise HttpError(response)
-                    return models.OIDCClient(token, introspection)
+                    return models.OIDCUser(token=token, introspection=introspection)
                 else:
                     raise e
             except requests.HTTPError as internal_exception:

@@ -30,6 +30,7 @@ Caluma expects a bearer token to be passed on as [Authorization Request Header F
 
 * `OIDC_USERINFO_ENDPOINT`: Url of userinfo endpoint as [described](https://openid.net/specs/openid-connect-core-1_0.html#UserInfo)
 * `OIDC_GROUPS_CLAIM`: Name of claim to be used to represent groups (default: caluma_groups)
+* `OIDC_USERNAME_CLAIM`: Name of claim to be used to represent the username (default: sub)
 * `OIDC_BEARER_TOKEN_REVALIDATION_TIME`: Time in seconds before bearer token validity is verified again. For best security token is validated on each request per default. It might be helpful though in case of slow Open ID Connect provider to cache it. It uses [cache](#cache) mechanism for memorizing userinfo result. Number has to be lower than access token expiration time. (default: 0)
 
 ## Cache
@@ -88,6 +89,11 @@ Following environment variables need to be set for caluma:
 * `OIDC_INTROSPECT_ENDPOINT`: introspect endpoint from the OIDC-provider
 * `OIDC_INTROSPECT_CLIENT_ID`: ID of the OIDC-client
 * `OIDC_INTROSPECT_CLIENT_SECRET`: Secret of the OIDC-client
+
+Some OIDC implementations (e.g. keycloak), allow for querying the `userinfo` endpoint
+with a client token. In that case the `introspection` endpoint is never called.
+
+The attribute `claims_source` on `OIDCUser` instances indicates the source of the claims.
 
 
 ## uWSGI defaults
