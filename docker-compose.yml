@@ -1,7 +1,7 @@
 version: "3.4"
 services:
   db:
-    image: postgres:9.6-alpine@sha256:3a1d32d67fff9d004a8fb50cbb4c7854dca176a9624ea12ba1bb9a5321e8eac1
+    image: postgres:9.6-alpine@sha256:377bf07044d71ace1856a46ef10274e44f42021312f6273108db2cdfa280b8a9
     environment:
       - POSTGRES_USER=caluma
       # following option is a must to configure on production system:
