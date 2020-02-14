@@ -133,3 +133,86 @@ def test_migrate_to_form_question_natural_key_reverse(transactional_db):
     executor.loader.build_graph()  # reload.
     with pytest.raises(DataError):
         executor.migrate(migrate_to)
+
+
+def test_dynamic_option_unique_together(transactional_db):
+    executor = MigrationExecutor(connection)
+    app = "caluma_form"
+    migrate_from = [(app, "0028_auto_20200210_0929")]
+    migrate_to = [(app, "0029_dynamic_option_unique_together")]
+
+    executor.migrate(migrate_from)
+    old_apps = executor.loader.project_state(migrate_from).apps
+
+    # Create some old data. Can't use factories here
+
+    Document = old_apps.get_model(app, "Document")
+    Form = old_apps.get_model(app, "Form")
+    Question = old_apps.get_model(app, "Question")
+    DynamicOption = old_apps.get_model(app, "DynamicOption")
+    HistoricalDynamicOption = old_apps.get_model(
+        "caluma_form", "HistoricalDynamicOption"
+    )
+
+    form = Form.objects.create(slug="main-form")
+
+    question = Question.objects.create(type="text", slug="main-form-question")
+
+    # we need to set a temporary family, because the signals are not available
+    document = Document.objects.create(form=form, family=uuid4())
+    # then we set the correct family
+    document.family = document.pk
+    document.save()
+
+    d_option_1 = DynamicOption.objects.create(
+        document=document, question=question, slug="foo"
+    )
+    d_option_2 = DynamicOption.objects.create(
+        document=document, question=question, slug="foo"
+    )
+
+    # again no signals
+    HistoricalDynamicOption.objects.create(
+        document=document,
+        question=question,
+        history_type="+",
+        created_at=d_option_1.created_at,
+        modified_at=d_option_1.modified_at,
+        history_date=d_option_1.modified_at,
+        slug="foo",
+        id=d_option_1.pk,
+    )
+    HistoricalDynamicOption.objects.create(
+        document=document,
+        question=question,
+        history_type="+",
+        created_at=d_option_2.created_at,
+        modified_at=d_option_2.modified_at,
+        history_date=d_option_2.modified_at,
+        slug="foo",
+        id=d_option_2.pk,
+    )
+
+    # Migrate forwards.
+    executor.loader.build_graph()  # reload.
+    executor.migrate(migrate_to)
+    new_apps = executor.loader.project_state(migrate_to).apps
+
+    # Test the new data.
+    DynamicOption = new_apps.get_model(app, "DynamicOption")
+    HistoricalDynamicOption = new_apps.get_model(
+        "caluma_form", "HistoricalDynamicOption"
+    )
+    Document = new_apps.get_model(app, "Document")
+    Question = new_apps.get_model(app, "Question")
+
+    document = Document.objects.get(pk=document.pk)
+    question = Question.objects.get(pk=question.pk)
+
+    assert DynamicOption.objects.get(document=document, question=question, slug="foo")
+    assert (
+        HistoricalDynamicOption.objects.filter(
+            document=document, question=question, slug="foo"
+        ).count()
+        == 1
+    )
