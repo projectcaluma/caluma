@@ -305,3 +305,6 @@ class DynamicOption(UUIDModel):
     label = LocalizedField(blank=False, null=False, required=False)
     document = models.ForeignKey("Document", on_delete=models.CASCADE)
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("slug", "document", "question")
