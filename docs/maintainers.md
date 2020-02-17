@@ -14,6 +14,8 @@ Here is a rough outline / checklist for the release (explained further below):
 5. Pull Request with the version bump.
 6. Create tag on the merge commit
 7. Upload / edit change log
+8. If new deprecations have been introduced, make sure they are listed in the
+   `Deprecations` issue, and ensure the deprecations are explicitly mentioned in the release notes as well.
 
 Here's how this works in detail:
 
