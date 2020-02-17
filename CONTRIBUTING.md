@@ -58,6 +58,13 @@ To disable xdist completely run:
 pytest -n 0
 ```
 
+This is especially important when you're updating snapshot tests, because this will fail with
+multiple workers:
+
+```bash
+pytest --snapshot-update -n 0
+```
+
 ### Install new requirements
 
 In case you're adding new requirements you simply need to build the docker container
