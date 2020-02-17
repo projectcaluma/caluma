@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -118,8 +119,9 @@ snapshots[
                     "id": "VGV4dFF1ZXN0aW9uOmVmZm9ydC1tZWV0",
                     "infoText": "",
                     "label": "Brian Williams",
-                    "maxLength": 10,
+                    "maxLength": None,
                     "meta": {},
+                    "minLength": 10,
                     "placeholder": "",
                     "slug": "effort-meet",
                 }
@@ -143,6 +145,7 @@ snapshots[
                     "label": "Brian Williams",
                     "maxLength": 10,
                     "meta": {},
+                    "minLength": None,
                     "placeholder": "",
                     "slug": "effort-meet",
                 }

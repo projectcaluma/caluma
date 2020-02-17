@@ -188,6 +188,7 @@ class FormatValidatorConnection(CountableConnectionBase):
 
 
 class TextQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    min_length = graphene.Int()
     max_length = graphene.Int()
     placeholder = graphene.String()
     format_validators = ConnectionField(FormatValidatorConnection)
@@ -213,6 +214,7 @@ class TextQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    min_length = graphene.Int()
     max_length = graphene.Int()
     placeholder = graphene.String()
     format_validators = ConnectionField(FormatValidatorConnection)

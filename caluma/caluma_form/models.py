@@ -120,6 +120,14 @@ class Question(SlugModel):
     )
 
     @property
+    def min_length(self):
+        return self.configuration.get("min_length")
+
+    @min_length.setter
+    def min_length(self, value):
+        self.configuration["min_length"] = value
+
+    @property
     def max_length(self):
         return self.configuration.get("max_length")
 

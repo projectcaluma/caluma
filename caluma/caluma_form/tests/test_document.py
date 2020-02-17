@@ -479,10 +479,10 @@ def test_save_document(db, document, schema_executor, update):
         ),
         (
             Question.TYPE_TEXT,
-            {"max_length": 1},
+            {"min_length": 10},
             None,
             [],
-            "toolong",
+            "tooshort",
             None,
             "SaveDocumentStringAnswer",
             False,

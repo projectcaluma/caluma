@@ -29,13 +29,19 @@ class CustomValidationError(exceptions.ValidationError):
 
 class AnswerValidator:
     def _validate_question_text(self, question, value, **kwargs):
+        min_length = question.min_length if question.min_length is not None else 0
         max_length = (
             question.max_length if question.max_length is not None else sys.maxsize
         )
-        if not isinstance(value, str) or len(value) > max_length:
+
+        if (
+            not isinstance(value, str)
+            or len(value) < min_length
+            or len(value) > max_length
+        ):
             raise CustomValidationError(
                 f"Invalid value {value}. "
-                f"Should be of type str and max length {max_length}",
+                f"Should be of type str, and it's length between {min_length} and {max_length}",
                 slugs=[question.slug],
             )
 
