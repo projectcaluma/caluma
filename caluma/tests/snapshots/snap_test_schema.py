@@ -1861,6 +1861,7 @@ type StaticQuestion implements Question, Node {
   createdByGroup: String
   slug: String!
   label: String!
+  isRequired: QuestionJexl!
   isHidden: QuestionJexl!
   isArchived: Boolean!
   infoText: String
@@ -1870,7 +1871,6 @@ type StaticQuestion implements Question, Node {
   staticContent: String
   dataSource: String
   id: ID!
-  isRequired: QuestionJexl!
 }
 
 enum Status {

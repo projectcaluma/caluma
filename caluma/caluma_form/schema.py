@@ -462,6 +462,12 @@ class FileQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class StaticQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    is_required = QuestionJexl(
+        required=True,
+        description="Required expression is only evaluated when question is not hidden."
+        " This should not be used for `StaticQuestion`, because it can never be satisfied.",
+    )
+
     class Meta:
         model = models.Question
         exclude = (
@@ -472,7 +478,6 @@ class StaticQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "row_form",
             "sub_form",
             "placeholder",
-            "is_required",
             "format_validators",
             "dynamicoption_set",
         )
@@ -661,7 +666,7 @@ class IntegerAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("document", "documents", "file", "date", "dynamicoption_set")
+        exclude = ("document", "documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -671,7 +676,7 @@ class FloatAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("document", "documents", "file", "date", "dynamicoption_set")
+        exclude = ("document", "documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -684,7 +689,7 @@ class DateAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("document", "documents", "file", "dynamicoption_set")
+        exclude = ("document", "documents", "file")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -694,7 +699,7 @@ class StringAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("document", "documents", "file", "date", "dynamicoption_set")
+        exclude = ("document", "documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -704,7 +709,7 @@ class ListAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("document", "documents", "file", "date", "dynamicoption_set")
+        exclude = ("document", "documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -738,7 +743,7 @@ class TableAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("documents", "file", "date", "dynamicoption_set")
+        exclude = ("documents", "file", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -763,7 +768,7 @@ class FileAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("document", "documents", "date", "dynamicoption_set")
+        exclude = ("document", "documents", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 

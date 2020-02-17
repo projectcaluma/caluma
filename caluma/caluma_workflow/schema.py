@@ -95,7 +95,7 @@ class TaskQuerysetMixin(object):
 class SimpleTask(TaskQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Task
-        exclude = ("task_flows", "work_items", "task", "form")
+        exclude = ("task_flows", "work_items", "form")
         use_connection = False
         interfaces = (Task, relay.Node)
 
@@ -103,7 +103,7 @@ class SimpleTask(TaskQuerysetMixin, DjangoObjectType):
 class CompleteWorkflowFormTask(TaskQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Task
-        exclude = ("task_flows", "work_items", "task", "form")
+        exclude = ("task_flows", "work_items", "form")
         use_connection = False
         interfaces = (Task, relay.Node)
 
