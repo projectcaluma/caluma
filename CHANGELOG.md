@@ -1,3 +1,9 @@
+# v5.2.1 (17 Feb 2020)
+
+### Fix
+* add unique_together to DynamicOption (c7460c01a4c764f580adc5c76cdca3cbe208b081)
+
+
 # v5.2.0 (13 Feb 2020)
 
 ### Feature
