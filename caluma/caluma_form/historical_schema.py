@@ -61,7 +61,7 @@ class HistoricalAnswerConnection(CountableConnectionBase):
 class HistoricalIntegerAnswer(IntegerAnswer):
     class Meta:
         model = models.Answer.history.model
-        exclude = ("document", "documents", "file", "date")
+        exclude = ("document", "file", "date")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
@@ -69,7 +69,7 @@ class HistoricalIntegerAnswer(IntegerAnswer):
 class HistoricalFloatAnswer(FloatAnswer):
     class Meta:
         model = models.Answer.history.model
-        exclude = ("document", "documents", "file", "date")
+        exclude = ("document", "file", "date")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
@@ -77,7 +77,7 @@ class HistoricalFloatAnswer(FloatAnswer):
 class HistoricalDateAnswer(DateAnswer):
     class Meta:
         model = models.Answer.history.model
-        exclude = ("document", "documents", "file")
+        exclude = ("document", "file")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
@@ -85,7 +85,7 @@ class HistoricalDateAnswer(DateAnswer):
 class HistoricalStringAnswer(StringAnswer):
     class Meta:
         model = models.Answer.history.model
-        exclude = ("document", "documents", "file", "date")
+        exclude = ("document", "file", "date")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
@@ -93,7 +93,7 @@ class HistoricalStringAnswer(StringAnswer):
 class HistoricalListAnswer(ListAnswer):
     class Meta:
         model = models.Answer.history.model
-        exclude = ("document", "documents", "file", "date")
+        exclude = ("document", "file", "date")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
@@ -137,7 +137,7 @@ class HistoricalFileAnswer(FileAnswer):
 
     class Meta:
         model = models.Answer.history.model
-        exclude = ("document", "documents", "date")
+        exclude = ("document", "date")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
@@ -202,7 +202,7 @@ class HistoricalTableAnswer(TableAnswer):
 
     class Meta:
         model = models.Answer.history.model
-        exclude = ("documents", "file", "date")
+        exclude = ("file", "date")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
