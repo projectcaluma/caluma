@@ -537,7 +537,7 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
                     f"Document {document.pk} is not of form type {question.row_form.pk}."
                 )
 
-        return super().validate(data)
+        return data
 
     def create_answer_documents(self, answer, documents):
         family = answer.document.family

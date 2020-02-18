@@ -782,9 +782,45 @@ def test_save_document_answer_empty(
 
 
 @pytest.mark.parametrize("question__type", [Question.TYPE_TABLE])
+def test_save_document_table_answer_invalid_row_document(
+    db,
+    schema_executor,
+    answer,
+    document_factory,
+    question,
+    form_factory,
+    question_factory,
+):
+    """Ensure that we can save incomplete row documents."""
+    question.row_form = form_factory()
+    question.save()
+
+    question.row_form.questions.add(question_factory(is_required="true"))
+
+    query = """
+        mutation SaveDocumentTableAnswer($input: SaveDocumentTableAnswerInput!) {
+            saveDocumentTableAnswer(input: $input) {
+                clientMutationId
+            }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveAnswerSerializer, answer
+        )
+    }
+    inp["input"]["value"] = [str(document_factory(form=question.row_form).pk)]
+
+    result = schema_executor(query, variables=inp)
+    assert not result.errors
+
+
+@pytest.mark.parametrize("question__type", [Question.TYPE_TABLE])
 def test_save_document_table_answer_invalid_row_form(
     db, schema_executor, answer, document_factory
 ):
+    """Test validation that row documents must have correct row type."""
     query = """
         mutation SaveDocumentTableAnswer($input: SaveDocumentTableAnswerInput!) {
             saveDocumentTableAnswer(input: $input) {
