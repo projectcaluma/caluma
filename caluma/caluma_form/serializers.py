@@ -534,7 +534,7 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         for document in documents:
             if document.form_id != question.row_form_id:
                 raise exceptions.ValidationError(
-                    f"Document {document.pk} is not of form type {question.form.pk}."
+                    f"Document {document.pk} is not of form type {question.row_form.pk}."
                 )
 
         return super().validate(data)
