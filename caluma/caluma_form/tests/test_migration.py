@@ -37,9 +37,11 @@ def test_migrate_to_flat_answers(transactional_db):
     sub_text_question = Question.objects.create(type="text", slug="sub_1_question_1")
     FormQuestion.objects.create(form=sub_form, question=sub_text_question)
 
-    # we need to set a temporary family, because the signals are not available
+    # Note: in this step, Document.family is (historically) a UUID4 field, and
+    # not yet a foreign key.
+    # We need to set a temporary family, because the signals are not available...
     main_document = Document.objects.create(form=main_form, family=uuid4())
-    # then we set the correct family
+    # ... then we set the correct family
     main_document.family = main_document.pk
     main_document.save()
 
@@ -216,3 +218,58 @@ def test_dynamic_option_unique_together(transactional_db):
         ).count()
         == 1
     )
+
+
+def test_migrate_to_family_as_pk(transactional_db, caplog):
+    """Ensure correct behaviour when moving family to PK.
+
+    Document family may not match an existing document.
+    In this case, the family should be set to their own PK.
+    """
+    executor = MigrationExecutor(connection)
+    app = "caluma_form"
+    migrate_from = [(app, "0030_auto_20200219_1359")]
+    migrate_to = [(app, "0031_auto_20200220_0910")]
+
+    executor.migrate(migrate_from)
+    old_apps = executor.loader.project_state(migrate_from).apps
+
+    OldDocument = old_apps.get_model(app, "Document")
+    OldForm = old_apps.get_model(app, "Form")
+
+    form = OldForm.objects.create(slug="form-1")
+
+    # We don't have any signals here, so have to do it ourselves
+    root_doc = OldDocument.objects.create(form=form, family=uuid4())
+    root_doc.family = root_doc.pk
+    root_doc.save()
+
+    other_doc = OldDocument.objects.create(form=form, family=root_doc.pk)
+    unrelated_doc = OldDocument.objects.create(form=form, family=uuid4())
+
+    # migration should log that our unrelated_doc needs fixing
+    expected_msg = (
+        f"Document pk={unrelated_doc.pk} (form={form.pk}) "
+        f"missing it's family={unrelated_doc.family}. "
+        f"Resetting to itself"
+    )
+
+    assert isinstance(other_doc.family, UUID)
+
+    # Migrate forwards.
+    executor.loader.build_graph()  # reload.
+    executor.migrate(migrate_to)
+
+    new_apps = executor.loader.project_state(migrate_to).apps
+
+    # Test the new data.
+    NewDocument = new_apps.get_model(app, "Document")
+
+    new_root_doc = NewDocument.objects.get(pk=root_doc.pk)
+    new_other_doc = NewDocument.objects.get(pk=other_doc.pk)
+    new_unrelated_doc = NewDocument.objects.get(pk=unrelated_doc.pk)
+
+    assert new_other_doc.family == new_root_doc
+    assert new_unrelated_doc.family == new_unrelated_doc
+    assert new_root_doc.family == new_root_doc
+    assert expected_msg in caplog.messages

@@ -861,7 +861,7 @@ def test_save_document_table_answer_setting_family(
         Document.objects.filter(family=main_family).values_list("id", flat=True)
     )
     to_be_deleted_document.refresh_from_db()
-    assert to_be_deleted_document.family == to_be_deleted_document.pk
+    assert to_be_deleted_document.family == to_be_deleted_document
     to_be_deleted_table_row.refresh_from_db()
     assert to_be_deleted_table_row.family == to_be_deleted_document.family
 

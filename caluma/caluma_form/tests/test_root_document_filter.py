@@ -38,7 +38,7 @@ def test_root_document_filter(
     ]
 
     document1 = document_factory(form=top_form)
-    document2 = document_factory(form=top_form, family=document1.id)
+    document2 = document_factory(form=top_form, family=document1)
     document3 = document_factory(form=top_form)
 
     for d in [document1, document2]:

@@ -21,7 +21,7 @@ from ..caluma_core.filters import (
     SlugMultipleChoiceFilter,
 )
 from ..caluma_core.ordering import AttributeOrderingFactory, MetaFieldOrdering
-from ..caluma_form.models import Answer, Document, Question
+from ..caluma_form.models import Answer, Question
 from ..caluma_form.ordering import AnswerValueOrdering
 from . import models, validators
 
@@ -411,7 +411,7 @@ class VisibleAnswerFilter(Filter):
             return qs
 
         # assuming qs can only ever be in the context of a single document
-        document = Document.objects.get(pk=qs.first().document.family)
+        document = qs.first().document.family
         validator = validators.DocumentValidator()
         return qs.filter(question__slug__in=validator.visible_questions(document))
 

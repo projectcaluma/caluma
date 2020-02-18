@@ -522,18 +522,25 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         help_text="List of document IDs representing the rows in the table.",
     )
 
-    def _get_document_tree(self, document_id):
+    def _children_of_document(self, document):
         """Get all child documents (table rows) of a given document, and the document itself."""
 
         table_answers = models.Answer.objects.filter(
-            document_id=document_id, question__type=models.Question.TYPE_TABLE
+            document=document,
+            # TODO this is not REALLY required, as only table answers
+            # have child documents anyhow. Leaving it out would avoid
+            # a JOIN to the question table
+            question__type=models.Question.TYPE_TABLE,
         )
-        child_documents = table_answers.values_list("documents", flat=True).distinct()
 
-        for child_document in child_documents:
-            yield from self._get_document_tree(child_document)
+        child_documents = models.AnswerDocument.objects.filter(
+            answer__in=table_answers
+        ).select_related("document")
 
-        yield document_id
+        for answer_document in child_documents:
+            yield from self._children_of_document(answer_document.document)
+
+        yield document
 
     def validate(self, data):
         documents = (
@@ -584,16 +591,16 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         documents = validated_data.pop("documents")
 
         # detach each table row to its own family
-        document_pks = instance.documents.values_list("pk", flat=True)
-        for document_pk in document_pks:
-            tree = self._get_document_tree(document_pk)
-            for doc in models.Document.objects.filter(pk__in=tree):
+        row_docs = instance.documents.all()
+        for row_doc in row_docs:
+            children = self._children_of_document(row_doc)
+            for doc in children:
                 # do not use update but set family one by one
                 # to allow django-simple-history to update history
-                doc.family = document_pk
+                doc.family = row_doc
                 doc.save()
 
-        models.AnswerDocument.objects.filter(document__in=document_pks).delete()
+        models.AnswerDocument.objects.filter(document__in=row_docs).delete()
 
         instance = super().update(instance, validated_data)
         self.create_answer_documents(instance, documents)

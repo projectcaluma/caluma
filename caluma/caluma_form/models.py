@@ -210,8 +210,12 @@ class DocumentManager(models.Manager):
 class Document(UUIDModel):
     objects = DocumentManager()
 
-    family = models.UUIDField(
-        help_text="Family id which document belongs too.", db_index=True
+    family = models.ForeignKey(
+        "self",
+        help_text="Family id which document belongs too.",
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="+",
     )
     form = models.ForeignKey(
         "caluma_form.Form", on_delete=models.DO_NOTHING, related_name="documents"
@@ -294,8 +298,8 @@ def set_document_family(sender, instance, **kwargs):
     Family will be manually set on mutation where a tree structure
     is created.
     """
-    if instance.family is None:
-        instance.family = instance.pk
+    if instance.family_id is None:
+        instance.family = instance
 
 
 class AnswerDocument(UUIDModel):
