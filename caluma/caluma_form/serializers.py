@@ -197,6 +197,7 @@ class SaveQuestionSerializer(serializers.ModelSerializer):
 
 
 class SaveTextQuestionSerializer(SaveQuestionSerializer):
+    min_length = IntegerField(min_value=1, required=False, allow_null=True)
     max_length = IntegerField(min_value=1, required=False, allow_null=True)
     format_validators = ListField(child=CharField(), required=False)
 
@@ -206,6 +207,7 @@ class SaveTextQuestionSerializer(SaveQuestionSerializer):
 
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + (
+            "min_length",
             "max_length",
             "placeholder",
             "format_validators",
@@ -213,6 +215,7 @@ class SaveTextQuestionSerializer(SaveQuestionSerializer):
 
 
 class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
+    min_length = IntegerField(min_value=1, required=False, allow_null=True)
     max_length = IntegerField(min_value=1, required=False, allow_null=True)
     format_validators = ListField(child=CharField(), required=False)
 
@@ -222,6 +225,7 @@ class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
 
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + (
+            "min_length",
             "max_length",
             "placeholder",
             "format_validators",

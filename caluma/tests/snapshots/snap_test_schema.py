@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -1641,6 +1642,7 @@ input SaveTextQuestionInput {
   isHidden: QuestionJexl
   meta: JSONString
   isArchived: Boolean
+  minLength: Int
   maxLength: Int
   placeholder: String
   formatValidators: [String]
@@ -1660,6 +1662,7 @@ input SaveTextareaQuestionInput {
   isHidden: QuestionJexl
   meta: JSONString
   isArchived: Boolean
+  minLength: Int
   maxLength: Int
   placeholder: String
   formatValidators: [String]
@@ -2018,6 +2021,7 @@ type TextQuestion implements Question, Node {
   formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
   id: ID!
+  minLength: Int
   maxLength: Int
 }
 
@@ -2038,6 +2042,7 @@ type TextareaQuestion implements Question, Node {
   formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
   forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, metaHasKey: String, search: String, slugs: [String]): FormConnection
   id: ID!
+  minLength: Int
   maxLength: Int
 }
 

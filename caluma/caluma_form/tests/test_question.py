@@ -14,7 +14,7 @@ from .. import models, serializers
         (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 0.0}, None, []),
         (models.Question.TYPE_FLOAT, {}, None, []),
         (models.Question.TYPE_DATE, {}, None, []),
-        (models.Question.TYPE_TEXT, {"max_length": 10}, None, ["email"]),
+        (models.Question.TYPE_TEXT, {"min_length": 10}, None, ["email"]),
         (models.Question.TYPE_TEXTAREA, {"max_length": 10}, None, []),
         (models.Question.TYPE_CHOICE, {}, None, []),
         (models.Question.TYPE_MULTIPLE_CHOICE, {}, None, []),
@@ -50,6 +50,7 @@ def test_query_all_questions(
                 meta
                 infoText
                 ... on TextQuestion {
+                  minLength
                   maxLength
                   placeholder
                   formatValidators {
@@ -64,6 +65,7 @@ def test_query_all_questions(
                   }
                 }
                 ... on TextareaQuestion {
+                  minLength
                   maxLength
                   placeholder
                   formatValidators {
