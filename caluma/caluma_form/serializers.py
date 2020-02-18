@@ -522,26 +522,6 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         help_text="List of document IDs representing the rows in the table.",
     )
 
-    def _children_of_document(self, document):
-        """Get all child documents (table rows) of a given document, and the document itself."""
-
-        table_answers = models.Answer.objects.filter(
-            document=document,
-            # TODO this is not REALLY required, as only table answers
-            # have child documents anyhow. Leaving it out would avoid
-            # a JOIN to the question table
-            question__type=models.Question.TYPE_TABLE,
-        )
-
-        child_documents = models.AnswerDocument.objects.filter(
-            answer__in=table_answers
-        ).select_related("document")
-
-        for answer_document in child_documents:
-            yield from self._children_of_document(answer_document.document)
-
-        yield document
-
     def validate(self, data):
         documents = (
             data.get("documents")
@@ -564,20 +544,16 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         document_ids = [document.pk for document in documents]
 
         for sort, document_id in enumerate(reversed(document_ids), start=1):
-            models.AnswerDocument.objects.create(
-                answer=answer, document_id=document_id, sort=sort
+            ans_doc, created = models.AnswerDocument.objects.get_or_create(
+                answer=answer, document_id=document_id, defaults={"sort": sort}
             )
-
-        # attach document answers to root document family
-        for document in models.Document.objects.filter(
-            family__in=models.Document.objects.filter(pk__in=document_ids).values(
-                "family"
-            )
-        ):
-            # do not use update but set family one by one
-            # to allow django-simple-history to update history
-            document.family = family
-            document.save()
+            if not created and ans_doc.sort != sort:
+                ans_doc.sort = sort
+                ans_doc.save()
+            if created:
+                # Already-existing documents are already in the family,
+                # so we're updating only the newly attached rows
+                ans_doc.document.set_family(family)
 
     @transaction.atomic
     def create(self, validated_data):
@@ -586,21 +562,21 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         self.create_answer_documents(instance, documents)
         return instance
 
+    def unlink_unused_rows(self, docs_to_keep):
+        existing = models.AnswerDocument.objects.filter(answer=self.instance).exclude(
+            document__in=docs_to_keep
+        )
+        for ans_doc in list(existing.select_related("document")):
+            # Set document to be its own family
+            # TODO: Can/should we delete the detached documents?
+            ans_doc.document.set_family(ans_doc.document)
+            ans_doc.delete()
+
     @transaction.atomic
     def update(self, instance, validated_data):
         documents = validated_data.pop("documents")
 
-        # detach each table row to its own family
-        row_docs = instance.documents.all()
-        for row_doc in row_docs:
-            children = self._children_of_document(row_doc)
-            for doc in children:
-                # do not use update but set family one by one
-                # to allow django-simple-history to update history
-                doc.family = row_doc
-                doc.save()
-
-        models.AnswerDocument.objects.filter(document__in=row_docs).delete()
+        self.unlink_unused_rows(docs_to_keep=documents)
 
         instance = super().update(instance, validated_data)
         self.create_answer_documents(instance, documents)

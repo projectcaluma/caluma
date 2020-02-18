@@ -222,6 +222,31 @@ class Document(UUIDModel):
     )
     meta = JSONField(default=dict)
 
+    def set_family(self, root_doc):
+        """Set the family to the given root_doc.
+
+        Apply the same to all row documents within this document,
+        recursively.
+        """
+        if self.family != root_doc:
+            self.family = root_doc
+            self.save()
+
+        table_answers = Answer.objects.filter(
+            document=self,
+            # TODO this is not REALLY required, as only table answers
+            # have child documents anyhow. Leaving it out would avoid
+            # a JOIN to the question table
+            question__type=Question.TYPE_TABLE,
+        )
+
+        child_documents = AnswerDocument.objects.filter(
+            answer__in=table_answers
+        ).select_related("document")
+
+        for answer_document in child_documents:
+            answer_document.document.set_family(root_doc)
+
     class Meta:
         indexes = [GinIndex(fields=["meta"])]
 
@@ -293,12 +318,15 @@ class File(UUIDModel):
 @receiver(post_init, sender=Document)
 def set_document_family(sender, instance, **kwargs):
     """
-    Family id is inherited from document id.
+    Ensure document has the family pointer set.
 
-    Family will be manually set on mutation where a tree structure
-    is created.
+    This sets the document's family if not overruled or set already.
+    The family will be in the corresponding mutations when a tree
+    structure is created or restructured.
     """
     if instance.family_id is None:
+        # can't use instance.set_family() here as the instance isn't
+        # in DB yet, causing integrity errors
         instance.family = instance
 
 
