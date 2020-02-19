@@ -17,6 +17,6 @@ minio==5.0.7
 psycopg2-binary==2.8.4
 pyjexl==0.2.3
 python-memcached==1.59
-requests==2.22.0
+requests==2.23.0
 urllib3==1.25.8
 uwsgi==2.0.18
