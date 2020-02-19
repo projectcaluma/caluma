@@ -541,3 +541,125 @@ def test_required_file(db, question, form, document, answer, info, form_question
 
     # then, validation must pass
     assert DocumentValidator().validate(document, info) is None
+
+
+def test_validate_missing_in_subform(
+    db,
+    question_factory,
+    form_factory,
+    document_factory,
+    form_question_factory,
+    answer_factory,
+    info,
+):
+    # First, build our nested form:
+    #     top_form
+    #       \__ form_question # not required
+    #            \__ sub_form
+    #                 \__ sub_question# required, but not filled
+    top_form = form_factory()
+    sub_form = form_factory()
+
+    # form question is not required
+    form_question = question_factory(
+        type=Question.TYPE_FORM,
+        sub_form=sub_form,
+        is_hidden="false",
+        is_required="false",
+        slug="form_question",
+    )
+    form_question_factory(form=top_form, question=form_question)
+
+    # sub question is required
+    sub_question = question_factory(
+        type=Question.TYPE_FLOAT,
+        configuration={"min_value": 0, "max_value": 3},
+        is_hidden="false",
+        is_required="true",
+        slug="sub_question",
+    )
+    form_question_factory(form=sub_form, question=sub_question)
+
+    # Second, make a document.
+    # the sub question remains unanswered, which should raise an error
+    document = document_factory(form=top_form)
+
+    with pytest.raises(ValidationError) as excinfo:
+        DocumentValidator().validate(document, info)
+
+    # Verify that the sub_sub_question is not the cause of the exception:
+    # it should not be checked at all because it's parent is always hidden
+    assert excinfo.match(r"Questions \bsub_question\s.* required but not provided.")
+
+
+@pytest.mark.parametrize("table_required", [True, False])
+def test_validate_missing_in_table(
+    db,
+    question_factory,
+    form_factory,
+    document_factory,
+    form_question_factory,
+    answer_document_factory,
+    answer_factory,
+    table_required,
+    info,
+):
+    # First, build our nested form:
+    #     top_form
+    #       \__ table_question # requiredness parametrized
+    #            \__ sub_form
+    #                 \__ sub_question1 # required and filled
+    #                 \__ sub_question2 # required, but not filled
+    top_form = form_factory()
+    sub_form = form_factory()
+
+    # form question is not required
+    table_question = question_factory(
+        type=Question.TYPE_TABLE,
+        row_form=sub_form,
+        is_hidden="false",
+        is_required=str(table_required).lower(),
+        slug="table_question",
+    )
+    form_question_factory(form=top_form, question=table_question)
+
+    # sub question1 is NOT required
+    sub_question1 = question_factory(
+        type=Question.TYPE_TEXT,
+        is_hidden="false",
+        is_required="true",
+        slug="sub_question1",
+    )
+    # sub question1 is required
+    sub_question2 = question_factory(
+        type=Question.TYPE_TEXT,
+        is_hidden="false",
+        is_required="true",
+        slug="sub_question2",
+    )
+    form_question_factory(form=sub_form, question=sub_question1)
+    form_question_factory(form=sub_form, question=sub_question2)
+
+    # Second, make a document.
+    # it has one row, but the answer to question2 is missing
+    document = document_factory(form=top_form)
+    table_ans = answer_factory(document=document, question=table_question)
+
+    if table_required:
+        # Table required. But we only fill it partially, this
+        # should raise an error
+        row_doc = document_factory(form=sub_form)
+        answer_document_factory(answer=table_ans, document=row_doc)
+        row_doc.answers.create(question=sub_question1, value="hi")
+
+        with pytest.raises(ValidationError) as excinfo:
+            DocumentValidator().validate(document, info)
+        # Verify that the sub_sub_question is not the cause of the exception:
+        # it should not be checked at all because it's parent is always hidden
+        assert excinfo.match(
+            r"Questions \bsub_question2\s.* required but not provided."
+        )
+
+    else:
+        # should not raise
+        DocumentValidator().validate(document, info)
