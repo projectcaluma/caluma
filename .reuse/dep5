@@ -18,6 +18,7 @@ Files:
     docker-compose.override.yml
     docker-compose.yml
     manage.py
+    MANIFEST.in
     renovate.json
     requirements-dev.txt
     requirements.txt
