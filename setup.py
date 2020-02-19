@@ -56,6 +56,12 @@ setup(
     description=version["__description__"],
     url="https://projectcaluma.github.io/",
     license="License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    classifiers=[
+        "Development Status :: 4 - Beta",
+        "Intended Audience :: Developers",
+        "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+        "Programming Language :: Python :: 3.6",
+    ],
     packages=find_packages(),
     install_requires=dependencies,
 )
