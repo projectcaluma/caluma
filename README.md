@@ -19,6 +19,9 @@ Caluma Service is the core part of the Caluma project providing a
 
 ### Installation
 
+NOTE: We recommend using Caluma as a dedicated service. However, it is possible to integrate
+Caluma into a django project. You can read about this [here](docs/django-apps.md).
+
 **Requirements**
 * docker
 * docker-compose
@@ -74,5 +77,6 @@ For further information on our license choice, you can read up on the [correspon
 * [Validation](docs/validation.md) - Validation of user input
 * [Extending Caluma](docs/extending.md) - Extensions: Data visibility and
   permissions
+* [Using Caluma as django apps](docs/django-apps.md)
 * [Maintainer's Handbook](docs/maintainers.md) - HOWTO for various maintainer's
   tasks
