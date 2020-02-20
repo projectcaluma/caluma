@@ -1,29 +1,15 @@
-import os
+"""The main settings module used by caluma service."""
+
 import re
 
-import environ
 from django.conf import global_settings
 from promise import async_instance
 
-env = environ.Env()
-django_root = environ.Path(__file__) - 2
+from .caluma import *  # noqa
+from .caluma import GRAPHENE, default, django_root, env, environ
 
-ENV_FILE = env.str("ENV_FILE", default=django_root(".env"))
-if os.path.exists(ENV_FILE):  # pragma: no cover
-    environ.Env.read_env(ENV_FILE)
-
-# per default production is enabled for security reasons
-# for development create .env file with ENV=development
-ENV = env.str("ENV", "production")
-
-
-def default(default_dev=env.NOTSET, default_prod=env.NOTSET):
-    """Environment aware default."""
-    return default_prod if ENV == "production" else default_dev
-
-
-SECRET_KEY = env.str("SECRET_KEY", default=default("uuuuuuuuuu"))
 DEBUG = env.bool("DEBUG", default=default(True, False))
+SECRET_KEY = env.str("SECRET_KEY", default=default("uuuuuuuuuu"))
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=default(["*"]))
 
 
@@ -118,22 +104,6 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Managing files
-
-MEDIA_STORAGE_SERVICE = env.str("MEDIA_STORAGE_SERVICE", default="minio")
-MINIO_STORAGE_ENDPOINT = env.str("MINIO_STORAGE_ENDPOINT", default="minio:9000")
-MINIO_STORAGE_ACCESS_KEY = env.str("MINIO_STORAGE_ACCESS_KEY", default="minio")
-MINIO_STORAGE_SECRET_KEY = env.str("MINIO_STORAGE_SECRET_KEY", default="minio123")
-MINIO_STORAGE_USE_HTTPS = env.str("MINIO_STORAGE_USE_HTTPS", default=False)
-MINIO_STORAGE_MEDIA_BUCKET_NAME = env.str(
-    "MINIO_STORAGE_MEDIA_BUCKET_NAME", default="caluma-media"
-)
-MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = env.str(
-    "MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET", default=True
-)
-MINIO_PRESIGNED_TTL_MINUTES = env.str("MINIO_PRESIGNED_TTL_MINUTES", default=15)
-
-
 def parse_admins(admins):  # pragma: no cover
     """
     Parse env admins to django admins.
@@ -156,52 +126,10 @@ def parse_admins(admins):  # pragma: no cover
 ADMINS = parse_admins(env.list("ADMINS", default=[]))
 
 
-# GraphQL
-
-GRAPHENE = {"SCHEMA": "caluma.schema.schema", "MIDDLEWARE": []}
-
-if DEBUG:
-    GRAPHENE["MIDDLEWARE"].append("graphene_django.debug.DjangoDebugMiddleware")
-
-# OpenID connect
-
-OIDC_USERINFO_ENDPOINT = env.str("OIDC_USERINFO_ENDPOINT", default=None)
-OIDC_VERIFY_SSL = env.bool("OIDC_VERIFY_SSL", default=True)
-OIDC_GROUPS_CLAIM = env.str("OIDC_GROUPS_CLAIM", default="caluma_groups")
-OIDC_USERNAME_CLAIM = env.str("OIDC_USERNAME_CLAIM", default="sub")
-OIDC_BEARER_TOKEN_REVALIDATION_TIME = env.int(
-    "OIDC_BEARER_TOKEN_REVALIDATION_TIME", default=0
-)
-
-OIDC_INTROSPECT_ENDPOINT = env.str("OIDC_INTROSPECT_ENDPOINT", default=None)
-OIDC_INTROSPECT_CLIENT_ID = env.str("OIDC_INTROSPECT_CLIENT_ID", default=None)
-OIDC_INTROSPECT_CLIENT_SECRET = env.str("OIDC_INTROSPECT_CLIENT_SECRET", default=None)
-
-# Extensions
-
-VISIBILITY_CLASSES = env.list(
-    "VISIBILITY_CLASSES", default=default(["caluma.caluma_core.visibilities.Any"])
-)
-
-PERMISSION_CLASSES = env.list(
-    "PERMISSION_CLASSES", default=default(["caluma.caluma_core.permissions.AllowAny"])
-)
-
-VALIDATION_CLASSES = env.list("VALIDATION_CLASSES", default=[])
-
-DATA_SOURCE_CLASSES = env.list("DATA_SOURCE_CLASSES", default=[])
-
-FORMAT_VALIDATOR_CLASSES = env.list("FORMAT_VALIDATOR_CLASSES", default=[])
-
 # Cors headers
 CORS_ORIGIN_ALLOW_ALL = env.bool("CORS_ORIGIN_ALLOW_ALL", default=False)
 CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default=[])
 
-# simple history
-SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
-
-# Historical API
-ENABLE_HISTORICAL_API = env.bool("ENABLE_HISTORICAL_API", default=False)
 
 # Logging
 
@@ -214,11 +142,6 @@ LOGGING = {
     },
 }
 
-# Configure the fields you intend to use in the "meta" fields. This will
-# provide corresponding constants in the ordreBy filter.
-META_FIELDS = env.list("META_FIELDS", default=[])
-
-
 # static files
 
 STATIC_URL = "/static/"
@@ -228,3 +151,8 @@ STATIC_URL = "/static/"
 # this means though that data loader won't work which we currently don't use
 # best to remove once graphql-core-next is compatible with graphene.
 async_instance.disable_trampoline()
+
+
+# GraphQL
+if DEBUG:
+    GRAPHENE["MIDDLEWARE"].append("graphene_django.debug.DjangoDebugMiddleware")

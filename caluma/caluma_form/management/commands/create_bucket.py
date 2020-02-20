@@ -6,9 +6,9 @@ from ...storage_clients import client
 
 
 class Command(BaseCommand):
-    """Create a bucket based on the config in settings.py."""
+    """Create a bucket based on the config."""
 
-    help = "Create a bucket based on the config in settings.py"
+    help = "Create a bucket based on the config."
 
     def handle(self, *args, **options):
         bucket_name = settings.MINIO_STORAGE_MEDIA_BUCKET_NAME
