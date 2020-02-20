@@ -2,12 +2,18 @@
 
 import distutils.cmd
 import os
+from os import path
 
 from setuptools import find_packages, setup
 
 version = {}
 with open("caluma/caluma_metadata.py") as fp:
     exec(fp.read(), version)
+
+here = path.abspath(path.dirname(__file__))
+with open(path.join(here, "README.md"), encoding="utf-8") as f:
+    long_description = f.read()
+
 
 pipenv_setup = """
 echo UID=$(id --user) > .env
@@ -54,7 +60,10 @@ setup(
     name=version["__title__"],
     version=version["__version__"],
     description=version["__description__"],
+    long_description=long_description,
+    long_description_content_type="text/markdown",
     url="https://projectcaluma.github.io/",
+    download_url="https://github.com/projectcaluma/caluma",
     license="License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     classifiers=[
         "Development Status :: 4 - Beta",
