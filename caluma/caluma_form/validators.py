@@ -305,7 +305,7 @@ class DocumentValidator:
                 elif question.type == Question.TYPE_TABLE:
                     # We need to validate presence in at least one row, but only
                     # if the table question is required.
-                    if not field.children():
+                    if is_required and not field.children():
                         raise CustomValidationError(
                             f"no rows in {question.slug}", slugs=[question.slug]
                         )
@@ -318,8 +318,7 @@ class DocumentValidator:
                         required_but_empty.append(question.slug)
 
             except CustomValidationError as exc:
-                if is_required:
-                    required_but_empty.extend(exc.slugs)
+                required_but_empty.extend(exc.slugs)
 
             except (jexl.QuestionMissing, exceptions.ValidationError):
                 raise
