@@ -68,5 +68,5 @@ You should then edit the release on Github and paste the changelog there as well
 
 Docker Hub will automatically trigger a build for the new tag, and publish it.
 
-Next, you should upload the version to PyPI. Use the .tar.gz from the Github
-release page for that.
+The `pypi` github workflow will automatically build a source package and a wheel and
+publish them on [PyPI](https://pypi.org/project/caluma/).
