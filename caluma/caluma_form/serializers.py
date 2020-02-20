@@ -522,19 +522,6 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         help_text="List of document IDs representing the rows in the table.",
     )
 
-    def _get_document_tree(self, document_id):
-        """Get all child documents (table rows) of a given document, and the document itself."""
-
-        table_answers = models.Answer.objects.filter(
-            document_id=document_id, question__type=models.Question.TYPE_TABLE
-        )
-        child_documents = table_answers.values_list("documents", flat=True).distinct()
-
-        for child_document in child_documents:
-            yield from self._get_document_tree(child_document)
-
-        yield document_id
-
     def validate(self, data):
         documents = (
             data.get("documents")
@@ -547,30 +534,26 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         for document in documents:
             if document.form_id != question.row_form_id:
                 raise exceptions.ValidationError(
-                    f"Document {document.pk} is not of form type {question.form.pk}."
+                    f"Document {document.pk} is not of form type {question.row_form.pk}."
                 )
 
-        return super().validate(data)
+        return data
 
     def create_answer_documents(self, answer, documents):
         family = answer.document.family
         document_ids = [document.pk for document in documents]
 
         for sort, document_id in enumerate(reversed(document_ids), start=1):
-            models.AnswerDocument.objects.create(
-                answer=answer, document_id=document_id, sort=sort
+            ans_doc, created = models.AnswerDocument.objects.get_or_create(
+                answer=answer, document_id=document_id, defaults={"sort": sort}
             )
-
-        # attach document answers to root document family
-        for document in models.Document.objects.filter(
-            family__in=models.Document.objects.filter(pk__in=document_ids).values(
-                "family"
-            )
-        ):
-            # do not use update but set family one by one
-            # to allow django-simple-history to update history
-            document.family = family
-            document.save()
+            if not created and ans_doc.sort != sort:
+                ans_doc.sort = sort
+                ans_doc.save()
+            if created:
+                # Already-existing documents are already in the family,
+                # so we're updating only the newly attached rows
+                ans_doc.document.set_family(family)
 
     @transaction.atomic
     def create(self, validated_data):
@@ -579,21 +562,21 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         self.create_answer_documents(instance, documents)
         return instance
 
+    def unlink_unused_rows(self, docs_to_keep):
+        existing = models.AnswerDocument.objects.filter(answer=self.instance).exclude(
+            document__in=docs_to_keep
+        )
+        for ans_doc in list(existing.select_related("document")):
+            # Set document to be its own family
+            # TODO: Can/should we delete the detached documents?
+            ans_doc.document.set_family(ans_doc.document)
+            ans_doc.delete()
+
     @transaction.atomic
     def update(self, instance, validated_data):
         documents = validated_data.pop("documents")
 
-        # detach each table row to its own family
-        document_pks = instance.documents.values_list("pk", flat=True)
-        for document_pk in document_pks:
-            tree = self._get_document_tree(document_pk)
-            for doc in models.Document.objects.filter(pk__in=tree):
-                # do not use update but set family one by one
-                # to allow django-simple-history to update history
-                doc.family = document_pk
-                doc.save()
-
-        models.AnswerDocument.objects.filter(document__in=document_pks).delete()
+        self.unlink_unused_rows(docs_to_keep=documents)
 
         instance = super().update(instance, validated_data)
         self.create_answer_documents(instance, documents)

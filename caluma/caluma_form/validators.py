@@ -152,8 +152,8 @@ class AnswerValidator:
 
     def _validate_question_table(self, question, value, document, info, **kwargs):
 
-        for _document in value:
-            DocumentValidator().validate(_document, info=info, **kwargs)
+        for row_doc in value:
+            DocumentValidator().validate(row_doc, info=info, **kwargs)
 
     def _validate_question_file(self, question, value, **kwargs):
         pass
