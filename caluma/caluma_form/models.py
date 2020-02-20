@@ -220,6 +220,14 @@ class Document(UUIDModel):
     form = models.ForeignKey(
         "caluma_form.Form", on_delete=models.DO_NOTHING, related_name="documents"
     )
+    source = models.ForeignKey(
+        "self",
+        blank=True,
+        null=True,
+        help_text="Reference this document has been copied from",
+        related_name="copies",
+        on_delete=models.SET_NULL,
+    )
     meta = JSONField(default=dict)
 
     def set_family(self, root_doc):
@@ -246,6 +254,38 @@ class Document(UUIDModel):
 
         for answer_document in child_documents:
             answer_document.document.set_family(root_doc)
+
+    def copy(self, family=None):
+        """Create a copy including all its answers."""
+
+        new_document = type(self).objects.create(
+            form=self.form, meta=dict(self.meta), source=self, family=family
+        )
+        if not family:
+            family = new_document
+
+        # copy answers
+        for source_answer in self.answers.all():
+            new_answer = new_document.answers.create(
+                question=source_answer.question,
+                value=source_answer.value,
+                meta=dict(source_answer.meta),
+                date=source_answer.date,
+            )
+
+            if source_answer.question.type == Question.TYPE_FILE:
+                new_answer.file = source_answer.file.copy()
+                new_answer.save()
+
+            # TableAnswer: copy AnswerDocument too
+            for answer_doc in AnswerDocument.objects.filter(answer=source_answer):
+                new_doc = answer_doc.document.copy(family=family)
+
+                AnswerDocument.objects.create(
+                    answer=new_answer, document=new_doc, sort=answer_doc.sort
+                )
+
+        return new_document
 
     class Meta:
         indexes = [GinIndex(fields=["meta"])]
@@ -288,6 +328,11 @@ class File(UUIDModel):
         old_file = self.history.first()
         new_name = f"{old_file.pk}_{old_file.name}"
         client.move_object(self.object_name, new_name)
+
+    def copy(self, *args, **kwargs):
+        copy = File.objects.create(name=self.name)
+        client.copy_object(self.object_name, copy.object_name)
+        return copy
 
     def delete(self, *args, **kwargs):
         self._move_blob()

@@ -641,3 +641,17 @@ class RemoveDocumentSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("document",)
         model = models.Document
+
+
+class CopyDocumentSerializer(serializers.ModelSerializer):
+    source = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.Document.objects, required=True
+    )
+
+    @transaction.atomic
+    def create(self, validated_data):
+        return validated_data["source"].copy()
+
+    class Meta:
+        model = models.Document
+        fields = ("source",)

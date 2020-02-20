@@ -1096,3 +1096,115 @@ def test_remove_document_without_case_table(
     for answer in [table_answer, *sub_answers]:
         with pytest.raises(Answer.DoesNotExist):
             Answer.objects.get(pk=answer.pk)
+
+
+def test_copy_document(
+    db,
+    document_factory,
+    answer_factory,
+    answer_document_factory,
+    question_factory,
+    form_factory,
+    form_question_factory,
+    schema_executor,
+    minio_mock,
+):
+    main_form = form_factory(slug="main-form")
+    table_question = question_factory(
+        type=Question.TYPE_TABLE, slug="table-question", row_form=form_factory()
+    )
+    form_question_factory(form=main_form, question=table_question)
+
+    sub_question = form_question_factory(
+        form=table_question.row_form,
+        question__type=Question.TYPE_TEXT,
+        question__slug="sub_question",
+    )
+    other_question = form_question_factory(
+        form=main_form,
+        question__type=Question.TYPE_TEXT,
+        question__slug="other_question",
+    )
+    file_question = form_question_factory(
+        form=main_form, question__type=Question.TYPE_FILE
+    )
+
+    # main_document
+    #   - table_answer
+    #       - row_document_1
+    #           - sub_question answer:"foo"
+    #   - other_question answer:"something"
+    #   - file_question answer: b"a file"
+
+    main_document = document_factory(form=main_form)
+    table_answer = answer_factory(
+        document=main_document, question=table_question, value=None
+    )
+
+    row_document_1 = document_factory(form=table_question.row_form)
+    answer_document_factory(document=row_document_1, answer=table_answer)
+
+    answer_factory(question=sub_question.question, document=row_document_1, value="foo")
+    other_question_ans = answer_factory(
+        question=other_question.question, document=main_document, value="something"
+    )
+    file_answer = answer_factory(
+        question=file_question.question, document=main_document
+    )
+
+    query = """
+        mutation CopyDocument($input: CopyDocumentInput!) {
+          copyDocument(input: $input) {
+            document {
+              id
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    result = schema_executor(
+        query, variables={"input": {"source": str(main_document.pk)}}
+    )
+    assert not result.errors
+
+    result_document_id = extract_global_id(
+        result.data["copyDocument"]["document"]["id"]
+    )
+
+    new_document = Document.objects.get(pk=result_document_id)
+    # main document is copied
+    assert new_document.source_id == main_document.pk
+    assert new_document.family == new_document
+    assert new_document.family != main_document.family
+
+    # answers are copied
+    assert other_question.question.slug in new_document.answers.all().values_list(
+        "question__slug", flat=True
+    )
+    assert (
+        new_document.answers.get(question__slug=other_question.question.slug).value
+        == other_question_ans.value
+    )
+    assert file_question.question.slug in new_document.answers.all().values_list(
+        "question__slug", flat=True
+    )
+    new_file_answer = new_document.answers.get(
+        question__slug=file_question.question.slug
+    )
+    assert new_file_answer.value == file_answer.value
+    # file is copied
+    minio_mock.copy_object.assert_called()
+    assert new_file_answer.file.name == file_answer.file.name
+    assert new_file_answer.file.object_name != file_answer.file.object_name
+
+    # table docs and answers are moved
+    new_table_answer = new_document.answers.get(question=table_question)
+    assert new_table_answer.documents.count() == 1
+
+    result_table_answer_document = new_table_answer.documents.first()
+    assert result_table_answer_document.source == row_document_1
+    assert result_table_answer_document.family == new_document
+    assert set(ans.value for ans in result_table_answer_document.answers.all()) == set(
+        ans.value for ans in row_document_1.answers.all()
+    )

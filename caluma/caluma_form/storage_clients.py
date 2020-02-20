@@ -61,10 +61,13 @@ class Minio:
     def remove_object(self, object_name):
         self.client.remove_object(self.bucket, object_name)
 
-    def move_object(self, object_name, new_object_name):
+    def copy_object(self, object_name, new_object_name):
         self.client.copy_object(
             self.bucket, new_object_name, f"/{self.bucket}/{object_name}"
         )
+
+    def move_object(self, object_name, new_object_name):
+        self.copy_object(object_name, new_object_name)
         self.remove_object(object_name)
 
 
