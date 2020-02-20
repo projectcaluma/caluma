@@ -1,3 +1,23 @@
+# v5.3.0 (20 Feb 2020)
+
+### Feature
+* Implement copydocumentmutation (613ccd3b5962d5068a49ee44090e265786feee01)
+  It is now possible to copy documents
+* Split settings file (c80cb4f3523fe8defc4befbe563905f9e0eb285d)
+  Useful for integrating caluma as a django app
+* Increase max-length of slugs to 150 (5dbfff523d6486166c8e115071ca526bbd7c60e4)
+* Add support for minlength validation (4d67bcefc9659932f8edfd28f4864074c969cc95)
+
+### Fix
+* Do not validate row documents when attaching them (fee356ae9549ca0bf4df4a18f9d260f8dd544569)
+* Do not crash when lamenting invalid form slug (42ce73cf3049c0305efae4d35807cc5f7a982deb)
+* Handle is_required correctly in nested questions (cb78c0836d6d354aa78a6458a70ca660f6d7b32b)
+
+### Documentation
+* Add docs about usage of django apps and interfaces (c164ed340db0b7e1a2f8ca49bdc973ff8b8b8f90)
+* Add hint about snapshot updates and xdist (c0269950f1261884786306c013bd01945fee6498)
+
+
 # v5.2.1 (17 Feb 2020)
 
 ### Fix
