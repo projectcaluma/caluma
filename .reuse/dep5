@@ -7,6 +7,7 @@ Source: https://github.com/projectcaluma/caluma
 Files:
     .dockerignore
     .editorconfig
+    .github/workflows/pypi.yml
     .gitignore
     .pre-commit-config.yaml
     .flake8
