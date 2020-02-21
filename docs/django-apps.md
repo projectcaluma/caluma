@@ -28,10 +28,9 @@ Add the Caluma apps you want to use to your `INSTALLED_APPS`.
 
 Some notes about Caluma-internal dependencies:
 
+* `caluma_core` should always be added when using Caluma
+* `caluma_user` should always be added when using Caluma
 * `caluma_workflow` needs `caluma_form` to work correctly (as cases and work items point to documents)
-* `caluma_core` should always be installed when using Caluma (though, technically,
-  it would work without it, as core doesn't contain any models
-* `caluma_user` should always be added (same caveat as with core)
 
 ```python
 INSTALLED_APPS = [
