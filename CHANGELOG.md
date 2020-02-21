@@ -1,3 +1,8 @@
+# v5.3.1 (21 Feb 2020)
+
+### Fix
+* Fix loading of caluma settings (b001d6fd0eed601aea9b5e170c3f66b5dceca46d)
+
 # v5.3.0 (20 Feb 2020)
 
 ### Feature
