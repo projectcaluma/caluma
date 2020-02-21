@@ -15,7 +15,7 @@ ENV HOME=/home/caluma
 
 ENV PYTHONUNBUFFERED=1
 ENV APP_HOME=/app
-ENV DJANGO_SETTINGS_MODULE caluma.settings
+ENV DJANGO_SETTINGS_MODULE caluma.settings.django
 ENV UWSGI_INI /app/uwsgi.ini
 
 ARG REQUIREMENTS=requirements.txt
