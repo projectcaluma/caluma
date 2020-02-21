@@ -25,5 +25,5 @@ pytest-xdist==1.31.0
 python-semantic-release==4.6.0
 requests-mock==1.7.0
 snapshottest==0.5.1
-reuse==0.8.0
+reuse==0.8.1
 gitlint==0.12.0
