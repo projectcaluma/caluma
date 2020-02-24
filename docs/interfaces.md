@@ -277,6 +277,11 @@ All the schemas:
 * `caluma_form.schema`
 * `caluma_workflow.schema`
 
+## urls.py
+
+You can include the `graphql` endpoint into your `urls.py` from `caluma.caluma_core.urls`.
+
+
 ## Extensions base classes and decorators
 
 Further information about extensions and their utilities can be found [here](extending.md).
