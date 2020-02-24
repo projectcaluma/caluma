@@ -11,7 +11,7 @@ from django.utils.encoding import force_bytes, smart_text
 from graphene_django.views import GraphQLView, HttpError
 from rest_framework.authentication import get_authorization_header
 
-from . import models
+from caluma.caluma_user import models
 
 
 class HttpResponseUnauthorized(HttpResponse):

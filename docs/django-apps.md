@@ -80,6 +80,21 @@ if DEBUG:
 ```
 
 
+### urls.py
+
+Include the Caluma URLs (this example uses `graphql` as URL prefix):
+
+```python
+from django.conf.urls import include, url
+
+urlpatterns = [
+    # ...
+    url(r"^graphql", include("caluma.caluma_core.urls")),
+    # ...
+]
+```
+
+
 ## Supported interfaces
 
 See [interfaces](interfaces.md) for information about the officially supported API.
