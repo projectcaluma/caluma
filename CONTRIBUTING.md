@@ -96,7 +96,7 @@ Docker is the way to run and test caluma, but you can install the requirements
 for your IDE/editor using pipenv:
 
 ```bash
-pipenv install --python 3.6 -r requirements.txt
+pipenv install --python 3.7 -r requirements.txt
 pipenv install -d -r requirements-dev.txt
 ```
 
@@ -106,7 +106,7 @@ You can also run tests without the caluma-container:
 echo UID=$(id --user) > .env
 echo ENV=dev >> .env
 docker-compose up -d db
-pipenv install --python 3.6 -r requirements.txt
+pipenv install --python 3.7 -r requirements.txt
 pipenv install -d -r requirements-dev.txt
 pipenv shell
 pytest
