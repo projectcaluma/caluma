@@ -47,7 +47,9 @@ class SlugModel(BaseModel):
     to merge between developer and user configuration.
     """
 
-    slug = models.SlugField(max_length=150, primary_key=True)
+    # Slug is limited to 127 chars to enable the NaturalKeyModel
+    # (see below) to reference two slugs, separated with a dot.
+    slug = models.SlugField(max_length=127, primary_key=True)
 
     def __str__(self):
         return self.slug
