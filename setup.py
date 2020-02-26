@@ -21,7 +21,7 @@ echo ENV=dev >> .env
 docker-compose up -d db
 rm -f Pipfile*
 touch Pipfile
-pipenv install --python 3.6 -r requirements.txt
+pipenv install --python 3.7 -r requirements.txt
 pipenv install -d -r requirements-dev.txt
 """.strip().splitlines()
 
@@ -69,7 +69,7 @@ setup(
         "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
     ],
     packages=find_packages(),
     install_requires=dependencies,
