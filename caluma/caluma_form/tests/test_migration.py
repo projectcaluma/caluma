@@ -1,9 +1,13 @@
 from uuid import UUID, uuid4
 
+import django.apps
 import pytest
+from django.core.management import call_command
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
 from django.db.utils import DataError
+
+from caluma.utils import col_type_from_db
 
 
 def test_migrate_to_flat_answers(transactional_db):
@@ -273,3 +277,73 @@ def test_migrate_to_family_as_pk(transactional_db, caplog):
     assert new_unrelated_doc.family == new_unrelated_doc
     assert new_root_doc.family == new_root_doc
     assert expected_msg in caplog.messages
+
+
+def _verify_foreign_key_types(apps):
+
+    for models in apps.all_models.values():
+        for model in models.values():
+            slug_fks = [
+                field
+                for field in model._meta.fields
+                if field.is_relation and field.target_field.name == "slug"
+            ]
+
+            for field in slug_fks:
+                # ok we have a slug foreign key
+                fk_params = field.db_parameters(connection)
+                target_params = field.target_field.db_parameters(connection)
+
+                # verify django-internal specified type
+                assert (
+                    fk_params["type"] == target_params["type"]
+                ), f"Foreign key field {field}: type mismatch with destination in django-internal representation"
+
+                # check if the DB agrees
+                fk_dbtype = col_type_from_db(field, connection)
+                target_dbtype = col_type_from_db(field.target_field, connection)
+                assert (
+                    fk_dbtype == target_dbtype
+                ), f"Foreign key field {field}: type mismatch with destination in DB"
+
+
+def test_slugfield_length_correctness(transactional_db):
+    """Detect deviation of foreign key types from target field types.
+
+    Note: If this test fails, you'll most likely need to create a new
+    migration and run caluma.utils.fix_foreign_key_types() in it to
+    cleanup the mess again.
+    """
+
+    # Just make sure we're at the newest version, as we're messing
+    # with migrations in these tests around here
+    call_command("migrate", no_input=True)
+    _verify_foreign_key_types(django.apps.apps)
+
+
+def test_migrate_slugfield_length(transactional_db):
+    """Ensure migration of slugfield length works correctly."""
+
+    # we need to migrate down and up again to consistently trigger
+    # the type mismatch :(
+
+    migration_back = [
+        # first change (50 -> 150)
+        ("caluma_form", "0032_auto_20200220_1311"),
+        ("caluma_workflow", "0018_auto_20200219_1359"),
+    ]
+
+    migration_with_fixes = [("caluma_form", "0034_fix_fk_lengths")]
+
+    executor = MigrationExecutor(connection)
+
+    apps = executor.migrate(migration_back).apps
+
+    with pytest.raises(AssertionError):
+        _verify_foreign_key_types(apps)
+
+    executor.loader.build_graph()  # reload.
+    new_apps = executor.migrate(migration_with_fixes).apps
+
+    # should now throw anymore
+    _verify_foreign_key_types(new_apps)
