@@ -1,4 +1,5 @@
 import pytest
+from graphql_relay import to_global_id
 
 from ...caluma_core.relay import extract_global_id
 from ...caluma_form.models import Question
@@ -274,6 +275,43 @@ def test_root_case_filter(schema_executor, db, workflow_factory, case_factory):
     ]
 
     assert sorted(result_ids) == sorted([str(case.id), str(child_case.id)])
+
+
+def test_family_workitems(schema_executor, db, case_factory, work_item_factory):
+    case = case_factory()
+    child_case = case_factory(family=case)
+    dummy_case = case_factory()
+    work_item = work_item_factory(child_case=child_case, case=case)
+    sub_work_item = work_item_factory(child_case=None, case=child_case)
+    work_item_factory(child_case=None, case=dummy_case)
+
+    query = """
+        query CaseNode ($case: ID!) {
+          node(id: $case) {
+            ...on Case {
+              familyWorkItems {
+                edges {
+                  node {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    variables = {"case": to_global_id("Case", case.pk)}
+    result = schema_executor(query, variables=variables)
+
+    assert not result.errors
+
+    result_ids = [
+        extract_global_id(edge["node"]["id"])
+        for edge in result.data["node"]["familyWorkItems"]["edges"]
+    ]
+
+    assert sorted(result_ids) == sorted([str(work_item.id), str(sub_work_item.id)])
 
 
 @pytest.mark.parametrize("asc", [True, False])

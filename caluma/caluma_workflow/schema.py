@@ -181,7 +181,16 @@ class Case(DjangoObjectType):
             filters.WorkItemFilterSet, orderset_class=filters.WorkItemOrderSet
         ),
     )
+    family_work_items = DjangoFilterConnectionField(
+        WorkItem,
+        filterset_class=CollectionFilterSetFactory(
+            filters.WorkItemFilterSet, orderset_class=filters.WorkItemOrderSet
+        ),
+    )
     meta = generic.GenericScalar()
+
+    def resolve_family_work_items(self, info, **args):
+        return models.WorkItem.objects.filter(case__family=self.family)
 
     class Meta:
         model = models.Case

@@ -139,6 +139,7 @@ type Case implements Node {
   document: Document
   workItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, task: ID, case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], createdByUser: String, createdByGroup: String, metaHasKey: String, addressedGroups: [String], assignedUsers: [String], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType]): WorkItemConnection
   parentWorkItem: WorkItem
+  familyWorkItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], task: ID, case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, createdByUser: String, createdByGroup: String, metaHasKey: String, addressedGroups: [String], assignedUsers: [String]): WorkItemConnection
 }
 
 type CaseConnection {
