@@ -244,6 +244,38 @@ def test_status_filter(db, case_factory, schema_executor):
     assert expected == received
 
 
+def test_root_case_filter(schema_executor, db, workflow_factory, case_factory):
+    workflow = workflow_factory()
+    sub_workflow = workflow_factory()
+    other_workflow = workflow_factory()
+    case = case_factory(workflow=workflow)
+    child_case = case_factory(workflow=sub_workflow, family=case)
+    case_factory(workflow=other_workflow)  # dummy case that should not be returned
+
+    query = """
+        query AllCases ($case: ID!) {
+          allCases(rootCase: $case) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+    """
+    variables = {"case": case.pk}
+    result = schema_executor(query, variables=variables)
+
+    assert not result.errors
+
+    result_ids = [
+        extract_global_id(edge["node"]["id"])
+        for edge in result.data["allCases"]["edges"]
+    ]
+
+    assert sorted(result_ids) == sorted([str(case.id), str(child_case.id)])
+
+
 @pytest.mark.parametrize("asc", [True, False])
 @pytest.mark.parametrize(
     "type,success",
