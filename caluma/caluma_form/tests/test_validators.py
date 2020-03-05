@@ -663,3 +663,82 @@ def test_validate_missing_in_table(
     else:
         # should not raise
         DocumentValidator().validate(document, info)
+
+
+@pytest.mark.parametrize(
+    "column_is_hidden,expect_error",
+    [("form == 'topform'", False), ("form == 'rowform'", True)],
+)
+def test_validate_form_in_table(
+    db,
+    question_factory,
+    form_factory,
+    document_factory,
+    form_question_factory,
+    answer_document_factory,
+    answer_factory,
+    column_is_hidden,
+    expect_error,
+    info,
+):
+    # First, build our nested form:
+    #     top_form
+    #       \__ table_question # requiredness parametrized
+    #            \__ sub_form
+    #                 \__ sub_question1 # required and filled
+    #                 \__ sub_question2 # required, but not filled
+    top_form = form_factory(slug="topform")
+    sub_form = form_factory(slug="rowform")
+
+    # form question is not required
+    table_question = question_factory(
+        type=Question.TYPE_TABLE,
+        row_form=sub_form,
+        is_required="true",
+        is_hidden="false",
+        slug="table_question",
+    )
+    form_question_factory(form=top_form, question=table_question)
+
+    # sub question1 is required and filled
+    sub_question1 = question_factory(
+        type=Question.TYPE_TEXT,
+        is_required="true",
+        is_hidden="false",
+        slug="sub_question1",
+    )
+    # sub question2 depends on the form, is NOT filled
+    sub_question2 = question_factory(
+        type=Question.TYPE_TEXT,
+        is_required="true",
+        is_hidden=column_is_hidden,
+        slug="sub_question2",
+    )
+    form_question_factory(form=sub_form, question=sub_question1)
+    form_question_factory(form=sub_form, question=sub_question2)
+
+    # Second, make a document.
+    # it has one row, but the answer to question2 is missing
+    document = document_factory(form=top_form)
+    table_ans = answer_factory(document=document, question=table_question)
+
+    row_doc = document_factory(form=sub_form)
+    answer_document_factory(answer=table_ans, document=row_doc)
+    row_doc.answers.create(question=sub_question1, value="hi")
+
+    if expect_error:
+        # column "sub_question2" required, but won't be answered.
+        # Should raise an error
+
+        with pytest.raises(ValidationError) as excinfo:
+            DocumentValidator().validate(document, info)
+        # Verify that the sub_sub_question is not the cause of the exception:
+        # it should not be checked at all because it's parent is always hidden
+        assert excinfo.match(
+            r"Questions \bsub_question2\s.* required but not provided."
+        )
+
+    else:
+        # Should not raise, as the "form" referenced by the
+        # question's jexl is the rowform, which is wrong
+        DocumentValidator().validate(document, info)
