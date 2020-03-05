@@ -203,7 +203,16 @@ class CaseSerializer(serializers.ModelSerializer):
                 form=form, created_by_user=user.username, created_by_group=user.group
             )
 
+        if parent_work_item:
+            case = parent_work_item.case
+            while hasattr(case, "parent_work_item"):
+                case = case.parent_work_item.case
+            validated_data["family"] = case
+
         instance = super().create(validated_data)
+
+        # Django doesn't save reverse one-to-one relationships automatically:
+        # https://code.djangoproject.com/ticket/18638
         if parent_work_item:
             parent_work_item.child_case = instance
             parent_work_item.save()

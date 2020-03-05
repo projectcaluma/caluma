@@ -104,7 +104,16 @@ def test_start_case(
     snapshot.assert_match(result.data)
 
 
-def test_start_sub_case(db, workflow, work_item, schema_executor):
+def test_start_sub_sub_case(
+    db, workflow_factory, work_item_factory, case_factory, schema_executor
+):
+    workflow = workflow_factory()
+    sub_workflow = workflow_factory()
+    case = case_factory(workflow=workflow)
+    child_case = case_factory(workflow=sub_workflow, family=case)
+    work_item_factory(child_case=child_case, case=case)
+    sub_work_item = work_item_factory(child_case=None, case=child_case)
+
     query = """
         mutation StartCase($input: StartCaseInput!) {
           startCase(input: $input) {
@@ -116,14 +125,17 @@ def test_start_sub_case(db, workflow, work_item, schema_executor):
         }
     """
 
-    inp = {"input": {"workflow": workflow.slug, "parentWorkItem": str(work_item.pk)}}
+    inp = {
+        "input": {"workflow": workflow.slug, "parentWorkItem": str(sub_work_item.pk)}
+    }
     result = schema_executor(query, variables=inp)
 
     assert not result.errors
 
     case_id = result.data["startCase"]["case"]["id"]
-    case = models.Case.objects.get(pk=extract_global_id(case_id))
-    assert case.parent_work_item.pk == work_item.pk
+    child_child_case = models.Case.objects.get(pk=extract_global_id(case_id))
+    assert child_child_case.parent_work_item.pk == sub_work_item.pk
+    assert child_child_case.family == child_case.family == case.family == case
 
 
 def test_start_case_invalid_form(db, workflow, form, schema_executor):
