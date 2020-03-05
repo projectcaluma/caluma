@@ -245,7 +245,6 @@ class DocumentValidator:
                 if question.type == Question.TYPE_FORM:
                     # answers to questions in subforms are still in
                     # the top level document
-
                     sub_context = {**validation_context, "structure": field}
                     visible_questions.extend(
                         self.visible_questions(document, sub_context)
@@ -253,7 +252,9 @@ class DocumentValidator:
 
                 elif question.type == Question.TYPE_TABLE:
                     row_visibles = set()
-                    row_context = {**validation_context, "form": question.row_form}
+                    # make a copy of the validation context, so we
+                    # can reuse it for each row
+                    row_context = {**validation_context}
                     for row in field.children():
                         sub_context = {**row_context, "structure": row}
                         row_visibles.update(
