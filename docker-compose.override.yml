@@ -25,7 +25,7 @@ services:
     environment:
       - ENV=development
   minio:
-    image: minio/minio:latest@sha256:dbc1919740edc8d8815384e1d0587e764f7b671498ef0214a34b472e87efbfdb
+    image: minio/minio:latest@sha256:2e35801b433e0dc3c3fbf8ccce82ba45a30ffd33dffc1a02d2d5b5b48af4eb84
     volumes:
       - minio_data:/data
     ports:
