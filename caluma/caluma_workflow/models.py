@@ -3,6 +3,8 @@ from datetime import timedelta
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
+from django.db.models.signals import post_init
+from django.dispatch import receiver
 from django.utils import timezone
 from localized_fields.fields import LocalizedField
 
@@ -111,6 +113,14 @@ class Case(UUIDModel):
         (STATUS_CANCELED, "Case is cancelled."),
     )
 
+    family = models.ForeignKey(
+        "self",
+        help_text="Family id which case belongs to.",
+        null=True,
+        on_delete=models.CASCADE,
+        related_name="+",
+    )
+
     closed_at = models.DateTimeField(
         blank=True,
         null=True,
@@ -134,6 +144,17 @@ class Case(UUIDModel):
 
     class Meta:
         indexes = [GinIndex(fields=["meta"])]
+
+
+@receiver(post_init, sender=Case)
+def set_case_family(sender, instance, **kwargs):
+    """
+    Ensure case has the family pointer set.
+
+    This sets the case's family if not overruled or set already.
+    """
+    if instance.family_id is None:
+        instance.family = instance
 
 
 class WorkItem(UUIDModel):

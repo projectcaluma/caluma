@@ -83,6 +83,7 @@ class CaseFilterSet(MetaFilterSet):
     work_item_document_has_answer = HasAnswerFilter(
         document_id="work_items__document__pk"
     )
+    root_case = GlobalIDFilter(field_name="family")
     search_answers = SearchAnswersFilter(document_id="document__pk")
     status = case_status_filter(lookup_expr="in")
     order_by_question_answer_value = CharFilter(

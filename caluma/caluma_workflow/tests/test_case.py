@@ -1,4 +1,5 @@
 import pytest
+from graphql_relay import to_global_id
 
 from ...caluma_core.relay import extract_global_id
 from ...caluma_form.models import Question
@@ -104,7 +105,16 @@ def test_start_case(
     snapshot.assert_match(result.data)
 
 
-def test_start_sub_case(db, workflow, work_item, schema_executor):
+def test_start_sub_sub_case(
+    db, workflow_factory, work_item_factory, case_factory, schema_executor
+):
+    workflow = workflow_factory()
+    sub_workflow = workflow_factory()
+    case = case_factory(workflow=workflow)
+    child_case = case_factory(workflow=sub_workflow, family=case)
+    work_item_factory(child_case=child_case, case=case)
+    sub_work_item = work_item_factory(child_case=None, case=child_case)
+
     query = """
         mutation StartCase($input: StartCaseInput!) {
           startCase(input: $input) {
@@ -116,14 +126,17 @@ def test_start_sub_case(db, workflow, work_item, schema_executor):
         }
     """
 
-    inp = {"input": {"workflow": workflow.slug, "parentWorkItem": str(work_item.pk)}}
+    inp = {
+        "input": {"workflow": workflow.slug, "parentWorkItem": str(sub_work_item.pk)}
+    }
     result = schema_executor(query, variables=inp)
 
     assert not result.errors
 
     case_id = result.data["startCase"]["case"]["id"]
-    case = models.Case.objects.get(pk=extract_global_id(case_id))
-    assert case.parent_work_item.pk == work_item.pk
+    child_child_case = models.Case.objects.get(pk=extract_global_id(case_id))
+    assert child_child_case.parent_work_item.pk == sub_work_item.pk
+    assert child_child_case.family == child_case.family == case.family == case
 
 
 def test_start_case_invalid_form(db, workflow, form, schema_executor):
@@ -230,6 +243,75 @@ def test_status_filter(db, case_factory, schema_executor):
     )
 
     assert expected == received
+
+
+def test_root_case_filter(schema_executor, db, workflow_factory, case_factory):
+    workflow = workflow_factory()
+    sub_workflow = workflow_factory()
+    other_workflow = workflow_factory()
+    case = case_factory(workflow=workflow)
+    child_case = case_factory(workflow=sub_workflow, family=case)
+    case_factory(workflow=other_workflow)  # dummy case that should not be returned
+
+    query = """
+        query AllCases ($case: ID!) {
+          allCases(rootCase: $case) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+    """
+    variables = {"case": case.pk}
+    result = schema_executor(query, variables=variables)
+
+    assert not result.errors
+
+    result_ids = [
+        extract_global_id(edge["node"]["id"])
+        for edge in result.data["allCases"]["edges"]
+    ]
+
+    assert sorted(result_ids) == sorted([str(case.id), str(child_case.id)])
+
+
+def test_family_workitems(schema_executor, db, case_factory, work_item_factory):
+    case = case_factory()
+    child_case = case_factory(family=case)
+    dummy_case = case_factory()
+    work_item = work_item_factory(child_case=child_case, case=case)
+    sub_work_item = work_item_factory(child_case=None, case=child_case)
+    work_item_factory(child_case=None, case=dummy_case)
+
+    query = """
+        query CaseNode ($case: ID!) {
+          node(id: $case) {
+            ...on Case {
+              familyWorkItems {
+                edges {
+                  node {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    variables = {"case": to_global_id("Case", case.pk)}
+    result = schema_executor(query, variables=variables)
+
+    assert not result.errors
+
+    result_ids = [
+        extract_global_id(edge["node"]["id"])
+        for edge in result.data["node"]["familyWorkItems"]["edges"]
+    ]
+
+    assert sorted(result_ids) == sorted([str(work_item.id), str(sub_work_item.id)])
 
 
 @pytest.mark.parametrize("asc", [True, False])
