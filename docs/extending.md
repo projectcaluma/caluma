@@ -40,7 +40,7 @@ class CustomVisibility(BaseVisibility):
 Arguments:
 * `node`: GraphQL node filtering queryset for
 * `queryset`: [Queryset](https://docs.djangoproject.com/en/2.1/ref/models/querysets/) of specific node type
-* `info`: Resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/1.11/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
+* `info`: [The `info` object](interfaces.md#the-info-object)
 
 Save your visibility module as `visibilities.py` and inject it as Docker volume to path `/app/caluma/extensions/visibilities.py`,
 see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) for an example.
@@ -84,7 +84,7 @@ class CustomPermission(BasePermission):
 
 Arguments:
 * `mutation`: mutation class
-* `info`: resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/1.11/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
+* `info`: [The `info` object](interfaces.md#the-info-object)
 * `instance`: instance being edited by specific mutation
 
 Save your permission module as `permissions.py` and inject it as Docker volume to path `/app/caluma/extensions/permissions.py`,
@@ -138,7 +138,7 @@ class CustomValidation(BaseValidation):
 Arguments:
 * `mutation`: mutation class
 * `data`: input data with resolved relationships (e.g. a form ID is represented as actual form object)
-* `info`: resolver info, whereas `info.context` is the [http request](https://docs.djangoproject.com/en/1.11/ref/request-response/#httprequest-objects) and user can be accessed through `info.context.user`
+* `info`: [The `info` object](interfaces.md#the-info-object)
 
 Save your validation module as `validations.py` and inject it as Docker volume to path `/app/caluma/extensions/validations.py`,
 see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) for an example.
@@ -238,3 +238,7 @@ conflicts.
 
 [['my-option'], ...]
 ```
+
+## Caluma events
+
+For reacting upon Caluma Events, you can setup [event receivers](events.md)

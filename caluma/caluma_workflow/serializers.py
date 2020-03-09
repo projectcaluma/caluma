@@ -5,9 +5,11 @@ from django.utils import timezone
 from rest_framework import exceptions
 from simple_history.utils import bulk_create_with_history
 
+from caluma.caluma_core.events import SendEventSerializerMixin
+
 from ..caluma_core import serializers
 from ..caluma_form.models import Document, Form
-from . import models, validators
+from . import events, models, validators
 from .jexl import FlowJexl, GroupJexl
 
 
@@ -165,7 +167,7 @@ class SaveCompleteTaskFormTaskSerializer(SaveTaskSerializer):
         fields = SaveTaskSerializer.Meta.fields + ("form",)
 
 
-class CaseSerializer(serializers.ModelSerializer):
+class CaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
     workflow = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Workflow.objects.prefetch_related("start_tasks")
     )
@@ -240,6 +242,11 @@ class CaseSerializer(serializers.ModelSerializer):
         )
 
         bulk_create_with_history(work_items, models.WorkItem)
+
+        self.send_event(events.created_case, case=instance)
+        for work_item in work_items:  # pragma: no cover
+            self.send_event(events.created_work_item, work_item=work_item)
+
         return instance
 
     class Meta:
@@ -248,11 +255,21 @@ class CaseSerializer(serializers.ModelSerializer):
 
 
 class SaveCaseSerializer(CaseSerializer):
+    def create(self, validated_data):  # pragma: no cover
+        instance = super().create(validated_data)
+        self.send_event(events.created_case, case=instance)
+        return instance
+
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        self.send_event(events.created_case, case=instance)
+        return instance
+
     class Meta(CaseSerializer.Meta):
         fields = ("id", "workflow", "meta", "parent_work_item", "form")
 
 
-class CancelCaseSerializer(serializers.ModelSerializer):
+class CancelCaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
     id = serializers.GlobalIDField()
 
     class Meta:
@@ -274,21 +291,30 @@ class CancelCaseSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
         user = self.context["request"].user
-        instance.work_items.exclude(
+
+        work_items = instance.work_items.exclude(
             status__in=[
                 models.WorkItem.STATUS_COMPLETED,
                 models.WorkItem.STATUS_CANCELED,
             ]
-        ).update(
-            status=models.WorkItem.STATUS_CANCELED,
-            closed_at=timezone.now(),
-            closed_by_user=user.username,
-            closed_by_group=user.group,
         )
+
+        for work_item in work_items:
+            work_item.status = models.WorkItem.STATUS_CANCELED
+            work_item.closed_at = timezone.now()
+            work_item.closed_by_user = user.username
+            work_item.closed_by_group = user.group
+            work_item.save()
+
+        # send events in separate loop in order to be sure all operations are finished
+        for work_item in work_items:
+            self.send_event(events.cancelled_work_item, work_item=work_item)
+
+        self.send_event(events.cancelled_case, case=instance)
         return instance
 
 
-class CompleteWorkItemSerializer(serializers.ModelSerializer):
+class CompleteWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
     id = serializers.GlobalIDField()
 
     def validate(self, data):
@@ -368,6 +394,8 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
             )
 
             bulk_create_with_history(work_items, models.WorkItem)
+            for work_item in work_items:  # pragma: no cover
+                self.send_event(events.created_work_item, work_item=work_item)
         else:
             # no more tasks, mark case as complete
             case.status = models.Case.STATUS_COMPLETED
@@ -375,6 +403,9 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
             case.closed_by_user = user.username
             case.closed_by_group = user.group
             case.save()
+            self.send_event(events.completed_case, case=case)
+
+        self.send_event(events.completed_work_item, work_item=instance)
 
         return instance
 
@@ -398,16 +429,26 @@ class SkipWorkItemSerializer(CompleteWorkItemSerializer):
 
         return data
 
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        self.send_event(events.skipped_work_item, work_item=instance)
+        return instance
 
-class SaveWorkItemSerializer(serializers.ModelSerializer):
+
+class SaveWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
     work_item = serializers.GlobalIDField(source="id")
+
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        self.send_event(events.created_work_item, work_item=instance)
+        return instance
 
     class Meta:
         model = models.WorkItem
         fields = ("work_item", "assigned_users", "deadline", "meta")
 
 
-class CreateWorkItemSerializer(serializers.ModelSerializer):
+class CreateWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
     case = serializers.GlobalIDPrimaryKeyRelatedField(queryset=models.Case.objects)
     multiple_instance_task = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Task.objects, source="task"
@@ -435,6 +476,11 @@ class CreateWorkItemSerializer(serializers.ModelSerializer):
         data["document"] = Document.objects.create_document_for_task(task, user)
         data["status"] = models.WorkItem.STATUS_READY
         return super().validate(data)
+
+    def create(self, validated_data):
+        instance = super().create(validated_data)
+        self.send_event(events.created_work_item, work_item=instance)
+        return instance
 
     class Meta:
         model = models.WorkItem
