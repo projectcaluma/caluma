@@ -185,3 +185,98 @@ def permission_classes(settings):
     yield set_permission_classes
     settings.PERMISSION_CLASSES = old_permissions
     config.ready()
+
+
+@pytest.fixture
+def form_and_document(
+    db,
+    form_factory,
+    question_factory,
+    form_question_factory,
+    document_factory,
+    answer_factory,
+):
+    """
+    Return a factory for a form and document.
+
+    The return value is a 4-tuple with the following values:
+        (form, document, questions_dict, answers_dict)
+
+    Optionally add a table question (and a row in the document),
+    and a subform for added complexity.
+
+    The slugs are named as follows:
+
+    * form: top_form
+       * question: top_question
+       * question: table
+           * row_form: row_form
+               * question: column
+       * question: form_question
+           * sub_form: sub_form
+               * question: sub_question
+    """
+
+    def factory(use_table=False, use_subform=False):
+        form = form_factory(slug="top_form")
+        document = document_factory(form=form)
+
+        questions = {}
+        answers = {}
+
+        questions["top_question"] = question_factory(
+            slug="top_question", is_required="true", is_hidden="false"
+        )
+
+        form_question_factory(form=form, question=questions["top_question"])
+        answers["top_question"] = answer_factory(
+            document=document, question_id="top_question"
+        )
+
+        if use_table:
+            row_form = form_factory(slug="row_form")
+            questions["table_question"] = question_factory(
+                type="table",
+                slug="table",
+                row_form=row_form,
+                is_required="true",
+                is_hidden="false",
+            )
+            form_question_factory(form=form, question=questions["table_question"])
+            questions["column"] = question_factory(
+                slug="column", is_required="true", is_hidden="false"
+            )
+            form_question_factory(form=row_form, question=questions["column"])
+
+            answers["table_question"] = answer_factory(
+                document=document, question=questions["table_question"]
+            )
+
+            row_doc = document_factory(form=row_form)
+            answers["column"] = answer_factory(
+                document=row_doc, question=questions["column"]
+            )
+            answers["table_question"].documents.add(row_doc)
+
+        if use_subform:
+            sub_form = form_factory(slug="sub_form")
+            questions["form_question"] = question_factory(
+                type="form",
+                slug="form_question",
+                sub_form=sub_form,
+                is_required="true",
+                is_hidden="false",
+            )
+            form_question_factory(form=form, question=questions["form_question"])
+            questions["sub_question"] = question_factory(
+                slug="sub_question", is_required="true", is_hidden="false"
+            )
+            form_question_factory(form=sub_form, question=questions["sub_question"])
+
+            answers["sub_question"] = answer_factory(
+                document=document, question_id="sub_question"
+            )
+
+        return (form, document, questions, answers)
+
+    return factory
