@@ -159,9 +159,10 @@ def test_reference_missing_question(
 @pytest.mark.parametrize(
     "question,expr,expectation,features",
     [
-        ("sub_question", "structure.form == 'sub_form'", True, "subform"),
-        ("sub_question", "structure.parent.form == 'top_form'", True, "subform"),
-        ("column", "structure.parent.form == 'top_form'", True, "table"),
+        ("sub_question", "info.form == 'sub_form'", True, "subform"),
+        ("sub_question", "info.parent.form == 'top_form'", True, "subform"),
+        ("column", "info.parent.form == 'top_form'", True, "table"),
+        ("column", "info.root.form == 'top_form'", True, "table"),
     ],
 )
 def test_new_jexl_expressions(
@@ -202,7 +203,7 @@ def test_new_jexl_expressions(
         try:
             validator.validate(document, info)
             return True
-        except validators.CustomValidationError:
+        except validators.CustomValidationError:  # pragma: no cover
             return False
 
     assert do_check() == expectation

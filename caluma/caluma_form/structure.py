@@ -31,6 +31,12 @@ class Element:
     def children(self):  # pragma: no cover
         return []
 
+    def root(self):
+        parent = self.parent()
+        if parent:
+            return parent.root()
+        return self
+
     def get(self, name, default=None):
         out = getattr(self, name)
 
