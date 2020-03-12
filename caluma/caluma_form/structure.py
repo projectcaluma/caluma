@@ -31,6 +31,22 @@ class Element:
     def children(self):  # pragma: no cover
         return []
 
+    def root(self):
+        parent = self.parent()
+        if parent:
+            return parent.root()
+        return self
+
+    def get(self, name, default=None):
+        out = getattr(self, name)
+
+        # if a method is requested, execute it before continuing
+        if callable(out):
+            out = out()
+        if isinstance(out, Element):
+            return out
+        return str(out)
+
 
 class Field(Element):
     def __init__(self, document, form, question, answer=None, parent=None):

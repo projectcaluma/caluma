@@ -154,3 +154,56 @@ def test_reference_missing_question(
 
     with pytest.raises(QuestionMissing):
         validator.validate(topdoc, info)
+
+
+@pytest.mark.parametrize(
+    "question,expr,expectation,features",
+    [
+        ("sub_question", "info.form == 'sub_form'", True, "subform"),
+        ("sub_question", "info.parent.form == 'top_form'", True, "subform"),
+        ("column", "info.parent.form == 'top_form'", True, "table"),
+        ("column", "info.root.form == 'top_form'", True, "table"),
+    ],
+)
+def test_new_jexl_expressions(
+    question, expr, expectation, features, info, form_and_document
+):
+    """Evaluate a JEXL expression in the context of a full document.
+
+    The given JEXL expression is evaluated in the context of the given
+    question within a structured document. The expression's value (boolean)
+    is then returned. The document is generated with the following structure:
+
+    * form: top_form
+       * question: top_question
+       * question: table [enabled by putting 'table' in features param]
+           * row_form: row_form
+               * question: column
+       * question: form_question [enabled by putting 'subform' in features param]
+           * sub_form: sub_form
+               * question: sub_question
+    """
+
+    use_table = "table" in features
+    use_subform = "subform" in features
+
+    form, document, questions, answers = form_and_document(
+        use_table=use_table, use_subform=use_subform
+    )
+
+    # expression test method: we delete an answer and set it's is_hidden
+    # to an expression to be tested. If the expression evaluates to True,
+    # we won't have a ValidationError.
+    answers[question].delete()
+    questions[question].is_hidden = expr
+    questions[question].save()
+
+    def do_check():
+        validator = validators.DocumentValidator()
+        try:
+            validator.validate(document, info)
+            return True
+        except validators.CustomValidationError:  # pragma: no cover
+            return False
+
+    assert do_check() == expectation

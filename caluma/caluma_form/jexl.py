@@ -31,12 +31,19 @@ class QuestionJexl(JEXL):
 
         super().__init__(**kwargs)
 
+        self._structure = None
+        self._form = None
+
         context_data = None
+
         if validation_context:
-            context_data = {**validation_context}
-            form = validation_context.get("form")
-            if form:
-                context_data["form"] = form.slug
+            # cleaned up variant
+            self._form = validation_context.get("form")
+            self._structure = validation_context.get("structure")
+            context_data = {
+                "form": self._form.slug if self._form else None,
+                "info": self._structure,
+            }
 
         self.context = Context(context_data)
 
@@ -47,7 +54,7 @@ class QuestionJexl(JEXL):
         )
 
     def answer_transform(self, question):
-        return self.context["structure"].get_field(question).value()
+        return self._structure.get_field(question).value()
 
     def validate(self, expression, **kwargs):
         return super().validate(expression, QuestionValidatingAnalyzer)
@@ -59,7 +66,7 @@ class QuestionJexl(JEXL):
         )
 
     def _question(self, slug):
-        field = self.context["structure"].get_field(slug)
+        field = self._structure.get_field(slug)
         if field:
             return field.question
 
@@ -77,7 +84,7 @@ class QuestionJexl(JEXL):
         If all subforms are hidden where the question shows up,
         the question shall be hidden as well.
         """
-        paths = self.context.get("structure").paths_to_question(question.slug)
+        paths = self._structure.paths_to_question(question.slug)
 
         res = bool(paths) and all(
             # the "inner" check here represents a single path. If any
