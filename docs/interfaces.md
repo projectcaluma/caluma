@@ -2,6 +2,12 @@
 
 Here you find a list of interfaces we support and won't change without further notice.
 
+## The `info` object
+
+The `info` object holds the resolver info.
+
+* `info.context` holds the [http request](https://docs.djangoproject.com/en/1.11/ref/request-response/#httprequest-objects)
+* `info.context.user` holds the `User`
 
 ## Models
 

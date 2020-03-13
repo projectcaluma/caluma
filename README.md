@@ -78,6 +78,7 @@ For further information on our license choice, you can read up on the [correspon
 * [Validation](docs/validation.md) - Validation of user input
 * [Extending Caluma](docs/extending.md) - Extensions: Data visibility and
   permissions
+* [Caluma Events](docs/events.md) - Reacting upon Caluma Events
 * [Using Caluma as django apps](docs/django-apps.md)
 * [Maintainer's Handbook](docs/maintainers.md) - HOWTO for various maintainer's
   tasks

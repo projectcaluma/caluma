@@ -1,3 +1,5 @@
+from importlib import import_module
+
 from django.apps import AppConfig
 from django.conf import settings
 from django.utils.module_loading import import_string
@@ -22,3 +24,5 @@ class DefaultConfig(AppConfig):
         Node.visibility_classes = [
             import_string(cls) for cls in settings.VISIBILITY_CLASSES
         ]
+        for module in settings.EVENT_RECEIVER_MODULES:
+            import_module(module)
