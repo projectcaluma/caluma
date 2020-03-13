@@ -235,6 +235,7 @@ type CompleteTaskFormTask implements Task, Node {
   type: TaskType!
   meta: GenericScalar!
   addressGroups: GroupJexl
+  controlGroups: GroupJexl
   isArchived: Boolean!
   leadTime: Int
   isMultipleInstance: Boolean!
@@ -263,6 +264,7 @@ type CompleteWorkflowFormTask implements Task, Node {
   type: TaskType!
   meta: GenericScalar!
   addressGroups: GroupJexl
+  controlGroups: GroupJexl
   isArchived: Boolean!
   leadTime: Int
   isMultipleInstance: Boolean!
@@ -322,6 +324,7 @@ input CreateWorkItemInput {
   multipleInstanceTask: ID!
   assignedUsers: [String]
   addressedGroups: [String]
+  controllingGroups: [String]
   deadline: DateTime
   meta: JSONString
   clientMutationId: String
@@ -1300,6 +1303,7 @@ input SaveCompleteTaskFormTaskInput {
   description: String
   meta: JSONString
   addressGroups: GroupJexl
+  controlGroups: GroupJexl
   isArchived: Boolean
   leadTime: Int
   isMultipleInstance: Boolean
@@ -1318,6 +1322,7 @@ input SaveCompleteWorkflowFormTaskInput {
   description: String
   meta: JSONString
   addressGroups: GroupJexl
+  controlGroups: GroupJexl
   isArchived: Boolean
   leadTime: Int
   isMultipleInstance: Boolean
@@ -1605,6 +1610,7 @@ input SaveSimpleTaskInput {
   description: String
   meta: JSONString
   addressGroups: GroupJexl
+  controlGroups: GroupJexl
   isArchived: Boolean
   leadTime: Int
   isMultipleInstance: Boolean
@@ -1743,6 +1749,7 @@ type SimpleTask implements Task, Node {
   type: TaskType!
   meta: GenericScalar!
   addressGroups: GroupJexl
+  controlGroups: GroupJexl
   isArchived: Boolean!
   leadTime: Int
   isMultipleInstance: Boolean!
@@ -1951,6 +1958,7 @@ interface Task {
   description: String
   isArchived: Boolean!
   addressGroups: GroupJexl
+  controlGroups: GroupJexl
   meta: GenericScalar!
   isMultipleInstance: Boolean!
 }
@@ -2095,6 +2103,7 @@ type WorkItem implements Node {
   status: WorkItemStatus!
   meta: GenericScalar
   addressedGroups: [String]!
+  controllingGroups: [String]!
   assignedUsers: [String]!
   case: Case!
   childCase: Case

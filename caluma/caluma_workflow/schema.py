@@ -65,6 +65,7 @@ class Task(Node, graphene.Interface):
     description = graphene.String()
     is_archived = graphene.Boolean(required=True)
     address_groups = GroupJexl()
+    control_groups = GroupJexl()
     meta = generic.GenericScalar(required=True)
     is_multiple_instance = graphene.Boolean(required=True)
 

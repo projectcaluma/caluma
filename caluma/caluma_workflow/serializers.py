@@ -1,8 +1,7 @@
-import itertools
-
 from django.db import transaction
 from django.utils import timezone
 from rest_framework import exceptions
+from rest_framework.serializers import CharField, ListField
 from simple_history.utils import bulk_create_with_history
 
 from caluma.caluma_core.events import SendEventSerializerMixin
@@ -13,18 +12,62 @@ from . import events, models, validators
 from .jexl import FlowJexl, GroupJexl
 
 
-def evaluate_assigned_groups(task):
-    if task.address_groups:
-        return GroupJexl().evaluate(task.address_groups)
+def get_group_jexl_structure(work_item_created_by_group, case, prev_work_item=None):
+    return {
+        "case": {"created_by_group": case.created_by_group},
+        "work_item": {"created_by_group": work_item_created_by_group},
+        "prev_work_item": {
+            "controlling_groups": prev_work_item.controlling_groups
+            if prev_work_item
+            else None
+        },
+    }
 
+
+def get_jexl_groups(jexl, case, work_item_created_by_group, prev_work_item=None):
+    context = get_group_jexl_structure(work_item_created_by_group, case, prev_work_item)
+    if jexl:
+        return GroupJexl(validation_context=context).evaluate(jexl)
     return []
 
 
-def get_addressed_groups(task):
-    addressed_groups = [evaluate_assigned_groups(task)]
-    if task.is_multiple_instance:
-        addressed_groups = [[x] for x in addressed_groups[0]]
-    return addressed_groups
+def bulk_create_work_items(tasks, case, user, prev_work_item=None):
+    work_items = []
+    for task in tasks:
+        controlling_groups = get_jexl_groups(
+            task.control_groups,
+            case,
+            user.group,
+            prev_work_item if prev_work_item else None,
+        )
+        addressed_groups = [
+            get_jexl_groups(
+                task.address_groups,
+                case,
+                user.group,
+                prev_work_item if prev_work_item else None,
+            )
+        ]
+        if task.is_multiple_instance:
+            addressed_groups = [[x] for x in addressed_groups[0]]
+
+        for groups in addressed_groups:
+            work_items.append(
+                models.WorkItem(
+                    addressed_groups=groups,
+                    controlling_groups=controlling_groups,
+                    task_id=task.pk,
+                    deadline=task.calculate_deadline(),
+                    document=Document.objects.create_document_for_task(task, user),
+                    case=case,
+                    status=models.WorkItem.STATUS_READY,
+                    created_by_user=user.username,
+                    created_by_group=user.group,
+                )
+            )
+
+    bulk_create_with_history(work_items, models.WorkItem)
+    return work_items
 
 
 class FlowJexlField(serializers.JexlField):
@@ -122,6 +165,12 @@ class SaveTaskSerializer(serializers.ModelSerializer):
         help_text=models.Task._meta.get_field("address_groups").help_text,
     )
 
+    control_groups = GroupJexlField(
+        required=False,
+        allow_null=True,
+        help_text=models.Task._meta.get_field("control_groups").help_text,
+    )
+
     class Meta:
         model = models.Task
         fields = (
@@ -130,6 +179,7 @@ class SaveTaskSerializer(serializers.ModelSerializer):
             "description",
             "meta",
             "address_groups",
+            "control_groups",
             "is_archived",
             "lead_time",
             "is_multiple_instance",
@@ -222,26 +272,7 @@ class CaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
         workflow = instance.workflow
         tasks = workflow.start_tasks.all()
 
-        work_items = itertools.chain(
-            *[
-                [
-                    models.WorkItem(
-                        addressed_groups=groups,
-                        task_id=task.pk,
-                        deadline=task.calculate_deadline(),
-                        document=Document.objects.create_document_for_task(task, user),
-                        case=instance,
-                        status=models.WorkItem.STATUS_READY,
-                        created_by_user=user.username,
-                        created_by_group=user.group,
-                    )
-                    for groups in get_addressed_groups(task)
-                ]
-                for task in tasks
-            ]
-        )
-
-        bulk_create_with_history(work_items, models.WorkItem)
+        work_items = bulk_create_work_items(tasks, instance, user)
 
         self.send_event(events.created_case, case=instance)
         for work_item in work_items:  # pragma: no cover
@@ -372,28 +403,8 @@ class CompleteWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSeri
 
             tasks = models.Task.objects.filter(pk__in=result)
 
-            work_items = itertools.chain(
-                *[
-                    [
-                        models.WorkItem(
-                            addressed_groups=groups,
-                            task_id=task.pk,
-                            deadline=task.calculate_deadline(),
-                            document=Document.objects.create_document_for_task(
-                                task, user
-                            ),
-                            case=case,
-                            status=models.WorkItem.STATUS_READY,
-                            created_by_user=user.username,
-                            created_by_group=user.group,
-                        )
-                        for groups in get_addressed_groups(task)
-                    ]
-                    for task in tasks
-                ]
-            )
+            work_items = bulk_create_work_items(tasks, case, user, instance)
 
-            bulk_create_with_history(work_items, models.WorkItem)
             for work_item in work_items:  # pragma: no cover
                 self.send_event(events.created_work_item, work_item=work_item)
         else:
@@ -453,6 +464,8 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerial
     multiple_instance_task = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Task.objects, source="task"
     )
+    controlling_groups = ListField(child=CharField(required=False), required=False)
+    addressed_groups = ListField(child=CharField(required=False), required=False)
 
     def validate_multiple_instance_task(self, task):
         if not task.is_multiple_instance:
@@ -475,6 +488,17 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerial
 
         data["document"] = Document.objects.create_document_for_task(task, user)
         data["status"] = models.WorkItem.STATUS_READY
+
+        if "controlling_groups" not in data:
+            controlling_groups = get_jexl_groups(task.control_groups, case, user.group)
+            if controlling_groups is not None:
+                data["controlling_groups"] = controlling_groups
+
+        if "addressed_groups" not in data:
+            addressed_groups = get_jexl_groups(task.address_groups, case, user.group)
+            if addressed_groups is not None:
+                data["addressed_groups"] = addressed_groups
+
         return super().validate(data)
 
     def create(self, validated_data):
@@ -489,6 +513,7 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerial
             "multiple_instance_task",
             "assigned_users",
             "addressed_groups",
+            "controlling_groups",
             "deadline",
             "meta",
         )

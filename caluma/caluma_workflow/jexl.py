@@ -2,6 +2,7 @@ from functools import partial
 from itertools import chain
 
 from pyjexl.analysis import ValidatingAnalyzer
+from pyjexl.evaluator import Context
 
 from ..caluma_core.jexl import JEXL, ExtractTransformSubjectAnalyzer
 
@@ -26,12 +27,43 @@ class TaskValidatingAnalyzer(ValidatingAnalyzer):
 
 
 class GroupJexl(JEXL):
-    def __init__(self, **kwargs):
+    """
+    Class for evaluating GroupJexl.
+
+    validation_context is expected to be the following:
+
+    {
+        "case": {
+            "created_by_group": str,
+        },
+        "work_item": {
+            "created_by_group": str,
+        },
+        "prev_work_item": {
+            "controlling_groups": list of str,
+        },
+    }
+    """
+
+    def __init__(self, validation_context=None, **kwargs):
         super().__init__(**kwargs)
+
+        context_data = None
+
+        if validation_context:
+            context_data = {"info": validation_context}
+
+        self.context = Context(context_data)
         self.add_transform("groups", lambda spec: spec)
 
     def validate(self, expression):
         return super().validate(expression, GroupValidatingAnalyzer)
+
+    def evaluate(self, expression, context=None):
+        value = super().evaluate(expression, context)
+        if isinstance(value, list) or value is None:
+            return value
+        return [value]
 
 
 class FlowJexl(JEXL):
