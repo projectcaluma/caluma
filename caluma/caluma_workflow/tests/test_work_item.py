@@ -37,34 +37,48 @@ def test_query_all_work_items_filter_status(db, work_item_factory, schema_execut
     )
 
 
-def test_query_all_work_items_filter_addressed_groups(
-    db, work_item_factory, schema_executor
+@pytest.mark.parametrize("key", ["addressed_groups", "controlling_groups"])
+def test_query_all_work_items_filter_groups(
+    db, key, work_item_factory, schema_executor
 ):
-    work_item_factory(addressed_groups=["A", "B"])
+    factory_kwargs = {key: ["A", "B"]}
+    work_item_factory(**factory_kwargs)
 
     query = """
-            query WorkItems($addressedGroups: [String]!) {
-              allWorkItems(addressedGroups: $addressedGroups) {
-                totalCount
+        query WorkItems($groups: [String]!) {
+          allWorkItems(addressedGroups: $groups) {
+            edges {
+              node {
+                addressedGroups
+              }
+            }
+          }
+        }
+    """
+
+    if key == "controlling_groups":
+        query = """
+            query WorkItems($groups: [String]!) {
+              allWorkItems(controllingGroups: $groups) {
                 edges {
                   node {
-                    addressedGroups
+                    controllingGroups
                   }
                 }
               }
             }
         """
 
-    result = schema_executor(query, variables={"addressedGroups": ["B", "C"]})
+    result = schema_executor(query, variables={"groups": ["B", "C"]})
 
     assert not result.errors
     assert len(result.data["allWorkItems"]["edges"]) == 1
-    assert result.data["allWorkItems"]["edges"][0]["node"]["addressedGroups"] == [
+    assert result.data["allWorkItems"]["edges"][0]["node"][key.replace("_g", "G")] == [
         "A",
         "B",
     ]
 
-    result = schema_executor(query, variables={"addressedGroups": ["C", "D"]})
+    result = schema_executor(query, variables={"groups": ["C", "D"]})
 
     assert not result.errors
     assert len(result.data["allWorkItems"]["edges"]) == 0
