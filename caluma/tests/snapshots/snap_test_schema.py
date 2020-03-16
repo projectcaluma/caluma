@@ -1828,7 +1828,6 @@ enum SortableQuestionAttributes {
 
 enum SortableTaskAttributes {
   ALLOW_ALL_FORMS
-  ADDRESS_GROUPS
   LEAD_TIME
   TYPE
   CREATED_BY_GROUP

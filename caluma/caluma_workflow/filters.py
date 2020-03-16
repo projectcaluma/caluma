@@ -171,7 +171,6 @@ class TaskOrderSet(FilterSet):
         models.Task,
         fields=[
             "allow_all_forms",
-            "address_groups",
             "lead_time",
             "type",
             "created_by_group",
