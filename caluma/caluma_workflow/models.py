@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
-from django.db.models.signals import post_init
+from django.db.models.signals import post_init, pre_save
 from django.dispatch import receiver
 from django.utils import timezone
 from localized_fields.fields import LocalizedField
@@ -251,14 +251,14 @@ class WorkItem(UUIDModel):
         ]
 
 
-@receiver(post_init, sender=WorkItem)
+@receiver(pre_save, sender=WorkItem)
 def set_name_and_description(sender, instance, **kwargs):
     """
     Ensure WorkItem has a name and description set.
 
     Default to values from Task.
     """
-    if not any((value for _, value in instance.name.items())):
+    if not any(instance.name.values()):
         instance.name = instance.task.name
-    if not any((value for _, value in instance.description.items())):
+    if not any(instance.description.values()):
         instance.description = instance.task.description
