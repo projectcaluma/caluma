@@ -32,6 +32,11 @@ class Task(SlugModel):
         null=True,
         help_text="Group jexl returning what group(s) derived work items will be addressed to.",
     )
+    control_groups = models.TextField(
+        blank=True,
+        null=True,
+        help_text="Group jexl returning what group(s) derived work items will be assigned to for controlling.",
+    )
     is_archived = models.BooleanField(default=False)
     form = models.ForeignKey(
         "caluma_form.Form",
@@ -193,6 +198,12 @@ class WorkItem(UUIDModel):
             "Offer work item to be processed by a group of users, "
             "such are not committed to process it though."
         ),
+    )
+
+    controlling_groups = ArrayField(
+        models.CharField(max_length=150),
+        default=list,
+        help_text="List of groups this work item is assigned to for controlling.",
     )
 
     assigned_users = ArrayField(

@@ -10,6 +10,7 @@ class TaskFactory(DjangoModelFactory):
     name = Faker("multilang", faker_provider="name")
     type = Faker("word", ext_word_list=models.Task.TYPE_CHOICES)
     address_groups = None
+    control_groups = None
     description = Faker("multilang", faker_provider="text")
     meta = {}
     is_archived = False
@@ -84,6 +85,7 @@ class WorkItemFactory(DjangoModelFactory):
     document = SubFactory(DocumentFactory)
     addressed_groups = []
     assigned_users = []
+    controlling_groups = []
     meta = {}
     deadline = None
 

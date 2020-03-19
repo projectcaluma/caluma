@@ -5,6 +5,7 @@ from graphene.utils.str_converters import to_const
 
 from ...caluma_core.relay import extract_global_id
 from ...caluma_form.models import Question
+from ...caluma_user.models import BaseUser
 from .. import models
 
 
@@ -36,34 +37,48 @@ def test_query_all_work_items_filter_status(db, work_item_factory, schema_execut
     )
 
 
-def test_query_all_work_items_filter_addressed_groups(
-    db, work_item_factory, schema_executor
+@pytest.mark.parametrize("key", ["addressed_groups", "controlling_groups"])
+def test_query_all_work_items_filter_groups(
+    db, key, work_item_factory, schema_executor
 ):
-    work_item_factory(addressed_groups=["A", "B"])
+    factory_kwargs = {key: ["A", "B"]}
+    work_item_factory(**factory_kwargs)
 
     query = """
-            query WorkItems($addressedGroups: [String]!) {
-              allWorkItems(addressedGroups: $addressedGroups) {
-                totalCount
+        query WorkItems($groups: [String]!) {
+          allWorkItems(addressedGroups: $groups) {
+            edges {
+              node {
+                addressedGroups
+              }
+            }
+          }
+        }
+    """
+
+    if key == "controlling_groups":
+        query = """
+            query WorkItems($groups: [String]!) {
+              allWorkItems(controllingGroups: $groups) {
                 edges {
                   node {
-                    addressedGroups
+                    controllingGroups
                   }
                 }
               }
             }
         """
 
-    result = schema_executor(query, variables={"addressedGroups": ["B", "C"]})
+    result = schema_executor(query, variables={"groups": ["B", "C"]})
 
     assert not result.errors
     assert len(result.data["allWorkItems"]["edges"]) == 1
-    assert result.data["allWorkItems"]["edges"][0]["node"]["addressedGroups"] == [
+    assert result.data["allWorkItems"]["edges"][0]["node"][key.replace("_g", "G")] == [
         "A",
         "B",
     ]
 
-    result = schema_executor(query, variables={"addressedGroups": ["C", "D"]})
+    result = schema_executor(query, variables={"groups": ["C", "D"]})
 
     assert not result.errors
     assert len(result.data["allWorkItems"]["edges"]) == 0
@@ -322,22 +337,58 @@ def test_complete_multiple_instance_task_form_work_item_next(
 
 
 @pytest.mark.parametrize(
-    "work_item__status,work_item__child_case,task__type",
-    [(models.WorkItem.STATUS_READY, None, models.Task.TYPE_SIMPLE)],
+    "work_item__status,work_item__child_case,task__type,work_item__controlling_groups,work_item__created_by_group,case__created_by_group",
+    [
+        (
+            models.WorkItem.STATUS_READY,
+            None,
+            models.Task.TYPE_SIMPLE,
+            ["controlling-group1", "controlling-group2"],
+            "work-item-creating-group",
+            "case-creating-group",
+        )
+    ],
+)
+@pytest.mark.parametrize(
+    "group_jexl",
+    [
+        '["some-group"]|groups',
+        "info.prev_work_item.controlling_groups",
+        "info.work_item.created_by_group",
+        "info.case.created_by_group",
+        "[info.case.created_by_group, info.work_item.created_by_group]|groups",
+        "[info.case.created_by_group, info.work_item.created_by_group]",
+    ],
 )
 def test_complete_work_item_with_next(
     db,
+    group_jexl,
     snapshot,
     work_item,
     task,
     task_factory,
     task_flow_factory,
     workflow,
+    info,
+    case,
     schema_executor,
 ):
+    class FakeUser(BaseUser):
+        def __init__(self):
+            self.username = "foo"
+            self.groups = ["fake-user-group"]
+
+        @property
+        def group(self):
+            return self.groups[0]
+
+    info.context.user = FakeUser()
 
     task_next = task_factory(
-        type=models.Task.TYPE_SIMPLE, form=None, address_groups='["group-name"]|groups'
+        type=models.Task.TYPE_SIMPLE,
+        form=None,
+        address_groups=group_jexl,
+        control_groups=group_jexl,
     )
     task_flow = task_flow_factory(task=task, workflow=workflow)
     task_flow.flow.next = f"'{task_next.slug}'|task"
@@ -356,6 +407,7 @@ def test_complete_work_item_with_next(
                     node {
                       status
                       addressedGroups
+                      controllingGroups
                     }
                   }
                 }
@@ -367,7 +419,7 @@ def test_complete_work_item_with_next(
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variables=inp, info=info)
 
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -571,14 +623,77 @@ def test_save_work_item(db, work_item, schema_executor):
 
 
 @pytest.mark.parametrize(
-    "task__is_multiple_instance,work_item__status,work_item__child_case, success",
+    "task__is_multiple_instance,task__control_groups,expected_groups,work_item__status,set_groups,success",
     [
-        (False, models.WorkItem.STATUS_READY, None, False),
-        (True, models.WorkItem.STATUS_COMPLETED, None, False),
-        (True, models.WorkItem.STATUS_READY, None, True),
+        # Failing
+        (False, None, None, models.WorkItem.STATUS_READY, False, False),
+        (True, None, None, models.WorkItem.STATUS_COMPLETED, False, False),
+        # Successful
+        (
+            True,
+            '["groups-transform"]|groups',
+            ["groups-transform"],
+            models.WorkItem.STATUS_READY,
+            False,
+            True,
+        ),
+        (
+            True,
+            "info.case.created_by_group",
+            ["group-case"],
+            models.WorkItem.STATUS_READY,
+            False,
+            True,
+        ),
+        (
+            True,
+            "info.work_item.created_by_group",
+            ["group-work-item"],
+            models.WorkItem.STATUS_READY,
+            False,
+            True,
+        ),
+        # Controlling jexl evaluates to None
+        (True, "", [], models.WorkItem.STATUS_READY, False, True),
+        (True, None, [], models.WorkItem.STATUS_READY, False, True),
+        (
+            True,
+            "info.prev_work_item.controlling_groups",
+            [],
+            models.WorkItem.STATUS_READY,
+            False,
+            True,
+        ),
+        # Reset controlling_groups and addressed_groups
+        (
+            True,
+            "info.work_item.created_by_group",
+            [],
+            models.WorkItem.STATUS_READY,
+            True,
+            True,
+        ),
     ],
 )
-def test_create_work_item(db, work_item, success, schema_executor):
+@pytest.mark.parametrize("case__created_by_group", ["group-case"])
+@pytest.mark.parametrize("work_item__child_case", [None])
+def test_create_work_item(
+    db, work_item, task, expected_groups, set_groups, success, schema_executor, info
+):
+    task.address_groups = task.control_groups
+    task.save()
+
+    class FakeUser(BaseUser):
+        def __init__(self):
+            self.username = "foo"
+            self.groups = ["group-work-item"]
+
+        @property
+        def group(self):
+            return self.groups[0]
+
+    info.context.user = FakeUser()
+
     query = """
         mutation CreateWorkItem($input: CreateWorkItemInput!) {
           createWorkItem(input: $input) {
@@ -599,7 +714,12 @@ def test_create_work_item(db, work_item, success, schema_executor):
             "meta": json.dumps(meta),
         }
     }
-    result = schema_executor(query, variables=inp)
+
+    if set_groups:
+        inp["input"]["controllingGroups"] = []
+        inp["input"]["addressedGroups"] = []
+
+    result = schema_executor(query, variables=inp, info=info)
 
     assert not bool(result.errors) == success
     if success:
@@ -609,6 +729,8 @@ def test_create_work_item(db, work_item, success, schema_executor):
         assert new_work_item.status == models.WorkItem.STATUS_READY
         assert new_work_item.meta == meta
         assert new_work_item.document is not None
+        assert new_work_item.controlling_groups == expected_groups
+        assert new_work_item.addressed_groups == expected_groups
 
 
 def test_filter_document_has_answer(

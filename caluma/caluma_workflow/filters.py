@@ -171,7 +171,6 @@ class TaskOrderSet(FilterSet):
         models.Task,
         fields=[
             "allow_all_forms",
-            "address_groups",
             "lead_time",
             "type",
             "created_by_group",
@@ -192,6 +191,7 @@ class TaskOrderSet(FilterSet):
 class WorkItemFilterSet(MetaFilterSet):
     order_by = OrderingFilter(label="WorkItemOrdering", fields=("status", "deadline"))
     addressed_groups = StringListFilter(lookup_expr="overlap")
+    controlling_groups = StringListFilter(lookup_expr="overlap")
     assigned_users = StringListFilter(lookup_expr="overlap")
 
     document_has_answer = HasAnswerFilter(document_id="document__pk")

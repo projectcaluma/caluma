@@ -172,6 +172,7 @@ This model contains tasks.
 * `type`
 * `meta`
 * `address_groups`
+* `control_groups`
 * `is_archived`
 * `form`
 * `lead_time`
@@ -251,6 +252,7 @@ This model contains work items.
 * `status`
 * `meta`
 * `addressed_groups`
+* `controlling_groups`
 * `assigned_users`
 * `case`
 * `child_case`
