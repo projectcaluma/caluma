@@ -322,6 +322,8 @@ type CopyQuestionPayload {
 input CreateWorkItemInput {
   case: ID!
   multipleInstanceTask: ID!
+  name: String
+  description: String
   assignedUsers: [String]
   addressedGroups: [String]
   controllingGroups: [String]
@@ -1697,6 +1699,8 @@ type SaveTextareaQuestionPayload {
 
 input SaveWorkItemInput {
   workItem: ID!
+  name: String
+  description: String
   assignedUsers: [String]
   deadline: DateTime
   meta: JSONString
@@ -2094,6 +2098,8 @@ type WorkItem implements Node {
   createdByUser: String
   createdByGroup: String
   id: ID!
+  name: String!
+  description: String
   closedAt: DateTime
   closedByUser: String
   closedByGroup: String

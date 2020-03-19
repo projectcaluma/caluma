@@ -448,6 +448,18 @@ class SkipWorkItemSerializer(CompleteWorkItemSerializer):
 
 class SaveWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
     work_item = serializers.GlobalIDField(source="id")
+    name = CharField(
+        required=False,
+        allow_blank=True,
+        allow_null=True,
+        help_text=models.WorkItem._meta.get_field("name").help_text,
+    )
+    description = CharField(
+        required=False,
+        allow_blank=True,
+        allow_null=True,
+        help_text=models.WorkItem._meta.get_field("description").help_text,
+    )
 
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
@@ -456,7 +468,14 @@ class SaveWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerializ
 
     class Meta:
         model = models.WorkItem
-        fields = ("work_item", "assigned_users", "deadline", "meta")
+        fields = (
+            "work_item",
+            "name",
+            "description",
+            "assigned_users",
+            "deadline",
+            "meta",
+        )
 
 
 class CreateWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
@@ -466,6 +485,16 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerial
     )
     controlling_groups = ListField(child=CharField(required=False), required=False)
     addressed_groups = ListField(child=CharField(required=False), required=False)
+    name = CharField(
+        required=False,
+        allow_blank=True,
+        help_text=models.WorkItem._meta.get_field("name").help_text,
+    )
+    description = CharField(
+        required=False,
+        allow_blank=True,
+        help_text=models.WorkItem._meta.get_field("description").help_text,
+    )
 
     def validate_multiple_instance_task(self, task):
         if not task.is_multiple_instance:
@@ -511,6 +540,8 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerial
         fields = (
             "case",
             "multiple_instance_task",
+            "name",
+            "description",
             "assigned_users",
             "addressed_groups",
             "controlling_groups",

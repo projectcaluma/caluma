@@ -176,6 +176,19 @@ class WorkItem(UUIDModel):
         (STATUS_SKIPPED, "Task is skipped."),
     )
 
+    name = LocalizedField(
+        blank=False,
+        null=False,
+        required=False,
+        help_text="Will be set from Task, if not provided.",
+    )
+    description = LocalizedField(
+        blank=True,
+        null=True,
+        required=False,
+        help_text="Will be set from Task, if not provided.",
+    )
+
     closed_at = models.DateTimeField(
         blank=True,
         null=True,
@@ -236,3 +249,16 @@ class WorkItem(UUIDModel):
             GinIndex(fields=["assigned_users"]),
             GinIndex(fields=["meta"]),
         ]
+
+
+@receiver(post_init, sender=WorkItem)
+def set_name_and_description(sender, instance, **kwargs):
+    """
+    Ensure WorkItem has a name and description set.
+
+    Default to values from Task.
+    """
+    if not any((value for _, value in instance.name.items())):
+        instance.name = instance.task.name
+    if not any((value for _, value in instance.description.items())):
+        instance.description = instance.task.description
