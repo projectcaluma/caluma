@@ -207,3 +207,52 @@ def test_new_jexl_expressions(
             return False
 
     assert do_check() == expectation
+
+
+def test_answer_transform_on_hidden_question(info, form_and_document):
+    # Bug test: When a JEXL expression references two answers, and one of them
+    # is hidden, the `answer` transform must return None for the hidden question
+    # to ensure correct evaluation.
+
+    form, document, questions, answers = form_and_document(
+        use_table=True, use_subform=True
+    )
+
+    # the "sub_question" question is hidden (no magic). This means
+    # it's "answer" transform should always return None
+    questions["sub_question"].is_hidden = "true"
+    questions["sub_question"].is_required = "true"
+    questions["sub_question"].save()
+
+    # sub_question and top_question are referenced in a JEXL expresison later on
+    answers["sub_question"].value = "hello"
+    answers["sub_question"].save()
+    answers["top_question"].value = "xyz"
+    answers["top_question"].save()
+
+    # the `column` question is used to evaluate the expression via `is_required`:
+    # The required state depends on two questions, so we can check the expression's
+    # result by checking whether the validator throws an exception.
+    answers["column"].delete()
+
+    validator = validators.DocumentValidator()
+
+    # expression references two other questions, so it will still be evaluated
+    # even if one question is hidden.
+    # This specific expression evaluates to `True` only if the `answer` transform
+    # works correctly
+    questions[
+        "column"
+    ].is_required = "'sub_question'|answer == null && 'top_question'|answer=='xyz'"
+    questions["column"].is_hidden = "false"
+    questions["column"].save()
+
+    with pytest.raises(validators.CustomValidationError):
+        validator.validate(document, info)
+
+    # Counter-Test to the `expect_fail` case: Ensure the answer transform still works
+    questions["column"].is_required = "'sub_question'|answer == 'hello'"
+    questions["column"].is_hidden = "false"
+    questions["column"].save()
+
+    assert validator.validate(document, info) is None

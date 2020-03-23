@@ -54,6 +54,8 @@ class QuestionJexl(JEXL):
         )
 
     def answer_transform(self, question):
+        if self.is_hidden(self._question(question)):
+            return None
         return self._structure.get_field(question).value()
 
     def validate(self, expression, **kwargs):
