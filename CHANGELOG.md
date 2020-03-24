@@ -1,3 +1,26 @@
+# v5.4.0
+
+### Feature
+* Add `controllinggroups` filter to workitemfilterset (2d4b43790a3f3ea9836a87b7177f71f8b2295d7c)
+* "controlling" for tasks and workitems (1ba66084d6e87de58894ed021ef99f26bfed0c90)
+* Implement caluma events (3efeba0f2495a3425226bdad92a786d511852299)
+* Cleanup context data for jexl expressions (4cc9a3d8b7bad18bc8378fe3611beed5b34ada18)
+* Structure objects can now be accessed via dot notation (8401af5bb1eafb0a966337db294e9646b2ea3907)
+* Fixture that can generate a full form and document (1e7dc050fb422274571fb8f3706c19960fa29e6b)
+* Add `family_work_items` to `case` type (41b2fb764d3ef104e9d3b29cd13cd09f69f54b1a)
+* Add rootcase filter (2c5145d7a2105159d244d3203b6602b5784a21e3)
+* Automatically set case family (2345af3903b06b4ac66f4004ea6a28a439a05d14)
+* Add case families (d7c0a662dff2f21b2226d6857b2837be35c6462e)
+
+### Fix
+* Answer transform shouldn't return value for hidden questions (984e2f9a0880eb4659917662d70ba40fdbb8d4c3)
+* Remove `address_group` from `taskorderset` (92dbb5b51c99c12ecfc2d568cfb06046388766ff)
+* The word "form" should always be the root form (787c30ca43578ec77ffa565e0ef0333237962d99)
+* Slug fields should be 127 chars (f6c3483e19dcf549238b7408a28fb5fd9f45bb9a)
+
+### Documentation
+* Extend validation with information about jexl expressions (2d8b1d3924001302268c3b6fe04b9b8ba102347c)
+
 # v5.3.1 (21 Feb 2020)
 
 ### Fix
