@@ -2,24 +2,7 @@
 
 ## Javascript Expression Language
 
-Caluma relies on Javascript Expression Language alias
-[JEXL](https://github.com/TomFrost/Jexl) for defining powerful yet simple
-expressions for complex validation and flow definitions.  Reason for
-using JEXL over other languages is that it can be simply implemented
-in the backend and frontend as of its defined small scope. This allows
-frontends in the browser to validate data in exactly the same way as
-the server will, while not limiting validation to simple regexes.
-
-This speeds up user interaction a good deal. JEXL expressions are used in
-the following contexts:
-
-* Deciding whether a field should be visible or not (`is_hidden` property)
-* Deciding whether a field is required (`is_required` property)
-* ...
-
-Within the expressions, you can access various information about the context
-of the question, it's answers as well as the form / document the question
-resides in.
+Our rationale about using jexl can be found [here](jexl.md).
 
 ### Variables available for evaluation
 
