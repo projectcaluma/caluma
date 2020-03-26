@@ -3,7 +3,7 @@ from datetime import timedelta
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
-from django.db.models.signals import post_init
+from django.db.models.signals import post_init, pre_save
 from django.dispatch import receiver
 from django.utils import timezone
 from localized_fields.fields import LocalizedField
@@ -176,6 +176,19 @@ class WorkItem(UUIDModel):
         (STATUS_SKIPPED, "Task is skipped."),
     )
 
+    name = LocalizedField(
+        blank=False,
+        null=False,
+        required=False,
+        help_text="Will be set from Task, if not provided.",
+    )
+    description = LocalizedField(
+        blank=True,
+        null=True,
+        required=False,
+        help_text="Will be set from Task, if not provided.",
+    )
+
     closed_at = models.DateTimeField(
         blank=True,
         null=True,
@@ -236,3 +249,16 @@ class WorkItem(UUIDModel):
             GinIndex(fields=["assigned_users"]),
             GinIndex(fields=["meta"]),
         ]
+
+
+@receiver(pre_save, sender=WorkItem)
+def set_name_and_description(sender, instance, **kwargs):
+    """
+    Ensure WorkItem has a name and description set.
+
+    Default to values from Task.
+    """
+    if not any(instance.name.values()):
+        instance.name = instance.task.name
+    if not any(instance.description.values()):
+        instance.description = instance.task.description

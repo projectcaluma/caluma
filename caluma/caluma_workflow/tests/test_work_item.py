@@ -597,7 +597,35 @@ def test_complete_work_item_with_merge(
     assert ready_workitem.document_id is not None
 
 
-def test_save_work_item(db, work_item, schema_executor):
+@pytest.mark.parametrize(
+    "work_item_name,work_item_description,expected_name,expected_description",
+    [
+        (
+            None,
+            None,
+            {"en": "Task name", "de": None, "fr": None},
+            {"en": "Task description", "de": None, "fr": None},
+        ),
+        (
+            "WorkItem name",
+            "WorkItem description",
+            {"en": "WorkItem name", "de": None, "fr": None},
+            {"en": "WorkItem description", "de": None, "fr": None},
+        ),
+    ],
+)
+@pytest.mark.parametrize(
+    "task__name,task__description", [("Task name", "Task description")]
+)
+def test_save_work_item(
+    db,
+    work_item,
+    work_item_name,
+    work_item_description,
+    expected_name,
+    expected_description,
+    schema_executor,
+):
     query = """
         mutation SaveWorkItem($input: SaveWorkItemInput!) {
           saveWorkItem(input: $input) {
@@ -612,6 +640,8 @@ def test_save_work_item(db, work_item, schema_executor):
             "workItem": str(work_item.pk),
             "assignedUsers": assigned_users,
             "meta": json.dumps({"test": "test"}),
+            "name": work_item_name,
+            "description": work_item_description,
         }
     }
     result = schema_executor(query, variables=inp)
@@ -620,6 +650,8 @@ def test_save_work_item(db, work_item, schema_executor):
     work_item.refresh_from_db()
     assert work_item.assigned_users == assigned_users
     assert work_item.meta == {"test": "test"}
+    assert dict(work_item.name) == expected_name
+    assert dict(work_item.description) == expected_description
 
 
 @pytest.mark.parametrize(
@@ -677,6 +709,9 @@ def test_save_work_item(db, work_item, schema_executor):
 )
 @pytest.mark.parametrize("case__created_by_group", ["group-case"])
 @pytest.mark.parametrize("work_item__child_case", [None])
+@pytest.mark.parametrize(
+    "task__name,task__description", [("Task name", "Task description")]
+)
 def test_create_work_item(
     db, work_item, task, expected_groups, set_groups, success, schema_executor, info
 ):
@@ -712,6 +747,7 @@ def test_create_work_item(
             "multipleInstanceTask": str(work_item.task.pk),
             "assignedUsers": assigned_users,
             "meta": json.dumps(meta),
+            "description": "work_item description",
         }
     }
 
@@ -731,6 +767,12 @@ def test_create_work_item(
         assert new_work_item.document is not None
         assert new_work_item.controlling_groups == expected_groups
         assert new_work_item.addressed_groups == expected_groups
+        assert dict(new_work_item.name) == {"en": "Task name", "de": None, "fr": None}
+        assert dict(new_work_item.description) == {
+            "en": "work_item description",
+            "de": None,
+            "fr": None,
+        }
 
 
 def test_filter_document_has_answer(

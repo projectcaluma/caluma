@@ -69,3 +69,54 @@ def test_add_case_families(transactional_db):
 
     assert historical_case.family_id == historical__child_case.family_id == case.id
     assert historical_orphan_case.family_id == historical_orphan_case.id
+
+
+def test_workitem_name_description(transactional_db):
+    executor = MigrationExecutor(connection)
+    app = "caluma_workflow"
+    migrate_from = [(app, "0021_work_item_controlling_groups")]
+    migrate_to = [(app, "0022_workitem_name_description")]
+
+    executor.migrate(migrate_from)
+    old_apps = executor.loader.project_state(migrate_from).apps
+
+    # Create some old data. Can't use factories here
+
+    Case = old_apps.get_model(app, "Case")
+    Workflow = old_apps.get_model(app, "Workflow")
+    WorkItem = old_apps.get_model(app, "WorkItem")
+    Task = old_apps.get_model(app, "Task")
+    HistoricalWorkItem = old_apps.get_model(app, "HistoricalWorkItem")
+
+    workflow = Workflow.objects.create(slug="main-workflow")
+
+    case = Case.objects.create(workflow=workflow)
+    task = Task.objects.create(name="task_name", description="task_description")
+    work_item = WorkItem.objects.create(child_case=None, case=case, task=task)
+
+    historical_work_item = HistoricalWorkItem.objects.create(
+        id=work_item.pk,
+        child_case=None,
+        case=case,
+        task=task,
+        created_at=timezone.now(),
+        modified_at=timezone.now(),
+        history_date=timezone.now(),
+    )
+
+    # Migrate forwards.
+    executor.loader.build_graph()  # reload.
+    executor.migrate(migrate_to)
+    new_apps = executor.loader.project_state(migrate_to).apps
+
+    # Test the new data.
+    WorkItem = new_apps.get_model(app, "WorkItem")
+    HistoricalWorkItem = new_apps.get_model(app, "HistoricalWorkItem")
+
+    # Refresh objects
+    work_item = WorkItem.objects.get(pk=work_item.pk)
+    historical_work_item = HistoricalWorkItem.objects.get(pk=historical_work_item.pk)
+
+    for wi in [work_item, historical_work_item]:
+        assert wi.name == wi.task.name
+        assert wi.description == wi.task.description
