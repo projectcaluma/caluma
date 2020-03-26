@@ -1,4 +1,16 @@
-# v5.4.0
+# v5.5.0 (26 Mar 2020)
+
+### Feature
+* add name filter (a804572ad6979cf26c711a7f29cd44e37cb71c6e)
+* name and description (18a987370d9d6f2ec8db84ce225bd32af7de00f8)
+
+### Fix
+* fix answer transform for questions with multiple values (d0189cbac7d43ef479ff23ff0123dae23c98ca5d)
+
+### Documentation
+* add documentation about the GroupJexl (a3e5bd1e295606d64392a1205326fcad2b908092)
+
+# v5.4.0 (24 Mar 2020)
 
 ### Feature
 * Add `controllinggroups` filter to workitemfilterset (2d4b43790a3f3ea9836a87b7177f71f8b2295d7c)
