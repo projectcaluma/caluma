@@ -9,7 +9,7 @@ from ..models import Question
     "expression,num_errors",
     [
         # correct case
-        ('"question-slug"|answer|mapby', 0),
+        ("\"question-slug\"|answer|mapby('key')", 0),
         # invalid subject type
         ("100|answer", 1),
         # two invalid subject types
@@ -21,6 +21,18 @@ from ..models import Question
 def test_question_jexl_validate(expression, num_errors):
     jexl = QuestionJexl()
     assert len(list(jexl.validate(expression))) == num_errors
+
+
+@pytest.mark.parametrize(
+    "expression,result",
+    [
+        ("[{ key: 1 }]|mapby('key')", [1]),
+        ("[{ otherkey: 1 }]|mapby('key')", [None]),
+        ("[]|mapby('key')", []),
+    ],
+)
+def test_mapby_operator(expression, result):
+    assert QuestionJexl().evaluate(expression) == result
 
 
 @pytest.mark.parametrize(
@@ -256,3 +268,52 @@ def test_answer_transform_on_hidden_question(info, form_and_document):
     questions["column"].save()
 
     assert validator.validate(document, info) is None
+
+
+@pytest.mark.parametrize(
+    "question_type,expected_value",
+    [
+        (Question.TYPE_MULTIPLE_CHOICE, []),
+        (Question.TYPE_INTEGER, None),
+        (Question.TYPE_FLOAT, None),
+        (Question.TYPE_DATE, None),
+        (Question.TYPE_CHOICE, None),
+        (Question.TYPE_TEXTAREA, None),
+        (Question.TYPE_TEXT, None),
+        (Question.TYPE_TABLE, []),
+        (Question.TYPE_FILE, None),
+        (Question.TYPE_DYNAMIC_CHOICE, None),
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, []),
+        # Those should not appear in a JEXL answer transform
+        # (Question.TYPE_FORM,None),
+        # (Question.TYPE_STATIC,None),
+    ],
+)
+def test_answer_transform_on_hidden_question_types(
+    info, form_and_document, question_type, expected_value
+):
+    form, document, questions, answers = form_and_document(
+        use_table=True, use_subform=True
+    )
+
+    questions[
+        "form_question"
+    ].is_hidden = (
+        f"'top_question'|answer == {expected_value} && 'table'|answer|mapby('column')"
+    )
+    questions["form_question"].save()
+
+    questions["top_question"].is_hidden = "true"
+    questions["top_question"].type = question_type
+    questions["top_question"].save()
+
+    qj = QuestionJexl(
+        {
+            "document": document,
+            "answers": answers,
+            "form": form,
+            "structure": structure.FieldSet(document, document.form),
+        }
+    )
+
+    assert qj.is_hidden(questions["form_question"])
