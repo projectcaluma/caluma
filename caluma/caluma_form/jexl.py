@@ -5,6 +5,7 @@ from pyjexl.analysis import ValidatingAnalyzer
 from pyjexl.evaluator import Context
 
 from ..caluma_core.jexl import JEXL, ExtractTransformSubjectAnalyzer
+from .models import Question
 
 
 class QuestionMissing(Exception):
@@ -48,15 +49,27 @@ class QuestionJexl(JEXL):
         self.context = Context(context_data)
 
         self.add_transform("answer", self.answer_transform)
-        self.add_transform("mapby", lambda arr, key: [obj[key] for obj in arr])
+        self.add_transform(
+            "mapby", lambda arr, key: [obj.get(key, None) for obj in arr]
+        )
         self.add_binary_operator(
             "intersects", 20, lambda left, right: any(x in right for x in left)
         )
 
-    def answer_transform(self, question):
-        if self.is_hidden(self._question(question)):
+    def answer_transform(self, question_slug):
+        question = self._question(question_slug)
+
+        if self.is_hidden(question):
+            if question.type in [
+                Question.TYPE_MULTIPLE_CHOICE,
+                Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+                Question.TYPE_TABLE,
+            ]:
+                return []
+
             return None
-        return self._structure.get_field(question).value()
+
+        return self._structure.get_field(question_slug).value()
 
     def validate(self, expression, **kwargs):
         return super().validate(expression, QuestionValidatingAnalyzer)
