@@ -1,3 +1,8 @@
+# v5.5.1 (27 Mar 2020)
+
+### Fix
+* fix WorkItem migration (870bd94a2a9f08d4268093649bb28f85e86811ac)
+
 # v5.5.0 (26 Mar 2020)
 
 ### Feature
