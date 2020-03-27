@@ -94,7 +94,7 @@ def test_workitem_name_description(transactional_db):
     task = Task.objects.create(name="task_name", description="task_description")
     work_item = WorkItem.objects.create(child_case=None, case=case, task=task)
 
-    historical_work_item = HistoricalWorkItem.objects.create(
+    HistoricalWorkItem.objects.create(
         id=work_item.pk,
         child_case=None,
         case=case,
@@ -102,6 +102,16 @@ def test_workitem_name_description(transactional_db):
         created_at=timezone.now(),
         modified_at=timezone.now(),
         history_date=timezone.now(),
+    )
+
+    HistoricalWorkItem.objects.create(
+        id=work_item.pk,
+        child_case=None,
+        case=case,
+        task=task,
+        created_at=timezone.now() + timezone.timedelta(hours=1),
+        modified_at=timezone.now() + timezone.timedelta(hours=1),
+        history_date=timezone.now() + timezone.timedelta(hours=1),
     )
 
     # Migrate forwards.
@@ -115,8 +125,8 @@ def test_workitem_name_description(transactional_db):
 
     # Refresh objects
     work_item = WorkItem.objects.get(pk=work_item.pk)
-    historical_work_item = HistoricalWorkItem.objects.get(pk=historical_work_item.pk)
+    historical_work_items = HistoricalWorkItem.objects.filter(id=work_item.pk)
 
-    for wi in [work_item, historical_work_item]:
+    for wi in [work_item, *historical_work_items]:
         assert wi.name == wi.task.name
         assert wi.description == wi.task.description

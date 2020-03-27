@@ -13,12 +13,12 @@ def set_name_and_description(apps, schema_editor):
         work_item.name = work_item.task.name
         work_item.description = work_item.task.description
         work_item.save()
-        historical_work_item = HistoricalWorkItem.objects.using(db_alias).get(
+        for historical_work_item in HistoricalWorkItem.objects.using(db_alias).filter(
             id=work_item.pk
-        )
-        historical_work_item.name = work_item.name
-        historical_work_item.description = work_item.description
-        historical_work_item.save()
+        ):
+            historical_work_item.name = work_item.name
+            historical_work_item.description = work_item.description
+            historical_work_item.save()
 
 
 class Migration(migrations.Migration):
