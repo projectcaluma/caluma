@@ -1,5 +1,5 @@
 dateparser==0.7.4
-django==2.2.11
+django==2.2.12
 django-cors-headers==3.2.1
 django-environ==0.4.5
 django-extensions==2.2.8
