@@ -14,7 +14,7 @@ graphql-core==2.2.1
 graphql-relay==2.0.1
 idna==2.9
 minio==5.0.8
-psycopg2-binary==2.8.4
+psycopg2-binary==2.8.5
 pyjexl==0.2.3
 python-memcached==1.59
 requests==2.23.0
