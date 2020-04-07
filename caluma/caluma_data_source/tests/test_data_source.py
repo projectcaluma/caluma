@@ -238,7 +238,7 @@ def test_data_sources_stores_user(
     variables = {
         "input": {
             "question": question.slug,
-            "document": document.id,
+            "document": str(document.id),
             "value": "something",
         }
     }
