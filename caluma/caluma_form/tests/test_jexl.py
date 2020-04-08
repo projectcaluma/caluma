@@ -101,16 +101,21 @@ def test_indirectly_hidden_dependency(
     # but also if they're part of a subform, where the containing form question
     # is hidden.
     #
-    # Showcase form to demonstrate this (f: form, q:question, d:document, a:answer):
+    # Showcase form to demonstrate this (f:form, q:question, d:document, a:answer):
     # f:topform
-    #   q:formquestion - hidden=true
+    #    q:formquestionbranch - hidden=false
+    #      f:subformbranch
+    #         q:depquestion2 - required = 'subquestion2'|answer=='bluh'
+    #    q:formquestion - hidden=variable
     #      f:subform
-    #         q:subquestion - hidden=false
-    #   q:depquestion - required = subquestion|answer=='blah'
+    #         q:subquestion1 - hidden=false
+    #         q:subquestion2 - hidden=false
+    #   q:depquestion1 - required = 'subquestion1'|answer=='blah'
     #
     # d:topdoc f=topform
-    #    a:subanswer q=subquestion, value='blah'
-    #    (depquestion has no answer, as it's indirectly not required)
+    #    a:subanswer1 q=subquestion1, value='blah'
+    #    a:subanswer2 q=subquestion2, value='bluh'
+    #    (depquestion1 and depquestion2 have no answers, as they're indirectly not required)
     #
     # Note: The above structure shows the actual "feature" case.
     # We also test with `subquestion` not hidden, to ensure both ways
@@ -118,25 +123,50 @@ def test_indirectly_hidden_dependency(
 
     # Build the form first...
     topform = form_factory(slug="top")
-    subform = form_factory(slug="subform")
+    subformbranch = form_factory(slug="subform")
+    subform = form_factory(slug="subformbranch")
 
     formquestion = question_factory(
-        type=Question.TYPE_FORM, is_hidden=fq_is_hidden, sub_form=subform
+        type=Question.TYPE_FORM,
+        is_hidden=fq_is_hidden,
+        sub_form=subform,
+        slug="topformquestion",
     )
-    subquestion = question_factory(
-        type=Question.TYPE_INTEGER, is_hidden="false", slug="subquestion"
+    formquestionbranch = question_factory(
+        type=Question.TYPE_FORM,
+        is_hidden="false",
+        sub_form=subformbranch,
+        slug="topformquestionbranch",
     )
-    depquestion = question_factory(
-        type=Question.TYPE_INTEGER, is_required="'subquestion'|answer=='blah'"
+    subquestion1 = question_factory(
+        type=Question.TYPE_INTEGER, is_hidden="false", slug="subquestion1"
+    )
+    subquestion2 = question_factory(
+        type=Question.TYPE_INTEGER, is_hidden="false", slug="subquestion2"
+    )
+    depquestion1 = question_factory(
+        type=Question.TYPE_INTEGER,
+        is_required="'subquestion1'|answer=='blah'",
+        slug="depquestion1",
+    )
+    depquestion2 = question_factory(
+        type=Question.TYPE_INTEGER,
+        is_required="'subquestion2'|answer=='bluh'",
+        slug="depquestion2",
     )
     form_question_factory(form=topform, question=formquestion)
-    form_question_factory(form=topform, question=depquestion)
+    form_question_factory(form=topform, question=formquestionbranch)
+    form_question_factory(form=topform, question=depquestion1)
 
-    form_question_factory(form=subform, question=subquestion)
+    form_question_factory(form=subformbranch, question=depquestion2)
+
+    form_question_factory(form=subform, question=subquestion1)
+    form_question_factory(form=subform, question=subquestion2)
 
     # ... then build the document
     topdoc = document_factory(form=topform)
-    answer_factory(document=topdoc, question=subquestion, value="blah")
+    answer_factory(document=topdoc, question=subquestion1, value="blah")
+    answer_factory(document=topdoc, question=subquestion2, value="bluh")
 
     validator = validators.DocumentValidator()
 

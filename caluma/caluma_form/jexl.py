@@ -99,7 +99,7 @@ class QuestionJexl(JEXL):
         If all subforms are hidden where the question shows up,
         the question shall be hidden as well.
         """
-        paths = self._structure.paths_to_question(question.slug)
+        paths = self._structure.root().paths_to_question(question.slug)
 
         res = bool(paths) and all(
             # the "inner" check here represents a single path. If any
