@@ -1,3 +1,10 @@
+# v5.5.2 (8 April 2020)
+
+### Fix
+* Fix evaluating requiredness from branch forms (062e350236f18031a4158cffe8b752192b7d2661)
+* Only accepts integer or string as id (562b4c0594336392abf5a3d3f83878d37e434e42)
+
+
 # v5.5.1 (27 Mar 2020)
 
 ### Fix
