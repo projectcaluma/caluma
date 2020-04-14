@@ -7,13 +7,10 @@ class BaseUser:  # pragma: no cover
     def __init__(self):
         self.username = None
         self.groups = []
+        self.group = None
         self.token = None
         self.claims = {}
         self.is_authenticated = False
-
-    @property
-    def group(self):
-        raise NotImplementedError
 
     def __getattribute__(self, name):
         if name in ["userinfo", "introspection"]:
@@ -29,10 +26,6 @@ class BaseUser:  # pragma: no cover
 
 
 class AnonymousUser(BaseUser):
-    @property
-    def group(self):
-        return None
-
     def __str__(self):
         return "AnonymousUser"
 
@@ -44,6 +37,7 @@ class OIDCUser(BaseUser):
         self.claims, self.claims_source = self._get_claims(userinfo, introspection)
         self.username = self.claims[settings.OIDC_USERNAME_CLAIM]
         self.groups = self.claims.get(settings.OIDC_GROUPS_CLAIM)
+        self.group = self.groups[0] if self.groups else None
         self.token = token
         self.is_authenticated = True
 
@@ -56,10 +50,6 @@ class OIDCUser(BaseUser):
         elif introspection is not None:
             result = (introspection, "introspection")
         return result
-
-    @property
-    def group(self):
-        return self.groups[0] if self.groups else None
 
     def __str__(self):
         return self.username

@@ -130,7 +130,7 @@ class CustomValidation(BaseValidation):
 
     @validation_for(SaveForm)
     def validate_save_form(self, mutation, data, info):
-        if data['meta'] and info.context.group != 'admin':
+        if data['meta'] and 'admin' not in info.context.user.groups:
             raise exceptions.ValidationError('May not change meta on form')
         return data
 ```
@@ -144,6 +144,25 @@ Save your validation module as `validations.py` and inject it as Docker volume t
 see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) for an example.
 
 Afterwards you can configure it in `VALIDATION_CLASSES` as `caluma.extensions.validations.CustomValidation`.
+
+### The main group of the user
+By default, Caluma assumes the first group in the list of groups it receives from the OIDC provider as the group the request was made in the name of.
+This means, this group will be written into the `created_by_group` field on the records that get created during the request.
+
+It is possible to manually set this group in the validation class, in order to override this behavior:
+
+```python
+from caluma.caluma_core.validations import BaseValidation
+
+
+class CustomValidation(BaseValidation):
+    def validate(self, mutation, data, info):
+        # the list of groups received from the OIDC provider can be accessed with
+        # info.context.user.groups
+        # Overriding the main group can be achieved by setting the `group` property on the user object:
+        info.context.user.group = "foobar"
+        return data
+```
 
 ## FormatValidator classes
 

@@ -1,7 +1,7 @@
 import pytest
 from django.core.exceptions import ImproperlyConfigured
 
-from .. import models, serializers
+from .. import models, mutation, serializers, types, validations
 from ..mutation import Mutation
 from ..validations import BaseValidation, validation_for
 from .fake_model import get_fake_model
@@ -76,3 +76,30 @@ def test_custom_validation_override_validate_no_class_match(db, info):
             return data
 
     assert CustomValidation().validate(AnotherMutation, {}, info) == {}
+
+
+def test_custom_validation_override_created_by_group(db, admin_info, history_mock):
+    FakeModel = get_fake_model(model_base=models.UUIDModel)
+
+    class CustomValidation(validations.BaseValidation):
+        def validate(self, mutation, data, info):
+            info.context.user.group = "foobar"
+            return data
+
+    class MySerializer(serializers.ModelSerializer):
+        validation_classes = [CustomValidation]
+
+        class Meta:
+            model = FakeModel
+            fields = "__all__"
+
+    class CustomNode(types.DjangoObjectType):
+        class Meta:
+            model = FakeModel
+
+    class MyMutation(mutation.Mutation):
+        class Meta:
+            serializer_class = MySerializer
+
+    MyMutation.mutate_and_get_payload(None, admin_info)
+    assert FakeModel.objects.first().created_by_group == "foobar"
