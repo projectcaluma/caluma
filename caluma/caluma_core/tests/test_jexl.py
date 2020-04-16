@@ -1,9 +1,8 @@
 import functools
 
 import pytest
-from pyjexl import JEXL
 
-from ..jexl import Cache, ExtractTransformSubjectAnalyzer
+from ..jexl import JEXL, Cache, ExtractTransformSubjectAnalyzer
 
 
 @pytest.mark.parametrize(
@@ -56,3 +55,26 @@ def test_jexl_cache():
 
     # validate invariants
     assert cache._cache.keys() == cache._mru.keys()
+
+
+@pytest.mark.parametrize(
+    "expression,expected_result,expected_error",
+    [
+        ("undef > 3", None, TypeError),
+        ("undef && undef > 3", False, None),
+        ("undef || undef > 3", None, TypeError),
+        ("foo || foo > 3", True, None),
+        ('"foo"|answer != null && 15 > ("foo"|answer || 0)', False, None),
+        ("undefined || 0", 0, None),
+        ("undefined || 3", 3, None),
+    ],
+)
+def test_expression_behaviours(expression, expected_result, expected_error):
+    jexl = JEXL()
+    jexl.add_transform("answer", lambda _: None)
+
+    if expected_error:
+        with pytest.raises(expected_error):
+            jexl.evaluate(expression, {"foo": 3})
+    else:
+        assert jexl.evaluate(expression, {"foo": 3}) == expected_result

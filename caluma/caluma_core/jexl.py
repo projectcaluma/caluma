@@ -2,6 +2,7 @@ from itertools import count
 
 import pyjexl
 from pyjexl.analysis import ValidatingAnalyzer
+from pyjexl.evaluator import Context, Evaluator
 from pyjexl.exceptions import ParseError
 from rest_framework import exceptions
 
@@ -46,6 +47,32 @@ class Cache:
             del self._mru[key]
 
 
+class ShortcutEvaluator(Evaluator):
+    def visit_BinaryExpression(self, exp, context):
+        # Shortcut boolean expressions. This improves evaluation speed (minimally), but
+        # also allows checking things before doing a comparison, for example.
+        operators = {
+            "&&": self.visit_BinaryExpressionAndLazy,
+            "||": self.visit_BinaryExpressionOrLazy,
+        }
+        default_visitor = super().visit_BinaryExpression
+
+        operator = operators.get(exp.operator.symbol, default_visitor)
+        return operator(exp, context)
+
+    def visit_BinaryExpressionAndLazy(self, exp, context):
+        left = self.evaluate(exp.left, context)
+        if not left:
+            return False
+        return self.evaluate(exp.right, context)
+
+    def visit_BinaryExpressionOrLazy(self, exp, context):
+        left = self.evaluate(exp.left, context)
+        if left:
+            return True
+        return self.evaluate(exp.right, context)
+
+
 class JexlValidator(object):
     def __init__(self, jexl):
         self.jexl = jexl
@@ -71,6 +98,12 @@ class JEXL(pyjexl.JEXL):
                 yield res
         except ParseError as err:
             yield str(err)
+
+    def evaluate(self, expression, context=None):
+        """Overload so we can use a short-cutting evaluator."""
+        parsed_expression = self.parse(expression)
+        context = Context(context) if context is not None else self.context
+        return ShortcutEvaluator(self.config).evaluate(parsed_expression, context)
 
 
 class ExtractTransformSubjectAnalyzer(ValidatingAnalyzer):
