@@ -31,7 +31,7 @@ class BaseValidation(object):
     A custom validation class could look like this:
     ```
     >>> from caluma.caluma_form.schema import SaveForm
-    ... from caluma.mutation import Mutation
+    ... from caluma.caluma_core.mutation import Mutation
     ... from rest_framework import exceptions
     ...
     ... class CustomValidation(BaseValidation):
@@ -42,8 +42,8 @@ class BaseValidation(object):
     ...
     ...     @validation_for(SaveForm)
     ...     def validate_save_form(self, mutation, data, info):
-    ...         if data['meta'] and info.context.group != 'admin':
-    ...           raise exceptions.ValidationException('May not change meta on form')
+    ...         if data['meta'] and 'admin' not in info.context.user.groups:
+    ...             raise exceptions.ValidationException('May not change meta on form')
     ...         return data
     """
 
