@@ -1,4 +1,5 @@
 from collections import defaultdict
+from contextlib import contextmanager
 from functools import partial
 
 from pyjexl.analysis import ValidatingAnalyzer
@@ -89,6 +90,23 @@ class QuestionJexl(JEXL):
             f"Question `{slug}` could not be found in form {self.context['form']}"
         )
 
+    @contextmanager
+    def _question_local_structure(self, question_slug):
+        """Context manger to temporarily overwrite self._structure.
+
+        This is used so we can evaluate each JEXL expression in the context
+        of the corresponding question, not from where the question was
+        referenced.
+        This is relevant in table questions and form questions, so we always
+        lookup the correct answer value (no "crosstalk" between rows, for example)
+        """
+
+        # field's parent is the fieldset - which is a valid structure object
+        old_structure = self._structure
+        self._structure = self._structure.get_field(question_slug).parent()
+        yield
+        self._structure = old_structure
+
     def _all_containers_hidden(self, question):
         """Check whether all containers of the given question are hidden.
 
@@ -152,7 +170,9 @@ class QuestionJexl(JEXL):
             return True
         # if the question is visible-in-context and not hidden by invisible dependencies,
         # we can evaluate it's own is_hidden expression
-        self._cache["hidden"][cache_key] = self.evaluate(question.is_hidden)
+
+        with self._question_local_structure(question.pk):
+            self._cache["hidden"][cache_key] = self.evaluate(question.is_hidden)
         return self._cache["hidden"][cache_key]
 
     def is_required(self, question):
@@ -168,6 +188,7 @@ class QuestionJexl(JEXL):
             # so assume requiredness to be False
             ret = False
         else:
-            ret = self.evaluate(question.is_required)
+            with self._question_local_structure(question.pk):
+                ret = self.evaluate(question.is_required)
         self._cache["required"][cache_key] = ret
         return ret

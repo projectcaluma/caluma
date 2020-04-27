@@ -359,24 +359,23 @@ def test_answer_transform_in_tables(info, form_and_document, form_question_facto
     )
 
     table_question = questions["table_question"]
+    top_ans = answers["top_question"].value
 
-    question_col1 = questions["column"]
-    question_col2 = form_question_factory(
+    form_question_factory(
         form=table_question.row_form,
         question__slug="column2",
-        question__is_required="'column'|answer == 5",
+        question__is_required=f"'column'|answer == 5 && 'top_question'|answer == '{top_ans}'",
     ).question
 
     table_answer = answers["table_question"]
 
-    ans_doc_1 = table_answer.documents.first()
-    ans_doc_2 = table_answer.documents.create(form=table_question.row_form)
+    row2_doc = table_answer.documents.create(form=table_question.row_form)
 
-    ans_row1_col1 = ans_doc_1.answers.get(question_id="column")
-    ans_row2_col1 = ans_doc_2.answers.create(question_id="column", value=5)
+    # Second row has an answer that triggers the transform and implies a validation error.
+    # This will wrongfully succeed if the answer value comes from the wrong row
+    row2_doc.answers.create(question_id="column", value=5)
 
     validator = validators.DocumentValidator()
-
     # we expect this to fail, as in the second row, the 'column' answer is 5,
     # so 'column2' should be required
     with pytest.raises(validators.CustomValidationError):
