@@ -3,7 +3,7 @@ import weakref
 from functools import singledispatch
 from typing import Optional
 
-from .models import Question
+from .models import AnswerDocument, Question
 
 
 def object_local_memoise(method):
@@ -112,14 +112,15 @@ class RowField(Field):
         if not self.answer:
             return []  # pragma: no cover
 
+        rows = AnswerDocument.objects.filter(answer=self.answer).order_by("sort")
         return [
             FieldSet(
-                row_doc,
+                ans_doc.document,
                 self.question.row_form,
                 question=self.question,
                 parent=self.parent(),
             )
-            for row_doc in self.answer.documents.all()
+            for ans_doc in rows
         ]
 
 
