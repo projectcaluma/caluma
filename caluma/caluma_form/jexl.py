@@ -1,4 +1,5 @@
 from collections import defaultdict
+from contextlib import contextmanager
 from functools import partial
 
 from pyjexl.analysis import ValidatingAnalyzer
@@ -89,6 +90,23 @@ class QuestionJexl(JEXL):
             f"Question `{slug}` could not be found in form {self.context['form']}"
         )
 
+    @contextmanager
+    def _question_local_structure(self, question_slug):
+        """Context manger to temporarily overwrite self._structure.
+
+        This is used so we can evaluate each JEXL expression in the context
+        of the corresponding question, not from where the question was
+        referenced.
+        This is relevant in table questions and form questions, so we always
+        lookup the correct answer value (no "crosstalk" between rows, for example)
+        """
+
+        # field's parent is the fieldset - which is a valid structure object
+        old_structure = self._structure
+        self._structure = self._structure.get_field(question_slug).parent()
+        yield
+        self._structure = old_structure
+
     def _all_containers_hidden(self, question):
         """Check whether all containers of the given question are hidden.
 
@@ -114,15 +132,20 @@ class QuestionJexl(JEXL):
 
         return res
 
+    def _cache_key(self, question_slug):
+        field = self._structure.get_field(question_slug)
+        return (field.document.pk, question_slug)
+
     def is_hidden(self, question):
         """Return True if the given question is hidden.
 
         This checks whether the dependency questions are hidden, then
         evaluates the question's is_hidden expression itself.
         """
+        cache_key = self._cache_key(question.pk)
 
-        if question.pk in self._cache["hidden"]:
-            return self._cache["hidden"][question.pk]
+        if cache_key in self._cache["hidden"]:
+            return self._cache["hidden"][cache_key]
         # Check visibility of dependencies before actually evaluating the `is_hidden`
         # expression. If all dependencies are hidden,
         # there is no way to evaluate our own visibility, so we default to
@@ -136,23 +159,27 @@ class QuestionJexl(JEXL):
             self.is_hidden(self._question(dep)) for dep in deps
         )
         if all_deps_hidden:
-            self._cache["hidden"][question.pk] = True
+            self._cache["hidden"][cache_key] = True
             return True
 
         # Also check if the question is hidden indirectly,
         # for example via parent formquestion.
         if self._all_containers_hidden(question):
             # no way this is shown somewhere
-            self._cache["hidden"][question.pk] = True
+            self._cache["hidden"][cache_key] = True
             return True
         # if the question is visible-in-context and not hidden by invisible dependencies,
         # we can evaluate it's own is_hidden expression
-        self._cache["hidden"][question.pk] = self.evaluate(question.is_hidden)
-        return self._cache["hidden"][question.pk]
+
+        with self._question_local_structure(question.pk):
+            self._cache["hidden"][cache_key] = self.evaluate(question.is_hidden)
+        return self._cache["hidden"][cache_key]
 
     def is_required(self, question):
-        if question.pk in self._cache["required"]:
-            return self._cache["required"][question.pk]
+        cache_key = self._cache_key(question.pk)
+
+        if cache_key in self._cache["required"]:
+            return self._cache["required"][cache_key]
 
         deps = list(self.extract_referenced_questions(question.is_required))
 
@@ -161,6 +188,7 @@ class QuestionJexl(JEXL):
             # so assume requiredness to be False
             ret = False
         else:
-            ret = self.evaluate(question.is_required)
-        self._cache["required"][question.pk] = ret
+            with self._question_local_structure(question.pk):
+                ret = self.evaluate(question.is_required)
+        self._cache["required"][cache_key] = ret
         return ret

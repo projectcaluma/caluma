@@ -347,3 +347,36 @@ def test_answer_transform_on_hidden_question_types(
     )
 
     assert qj.is_hidden(questions["form_question"])
+
+
+def test_answer_transform_in_tables(info, form_and_document, form_question_factory):
+    # Bug test: When a JEXL expression references two answers, and one of them
+    # is hidden, the `answer` transform must return None for the hidden question
+    # to ensure correct evaluation.
+
+    form, document, questions, answers = form_and_document(
+        use_table=True, use_subform=False
+    )
+
+    table_question = questions["table_question"]
+    top_ans = answers["top_question"].value
+
+    form_question_factory(
+        form=table_question.row_form,
+        question__slug="column2",
+        question__is_required=f"'column'|answer == 5 && 'top_question'|answer == '{top_ans}'",
+    ).question
+
+    table_answer = answers["table_question"]
+
+    row2_doc = table_answer.documents.create(form=table_question.row_form)
+
+    # Second row has an answer that triggers the transform and implies a validation error.
+    # This will wrongfully succeed if the answer value comes from the wrong row
+    row2_doc.answers.create(question_id="column", value=5)
+
+    validator = validators.DocumentValidator()
+    # we expect this to fail, as in the second row, the 'column' answer is 5,
+    # so 'column2' should be required
+    with pytest.raises(validators.CustomValidationError):
+        validator.validate(document, info)
