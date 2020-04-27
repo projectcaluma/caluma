@@ -265,7 +265,6 @@ class DocumentValidator:
             except (jexl.QuestionMissing, exceptions.ValidationError):
                 raise
             except Exception as exc:
-
                 log.error(
                     f"Error while evaluating `is_hidden` expression on question {question.slug}: "
                     f"{question.is_hidden}: {str(exc)}"
@@ -292,11 +291,19 @@ class DocumentValidator:
             question = field.question
             try:
                 is_hidden = question.slug not in validation_context["visible_questions"]
-
                 if is_hidden:
                     continue
 
-                is_required = q_jexl.is_required(question)
+                # The above `is_hidden` is globally cached per question, mainly to optimize DB access.
+                # This means a question could be marked "visible" as it would be visible
+                # in another row, but would still be hidden in the local row, if this is a
+                # table question context.  Thus, in this case we need to re-evaluate it's
+                # hiddenness. Luckily, the JEXL evaluator caches those values (locally).
+                with q_jexl.use_question_context(question.pk):
+                    if q_jexl.is_hidden(question):
+                        continue
+
+                is_required = q_jexl.is_required(field)
 
                 if question.type == Question.TYPE_FORM:
                     # form questions's answers are still in the top level document

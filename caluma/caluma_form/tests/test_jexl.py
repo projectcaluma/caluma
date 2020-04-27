@@ -83,7 +83,7 @@ def test_all_deps_hidden(db, form, document_factory, form_question_factory):
         }
     )
     assert qj.is_hidden(q2)
-    assert not qj.is_required(q2)
+    assert not qj.is_required(structure.Field(document, document.form, q2))
 
 
 @pytest.mark.parametrize("fq_is_hidden", ["true", "false"])
@@ -349,27 +349,45 @@ def test_answer_transform_on_hidden_question_types(
     assert qj.is_hidden(questions["form_question"])
 
 
-def test_answer_transform_in_tables(info, form_and_document, form_question_factory):
-    # Bug test: When a JEXL expression references two answers, and one of them
-    # is hidden, the `answer` transform must return None for the hidden question
-    # to ensure correct evaluation.
+@pytest.mark.parametrize(
+    "jexl_field,expr",
+    [
+        ("is_required", "('column'|answer == 5)"),
+        ("is_hidden", "('column'|answer > 10)"),
+    ],
+)
+def test_answer_transform_in_tables(
+    info,
+    form_and_document,
+    form_question_factory,
+    jexl_field,
+    expr,
+    answer_document_factory,
+):
 
     form, document, questions, answers = form_and_document(
         use_table=True, use_subform=False
     )
 
     table_question = questions["table_question"]
-    top_ans = answers["top_question"].value
 
-    form_question_factory(
-        form=table_question.row_form,
-        question__slug="column2",
-        question__is_required=f"'column'|answer == 5 && 'top_question'|answer == '{top_ans}'",
+    col2_question = form_question_factory(
+        **{
+            "form": table_question.row_form,
+            "question__slug": "column2",
+            "question__is_hidden": "false",
+            "question__is_required": "true",
+            # this overrwrites above "default values"
+            f"question__{jexl_field}": expr,
+        }
     ).question
+    assert getattr(col2_question, jexl_field) == expr
 
     table_answer = answers["table_question"]
 
-    row2_doc = table_answer.documents.create(form=table_question.row_form)
+    row2_doc = answer_document_factory(
+        answer=table_answer, document__form=table_question.row_form, sort=10
+    ).document
 
     # Second row has an answer that triggers the transform and implies a validation error.
     # This will wrongfully succeed if the answer value comes from the wrong row

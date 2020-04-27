@@ -91,7 +91,7 @@ class QuestionJexl(JEXL):
         )
 
     @contextmanager
-    def _question_local_structure(self, question_slug):
+    def use_question_context(self, question_slug):
         """Context manger to temporarily overwrite self._structure.
 
         This is used so we can evaluate each JEXL expression in the context
@@ -171,12 +171,13 @@ class QuestionJexl(JEXL):
         # if the question is visible-in-context and not hidden by invisible dependencies,
         # we can evaluate it's own is_hidden expression
 
-        with self._question_local_structure(question.pk):
+        with self.use_question_context(question.pk):
             self._cache["hidden"][cache_key] = self.evaluate(question.is_hidden)
         return self._cache["hidden"][cache_key]
 
-    def is_required(self, question):
-        cache_key = self._cache_key(question.pk)
+    def is_required(self, question_field):
+        cache_key = (question_field.document.pk, question_field.question.pk)
+        question = question_field.question
 
         if cache_key in self._cache["required"]:
             return self._cache["required"][cache_key]
@@ -188,7 +189,7 @@ class QuestionJexl(JEXL):
             # so assume requiredness to be False
             ret = False
         else:
-            with self._question_local_structure(question.pk):
+            with self.use_question_context(question.pk):
                 ret = self.evaluate(question.is_required)
         self._cache["required"][cache_key] = ret
         return ret
