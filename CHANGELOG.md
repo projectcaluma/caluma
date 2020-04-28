@@ -1,3 +1,16 @@
+# v5.6.0 (28 April 2020)
+
+### Feature
+* Add filters for object creation dates (310139c03b407efa4d473c1933a48906e9007a13)
+* Make created_by_group settable (ac3cb58959adcfaf386d8707416889f53ec248b8)
+
+### Fix
+* The requiredness check needs local context (2412577738dc708b1020105dd0e2eac656a332f9)
+* Return table rows in sorted fashion (aa0f72539e63d9103fe138180d81d3e99f4898af)
+* Ensure jexl evaluation is local to the relevant question (121bdb6ed075f6e968c7a4a250d045edec436f86)
+* Properly cache is_hidden/is_required (c09a13316e2a742964c9558c10f2a9327db0c933)
+
+
 # v5.5.2 (8 April 2020)
 
 ### Fix
