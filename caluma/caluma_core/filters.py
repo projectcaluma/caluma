@@ -16,6 +16,7 @@ from django_filters.constants import EMPTY_VALUES
 from django_filters.fields import ChoiceField
 from django_filters.rest_framework import (
     CharFilter,
+    DateTimeFilter,
     Filter,
     FilterSet,
     MultipleChoiceFilter,
@@ -422,6 +423,17 @@ class IntegerFilter(Filter):
 class FilterSet(GrapheneFilterSetMixin, FilterSet):
     created_by_user = CharFilter()
     created_by_group = CharFilter()
+
+    created_before = DateTimeFilter(
+        field_name="created_at",
+        lookup_expr="lt",
+        label="Only return entries created after the given DateTime (Exclusive)",
+    )
+    created_after = DateTimeFilter(
+        field_name="created_at",
+        lookup_expr="gte",
+        label="Only return entries created at or before the given DateTime (Inclusive)",
+    )
 
 
 class JSONLookupMode(Enum):
