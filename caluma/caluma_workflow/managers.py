@@ -1,5 +1,7 @@
+from django.db.models import Manager
+from caluma.caluma_core.events import send_event
 from ..caluma_form.models import Document, Form
-from . import events, models, validators
+from . import events, models
 from .jexl import FlowJexl, GroupJexl
 from simple_history.utils import bulk_create_with_history
 
@@ -62,23 +64,23 @@ def bulk_create_work_items(tasks, case, user, prev_work_item=None):
     return work_items
 
 
-class CaseLogic:
-    def validate(self, data):
+class CaseManager(Manager):
+    def _validate(self, data):
         form = data.get("form")
-        workflow = data["workflow"]
+        workflow = data.get("workflow")
 
         if form:
             if (
                 not workflow.allow_all_forms
                 and not workflow.allow_forms.filter(pk=form.pk).exists()
             ):
-                raise ValueError(
+                raise Exception(
                     f"Workflow {workflow.pk} does not allow to start case with form {form.pk}"
                 )
 
-        return super().validate(data)
+        return data
 
-    def create(self, user, validated_data):
+    def _pre_create(self, validated_data, user):
         parent_work_item = validated_data.get("parent_work_item")
         validated_data["status"] = models.Case.STATUS_RUNNING
 
@@ -94,21 +96,33 @@ class CaseLogic:
                 case = case.parent_work_item.case
             validated_data["family"] = case
 
-        instance = super().create(validated_data)
+        return validated_data
 
+    def _post_create(self, case, user, parent_work_item):
         # Django doesn't save reverse one-to-one relationships automatically:
         # https://code.djangoproject.com/ticket/18638
         if parent_work_item:
-            parent_work_item.child_case = instance
+            parent_work_item.child_case = case
             parent_work_item.save()
 
-        workflow = instance.workflow
+        workflow = case.workflow
         tasks = workflow.start_tasks.all()
 
-        work_items = bulk_create_work_items(tasks, instance, user)
+        work_items = bulk_create_work_items(tasks, case, user)
 
-        self.send_event(events.created_case, case=instance)
+        send_event(events.created_case, sender="case_post_create", case=case)
         for work_item in work_items:  # pragma: no cover
-            self.send_event(events.created_work_item, work_item=work_item)
+            send_event(
+                events.created_work_item, sender="case_post_create", work_item=work_item
+            )
 
-        return instance
+        return case
+
+    def start(self, *args, **kwargs):
+        user = kwargs.pop("user")
+
+        validated_data = self._pre_create(self._validate(kwargs), user)
+
+        case = self.create(**kwargs)
+
+        return self._post_create(case, user, validated_data.get("parent_work_item"))

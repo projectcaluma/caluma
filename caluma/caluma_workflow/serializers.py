@@ -11,6 +11,7 @@ from ..caluma_form.models import Document, Form
 from . import events, models, validators
 from .jexl import FlowJexl, GroupJexl
 
+
 class FlowJexlField(serializers.JexlField):
     def __init__(self, **kwargs):
         super().__init__(FlowJexl(), **kwargs)
@@ -170,71 +171,26 @@ class CaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
     )
 
     def validate(self, data):
-        form = data.get("form")
-        workflow = data["workflow"]
-
-        if form:
-            if (
-                not workflow.allow_all_forms
-                and not workflow.allow_forms.filter(pk=form.pk).exists()
-            ):
-                raise exceptions.ValidationError(
-                    f"Workflow {workflow.pk} does not allow to start case with form {form.pk}"
-                )
+        try:
+            data = models.Case.objects._validate(data)
+        except Exception as e:
+            raise exceptions.ValidationError(str(e))
 
         return super().validate(data)
 
     @transaction.atomic
     def create(self, validated_data):
         user = self.context["request"].user
-        parent_work_item = validated_data.get("parent_work_item")
-        validated_data["status"] = models.Case.STATUS_RUNNING
 
-        form = validated_data.pop("form", None)
-        if form:
-            validated_data["document"] = Document.objects.create(
-                form=form, created_by_user=user.username, created_by_group=user.group
-            )
+        validated_data = models.Case.objects._pre_create(validated_data, user)
 
-        if parent_work_item:
-            case = parent_work_item.case
-            while hasattr(case, "parent_work_item"):
-                case = case.parent_work_item.case
-            validated_data["family"] = case
+        case = super().create(validated_data)
 
-        instance = super().create(validated_data)
-
-        # Django doesn't save reverse one-to-one relationships automatically:
-        # https://code.djangoproject.com/ticket/18638
-        if parent_work_item:
-            parent_work_item.child_case = instance
-            parent_work_item.save()
-
-        workflow = instance.workflow
-        tasks = workflow.start_tasks.all()
-
-        work_items = bulk_create_work_items(tasks, instance, user)
-
-        self.send_event(events.created_case, case=instance)
-        for work_item in work_items:  # pragma: no cover
-            self.send_event(events.created_work_item, work_item=work_item)
-
-        return instance
+        return models.Case.objects._post_create(case, user, validated_data.get("parent_work_item"))
 
     class Meta:
         model = models.Case
         fields = ("workflow", "meta", "parent_work_item", "form")
-
-from caluma_workflow import business_logic
-
-business_logic.save_case(user, case_data,
-
-    (data) => super().create(data))
-business_logic.save_case((data) => models.Case.objects.create(**data))
-
-_validate
-_pre_create
-_post_create
 
 
 class SaveCaseSerializer(CaseSerializer):

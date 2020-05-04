@@ -567,3 +567,54 @@ def test_work_item_document(
     assert not result.errors
 
     assert len(result.data["allCases"]["edges"]) == result_count
+
+
+@pytest.mark.parametrize("task__lead_time", [100, None])
+@pytest.mark.parametrize("task__address_groups", ['["group-name"]|groups', None])
+def test_start_case_manager(
+    db,
+    workflow,
+    workflow_allow_forms,
+    workflow_start_tasks,
+    work_item,
+    form,
+    case,
+    admin_user,
+):
+    case = models.Case.objects.start(workflow=workflow, form=form, user=admin_user)
+
+    assert case.document.form == form
+    import ipdb
+
+    ipdb.set_trace()
+
+
+x = """
+            case {
+              id
+              document {
+                form {
+                  slug
+                }
+              }
+              status
+              parentWorkItem {
+                status
+              }
+              workItems {
+                edges {
+                  node {
+                    status
+                    addressedGroups
+                    document {
+                      form {
+                        slug
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            clientMutationId
+          }
+          """

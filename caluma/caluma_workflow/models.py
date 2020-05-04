@@ -9,6 +9,7 @@ from django.utils import timezone
 from localized_fields.fields import LocalizedField
 
 from ..caluma_core.models import ChoicesCharField, SlugModel, UUIDModel
+from . import managers
 
 
 class Task(SlugModel):
@@ -107,6 +108,8 @@ class TaskFlow(UUIDModel):
 
 
 class Case(UUIDModel):
+    objects = managers.CaseManager()
+
     STATUS_RUNNING = "running"
     STATUS_COMPLETED = "completed"
     STATUS_CANCELED = "canceled"
