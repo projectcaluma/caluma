@@ -1,6 +1,7 @@
 from django.db.models import Manager
 
 from caluma.caluma_core.events import send_event
+from caluma.caluma_user.models import BaseUser
 
 from ..caluma_form.models import Document
 from . import events, models, utils
@@ -61,7 +62,28 @@ class CaseManager(Manager):
         return case
 
     def start(self, *args, **kwargs):
-        user = kwargs.pop("user")
+        """
+        Start a case of a given workflow (just like `saveCase`).
+
+        Similar to Case.objects.create(), but with the same business logic as used in
+        the `saveCase` mutation.
+
+        All model relationships must be passed as resolved instances instead of primary keys.
+
+        Usage example:
+        ```py
+        Case.objects.start(
+            workflow=Workflow.objects.get(pk="my-wf"),
+            form=Form.objects.get(pk="my-form")),
+            user=AnonymousUser()
+        )
+        ```
+        """
+        user = kwargs.pop("user", None)
+
+        assert isinstance(
+            user, BaseUser
+        ), "`user` argument is required and must be instance of OIDCUser or AnonymousUser"
 
         validated_data = self._pre_create(self._validate(kwargs), user)
 
