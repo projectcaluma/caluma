@@ -172,7 +172,7 @@ class CaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
 
     def validate(self, data):
         try:
-            data = models.Case.objects._validate(data)
+            data = models.Case.objects.validate(data)
         except Exception as e:
             raise exceptions.ValidationError(str(e))
 
@@ -182,11 +182,11 @@ class CaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
 
-        validated_data = models.Case.objects._pre_create(validated_data, user)
+        validated_data = models.Case.objects.pre_create(validated_data, user)
 
         case = super().create(validated_data)
 
-        return models.Case.objects._post_create(
+        return models.Case.objects.post_create(
             case, user, validated_data.get("parent_work_item")
         )
 
@@ -259,19 +259,12 @@ class CompleteWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSeri
     id = serializers.GlobalIDField()
 
     def validate(self, data):
-        user = self.context["request"].user
-        validators.WorkItemValidator().validate(
-            status=self.instance.status,
-            child_case=self.instance.child_case,
-            task=self.instance.task,
-            case=self.instance.case,
-            document=self.instance.document,
-            info=self.context["info"],
-        )
-        data["status"] = models.WorkItem.STATUS_COMPLETED
-        data["closed_at"] = timezone.now()
-        data["closed_by_user"] = user.username
-        data["closed_by_group"] = user.group
+        try:
+            user = self.context["request"].user
+            data = self.instance.prepare_for_complete(data, user)
+        except Exception as e:
+            raise exceptions.ValidationError(str(e))
+
         return super().validate(data)
 
     def _can_continue(self, instance, task):
@@ -290,8 +283,11 @@ class CompleteWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSeri
 
     @transaction.atomic
     def update(self, instance, validated_data):
+        user = self.context["request"].user
+        instance.pre_complete(user)
+        instance.save()
+        instance.post_complete()
 
-        instance = super().update(instance, validated_data)
         user = self.context["request"].user
         case = instance.case
 

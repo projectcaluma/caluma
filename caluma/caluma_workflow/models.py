@@ -9,7 +9,7 @@ from django.utils import timezone
 from localized_fields.fields import LocalizedField
 
 from ..caluma_core.models import ChoicesCharField, SlugModel, UUIDModel
-from . import managers
+from . import managers, validators
 
 
 class Task(SlugModel):
@@ -245,6 +245,63 @@ class WorkItem(UUIDModel):
         blank=True,
         null=True,
     )
+
+    def validate_for_complete(self, user):
+        validators.WorkItemValidator().validate(
+            status=self.status,
+            child_case=self.child_case,
+            task=self.task,
+            case=self.case,
+            document=self.document,
+            user=user,
+        )
+
+    def pre_complete(self, user):
+        self.validate_for_complete(user)
+        self.status = models.WorkItem.STATUS_COMPLETED
+        self.closed_at = timezone.now()
+        self.closed_by_user = user.username
+        self.closed_by_group = user.group
+
+    def post_complete(self, user):
+        instance = super().update(instance, validated_data)
+        user = self.context["request"].user
+        case = instance.case
+
+        if not self._can_continue(instance, instance.task):
+            return instance
+
+        flow = models.Flow.objects.filter(task_flows__task=instance.task_id).first()
+        flow_referenced_tasks = models.Task.objects.filter(task_flows__flow=flow)
+
+        all_complete = all(
+            self._can_continue(instance, task) for task in flow_referenced_tasks
+        )
+
+        if flow and all_complete:
+            jexl = FlowJexl()
+            result = jexl.evaluate(flow.next)
+            if not isinstance(result, list):
+                result = [result]
+
+            tasks = models.Task.objects.filter(pk__in=result)
+
+            work_items = utils.bulk_create_work_items(tasks, case, user, instance)
+
+            for work_item in work_items:  # pragma: no cover
+                self.send_event(events.created_work_item, work_item=work_item)
+        else:
+            # no more tasks, mark case as complete
+            case.status = models.Case.STATUS_COMPLETED
+            case.closed_at = timezone.now()
+            case.closed_by_user = user.username
+            case.closed_by_group = user.group
+            case.save()
+            self.send_event(events.completed_case, case=case)
+
+        self.send_event(events.completed_work_item, work_item=instance)
+
+        return instance
 
     class Meta:
         indexes = [

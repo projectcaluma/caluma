@@ -8,7 +8,7 @@ from . import events, models, utils
 
 
 class CaseManager(Manager):
-    def _validate(self, data):
+    def validate(self, data):
         form = data.get("form")
         workflow = data.get("workflow")
 
@@ -23,7 +23,7 @@ class CaseManager(Manager):
 
         return data
 
-    def _pre_create(self, validated_data, user):
+    def pre_create(self, validated_data, user):
         parent_work_item = validated_data.get("parent_work_item")
         validated_data["status"] = models.Case.STATUS_RUNNING
 
@@ -41,7 +41,7 @@ class CaseManager(Manager):
 
         return validated_data
 
-    def _post_create(self, case, user, parent_work_item):
+    def post_create(self, case, user, parent_work_item):
         # Django doesn't save reverse one-to-one relationships automatically:
         # https://code.djangoproject.com/ticket/18638
         if parent_work_item:
@@ -85,8 +85,8 @@ class CaseManager(Manager):
             user, BaseUser
         ), "`user` argument is required and must be instance of OIDCUser or AnonymousUser"
 
-        validated_data = self._pre_create(self._validate(kwargs), user)
+        validated_data = self.pre_create(self.validate(kwargs), user)
 
         case = self.create(**kwargs)
 
-        return self._post_create(case, user, validated_data.get("parent_work_item"))
+        return self.post_create(case, user, validated_data.get("parent_work_item"))
