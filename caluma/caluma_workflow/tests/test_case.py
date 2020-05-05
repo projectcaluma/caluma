@@ -577,44 +577,14 @@ def test_start_case_manager(
     workflow_allow_forms,
     workflow_start_tasks,
     work_item,
+    task,
     form,
     case,
     admin_user,
 ):
     case = models.Case.objects.start(workflow=workflow, form=form, user=admin_user)
+    work_item = case.work_items.get(task_id=task.pk)
 
     assert case.document.form == form
-    import ipdb
-
-    ipdb.set_trace()
-
-
-x = """
-            case {
-              id
-              document {
-                form {
-                  slug
-                }
-              }
-              status
-              parentWorkItem {
-                status
-              }
-              workItems {
-                edges {
-                  node {
-                    status
-                    addressedGroups
-                    document {
-                      form {
-                        slug
-                      }
-                    }
-                  }
-                }
-              }
-            }
-            clientMutationId
-          }
-          """
+    assert work_item.document.form == form
+    assert work_item.status == models.WorkItem.STATUS_READY

@@ -8,7 +8,7 @@ from caluma.caluma_core.events import SendEventSerializerMixin
 
 from ..caluma_core import serializers
 from ..caluma_form.models import Document, Form
-from . import events, models, validators
+from . import events, models, utils, validators
 from .jexl import FlowJexl, GroupJexl
 
 
@@ -186,7 +186,9 @@ class CaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
 
         case = super().create(validated_data)
 
-        return models.Case.objects._post_create(case, user, validated_data.get("parent_work_item"))
+        return models.Case.objects._post_create(
+            case, user, validated_data.get("parent_work_item")
+        )
 
     class Meta:
         model = models.Case
@@ -311,7 +313,7 @@ class CompleteWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSeri
 
             tasks = models.Task.objects.filter(pk__in=result)
 
-            work_items = bulk_create_work_items(tasks, case, user, instance)
+            work_items = utils.bulk_create_work_items(tasks, case, user, instance)
 
             for work_item in work_items:  # pragma: no cover
                 self.send_event(events.created_work_item, work_item=work_item)
@@ -427,12 +429,16 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerial
         data["status"] = models.WorkItem.STATUS_READY
 
         if "controlling_groups" not in data:
-            controlling_groups = get_jexl_groups(task.control_groups, case, user.group)
+            controlling_groups = utils.get_jexl_groups(
+                task.control_groups, case, user.group
+            )
             if controlling_groups is not None:
                 data["controlling_groups"] = controlling_groups
 
         if "addressed_groups" not in data:
-            addressed_groups = get_jexl_groups(task.address_groups, case, user.group)
+            addressed_groups = utils.get_jexl_groups(
+                task.address_groups, case, user.group
+            )
             if addressed_groups is not None:
                 data["addressed_groups"] = addressed_groups
 
