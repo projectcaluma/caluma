@@ -9,7 +9,7 @@ from caluma.caluma_core.events import SendEventSerializerMixin
 
 from ..caluma_core import serializers
 from ..caluma_form.models import Document, Form
-from . import domain_logic, events, models, utils, validators
+from . import domain_logic, events, models, utils
 from .jexl import FlowJexl, GroupJexl
 
 
@@ -256,105 +256,61 @@ class CancelCaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer
         return instance
 
 
-class CompleteWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
+class CompleteWorkItemSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField()
 
     def validate(self, data):
-        user = self.context["request"].user
-        validators.WorkItemValidator().validate(
-            status=self.instance.status,
-            child_case=self.instance.child_case,
-            task=self.instance.task,
-            case=self.instance.case,
-            document=self.instance.document,
-            info=self.context["info"],
-        )
-        data["status"] = models.WorkItem.STATUS_COMPLETED
-        data["closed_at"] = timezone.now()
-        data["closed_by_user"] = user.username
-        data["closed_by_group"] = user.group
+        try:
+            domain_logic.CompleteWorkItemLogic.validate_for_complete(
+                self.instance, self.context["request"].user
+            )
+        except ValidationError as e:
+            raise exceptions.ValidationError(str(e))
+
         return super().validate(data)
 
-    def _can_continue(self, instance, task):
-        # If a "multiple instance" task has running siblings, the task is not completed
-        if task.is_multiple_instance:
-            return not instance.case.work_items.filter(
-                task=task, status=models.WorkItem.STATUS_READY
-            ).exists()
-        return instance.case.work_items.filter(
-            task=task,
-            status__in=(
-                models.WorkItem.STATUS_COMPLETED,
-                models.WorkItem.STATUS_SKIPPED,
-            ),
-        ).exists()
-
     @transaction.atomic
-    def update(self, instance, validated_data):
-
-        instance = super().update(instance, validated_data)
+    def update(self, work_item, validated_data):
         user = self.context["request"].user
-        case = instance.case
 
-        if not self._can_continue(instance, instance.task):
-            return instance
-
-        flow = models.Flow.objects.filter(task_flows__task=instance.task_id).first()
-        flow_referenced_tasks = models.Task.objects.filter(task_flows__flow=flow)
-
-        all_complete = all(
-            self._can_continue(instance, task) for task in flow_referenced_tasks
+        validated_data = domain_logic.CompleteWorkItemLogic.pre_complete(
+            validated_data, user
         )
 
-        if flow and all_complete:
-            jexl = FlowJexl()
-            result = jexl.evaluate(flow.next)
-            if not isinstance(result, list):
-                result = [result]
+        work_item = super().update(work_item, validated_data)
+        work_item = domain_logic.CompleteWorkItemLogic.post_complete(work_item, user)
 
-            tasks = models.Task.objects.filter(pk__in=result)
-
-            work_items = utils.bulk_create_work_items(tasks, case, user, instance)
-
-            for work_item in work_items:  # pragma: no cover
-                self.send_event(events.created_work_item, work_item=work_item)
-        else:
-            # no more tasks, mark case as complete
-            case.status = models.Case.STATUS_COMPLETED
-            case.closed_at = timezone.now()
-            case.closed_by_user = user.username
-            case.closed_by_group = user.group
-            case.save()
-            self.send_event(events.completed_case, case=case)
-
-        self.send_event(events.completed_work_item, work_item=instance)
-
-        return instance
+        return work_item
 
     class Meta:
         model = models.WorkItem
         fields = ("id",)
 
 
-class SkipWorkItemSerializer(CompleteWorkItemSerializer):
-    def validate(self, data):
-        if self.instance.status != models.WorkItem.STATUS_READY:
-            raise exceptions.ValidationError("Only READY work items can be skipped")
+class SkipWorkItemSerializer(serializers.ModelSerializer):
+    id = serializers.GlobalIDField()
 
-        user = self.context["request"].user
-        data["status"] = models.WorkItem.STATUS_SKIPPED
-        data["closed_at"] = timezone.now()
-        data["closed_by_user"] = user.username
-        data["closed_by_group"] = user.group
-        # We skip parent validation, as the work item is now "skipped",
-        # meaning no other conditions need apply
+    def validate(self, data):
+        try:
+            domain_logic.SkipWorkItemLogic.validate_for_skip(self.instance)
+        except ValidationError as e:
+            raise exceptions.ValidationError(str(e))
 
         return data
 
-    def update(self, instance, validated_data):
-        instance = super().update(instance, validated_data)
-        self.send_event(events.skipped_work_item, work_item=instance)
-        return instance
+    def update(self, work_item, validated_data):
+        user = self.context["request"].user
+
+        validated_data = domain_logic.SkipWorkItemLogic.pre_skip(validated_data, user)
+
+        work_item = super().update(work_item, validated_data)
+        work_item = domain_logic.SkipWorkItemLogic.post_skip(work_item, user)
+
+        return work_item
+
+    class Meta:
+        model = models.WorkItem
+        fields = ("id",)
 
 
 class SaveWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerializer):

@@ -6,7 +6,7 @@ from graphene.utils.str_converters import to_const
 from ...caluma_core.relay import extract_global_id
 from ...caluma_form.models import Question
 from ...caluma_user.models import BaseUser
-from .. import models
+from .. import api, models
 
 
 def test_query_all_work_items_filter_status(db, work_item_factory, schema_executor):
@@ -990,3 +990,31 @@ def test_skip_multiple_instance_task_form_work_item(
         assert result.data["skipWorkItem"]["workItem"]["case"]["status"] == to_const(
             models.Case.STATUS_COMPLETED
         )
+
+
+@pytest.mark.parametrize("task__type,task__form", [(models.Task.TYPE_SIMPLE, None)])
+@pytest.mark.parametrize(
+    "work_item__status,case__status",
+    [(models.WorkItem.STATUS_READY, models.Case.STATUS_COMPLETED)],
+)
+def test_complete_work_item_last_api(db, work_item, admin_user):
+    api.complete_work_item(work_item, admin_user)
+
+    work_item.refresh_from_db()
+
+    assert work_item.status == models.WorkItem.STATUS_COMPLETED
+    assert work_item.case.status == models.Case.STATUS_COMPLETED
+
+
+@pytest.mark.parametrize("task__type,task__form", [(models.Task.TYPE_SIMPLE, None)])
+@pytest.mark.parametrize(
+    "work_item__status,case__status",
+    [(models.WorkItem.STATUS_READY, models.Case.STATUS_COMPLETED)],
+)
+def test_skip_work_item_last_api(db, work_item, admin_user):
+    api.skip_work_item(work_item, admin_user)
+
+    work_item.refresh_from_db()
+
+    assert work_item.status == models.WorkItem.STATUS_SKIPPED
+    assert work_item.case.status == models.Case.STATUS_COMPLETED

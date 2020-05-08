@@ -103,20 +103,20 @@ class AnswerValidator:
             )
 
     def _validate_question_dynamic_choice(
-        self, question, value, document, info, **kwargs
+        self, question, value, document, user, **kwargs
     ):
         if not isinstance(value, str):
             raise CustomValidationError(
                 f'Invalid value "{value}". Must be of type str.', slugs=[question.slug]
             )
-        self._validate_dynamic_option(question, document, value, info)
+        self._validate_dynamic_option(question, document, value, user)
 
-    def _validate_dynamic_option(self, question, document, option, info):
+    def _validate_dynamic_option(self, question, document, option, user):
         data_source = get_data_sources(dic=True)[question.data_source]
         data_source_object = data_source()
 
         valid_label = data_source_object.validate_answer_value(
-            option, document, question, info
+            option, document, question, user
         )
         if valid_label is False:
             raise CustomValidationError(
@@ -129,13 +129,13 @@ class AnswerValidator:
             slug=option,
             defaults={
                 "label": valid_label,
-                "created_by_user": info.context.user.username,
-                "created_by_group": info.context.user.group,
+                "created_by_user": user.username,
+                "created_by_group": user.group,
             },
         )
 
     def _validate_question_dynamic_multiple_choice(
-        self, question, value, document, info, **kwargs
+        self, question, value, document, user, **kwargs
     ):
         if not isinstance(value, list):
             raise CustomValidationError(
@@ -148,17 +148,17 @@ class AnswerValidator:
                     f'Invalid value: "{v}". Must be of type string',
                     slugs=[question.slug],
                 )
-            self._validate_dynamic_option(question, document, v, info)
+            self._validate_dynamic_option(question, document, v, user)
 
-    def _validate_question_table(self, question, value, document, info, **kwargs):
+    def _validate_question_table(self, question, value, document, user, **kwargs):
 
         for row_doc in value:
-            DocumentValidator().validate(row_doc, info=info, **kwargs)
+            DocumentValidator().validate(row_doc, user=user, **kwargs)
 
     def _validate_question_file(self, question, value, **kwargs):
         pass
 
-    def validate(self, *, question, document, info, validation_context=None, **kwargs):
+    def validate(self, *, question, document, user, validation_context=None, **kwargs):
         # Check all possible fields for value
         value = None
         for i in ["value", "file", "date", "documents"]:
@@ -174,7 +174,7 @@ class AnswerValidator:
                 question,
                 value,
                 document=document,
-                info=info,
+                user=user,
                 validation_context=validation_context,
             )
 
@@ -184,7 +184,7 @@ class AnswerValidator:
 
 
 class DocumentValidator:
-    def validate(self, document, info, validation_context=None, **kwargs):
+    def validate(self, document, user, validation_context=None, **kwargs):
         if not validation_context:
             validation_context = self._validation_context(document)
 
@@ -199,7 +199,7 @@ class DocumentValidator:
                 question=answer.question,
                 value=answer.value,
                 documents=answer.documents.all(),
-                info=info,
+                user=user,
                 validation_context=validation_context,
             )
 
@@ -373,13 +373,13 @@ class QuestionValidator:
             self._validate_data_source(data["dataSource"])
 
 
-def get_document_validity(document, info):
+def get_document_validity(document, user):
     validator = DocumentValidator()
     is_valid = True
     errors = []
 
     try:
-        validator.validate(document, info)
+        validator.validate(document, user)
     except CustomValidationError as exc:
         is_valid = False
         detail = str(exc.detail[0])

@@ -470,7 +470,7 @@ class SaveAnswerSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if "value" not in data:
             data["value"] = None
-        validators.AnswerValidator().validate(**data, info=self.context["info"])
+        validators.AnswerValidator().validate(**data, user=self.context["request"].user)
         return super().validate(data)
 
     class Meta:
