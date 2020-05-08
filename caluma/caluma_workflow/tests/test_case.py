@@ -3,7 +3,7 @@ from graphql_relay import to_global_id
 
 from ...caluma_core.relay import extract_global_id
 from ...caluma_form.models import Question
-from .. import models
+from .. import api, models
 
 
 @pytest.mark.parametrize(
@@ -567,3 +567,24 @@ def test_work_item_document(
     assert not result.errors
 
     assert len(result.data["allCases"]["edges"]) == result_count
+
+
+@pytest.mark.parametrize("task__lead_time", [100, None])
+@pytest.mark.parametrize("task__address_groups", ['["group-name"]|groups', None])
+def test_api_start_case(
+    db,
+    workflow,
+    workflow_allow_forms,
+    workflow_start_tasks,
+    work_item,
+    task,
+    form,
+    case,
+    admin_user,
+):
+    case = api.start_case(workflow=workflow, form=form, user=admin_user)
+    work_item = case.work_items.get(task_id=task.pk)
+
+    assert case.document.form == form
+    assert work_item.document.form == form
+    assert work_item.status == models.WorkItem.STATUS_READY

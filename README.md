@@ -12,9 +12,7 @@ A collaborative form editing service.
 
 Caluma Service is the core part of the Caluma project providing a
 [GraphQL API](https://graphql.org/). For a big picture and to learn what Caluma
- does for you, have a look at [caluma.io](https://caluma.io)
-
-
+does for you, have a look at [caluma.io](https://caluma.io)
 
 ## Getting started
 
@@ -24,11 +22,11 @@ NOTE: We recommend using Caluma as a dedicated service. However, it is possible 
 Caluma into a django project. You can read about this [here](docs/django-apps.md).
 
 **Requirements**
-* docker
-* docker-compose
+
+- docker
+- docker-compose
 
 After installing and configuring those, download [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) and run the following command:
-
 
 ```bash
 docker-compose up -d
@@ -56,7 +54,6 @@ This enables [Django Debug Middleware](https://docs.graphene-python.org/projects
 For profiling you can use `./manage.py runprofileserver`. See [docker-compose.override.yml](docker-compose.override.yml) for
 an example.
 
-
 ## License
 
 Code released under the [GPL-3.0-or-later license](LICENSE).
@@ -65,20 +62,21 @@ For further information on our license choice, you can read up on the [correspon
 
 ## Further reading
 
-* [Installation & Configuration](docs/configuration.md) - Get started installing
+- [Installation & Configuration](docs/configuration.md) - Get started installing
   Caluma in a production context
-* [Contributing](CONTRIBUTING.md) - If you want to help us, here's
+- [Contributing](CONTRIBUTING.md) - If you want to help us, here's
   how to start with your first contribution.
-* [Caluma Guide](docs/guide.md) - How to get up and running with Caluma
-* [Workflow Concepts](docs/workflow-concepts.md) - How to use caluma workflows
-* [Historical Records](docs/historical-records.md) - Undo and audit trail
+- [Caluma Guide](docs/guide.md) - How to get up and running with Caluma
+- [Workflow Concepts](docs/workflow-concepts.md) - How to use caluma workflows
+- [Historical Records](docs/historical-records.md) - Undo and audit trail
   functionality
-* [GraphQL](docs/graphql.md) - Further information on how to use the GraphQL
+- [GraphQL](docs/graphql.md) - Further information on how to use the GraphQL
   interface
-* [Validation](docs/validation.md) - Validation of user input
-* [Extending Caluma](docs/extending.md) - Extensions: Data visibility and
+- [Validation](docs/validation.md) - Validation of user input
+- [Extending Caluma](docs/extending.md) - Extensions: Data visibility and
   permissions
-* [Caluma Events](docs/events.md) - Reacting upon Caluma Events
-* [Using Caluma as django apps](docs/django-apps.md)
-* [Maintainer's Handbook](docs/maintainers.md) - HOWTO for various maintainer's
+- [Caluma Events](docs/events.md) - Reacting upon Caluma Events
+- [Using Caluma as django apps](docs/django-apps.md)
+- [Interfaces](docs/interfaces.md)
+- [Maintainer's Handbook](docs/maintainers.md) - HOWTO for various maintainer's
   tasks
