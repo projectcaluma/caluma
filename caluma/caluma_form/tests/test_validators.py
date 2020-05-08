@@ -19,7 +19,13 @@ from ..validators import DocumentValidator, QuestionValidator
 )
 @pytest.mark.parametrize("question__type", [Question.TYPE_TEXT])
 def test_validate_hidden_required_field(
-    db, required_jexl, hidden_jexl, should_throw, form_question, document_factory, info
+    db,
+    required_jexl,
+    hidden_jexl,
+    should_throw,
+    form_question,
+    document_factory,
+    admin_user,
 ):
     form_question.question.is_required = required_jexl
     form_question.question.is_hidden = hidden_jexl
@@ -29,9 +35,9 @@ def test_validate_hidden_required_field(
     error_msg = f"Questions {form_question.question.slug} are required but not provided"
     if should_throw:
         with pytest.raises(ValidationError, match=error_msg):
-            DocumentValidator().validate(document, info)
+            DocumentValidator().validate(document, admin_user)
     else:
-        DocumentValidator().validate(document, info)
+        DocumentValidator().validate(document, admin_user)
 
 
 @pytest.mark.parametrize(
@@ -39,11 +45,11 @@ def test_validate_hidden_required_field(
     [(Question.TYPE_FILE, "false"), (Question.TYPE_DATE, "false")],
 )
 def test_validate_special_fields(
-    db, form_question, question, document_factory, answer_factory, info
+    db, form_question, question, document_factory, answer_factory, admin_user
 ):
     document = document_factory(form=form_question.form)
     answer_factory(document=document, question=question)
-    DocumentValidator().validate(document, info)
+    DocumentValidator().validate(document, admin_user)
 
 
 @pytest.mark.parametrize(
@@ -70,7 +76,7 @@ def test_validate_dynamic_options(
     valid,
     document_factory,
     answer_factory,
-    info,
+    admin_user,
     settings,
 ):
     settings.DATA_SOURCE_CLASSES = [
@@ -85,13 +91,13 @@ def test_validate_dynamic_options(
     answer_factory(value=value, document=document, question=question)
 
     if valid:
-        DocumentValidator().validate(document, info)
+        DocumentValidator().validate(document, admin_user)
         assert DynamicOption.objects.get(
             document=document, slug=lookup_value, question=question
         )
     else:
         with pytest.raises(ValidationError):
-            DocumentValidator().validate(document, info)
+            DocumentValidator().validate(document, admin_user)
 
 
 @pytest.mark.parametrize(
@@ -106,7 +112,7 @@ def test_validate_dynamic_option_exists(
     answer_factory,
     document_factory,
     dynamic_option_factory,
-    info,
+    admin_user,
     settings,
 ):
     settings.DATA_SOURCE_CLASSES = [
@@ -123,7 +129,7 @@ def test_validate_dynamic_option_exists(
         value = [value]
     answer_factory(question=question, value=value, document=document)
 
-    assert DocumentValidator().validate(dynamic_option.document, info) is None
+    assert DocumentValidator().validate(dynamic_option.document, admin_user) is None
 
 
 @pytest.mark.parametrize(
@@ -152,7 +158,7 @@ def test_validate_table(
     form_question_factory,
     document_factory,
     answer_factory,
-    info,
+    admin_user,
 ):
 
     # F: main-form
@@ -222,16 +228,16 @@ def test_validate_table(
 
     if should_throw and required_jexl_sub.startswith("'fail'"):
         with pytest.raises(QuestionMissing):
-            DocumentValidator().validate(main_document, info)
+            DocumentValidator().validate(main_document, admin_user)
     elif should_throw:
         q_slug = sub_question_b.question.slug
         if required_jexl_sub == "false":
             q_slug = other_q_2.question.slug
         error_msg = f"Questions {q_slug} are required but not provided"
         with pytest.raises(ValidationError, match=error_msg):
-            DocumentValidator().validate(main_document, info)
+            DocumentValidator().validate(main_document, admin_user)
     else:
-        DocumentValidator().validate(main_document, info)
+        DocumentValidator().validate(main_document, admin_user)
 
 
 @pytest.mark.parametrize(
@@ -248,7 +254,7 @@ def test_validate_table(
     ],
 )
 def test_validate_data_source(
-    db, question, valid, info, serializer_to_use, data_source_settings
+    db, question, valid, serializer_to_use, data_source_settings
 ):
     serializer = getattr(serializers, serializer_to_use)
 
@@ -286,7 +292,6 @@ def test_validate_empty_answers(
     document_factory,
     answer_factory,
     expected_value,
-    info,
 ):
 
     struct = structure.FieldSet(document, document.form)
@@ -325,19 +330,19 @@ def test_validate_empty_answers(
     ],
 )
 def test_validate_invalid_jexl(
-    db, form_question, document, answer, question, exception_message, info
+    db, form_question, document, answer, question, exception_message, admin_user
 ):
 
     if exception_message is not None:
         with pytest.raises(RuntimeError) as exc:
-            DocumentValidator().validate(document, info)
+            DocumentValidator().validate(document, admin_user)
         assert exc.value.args[0] == exception_message
     else:
-        assert DocumentValidator().validate(document, info) is None
+        assert DocumentValidator().validate(document, admin_user) is None
 
 
 def test_validate_required_integer_0(
-    db, form_question, answer_factory, document_factory, info
+    db, form_question, answer_factory, document_factory, admin_user
 ):
     form_question.question.is_required = "true"
     form_question.question.type = Question.TYPE_INTEGER
@@ -346,7 +351,7 @@ def test_validate_required_integer_0(
     document = document_factory(form=form_question.form)
     answer_factory(document=document, value=0, question=form_question.question)
 
-    DocumentValidator().validate(document, info)
+    DocumentValidator().validate(document, admin_user)
 
 
 @pytest.mark.parametrize(
@@ -373,10 +378,10 @@ def test_validate_required_integer_0(
     "answer__date,answer__file,question__is_required", [(None, None, "true")]
 )
 def test_validate_required_empty_answers(
-    db, info, form_question, document, answer, question
+    db, admin_user, form_question, document, answer, question
 ):
     with pytest.raises(ValidationError):
-        DocumentValidator().validate(document, info)
+        DocumentValidator().validate(document, admin_user)
 
 
 @pytest.mark.parametrize("question__is_hidden", ["true", "false"])
@@ -385,7 +390,7 @@ def test_validate_required_empty_answers(
     [[Question.TYPE_FLOAT, {"min_value": 0, "max_value": 3}]],
 )
 def test_validate_hidden_field(
-    db, form_question, document_factory, answer_factory, info
+    db, form_question, document_factory, answer_factory, admin_user
 ):
     question = form_question.question
     document = document_factory(form=form_question.form)
@@ -394,10 +399,10 @@ def test_validate_hidden_field(
     answer_factory(question=question, document=document, value=4)
 
     if question.is_hidden == "true":
-        assert DocumentValidator().validate(document, info) is None
+        assert DocumentValidator().validate(document, admin_user) is None
     else:
         with pytest.raises(ValidationError):
-            DocumentValidator().validate(document, info)
+            DocumentValidator().validate(document, admin_user)
 
 
 @pytest.mark.parametrize("hide_formquestion", [True, False])
@@ -408,7 +413,7 @@ def test_validate_hidden_subform(
     document_factory,
     form_question_factory,
     answer_factory,
-    info,
+    admin_user,
     hide_formquestion,
 ):
     # First, build our nested form:
@@ -461,10 +466,10 @@ def test_validate_hidden_subform(
     answer_factory(question=sub_sub_question, document=document, value=4)
 
     if hide_formquestion:
-        assert DocumentValidator().validate(document, info) is None
+        assert DocumentValidator().validate(document, admin_user) is None
     else:
         with pytest.raises(ValidationError) as excinfo:
-            DocumentValidator().validate(document, info)
+            DocumentValidator().validate(document, admin_user)
         # Verify that the sub_sub_question is not the cause of the exception:
         # it should not be checked at all because it's parent is always hidden
         assert excinfo.match(r"Questions \bsub_question\s.* required but not provided.")
@@ -483,7 +488,7 @@ def test_dependent_question_is_hidden(
     form_question_factory,
     answer_factory,
     answer_value,
-    info,
+    admin_user,
 ):
     form = form_factory()
     q1 = question_factory(is_hidden="false", type=Question.TYPE_TEXT)
@@ -508,18 +513,18 @@ def test_dependent_question_is_hidden(
     if answer_value == "foo":
         # Answer to q1's value is "foo", so q2 is hidden. This means
         # that q3 should be hidden and not required as well
-        assert DocumentValidator().validate(document, info) is None
+        assert DocumentValidator().validate(document, admin_user) is None
     else:
         # a1's value is "bar", so q2 is visible. This means
         # that q3 should also be visible and required
         with pytest.raises(ValidationError):
-            DocumentValidator().validate(document, info)
+            DocumentValidator().validate(document, admin_user)
 
 
 @pytest.mark.parametrize("question__type", ["file"])
 @pytest.mark.parametrize("question__is_required", ["true"])
 @pytest.mark.parametrize("question__is_hidden", ["false"])
-def test_required_file(db, question, form, document, answer, info, form_question):
+def test_required_file(db, question, form, document, answer, admin_user, form_question):
     # verify some assumptions
     assert document.form == form
     assert answer.document == document
@@ -533,14 +538,14 @@ def test_required_file(db, question, form, document, answer, info, form_question
 
     # ensure validation fails with no `file` value
     with pytest.raises(ValidationError):
-        DocumentValidator().validate(document, info)
+        DocumentValidator().validate(document, admin_user)
 
     # put the file back
     answer.file = the_file
     answer.save()
 
     # then, validation must pass
-    assert DocumentValidator().validate(document, info) is None
+    assert DocumentValidator().validate(document, admin_user) is None
 
 
 def test_validate_missing_in_subform(
@@ -550,7 +555,7 @@ def test_validate_missing_in_subform(
     document_factory,
     form_question_factory,
     answer_factory,
-    info,
+    admin_user,
 ):
     # First, build our nested form:
     #     top_form
@@ -585,7 +590,7 @@ def test_validate_missing_in_subform(
     document = document_factory(form=top_form)
 
     with pytest.raises(ValidationError) as excinfo:
-        DocumentValidator().validate(document, info)
+        DocumentValidator().validate(document, admin_user)
 
     # Verify that the sub_sub_question is not the cause of the exception:
     # it should not be checked at all because it's parent is always hidden
@@ -602,7 +607,7 @@ def test_validate_missing_in_table(
     answer_document_factory,
     answer_factory,
     table_required,
-    info,
+    admin_user,
 ):
     # First, build our nested form:
     #     top_form
@@ -653,7 +658,7 @@ def test_validate_missing_in_table(
         row_doc.answers.create(question=sub_question1, value="hi")
 
         with pytest.raises(ValidationError) as excinfo:
-            DocumentValidator().validate(document, info)
+            DocumentValidator().validate(document, admin_user)
         # Verify that the sub_sub_question is not the cause of the exception:
         # it should not be checked at all because it's parent is always hidden
         assert excinfo.match(
@@ -662,7 +667,7 @@ def test_validate_missing_in_table(
 
     else:
         # should not raise
-        DocumentValidator().validate(document, info)
+        DocumentValidator().validate(document, admin_user)
 
 
 @pytest.mark.parametrize(
@@ -679,7 +684,7 @@ def test_validate_form_in_table(
     answer_factory,
     column_is_hidden,
     expect_error,
-    info,
+    admin_user,
 ):
     # First, build our nested form:
     #     top_form
@@ -731,7 +736,7 @@ def test_validate_form_in_table(
         # Should raise an error
 
         with pytest.raises(ValidationError) as excinfo:
-            DocumentValidator().validate(document, info)
+            DocumentValidator().validate(document, admin_user)
         # Verify that the sub_sub_question is not the cause of the exception:
         # it should not be checked at all because it's parent is always hidden
         assert excinfo.match(
@@ -741,4 +746,4 @@ def test_validate_form_in_table(
     else:
         # Should not raise, as the "form" referenced by the
         # question's jexl is the rowform, which is wrong
-        DocumentValidator().validate(document, info)
+        DocumentValidator().validate(document, admin_user)
