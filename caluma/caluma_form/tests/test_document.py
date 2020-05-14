@@ -318,6 +318,7 @@ def test_query_all_documents_filter_answers_by_questions(
           allDocuments {
             edges {
               node {
+                id
                 answers(questions: $questions) {
                   edges {
                     node {
@@ -336,9 +337,13 @@ def test_query_all_documents_filter_answers_by_questions(
     )
     assert not result.errors
     assert len(result.data["allDocuments"]["edges"]) == 3
-    assert len(result.data["allDocuments"]["edges"][0]["node"]["answers"]["edges"]) == 1
-    assert len(result.data["allDocuments"]["edges"][1]["node"]["answers"]["edges"]) == 1
-    assert len(result.data["allDocuments"]["edges"][2]["node"]["answers"]["edges"]) == 0
+
+    result_lengths = [
+        (extract_global_id(doc["node"]["id"]), len(doc["node"]["answers"]["edges"]))
+        for doc in result.data["allDocuments"]["edges"]
+    ]
+    expect_data = [(str(documents[idx].pk), int(idx < 2)) for idx in range(3)]
+    assert set(expect_data) == set(result_lengths)
 
 
 @pytest.mark.parametrize("update", [True, False])
