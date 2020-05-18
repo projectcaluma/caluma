@@ -71,12 +71,14 @@ def info(anonymous_request):
         None,
         None,
         None,
+        path=None,
         schema=None,
         fragments=None,
         root_value=None,
         operation=None,
         variable_values=None,
         context=anonymous_request,
+        is_awaitable=None,
     )
 
 
@@ -88,12 +90,14 @@ def admin_info(admin_request):
         None,
         None,
         None,
+        path=None,
         schema=None,
         fragments=None,
         root_value=None,
         operation=None,
         variable_values=None,
         context=admin_request,
+        is_awaitable=None,
     )
 
 
