@@ -9,6 +9,7 @@ from ..caluma_core.filters import (
     MetaFilterSet,
     OrderingFilter,
     SearchFilter,
+    SlugMultipleChoiceFilter,
     StringListFilter,
     generate_list_filter_class,
 )
@@ -79,6 +80,7 @@ class CaseFilterSet(MetaFilterSet):
     order_by = OrderingFilter(label="CaseOrdering", fields=("status",))
 
     document_form = CharFilter(field_name="document__form_id")
+    document_forms = SlugMultipleChoiceFilter(field_name="document__form_id")
     has_answer = HasAnswerFilter(document_id="document__pk")
     work_item_document_has_answer = HasAnswerFilter(
         document_id="work_items__document__pk"

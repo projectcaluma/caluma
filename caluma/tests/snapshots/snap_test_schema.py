@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
+
 snapshots = Snapshot()
 
 snapshots[
@@ -165,6 +166,7 @@ input CaseFilterSetType {
   metaValue: [JSONValueFilterType]
   orderBy: [CaseOrdering]
   documentForm: String
+  documentForms: [String]
   hasAnswer: [HasAnswerFilterType]
   workItemDocumentHasAnswer: [HasAnswerFilterType]
   rootCase: ID
@@ -1144,7 +1146,7 @@ type Query {
   dataSource(name: String!, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
   allWorkflows(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, orderBy: [WorkflowOrdering], filter: [WorkflowFilterSetType], order: [WorkflowOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String): WorkflowConnection
   allTasks(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, orderBy: [TaskOrdering], filter: [TaskFilterSetType], order: [TaskOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String): TaskConnection
-  allCases(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], workflow: ID, orderBy: [CaseOrdering], filter: [CaseFilterSetType], order: [CaseOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, documentForm: String, hasAnswer: [HasAnswerFilterType], workItemDocumentHasAnswer: [HasAnswerFilterType], rootCase: ID, searchAnswers: [SearchAnswersFilterType], status: [CaseStatusArgument], orderByQuestionAnswerValue: String): CaseConnection
+  allCases(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], workflow: ID, orderBy: [CaseOrdering], filter: [CaseFilterSetType], order: [CaseOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, documentForm: String, documentForms: [String], hasAnswer: [HasAnswerFilterType], workItemDocumentHasAnswer: [HasAnswerFilterType], rootCase: ID, searchAnswers: [SearchAnswersFilterType], status: [CaseStatusArgument], orderByQuestionAnswerValue: String): CaseConnection
   allWorkItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], name: String, task: ID, case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, addressedGroups: [String], controllingGroups: [String], assignedUsers: [String]): WorkItemConnection
   allForms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, filter: [FormFilterSetType], order: [FormOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
   allQuestions(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, filter: [QuestionFilterSetType], order: [QuestionOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, excludeForms: [ID], search: String, slugs: [String]): QuestionConnection
