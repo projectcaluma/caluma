@@ -21,8 +21,8 @@ echo ENV=dev >> .env
 docker-compose up -d db
 rm -f Pipfile*
 touch Pipfile
-pipenv install --python 3.7 -r requirements.txt
-pipenv install -d -r requirements-dev.txt
+pipenv install --pre --python 3.7 -r requirements.txt
+pipenv install --pre -d -r requirements-dev.txt
 """.strip().splitlines()
 
 
