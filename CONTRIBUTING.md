@@ -103,7 +103,7 @@ pipenv install -d -r requirements-dev.txt
 You can also run tests without the caluma-container:
 
 ```bash
-echo UID=$(id --user) > .env
+echo UID=$(id -u) > .env
 echo ENV=dev >> .env
 docker-compose up -d db
 pipenv install --python 3.7 -r requirements.txt
