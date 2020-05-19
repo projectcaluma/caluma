@@ -16,7 +16,7 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 
 
 pipenv_setup = """
-echo UID=$(id --user) > .env
+echo UID=$(id -u) > .env
 echo ENV=dev >> .env
 docker-compose up -d db
 rm -f Pipfile*
