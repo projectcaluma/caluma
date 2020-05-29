@@ -7,6 +7,7 @@ from ..caluma_core.relay import extract_global_id
 from ..caluma_core.types import ConnectionField, CountableConnectionBase
 from . import models
 from .schema import (
+    QUESTION_ANSWER_TYPES,
     Answer,
     DateAnswer,
     FileAnswer,
@@ -16,7 +17,6 @@ from .schema import (
     ListAnswer,
     StringAnswer,
     TableAnswer,
-    resolve_answer,
 )
 from .storage_clients import client
 
@@ -39,7 +39,15 @@ def historical_qs_as_of(queryset, date, pk_attr):
 
 
 def resolve_historical_answer(answer):
-    answer_type = resolve_answer(answer)
+    """Get answer type from question as_of historical answer time."""
+
+    # as_of returns a generator rather than a queryset, see link above
+    question = next(
+        q_as_of
+        for q_as_of in models.Question.history.as_of(answer.history_date)
+        if q_as_of.pk == answer.question_id
+    )
+    answer_type = QUESTION_ANSWER_TYPES[question.type]
     return eval(f"Historical{answer_type.__name__}")
 
 
