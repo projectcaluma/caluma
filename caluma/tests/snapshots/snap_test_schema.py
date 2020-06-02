@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -847,6 +846,7 @@ type HistoricalDocument implements Node {
   source: Document
   historyDate: DateTime!
   historyType: String
+  answers(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [AnswerOrdering], filter: [AnswerFilterSetType], order: [AnswerOrderSetType], question: ID, search: String, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, questions: [ID], visibleInContext: Boolean): AnswerConnection
   historicalAnswers(asOf: DateTime!, before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
   documentId: UUID
 }

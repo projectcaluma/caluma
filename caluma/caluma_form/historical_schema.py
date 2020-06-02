@@ -9,9 +9,9 @@ from . import models
 from .schema import (
     Answer,
     DateAnswer,
+    Document,
     FileAnswer,
     FloatAnswer,
-    FormDjangoObjectType,
     IntegerAnswer,
     ListAnswer,
     StringAnswer,
@@ -142,7 +142,7 @@ class HistoricalFileAnswer(FileAnswer):
         interfaces = (HistoricalAnswer, graphene.Node)
 
 
-class HistoricalDocument(FormDjangoObjectType):
+class HistoricalDocument(Document):
     historical_answers = ConnectionField(
         HistoricalAnswerConnection,
         as_of=graphene.types.datetime.DateTime(required=True),
