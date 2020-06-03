@@ -145,7 +145,7 @@ class CompleteWorkItemLogic:
                     sender="post_complete_work_item",
                     work_item=created_work_item,
                 )
-        else:
+        elif not flow and all_complete:
             # no more tasks, mark case as complete
             case.status = models.Case.STATUS_COMPLETED
             case.closed_at = timezone.now()

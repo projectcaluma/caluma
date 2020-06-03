@@ -1018,3 +1018,50 @@ def test_skip_work_item_last_api(db, work_item, admin_user):
 
     assert work_item.status == models.WorkItem.STATUS_SKIPPED
     assert work_item.case.status == models.Case.STATUS_COMPLETED
+
+
+@pytest.mark.parametrize(
+    "work_item__status,work_item__child_case,task__type",
+    [(models.WorkItem.STATUS_COMPLETED, None, models.Task.TYPE_SIMPLE)],
+)
+def test_complete_work_item_parallel(
+    db,
+    case,
+    work_item,
+    work_item_factory,
+    task,
+    task_factory,
+    flow_factory,
+    task_flow_factory,
+    workflow,
+    schema_executor,
+    admin_user,
+):
+    # create two work items which can be processed in parallel
+    task_1, task_2 = task_factory.create_batch(2, type=models.Task.TYPE_SIMPLE)
+    flow = flow_factory(next=f"['{task_1.slug}','{task_2.slug}']|tasks")
+    task_flow_factory(task=work_item.task, workflow=workflow, flow=flow)
+    work_item_factory(
+        task=task_1, status=models.WorkItem.STATUS_READY, child_case=None, case=case
+    )
+    work_item_factory(
+        task=task_2, status=models.WorkItem.STATUS_READY, child_case=None, case=case
+    )
+
+    ready_work_items = case.work_items.filter(status=models.WorkItem.STATUS_READY)
+
+    for i, ready_work_item in enumerate(ready_work_items):
+        api.complete_work_item(ready_work_item, admin_user)
+
+        ready_work_item.refresh_from_db()
+        case.refresh_from_db()
+
+        assert ready_work_item.status == models.WorkItem.STATUS_COMPLETED
+
+        # if we have multiple parallel running work items without a flow (end
+        # of the workflow), the case should only be completed when all parallel
+        # work items are completed
+        if i + 1 == len(ready_work_items):
+            assert case.status == models.Case.STATUS_COMPLETED
+        else:
+            assert case.status == models.Case.STATUS_RUNNING
