@@ -165,3 +165,45 @@ def test_union_visibility_none(db, history_mock):
     assert result.count() == 0
     queryset = ConfiguredUnion().filter_queryset(CustomNode, queryset, None)
     assert queryset.count() == 0
+
+
+def test_custom_visibility_chained_decorators(db, history_mock):
+    """The first matching filter 'wins'."""
+    FakeModel1 = get_fake_model(
+        dict(name=CharField(max_length=255)), model_base=models.UUIDModel
+    )
+    FakeModel1.objects.create(name="Name1")
+    FakeModel1.objects.create(name="Name2")
+
+    FakeModel2 = get_fake_model(
+        dict(name=CharField(max_length=255)), model_base=models.UUIDModel
+    )
+    FakeModel2.objects.create(name="Name1")
+    FakeModel2.objects.create(name="Name2")
+
+    class CustomNode1(DjangoObjectType):
+        class Meta:
+            model = FakeModel1
+
+    class CustomNode2(DjangoObjectType):
+        class Meta:
+            model = FakeModel2
+
+    class CustomVisibility(BaseVisibility):
+        @filter_queryset_for(Node)
+        def filter_queryset_for_all(self, node, queryset, info):
+            return queryset.none()
+
+        @filter_queryset_for(CustomNode1)
+        @filter_queryset_for(CustomNode2)
+        def filter_queryset_for_custom_node(self, node, queryset, info):
+            return queryset.filter(name="Name1")
+
+    assert FakeModel1.objects.count() == 2
+    assert FakeModel2.objects.count() == 2
+    queryset = CustomVisibility().filter_queryset(Node, FakeModel1.objects, None)
+    assert queryset.count() == 0
+    queryset = CustomVisibility().filter_queryset(CustomNode1, FakeModel1.objects, None)
+    assert queryset.count() == 1
+    queryset = CustomVisibility().filter_queryset(CustomNode2, FakeModel2.objects, None)
+    assert queryset.count() == 1
