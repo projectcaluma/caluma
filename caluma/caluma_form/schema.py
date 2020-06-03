@@ -25,43 +25,13 @@ from .validators import get_document_validity
 
 
 def resolve_answer(answer):
-    question_answer_types = {
-        models.Question.TYPE_MULTIPLE_CHOICE: ListAnswer,
-        models.Question.TYPE_INTEGER: IntegerAnswer,
-        models.Question.TYPE_FLOAT: FloatAnswer,
-        models.Question.TYPE_DATE: DateAnswer,
-        models.Question.TYPE_CHOICE: StringAnswer,
-        models.Question.TYPE_TEXTAREA: StringAnswer,
-        models.Question.TYPE_TEXT: StringAnswer,
-        models.Question.TYPE_TABLE: TableAnswer,
-        models.Question.TYPE_FILE: FileAnswer,
-        models.Question.TYPE_DYNAMIC_CHOICE: StringAnswer,
-        models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: ListAnswer,
-    }
     if answer.question.type == models.Question.TYPE_STATIC:
         raise Exception('Questions of type "static" should never have an answer!')
-
-    return question_answer_types[answer.question.type]
+    return QUESTION_ANSWER_TYPES[answer.question.type]
 
 
 def resolve_question(question):
-    QUESTION_OBJECT_TYPE = {
-        models.Question.TYPE_TEXT: TextQuestion,
-        models.Question.TYPE_FLOAT: FloatQuestion,
-        models.Question.TYPE_CHOICE: ChoiceQuestion,
-        models.Question.TYPE_INTEGER: IntegerQuestion,
-        models.Question.TYPE_MULTIPLE_CHOICE: MultipleChoiceQuestion,
-        models.Question.TYPE_DYNAMIC_CHOICE: DynamicChoiceQuestion,
-        models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: DynamicMultipleChoiceQuestion,
-        models.Question.TYPE_TEXTAREA: TextareaQuestion,
-        models.Question.TYPE_DATE: DateQuestion,
-        models.Question.TYPE_TABLE: TableQuestion,
-        models.Question.TYPE_FORM: FormQuestion,
-        models.Question.TYPE_FILE: FileQuestion,
-        models.Question.TYPE_STATIC: StaticQuestion,
-    }
-
-    return QUESTION_OBJECT_TYPE[question.type]
+    return QUESTION_OBJECT_TYPES[question.type]
 
 
 class FormDjangoObjectType(DjangoObjectType):
@@ -963,3 +933,34 @@ class Query:
 
     def resolve_document_validity(self, info, id):
         return validate_document(info, id)
+
+
+QUESTION_ANSWER_TYPES = {
+    models.Question.TYPE_MULTIPLE_CHOICE: ListAnswer,
+    models.Question.TYPE_INTEGER: IntegerAnswer,
+    models.Question.TYPE_FLOAT: FloatAnswer,
+    models.Question.TYPE_DATE: DateAnswer,
+    models.Question.TYPE_CHOICE: StringAnswer,
+    models.Question.TYPE_TEXTAREA: StringAnswer,
+    models.Question.TYPE_TEXT: StringAnswer,
+    models.Question.TYPE_TABLE: TableAnswer,
+    models.Question.TYPE_FILE: FileAnswer,
+    models.Question.TYPE_DYNAMIC_CHOICE: StringAnswer,
+    models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: ListAnswer,
+}
+
+QUESTION_OBJECT_TYPES = {
+    models.Question.TYPE_TEXT: TextQuestion,
+    models.Question.TYPE_FLOAT: FloatQuestion,
+    models.Question.TYPE_CHOICE: ChoiceQuestion,
+    models.Question.TYPE_INTEGER: IntegerQuestion,
+    models.Question.TYPE_MULTIPLE_CHOICE: MultipleChoiceQuestion,
+    models.Question.TYPE_DYNAMIC_CHOICE: DynamicChoiceQuestion,
+    models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: DynamicMultipleChoiceQuestion,
+    models.Question.TYPE_TEXTAREA: TextareaQuestion,
+    models.Question.TYPE_DATE: DateQuestion,
+    models.Question.TYPE_TABLE: TableQuestion,
+    models.Question.TYPE_FORM: FormQuestion,
+    models.Question.TYPE_FILE: FileQuestion,
+    models.Question.TYPE_STATIC: StaticQuestion,
+}

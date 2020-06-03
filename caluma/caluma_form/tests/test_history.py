@@ -372,3 +372,139 @@ def test_historical_table_answer(
     result = schema_executor(historical_query, variables=variables)
     assert not result.errors
     snapshot.assert_match(result.data)
+
+
+def test_history_answer_type(
+    db,
+    answer_factory,
+    form_question_factory,
+    document_factory,
+    form,
+    schema_executor,
+    admin_schema_executor,
+):
+    """Test that the answer type is resolved correctly through history.
+
+    The answer type should resolve to the type of the question of the given time (as_of).
+    Resolve type correctly even if the question type of a given question-slug changed.
+    """
+    document = document_factory(form=form)
+
+    old_question = form_question_factory(
+        question__type=models.Question.TYPE_TEXT, form=form
+    ).question
+
+    # create first answer type text
+    query = """
+        mutation saveAnswer($input: SaveDocumentStringAnswerInput!) {
+          saveDocumentStringAnswer(input: $input) {
+            clientMutationId
+          }
+        }
+    """
+
+    result = admin_schema_executor(
+        query,
+        variables={
+            "input": {
+                "question": str(old_question.pk),
+                "value": "some text answer",
+                "document": str(document.pk),
+            }
+        },
+    )
+
+    old_date = timezone.now()
+    old_answer = models.Answer.objects.get()
+
+    historical_answer = old_answer.history.first()
+    historical_question = old_question.history.first()
+
+    # delete old_question and create one with identical slug but different type
+    old_question.delete()
+    new_question = form_question_factory(
+        form=form,
+        question__slug=historical_question.slug,
+        question__type=models.Question.TYPE_INTEGER,
+    ).question
+
+    query = """
+        mutation MyIntegerAnswer($input: SaveDocumentIntegerAnswerInput!) {
+          saveDocumentIntegerAnswer (input: $input) {
+            answer {
+              id
+            }
+          }
+        }
+    """
+
+    # add new integer answer
+    result = admin_schema_executor(
+        query,
+        variables={
+            "input": {
+                "question": str(new_question.pk),
+                "value": 123,
+                "document": str(document.pk),
+            }
+        },
+    )
+    assert not result.errors
+
+    historical_query = """
+        query documentAsOf($id: ID!, $asOf: DateTime!) {
+          documentAsOf (id: $id, asOf: $asOf) {
+            meta
+            documentId
+            historicalAnswers (asOf: $asOf) {
+              edges {
+                node {
+                  __typename
+                  ...on HistoricalStringAnswer {
+                    stringValue: value
+                  }
+                  ...on HistoricalIntegerAnswer {
+                    integerValue: value
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    # old date resolves to the string value
+    variables = {"id": document.pk, "asOf": old_date}
+    result = admin_schema_executor(historical_query, variables=variables)
+
+    assert not result.errors
+    assert (
+        result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"][
+            "stringValue"
+        ]
+        == historical_answer.value
+    )
+    assert (
+        result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"][
+            "__typename"
+        ]
+        == "HistoricalStringAnswer"
+    )
+
+    # current date resolves to integer value
+    variables = {"id": document.pk, "asOf": timezone.now()}
+    result = admin_schema_executor(historical_query, variables=variables)
+
+    assert not result.errors
+    assert (
+        result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"][
+            "integerValue"
+        ]
+        == 123
+    )
+    assert (
+        result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"][
+            "__typename"
+        ]
+        == "HistoricalIntegerAnswer"
+    )
