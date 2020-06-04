@@ -39,7 +39,7 @@ def test_search(
 
     def _search(slugs, word, expect_count):
         variables = {"search": [{"questions": slugs, "value": word}]}
-        result = schema_executor(query, variables=variables)
+        result = schema_executor(query, variable_values=variables)
 
         assert not result.errors
         edges = result.data["allDocuments"]["edges"]
@@ -99,7 +99,7 @@ def test_search_multiple(
     # Here, we send two searches, which we expect to be joined by AND.
     result = schema_executor(
         query,
-        variables={
+        variable_values={
             "search": [
                 # "hello" is in doc_a and doc_b
                 {"questions": [question_a.slug], "value": "hello"},
@@ -133,7 +133,7 @@ def test_search_invalid_question_type(schema_executor, db, question_factory):
               }
             }
         """,
-        variables={"search": [{"questions": [question.slug], "value": "blah"}]},
+        variable_values={"search": [{"questions": [question.slug], "value": "blah"}]},
     )
 
     assert [str(err) for err in result.errors] == [

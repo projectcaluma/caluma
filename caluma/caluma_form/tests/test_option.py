@@ -22,7 +22,7 @@ def test_save_option(db, option, snapshot, schema_executor):
         )
     }
 
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
 
@@ -40,7 +40,7 @@ def test_copy_option(db, option, schema_executor):
     """
 
     inp = {"input": {"source": option.pk, "slug": "new-option", "label": "Test Option"}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
 
@@ -68,7 +68,7 @@ def test_dynamic_option(db, schema_executor, dynamic_option_factory):
 
     dynamic_option = dynamic_option_factory()
     inp = {"filter": [{"document": dynamic_option.id}]}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
     assert dynamic_option.slug == "service-bank-arm"

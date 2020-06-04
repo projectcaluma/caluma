@@ -97,7 +97,7 @@ def test_get_mutation_params_with_vars(db, schema_executor, permission_classes, 
 
     result = schema_executor(
         query,
-        variables={
+        variable_values={
             "quest": {
                 "slug": "email_addr",
                 "label": "hello",

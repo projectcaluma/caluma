@@ -20,7 +20,9 @@ def test_remove_answer(db, snapshot, question, answer, schema_executor):
         }
     """
 
-    result = schema_executor(query, variables={"input": {"answer": str(answer.pk)}})
+    result = schema_executor(
+        query, variable_values={"input": {"answer": str(answer.pk)}}
+    )
 
     assert not result.errors
     with pytest.raises(models.Answer.DoesNotExist):

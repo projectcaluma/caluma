@@ -36,7 +36,7 @@ def test_answer_types(
         }
     """
 
-    result = schema_executor(query, variables={"id": global_id})
+    result = schema_executor(query, variable_values={"id": global_id})
     assert not result.errors == success
     if success:
         assert result.data["node"]["__typename"] == expected_typename
@@ -74,6 +74,6 @@ def test_question_types(
         }
     """
 
-    result = schema_executor(query, variables={"id": global_id})
+    result = schema_executor(query, variable_values={"id": global_id})
     assert not result.errors
     assert result.data["node"]["__typename"] == expected_typename

@@ -117,7 +117,7 @@ def test_data_source_failure(data_source, schema_executor, settings):
 
     inp = {"name": data_source}
 
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert result.errors
 
 
@@ -144,7 +144,7 @@ def test_data_source_defaults(snapshot, schema_executor, settings):
             }
         """
 
-    result = schema_executor(query, variables={})
+    result = schema_executor(query, variable_values={})
     assert not result.errors
     snapshot.assert_match(result.data)
 
@@ -171,7 +171,7 @@ def test_data_source_exception(schema_executor, settings):
             }
         """
 
-    result = schema_executor(query, variables={})
+    result = schema_executor(query, variable_values={})
     assert result.errors
 
 
@@ -243,7 +243,7 @@ def test_data_sources_stores_user(
         }
     }
     assert not DynamicOption.objects.exists()
-    result = schema_executor(query, variables=variables, info=info)
+    result = schema_executor(query, variable_values=variables, info=info)
     assert not result.errors
     assert DynamicOption.objects.filter(
         document=document,

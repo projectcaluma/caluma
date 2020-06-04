@@ -107,7 +107,7 @@ def simple_history_middleware(next, root, info, **args):
 def schema_executor(anonymous_request):
     return functools.partial(
         schema.execute,
-        context=anonymous_request,
+        context_value=anonymous_request,
         middleware=[simple_history_middleware],
     )
 
@@ -115,7 +115,9 @@ def schema_executor(anonymous_request):
 @pytest.fixture
 def admin_schema_executor(admin_request):
     return functools.partial(
-        schema.execute, context=admin_request, middleware=[simple_history_middleware]
+        schema.execute,
+        context_value=admin_request,
+        middleware=[simple_history_middleware],
     )
 
 

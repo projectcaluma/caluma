@@ -27,7 +27,7 @@ def test_query_all_work_items_filter_status(db, work_item_factory, schema_execut
     """
 
     result = schema_executor(
-        query, variables={"status": to_const(models.WorkItem.STATUS_READY)}
+        query, variable_values={"status": to_const(models.WorkItem.STATUS_READY)}
     )
 
     assert not result.errors
@@ -69,7 +69,7 @@ def test_query_all_work_items_filter_groups(
             }
         """
 
-    result = schema_executor(query, variables={"groups": ["B", "C"]})
+    result = schema_executor(query, variable_values={"groups": ["B", "C"]})
 
     assert not result.errors
     assert len(result.data["allWorkItems"]["edges"]) == 1
@@ -78,7 +78,7 @@ def test_query_all_work_items_filter_groups(
         "B",
     ]
 
-    result = schema_executor(query, variables={"groups": ["C", "D"]})
+    result = schema_executor(query, variable_values={"groups": ["C", "D"]})
 
     assert not result.errors
     assert len(result.data["allWorkItems"]["edges"]) == 0
@@ -114,7 +114,7 @@ def test_complete_work_item_last(
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = admin_schema_executor(query, variables=inp)
+    result = admin_schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors) == success
     if success:
@@ -177,7 +177,7 @@ def test_complete_workflow_form_work_item(
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors) == success
     if success:
@@ -223,7 +223,7 @@ def test_complete_task_form_work_item(
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors) == success
     if success:
@@ -257,7 +257,7 @@ def test_complete_multiple_instance_task_form_work_item(
     """
 
     inp = {"input": {"id": work_item_1.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors)
     assert result.data["completeWorkItem"]["workItem"]["status"] == to_const(
@@ -268,7 +268,7 @@ def test_complete_multiple_instance_task_form_work_item(
     )
 
     inp = {"input": {"id": work_item_2.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors)
     assert result.data["completeWorkItem"]["workItem"]["status"] == to_const(
@@ -330,7 +330,7 @@ def test_complete_multiple_instance_task_form_work_item_next(
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors)
     snapshot.assert_match(result.data)
@@ -419,7 +419,7 @@ def test_complete_work_item_with_next(
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = schema_executor(query, variables=inp, info=info)
+    result = schema_executor(query, variable_values=inp, info=info)
 
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -469,7 +469,7 @@ def test_complete_work_item_with_next_multiple_tasks(
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
     assert case.work_items.count() == 3
@@ -524,7 +524,7 @@ def test_complete_work_item_with_next_multiple_instance_task(
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
     assert case.work_items.filter(status=models.WorkItem.STATUS_READY).count() == 3
@@ -577,7 +577,7 @@ def test_complete_work_item_with_merge(
         }
     """
     inp = {"input": {"id": work_item_1.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
 
     # one parallel work item is left, no new one created as both preceding
@@ -587,7 +587,7 @@ def test_complete_work_item_with_merge(
 
     # complete second work item
     inp = {"input": {"id": work_item_2.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
 
     # new work item is created of merge task
@@ -644,7 +644,7 @@ def test_save_work_item(
             "description": work_item_description,
         }
     }
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
     work_item.refresh_from_db()
@@ -755,7 +755,7 @@ def test_create_work_item(
         inp["input"]["controllingGroups"] = []
         inp["input"]["addressedGroups"] = []
 
-    result = schema_executor(query, variables=inp, info=info)
+    result = schema_executor(query, variable_values=inp, info=info)
 
     assert not bool(result.errors) == success
     if success:
@@ -810,7 +810,7 @@ def test_filter_document_has_answer(
 
         result = schema_executor(
             query,
-            variables={
+            variable_values={
                 "has_answer": [{"question": answer.question_id, "value": "foo"}]
             },
         )
@@ -873,7 +873,7 @@ def test_query_all_work_items_filter_case_meta_value(
     if lookup_expr:
         variables["lookup"] = lookup_expr
 
-    result = schema_executor(query, variables={"case_meta_value": [variables]})
+    result = schema_executor(query, variable_values={"case_meta_value": [variables]})
 
     assert not result.errors
     assert len(result.data["allWorkItems"]["edges"]) == len_results
@@ -913,7 +913,7 @@ def test_skip_task_form_work_item(
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     # when skipping, both valid and invalid forms don't matter (contrary
     # to completion, where it DOES matter)
@@ -964,7 +964,7 @@ def test_skip_multiple_instance_task_form_work_item(
     """
 
     inp = {"input": {"id": work_item_1.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert bool(result.errors) != success
 
@@ -981,7 +981,7 @@ def test_skip_multiple_instance_task_form_work_item(
         )
 
         inp = {"input": {"id": work_item_2.pk}}
-        result = schema_executor(query, variables=inp)
+        result = schema_executor(query, variable_values=inp)
 
         assert not bool(result.errors)
         assert result.data["skipWorkItem"]["workItem"]["status"] == to_const(

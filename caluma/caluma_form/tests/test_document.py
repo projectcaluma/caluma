@@ -111,7 +111,7 @@ def test_query_all_documents(
         answer.save()
         search = answer.file.name
 
-    result = schema_executor(query, variables={"search": search})
+    result = schema_executor(query, variable_values={"search": search})
     assert not result.errors
     snapshot.assert_match(result.data)
 
@@ -265,7 +265,7 @@ def test_complex_document_query_performance(
     """
 
     with django_assert_num_queries(8):
-        result = schema_executor(query, variables={"id": str(document.pk)})
+        result = schema_executor(query, variable_values={"id": str(document.pk)})
     assert not result.errors
 
 
@@ -292,7 +292,7 @@ def test_query_all_documents_filter_answers_by_question(
         }
     """
 
-    result = schema_executor(query, variables={"question": question.slug})
+    result = schema_executor(query, variable_values={"question": question.slug})
     assert not result.errors
     assert len(result.data["allDocuments"]["edges"]) == 1
     result_document = result.data["allDocuments"]["edges"][0]["node"]
@@ -333,7 +333,7 @@ def test_query_all_documents_filter_answers_by_questions(
     """
 
     result = schema_executor(
-        query, variables={"questions": [questions[0].slug, questions[1].slug]}
+        query, variable_values={"questions": [questions[0].slug, questions[1].slug]}
     )
     assert not result.errors
     assert len(result.data["allDocuments"]["edges"]) == 3
@@ -372,7 +372,7 @@ def test_save_document(db, document, schema_executor, update):
         # not update = create = we don't pass the ID
         del inp["input"]["id"]
 
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
     assert result.data["saveDocument"]["document"]["form"]["slug"] == document.form.slug
@@ -740,7 +740,7 @@ def test_save_document_answer(
         # delete answer to force create test instead of update
         Answer.objects.filter(pk=answer.pk).delete()
 
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors) == success
     if success:
@@ -780,7 +780,7 @@ def test_save_document_answer_empty(
         # delete answer to force create test instead of update
         Answer.objects.filter(pk=answer.pk).delete()
 
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -817,7 +817,7 @@ def test_save_document_table_answer_invalid_row_document(
     }
     inp["input"]["value"] = [str(document_factory(form=question.row_form).pk)]
 
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
 
 
@@ -842,7 +842,7 @@ def test_save_document_table_answer_invalid_row_form(
     inp["input"]["value"] = [
         str(document.pk) for document in document_factory.create_batch(1)
     ]
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert result.errors
 
 
@@ -884,7 +884,7 @@ def test_save_document_table_answer_setting_family(
 
     # attach documents to table answer
     inp["input"]["value"] = {remaining_document.pk, to_be_deleted_document.pk}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
     assert {main_pk, to_be_deleted_table_row.pk} | inp["input"]["value"] == set(
         Document.objects.filter(family=main_family).values_list("id", flat=True)
@@ -896,7 +896,7 @@ def test_save_document_table_answer_setting_family(
 
     # detach one document answer from table answer
     inp["input"]["value"] = {remaining_document.pk}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
     assert {main_pk} | inp["input"]["value"] == set(
         Document.objects.filter(family=main_family).values_list("id", flat=True)
@@ -921,7 +921,7 @@ def test_query_answer_node(db, answer, schema_executor):
     }
     """
 
-    result = schema_executor(node_query, variables={"id": global_id})
+    result = schema_executor(node_query, variable_values={"id": global_id})
     assert not result.errors
 
 
@@ -963,7 +963,7 @@ def test_validity_query(db, form, question, document, is_valid, schema_executor)
         }
     """
 
-    result = schema_executor(query, variables={"document_id": document.id})
+    result = schema_executor(query, variable_values={"document_id": document.id})
 
     # if is_valid, we expect 0 errors, otherwise one
     num_errors = int(not is_valid)
@@ -1008,7 +1008,7 @@ def test_validity_with_visibility(
 
     mocker.patch("caluma.caluma_core.types.Node.visibility_classes", [CustomVisibility])
 
-    result = schema_executor(query, variables={"document_id": document.id})
+    result = schema_executor(query, variable_values={"document_id": document.id})
 
     if hide_documents:
         assert result.data["documentValidity"] is None
@@ -1028,7 +1028,9 @@ def test_remove_document_without_case(db, document, answer, schema_executor):
         }
     """
 
-    result = schema_executor(query, variables={"input": {"document": str(document.pk)}})
+    result = schema_executor(
+        query, variable_values={"input": {"document": str(document.pk)}}
+    )
 
     assert not result.errors
     with pytest.raises(Document.DoesNotExist):
@@ -1049,7 +1051,9 @@ def test_remove_document_with_case(db, document, answer, case, schema_executor):
         }
     """
 
-    result = schema_executor(query, variables={"input": {"document": str(document.pk)}})
+    result = schema_executor(
+        query, variable_values={"input": {"document": str(document.pk)}}
+    )
 
     assert result.errors
     Document.objects.get(pk=document.pk)
@@ -1091,7 +1095,7 @@ def test_remove_document_without_case_table(
     """
 
     result = schema_executor(
-        query, variables={"input": {"document": str(table_answer.document.pk)}}
+        query, variable_values={"input": {"document": str(table_answer.document.pk)}}
     )
 
     assert not result.errors
@@ -1169,7 +1173,7 @@ def test_copy_document(
     """
 
     result = schema_executor(
-        query, variables={"input": {"source": str(main_document.pk)}}
+        query, variable_values={"input": {"source": str(main_document.pk)}}
     )
     assert not result.errors
 

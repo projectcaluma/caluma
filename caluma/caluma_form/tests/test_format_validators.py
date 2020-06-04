@@ -88,7 +88,7 @@ def test_base_format_validators(
 
     inp = {"input": extract_serializer_input_fields(SaveAnswerSerializer, answer)}
 
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors) == success
     if success:

@@ -96,7 +96,7 @@ def test_query_all_questions(
                 }
             }
         """,
-        variables={"form_id": top_form.pk},
+        variable_values={"form_id": top_form.pk},
     )
 
     document_id = extract_global_id(result.data["saveDocument"]["document"]["id"])
@@ -138,7 +138,7 @@ def test_query_all_questions(
     if hierarchy_lookup is not None:
         variables["hasAnswer"][0]["hierarchy"] = hierarchy_lookup
 
-    result = schema_executor(query, variables=variables)
+    result = schema_executor(query, variable_values=variables)
     # note: result.errors may contain stuff that pytest-snapshottest cannot
     # serialize properly, thus we stringify it
     snapshot.assert_match(
@@ -192,7 +192,7 @@ def test_has_answer_intersect(
         ]
     }
 
-    result = schema_executor(query, variables=variables)
+    result = schema_executor(query, variable_values=variables)
     assert not result.errors
 
     expect_count = 1 if expect_find else 0
@@ -223,7 +223,7 @@ def test_visible_in_context(
     """
     variables = {"visible": True}
 
-    result = schema_executor(query, variables=variables)
+    result = schema_executor(query, variable_values=variables)
     assert not result.errors
     assert (
         len(result.data["allDocuments"]["edges"][0]["node"]["answers"]["edges"])

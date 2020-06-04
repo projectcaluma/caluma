@@ -23,7 +23,7 @@ def test_query_all_tasks(db, snapshot, task, schema_executor):
         }
     """
 
-    result = schema_executor(query, variables={"name": task.name})
+    result = schema_executor(query, variable_values={"name": task.name})
 
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -49,7 +49,7 @@ def test_save_task(db, snapshot, task, mutation, schema_executor):
     inp = {
         "input": extract_serializer_input_fields(serializers.SaveTaskSerializer, task)
     }
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
 
@@ -74,6 +74,6 @@ def test_save_comlete_task_form_task(db, snapshot, task, schema_executor):
             serializers.SaveCompleteTaskFormTaskSerializer, task
         )
     }
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
     snapshot.assert_match(result.data)

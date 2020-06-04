@@ -42,7 +42,7 @@ def test_has_next_previous(
 
     inp = {"first": first, "last": last, "before": before, "after": after}
 
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
     assert result.data["allDocuments"]["pageInfo"]["hasNextPage"] == has_next
