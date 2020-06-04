@@ -2,7 +2,7 @@ import pytest
 from graphql_relay import to_global_id
 
 from ...caluma_core.tests import extract_serializer_input_fields
-from .. import serializers
+from .. import models, serializers
 
 
 def test_query_all_workflows(
@@ -175,3 +175,60 @@ def test_remove_flow(db, workflow, task_flow, flow, schema_executor):
     result = schema_executor(query, variables={"input": {"flow": str(flow.pk)}})
     assert not result.errors
     assert workflow.task_flows.count() == 0
+
+
+def test_add_workflow_flow_reuse_task(
+    db, workflow_start_tasks_factory, task_factory, snapshot, admin_schema_executor
+):
+    """Test that the same tasks can be reused in multiple flows."""
+
+    task_a, task_b = task_factory.create_batch(2, type=models.Task.TYPE_SIMPLE)
+    workflow_a = workflow_start_tasks_factory(
+        task=task_a, workflow__slug="workflow-a"
+    ).workflow
+    workflow_b = workflow_start_tasks_factory(
+        task=task_b, workflow__slug="workflow-b"
+    ).workflow
+
+    query = """
+    mutation AddWorkflowFlow($input: AddWorkflowFlowInput!) {
+      addWorkflowFlow(input: $input) {
+        clientMutationId
+      }
+    }
+    """
+
+    result = admin_schema_executor(
+        query,
+        variables={
+            "input": {
+                "workflow": workflow_a.slug,
+                "tasks": [task_a.slug],
+                "next": f"'{task_b.slug}'|task",
+            }
+        },
+    )
+    assert not result.errors
+
+    result = admin_schema_executor(
+        query,
+        variables={
+            "input": {
+                "workflow": workflow_b.slug,
+                "tasks": [task_a.slug],
+                "next": f"'{task_b.slug}'|task",
+            }
+        },
+    )
+    assert not result.errors
+
+    task_flows = models.TaskFlow.objects.all()
+    assert task_flows.count() == 2
+    assert (
+        task_flows.get(workflow=workflow_a).flow
+        != task_flows.get(workflow=workflow_b).flow
+    )
+    assert (
+        task_flows.get(workflow=workflow_a).flow.next
+        == task_flows.get(workflow=workflow_b).flow.next
+    )

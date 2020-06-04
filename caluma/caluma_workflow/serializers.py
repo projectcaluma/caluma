@@ -71,7 +71,9 @@ class AddWorkflowFlowSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         user = self.context["request"].user
         tasks = validated_data["tasks"]
-        models.Flow.objects.filter(task_flows__task__in=tasks).delete()
+        models.Flow.objects.filter(
+            task_flows__workflow=instance, task_flows__task__in=tasks
+        ).delete()
         flow = models.Flow.objects.create(
             next=validated_data["next"],
             created_by_user=user.username,
