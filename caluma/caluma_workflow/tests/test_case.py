@@ -91,7 +91,7 @@ def test_start_case(
     if mutation == "saveCase":
         inp["input"]["id"] = str(case.id)
 
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
 
@@ -129,7 +129,7 @@ def test_start_sub_sub_case(
     inp = {
         "input": {"workflow": workflow.slug, "parentWorkItem": str(sub_work_item.pk)}
     }
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
 
@@ -152,7 +152,7 @@ def test_start_case_invalid_form(db, workflow, form, schema_executor):
     """
 
     inp = {"input": {"workflow": workflow.slug, "form": str(form.pk)}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert result.errors
 
@@ -190,7 +190,7 @@ def test_cancel_case(db, snapshot, case, work_item, schema_executor, success):
     """
 
     inp = {"input": {"id": case.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors) == success
     if success:
@@ -213,7 +213,7 @@ def test_multiple_instance_task_address_groups(
     """
 
     inp = {"input": {"workflow": workflow.slug}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not bool(result.errors)
     assert models.WorkItem.objects.count() == count
 
@@ -265,7 +265,7 @@ def test_root_case_filter(schema_executor, db, workflow_factory, case_factory):
         }
     """
     variables = {"case": case.pk}
-    result = schema_executor(query, variables=variables)
+    result = schema_executor(query, variable_values=variables)
 
     assert not result.errors
 
@@ -302,7 +302,7 @@ def test_family_workitems(schema_executor, db, case_factory, work_item_factory):
     """
 
     variables = {"case": to_global_id("Case", case.pk)}
-    result = schema_executor(query, variables=variables)
+    result = schema_executor(query, variable_values=variables)
 
     assert not result.errors
 
@@ -476,7 +476,7 @@ def test_order_by_question_answer_value(
 
     inp = {"orderByQuestionAnswerValue": value}
 
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors) == success
     if success:
@@ -511,7 +511,7 @@ def test_document_form(
         }
     """
     # search for form A's slug
-    result = schema_executor(query, variables={"form": form_a.slug})
+    result = schema_executor(query, variable_values={"form": form_a.slug})
 
     assert len(result.data["allCases"]["edges"]) == 1
 
@@ -559,7 +559,7 @@ def test_work_item_document(
     """
     result = schema_executor(
         query,
-        variables={
+        variable_values={
             "filter": {"question": question.slug, "value": "hello", "lookup": "EXACT"}
         },
     )

@@ -15,7 +15,7 @@ def test_base_model_created_by_user_filter(db, work_item_factory, schema_executo
             }
         """
 
-    result = schema_executor(query, variables={"createdByUser": "Winston Smith"})
+    result = schema_executor(query, variable_values={"createdByUser": "Winston Smith"})
 
     assert not result.errors
     assert len(result.data["allWorkItems"]["edges"]) == 1
@@ -42,7 +42,7 @@ def test_base_model_created_by_group_filter(db, work_item_factory, schema_execut
                 }
             """
 
-    result = schema_executor(query, variables={"createdByGroup": "Oceania"})
+    result = schema_executor(query, variable_values={"createdByGroup": "Oceania"})
 
     assert not result.errors
     assert len(result.data["allWorkItems"]["edges"]) == 1

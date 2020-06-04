@@ -30,7 +30,7 @@ def test_schema_node(db, snapshot, request, node_type):
         "name": node_instance.__class__.__name__
     }
 
-    result = schema.execute(node_query, variables={"id": global_id})
+    result = schema.execute(node_query, variable_values={"id": global_id})
     assert not result.errors
     assert result.data["node"]["id"] == global_id
 

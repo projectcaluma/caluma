@@ -50,7 +50,7 @@ def test_before_after_filters(
             }
         """
 
-    result = schema_executor(query, variables={"filter": filter})
+    result = schema_executor(query, variable_values={"filter": filter})
 
     assert not result.errors
     result_info = set(

@@ -61,7 +61,7 @@ def test_root_document_filter(
     """
     variables = {"root": str(document1.id)}
 
-    result = schema_executor(query, variables=variables)
+    result = schema_executor(query, variable_values=variables)
     assert not result.errors
     result_ids = [
         extract_global_id(doc["node"]["id"])

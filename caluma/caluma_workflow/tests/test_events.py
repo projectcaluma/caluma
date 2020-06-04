@@ -27,7 +27,7 @@ def test_events(db, work_item_factory, schema_executor):
     """
 
     inp = {"input": {"id": work_item.pk}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
     work_item.refresh_from_db()

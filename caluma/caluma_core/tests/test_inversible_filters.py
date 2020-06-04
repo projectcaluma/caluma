@@ -27,7 +27,7 @@ def test_inversible_with_vars(db, schema_executor, document_factory):
         }
     """
 
-    result = schema_executor(query, variables=variables)
+    result = schema_executor(query, variable_values=variables)
     assert not result.errors
 
     result_ids = [

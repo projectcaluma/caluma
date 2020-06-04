@@ -52,7 +52,7 @@ def test_query_all_forms(
 
     result = schema_executor(
         query,
-        variables={
+        variable_values={
             "question": question.label,
             "orderBy": ["NAME_ASC", "CREATED_AT_ASC"],
         },
@@ -81,7 +81,7 @@ def test_save_form(db, snapshot, form, settings, schema_executor, language_code)
 
     inp = {"input": extract_serializer_input_fields(SaveFormSerializer, form)}
     with translation.override(language_code):
-        result = schema_executor(query, variables=inp)
+        result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -100,7 +100,7 @@ def test_save_form_created_as_admin_user(db, form, admin_schema_executor, admin_
 
     inp = {"input": extract_serializer_input_fields(SaveFormSerializer, form)}
     form.delete()  # test creation of form
-    result = admin_schema_executor(query, variables=inp)
+    result = admin_schema_executor(query, variable_values=inp)
 
     assert not result.errors
     assert result.data["saveForm"]["form"]["createdByUser"] == admin_user.username
@@ -121,7 +121,7 @@ def test_copy_form(db, form, form_question_factory, schema_executor):
     """
 
     inp = {"input": {"source": form.pk, "slug": "new-form", "name": "Test Form"}}
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
 
@@ -163,7 +163,7 @@ def test_add_form_question(db, form, question, form_question_factory, schema_exe
 
     result = schema_executor(
         query,
-        variables={
+        variable_values={
             "input": {
                 "form": to_global_id(type(form).__name__, form.pk),
                 "question": to_global_id(type(question).__name__, question.pk),
@@ -199,7 +199,7 @@ def test_remove_form_question(
 
     result = schema_executor(
         query,
-        variables={
+        variable_values={
             "input": {
                 "form": to_global_id(type(form).__name__, form.pk),
                 "question": to_global_id(type(question).__name__, question.pk),
@@ -236,7 +236,7 @@ def test_reorder_form_questions(db, form, form_question_factory, schema_executor
     )
     result = schema_executor(
         query,
-        variables={
+        variable_values={
             "input": {
                 "form": to_global_id(type(form).__name__, form.pk),
                 "questions": [
@@ -283,7 +283,7 @@ def test_reorder_form_questions_invalid_question(
 
     result = schema_executor(
         query,
-        variables={
+        variable_values={
             "input": {
                 "form": to_global_id(type(form).__name__, form.pk),
                 "questions": [
@@ -319,7 +319,7 @@ def test_reorder_form_questions_duplicated_question(
 
     result = schema_executor(
         query,
-        variables={
+        variable_values={
             "input": {
                 "form": to_global_id(type(form).__name__, form.pk),
                 "questions": [question.slug, question.slug],

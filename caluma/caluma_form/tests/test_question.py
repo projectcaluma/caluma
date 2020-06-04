@@ -145,7 +145,7 @@ def test_query_all_questions(
 
     result = schema_executor(
         query,
-        variables={
+        variable_values={
             "search": question.label,
             "forms": [extract_global_id_input_fields(form)["id"]],
         },
@@ -178,7 +178,7 @@ def test_copy_question(
             "label": "Test Question",
         }
     }
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
 
@@ -234,7 +234,7 @@ def test_save_question(db, snapshot, question, mutation, schema_executor, succes
             serializers.SaveQuestionSerializer, question
         )
     }
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors) == success
     if success:
@@ -283,7 +283,7 @@ def test_save_text_question(db, question, schema_executor, success):
             serializers.SaveTextQuestionSerializer, question
         )
     }
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not bool(result.errors) == success
     if success:
         assert result.data["saveTextQuestion"]["question"]["maxLength"] == 10
@@ -324,7 +324,7 @@ def test_save_textarea_question(db, question, schema_executor):
             serializers.SaveTextareaQuestionSerializer, question
         )
     }
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
     assert result.data["saveTextareaQuestion"]["question"]["maxLength"] == 10
 
@@ -361,7 +361,7 @@ def test_save_float_question(db, snapshot, question, schema_executor, success):
             serializers.SaveFloatQuestionSerializer, question
         )
     }
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not bool(result.errors) == success
     if success:
         snapshot.assert_match(result.data)
@@ -399,7 +399,7 @@ def test_save_integer_question(db, snapshot, question, success, schema_executor)
             serializers.SaveIntegerQuestionSerializer, question
         )
     }
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not bool(result.errors) == success
     if success:
         snapshot.assert_match(result.data)
@@ -444,7 +444,7 @@ def test_save_multiple_choice_question(
         )
     }
     inp["input"]["options"] = option_ids
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
 
@@ -482,7 +482,7 @@ def test_save_choice_question(db, snapshot, question, question_option, schema_ex
         )
     }
     question.delete()  # test creation
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
 
@@ -527,7 +527,7 @@ def test_save_dynamic_choice_question(
     }
     if delete:
         question.delete()  # test creation
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
 
@@ -577,7 +577,7 @@ def test_save_dynamic_multiple_choice_question(
     }
     if delete:
         question.delete()  # test creation
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
 
@@ -610,7 +610,7 @@ def test_save_table_question(db, snapshot, question, question_option, schema_exe
         )
     }
     question.delete()  # test creation
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
 
@@ -643,7 +643,7 @@ def test_save_form_question(db, snapshot, question, question_option, schema_exec
         )
     }
     question.delete()  # test creation
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
 
@@ -673,7 +673,7 @@ def test_save_static_question(db, snapshot, question, schema_executor):
             serializers.SaveStaticQuestionSerializer, question
         )
     }
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
     assert not bool(result.errors)
     snapshot.assert_match(result.data)
 

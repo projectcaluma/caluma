@@ -46,7 +46,7 @@ def test_meta_value_filter(
     if lookup:
         variables["filter"][0]["lookup"] = lookup
 
-    result = schema_executor(query, variables=variables)
+    result = schema_executor(query, variable_values=variables)
 
     assert not result.errors
 

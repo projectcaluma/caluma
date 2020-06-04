@@ -41,7 +41,7 @@ def test_inversible_with_vars(db, schema_executor, document_factory, question):
         ]
 
     def get_ordered(ordering):
-        result = schema_executor(query, variables={"order": ordering})
+        result = schema_executor(query, variable_values={"order": ordering})
         assert not result.errors
         return result_ids(result)
 

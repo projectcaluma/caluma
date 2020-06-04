@@ -20,7 +20,7 @@ def test_history(db, question, document, schema_executor, admin_schema_executor)
 
     result = admin_schema_executor(
         query,
-        variables={
+        variable_values={
             "input": {
                 "question": str(question.pk),
                 "value": "dolor",
@@ -31,7 +31,7 @@ def test_history(db, question, document, schema_executor, admin_schema_executor)
     assert not result.errors
     assert (
         models.Answer.history.get(value="dolor").history_user
-        == admin_schema_executor.keywords["context"].user.username
+        == admin_schema_executor.keywords["context_value"].user.username
     )
 
     query = """
@@ -46,7 +46,7 @@ def test_history(db, question, document, schema_executor, admin_schema_executor)
 
     result = schema_executor(
         query,
-        variables={
+        variable_values={
             "input": {
                 "question": str(question.pk),
                 "value": "sit",
@@ -59,7 +59,7 @@ def test_history(db, question, document, schema_executor, admin_schema_executor)
     history = models.Answer.history.all()
     assert (
         history[1].history_user
-        == admin_schema_executor.keywords["context"].user.username
+        == admin_schema_executor.keywords["context_value"].user.username
     )
     assert history[1].value == "dolor"
 
@@ -99,21 +99,21 @@ def test_document_as_of(
         "question": q1.question.slug,
     }
 
-    result = admin_schema_executor(save_answer_query, variables={"input": input})
+    result = admin_schema_executor(save_answer_query, variable_values={"input": input})
     assert not result.errors
     timestamp1 = timezone.now()
 
     input["value"] = "second admin - revision 2 - not queried"
-    result = admin_schema_executor(save_answer_query, variables={"input": input})
+    result = admin_schema_executor(save_answer_query, variable_values={"input": input})
     assert not result.errors
 
     input["value"] = "first anon - revision 3"
-    result = schema_executor(save_answer_query, variables={"input": input})
+    result = schema_executor(save_answer_query, variable_values={"input": input})
     assert not result.errors
     timestamp2 = timezone.now()
 
     input["value"] = "second anon - revision 4"
-    result = schema_executor(save_answer_query, variables={"input": input})
+    result = schema_executor(save_answer_query, variable_values={"input": input})
     assert not result.errors
     timestamp3 = timezone.now()
 
@@ -141,22 +141,22 @@ def test_document_as_of(
 
     variables = {"id": document.pk, "asOf": timestamp1}
 
-    result = admin_schema_executor(historical_query, variables=variables)
+    result = admin_schema_executor(historical_query, variable_values=variables)
     assert not result.errors
     snapshot.assert_match(result.data)
 
     variables["asOf"] = timestamp2
-    result = admin_schema_executor(historical_query, variables=variables)
+    result = admin_schema_executor(historical_query, variable_values=variables)
     assert not result.errors
     snapshot.assert_match(result.data)
 
     variables["asOf"] = timestamp3
-    result = admin_schema_executor(historical_query, variables=variables)
+    result = admin_schema_executor(historical_query, variable_values=variables)
     assert not result.errors
     snapshot.assert_match(result.data)
 
     variables["asOf"] = timezone.make_aware(timezone.datetime(1900, 9, 15))
-    result = admin_schema_executor(historical_query, variables=variables)
+    result = admin_schema_executor(historical_query, variable_values=variables)
     assert result.errors
 
 
@@ -190,19 +190,19 @@ def test_historical_file_answer(
         "question": q1.question.slug,
     }
 
-    result = schema_executor(save_answer_query, variables={"input": input})
+    result = schema_executor(save_answer_query, variable_values={"input": input})
     assert not result.errors
     hist_file_1 = models.File.history.first()
     timestamp1 = timezone.now()
 
     input["value"] = "my_file - rev 2"
-    result = schema_executor(save_answer_query, variables={"input": input})
+    result = schema_executor(save_answer_query, variable_values={"input": input})
     assert not result.errors
     hist_file_2 = models.File.history.first()
     timestamp2 = timezone.now()
 
     input["value"] = "my_file - rev 3"
-    result = schema_executor(save_answer_query, variables={"input": input})
+    result = schema_executor(save_answer_query, variable_values={"input": input})
     assert not result.errors
     file3 = document.answers.get(question=q1.question).file
 
@@ -236,7 +236,7 @@ def test_historical_file_answer(
         """
 
     variables = {"id": document.pk, "asOf": timestamp1}
-    result = schema_executor(historical_query, variables=variables)
+    result = schema_executor(historical_query, variable_values=variables)
     assert not result.errors
     assert (
         result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"]["value"][
@@ -246,7 +246,7 @@ def test_historical_file_answer(
     )
 
     variables["asOf"] = timestamp2
-    result = schema_executor(historical_query, variables=variables)
+    result = schema_executor(historical_query, variable_values=variables)
     assert not result.errors
     assert (
         result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"]["value"][
@@ -258,7 +258,7 @@ def test_historical_file_answer(
     # This is the newest revision, so the uuid in the downloadUri must be the one
     # from the actual file and not from the history record.
     variables["asOf"] = timezone.now()
-    result = schema_executor(historical_query, variables=variables)
+    result = schema_executor(historical_query, variable_values=variables)
     assert not result.errors
     assert (
         result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"]["value"][
@@ -369,7 +369,7 @@ def test_historical_table_answer(
     """
 
     variables = {"id": main_document.pk, "asOf1": timestamp_init, "asOf2": timestamp_2}
-    result = schema_executor(historical_query, variables=variables)
+    result = schema_executor(historical_query, variable_values=variables)
     assert not result.errors
     snapshot.assert_match(result.data)
 
@@ -405,7 +405,7 @@ def test_history_answer_type(
 
     result = admin_schema_executor(
         query,
-        variables={
+        variable_values={
             "input": {
                 "question": str(old_question.pk),
                 "value": "some text answer",
@@ -441,7 +441,7 @@ def test_history_answer_type(
     # add new integer answer
     result = admin_schema_executor(
         query,
-        variables={
+        variable_values={
             "input": {
                 "question": str(new_question.pk),
                 "value": 123,
@@ -475,7 +475,7 @@ def test_history_answer_type(
 
     # old date resolves to the string value
     variables = {"id": document.pk, "asOf": old_date}
-    result = admin_schema_executor(historical_query, variables=variables)
+    result = admin_schema_executor(historical_query, variable_values=variables)
 
     assert not result.errors
     assert (
@@ -493,7 +493,7 @@ def test_history_answer_type(
 
     # current date resolves to integer value
     variables = {"id": document.pk, "asOf": timezone.now()}
-    result = admin_schema_executor(historical_query, variables=variables)
+    result = admin_schema_executor(historical_query, variable_values=variables)
 
     assert not result.errors
     assert (

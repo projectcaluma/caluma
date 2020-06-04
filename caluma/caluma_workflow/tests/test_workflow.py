@@ -56,7 +56,7 @@ def test_query_all_workflows(
         }
     """
 
-    result = schema_executor(query, variables={"name": workflow.name})
+    result = schema_executor(query, variable_values={"name": workflow.name})
 
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -93,7 +93,7 @@ def test_save_workflow(
         )
     }
     workflow.delete()  # test creation
-    result = schema_executor(query, variables=inp)
+    result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -147,7 +147,7 @@ def test_add_workflow_flow(
 
     result = admin_schema_executor(
         query,
-        variables={
+        variable_values={
             "input": {
                 "workflow": to_global_id(type(workflow).__name__, workflow.pk),
                 "tasks": [to_global_id(type(task).__name__, task.pk)],
@@ -172,7 +172,7 @@ def test_remove_flow(db, workflow, task_flow, flow, schema_executor):
         }
     """
 
-    result = schema_executor(query, variables={"input": {"flow": str(flow.pk)}})
+    result = schema_executor(query, variable_values={"input": {"flow": str(flow.pk)}})
     assert not result.errors
     assert workflow.task_flows.count() == 0
 
@@ -200,7 +200,7 @@ def test_add_workflow_flow_reuse_task(
 
     result = admin_schema_executor(
         query,
-        variables={
+        variable_values={
             "input": {
                 "workflow": workflow_a.slug,
                 "tasks": [task_a.slug],
@@ -212,7 +212,7 @@ def test_add_workflow_flow_reuse_task(
 
     result = admin_schema_executor(
         query,
-        variables={
+        variable_values={
             "input": {
                 "workflow": workflow_b.slug,
                 "tasks": [task_a.slug],
