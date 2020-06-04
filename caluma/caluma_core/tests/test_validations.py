@@ -103,3 +103,33 @@ def test_custom_validation_override_created_by_group(db, admin_info, history_moc
 
     MyMutation.mutate_and_get_payload(None, admin_info)
     assert FakeModel.objects.first().created_by_group == "foobar"
+
+
+def test_custom_validation_chained_decorators(db, info):
+    FakeModel = get_fake_model(model_base=models.UUIDModel)
+
+    class Serializer(serializers.ModelSerializer):
+        class Meta:
+            model = FakeModel
+            fields = "__all__"
+
+    class CustomMutation1(Mutation):
+        class Meta:
+            serializer_class = Serializer
+
+    class CustomMutation2(Mutation):
+        class Meta:
+            serializer_class = Serializer
+
+    class CustomValidation(BaseValidation):
+        @validation_for(CustomMutation1)
+        @validation_for(CustomMutation2)
+        def validate_custom_mutation(self, mutation, data, info):
+            data["test"] = "test"
+            return data
+
+    data = CustomValidation().validate(CustomMutation1, {}, info)
+    assert data["test"] == "test"
+
+    data = CustomValidation().validate(CustomMutation2, {}, info)
+    assert data["test"] == "test"

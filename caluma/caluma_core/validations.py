@@ -1,5 +1,4 @@
 import inspect
-from functools import wraps
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -10,12 +9,11 @@ def validation_for(mutation):
     """Decorate function to overwriting validation of specific mutation."""
 
     def decorate(fn):
-        @wraps(fn)
-        def _decorated(self, mutation, data, info):
-            return fn(self, mutation, data, info)
+        if not hasattr(fn, "_validations"):
+            fn._validations = []
 
-        _decorated._validation = mutation
-        return _decorated
+        fn._validations.append(mutation)
+        return fn
 
     return decorate
 
@@ -48,15 +46,22 @@ class BaseValidation(object):
     """
 
     def __init__(self):
-        validation_fns = inspect.getmembers(self, lambda m: hasattr(m, "_validation"))
-        validation_muts = [fn._validation.__name__ for _, fn in validation_fns]
+        validation_fns = inspect.getmembers(self, lambda m: hasattr(m, "_validations"))
+
+        validation_muts = [
+            mutation.__name__
+            for _, fn in validation_fns
+            for mutation in fn._validations
+        ]
         validation_muts_dups = list_duplicates(validation_muts)
         if validation_muts_dups:
             raise ImproperlyConfigured(
                 f"`validation_for` defined multiple times for "
                 f"{', '.join(validation_muts_dups)} in {str(self)}"
             )
-        self._validations = {fn._validation: fn for _, fn in validation_fns}
+        self._validations = {
+            mutation: fn for _, fn in validation_fns for mutation in fn._validations
+        }
 
     def validate(self, mutation, data, info):
         for cls in mutation.mro():

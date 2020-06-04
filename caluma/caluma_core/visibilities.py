@@ -1,5 +1,4 @@
 import inspect
-from functools import wraps
 
 from django.core.exceptions import ImproperlyConfigured
 
@@ -10,12 +9,11 @@ def filter_queryset_for(node):
     """Decorate function to define filtering of queryset of specific node."""
 
     def decorate(fn):
-        @wraps(fn)
-        def _decorated(self, node, queryset, info):
-            return fn(self, node, queryset, info)
+        if not hasattr(fn, "_visibilities"):
+            fn._visibilities = []
 
-        _decorated._filter_queryset_for = node
-        return _decorated
+        fn._visibilities.append(node)
+        return fn
 
     return decorate
 
@@ -42,18 +40,20 @@ class BaseVisibility(object):
     """
 
     def __init__(self):
-        queryset_fns = inspect.getmembers(
-            self, lambda m: hasattr(m, "_filter_queryset_for")
-        )
-        queryset_nodes = [fn._filter_queryset_for.__name__ for _, fn in queryset_fns]
+        queryset_fns = inspect.getmembers(self, lambda m: hasattr(m, "_visibilities"))
+
+        queryset_nodes = [
+            node.__name__ for _, fn in queryset_fns for node in fn._visibilities
+        ]
         queryset_nodes_dups = list_duplicates(queryset_nodes)
         if queryset_nodes_dups:
             raise ImproperlyConfigured(
                 f"`filter_queryset_for` defined multiple times for "
                 f"{', '.join(queryset_nodes_dups)} in {str(self)}"
             )
+
         self._filter_querysets_for = {
-            fn._filter_queryset_for: fn for _, fn in queryset_fns
+            node: fn for _, fn in queryset_fns for node in fn._visibilities
         }
 
     def filter_queryset(self, node, queryset, info):
