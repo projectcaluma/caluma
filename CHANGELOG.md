@@ -1,3 +1,22 @@
+# v5.7.0 (06 June 2020)
+
+### Feature
+* Make validation and visibility decorators chainable (b8ed8c923296ca9100f76322b0d22ea66a1cfaba)
+* Add documentForms filter for allCases graph (ab14f8b96c1af838293688fd360d17c6b0466fa1)
+* Expose complete and skip work item to public API (32136bdfa2f894278f1d3c5b5f660774be5761a1)
+* Expose start case logic in public python api module (c78bbb72fe295fe54f81f4d49253aab6d6530c6f)
+
+### Fix
+* Remove DeprecationWarnings (262682e64cc3c6d7ca380ae6eb2fe1723ab05841)
+* Fix case status when completing parallel work items (2502b309260272a525abb56a461507999ea6c3ea)
+* Make tasks reusable in workflow flows (613386d7e8c9adb7fbf1e7d675b6840dccac99f8)
+* Use matching question for historicalanswer (097cdcbda1e05ffb22c38630ba9dae3efd31ce37)
+
+### Documentation
+* Switch to 'id -u' when creating a pipenv (06983b664e85a7259a25ce1a543c1851a015b72c)
+* Add docs for the new API functions (c5411b0cd9c51c1251925fe7db89c87a259b029c)
+
+
 # v5.6.0 (28 April 2020)
 
 ### Feature
