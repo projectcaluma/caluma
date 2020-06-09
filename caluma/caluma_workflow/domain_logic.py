@@ -119,42 +119,52 @@ class CompleteWorkItemLogic:
         if not CompleteWorkItemLogic._can_continue(work_item, work_item.task):
             return work_item
 
-        flow = models.Flow.objects.filter(task_flows__task=work_item.task_id).first()
-        flow_referenced_tasks = models.Task.objects.filter(task_flows__flow=flow)
+        flow = models.Flow.objects.filter(
+            task_flows__task=work_item.task_id,
+            task_flows__workflow=work_item.case.workflow.pk,
+        ).first()
 
-        all_complete = all(
-            CompleteWorkItemLogic._can_continue(work_item, task)
-            for task in flow_referenced_tasks
-        )
+        if flow:
+            sibling_tasks = models.Task.objects.filter(task_flows__flow=flow)
 
-        if flow and all_complete:
-            jexl = FlowJexl()
-            result = jexl.evaluate(flow.next)
-            if not isinstance(result, list):
-                result = [result]
-
-            tasks = models.Task.objects.filter(pk__in=result)
-
-            created_work_items = utils.bulk_create_work_items(
-                tasks, case, user, work_item
+            all_siblings_complete = all(
+                CompleteWorkItemLogic._can_continue(work_item, task)
+                for task in sibling_tasks
             )
 
-            for created_work_item in created_work_items:  # pragma: no cover
-                send_event(
-                    events.created_work_item,
-                    sender="post_complete_work_item",
-                    work_item=created_work_item,
+            if all_siblings_complete:
+                jexl = FlowJexl()
+                result = jexl.evaluate(flow.next)
+                if not isinstance(result, list):
+                    result = [result]
+
+                tasks = models.Task.objects.filter(pk__in=result)
+
+                created_work_items = utils.bulk_create_work_items(
+                    tasks, case, user, work_item
                 )
-        elif not flow and all_complete:
-            # no more tasks, mark case as complete
-            case.status = models.Case.STATUS_COMPLETED
-            case.closed_at = timezone.now()
-            case.closed_by_user = user.username
-            case.closed_by_group = user.group
-            case.save()
-            send_event(
-                events.completed_case, sender="post_complete_work_item", case=case
-            )
+
+                for created_work_item in created_work_items:  # pragma: no cover
+                    send_event(
+                        events.created_work_item,
+                        sender="post_complete_work_item",
+                        work_item=created_work_item,
+                    )
+        else:
+            has_ready_work_items = work_item.case.work_items.filter(
+                status=models.WorkItem.STATUS_READY
+            ).exists()
+
+            if not has_ready_work_items:
+                # no more tasks, mark case as complete
+                case.status = models.Case.STATUS_COMPLETED
+                case.closed_at = timezone.now()
+                case.closed_by_user = user.username
+                case.closed_by_group = user.group
+                case.save()
+                send_event(
+                    events.completed_case, sender="post_complete_work_item", case=case
+                )
 
         send_event(
             events.completed_work_item,
