@@ -302,7 +302,7 @@ def test_complete_multiple_instance_task_form_work_item_next(
     task_next = task_factory(
         type=models.Task.TYPE_SIMPLE, form=None, address_groups='["group-name"]|groups'
     )
-    task_flow = task_flow_factory(task=task)
+    task_flow = task_flow_factory(task=task, workflow=work_item.case.workflow)
     task_flow.flow.next = f"'{task_next.slug}'|task"
     task_flow.flow.save()
 
@@ -1065,3 +1065,46 @@ def test_complete_work_item_parallel(
             assert case.status == models.Case.STATUS_COMPLETED
         else:
             assert case.status == models.Case.STATUS_RUNNING
+
+
+def test_complete_work_item_same_task_multiple_workflows(
+    db,
+    case_factory,
+    work_item_factory,
+    task_factory,
+    flow_factory,
+    task_flow_factory,
+    workflow_factory,
+    schema_executor,
+    admin_user,
+):
+    workflow_1, workflow_2 = workflow_factory.create_batch(2)
+    # create two work items which can be processed in parallel
+    task_1, task_2 = task_factory.create_batch(2, type=models.Task.TYPE_SIMPLE)
+
+    flow = flow_factory(next=f"'{task_2.slug}'|task")
+
+    # workflow 1 consists out of 2 tasks, workflow_2 just out of one
+    task_flow_factory(task=task_1, workflow=workflow_1, flow=flow)
+
+    case_1 = case_factory(workflow=workflow_1)
+    case_2 = case_factory(workflow=workflow_2)
+
+    work_item_1 = work_item_factory(
+        task=task_1, status=models.WorkItem.STATUS_READY, child_case=None, case=case_1
+    )
+    work_item_2 = work_item_factory(
+        task=task_1, status=models.WorkItem.STATUS_READY, child_case=None, case=case_2
+    )
+
+    api.complete_work_item(work_item_1, admin_user)
+    api.complete_work_item(work_item_2, admin_user)
+
+    work_item_1.refresh_from_db()
+    work_item_2.refresh_from_db()
+
+    case_1.refresh_from_db()
+    case_2.refresh_from_db()
+
+    assert case_1.status == models.Case.STATUS_RUNNING
+    assert case_2.status == models.Case.STATUS_COMPLETED
