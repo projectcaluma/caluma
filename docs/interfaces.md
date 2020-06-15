@@ -320,3 +320,4 @@ in your application that installs Caluma as a django app:
 - `caluma_workflow.api.start_case` To start a new case of a given workflow
 - `caluma_workflow.api.complete_work_item` To complete a work item
 - `caluma_workflow.api.skip_work_item` To skip a work item
+- `caluma_workflow.api.cancel_case` To cancel a case

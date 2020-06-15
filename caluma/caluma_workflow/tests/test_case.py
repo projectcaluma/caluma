@@ -588,3 +588,17 @@ def test_api_start_case(
     assert case.document.form == form
     assert work_item.document.form == form
     assert work_item.status == models.WorkItem.STATUS_READY
+
+
+@pytest.mark.parametrize(
+    "case__status,work_item__status",
+    [(models.Case.STATUS_RUNNING, models.WorkItem.STATUS_READY)],
+)
+def test_api_cancel_case(db, case, work_item, admin_user):
+    api.cancel_case(case=case, user=admin_user)
+
+    case.refresh_from_db()
+    work_item.refresh_from_db()
+
+    assert case.status == models.Case.STATUS_CANCELED
+    assert work_item.status == models.WorkItem.STATUS_CANCELED

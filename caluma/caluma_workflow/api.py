@@ -79,3 +79,24 @@ def skip_work_item(work_item: models.WorkItem, user: BaseUser) -> models.WorkIte
     domain_logic.SkipWorkItemLogic.post_skip(work_item, user)
 
     return work_item
+
+
+def cancel_case(case: models.Case, user: BaseUser) -> models.Case:
+    """
+    Cancel a case and its pending work items (just like `CancelCase`).
+
+    >>> cancel_case(
+    ...     case=models.Case.first(),
+    ...     user=AnonymousUser()
+    ... )
+    <Case: Case object (some-uuid)>
+    """
+    domain_logic.CancelCaseLogic.validate_for_cancel(case)
+
+    validated_data = domain_logic.CancelCaseLogic.pre_cancel({}, user)
+
+    models.Case.objects.filter(pk=case.pk).update(**validated_data)
+
+    domain_logic.CancelCaseLogic.post_cancel(case, user)
+
+    return case
