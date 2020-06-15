@@ -1,6 +1,5 @@
 from django.core.exceptions import ValidationError
 from django.db import transaction
-from django.utils import timezone
 from rest_framework import exceptions
 from rest_framework.serializers import CharField, ListField
 from simple_history.utils import bulk_create_with_history
@@ -221,40 +220,23 @@ class CancelCaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer
         fields = ("id",)
 
     def validate(self, data):
-        if self.instance.status != models.Case.STATUS_RUNNING:
-            raise exceptions.ValidationError("Only running cases can be canceled.")
+        try:
+            domain_logic.CancelCaseLogic.validate_for_cancel(self.instance)
+        except ValidationError as e:
+            raise exceptions.ValidationError(str(e))
 
-        user = self.context["request"].user
-        data["status"] = models.Case.STATUS_CANCELED
-        data["closed_at"] = timezone.now()
-        data["closed_by_user"] = user.username
-        data["closed_by_group"] = user.group
         return super().validate(data)
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        instance = super().update(instance, validated_data)
         user = self.context["request"].user
 
-        work_items = instance.work_items.exclude(
-            status__in=[
-                models.WorkItem.STATUS_COMPLETED,
-                models.WorkItem.STATUS_CANCELED,
-            ]
+        super().update(
+            instance, domain_logic.CancelCaseLogic.pre_cancel(validated_data, user)
         )
 
-        for work_item in work_items:
-            work_item.status = models.WorkItem.STATUS_CANCELED
-            work_item.closed_at = timezone.now()
-            work_item.closed_by_user = user.username
-            work_item.closed_by_group = user.group
-            work_item.save()
+        domain_logic.CancelCaseLogic.post_cancel(instance, user)
 
-        # send events in separate loop in order to be sure all operations are finished
-        for work_item in work_items:
-            self.send_event(events.cancelled_work_item, work_item=work_item)
-
-        self.send_event(events.cancelled_case, case=instance)
         return instance
 
 

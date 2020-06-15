@@ -198,3 +198,57 @@ class SkipWorkItemLogic:
         )
 
         return work_item
+
+
+class CancelCaseLogic:
+    """
+    Shared domain logic for cancelling cases.
+
+    Used in the `cancelCase` mutation and in the `cancel_case` API. The logic
+    for case cancellation is split in three parts (`validate_for_cancel`,
+    `pre_cancel` and `post_cancel`) so that in between the appropriate update
+    method can be called (`super().update(...)` for the serializer and
+    `Case.objects.update(...) for the python API`).
+    """
+
+    @staticmethod
+    def validate_for_cancel(case):
+        if case.status != models.Case.STATUS_RUNNING:
+            raise ValidationError("Only running cases can be canceled.")
+
+    @staticmethod
+    def pre_cancel(validated_data, user):
+        validated_data["status"] = models.Case.STATUS_CANCELED
+        validated_data["closed_at"] = timezone.now()
+        validated_data["closed_by_user"] = user.username
+        validated_data["closed_by_group"] = user.group
+
+        return validated_data
+
+    @staticmethod
+    def post_cancel(case, user):
+        work_items = case.work_items.exclude(
+            status__in=[
+                models.WorkItem.STATUS_COMPLETED,
+                models.WorkItem.STATUS_CANCELED,
+            ]
+        )
+
+        for work_item in work_items:
+            work_item.status = models.WorkItem.STATUS_CANCELED
+            work_item.closed_at = timezone.now()
+            work_item.closed_by_user = user.username
+            work_item.closed_by_group = user.group
+            work_item.save()
+
+        # send events in separate loop in order to be sure all operations are finished
+        for work_item in work_items:
+            send_event(
+                events.cancelled_work_item,
+                sender="post_cancel_case",
+                work_item=work_item,
+            )
+
+        send_event(events.cancelled_case, sender="post_cancel_case", case=case)
+
+        return case
