@@ -16,4 +16,4 @@ pyjexl==0.2.3
 python-memcached==1.59
 requests==2.23.0
 urllib3==1.25.9
-uwsgi==2.0.18
+uwsgi==2.0.19.1
