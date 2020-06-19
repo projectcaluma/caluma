@@ -1,4 +1,13 @@
-# v5.7.0 (06 June 2020)
+# v5.8.0 (19 June 2020)
+
+### Feature
+* Extract code for cancelling cases and add a python API (ce74d06bdc9b0edb7080d6408f814ba434da31b4)
+
+### Fix
+* Consider workflow when completing work items (c024660d73103297dc6f96b2cdf7634190da3776)
+
+
+# v5.7.0 (6 June 2020)
 
 ### Feature
 * Make validation and visibility decorators chainable (b8ed8c923296ca9100f76322b0d22ea66a1cfaba)
