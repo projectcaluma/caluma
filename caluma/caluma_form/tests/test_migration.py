@@ -6,6 +6,7 @@ from django.core.management import call_command
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
 from django.db.utils import DataError
+from django.utils import timezone
 
 from caluma.utils import col_type_from_db
 
@@ -347,3 +348,60 @@ def test_migrate_slugfield_length(transactional_db):
 
     # should now throw anymore
     _verify_foreign_key_types(new_apps)
+
+
+def test_migrate_answer_history_question_type(transactional_db):
+    """Make sure migration to custom history field history_question_type works."""
+
+    executor = MigrationExecutor(connection)
+    app = "caluma_form"
+    migrate_from = [(app, "0034_fix_fk_lengths")]
+    migrate_to = [(app, "0035_historicalanswer_history_question_type")]
+
+    executor.migrate(migrate_from)
+    old_apps = executor.loader.project_state(migrate_from).apps
+
+    Document = old_apps.get_model(app, "Document")
+    Form = old_apps.get_model(app, "Form")
+    OldAnswer = old_apps.get_model(app, "Answer")
+    OldQuestion = old_apps.get_model(app, "Question")
+    OldHistAns = old_apps.get_model(app, "HistoricalAnswer")
+    OldHistQuest = old_apps.get_model(app, "HistoricalQuestion")
+
+    form = Form.objects.create()
+    question = OldQuestion.objects.create(type="text")
+    document = Document.objects.create(form=form)
+    answer = OldAnswer.objects.create(
+        document=document, question=question, value="some answer"
+    )
+
+    now = timezone.now()
+
+    # create historical records
+    hist_quest = OldHistQuest.objects.create(
+        slug=question.slug,
+        type="text",
+        created_at=now,
+        modified_at=now,
+        history_date=now,
+    )
+    OldHistAns.objects.create(
+        id=answer.id,
+        value=answer.value,
+        document_id=document.pk,
+        question_id=question.slug,
+        created_at=now,
+        modified_at=now,
+        history_date=now,
+    )
+
+    # Migrate forwards.
+    executor.loader.build_graph()  # reload.
+    executor.migrate(migrate_to)
+
+    new_apps = executor.loader.project_state(migrate_to).apps
+
+    # Test the new data.
+    NewHistAns = new_apps.get_model(app, "HistoricalAnswer")
+    new_hist_ans = NewHistAns.objects.get()
+    assert new_hist_ans.history_question_type == hist_quest.type

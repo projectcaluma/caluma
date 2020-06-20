@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -378,14 +377,14 @@ type DataSourceEdge {
 scalar Date
 
 type DateAnswer implements Answer, Node {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  createdByUser: String
-  createdByGroup: String
   id: ID!
   question: Question!
   value: Date
   meta: GenericScalar!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   date: Date
 }
 
@@ -587,14 +586,14 @@ type File implements Node {
 }
 
 type FileAnswer implements Answer, Node {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  createdByUser: String
-  createdByGroup: String
   id: ID!
   question: Question!
   value: File!
   meta: GenericScalar!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   file: File
 }
 
@@ -616,14 +615,14 @@ type FileQuestion implements Question, Node {
 }
 
 type FloatAnswer implements Answer, Node {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  createdByUser: String
-  createdByGroup: String
   id: ID!
   question: Question!
   value: Float
   meta: GenericScalar!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
 }
 
 type FloatQuestion implements Question, Node {
@@ -819,14 +818,15 @@ type HistoricalAnswerEdge {
 }
 
 type HistoricalDateAnswer implements HistoricalAnswer, Node {
+  id: ID!
+  value: Date
+  meta: GenericScalar!
   createdAt: DateTime!
   modifiedAt: DateTime!
   createdByUser: String
   createdByGroup: String
-  id: ID!
-  value: Date
-  meta: GenericScalar!
   date: Date
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -863,13 +863,14 @@ type HistoricalFile implements Node {
 }
 
 type HistoricalFileAnswer implements HistoricalAnswer, Node {
+  id: ID!
+  value(asOf: DateTime!): HistoricalFile
+  meta: GenericScalar!
   createdAt: DateTime!
   modifiedAt: DateTime!
   createdByUser: String
   createdByGroup: String
-  id: ID!
-  value(asOf: DateTime!): HistoricalFile
-  meta: GenericScalar!
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -880,13 +881,14 @@ type HistoricalFileAnswer implements HistoricalAnswer, Node {
 }
 
 type HistoricalFloatAnswer implements HistoricalAnswer, Node {
+  id: ID!
+  value: Float
+  meta: GenericScalar!
   createdAt: DateTime!
   modifiedAt: DateTime!
   createdByUser: String
   createdByGroup: String
-  id: ID!
-  value: Float
-  meta: GenericScalar!
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -896,13 +898,14 @@ type HistoricalFloatAnswer implements HistoricalAnswer, Node {
 }
 
 type HistoricalIntegerAnswer implements HistoricalAnswer, Node {
+  id: ID!
+  value: Int
+  meta: GenericScalar!
   createdAt: DateTime!
   modifiedAt: DateTime!
   createdByUser: String
   createdByGroup: String
-  id: ID!
-  value: Int
-  meta: GenericScalar!
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -912,13 +915,14 @@ type HistoricalIntegerAnswer implements HistoricalAnswer, Node {
 }
 
 type HistoricalListAnswer implements HistoricalAnswer, Node {
+  id: ID!
+  value: [String]
+  meta: GenericScalar!
   createdAt: DateTime!
   modifiedAt: DateTime!
   createdByUser: String
   createdByGroup: String
-  id: ID!
-  value: [String]
-  meta: GenericScalar!
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -928,13 +932,14 @@ type HistoricalListAnswer implements HistoricalAnswer, Node {
 }
 
 type HistoricalStringAnswer implements HistoricalAnswer, Node {
+  id: ID!
+  value: String
+  meta: GenericScalar!
   createdAt: DateTime!
   modifiedAt: DateTime!
   createdByUser: String
   createdByGroup: String
-  id: ID!
-  value: String
-  meta: GenericScalar!
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -944,13 +949,14 @@ type HistoricalStringAnswer implements HistoricalAnswer, Node {
 }
 
 type HistoricalTableAnswer implements HistoricalAnswer, Node {
+  id: ID!
+  value(asOf: DateTime!): [HistoricalDocument]
+  meta: GenericScalar!
   createdAt: DateTime!
   modifiedAt: DateTime!
   createdByUser: String
   createdByGroup: String
-  id: ID!
-  value(asOf: DateTime!): [HistoricalDocument]
-  meta: GenericScalar!
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -961,14 +967,14 @@ type HistoricalTableAnswer implements HistoricalAnswer, Node {
 }
 
 type IntegerAnswer implements Answer, Node {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  createdByUser: String
-  createdByGroup: String
   id: ID!
   question: Question!
   value: Int
   meta: GenericScalar!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
 }
 
 type IntegerQuestion implements Question, Node {
@@ -1011,14 +1017,14 @@ input JSONValueFilterType {
 }
 
 type ListAnswer implements Answer, Node {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  createdByUser: String
-  createdByGroup: String
   id: ID!
   question: Question!
   value: [String]
   meta: GenericScalar!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
 }
 
 type MultipleChoiceQuestion implements Question, Node {
@@ -1785,15 +1791,15 @@ type SkipWorkItemPayload {
 }
 
 enum SortableAnswerAttributes {
-  CREATED_AT
-  MODIFIED_AT
-  CREATED_BY_USER
-  CREATED_BY_GROUP
   QUESTION
   VALUE
   DOCUMENT
   DATE
   FILE
+  CREATED_AT
+  MODIFIED_AT
+  CREATED_BY_USER
+  CREATED_BY_GROUP
 }
 
 enum SortableCaseAttributes {
@@ -1924,25 +1930,25 @@ enum Status {
 }
 
 type StringAnswer implements Answer, Node {
-  createdAt: DateTime!
-  modifiedAt: DateTime!
-  createdByUser: String
-  createdByGroup: String
   id: ID!
   question: Question!
   value: String
   meta: GenericScalar!
-}
-
-type TableAnswer implements Answer, Node {
   createdAt: DateTime!
   modifiedAt: DateTime!
   createdByUser: String
   createdByGroup: String
+}
+
+type TableAnswer implements Answer, Node {
   id: ID!
   question: Question!
   value: [Document]
   meta: GenericScalar!
+  createdAt: DateTime!
+  modifiedAt: DateTime!
+  createdByUser: String
+  createdByGroup: String
   document: Document!
 }
 

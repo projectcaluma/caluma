@@ -26,3 +26,5 @@ class DefaultConfig(AppConfig):
         ]
         for module in settings.EVENT_RECEIVER_MODULES:
             import_module(module)
+
+        import_module("caluma.caluma_form.signals")

@@ -1,15 +1,18 @@
+import uuid
+
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
 from django.db.models.signals import post_init
 from django.dispatch import receiver
 from localized_fields.fields import LocalizedField, LocalizedTextField
+from simple_history.models import HistoricalRecords
 
-from ..caluma_core.models import NaturalKeyModel, SlugModel, UUIDModel
+from ..caluma_core import models as core_models
 from .storage_clients import client
 
 
-class Form(SlugModel):
+class Form(core_models.SlugModel):
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
     meta = JSONField(default=dict)
@@ -31,7 +34,7 @@ class Form(SlugModel):
         indexes = [GinIndex(fields=["meta"])]
 
 
-class FormQuestion(NaturalKeyModel):
+class FormQuestion(core_models.NaturalKeyModel):
     form = models.ForeignKey("Form", on_delete=models.CASCADE)
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
     sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
@@ -44,7 +47,7 @@ class FormQuestion(NaturalKeyModel):
         unique_together = ("form", "question")
 
 
-class Question(SlugModel):
+class Question(core_models.SlugModel):
     TYPE_MULTIPLE_CHOICE = "multiple_choice"
     TYPE_INTEGER = "integer"
     TYPE_FLOAT = "float"
@@ -165,7 +168,7 @@ class Question(SlugModel):
         indexes = [GinIndex(fields=["meta"])]
 
 
-class QuestionOption(NaturalKeyModel):
+class QuestionOption(core_models.NaturalKeyModel):
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
     option = models.ForeignKey("Option", on_delete=models.CASCADE)
     sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
@@ -178,7 +181,7 @@ class QuestionOption(NaturalKeyModel):
         unique_together = ("option", "question")
 
 
-class Option(SlugModel):
+class Option(core_models.SlugModel):
     label = LocalizedField(blank=False, null=False, required=False)
     is_archived = models.BooleanField(default=False)
     meta = JSONField(default=dict)
@@ -207,7 +210,7 @@ class DocumentManager(models.Manager):
             )
 
 
-class Document(UUIDModel):
+class Document(core_models.UUIDModel):
     objects = DocumentManager()
 
     family = models.ForeignKey(
@@ -291,7 +294,23 @@ class Document(UUIDModel):
         indexes = [GinIndex(fields=["meta"])]
 
 
-class Answer(UUIDModel):
+class QuestionTypeHistoricalModel(models.Model):
+    """Extra fields for HistoricalAnswer."""
+
+    history_question_type = models.CharField(
+        choices=Question.TYPE_CHOICES_TUPLE, max_length=23
+    )
+
+    class Meta:
+        abstract = True
+
+
+class Answer(models.Model):
+    """Records an answer to a question of arbitrary type."""
+
+    # We need to replicate the UUIDModel in order to register it as historical model.
+    # Otherwise simple_history complains that the model is already registered,
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     question = models.ForeignKey(
         "caluma_form.Question", on_delete=models.DO_NOTHING, related_name="answers"
     )
@@ -308,6 +327,23 @@ class Answer(UUIDModel):
         "File", on_delete=models.SET_NULL, null=True, blank=True
     )
 
+    # override history to add extra fields on historical model
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    modified_at = models.DateTimeField(auto_now=True, db_index=True)
+    created_by_user = models.CharField(
+        max_length=150, blank=True, null=True, db_index=True
+    )
+    created_by_group = models.CharField(
+        max_length=150, blank=True, null=True, db_index=True
+    )
+    history = HistoricalRecords(
+        inherit=True,
+        history_user_id_field=models.CharField(null=True, max_length=150),
+        history_user_setter=core_models._history_user_setter,
+        history_user_getter=core_models._history_user_getter,
+        bases=[QuestionTypeHistoricalModel],
+    )
+
     def delete(self, *args, **kwargs):
         if self.file:
             self.file.delete()
@@ -319,7 +355,7 @@ class Answer(UUIDModel):
         indexes = [models.Index(fields=["date"]), GinIndex(fields=["meta", "value"])]
 
 
-class File(UUIDModel):
+class File(core_models.UUIDModel):
     name = models.CharField(max_length=255)
 
     def _move_blob(self):
@@ -375,7 +411,7 @@ def set_document_family(sender, instance, **kwargs):
         instance.family = instance
 
 
-class AnswerDocument(UUIDModel):
+class AnswerDocument(core_models.UUIDModel):
     answer = models.ForeignKey("Answer", on_delete=models.CASCADE)
     document = models.ForeignKey("Document", on_delete=models.CASCADE)
     sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
@@ -385,7 +421,7 @@ class AnswerDocument(UUIDModel):
         unique_together = ("answer", "document")
 
 
-class DynamicOption(UUIDModel):
+class DynamicOption(core_models.UUIDModel):
     slug = models.CharField(max_length=255)
     label = LocalizedField(blank=False, null=False, required=False)
     document = models.ForeignKey("Document", on_delete=models.CASCADE)
