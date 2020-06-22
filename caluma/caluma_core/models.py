@@ -19,15 +19,7 @@ def _history_user_setter(historical_instance, user):
     historical_instance.history_user_id = user
 
 
-class BaseModel(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    modified_at = models.DateTimeField(auto_now=True, db_index=True)
-    created_by_user = models.CharField(
-        max_length=150, blank=True, null=True, db_index=True
-    )
-    created_by_group = models.CharField(
-        max_length=150, blank=True, null=True, db_index=True
-    )
+class HistoricalModel(models.Model):
     history = HistoricalRecords(
         inherit=True,
         history_user_id_field=models.CharField(null=True, max_length=150),
@@ -39,7 +31,21 @@ class BaseModel(models.Model):
         abstract = True
 
 
-class SlugModel(BaseModel):
+class BaseModel(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    modified_at = models.DateTimeField(auto_now=True, db_index=True)
+    created_by_user = models.CharField(
+        max_length=150, blank=True, null=True, db_index=True
+    )
+    created_by_group = models.CharField(
+        max_length=150, blank=True, null=True, db_index=True
+    )
+
+    class Meta:
+        abstract = True
+
+
+class SlugModel(BaseModel, HistoricalModel):
     """
     Models which use a slug as primary key.
 
@@ -58,7 +64,7 @@ class SlugModel(BaseModel):
         abstract = True
 
 
-class UUIDModel(BaseModel):
+class UUIDModel(BaseModel, HistoricalModel):
     """
     Models which use uuid as primary key.
 
@@ -71,7 +77,7 @@ class UUIDModel(BaseModel):
         abstract = True
 
 
-class NaturalKeyModel(BaseModel):
+class NaturalKeyModel(BaseModel, HistoricalModel):
     """Models which use a natural key as primary key."""
 
     id = models.CharField(max_length=255, unique=True, primary_key=True)

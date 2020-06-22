@@ -305,7 +305,7 @@ class QuestionTypeHistoricalModel(models.Model):
         abstract = True
 
 
-class Answer(models.Model):
+class Answer(core_models.BaseModel):
     """Records an answer to a question of arbitrary type."""
 
     # We need to replicate the UUIDModel in order to register it as historical model.
@@ -328,14 +328,6 @@ class Answer(models.Model):
     )
 
     # override history to add extra fields on historical model
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    modified_at = models.DateTimeField(auto_now=True, db_index=True)
-    created_by_user = models.CharField(
-        max_length=150, blank=True, null=True, db_index=True
-    )
-    created_by_group = models.CharField(
-        max_length=150, blank=True, null=True, db_index=True
-    )
     history = HistoricalRecords(
         inherit=True,
         history_user_id_field=models.CharField(null=True, max_length=150),
