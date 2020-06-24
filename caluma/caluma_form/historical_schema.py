@@ -38,19 +38,6 @@ def historical_qs_as_of(queryset, date, pk_attr):
     )
 
 
-def resolve_historical_answer(answer):
-    """Get answer type from question as_of historical answer time."""
-
-    # as_of returns a generator rather than a queryset, see link above
-    question = next(
-        q_as_of
-        for q_as_of in models.Question.history.as_of(answer.history_date)
-        if q_as_of.pk == answer.question_id
-    )
-    answer_type = QUESTION_ANSWER_TYPES[question.type]
-    return eval(f"Historical{answer_type.__name__}")
-
-
 class HistoricalAnswer(Answer):
     history_date = graphene.types.datetime.DateTime(required=True)
     history_user_id = graphene.String()
@@ -58,7 +45,8 @@ class HistoricalAnswer(Answer):
 
     @classmethod
     def resolve_type(cls, instance, info):
-        return resolve_historical_answer(instance)
+        answer_type = QUESTION_ANSWER_TYPES[instance.history_question_type]
+        return f"Historical{answer_type.__name__}"
 
 
 class HistoricalAnswerConnection(CountableConnectionBase):

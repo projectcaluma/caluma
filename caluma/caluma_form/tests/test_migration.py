@@ -6,6 +6,7 @@ from django.core.management import call_command
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
 from django.db.utils import DataError
+from django.utils import timezone
 
 from caluma.utils import col_type_from_db
 
@@ -347,3 +348,82 @@ def test_migrate_slugfield_length(transactional_db):
 
     # should now throw anymore
     _verify_foreign_key_types(new_apps)
+
+
+def test_migrate_answer_history_question_type(transactional_db):
+    """Make sure migration to custom history field history_question_type works."""
+
+    executor = MigrationExecutor(connection)
+    app = "caluma_form"
+    migrate_from = [(app, "0034_fix_fk_lengths")]
+    migrate_to = [(app, "0035_historicalanswer_history_question_type")]
+
+    executor.migrate(migrate_from)
+    old_apps = executor.loader.project_state(migrate_from).apps
+
+    Document = old_apps.get_model(app, "Document")
+    Form = old_apps.get_model(app, "Form")
+    OldAnswer = old_apps.get_model(app, "Answer")
+    OldQuestion = old_apps.get_model(app, "Question")
+    OldHistAns = old_apps.get_model(app, "HistoricalAnswer")
+    OldHistQuest = old_apps.get_model(app, "HistoricalQuestion")
+
+    form = Form.objects.create()
+    question = OldQuestion.objects.create(type="text")
+    document = Document.objects.create(form=form)
+    answer = OldAnswer.objects.create(
+        document=document, question=question, value="some answer"
+    )
+
+    now = timezone.now()
+
+    # create historical records
+    old_hist_quest = OldHistQuest.objects.create(
+        slug=question.slug,
+        type="text",
+        created_at=now,
+        modified_at=now,
+        history_date=now,
+    )
+    old_hist_ans = OldHistAns.objects.create(
+        id=answer.id,
+        value=answer.value,
+        document_id=document.pk,
+        question_id=question.slug,
+        created_at=now,
+        modified_at=now,
+        history_date=now,
+    )
+    # create another set of question / answer
+    now = timezone.now()
+
+    new_hist_quest = OldHistQuest.objects.create(
+        slug=question.slug,
+        type="integer",
+        created_at=now,
+        modified_at=now,
+        history_date=now,
+    )
+    new_hist_ans = OldHistAns.objects.create(
+        id=answer.id,
+        value=answer.value,
+        document_id=document.pk,
+        question_id=question.slug,
+        created_at=now,
+        modified_at=now,
+        history_date=now,
+    )
+    # Migrate forward
+    executor.loader.build_graph()
+    executor.migrate(migrate_to)
+
+    new_apps = executor.loader.project_state(migrate_to).apps
+
+    MigratedHistAns = new_apps.get_model(app, "HistoricalAnswer")
+
+    # Test the new data
+    old_hist_ans = MigratedHistAns.objects.get(history_id=old_hist_ans.history_id)
+    assert old_hist_ans.history_question_type == old_hist_quest.type
+
+    new_hist_ans = MigratedHistAns.objects.get(history_id=new_hist_ans.history_id)
+    assert new_hist_ans.history_question_type == new_hist_quest.type

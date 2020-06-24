@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from snapshottest import Snapshot
 
-
 snapshots = Snapshot()
 
 snapshots[
@@ -827,6 +826,7 @@ type HistoricalDateAnswer implements HistoricalAnswer, Node {
   value: Date
   meta: GenericScalar!
   date: Date
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -870,6 +870,7 @@ type HistoricalFileAnswer implements HistoricalAnswer, Node {
   id: ID!
   value(asOf: DateTime!): HistoricalFile
   meta: GenericScalar!
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -887,6 +888,7 @@ type HistoricalFloatAnswer implements HistoricalAnswer, Node {
   id: ID!
   value: Float
   meta: GenericScalar!
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -903,6 +905,7 @@ type HistoricalIntegerAnswer implements HistoricalAnswer, Node {
   id: ID!
   value: Int
   meta: GenericScalar!
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -919,6 +922,7 @@ type HistoricalListAnswer implements HistoricalAnswer, Node {
   id: ID!
   value: [String]
   meta: GenericScalar!
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -935,6 +939,7 @@ type HistoricalStringAnswer implements HistoricalAnswer, Node {
   id: ID!
   value: String
   meta: GenericScalar!
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
@@ -951,6 +956,7 @@ type HistoricalTableAnswer implements HistoricalAnswer, Node {
   id: ID!
   value(asOf: DateTime!): [HistoricalDocument]
   meta: GenericScalar!
+  historyQuestionType: String!
   historyUserId: String
   question: Question!
   historyId: UUID!
