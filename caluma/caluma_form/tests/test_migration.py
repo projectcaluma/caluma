@@ -378,14 +378,14 @@ def test_migrate_answer_history_question_type(transactional_db):
     now = timezone.now()
 
     # create historical records
-    hist_quest = OldHistQuest.objects.create(
+    old_hist_quest = OldHistQuest.objects.create(
         slug=question.slug,
         type="text",
         created_at=now,
         modified_at=now,
         history_date=now,
     )
-    OldHistAns.objects.create(
+    old_hist_ans = OldHistAns.objects.create(
         id=answer.id,
         value=answer.value,
         document_id=document.pk,
@@ -394,14 +394,36 @@ def test_migrate_answer_history_question_type(transactional_db):
         modified_at=now,
         history_date=now,
     )
+    # create another set of question / answer
+    now = timezone.now()
 
-    # Migrate forwards.
-    executor.loader.build_graph()  # reload.
+    new_hist_quest = OldHistQuest.objects.create(
+        slug=question.slug,
+        type="integer",
+        created_at=now,
+        modified_at=now,
+        history_date=now,
+    )
+    new_hist_ans = OldHistAns.objects.create(
+        id=answer.id,
+        value=answer.value,
+        document_id=document.pk,
+        question_id=question.slug,
+        created_at=now,
+        modified_at=now,
+        history_date=now,
+    )
+    # Migrate forward
+    executor.loader.build_graph()
     executor.migrate(migrate_to)
 
     new_apps = executor.loader.project_state(migrate_to).apps
 
-    # Test the new data.
-    NewHistAns = new_apps.get_model(app, "HistoricalAnswer")
-    new_hist_ans = NewHistAns.objects.get()
-    assert new_hist_ans.history_question_type == hist_quest.type
+    MigratedHistAns = new_apps.get_model(app, "HistoricalAnswer")
+
+    # Test the new data
+    old_hist_ans = MigratedHistAns.objects.get(history_id=old_hist_ans.history_id)
+    assert old_hist_ans.history_question_type == old_hist_quest.type
+
+    new_hist_ans = MigratedHistAns.objects.get(history_id=new_hist_ans.history_id)
+    assert new_hist_ans.history_question_type == new_hist_quest.type
