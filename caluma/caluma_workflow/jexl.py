@@ -45,7 +45,15 @@ class GroupJexl(JEXL):
     }
     """
 
-    def __init__(self, validation_context=None, **kwargs):
+    def __init__(
+        self,
+        validation_context=None,
+        task=None,
+        case=None,
+        work_item_created_by_user=None,
+        prev_work_item=None,
+        **kwargs,
+    ):
         super().__init__(**kwargs)
 
         context_data = None
@@ -54,7 +62,25 @@ class GroupJexl(JEXL):
             context_data = {"info": validation_context}
 
         self.context = Context(context_data)
-        self.add_transform("groups", lambda spec: spec)
+        self.add_transform(
+            "groups",
+            lambda names: list(
+                set(
+                    chain(
+                        *[
+                            self._get_dynamic_group(
+                                name,
+                                task,
+                                case,
+                                work_item_created_by_user,
+                                prev_work_item,
+                            )
+                            for name in names
+                        ]
+                    )
+                )
+            ),
+        )
 
     def validate(self, expression):
         return super().validate(expression, GroupValidatingAnalyzer)
@@ -64,6 +90,21 @@ class GroupJexl(JEXL):
         if isinstance(value, list) or value is None:
             return value
         return [value]
+
+    def _get_dynamic_group(
+        self, name, task, case, work_item_created_by_user, prev_work_item
+    ):
+        for dynamic_groups_class in self.dynamic_groups_classes:
+            method = dynamic_groups_class().resolve(name)
+            if method:
+                value = method(task, case, work_item_created_by_user, prev_work_item)
+
+                if not isinstance(value, list):
+                    value = [value]
+
+                return value
+
+        return [name]
 
 
 class FlowJexl(JEXL):

@@ -371,14 +371,14 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerial
 
         if "controlling_groups" not in data:
             controlling_groups = utils.get_jexl_groups(
-                task.control_groups, case, user.group
+                task.control_groups, task, case, user
             )
             if controlling_groups is not None:
                 data["controlling_groups"] = controlling_groups
 
         if "addressed_groups" not in data:
             addressed_groups = utils.get_jexl_groups(
-                task.address_groups, case, user.group
+                task.address_groups, task, case, user
             )
             if addressed_groups is not None:
                 data["addressed_groups"] = addressed_groups
