@@ -9,7 +9,7 @@ from simple_history.models import registered_models
 
 from caluma.caluma_core.management.commands import cleanup_history
 
-from ..models import Form
+from ..models import Document, Form
 
 
 def test_create_bucket_command(mocker):
@@ -19,8 +19,9 @@ def test_create_bucket_command(mocker):
 
 
 @pytest.mark.parametrize("force", [True, False])
-@pytest.mark.parametrize("keep,kept", [("1 year", 2), ("1 day", 1), (None, 2)])
-def test_cleanup_history_command(db, force, keep, kept):
+@pytest.mark.parametrize("keep,kept", [("1 year", 5), ("1 day", 4), (None, 5)])
+@pytest.mark.parametrize("dangling", [True, False])
+def test_cleanup_history_command(db, force, keep, kept, dangling):
     # we need to override the registered models dict in order to get rid of the
     # fake models created in caluma_core tests
     cleanup_history.registered_models = {
@@ -30,11 +31,13 @@ def test_cleanup_history_command(db, force, keep, kept):
     if force:
         kwargs["force"] = force
     else:
-        kept = 3
+        kept = 6
     if keep:
         kwargs["keep"] = keep
 
-    Form.objects.create(slug="form 1")
+    kwargs["dangling"] = dangling
+
+    f1 = Form.objects.create(slug="form 1")
 
     f2 = Form.objects.create(slug="form 2")
     f2_hist = f2.history.first()
@@ -46,6 +49,18 @@ def test_cleanup_history_command(db, force, keep, kept):
     f3_hist.history_date = f3_hist.history_date - timezone.timedelta(days=730)
     f3_hist.save()
 
+    doc = Document.objects.create(form=f1)
+    assert Document.history.count() == 1
+
+    doc.delete()
+    f1.delete()
+
+    # created 5 history entries:
+    # HistoricalForm: 4 (3 created, 1 deleted)
+    # HistoricalDocument: 2 (1 created, 1 deleted)
+
     call_command("cleanup_history", **kwargs, stdout=open(os.devnull, "w"))
 
-    assert Form.history.count() == kept
+    assert Form.history.count() + Document.history.count() == kept - 2 * int(
+        dangling and force
+    )
