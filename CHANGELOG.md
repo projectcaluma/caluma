@@ -1,3 +1,9 @@
+# v5.8.1 (25 June 2020)
+
+### Performance
+* Follow-up historicalanswer migration using SQL (2fad5bc5503497eacc4a1f264756d0f05680afe4)
+* Add history_question_type to HistoricalAnswer (cb93e3853f9a7d50fe9720f98b86193d427fef34)
+
 # v5.8.0 (19 June 2020)
 
 ### Feature
