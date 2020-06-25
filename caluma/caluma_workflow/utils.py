@@ -17,10 +17,18 @@ def get_group_jexl_structure(work_item_created_by_group, case, prev_work_item=No
     }
 
 
-def get_jexl_groups(jexl, case, work_item_created_by_group, prev_work_item=None):
-    context = get_group_jexl_structure(work_item_created_by_group, case, prev_work_item)
+def get_jexl_groups(jexl, task, case, work_item_created_by_user, prev_work_item=None):
     if jexl:
-        return GroupJexl(validation_context=context).evaluate(jexl)
+        return GroupJexl(
+            validation_context=get_group_jexl_structure(
+                work_item_created_by_user.group, case, prev_work_item
+            ),
+            task=task,
+            case=case,
+            work_item_created_by_user=work_item_created_by_user,
+            prev_work_item=prev_work_item,
+        ).evaluate(jexl)
+
     return []
 
 
@@ -29,15 +37,17 @@ def bulk_create_work_items(tasks, case, user, prev_work_item=None):
     for task in tasks:
         controlling_groups = get_jexl_groups(
             task.control_groups,
+            task,
             case,
-            user.group,
+            user,
             prev_work_item if prev_work_item else None,
         )
         addressed_groups = [
             get_jexl_groups(
                 task.address_groups,
+                task,
                 case,
-                user.group,
+                user,
                 prev_work_item if prev_work_item else None,
             )
         ]

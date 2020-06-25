@@ -40,7 +40,7 @@ def test_flow_jexl_validate(expression, num_errors):
     "expression,num_errors",
     [
         # correct cases
-        ('["group1"]|groups', 0),
+        ("['group1']|groups", 0),
         # invalid subject type
         ("100|groups", 1),
         ("'task-slug'|groups", 1),
