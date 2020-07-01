@@ -3,9 +3,6 @@
 ### Feature
 * Allow dynamic groups for group JEXL transform (15491285b4fb4fbd50c791c424ef5337f043cf46) [(Docs)](docs/extending.md#dynamic-groups)
 
-### Documentation
-* Change wording in dynamic group docs (b09c3afdd899082d5ecfa6d07d67e1de1d8278e9)
-
 
 # v5.8.1 (25 June 2020)
 
