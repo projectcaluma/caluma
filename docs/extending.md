@@ -271,7 +271,7 @@ conflicts.
 
 ## Dynamic Groups
 
-Caluma allows you to write code that returns groups for use in the `address_groups` and `control_groups` properties of a `Task`.
+Caluma allows you to write code to be executed as part of the JEXL evaluation in the `address_groups` and `control_groups` properties of a `Task`.
 A typical use-case for such "dynamic groups" would be to define role based groups.
 
 To configure a dynamic groups class, you can set the `DYNAMIC_GROUPS_CLASSES` environment variable.
