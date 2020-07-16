@@ -73,7 +73,7 @@ def fix_foreign_key_types(apps, connection):
                     cursor = connection.cursor()
                     type_, length = target_dbtype
                     new_type = f"{type_}({length})"
-                    log.warning("Correcting data type of {field} to {new_type}")
+                    log.warning(f"Correcting data type of {field} to {new_type}")
                     # not using the parametrized syntax here (sql, params) as
                     # we do NOT want escaping here
                     cursor.execute(
