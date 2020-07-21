@@ -1,0 +1,907 @@
+# name: test_cancel_case[running-True-completed]
+  <class 'OrderedDict'> {
+    'cancelCase': <class 'dict'> {
+      'case': <class 'dict'> {
+        'document': <class 'dict'> {
+          'form': <class 'dict'> {
+            'slug': 'sound-air-mission',
+          },
+        },
+        'status': 'CANCELED',
+        'workItems': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'status': 'COMPLETED',
+              },
+            },
+          ],
+        },
+      },
+      'clientMutationId': None,
+    },
+  }
+---
+# name: test_cancel_case[running-True-ready]
+  <class 'OrderedDict'> {
+    'cancelCase': <class 'dict'> {
+      'case': <class 'dict'> {
+        'document': <class 'dict'> {
+          'form': <class 'dict'> {
+            'slug': 'sound-air-mission',
+          },
+        },
+        'status': 'CANCELED',
+        'workItems': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'status': 'CANCELED',
+              },
+            },
+          ],
+        },
+      },
+      'clientMutationId': None,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[date-True-False]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-31',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-26',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-29',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-30',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-27',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-28',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[date-True-True]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-27',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-28',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-29',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-30',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-31',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-26',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[file-True-False]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'f',
+                      },
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'a',
+                      },
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'd',
+                      },
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'c',
+                      },
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'b',
+                      },
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'e',
+                      },
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[file-True-True]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'b',
+                      },
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'e',
+                      },
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'd',
+                      },
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'c',
+                      },
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'f',
+                      },
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'a',
+                      },
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[form-True-False]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'f',
+                    },
+                  },
+                ],
+                'totalCount': 1,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'd',
+                    },
+                  },
+                ],
+                'totalCount': 1,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'b',
+                    },
+                  },
+                ],
+                'totalCount': 1,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[form-True-True]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'b',
+                    },
+                  },
+                ],
+                'totalCount': 1,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'd',
+                    },
+                  },
+                ],
+                'totalCount': 1,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'f',
+                    },
+                  },
+                ],
+                'totalCount': 1,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[text-True-False]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'c',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'a2',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'b',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'c2',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'a',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'b2',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[text-True-True]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'a',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'b2',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'b',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'c2',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'c',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'a2',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_query_all_cases[completed-0]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+      ],
+      'totalCount': 0,
+    },
+  }
+---
+# name: test_query_all_cases[running-1]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'status': 'RUNNING',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_start_case[saveCase-None-100]
+  <class 'OrderedDict'> {
+    'saveCase': <class 'dict'> {
+      'case': <class 'dict'> {
+        'document': <class 'dict'> {
+          'form': <class 'dict'> {
+            'slug': 'sound-air-mission',
+          },
+        },
+        'parentWorkItem': <class 'dict'> {
+          'status': 'READY',
+        },
+        'status': 'RUNNING',
+        'workItems': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'addressedGroups': <class 'list'> [
+                ],
+                'document': <class 'dict'> {
+                  'form': <class 'dict'> {
+                    'slug': 'sound-air-mission',
+                  },
+                },
+                'status': 'READY',
+              },
+            },
+          ],
+        },
+      },
+      'clientMutationId': None,
+    },
+  }
+---
+# name: test_start_case[saveCase-None-None]
+  <class 'OrderedDict'> {
+    'saveCase': <class 'dict'> {
+      'case': <class 'dict'> {
+        'document': <class 'dict'> {
+          'form': <class 'dict'> {
+            'slug': 'sound-air-mission',
+          },
+        },
+        'parentWorkItem': <class 'dict'> {
+          'status': 'READY',
+        },
+        'status': 'RUNNING',
+        'workItems': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'addressedGroups': <class 'list'> [
+                ],
+                'document': <class 'dict'> {
+                  'form': <class 'dict'> {
+                    'slug': 'sound-air-mission',
+                  },
+                },
+                'status': 'READY',
+              },
+            },
+          ],
+        },
+      },
+      'clientMutationId': None,
+    },
+  }
+---
+# name: test_start_case[saveCase-["group-name"]|groups-100]
+  <class 'OrderedDict'> {
+    'saveCase': <class 'dict'> {
+      'case': <class 'dict'> {
+        'document': <class 'dict'> {
+          'form': <class 'dict'> {
+            'slug': 'sound-air-mission',
+          },
+        },
+        'parentWorkItem': <class 'dict'> {
+          'status': 'READY',
+        },
+        'status': 'RUNNING',
+        'workItems': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'addressedGroups': <class 'list'> [
+                ],
+                'document': <class 'dict'> {
+                  'form': <class 'dict'> {
+                    'slug': 'sound-air-mission',
+                  },
+                },
+                'status': 'READY',
+              },
+            },
+          ],
+        },
+      },
+      'clientMutationId': None,
+    },
+  }
+---
+# name: test_start_case[saveCase-["group-name"]|groups-None]
+  <class 'OrderedDict'> {
+    'saveCase': <class 'dict'> {
+      'case': <class 'dict'> {
+        'document': <class 'dict'> {
+          'form': <class 'dict'> {
+            'slug': 'sound-air-mission',
+          },
+        },
+        'parentWorkItem': <class 'dict'> {
+          'status': 'READY',
+        },
+        'status': 'RUNNING',
+        'workItems': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'addressedGroups': <class 'list'> [
+                ],
+                'document': <class 'dict'> {
+                  'form': <class 'dict'> {
+                    'slug': 'sound-air-mission',
+                  },
+                },
+                'status': 'READY',
+              },
+            },
+          ],
+        },
+      },
+      'clientMutationId': None,
+    },
+  }
+---
+# name: test_start_case[startCase-None-100]
+  <class 'OrderedDict'> {
+    'startCase': <class 'dict'> {
+      'case': <class 'dict'> {
+        'document': <class 'dict'> {
+          'form': <class 'dict'> {
+            'slug': 'sound-air-mission',
+          },
+        },
+        'parentWorkItem': None,
+        'status': 'RUNNING',
+        'workItems': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'addressedGroups': <class 'list'> [
+                ],
+                'document': <class 'dict'> {
+                  'form': <class 'dict'> {
+                    'slug': 'sound-air-mission',
+                  },
+                },
+                'status': 'READY',
+              },
+            },
+          ],
+        },
+      },
+      'clientMutationId': None,
+    },
+  }
+---
+# name: test_start_case[startCase-None-None]
+  <class 'OrderedDict'> {
+    'startCase': <class 'dict'> {
+      'case': <class 'dict'> {
+        'document': <class 'dict'> {
+          'form': <class 'dict'> {
+            'slug': 'sound-air-mission',
+          },
+        },
+        'parentWorkItem': None,
+        'status': 'RUNNING',
+        'workItems': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'addressedGroups': <class 'list'> [
+                ],
+                'document': <class 'dict'> {
+                  'form': <class 'dict'> {
+                    'slug': 'sound-air-mission',
+                  },
+                },
+                'status': 'READY',
+              },
+            },
+          ],
+        },
+      },
+      'clientMutationId': None,
+    },
+  }
+---
+# name: test_start_case[startCase-["group-name"]|groups-100]
+  <class 'OrderedDict'> {
+    'startCase': <class 'dict'> {
+      'case': <class 'dict'> {
+        'document': <class 'dict'> {
+          'form': <class 'dict'> {
+            'slug': 'sound-air-mission',
+          },
+        },
+        'parentWorkItem': None,
+        'status': 'RUNNING',
+        'workItems': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'addressedGroups': <class 'list'> [
+                  'group-name',
+                ],
+                'document': <class 'dict'> {
+                  'form': <class 'dict'> {
+                    'slug': 'sound-air-mission',
+                  },
+                },
+                'status': 'READY',
+              },
+            },
+          ],
+        },
+      },
+      'clientMutationId': None,
+    },
+  }
+---
+# name: test_start_case[startCase-["group-name"]|groups-None]
+  <class 'OrderedDict'> {
+    'startCase': <class 'dict'> {
+      'case': <class 'dict'> {
+        'document': <class 'dict'> {
+          'form': <class 'dict'> {
+            'slug': 'sound-air-mission',
+          },
+        },
+        'parentWorkItem': None,
+        'status': 'RUNNING',
+        'workItems': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'addressedGroups': <class 'list'> [
+                  'group-name',
+                ],
+                'document': <class 'dict'> {
+                  'form': <class 'dict'> {
+                    'slug': 'sound-air-mission',
+                  },
+                },
+                'status': 'READY',
+              },
+            },
+          ],
+        },
+      },
+      'clientMutationId': None,
+    },
+  }
+---

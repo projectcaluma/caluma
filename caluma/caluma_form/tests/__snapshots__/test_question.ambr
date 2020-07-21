@@ -1,0 +1,961 @@
+# name: test_query_all_questions[choice-question__configuration6-None-question__format_validators6]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'ChoiceQuestion',
+            'id': 'Q2hvaWNlUXVlc3Rpb246ZWZmb3J0LW1lZXQ=',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'meta': <class 'dict'> {
+            },
+            'options': <class 'dict'> {
+              'edges': <class 'list'> [
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'slug': 'treatment-radio',
+                  },
+                },
+              ],
+              'totalCount': 1,
+            },
+            'slug': 'effort-meet',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[date-question__configuration3-None-question__format_validators3]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'DateQuestion',
+            'id': 'RGF0ZVF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'meta': <class 'dict'> {
+            },
+            'slug': 'effort-meet',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[dynamic_choice-question__configuration10-MyDataSource-question__format_validators10]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'DynamicChoiceQuestion',
+            'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'meta': <class 'dict'> {
+            },
+            'options': <class 'dict'> {
+              'edges': <class 'list'> [
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': '1',
+                    'slug': '1',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': '5.5',
+                    'slug': '5.5',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'sdkj',
+                    'slug': 'sdkj',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'info',
+                    'slug': 'value',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'something',
+                    'slug': 'something',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'english description',
+                    'slug': 'translated_value',
+                  },
+                },
+              ],
+            },
+            'slug': 'effort-meet',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[dynamic_multiple_choice-question__configuration11-MyDataSource-question__format_validators11]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'DynamicMultipleChoiceQuestion',
+            'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZWZmb3J0LW1lZXQ=',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'meta': <class 'dict'> {
+            },
+            'options': <class 'dict'> {
+              'edges': <class 'list'> [
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': '1',
+                    'slug': '1',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': '5.5',
+                    'slug': '5.5',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'sdkj',
+                    'slug': 'sdkj',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'info',
+                    'slug': 'value',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'something',
+                    'slug': 'something',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'english description',
+                    'slug': 'translated_value',
+                  },
+                },
+              ],
+            },
+            'slug': 'effort-meet',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[file-question__configuration9-None-question__format_validators9]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'FileQuestion',
+            'id': 'RmlsZVF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'meta': <class 'dict'> {
+            },
+            'slug': 'effort-meet',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[float-question__configuration1-None-question__format_validators1]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'FloatQuestion',
+            'floatMaxValue': 1.0,
+            'floatMinValue': 0.0,
+            'id': 'RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'meta': <class 'dict'> {
+            },
+            'placeholder': '',
+            'slug': 'effort-meet',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[float-question__configuration2-None-question__format_validators2]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'FloatQuestion',
+            'floatMaxValue': None,
+            'floatMinValue': None,
+            'id': 'RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'meta': <class 'dict'> {
+            },
+            'placeholder': '',
+            'slug': 'effort-meet',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[form-question__configuration8-None-question__format_validators8]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'FormQuestion',
+            'id': 'Rm9ybVF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'meta': <class 'dict'> {
+            },
+            'slug': 'effort-meet',
+            'subForm': <class 'dict'> {
+              'slug': 'suggest-traditional',
+            },
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[integer-question__configuration0-None-question__format_validators0]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'IntegerQuestion',
+            'id': 'SW50ZWdlclF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+            'infoText': '',
+            'integerMaxValue': 10,
+            'integerMinValue': 0,
+            'label': 'Brian Williams',
+            'meta': <class 'dict'> {
+            },
+            'placeholder': '',
+            'slug': 'effort-meet',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[multiple_choice-question__configuration7-None-question__format_validators7]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'MultipleChoiceQuestion',
+            'id': 'TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjplZmZvcnQtbWVldA==',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'meta': <class 'dict'> {
+            },
+            'options': <class 'dict'> {
+              'edges': <class 'list'> [
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'slug': 'treatment-radio',
+                  },
+                },
+              ],
+              'totalCount': 1,
+            },
+            'slug': 'effort-meet',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[static-question__configuration12-None-question__format_validators12]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'StaticQuestion',
+            'id': 'U3RhdGljUXVlc3Rpb246ZWZmb3J0LW1lZXQ=',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'meta': <class 'dict'> {
+            },
+            'slug': 'effort-meet',
+            'staticContent': '
+              Line whatever team suggest traditional boy. Drop argue move. Anyone remember prove.
+              Kid avoid player relationship to range whose. Draw free property consider.
+            ',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[text-question__configuration4-None-question__format_validators4]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'TextQuestion',
+            'formatValidators': <class 'dict'> {
+              'edges': <class 'list'> [
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'errorMsg': 'Please enter a valid Email address.',
+                    'name': 'E-mail',
+                    'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
+                    'slug': 'email',
+                  },
+                },
+              ],
+            },
+            'id': 'VGV4dFF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'maxLength': None,
+            'meta': <class 'dict'> {
+            },
+            'minLength': 10,
+            'placeholder': '',
+            'slug': 'effort-meet',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[textarea-question__configuration5-None-question__format_validators5]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'TextareaQuestion',
+            'formatValidators': <class 'dict'> {
+              'edges': <class 'list'> [
+              ],
+            },
+            'id': 'VGV4dGFyZWFRdWVzdGlvbjplZmZvcnQtbWVldA==',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'maxLength': 10,
+            'meta': <class 'dict'> {
+            },
+            'minLength': None,
+            'placeholder': '',
+            'slug': 'effort-meet',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_save_choice_question[choice]
+  <class 'OrderedDict'> {
+    'saveChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'ChoiceQuestion',
+        'id': 'Q2hvaWNlUXVlc3Rpb246ZWZmb3J0LW1lZXQ=',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'John Thomas',
+                'slug': 'suggest-traditional',
+              },
+            },
+          ],
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_dynamic_choice_question[dynamic_choice-False]
+  <class 'OrderedDict'> {
+    'saveDynamicChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DynamicChoiceQuestion',
+        'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '1',
+                'slug': '1',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '5.5',
+                'slug': '5.5',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'sdkj',
+                'slug': 'sdkj',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'info',
+                'slug': 'value',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'something',
+                'slug': 'something',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'english description',
+                'slug': 'translated_value',
+              },
+            },
+          ],
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_dynamic_choice_question[dynamic_choice-True]
+  <class 'OrderedDict'> {
+    'saveDynamicChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DynamicChoiceQuestion',
+        'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '1',
+                'slug': '1',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '5.5',
+                'slug': '5.5',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'sdkj',
+                'slug': 'sdkj',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'info',
+                'slug': 'value',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'something',
+                'slug': 'something',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'english description',
+                'slug': 'translated_value',
+              },
+            },
+          ],
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_dynamic_choice_question[dynamic_multiple_choice-False]
+  <class 'OrderedDict'> {
+    'saveDynamicChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DynamicChoiceQuestion',
+        'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '1',
+                'slug': '1',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '5.5',
+                'slug': '5.5',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'sdkj',
+                'slug': 'sdkj',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'info',
+                'slug': 'value',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'something',
+                'slug': 'something',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'english description',
+                'slug': 'translated_value',
+              },
+            },
+          ],
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_dynamic_choice_question[dynamic_multiple_choice-True]
+  <class 'OrderedDict'> {
+    'saveDynamicChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DynamicChoiceQuestion',
+        'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '1',
+                'slug': '1',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '5.5',
+                'slug': '5.5',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'sdkj',
+                'slug': 'sdkj',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'info',
+                'slug': 'value',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'something',
+                'slug': 'something',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'english description',
+                'slug': 'translated_value',
+              },
+            },
+          ],
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_dynamic_multiple_choice_question[dynamic_multiple_choice-False]
+  <class 'OrderedDict'> {
+    'saveDynamicMultipleChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DynamicMultipleChoiceQuestion',
+        'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZWZmb3J0LW1lZXQ=',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '1',
+                'slug': '1',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '5.5',
+                'slug': '5.5',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'sdkj',
+                'slug': 'sdkj',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'info',
+                'slug': 'value',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'something',
+                'slug': 'something',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'english description',
+                'slug': 'translated_value',
+              },
+            },
+          ],
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_dynamic_multiple_choice_question[dynamic_multiple_choice-True]
+  <class 'OrderedDict'> {
+    'saveDynamicMultipleChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DynamicMultipleChoiceQuestion',
+        'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZWZmb3J0LW1lZXQ=',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '1',
+                'slug': '1',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '5.5',
+                'slug': '5.5',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'sdkj',
+                'slug': 'sdkj',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'info',
+                'slug': 'value',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'something',
+                'slug': 'something',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'english description',
+                'slug': 'translated_value',
+              },
+            },
+          ],
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_float_question[float-question__configuration0-True]
+  <class 'OrderedDict'> {
+    'saveFloatQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'FloatQuestion',
+        'id': 'RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==',
+        'label': 'Brian Williams',
+        'maxValue': 10.0,
+        'meta': <class 'dict'> {
+        },
+        'minValue': 0.0,
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_form_question[form]
+  <class 'OrderedDict'> {
+    'saveFormQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'FormQuestion',
+        'id': 'Rm9ybVF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'slug': 'effort-meet',
+        'subForm': <class 'dict'> {
+          'slug': 'suggest-traditional',
+        },
+      },
+    },
+  }
+---
+# name: test_save_integer_question[integer-question__configuration0-True]
+  <class 'OrderedDict'> {
+    'saveIntegerQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'IntegerQuestion',
+        'id': 'SW50ZWdlclF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_multiple_choice_question[multiple_choice]
+  <class 'OrderedDict'> {
+    'saveMultipleChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'MultipleChoiceQuestion',
+        'id': 'TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjplZmZvcnQtbWVldA==',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'Mariah Reynolds',
+                'slug': 'provide-beyond-seek',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'Daniel Mann',
+                'slug': 'live-by-itself',
+              },
+            },
+          ],
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_question[true-True-SaveDateQuestion]
+  <class 'OrderedDict'> {
+    'saveDateQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DateQuestion',
+        'id': 'RGF0ZVF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_question[true-True-SaveFileQuestion]
+  <class 'OrderedDict'> {
+    'saveFileQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'FileQuestion',
+        'id': 'RmlsZVF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_question[true-True-SaveFloatQuestion]
+  <class 'OrderedDict'> {
+    'saveFloatQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'FloatQuestion',
+        'id': 'RmxvYXRRdWVzdGlvbjplZmZvcnQtbWVldA==',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_question[true-True-SaveIntegerQuestion]
+  <class 'OrderedDict'> {
+    'saveIntegerQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'IntegerQuestion',
+        'id': 'SW50ZWdlclF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_question[true-True-SaveTextQuestion]
+  <class 'OrderedDict'> {
+    'saveTextQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'TextQuestion',
+        'id': 'VGV4dFF1ZXN0aW9uOmVmZm9ydC1tZWV0',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_question[true-True-SaveTextareaQuestion]
+  <class 'OrderedDict'> {
+    'saveTextareaQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'TextareaQuestion',
+        'id': 'VGV4dGFyZWFRdWVzdGlvbjplZmZvcnQtbWVldA==',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_static_question[static]
+  <class 'OrderedDict'> {
+    'saveStaticQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'StaticQuestion',
+        'id': 'U3RhdGljUXVlc3Rpb246ZWZmb3J0LW1lZXQ=',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'slug': 'effort-meet',
+        'staticContent': '
+          Line whatever team suggest traditional boy. Drop argue move. Anyone remember prove.
+          Kid avoid player relationship to range whose. Draw free property consider.
+        ',
+      },
+    },
+  }
+---
+# name: test_save_table_question[table]
+  <class 'OrderedDict'> {
+    'saveTableQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'TableQuestion',
+        'id': 'VGFibGVRdWVzdGlvbjplZmZvcnQtbWVldA==',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
+        },
+        'rowForm': <class 'dict'> {
+          'slug': 'suggest-traditional',
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---

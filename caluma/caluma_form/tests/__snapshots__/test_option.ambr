@@ -1,0 +1,10 @@
+# name: test_save_option
+  <class 'OrderedDict'> {
+    'saveOption': <class 'dict'> {
+      'option': <class 'dict'> {
+        'label': 'Brian Williams',
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
