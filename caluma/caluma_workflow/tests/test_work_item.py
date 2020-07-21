@@ -336,6 +336,7 @@ def test_complete_multiple_instance_task_form_work_item_next(
     snapshot.assert_match(result.data)
 
 
+@pytest.mark.flaky(10, 9)
 @pytest.mark.parametrize(
     "work_item__status,work_item__child_case,task__type,work_item__controlling_groups,work_item__created_by_group,case__created_by_group",
     [
