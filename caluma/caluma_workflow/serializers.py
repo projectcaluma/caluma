@@ -40,7 +40,7 @@ class GroupJexlField(serializers.JexlField):
 class SaveWorkflowSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Workflow
-        fields = (
+        fields = [
             "slug",
             "name",
             "description",
@@ -50,7 +50,7 @@ class SaveWorkflowSerializer(serializers.ModelSerializer):
             "allow_forms",
             "is_archived",
             "is_published",
-        )
+        ]
 
 
 class AddWorkflowFlowSerializer(serializers.ModelSerializer):
@@ -90,7 +90,7 @@ class AddWorkflowFlowSerializer(serializers.ModelSerializer):
         return instance
 
     class Meta:
-        fields = ("workflow", "tasks", "next")
+        fields = ["workflow", "tasks", "next"]
         model = models.Workflow
 
 
@@ -102,7 +102,7 @@ class RemoveFlowSerializer(serializers.ModelSerializer):
         return instance
 
     class Meta:
-        fields = ("flow",)
+        fields = ["flow"]
         model = models.Flow
 
 
@@ -121,7 +121,7 @@ class SaveTaskSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Task
-        fields = (
+        fields = [
             "slug",
             "name",
             "description",
@@ -131,7 +131,7 @@ class SaveTaskSerializer(serializers.ModelSerializer):
             "is_archived",
             "lead_time",
             "is_multiple_instance",
-        )
+        ]
 
 
 class SaveSimpleTaskSerializer(SaveTaskSerializer):
@@ -162,7 +162,7 @@ class SaveCompleteTaskFormTaskSerializer(SaveTaskSerializer):
         return super().validate(data)
 
     class Meta(SaveTaskSerializer.Meta):
-        fields = SaveTaskSerializer.Meta.fields + ("form",)
+        fields = SaveTaskSerializer.Meta.fields + ["form"]
 
 
 class CaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
@@ -198,7 +198,7 @@ class CaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
 
     class Meta:
         model = models.Case
-        fields = ("workflow", "meta", "parent_work_item", "form", "context")
+        fields = ["workflow", "meta", "parent_work_item", "form", "context"]
 
 
 class SaveCaseSerializer(CaseSerializer):
@@ -221,7 +221,7 @@ class SaveCaseSerializer(CaseSerializer):
         return instance
 
     class Meta(CaseSerializer.Meta):
-        fields = ("id", "workflow", "meta", "parent_work_item", "form", "context")
+        fields = ["id", "workflow", "meta", "parent_work_item", "form", "context"]
 
 
 class CancelCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
@@ -229,7 +229,7 @@ class CancelCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
 
     class Meta:
         model = models.Case
-        fields = ("id", "context")
+        fields = ["id", "context"]
 
     def validate(self, data):
         try:
@@ -260,7 +260,7 @@ class SuspendCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
 
     class Meta:
         model = models.Case
-        fields = ("id", "context")
+        fields = ["id", "context"]
 
     def validate(self, data):
         try:
@@ -291,7 +291,7 @@ class ResumeCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
 
     class Meta:
         model = models.Case
-        fields = ("id", "context")
+        fields = ["id", "context"]
 
     def validate(self, data):
         try:
@@ -347,7 +347,7 @@ class CompleteWorkItemSerializer(ContextModelSerializer):
 
     class Meta:
         model = models.WorkItem
-        fields = ("id", "context")
+        fields = ["id", "context"]
 
 
 class SkipWorkItemSerializer(ContextModelSerializer):
@@ -378,7 +378,7 @@ class SkipWorkItemSerializer(ContextModelSerializer):
 
     class Meta:
         model = models.WorkItem
-        fields = ("id", "context")
+        fields = ["id", "context"]
 
 
 class CancelWorkItemSerializer(ContextModelSerializer):
@@ -409,7 +409,7 @@ class CancelWorkItemSerializer(ContextModelSerializer):
 
     class Meta:
         model = models.WorkItem
-        fields = ("id", "context")
+        fields = ["id", "context"]
 
 
 class SaveWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer):
@@ -440,7 +440,7 @@ class SaveWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer):
 
     class Meta:
         model = models.WorkItem
-        fields = (
+        fields = [
             "work_item",
             "name",
             "description",
@@ -448,7 +448,7 @@ class SaveWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer):
             "deadline",
             "meta",
             "context",
-        )
+        ]
 
 
 class CreateWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer):
@@ -518,7 +518,7 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer)
 
     class Meta:
         model = models.WorkItem
-        fields = (
+        fields = [
             "case",
             "multiple_instance_task",
             "name",
@@ -529,7 +529,7 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer)
             "deadline",
             "meta",
             "context",
-        )
+        ]
 
 
 class SuspendWorkItemSerializer(ContextModelSerializer):
@@ -560,7 +560,7 @@ class SuspendWorkItemSerializer(ContextModelSerializer):
 
     class Meta:
         model = models.WorkItem
-        fields = ("id", "context")
+        fields = ["id", "context"]
 
 
 class ResumeWorkItemSerializer(ContextModelSerializer):
@@ -591,4 +591,4 @@ class ResumeWorkItemSerializer(ContextModelSerializer):
 
     class Meta:
         model = models.WorkItem
-        fields = ("id", "context")
+        fields = ["id", "context"]
