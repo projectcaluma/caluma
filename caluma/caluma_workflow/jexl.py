@@ -62,9 +62,10 @@ class GroupJexl(JEXL):
             context_data = {"info": validation_context}
 
         self.context = Context(context_data)
+
         self.add_transform(
             "groups",
-            lambda names: list(
+            lambda names: sorted(
                 set(
                     chain(
                         *[
