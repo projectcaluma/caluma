@@ -1,0 +1,117 @@
+# name: test_add_workflow_flow[task-slug-"task-slug"|task-True]
+  <class 'OrderedDict'> {
+    'addWorkflowFlow': <class 'dict'> {
+      'clientMutationId': None,
+      'workflow': <class 'dict'> {
+        'flows': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'createdByGroup': 'admin',
+                'createdByUser': 'admin',
+                'next': '"task-slug"|task',
+                'tasks': <class 'list'> [
+                  <class 'dict'> {
+                    'slug': 'task-slug',
+                  },
+                ],
+              },
+            },
+          ],
+          'totalCount': 1,
+        },
+        'tasks': <class 'list'> [
+          <class 'dict'> {
+            'slug': 'task-slug',
+          },
+          <class 'dict'> {
+            'slug': 'service-bank-arm',
+          },
+          <class 'dict'> {
+            'slug': 'relate-right-will',
+          },
+        ],
+      },
+    },
+  }
+---
+# name: test_query_all_workflows
+  <class 'dict'> {
+    'allWorkflows': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'allowAllForms': False,
+            'allowForms': <class 'dict'> {
+              'edges': <class 'list'> [
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'slug': 'sound-air-mission',
+                  },
+                },
+              ],
+            },
+            'description': '
+              Line whatever team suggest traditional boy. Drop argue move. Anyone remember prove.
+              Kid avoid player relationship to range whose. Draw free property consider.
+            ',
+            'flows': <class 'dict'> {
+              'edges': <class 'list'> [
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'next': 'mrs-positive',
+                    'tasks': <class 'list'> [
+                      <class 'dict'> {
+                        'slug': 'few-list-tax',
+                      },
+                    ],
+                  },
+                },
+              ],
+              'totalCount': 1,
+            },
+            'meta': <class 'dict'> {
+            },
+            'name': 'Brian Williams',
+            'slug': 'effort-meet',
+            'startTasks': <class 'list'> [
+              <class 'dict'> {
+                'slug': 'few-list-tax',
+              },
+            ],
+            'tasks': <class 'list'> [
+              <class 'dict'> {
+                'slug': 'few-list-tax',
+              },
+            ],
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_save_workflow
+  <class 'OrderedDict'> {
+    'saveWorkflow': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'workflow': <class 'dict'> {
+        'allowAllForms': False,
+        'allowForms': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'slug': 'sound-air-mission',
+              },
+            },
+          ],
+          'totalCount': 1,
+        },
+        'meta': <class 'dict'> {
+        },
+        'name': 'Brian Williams',
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---

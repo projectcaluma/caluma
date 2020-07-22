@@ -1,0 +1,271 @@
+# name: test_data_source_defaults
+  <class 'dict'> {
+    'dataSource': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': '1',
+            'slug': '1',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': '2',
+            'slug': '2',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': '3',
+            'slug': '3',
+          },
+        },
+      ],
+      'pageInfo': <class 'dict'> {
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjI=',
+        'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
+      },
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_fetch_data_from_data_source
+  <class 'dict'> {
+    'dataSource': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': '1',
+            'slug': '1',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': '5.5',
+            'slug': '5.5',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': 'sdkj',
+            'slug': 'sdkj',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': 'info',
+            'slug': 'value',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': 'something',
+            'slug': 'something',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': 'english description',
+            'slug': 'translated_value',
+          },
+        },
+      ],
+      'pageInfo': <class 'dict'> {
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjU=',
+        'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
+      },
+      'totalCount': 6,
+    },
+  }
+---
+# name: test_fetch_data_from_data_source.1
+  <class 'dict'> {
+    'dataSource': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': '1',
+            'slug': '1',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': '5.5',
+            'slug': '5.5',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': 'sdkj',
+            'slug': 'sdkj',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': 'info',
+            'slug': 'value',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': 'something',
+            'slug': 'something',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': 'deutsche Beschreibung',
+            'slug': 'translated_value',
+          },
+        },
+      ],
+      'pageInfo': <class 'dict'> {
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjU=',
+        'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
+      },
+      'totalCount': 6,
+    },
+  }
+---
+# name: test_fetch_data_from_data_source.2
+  <class 'dict'> {
+    'dataSource': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': '1',
+            'slug': '1',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': '5.5',
+            'slug': '5.5',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': 'sdkj',
+            'slug': 'sdkj',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': 'info',
+            'slug': 'value',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': 'something',
+            'slug': 'something',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'label': 'english description',
+            'slug': 'translated_value',
+          },
+        },
+      ],
+      'pageInfo': <class 'dict'> {
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjU=',
+        'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
+      },
+      'totalCount': 6,
+    },
+  }
+---
+# name: test_fetch_data_sources
+  <class 'dict'> {
+    'allDataSources': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'info': 'Nice test data source',
+            'name': 'MyDataSource',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'info': 'Faulty test data source',
+            'name': 'MyFaultyDataSource',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'info': 'Other faulty test data source',
+            'name': 'MyOtherFaultyDataSource',
+          },
+        },
+      ],
+      'pageInfo': <class 'dict'> {
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjI=',
+        'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
+      },
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_fetch_data_sources.1
+  <class 'dict'> {
+    'allDataSources': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'info': 'Schöne Datenquelle',
+            'name': 'MyDataSource',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'info': 'Faulty test data source',
+            'name': 'MyFaultyDataSource',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'info': 'Other faulty test data source',
+            'name': 'MyOtherFaultyDataSource',
+          },
+        },
+      ],
+      'pageInfo': <class 'dict'> {
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjI=',
+        'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
+      },
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_fetch_data_sources.2
+  <class 'dict'> {
+    'allDataSources': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'info': 'Nice test data source',
+            'name': 'MyDataSource',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'info': 'Faulty test data source',
+            'name': 'MyFaultyDataSource',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'info': 'Other faulty test data source',
+            'name': 'MyOtherFaultyDataSource',
+          },
+        },
+      ],
+      'pageInfo': <class 'dict'> {
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjI=',
+        'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
+      },
+      'totalCount': 3,
+    },
+  }
+---

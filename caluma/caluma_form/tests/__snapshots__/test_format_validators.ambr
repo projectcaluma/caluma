@@ -1,0 +1,188 @@
+# name: test_base_format_validators[question__format_validators1-test@example.com-True-text]
+  <class 'OrderedDict'> {
+    'saveDocumentStringAnswer': <class 'dict'> {
+      'answer': <class 'dict'> {
+        'stringValue': 'test@example.com',
+      },
+      'clientMutationId': 'testid',
+    },
+  }
+---
+# name: test_base_format_validators[question__format_validators1-test@example.com-True-textarea]
+  <class 'OrderedDict'> {
+    'saveDocumentStringAnswer': <class 'dict'> {
+      'answer': <class 'dict'> {
+        'stringValue': 'test@example.com',
+      },
+      'clientMutationId': 'testid',
+    },
+  }
+---
+# name: test_base_format_validators[question__format_validators3-+411234567890-True-text]
+  <class 'OrderedDict'> {
+    'saveDocumentStringAnswer': <class 'dict'> {
+      'answer': <class 'dict'> {
+        'stringValue': '+411234567890',
+      },
+      'clientMutationId': 'testid',
+    },
+  }
+---
+# name: test_base_format_validators[question__format_validators3-+411234567890-True-textarea]
+  <class 'OrderedDict'> {
+    'saveDocumentStringAnswer': <class 'dict'> {
+      'answer': <class 'dict'> {
+        'stringValue': '+411234567890',
+      },
+      'clientMutationId': 'testid',
+    },
+  }
+---
+# name: test_fetch_format_validators
+  <class 'dict'> {
+    'allFormatValidators': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'errorMsg': 'Not valid',
+            'name': 'test name english',
+            'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
+            'slug': 'test-validator',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'errorMsg': 'Please enter a valid Email address.',
+            'name': 'E-mail',
+            'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
+            'slug': 'email',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'errorMsg': 'Please enter a valid phone number.',
+            'name': 'Phone number',
+            'regex': '^[\\s\\/\\.\\(\\)-]*(?:\\+|0|00)(?:[\\s\\/\\.\\(\\)-]*\\d[\\s\\/\\.\\(\\)-]*){6,20}$',
+            'slug': 'phone-number',
+          },
+        },
+      ],
+      'pageInfo': <class 'dict'> {
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjI=',
+        'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
+      },
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_fetch_format_validators.1
+  <class 'dict'> {
+    'allFormatValidators': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'errorMsg': 'Nicht valid',
+            'name': 'test name deutsch',
+            'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
+            'slug': 'test-validator',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'errorMsg': 'Bitte geben Sie eine gültige E-Mail-Adresse ein.',
+            'name': 'E-Mail',
+            'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
+            'slug': 'email',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'errorMsg': 'Bitte geben Sie eine gültige Telefonnummer ein.',
+            'name': 'Telefonnummer',
+            'regex': '^[\\s\\/\\.\\(\\)-]*(?:\\+|0|00)(?:[\\s\\/\\.\\(\\)-]*\\d[\\s\\/\\.\\(\\)-]*){6,20}$',
+            'slug': 'phone-number',
+          },
+        },
+      ],
+      'pageInfo': <class 'dict'> {
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjI=',
+        'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
+      },
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_fetch_format_validators.2
+  <class 'dict'> {
+    'allFormatValidators': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'errorMsg': 'Not valid',
+            'name': 'test name english',
+            'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
+            'slug': 'test-validator',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'errorMsg': 'Veuillez entrer une addresse e-mail valide.',
+            'name': 'Courriel',
+            'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
+            'slug': 'email',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'errorMsg': 'Veuillez entrer un numéro de téléphone valide.',
+            'name': 'numéro de téléphone',
+            'regex': '^[\\s\\/\\.\\(\\)-]*(?:\\+|0|00)(?:[\\s\\/\\.\\(\\)-]*\\d[\\s\\/\\.\\(\\)-]*){6,20}$',
+            'slug': 'phone-number',
+          },
+        },
+      ],
+      'pageInfo': <class 'dict'> {
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjI=',
+        'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
+      },
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_fetch_format_validators.3
+  <class 'dict'> {
+    'allFormatValidators': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'errorMsg': 'Not valid',
+            'name': 'test name english',
+            'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
+            'slug': 'test-validator',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'errorMsg': 'Please enter a valid Email address.',
+            'name': 'E-mail',
+            'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
+            'slug': 'email',
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'errorMsg': 'Please enter a valid phone number.',
+            'name': 'Phone number',
+            'regex': '^[\\s\\/\\.\\(\\)-]*(?:\\+|0|00)(?:[\\s\\/\\.\\(\\)-]*\\d[\\s\\/\\.\\(\\)-]*){6,20}$',
+            'slug': 'phone-number',
+          },
+        },
+      ],
+      'pageInfo': <class 'dict'> {
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjI=',
+        'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
+      },
+      'totalCount': 3,
+    },
+  }
+---

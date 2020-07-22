@@ -1,0 +1,61 @@
+# name: test_query_all_tasks[simple]
+  <class 'dict'> {
+    'allTasks': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'SimpleTask',
+            'description': 'State section rock event recent. Final activity hope star check record well. Radio with Mr letter eye.',
+            'meta': <class 'dict'> {
+            },
+            'name': 'Thomas Johnson',
+            'slug': 'sound-air-mission',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_save_comlete_task_form_task
+  <class 'OrderedDict'> {
+    'saveCompleteTaskFormTask': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'task': <class 'dict'> {
+        '__typename': 'CompleteTaskFormTask',
+        'meta': <class 'dict'> {
+        },
+        'name': 'Thomas Johnson',
+        'slug': 'sound-air-mission',
+      },
+    },
+  }
+---
+# name: test_save_task[SaveCompleteWorkflowFormTask]
+  <class 'OrderedDict'> {
+    'saveCompleteWorkflowFormTask': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'task': <class 'dict'> {
+        '__typename': 'CompleteWorkflowFormTask',
+        'meta': <class 'dict'> {
+        },
+        'name': 'Thomas Johnson',
+        'slug': 'sound-air-mission',
+      },
+    },
+  }
+---
+# name: test_save_task[SaveSimpleTask]
+  <class 'OrderedDict'> {
+    'saveSimpleTask': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'task': <class 'dict'> {
+        '__typename': 'SimpleTask',
+        'meta': <class 'dict'> {
+        },
+        'name': 'Thomas Johnson',
+        'slug': 'sound-air-mission',
+      },
+    },
+  }
+---

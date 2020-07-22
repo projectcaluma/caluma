@@ -24,6 +24,6 @@ pytest-randomly==3.4.0
 pytest-xdist==1.31.0
 python-semantic-release==6.0.0
 requests-mock==1.7.0
-snapshottest==0.5.1
+syrupy==0.6.0
 reuse==0.10.0
 gitlint==0.13.1
