@@ -13,7 +13,8 @@ exposed in the GraphQL API. To enable it, set `ENABLE_HISTORICAL_API` to `true`
 ## Cleanup
 
 You may want to periodically cleanup the historical records. There are
-two commands available for this:
+three commands available for this:
 
  - `clean_duplicate_history`: Historical records are always created when `save()` has been called on a model. This command removes all duplicates.
- - `cleanup_history`: Remove all historical records, or the ones that are older than specified.
+ - `clean_old_history`: Remove all historical records, or the ones that are older than specified.
+ - `cleanup_history`: Remove historical records that have a foreign key to a deleted related model. Supported are caluma_form models: `Answer`, `Document` and `DynamicOption`.
