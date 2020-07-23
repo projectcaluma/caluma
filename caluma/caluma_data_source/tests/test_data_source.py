@@ -123,7 +123,7 @@ def test_data_source_failure(data_source, schema_executor, settings):
 
 def test_data_source_defaults(snapshot, schema_executor, settings):
     settings.DATA_SOURCE_CLASSES = [
-        f"caluma.caluma_data_source.tests.data_sources.MyBrokenDataSource"
+        "caluma.caluma_data_source.tests.data_sources.MyBrokenDataSource"
     ]
 
     query = """
@@ -151,7 +151,7 @@ def test_data_source_defaults(snapshot, schema_executor, settings):
 
 def test_data_source_exception(schema_executor, settings):
     settings.DATA_SOURCE_CLASSES = [
-        f"caluma.caluma_data_source.tests.data_sources.MyOtherBrokenDataSource"
+        "caluma.caluma_data_source.tests.data_sources.MyOtherBrokenDataSource"
     ]
 
     query = """
@@ -179,7 +179,7 @@ def test_data_source_exception(schema_executor, settings):
 def test_fetch_data_from_non_existing_data_source(schema_executor, settings, configure):
     if configure:
         settings.DATA_SOURCE_CLASSES = [
-            f"caluma.caluma_data_source.tests.data_sources.NonExistentDataSource"
+            "caluma.caluma_data_source.tests.data_sources.NonExistentDataSource"
         ]
 
     query = """

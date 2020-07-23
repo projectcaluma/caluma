@@ -755,18 +755,18 @@ def test_save_document_answer(
 def test_save_document_answer_empty(
     db, snapshot, question, answer, schema_executor, delete_answer
 ):
-    query = f"""
-        mutation saveDocumentStringAnswer($input: SaveDocumentStringAnswerInput!) {{
-          saveDocumentStringAnswer(input: $input) {{
-            answer {{
+    query = """
+        mutation saveDocumentStringAnswer($input: SaveDocumentStringAnswerInput!) {
+          saveDocumentStringAnswer(input: $input) {
+            answer {
               __typename
-              ... on StringAnswer {{
+              ... on StringAnswer {
                 stringValue: value
-              }}
-            }}
+              }
+            }
             clientMutationId
-          }}
-        }}
+          }
+        }
     """
 
     inp = {

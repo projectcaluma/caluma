@@ -24,7 +24,6 @@
         "flake8-isort",
         "flake8-string-format",
         "flake8-tuple",
-        "isort",
         "pydocstyle",
         "pytest",
         "pytest-cov",
@@ -34,7 +33,7 @@
         "pytest-mock",
         "pytest-randomly",
         "requests-mock",
-        "snapshottest"
+        "syrupy"
       ],
       "automerge": true
     }
