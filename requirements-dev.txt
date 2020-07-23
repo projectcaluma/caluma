@@ -21,7 +21,7 @@ pytest-env==0.6.2
 pytest-factoryboy==2.0.3
 pytest-mock==3.2.0
 pytest-randomly==3.4.1
-pytest-xdist==1.31.0
+pytest-xdist==1.33.0
 python-semantic-release==6.0.0
 requests-mock==1.7.0
 syrupy==0.6.0
