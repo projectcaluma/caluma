@@ -55,7 +55,7 @@ class Command(BaseCommand):
         ]
         if self.revert:
             queries = [
-                f"""UPDATE django_content_type SET app_label = REPLACE(app_label, 'caluma_', '');"""
+                """UPDATE django_content_type SET app_label = REPLACE(app_label, 'caluma_', '');"""
             ]
         return queries
 
@@ -65,7 +65,7 @@ class Command(BaseCommand):
         ]
         if self.revert:
             queries = [
-                f"""UPDATE django_migrations SET app = REPLACE(app, 'caluma_', '');"""
+                """UPDATE django_migrations SET app = REPLACE(app, 'caluma_', '');"""
             ]
         return queries
 

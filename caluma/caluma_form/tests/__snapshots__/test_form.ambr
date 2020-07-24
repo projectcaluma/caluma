@@ -68,7 +68,7 @@
     },
   }
 ---
-# name: test_save_form[de]
+# name: test_save_form[-de]
   <class 'OrderedDict'> {
     'saveForm': <class 'dict'> {
       'clientMutationId': 'testid',
@@ -82,7 +82,7 @@
     },
   }
 ---
-# name: test_save_form[en]
+# name: test_save_form[-en]
   <class 'OrderedDict'> {
     'saveForm': <class 'dict'> {
       'clientMutationId': 'testid',
