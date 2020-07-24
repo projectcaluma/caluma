@@ -198,7 +198,7 @@ class CaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
 
 
 class SaveCaseSerializer(CaseSerializer):
-    def create(self, validated_data):  # pragma: no cover
+    def create(self, validated_data):
         instance = super().create(validated_data)
         self.send_event(events.created_case, case=instance)
         return instance
