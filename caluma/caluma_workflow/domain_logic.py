@@ -67,10 +67,13 @@ class StartCaseLogic:
 
         work_items = utils.bulk_create_work_items(tasks, case, user)
 
-        send_event(events.created_case, sender="case_post_create", case=case)
+        send_event(events.created_case, sender="case_post_create", case=case, user=user)
         for work_item in work_items:  # pragma: no cover
             send_event(
-                events.created_work_item, sender="case_post_create", work_item=work_item
+                events.created_work_item,
+                sender="case_post_create",
+                work_item=work_item,
+                user=user,
             )
 
         return case
@@ -149,6 +152,7 @@ class CompleteWorkItemLogic:
                         events.created_work_item,
                         sender="post_complete_work_item",
                         work_item=created_work_item,
+                        user=user,
                     )
         else:
             has_ready_work_items = work_item.case.work_items.filter(
@@ -163,13 +167,17 @@ class CompleteWorkItemLogic:
                 case.closed_by_group = user.group
                 case.save()
                 send_event(
-                    events.completed_case, sender="post_complete_work_item", case=case
+                    events.completed_case,
+                    sender="post_complete_work_item",
+                    case=case,
+                    user=user,
                 )
 
         send_event(
             events.completed_work_item,
             sender="post_complete_work_item",
             work_item=work_item,
+            user=user,
         )
 
         return work_item
@@ -194,7 +202,10 @@ class SkipWorkItemLogic:
         work_item = CompleteWorkItemLogic.post_complete(work_item, user)
 
         send_event(
-            events.skipped_work_item, sender="post_skip_work_item", work_item=work_item
+            events.skipped_work_item,
+            sender="post_skip_work_item",
+            work_item=work_item,
+            user=user,
         )
 
         return work_item
@@ -247,8 +258,11 @@ class CancelCaseLogic:
                 events.cancelled_work_item,
                 sender="post_cancel_case",
                 work_item=work_item,
+                user=user,
             )
 
-        send_event(events.cancelled_case, sender="post_cancel_case", case=case)
+        send_event(
+            events.cancelled_case, sender="post_cancel_case", case=case, user=user
+        )
 
         return case

@@ -20,7 +20,7 @@ from caluma.caluma_workflow.schema import CompleteWorkItem
 
 
 @on(completed_work_item)
-def send_mail_on_complete_work_item(sender, work_item, **kwargs):
+def send_mail_on_complete_work_item(sender, work_item, user, **kwargs):
     if work_item.task.slug == "slug-we-are-interested-in":
         # send notification
         pass
@@ -29,7 +29,7 @@ def send_mail_on_complete_work_item(sender, work_item, **kwargs):
 # It's also possible to specify a sender, which refers to a mutation class,
 # analog to the `permission_for` decorators
 @on(completed_work_item, sender=CompleteWorkItem)
-def send_mail_on_complete_work_item_2(sender, work_item, **kwargs):
+def send_mail_on_complete_work_item_2(sender, work_item, user, **kwargs):
     if work_item.task.slug == "slug-we-are-interested-in":
         # send notification
         pass
@@ -56,15 +56,15 @@ in case the event sends additional arguments in the future.
 
 ## List of emitted events
 
-| Event                    | Mutations that can emit this event                                | Arguments    |
-| ------------------------ | ----------------------------------------------------------------- | ------------ |
-|  `created_work_item`     | `CreateWorkItem`, `SaveWorkItem`, `StartCase`, `CompleteWorkItem` | `work_item`  |
-|  `completed_work_item`   | `CompleteWorkItem`                                                | `work_item`  |
-|  `cancelled_work_item`   | `CancelCase`                                                      | `work_item`  |
-|  `skipped_work_item`     | `SkipWorkItem`                                                    | `work_item`  |
-|  `created_case`          | `SaveCase`, `StartCase`                                           | `case`       |
-|  `completed_case`        | `CompleteWorkItem`                                                | `case`       |
-|  `cancelled_case`        | `CancelCase`                                                      | `case`       |
+| Event                 | Mutations that can emit this event                                | Arguments           |
+| --------------------- | ----------------------------------------------------------------- | ------------------- |
+| `created_work_item`   | `CreateWorkItem`, `SaveWorkItem`, `StartCase`, `CompleteWorkItem` | `work_item`, `user` |
+| `completed_work_item` | `CompleteWorkItem`                                                | `work_item`, `user` |
+| `cancelled_work_item` | `CancelCase`                                                      | `work_item`, `user` |
+| `skipped_work_item`   | `SkipWorkItem`                                                    | `work_item`, `user` |
+| `created_case`        | `SaveCase`, `StartCase`                                           | `case`, `user`      |
+| `completed_case`      | `CompleteWorkItem`                                                | `case`, `user`      |
+| `cancelled_case`      | `CancelCase`                                                      | `case`, `user`      |
 
 ## Event receivers are blocking
 
@@ -77,7 +77,6 @@ There are plans to provide non-blocking event receivers, so stay tuned.
 
 Exceptions in event receivers are logged, but will not affect the current db transaction.
 That way, you can be sure the transaction will not be rolled-back because of an Exception in an event receiver.
-
 
 ## Built-in django signals
 
