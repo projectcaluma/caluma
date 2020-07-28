@@ -25,4 +25,9 @@ def send_event(signal, **kwargs):
 
 class SendEventSerializerMixin:
     def send_event(self, event, **kwargs):
-        send_event(event, sender=self.context["mutation"], **kwargs)  # noqa
+        send_event(
+            event,
+            sender=self.context["mutation"],
+            user=self.context["request"].user,
+            **kwargs,
+        )  # noqa
