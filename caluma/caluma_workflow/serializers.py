@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from rest_framework import exceptions
-from rest_framework.serializers import CharField, ListField
+from rest_framework.serializers import CharField, JSONField, ListField
 from simple_history.utils import bulk_create_with_history
 
 from caluma.caluma_core.events import SendEventSerializerMixin
@@ -184,12 +184,13 @@ class CaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
 
+        context = validated_data.pop("context", {})
         validated_data = domain_logic.StartCaseLogic.pre_start(validated_data, user)
 
         case = super().create(validated_data)
 
         return domain_logic.StartCaseLogic.post_start(
-            case, user, validated_data.get("parent_work_item")
+            case, user, validated_data.get("parent_work_item"), context
         )
 
     class Meta:
@@ -198,6 +199,15 @@ class CaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
 
 
 class SaveCaseSerializer(CaseSerializer):
+    context = JSONField(
+        encoder=None,
+        required=False,
+        allow_null=True,
+        write_only=True,
+        help_text="Provide extra context for DynamicGroups",
+        style={"base_template": "textarea.html"},
+    )
+
     def create(self, validated_data):
         instance = super().create(validated_data)
         self.send_event(events.created_case, case=instance)
@@ -209,7 +219,7 @@ class SaveCaseSerializer(CaseSerializer):
         return instance
 
     class Meta(CaseSerializer.Meta):
-        fields = ("id", "workflow", "meta", "parent_work_item", "form")
+        fields = ("id", "workflow", "meta", "parent_work_item", "form", "context")
 
 
 class CancelCaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
@@ -242,6 +252,13 @@ class CancelCaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer
 
 class CompleteWorkItemSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField()
+    context = JSONField(
+        encoder=None,
+        required=False,
+        allow_null=True,
+        write_only=True,
+        help_text="Provide extra context for DynamicGroups",
+    )
 
     def validate(self, data):
         try:
@@ -257,18 +274,21 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
     def update(self, work_item, validated_data):
         user = self.context["request"].user
 
+        context = validated_data.pop("context", {})
         validated_data = domain_logic.CompleteWorkItemLogic.pre_complete(
             validated_data, user
         )
 
         work_item = super().update(work_item, validated_data)
-        work_item = domain_logic.CompleteWorkItemLogic.post_complete(work_item, user)
+        work_item = domain_logic.CompleteWorkItemLogic.post_complete(
+            work_item, user, context
+        )
 
         return work_item
 
     class Meta:
         model = models.WorkItem
-        fields = ("id",)
+        fields = ("id", "context")
 
 
 class SkipWorkItemSerializer(serializers.ModelSerializer):

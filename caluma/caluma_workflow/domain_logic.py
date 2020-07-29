@@ -55,7 +55,7 @@ class StartCaseLogic:
         return validated_data
 
     @staticmethod
-    def post_start(case, user, parent_work_item):
+    def post_start(case, user, parent_work_item, context=None):
         # Django doesn't save reverse one-to-one relationships automatically:
         # https://code.djangoproject.com/ticket/18638
         if parent_work_item:
@@ -65,7 +65,7 @@ class StartCaseLogic:
         workflow = case.workflow
         tasks = workflow.start_tasks.all()
 
-        work_items = utils.bulk_create_work_items(tasks, case, user)
+        work_items = utils.bulk_create_work_items(tasks, case, user, context)
 
         send_event(events.created_case, sender="case_post_create", case=case, user=user)
         for work_item in work_items:  # pragma: no cover
@@ -116,7 +116,7 @@ class CompleteWorkItemLogic:
         return validated_data
 
     @staticmethod
-    def post_complete(work_item, user):
+    def post_complete(work_item, user, context=None):
         case = work_item.case
 
         if not CompleteWorkItemLogic._can_continue(work_item, work_item.task):
@@ -144,7 +144,7 @@ class CompleteWorkItemLogic:
                 tasks = models.Task.objects.filter(pk__in=result)
 
                 created_work_items = utils.bulk_create_work_items(
-                    tasks, case, user, work_item
+                    tasks, case, user, work_item, context
                 )
 
                 for created_work_item in created_work_items:  # pragma: no cover

@@ -252,6 +252,7 @@
   
   input CompleteWorkItemInput {
     id: ID!
+    context: JSONString
     clientMutationId: String
   }
   
@@ -1297,6 +1298,7 @@
     meta: JSONString
     parentWorkItem: ID
     form: ID
+    context: JSONString
     clientMutationId: String
   }
   

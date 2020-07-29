@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from graphql_relay import to_global_id
 
@@ -36,7 +38,7 @@ def test_query_all_cases(db, snapshot, case, result_count, flow, schema_executor
 @pytest.mark.parametrize(
     "mutation,update", [("startCase", False), ("saveCase", False), ("saveCase", True)]
 )
-def test_start_case(
+def test_save_case(
     db,
     snapshot,
     workflow,
@@ -90,6 +92,9 @@ def test_start_case(
     )
 
     inp = {"input": {"workflow": workflow.slug, "form": form.slug}}
+
+    if mutation == "saveCase":
+        inp["_context"] = json.dumps({"additional_data": "foo"})
 
     if update:
         inp["input"]["id"] = str(case.id)

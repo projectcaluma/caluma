@@ -52,6 +52,7 @@ class GroupJexl(JEXL):
         case=None,
         work_item_created_by_user=None,
         prev_work_item=None,
+        dynamic_context=None,
         **kwargs,
     ):
         super().__init__(**kwargs)
@@ -75,6 +76,7 @@ class GroupJexl(JEXL):
                                 case,
                                 work_item_created_by_user,
                                 prev_work_item,
+                                dynamic_context,
                             )
                             for name in names
                         ]
@@ -93,12 +95,24 @@ class GroupJexl(JEXL):
         return [value]
 
     def _get_dynamic_group(
-        self, name, task, case, work_item_created_by_user, prev_work_item
+        self,
+        name,
+        task,
+        case,
+        work_item_created_by_user,
+        prev_work_item,
+        dynamic_context,
     ):
         for dynamic_groups_class in self.dynamic_groups_classes:
             method = dynamic_groups_class().resolve(name)
             if method:
-                value = method(task, case, work_item_created_by_user, prev_work_item)
+                value = method(
+                    task,
+                    case,
+                    work_item_created_by_user,
+                    prev_work_item,
+                    dynamic_context,
+                )
 
                 if not isinstance(value, list):
                     value = [value]
