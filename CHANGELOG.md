@@ -1,3 +1,18 @@
+# v6.0.0 (29 July 2020)
+
+### Feature
+* Always send the current user to event receivers (5f0e8691b3bc98174c055d6507167ef5fe10bed8)
+* Remove --keep from cleanup_history command (420c0cbaee0ff4fb7958c167c3b7b5bd353c4999)
+* Extend cleanup-command for cleaning up dangling models (489bb41acb16772f258c6a5aee42def99699c489)
+
+### Fix
+* Sort the groups jexl (be5487cb4cf7864130123dff74fc4aed55d80d5d)
+* Use fstring to log fstring message (538659138777c11022ebf15e90d7993d039db13e)
+
+### Breaking
+* remove --keep from cleanup_history command (420c0cbaee0ff4fb7958c167c3b7b5bd353c4999)
+
+
 # v5.9.0 (1 July 2020)
 
 ### Feature
