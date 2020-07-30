@@ -243,6 +243,14 @@ class WorkItem(UUIDModel):
         null=True,
     )
 
+    previous_work_item = models.ForeignKey(
+        "self",
+        on_delete=models.SET_NULL,
+        related_name="succeeding_work_items",
+        blank=True,
+        null=True,
+    )
+
     class Meta:
         indexes = [
             GinIndex(fields=["addressed_groups"]),

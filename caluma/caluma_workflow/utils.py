@@ -66,6 +66,7 @@ def bulk_create_work_items(tasks, case, user, prev_work_item=None):
                     status=models.WorkItem.STATUS_READY,
                     created_by_user=user.username,
                     created_by_group=user.group,
+                    previous_work_item=prev_work_item if prev_work_item else None,
                 )
             )
 
