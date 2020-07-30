@@ -1,9 +1,18 @@
 from typing import Optional
 
+from django.db.models import Model
+
 from caluma.caluma_form.models import Form
 from caluma.caluma_user.models import BaseUser
 
 from . import domain_logic, models
+
+
+def update_model(model: Model, data: dict) -> Model:
+    for key, value in data.items():
+        setattr(model, key, value)
+
+    model.save()
 
 
 def start_case(
@@ -53,7 +62,7 @@ def complete_work_item(work_item: models.WorkItem, user: BaseUser) -> models.Wor
     domain_logic.CompleteWorkItemLogic.validate_for_complete(work_item, user)
     validated_data = domain_logic.CompleteWorkItemLogic.pre_complete({}, user)
 
-    models.WorkItem.objects.filter(pk=work_item.pk).update(**validated_data)
+    update_model(models.WorkItem.objects.get(pk=work_item.pk), validated_data)
 
     domain_logic.CompleteWorkItemLogic.post_complete(work_item, user)
 
@@ -74,7 +83,7 @@ def skip_work_item(work_item: models.WorkItem, user: BaseUser) -> models.WorkIte
 
     validated_data = domain_logic.SkipWorkItemLogic.pre_skip({}, user)
 
-    models.WorkItem.objects.filter(pk=work_item.pk).update(**validated_data)
+    update_model(models.WorkItem.objects.get(pk=work_item.pk), validated_data)
 
     domain_logic.SkipWorkItemLogic.post_skip(work_item, user)
 
@@ -95,7 +104,7 @@ def cancel_case(case: models.Case, user: BaseUser) -> models.Case:
 
     validated_data = domain_logic.CancelCaseLogic.pre_cancel({}, user)
 
-    models.Case.objects.filter(pk=case.pk).update(**validated_data)
+    update_model(models.Case.objects.get(pk=case.pk), validated_data)
 
     domain_logic.CancelCaseLogic.post_cancel(case, user)
 
