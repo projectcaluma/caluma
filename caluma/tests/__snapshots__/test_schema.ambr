@@ -2127,6 +2127,8 @@
     case: Case!
     childCase: Case
     document: Document
+    previousWorkItem: WorkItem
+    succeedingWorkItems(before: String, after: String, first: Int, last: Int): WorkItemConnection!
   }
   
   type WorkItemConnection {
