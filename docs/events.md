@@ -60,7 +60,7 @@ in case the event sends additional arguments in the future.
 | --------------------- | ----------------------------------------------------------------- | ------------------- |
 | `created_work_item`   | `CreateWorkItem`, `SaveWorkItem`, `StartCase`, `CompleteWorkItem` | `work_item`, `user` |
 | `completed_work_item` | `CompleteWorkItem`                                                | `work_item`, `user` |
-| `cancelled_work_item` | `CancelCase`                                                      | `work_item`, `user` |
+| `cancelled_work_item` | `CancelCase`, `CancelWorkItem`                                    | `work_item`, `user` |
 | `skipped_work_item`   | `SkipWorkItem`                                                    | `work_item`, `user` |
 | `created_case`        | `SaveCase`, `StartCase`                                           | `case`, `user`      |
 | `completed_case`      | `CompleteWorkItem`                                                | `case`, `user`      |

@@ -109,3 +109,24 @@ def cancel_case(case: models.Case, user: BaseUser) -> models.Case:
     domain_logic.CancelCaseLogic.post_cancel(case, user)
 
     return case
+
+
+def cancel_work_item(work_item: models.WorkItem, user: BaseUser) -> models.WorkItem:
+    """
+    Cancel a work item (just like `CancelWorkItem`).
+
+    >>> cancel_work_item(
+    ...     work_item=models.WorkItem.first(),
+    ...     user=AnonymousUser()
+    ... )
+    <WorkItem: WorkItem object (some-uuid)>
+    """
+    domain_logic.CancelWorkItemLogic.validate_for_cancel(work_item)
+
+    validated_data = domain_logic.CancelWorkItemLogic.pre_cancel({}, user)
+
+    update_model(models.WorkItem.objects.get(pk=work_item.pk), validated_data)
+
+    domain_logic.CancelWorkItemLogic.post_cancel(work_item, user)
+
+    return work_item

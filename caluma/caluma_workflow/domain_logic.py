@@ -266,3 +266,30 @@ class CancelCaseLogic:
         )
 
         return case
+
+
+class CancelWorkItemLogic:
+    @staticmethod
+    def validate_for_cancel(work_item):
+        if work_item.status != models.WorkItem.STATUS_READY:
+            raise ValidationError("Only READY work items can be cancelled")
+
+    @staticmethod
+    def pre_cancel(validated_data, user):
+        validated_data["status"] = models.WorkItem.STATUS_CANCELED
+        validated_data["closed_at"] = timezone.now()
+        validated_data["closed_by_user"] = user.username
+        validated_data["closed_by_group"] = user.group
+
+        return validated_data
+
+    @staticmethod
+    def post_cancel(work_item, user):
+        send_event(
+            events.cancelled_work_item,
+            sender="post_cancel_work_item",
+            work_item=work_item,
+            user=user,
+        )
+
+        return work_item

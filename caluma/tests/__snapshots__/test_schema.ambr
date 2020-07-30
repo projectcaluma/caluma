@@ -118,6 +118,16 @@
     clientMutationId: String
   }
   
+  input CancelWorkItemInput {
+    id: ID!
+    clientMutationId: String
+  }
+  
+  type CancelWorkItemPayload {
+    workItem: WorkItem
+    clientMutationId: String
+  }
+  
   type Case implements Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1050,6 +1060,7 @@
     cancelCase(input: CancelCaseInput!): CancelCasePayload
     completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
     skipWorkItem(input: SkipWorkItemInput!): SkipWorkItemPayload
+    cancelWorkItem(input: CancelWorkItemInput!): CancelWorkItemPayload
     saveWorkItem(input: SaveWorkItemInput!): SaveWorkItemPayload
     createWorkItem(input: CreateWorkItemInput!): CreateWorkItemPayload
     saveForm(input: SaveFormInput!): SaveFormPayload

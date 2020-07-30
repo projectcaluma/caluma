@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from django.core.exceptions import ValidationError
 from graphene.utils.str_converters import to_const
 
 from ...caluma_core.relay import extract_global_id
@@ -1108,3 +1109,51 @@ def test_complete_work_item_same_task_multiple_workflows(
 
     assert case_1.status == models.Case.STATUS_RUNNING
     assert case_2.status == models.Case.STATUS_COMPLETED
+
+
+@pytest.mark.parametrize("use_graphql_api", [True, False])
+@pytest.mark.parametrize(
+    "work_item__status,success,expected_status",
+    [
+        (models.WorkItem.STATUS_READY, True, models.WorkItem.STATUS_CANCELED),
+        (models.WorkItem.STATUS_SKIPPED, False, models.WorkItem.STATUS_SKIPPED),
+    ],
+)
+def test_cancel_work_item(
+    db,
+    work_item,
+    schema_executor,
+    admin_user,
+    use_graphql_api,
+    success,
+    expected_status,
+):
+    error_msg = "Only READY work items can be cancelled"
+
+    if use_graphql_api:
+        query = """
+            mutation CancelWorkItem($input: CancelWorkItemInput!) {
+                cancelWorkItem(input: $input) {
+                    clientMutationId
+                }
+            }
+        """
+
+        result = schema_executor(query, variable_values={"input": {"id": work_item.pk}})
+
+        if success:
+            assert not bool(result.errors)
+        else:
+            assert error_msg in str(result.errors[0])
+    else:
+        if success:
+            api.cancel_work_item(work_item, admin_user)
+        else:
+            with pytest.raises(ValidationError) as error:
+                api.cancel_work_item(work_item, admin_user)
+
+            assert error_msg in str(error.value)
+
+    work_item.refresh_from_db()
+
+    assert work_item.status == expected_status
