@@ -17,7 +17,9 @@ def get_group_jexl_structure(work_item_created_by_group, case, prev_work_item=No
     }
 
 
-def get_jexl_groups(jexl, task, case, work_item_created_by_user, prev_work_item=None):
+def get_jexl_groups(
+    jexl, task, case, work_item_created_by_user, prev_work_item=None, context=None
+):
     if jexl:
         return GroupJexl(
             validation_context=get_group_jexl_structure(
@@ -27,13 +29,17 @@ def get_jexl_groups(jexl, task, case, work_item_created_by_user, prev_work_item=
             case=case,
             work_item_created_by_user=work_item_created_by_user,
             prev_work_item=prev_work_item,
+            dynamic_context=context,
         ).evaluate(jexl)
 
     return []
 
 
-def bulk_create_work_items(tasks, case, user, prev_work_item=None):
+def bulk_create_work_items(
+    tasks, case, user, prev_work_item=None, context: dict = None
+):
     work_items = []
+
     for task in tasks:
         controlling_groups = get_jexl_groups(
             task.control_groups,
@@ -41,6 +47,7 @@ def bulk_create_work_items(tasks, case, user, prev_work_item=None):
             case,
             user,
             prev_work_item if prev_work_item else None,
+            context,
         )
         addressed_groups = [
             get_jexl_groups(
@@ -49,6 +56,7 @@ def bulk_create_work_items(tasks, case, user, prev_work_item=None):
                 case,
                 user,
                 prev_work_item if prev_work_item else None,
+                context,
             )
         ]
         if task.is_multiple_instance:

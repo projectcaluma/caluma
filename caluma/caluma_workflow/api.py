@@ -20,6 +20,7 @@ def start_case(
     user: BaseUser,
     form: Optional[Form] = None,
     parent_work_item: Optional[models.WorkItem] = None,
+    context: Optional[dict] = None,
     **kwargs
 ) -> models.Case:
     """
@@ -45,10 +46,12 @@ def start_case(
 
     case = models.Case.objects.create(**validated_data)
 
-    return domain_logic.StartCaseLogic.post_start(case, user, parent_work_item)
+    return domain_logic.StartCaseLogic.post_start(case, user, parent_work_item, context)
 
 
-def complete_work_item(work_item: models.WorkItem, user: BaseUser) -> models.WorkItem:
+def complete_work_item(
+    work_item: models.WorkItem, user: BaseUser, context: Optional[dict] = None
+) -> models.WorkItem:
     """
     Complete a work item (just like `completeWorkItem`).
 
@@ -64,7 +67,7 @@ def complete_work_item(work_item: models.WorkItem, user: BaseUser) -> models.Wor
 
     update_model(models.WorkItem.objects.get(pk=work_item.pk), validated_data)
 
-    domain_logic.CompleteWorkItemLogic.post_complete(work_item, user)
+    domain_logic.CompleteWorkItemLogic.post_complete(work_item, user, context)
 
     return work_item
 

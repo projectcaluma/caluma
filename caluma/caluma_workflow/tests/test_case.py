@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from graphql_relay import to_global_id
 
@@ -33,8 +35,10 @@ def test_query_all_cases(db, snapshot, case, result_count, flow, schema_executor
 
 @pytest.mark.parametrize("task__lead_time", [100, None])
 @pytest.mark.parametrize("task__address_groups", ['["group-name"]|groups', None])
-@pytest.mark.parametrize("mutation", ["startCase", "saveCase"])
-def test_start_case(
+@pytest.mark.parametrize(
+    "mutation,update", [("startCase", False), ("saveCase", False), ("saveCase", True)]
+)
+def test_save_case(
     db,
     snapshot,
     workflow,
@@ -42,9 +46,10 @@ def test_start_case(
     workflow_start_tasks,
     work_item,
     form,
+    case,
     schema_executor,
     mutation,
-    case,
+    update,
 ):
 
     input_type = {"startCase": "StartCaseInput!", "saveCase": "SaveCaseInput!"}[
@@ -89,16 +94,18 @@ def test_start_case(
     inp = {"input": {"workflow": workflow.slug, "form": form.slug}}
 
     if mutation == "saveCase":
+        inp["_context"] = json.dumps({"additional_data": "foo"})
+
+    if update:
         inp["input"]["id"] = str(case.id)
 
     result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
 
-    # if StartCase, we need a new ID, if "saveCase", we expect the same ID
-    id_needs_to_be_same = mutation == "saveCase"
+    # if it was an update, we expect the same ID else we need a new ID
     is_same_id = extract_global_id(result.data[mutation]["case"]["id"]) == str(case.id)
-    assert is_same_id == id_needs_to_be_same
+    assert is_same_id == update
 
     # can't snapshot IDs, they change
     del result.data[mutation]["case"]["id"]
