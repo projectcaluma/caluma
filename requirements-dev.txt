@@ -17,7 +17,7 @@ isort==4.3.21
 pdbpp==0.10.2
 pre-commit==2.6.0
 pydocstyle==5.0.2
-pytest==5.4.3
+pytest==6.0.1
 pytest-cov==2.10.0
 pytest-django==3.9.0
 pytest-env==0.6.2
