@@ -297,6 +297,34 @@ class SkipWorkItemSerializer(serializers.ModelSerializer):
         fields = ("id",)
 
 
+class CancelWorkItemSerializer(serializers.ModelSerializer):
+    id = serializers.GlobalIDField()
+
+    def validate(self, data):
+        try:
+            domain_logic.CancelWorkItemLogic.validate_for_cancel(self.instance)
+        except ValidationError as e:
+            raise exceptions.ValidationError(str(e))
+
+        return data
+
+    def update(self, work_item, validated_data):
+        user = self.context["request"].user
+
+        validated_data = domain_logic.CancelWorkItemLogic.pre_cancel(
+            validated_data, user
+        )
+
+        work_item = super().update(work_item, validated_data)
+        work_item = domain_logic.CancelWorkItemLogic.post_cancel(work_item, user)
+
+        return work_item
+
+    class Meta:
+        model = models.WorkItem
+        fields = ("id",)
+
+
 class SaveWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
     work_item = serializers.GlobalIDField(source="id")
     name = CharField(
