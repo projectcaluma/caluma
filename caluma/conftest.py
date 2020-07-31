@@ -282,3 +282,25 @@ def form_and_document(
         return (form, document, questions, answers)
 
     return factory
+
+
+@pytest.fixture
+def sorted_snapshot(snapshot):
+    """Return a sortable snapshot that sorts a list in a nested data structure.
+
+    The first arg (name) denotes the key/variable in the data structure which holds sortable list.
+    The second arg (key) is passed to the builtin `sorted` function.
+    """
+
+    def _sorted(name, key):
+        def _(data, path):
+            if isinstance(data, list) and path[-1][0] == name:
+                return sorted(data, key=key)
+            return data
+
+        return _
+
+    def custom_snapshot(*args):
+        return snapshot(matcher=_sorted(*args))
+
+    return custom_snapshot

@@ -1,7 +1,8 @@
 import pytest
 from graphql_relay import to_global_id
 
-from ...caluma_core.tests import extract_serializer_input_fields
+from caluma.caluma_core.tests import extract_serializer_input_fields
+
 from .. import models, serializers
 
 
@@ -113,7 +114,7 @@ def test_add_workflow_flow(
     workflow,
     workflow_start_tasks_factory,
     task,
-    snapshot,
+    sorted_snapshot,
     success,
     next,
     admin_schema_executor,
@@ -157,7 +158,7 @@ def test_add_workflow_flow(
     )
     assert not bool(result.errors) == success
     if success:
-        snapshot.assert_match(result.data)
+        assert result.data == sorted_snapshot("tasks", lambda el: el["slug"])
 
 
 def test_remove_flow(db, workflow, task_flow, flow, schema_executor):
