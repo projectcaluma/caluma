@@ -22,13 +22,13 @@
         },
         'tasks': <class 'list'> [
           <class 'dict'> {
-            'slug': 'task-slug',
+            'slug': 'relate-right-will',
           },
           <class 'dict'> {
             'slug': 'service-bank-arm',
           },
           <class 'dict'> {
-            'slug': 'relate-right-will',
+            'slug': 'task-slug',
           },
         ],
       },
