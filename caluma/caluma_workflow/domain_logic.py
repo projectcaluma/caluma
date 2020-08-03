@@ -5,7 +5,6 @@ from caluma.caluma_core.events import send_event
 
 from ..caluma_form.models import Document
 from . import events, models, utils, validators
-from .jexl import FlowJexl
 
 
 class StartCaseLogic:
@@ -127,7 +126,13 @@ class CompleteWorkItemLogic:
             task_flows__workflow=work_item.case.workflow.pk,
         ).first()
 
-        if flow:
+        next_tasks = models.Task.objects.filter(
+            pk__in=utils.get_jexl_tasks(
+                flow.next if flow else None, work_item.case, user, work_item, context
+            )
+        )
+
+        if next_tasks.exists():
             sibling_tasks = models.Task.objects.filter(task_flows__flow=flow)
 
             all_siblings_complete = all(
@@ -136,15 +141,8 @@ class CompleteWorkItemLogic:
             )
 
             if all_siblings_complete:
-                jexl = FlowJexl()
-                result = jexl.evaluate(flow.next)
-                if not isinstance(result, list):
-                    result = [result]
-
-                tasks = models.Task.objects.filter(pk__in=result)
-
                 created_work_items = utils.bulk_create_work_items(
-                    tasks, case, user, work_item, context
+                    next_tasks, case, user, work_item
                 )
 
                 for created_work_item in created_work_items:  # pragma: no cover

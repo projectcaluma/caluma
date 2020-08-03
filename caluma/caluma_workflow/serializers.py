@@ -53,17 +53,6 @@ class AddWorkflowFlowSerializer(serializers.ModelSerializer):
             raise exceptions.ValidationError(
                 f"jexl `{value}` does not contain any tasks as return value"
             )
-
-        available_tasks = set(
-            models.Task.objects.filter(slug__in=tasks).values_list("slug", flat=True)
-        )
-
-        not_found_tasks = tasks - available_tasks
-        if not_found_tasks:
-            raise exceptions.ValidationError(
-                f"jexl `{value}` contains invalid tasks [{', '.join(not_found_tasks)}]"
-            )
-
         return value
 
     @transaction.atomic
