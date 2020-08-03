@@ -2,7 +2,7 @@ from simple_history.utils import bulk_create_with_history
 
 from ..caluma_form.models import Document
 from . import models
-from .jexl import GroupJexl
+from .jexl import FlowJexl, GroupJexl
 
 
 def get_group_jexl_structure(work_item_created_by_group, case, prev_work_item=None):
@@ -31,6 +31,20 @@ def get_jexl_groups(
             prev_work_item=prev_work_item,
             dynamic_context=context,
         ).evaluate(jexl)
+
+    return []
+
+
+def get_jexl_tasks(jexl, case, user, prev_work_item, context=None):
+    if jexl:
+        evaluated = FlowJexl(
+            case=case, user=user, prev_work_item=prev_work_item, dynamic_context=context
+        ).evaluate(jexl)
+
+        if not isinstance(evaluated, list):
+            evaluated = [evaluated]
+
+        return evaluated
 
     return []
 

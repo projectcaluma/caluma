@@ -1,10 +1,30 @@
 from functools import partial
 from itertools import chain
 
+from django.core.exceptions import ValidationError
 from pyjexl.analysis import ValidatingAnalyzer
 from pyjexl.evaluator import Context
+from pyjexl.parser import Literal
 
 from ..caluma_core.jexl import JEXL, ExtractTransformSubjectAnalyzer
+from .models import Task
+
+
+def task_exists(slug):
+    return (
+        slug in FlowJexl.get_all_registered_dynamic_tasks()
+        or Task.objects.filter(pk=slug).exists()
+    )
+
+
+def parse_literal(value):
+    if isinstance(value, Literal):
+        return value.value
+
+    if isinstance(value, list):
+        return [parse_literal(item) for item in value]
+
+    return value
 
 
 class GroupValidatingAnalyzer(ValidatingAnalyzer):
@@ -17,11 +37,21 @@ class GroupValidatingAnalyzer(ValidatingAnalyzer):
 
 class TaskValidatingAnalyzer(ValidatingAnalyzer):
     def visit_Transform(self, transform):
-        if transform.name == "tasks" and not isinstance(transform.subject.value, list):
-            yield f"{transform.subject.value} is not a valid list of tasks."
+        value = parse_literal(transform.subject.value)
 
-        if transform.name == "task" and not isinstance(transform.subject.value, str):
-            yield f"{transform.subject.value} is not a valid task slug."
+        if transform.name == "tasks":
+            if not isinstance(value, list):
+                yield f"`{value}` is not a valid list of tasks."
+            else:
+                for slug in value:
+                    if not task_exists(slug):
+                        yield f"The task `{slug}` does not exist or is not registered as dynamic task"
+
+        elif transform.name == "task":
+            if not isinstance(value, str):
+                yield f"`{value}` is not a valid task slug."
+            elif not task_exists(value):
+                yield f"The task `{value}` does not exist or is not registered as dynamic task"
 
         yield from super().visit_Transform(transform)
 
@@ -123,10 +153,18 @@ class GroupJexl(JEXL):
 
 
 class FlowJexl(JEXL):
-    def __init__(self, **kwargs):
+    def __init__(
+        self, case=None, user=None, prev_work_item=None, dynamic_context=None, **kwargs
+    ):
         super().__init__(**kwargs)
-        self.add_transform("task", lambda spec: spec)
-        self.add_transform("tasks", lambda spec: spec)
+
+        self.case = case
+        self.user = user
+        self.prev_work_item = prev_work_item
+        self.dynamic_context = dynamic_context
+
+        self.add_transform("task", self.task_transform)
+        self.add_transform("tasks", self.tasks_transform)
 
     def validate(self, expression):
         return super().validate(expression, TaskValidatingAnalyzer)
@@ -145,3 +183,45 @@ class FlowJexl(JEXL):
                 )
             )
         )
+
+    @classmethod
+    def get_all_registered_dynamic_tasks(cls):
+        return chain(
+            *[
+                dynamic_tasks_class().get_registered_dynamic_tasks()
+                for dynamic_tasks_class in cls.dynamic_tasks_classes
+            ]
+        )
+
+    def task_transform(self, task_name):
+        all_tasks = self.tasks_transform([task_name])
+
+        if len(all_tasks) > 1:
+            raise ValidationError(
+                f"The dynamic task `{task_name}` used by the `task` transform should "
+                f"not return more than one task -- it returned {len(all_tasks)}"
+            )
+
+        return all_tasks[0] if len(all_tasks) else []
+
+    def tasks_transform(self, task_names):
+        evaluated = [self._get_dynamic_task(task_name) for task_name in task_names]
+
+        # transform all evaluated tasks into a sorted, unique and flat list
+        return sorted(set(chain(*evaluated)))
+
+    def _get_dynamic_task(self, name):
+        for dynamic_tasks_class in self.dynamic_tasks_classes:
+            method = dynamic_tasks_class().resolve(name)
+
+            if method:
+                value = method(
+                    self.case, self.user, self.prev_work_item, self.dynamic_context
+                )
+
+                if not isinstance(value, list):
+                    value = [value]
+
+                return value
+
+        return [name]

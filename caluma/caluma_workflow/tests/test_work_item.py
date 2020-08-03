@@ -444,7 +444,7 @@ def test_complete_work_item_with_next_multiple_tasks(
         2, type=models.Task.TYPE_SIMPLE
     )
     task_flow = task_flow_factory(task=task, workflow=workflow)
-    task_flow.flow.next = f"['{task_next_1.slug}', '{task_next_2.slug}']|task"
+    task_flow.flow.next = f"['{task_next_1.slug}', '{task_next_2.slug}']|tasks"
     task_flow.flow.save()
 
     query = """
@@ -499,7 +499,7 @@ def test_complete_work_item_with_next_multiple_instance_task(
         is_multiple_instance=True, address_groups=["group1", "group2", "group3"]
     )
     task_flow = task_flow_factory(task=task, workflow=workflow)
-    task_flow.flow.next = f"['{task_next.slug}']|task"
+    task_flow.flow.next = f"['{task_next.slug}']|tasks"
     task_flow.flow.save()
 
     query = """
