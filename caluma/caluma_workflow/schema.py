@@ -257,6 +257,9 @@ class StartCase(Mutation):
 
 
 class SaveCase(Mutation):
+    class Input:
+        id = graphene.String()
+
     class Meta:
         serializer_class = serializers.SaveCaseSerializer
         model_operations = ["create", "update"]
