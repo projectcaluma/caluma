@@ -2603,9 +2603,9 @@
     task: Task!
     status: WorkItemStatus!
     meta: GenericScalar
-    addressedGroups: [String]!
-    controllingGroups: [String]!
-    assignedUsers: [String]!
+    addressedGroups: [String!]!
+    controllingGroups: [String!]!
+    assignedUsers: [String!]!
     case: Case!
     childCase: Case
     document: Document
