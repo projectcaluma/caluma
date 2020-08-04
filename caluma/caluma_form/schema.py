@@ -815,6 +815,9 @@ class FileAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
 
 class SaveDocument(Mutation):
+    class Input:
+        id = graphene.String()
+
     class Meta:
         serializer_class = serializers.DocumentSerializer
         model_operations = ["create", "update"]
