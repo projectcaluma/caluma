@@ -94,26 +94,13 @@ class GroupJexl(JEXL):
 
         self.context = Context(context_data)
 
-        self.add_transform(
-            "groups",
-            lambda names: sorted(
-                set(
-                    chain(
-                        *[
-                            self._get_dynamic_group(
-                                name,
-                                task,
-                                case,
-                                work_item_created_by_user,
-                                prev_work_item,
-                                dynamic_context,
-                            )
-                            for name in names
-                        ]
-                    )
-                )
-            ),
-        )
+        self.task = task
+        self.case = case
+        self.work_item_created_by_user = work_item_created_by_user
+        self.prev_work_item = prev_work_item
+        self.dynamic_context = dynamic_context
+
+        self.add_transform("groups", self.groups_transform)
 
     def validate(self, expression):
         return super().validate(expression, GroupValidatingAnalyzer)
@@ -124,24 +111,21 @@ class GroupJexl(JEXL):
             return value
         return [value]
 
-    def _get_dynamic_group(
-        self,
-        name,
-        task,
-        case,
-        work_item_created_by_user,
-        prev_work_item,
-        dynamic_context,
-    ):
+    def groups_transform(self, group_names):
+        evaluated = [self._get_dynamic_group(group_name) for group_name in group_names]
+
+        return sorted(set(chain(*evaluated)))
+
+    def _get_dynamic_group(self, name):
         for dynamic_groups_class in self.dynamic_groups_classes:
             method = dynamic_groups_class().resolve(name)
             if method:
                 value = method(
-                    task,
-                    case,
-                    work_item_created_by_user,
-                    prev_work_item,
-                    dynamic_context,
+                    self.task,
+                    self.case,
+                    self.work_item_created_by_user,
+                    self.prev_work_item,
+                    self.dynamic_context,
                 )
 
                 if not isinstance(value, list):
