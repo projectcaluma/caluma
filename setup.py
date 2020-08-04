@@ -75,7 +75,7 @@ setup(
         "django-watchman<2",
         "djangorestframework<4",
         "django_simple_history<4",
-        "graphene-django<=2.13.0",
+        "graphene-django<=2.8.2",
         "idna<4",
         "minio >= 7, < 8",
         "psycopg2-binary >= 2.9",
