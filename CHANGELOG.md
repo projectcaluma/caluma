@@ -1,3 +1,20 @@
+# v6.1.0 (4 August 2020)
+
+### Feature
+* Add support for dynamic tasks (689f6a9940f13f7482f62a78e53ea5cc5822cffa)
+* Context for DynamicGroups (9ecc69a243ea1ed21d14c17fff8ec4bf9e205169)
+* Add mutation and api function for canceling work items (0b04defaccb8e78746ec1f78826febd2c247aeb7)
+* Save the previous work item on the model (84cd768f99607e99cd966b95ba2aa6d6211c030e)
+
+### Fix
+* Fix flakiness by sorting the list during snapshotting (825492a27a8ce156395fbd19b99acd4f85e5e836)
+* Extend test_start_case (b70b6ea1e725a935207a690016030010646c5308)
+* Fix history by not using djangos update function (59ca6f5732d2fdc3ecb0191563c169066581e625)
+
+### Documentation
+* Remove duplicated intro section (175285142c6b623bf8c2132a4c73189bde5dc66e)
+
+
 # v6.0.0 (29 July 2020)
 
 ### Feature
