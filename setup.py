@@ -21,8 +21,8 @@ echo ENV=dev >> .env
 docker-compose up -d db
 rm -f Pipfile*
 touch Pipfile
-pipenv install --python 3.8 -r requirements.txt
-pipenv install -d -r requirements-dev.txt
+pipenv install --pre --python 3.8 -r requirements.txt
+pipenv install --pre -d -r requirements-dev.txt
 """.strip().splitlines()
 
 
@@ -75,7 +75,7 @@ setup(
         "django-watchman<2",
         "djangorestframework<4",
         "django_simple_history<4",
-        "graphene-django<=2.13.0",
+        "graphene-django<=3.0.0b7",
         "idna<4",
         "minio >= 7, < 8",
         "psycopg2-binary >= 2.9",

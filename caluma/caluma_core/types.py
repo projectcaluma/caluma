@@ -66,10 +66,13 @@ class DjangoConnectionField(DjangoConnectionField):
     This can be removed, when (or better if)
     https://github.com/graphql-python/graphql-relay-py/issues/12
     is resolved.
+
+    TODO: properly implement max_limit, see
+    https://github.com/graphql-python/graphene-django/blob/b552dcac24364d3ef824f865ba419c74605942b2/graphene_django/fields.py#L133
     """
 
     @classmethod
-    def resolve_connection(cls, connection, args, iterable, max_limit):
+    def resolve_connection(cls, connection, args, iterable, max_limit=None):
         iterable = maybe_queryset(iterable)
         if isinstance(iterable, QuerySet):
             # only query count on database when pagination is needed
