@@ -200,12 +200,15 @@ class WorkItemFilterSet(MetaFilterSet):
     case_document_has_answer = HasAnswerFilter(document_id="case__document__pk")
     case_meta_value = JSONValueFilter(field_name="case__meta")
 
+    tasks = SlugMultipleChoiceFilter(field_name="task_id")
+
     class Meta:
         model = models.WorkItem
         fields = (
             "status",
             "name",
             "task",
+            "tasks",
             "case",
             "created_at",
             "closed_at",
