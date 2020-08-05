@@ -1,3 +1,9 @@
+# v6.2.0 (5 August 2020)
+
+### Feature
+* Add filter for filtering work items by multiple tasks (32508e587d2183e78265d32f5bff84f783430724)
+
+
 # v6.1.0 (4 August 2020)
 
 ### Feature
