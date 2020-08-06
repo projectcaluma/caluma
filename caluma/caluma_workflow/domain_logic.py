@@ -196,8 +196,8 @@ class SkipWorkItemLogic:
         return validated_data
 
     @staticmethod
-    def post_skip(work_item, user):
-        work_item = CompleteWorkItemLogic.post_complete(work_item, user)
+    def post_skip(work_item, user, context):
+        work_item = CompleteWorkItemLogic.post_complete(work_item, user, context)
 
         send_event(
             events.skipped_work_item,
