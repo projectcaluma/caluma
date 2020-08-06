@@ -72,7 +72,9 @@ def complete_work_item(
     return work_item
 
 
-def skip_work_item(work_item: models.WorkItem, user: BaseUser) -> models.WorkItem:
+def skip_work_item(
+    work_item: models.WorkItem, user: BaseUser, context: Optional[dict] = None
+) -> models.WorkItem:
     """
     Skip a work item (just like `SkipWorkItem`).
 
@@ -88,7 +90,7 @@ def skip_work_item(work_item: models.WorkItem, user: BaseUser) -> models.WorkIte
 
     update_model(models.WorkItem.objects.get(pk=work_item.pk), validated_data)
 
-    domain_logic.SkipWorkItemLogic.post_skip(work_item, user)
+    domain_logic.SkipWorkItemLogic.post_skip(work_item, user, context)
 
     return work_item
 

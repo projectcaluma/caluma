@@ -246,7 +246,7 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
         required=False,
         allow_null=True,
         write_only=True,
-        help_text="Provide extra context for DynamicGroups",
+        help_text="Provide extra context for dynamic jexl transforms",
     )
 
     def validate(self, data):
@@ -282,6 +282,13 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
 
 class SkipWorkItemSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField()
+    context = JSONField(
+        encoder=None,
+        required=False,
+        allow_null=True,
+        write_only=True,
+        help_text="Provide extra context for dynamic jexl transforms",
+    )
 
     def validate(self, data):
         try:
@@ -294,16 +301,17 @@ class SkipWorkItemSerializer(serializers.ModelSerializer):
     def update(self, work_item, validated_data):
         user = self.context["request"].user
 
+        context = validated_data.pop("context", {})
         validated_data = domain_logic.SkipWorkItemLogic.pre_skip(validated_data, user)
 
         work_item = super().update(work_item, validated_data)
-        work_item = domain_logic.SkipWorkItemLogic.post_skip(work_item, user)
+        work_item = domain_logic.SkipWorkItemLogic.post_skip(work_item, user, context)
 
         return work_item
 
     class Meta:
         model = models.WorkItem
-        fields = ("id",)
+        fields = ("id", "context")
 
 
 class CancelWorkItemSerializer(serializers.ModelSerializer):

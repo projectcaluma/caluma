@@ -1787,6 +1787,7 @@
   
   input SkipWorkItemInput {
     id: ID!
+    context: JSONString
     clientMutationId: String
   }
   
