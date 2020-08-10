@@ -1,5 +1,6 @@
 import graphene
 from django.db.models import OuterRef, Subquery
+from django_filters.rest_framework import BooleanFilter
 
 from ..caluma_core.filters import (
     CharFilter,
@@ -202,6 +203,10 @@ class WorkItemFilterSet(MetaFilterSet):
 
     tasks = SlugMultipleChoiceFilter(field_name="task_id")
 
+    has_deadline = BooleanFilter(
+        field_name="deadline", lookup_expr="isnull", exclude=True
+    )
+
     class Meta:
         model = models.WorkItem
         fields = (
@@ -213,6 +218,8 @@ class WorkItemFilterSet(MetaFilterSet):
             "created_at",
             "closed_at",
             "modified_at",
+            "deadline",
+            "has_deadline",
         )
 
 
