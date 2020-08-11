@@ -78,16 +78,22 @@ class CaseFactory(DjangoModelFactory):
 
 
 class WorkItemFactory(DjangoModelFactory):
+    name = Faker("multilang", faker_provider="name")
+    description = Faker("multilang", faker_provider="text")
+    closed_at = None
+    closed_by_user = None
+    closed_by_group = None
+    deadline = None
+    status = models.WorkItem.STATUS_READY
+    meta = {}
+    addressed_groups = []
+    controlling_groups = []
+    assigned_users = []
+    task = SubFactory(TaskFactory)
     case = SubFactory(CaseFactory)
     child_case = SubFactory(CaseFactory)
-    task = SubFactory(TaskFactory)
-    status = models.WorkItem.STATUS_READY
     document = SubFactory(DocumentFactory)
-    addressed_groups = []
-    assigned_users = []
-    controlling_groups = []
-    meta = {}
-    deadline = None
+    previous_work_item = None
 
     class Meta:
         model = models.WorkItem

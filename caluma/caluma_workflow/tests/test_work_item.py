@@ -601,17 +601,12 @@ def test_complete_work_item_with_merge(
 @pytest.mark.parametrize(
     "work_item_name,work_item_description,expected_name,expected_description",
     [
-        (
-            None,
-            None,
-            {"en": "Task name", "de": None, "fr": None},
-            {"en": "Task description", "de": None, "fr": None},
-        ),
+        (None, None, "Task name", "Task description"),
         (
             "WorkItem name",
             "WorkItem description",
-            {"en": "WorkItem name", "de": None, "fr": None},
-            {"en": "WorkItem description", "de": None, "fr": None},
+            "WorkItem name",
+            "WorkItem description",
         ),
     ],
 )
@@ -651,8 +646,8 @@ def test_save_work_item(
     work_item.refresh_from_db()
     assert work_item.assigned_users == assigned_users
     assert work_item.meta == {"test": "test"}
-    assert dict(work_item.name) == expected_name
-    assert dict(work_item.description) == expected_description
+    assert work_item.name.en == expected_name
+    assert work_item.description.en == expected_description
 
 
 @pytest.mark.parametrize(
