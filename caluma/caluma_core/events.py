@@ -29,5 +29,6 @@ class SendEventSerializerMixin:
             event,
             sender=self.context["mutation"],
             user=self.context["request"].user,
+            context=getattr(self, "context_data", None),
             **kwargs,
         )  # noqa

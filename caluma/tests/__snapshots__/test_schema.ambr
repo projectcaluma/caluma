@@ -110,6 +110,7 @@
   
   input CancelCaseInput {
     id: ID!
+    context: JSONString
     clientMutationId: String
   }
   
@@ -120,6 +121,7 @@
   
   input CancelWorkItemInput {
     id: ID!
+    context: JSONString
     clientMutationId: String
   }
   
@@ -337,6 +339,7 @@
     controllingGroups: [String]
     deadline: DateTime
     meta: JSONString
+    context: JSONString
     clientMutationId: String
   }
   
@@ -1729,6 +1732,7 @@
     assignedUsers: [String]
     deadline: DateTime
     meta: JSONString
+    context: JSONString
     clientMutationId: String
   }
   
@@ -1901,6 +1905,7 @@
     meta: JSONString
     parentWorkItem: ID
     form: ID
+    context: JSONString
     clientMutationId: String
   }
   

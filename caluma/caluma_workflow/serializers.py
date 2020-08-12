@@ -12,6 +12,21 @@ from . import domain_logic, events, models, utils
 from .jexl import FlowJexl, GroupJexl
 
 
+class ContextModelSerializer(serializers.ModelSerializer):
+    context = JSONField(
+        encoder=None,
+        required=False,
+        allow_null=True,
+        write_only=True,
+        help_text="Provide extra context for dynamic jexl transforms and events",
+    )
+
+    def validate(self, data):
+        self.context_data = data.pop("context", None)
+
+        return super().validate(data)
+
+
 class FlowJexlField(serializers.JexlField):
     def __init__(self, **kwargs):
         super().__init__(FlowJexl(), **kwargs)
@@ -150,7 +165,7 @@ class SaveCompleteTaskFormTaskSerializer(SaveTaskSerializer):
         fields = SaveTaskSerializer.Meta.fields + ("form",)
 
 
-class CaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
+class CaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
     workflow = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Workflow.objects.prefetch_related("start_tasks")
     )
@@ -173,33 +188,23 @@ class CaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
 
-        context = validated_data.pop("context", {})
         validated_data = domain_logic.StartCaseLogic.pre_start(validated_data, user)
 
         case = super().create(validated_data)
 
         return domain_logic.StartCaseLogic.post_start(
-            case, user, validated_data.get("parent_work_item"), context
+            case, user, validated_data.get("parent_work_item"), self.context_data
         )
 
     class Meta:
         model = models.Case
-        fields = ("workflow", "meta", "parent_work_item", "form")
+        fields = ("workflow", "meta", "parent_work_item", "form", "context")
 
 
 class SaveCaseSerializer(CaseSerializer):
-    context = JSONField(
-        encoder=None,
-        required=False,
-        allow_null=True,
-        write_only=True,
-        help_text="Provide extra context for DynamicGroups",
-        style={"base_template": "textarea.html"},
-    )
-
     def create(self, validated_data):
         instance = super().create(validated_data)
-        self.send_event(events.created_case, case=instance)
+        self.send_event(events.created_case)
         return instance
 
     def update(self, instance, validated_data):
@@ -211,12 +216,12 @@ class SaveCaseSerializer(CaseSerializer):
         fields = ("id", "workflow", "meta", "parent_work_item", "form", "context")
 
 
-class CancelCaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
+class CancelCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
     id = serializers.GlobalIDField()
 
     class Meta:
         model = models.Case
-        fields = ("id",)
+        fields = ("id", "context")
 
     def validate(self, data):
         try:
@@ -234,20 +239,13 @@ class CancelCaseSerializer(SendEventSerializerMixin, serializers.ModelSerializer
             instance, domain_logic.CancelCaseLogic.pre_cancel(validated_data, user)
         )
 
-        domain_logic.CancelCaseLogic.post_cancel(instance, user)
+        domain_logic.CancelCaseLogic.post_cancel(instance, user, self.context_data)
 
         return instance
 
 
-class CompleteWorkItemSerializer(serializers.ModelSerializer):
+class CompleteWorkItemSerializer(ContextModelSerializer):
     id = serializers.GlobalIDField()
-    context = JSONField(
-        encoder=None,
-        required=False,
-        allow_null=True,
-        write_only=True,
-        help_text="Provide extra context for dynamic jexl transforms",
-    )
 
     def validate(self, data):
         try:
@@ -263,14 +261,13 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
     def update(self, work_item, validated_data):
         user = self.context["request"].user
 
-        context = validated_data.pop("context", {})
         validated_data = domain_logic.CompleteWorkItemLogic.pre_complete(
             validated_data, user
         )
 
         work_item = super().update(work_item, validated_data)
         work_item = domain_logic.CompleteWorkItemLogic.post_complete(
-            work_item, user, context
+            work_item, user, self.context_data
         )
 
         return work_item
@@ -280,15 +277,8 @@ class CompleteWorkItemSerializer(serializers.ModelSerializer):
         fields = ("id", "context")
 
 
-class SkipWorkItemSerializer(serializers.ModelSerializer):
+class SkipWorkItemSerializer(ContextModelSerializer):
     id = serializers.GlobalIDField()
-    context = JSONField(
-        encoder=None,
-        required=False,
-        allow_null=True,
-        write_only=True,
-        help_text="Provide extra context for dynamic jexl transforms",
-    )
 
     def validate(self, data):
         try:
@@ -296,16 +286,17 @@ class SkipWorkItemSerializer(serializers.ModelSerializer):
         except ValidationError as e:
             raise exceptions.ValidationError(str(e))
 
-        return data
+        return super().validate(data)
 
     def update(self, work_item, validated_data):
         user = self.context["request"].user
 
-        context = validated_data.pop("context", {})
         validated_data = domain_logic.SkipWorkItemLogic.pre_skip(validated_data, user)
 
         work_item = super().update(work_item, validated_data)
-        work_item = domain_logic.SkipWorkItemLogic.post_skip(work_item, user, context)
+        work_item = domain_logic.SkipWorkItemLogic.post_skip(
+            work_item, user, self.context_data
+        )
 
         return work_item
 
@@ -314,7 +305,7 @@ class SkipWorkItemSerializer(serializers.ModelSerializer):
         fields = ("id", "context")
 
 
-class CancelWorkItemSerializer(serializers.ModelSerializer):
+class CancelWorkItemSerializer(ContextModelSerializer):
     id = serializers.GlobalIDField()
 
     def validate(self, data):
@@ -323,7 +314,7 @@ class CancelWorkItemSerializer(serializers.ModelSerializer):
         except ValidationError as e:
             raise exceptions.ValidationError(str(e))
 
-        return data
+        return super().validate(data)
 
     def update(self, work_item, validated_data):
         user = self.context["request"].user
@@ -333,16 +324,18 @@ class CancelWorkItemSerializer(serializers.ModelSerializer):
         )
 
         work_item = super().update(work_item, validated_data)
-        work_item = domain_logic.CancelWorkItemLogic.post_cancel(work_item, user)
+        work_item = domain_logic.CancelWorkItemLogic.post_cancel(
+            work_item, user, self.context_data
+        )
 
         return work_item
 
     class Meta:
         model = models.WorkItem
-        fields = ("id",)
+        fields = ("id", "context")
 
 
-class SaveWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
+class SaveWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer):
     work_item = serializers.GlobalIDField(source="id")
     name = CharField(
         required=False,
@@ -371,10 +364,11 @@ class SaveWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerializ
             "assigned_users",
             "deadline",
             "meta",
+            "context",
         )
 
 
-class CreateWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerializer):
+class CreateWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer):
     case = serializers.GlobalIDPrimaryKeyRelatedField(queryset=models.Case.objects)
     multiple_instance_task = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Task.objects, source="task"
@@ -416,14 +410,14 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerial
 
         if "controlling_groups" not in data:
             controlling_groups = utils.get_jexl_groups(
-                task.control_groups, task, case, user
+                task.control_groups, task, case, user, None, data.get("context", None)
             )
             if controlling_groups is not None:
                 data["controlling_groups"] = controlling_groups
 
         if "addressed_groups" not in data:
             addressed_groups = utils.get_jexl_groups(
-                task.address_groups, task, case, user
+                task.address_groups, task, case, user, None, data.get("context", None)
             )
             if addressed_groups is not None:
                 data["addressed_groups"] = addressed_groups
@@ -447,4 +441,5 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, serializers.ModelSerial
             "controlling_groups",
             "deadline",
             "meta",
+            "context",
         )

@@ -64,15 +64,22 @@ class StartCaseLogic:
         workflow = case.workflow
         tasks = workflow.start_tasks.all()
 
-        work_items = utils.bulk_create_work_items(tasks, case, user, context)
+        work_items = utils.bulk_create_work_items(tasks, case, user, None, context)
 
-        send_event(events.created_case, sender="case_post_create", case=case, user=user)
+        send_event(
+            events.created_case,
+            sender="case_post_create",
+            case=case,
+            user=user,
+            context=context,
+        )
         for work_item in work_items:  # pragma: no cover
             send_event(
                 events.created_work_item,
                 sender="case_post_create",
                 work_item=work_item,
                 user=user,
+                context=context,
             )
 
         return case
@@ -142,7 +149,7 @@ class CompleteWorkItemLogic:
 
             if all_siblings_complete:
                 created_work_items = utils.bulk_create_work_items(
-                    next_tasks, case, user, work_item
+                    next_tasks, case, user, work_item, context
                 )
 
                 for created_work_item in created_work_items:  # pragma: no cover
@@ -151,6 +158,7 @@ class CompleteWorkItemLogic:
                         sender="post_complete_work_item",
                         work_item=created_work_item,
                         user=user,
+                        context=context,
                     )
         else:
             has_ready_work_items = work_item.case.work_items.filter(
@@ -169,6 +177,7 @@ class CompleteWorkItemLogic:
                     sender="post_complete_work_item",
                     case=case,
                     user=user,
+                    context=context,
                 )
 
         send_event(
@@ -176,6 +185,7 @@ class CompleteWorkItemLogic:
             sender="post_complete_work_item",
             work_item=work_item,
             user=user,
+            context=context,
         )
 
         return work_item
@@ -196,7 +206,7 @@ class SkipWorkItemLogic:
         return validated_data
 
     @staticmethod
-    def post_skip(work_item, user, context):
+    def post_skip(work_item, user, context=None):
         work_item = CompleteWorkItemLogic.post_complete(work_item, user, context)
 
         send_event(
@@ -204,6 +214,7 @@ class SkipWorkItemLogic:
             sender="post_skip_work_item",
             work_item=work_item,
             user=user,
+            context=context,
         )
 
         return work_item
@@ -235,7 +246,7 @@ class CancelCaseLogic:
         return validated_data
 
     @staticmethod
-    def post_cancel(case, user):
+    def post_cancel(case, user, context=None):
         work_items = case.work_items.exclude(
             status__in=[
                 models.WorkItem.STATUS_COMPLETED,
@@ -257,10 +268,15 @@ class CancelCaseLogic:
                 sender="post_cancel_case",
                 work_item=work_item,
                 user=user,
+                context=context,
             )
 
         send_event(
-            events.cancelled_case, sender="post_cancel_case", case=case, user=user
+            events.cancelled_case,
+            sender="post_cancel_case",
+            case=case,
+            user=user,
+            context=context,
         )
 
         return case
@@ -282,12 +298,13 @@ class CancelWorkItemLogic:
         return validated_data
 
     @staticmethod
-    def post_cancel(work_item, user):
+    def post_cancel(work_item, user, context=None):
         send_event(
             events.cancelled_work_item,
             sender="post_cancel_work_item",
             work_item=work_item,
             user=user,
+            context=context,
         )
 
         return work_item
