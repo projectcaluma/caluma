@@ -206,6 +206,7 @@ class WorkItemFilterSet(MetaFilterSet):
     has_deadline = BooleanFilter(
         field_name="deadline", lookup_expr="isnull", exclude=True
     )
+    case_family = GlobalIDFilter(field_name="case__family")
 
     class Meta:
         model = models.WorkItem
@@ -220,6 +221,7 @@ class WorkItemFilterSet(MetaFilterSet):
             "modified_at",
             "deadline",
             "has_deadline",
+            "case_family",
         )
 
 
