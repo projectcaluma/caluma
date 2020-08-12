@@ -160,25 +160,6 @@ class CompleteWorkItemLogic:
                         user=user,
                         context=context,
                     )
-        else:
-            has_ready_work_items = work_item.case.work_items.filter(
-                status=models.WorkItem.STATUS_READY
-            ).exists()
-
-            if not has_ready_work_items:
-                # no more tasks, mark case as complete
-                case.status = models.Case.STATUS_COMPLETED
-                case.closed_at = timezone.now()
-                case.closed_by_user = user.username
-                case.closed_by_group = user.group
-                case.save()
-                send_event(
-                    events.completed_case,
-                    sender="post_complete_work_item",
-                    case=case,
-                    user=user,
-                    context=context,
-                )
 
         send_event(
             events.completed_work_item,
@@ -187,6 +168,27 @@ class CompleteWorkItemLogic:
             user=user,
             context=context,
         )
+
+        if (
+            not next_tasks.exists()
+            and not work_item.case.work_items.filter(
+                status=models.WorkItem.STATUS_READY
+            ).exists()
+        ):
+            # no more tasks, mark case as complete
+            case.status = models.Case.STATUS_COMPLETED
+            case.closed_at = timezone.now()
+            case.closed_by_user = user.username
+            case.closed_by_group = user.group
+            case.save()
+
+            send_event(
+                events.completed_case,
+                sender="post_complete_work_item",
+                case=case,
+                user=user,
+                context=context,
+            )
 
         return work_item
 
