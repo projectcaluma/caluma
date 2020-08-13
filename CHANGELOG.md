@@ -1,3 +1,15 @@
+# v6.3.0 (13 August 2020)
+
+### Feature
+* add context for all case and workitem mutations (bb45477eecdc478521feac1cd746d32a79bd7cdd)
+* add filter for case family (2b7271ff7ad4d3ee7f657caf20ef8d8c7a67593d)
+* add filters for work item deadlines (e7eb1044c6a67e7a955229781d2ff8d98af80d48)
+
+### Fix
+* emit completed_work_item event before closing the case (2d9d236eaa0ce37f2bc8b366bbd11b447090bf42)
+* enable context for skipping work items (a4f3b535514ad519f74465e743f785e0aa05994c)
+
+
 # v6.2.0 (5 August 2020)
 
 ### Feature
