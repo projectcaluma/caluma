@@ -95,7 +95,9 @@ def skip_work_item(
     return work_item
 
 
-def cancel_case(case: models.Case, user: BaseUser) -> models.Case:
+def cancel_case(
+    case: models.Case, user: BaseUser, context: Optional[dict] = None
+) -> models.Case:
     """
     Cancel a case and its pending work items (just like `CancelCase`).
 
@@ -111,12 +113,14 @@ def cancel_case(case: models.Case, user: BaseUser) -> models.Case:
 
     update_model(models.Case.objects.get(pk=case.pk), validated_data)
 
-    domain_logic.CancelCaseLogic.post_cancel(case, user)
+    domain_logic.CancelCaseLogic.post_cancel(case, user, context)
 
     return case
 
 
-def cancel_work_item(work_item: models.WorkItem, user: BaseUser) -> models.WorkItem:
+def cancel_work_item(
+    work_item: models.WorkItem, user: BaseUser, context: Optional[dict] = None
+) -> models.WorkItem:
     """
     Cancel a work item (just like `CancelWorkItem`).
 
@@ -132,6 +136,6 @@ def cancel_work_item(work_item: models.WorkItem, user: BaseUser) -> models.WorkI
 
     update_model(models.WorkItem.objects.get(pk=work_item.pk), validated_data)
 
-    domain_logic.CancelWorkItemLogic.post_cancel(work_item, user)
+    domain_logic.CancelWorkItemLogic.post_cancel(work_item, user, context)
 
     return work_item

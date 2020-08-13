@@ -20,7 +20,7 @@ from caluma.caluma_workflow.schema import CompleteWorkItem
 
 
 @on(completed_work_item)
-def send_mail_on_complete_work_item(sender, work_item, user, **kwargs):
+def send_mail_on_complete_work_item(sender, work_item, user, context, **kwargs):
     if work_item.task.slug == "slug-we-are-interested-in":
         # send notification
         pass
@@ -29,7 +29,7 @@ def send_mail_on_complete_work_item(sender, work_item, user, **kwargs):
 # It's also possible to specify a sender, which refers to a mutation class,
 # analog to the `permission_for` decorators
 @on(completed_work_item, sender=CompleteWorkItem)
-def send_mail_on_complete_work_item_2(sender, work_item, user, **kwargs):
+def send_mail_on_complete_work_item_2(sender, work_item, user, context, **kwargs):
     if work_item.task.slug == "slug-we-are-interested-in":
         # send notification
         pass
@@ -56,15 +56,15 @@ in case the event sends additional arguments in the future.
 
 ## List of emitted events
 
-| Event                 | Mutations that can emit this event                                | Arguments           |
-| --------------------- | ----------------------------------------------------------------- | ------------------- |
-| `created_work_item`   | `CreateWorkItem`, `SaveWorkItem`, `StartCase`, `CompleteWorkItem` | `work_item`, `user` |
-| `completed_work_item` | `CompleteWorkItem`                                                | `work_item`, `user` |
-| `cancelled_work_item` | `CancelCase`, `CancelWorkItem`                                    | `work_item`, `user` |
-| `skipped_work_item`   | `SkipWorkItem`                                                    | `work_item`, `user` |
-| `created_case`        | `SaveCase`, `StartCase`                                           | `case`, `user`      |
-| `completed_case`      | `CompleteWorkItem`                                                | `case`, `user`      |
-| `cancelled_case`      | `CancelCase`                                                      | `case`, `user`      |
+| Event                 | Mutations that can emit this event                                | Arguments                      |
+| --------------------- | ----------------------------------------------------------------- | ------------------------------ |
+| `created_work_item`   | `CreateWorkItem`, `SaveWorkItem`, `StartCase`, `CompleteWorkItem` | `work_item`, `user`, `context` |
+| `completed_work_item` | `CompleteWorkItem`                                                | `work_item`, `user`, `context` |
+| `cancelled_work_item` | `CancelCase`, `CancelWorkItem`                                    | `work_item`, `user`, `context` |
+| `skipped_work_item`   | `SkipWorkItem`                                                    | `work_item`, `user`, `context` |
+| `created_case`        | `SaveCase`, `StartCase`                                           | `case`, `user`, `context`      |
+| `completed_case`      | `CompleteWorkItem`                                                | `case`, `user`, `context`      |
+| `cancelled_case`      | `CancelCase`                                                      | `case`, `user`, `context`      |
 
 ## Event receivers are blocking
 
