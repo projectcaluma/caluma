@@ -1,4 +1,5 @@
-from factory import DjangoModelFactory as FactoryDjangoModelFactory, Faker, SubFactory
+from factory import Faker, SubFactory
+from factory.django import DjangoModelFactory as FactoryDjangoModelFactory
 
 from ..caluma_core.factories import DjangoModelFactory
 from ..caluma_form.factories import DocumentFactory, FormFactory
