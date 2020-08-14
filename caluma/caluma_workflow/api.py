@@ -65,7 +65,7 @@ def complete_work_item(
     domain_logic.CompleteWorkItemLogic.validate_for_complete(work_item, user)
     validated_data = domain_logic.CompleteWorkItemLogic.pre_complete({}, user)
 
-    update_model(models.WorkItem.objects.get(pk=work_item.pk), validated_data)
+    update_model(work_item, validated_data)
 
     domain_logic.CompleteWorkItemLogic.post_complete(work_item, user, context)
 
@@ -88,7 +88,7 @@ def skip_work_item(
 
     validated_data = domain_logic.SkipWorkItemLogic.pre_skip({}, user)
 
-    update_model(models.WorkItem.objects.get(pk=work_item.pk), validated_data)
+    update_model(work_item, validated_data)
 
     domain_logic.SkipWorkItemLogic.post_skip(work_item, user, context)
 
@@ -111,7 +111,7 @@ def cancel_case(
 
     validated_data = domain_logic.CancelCaseLogic.pre_cancel({}, user)
 
-    update_model(models.Case.objects.get(pk=case.pk), validated_data)
+    update_model(case, validated_data)
 
     domain_logic.CancelCaseLogic.post_cancel(case, user, context)
 
@@ -134,7 +134,7 @@ def cancel_work_item(
 
     validated_data = domain_logic.CancelWorkItemLogic.pre_cancel({}, user)
 
-    update_model(models.WorkItem.objects.get(pk=work_item.pk), validated_data)
+    update_model(work_item, validated_data)
 
     domain_logic.CancelWorkItemLogic.post_cancel(work_item, user, context)
 
