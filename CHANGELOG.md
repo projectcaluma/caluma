@@ -1,3 +1,9 @@
+# v6.3.1 (14 August 2020)
+
+### Fix
+* fix the return object of api methods (90a9102e3a9e4d9c59b49d11e5e0ec755a84c32d)
+
+
 # v6.3.0 (13 August 2020)
 
 ### Feature
