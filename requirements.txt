@@ -1,12 +1,12 @@
 dateparser==0.7.6
-django==2.2.14
+django==2.2.15
 django-cors-headers==3.4.0
 django-environ==0.4.5
-django-extensions==2.2.9
+django-extensions==3.0.5
 django-filter==2.3.0
 django-localized-fields==5.4.2
 django-postgres-extra==1.22
-djangorestframework==3.11.0
+djangorestframework==3.11.1
 django_simple_history==2.11.0
 graphene-django==2.8.2
 idna==2.10
