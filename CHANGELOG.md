@@ -1,3 +1,8 @@
+# v6.3.2 (17 August 2020)
+
+### Fix
+* Import djangomodelfactory from actual module path (341148f74429a4f2d032731778edce819598dce3)
+
 # v6.3.1 (14 August 2020)
 
 ### Fix
