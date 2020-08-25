@@ -63,20 +63,26 @@ def bulk_create_work_items(
             prev_work_item if prev_work_item else None,
             context,
         )
-        addressed_groups = [
-            get_jexl_groups(
-                task.address_groups,
-                task,
-                case,
-                user,
-                prev_work_item if prev_work_item else None,
-                context,
-            )
-        ]
+        addressed_groups = get_jexl_groups(
+            task.address_groups,
+            task,
+            case,
+            user,
+            prev_work_item if prev_work_item else None,
+            context,
+        )
         if task.is_multiple_instance:
-            addressed_groups = [[x] for x in addressed_groups[0]]
+            # for multiple instance tasks, create one work item per adressed group
+            work_item_groups = [[group] for group in addressed_groups]
 
-        for groups in addressed_groups:
+            # make sure that at least one work item is always created, even if addressed_groups is empty
+            if not work_item_groups:
+                work_item_groups = [[]]
+        else:
+            # for regular tasks, multiple groups can be adressed to one work item
+            work_item_groups = [addressed_groups]
+
+        for groups in work_item_groups:
             work_items.append(
                 models.WorkItem(
                     addressed_groups=groups,
