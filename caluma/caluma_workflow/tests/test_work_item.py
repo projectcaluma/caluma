@@ -351,19 +351,23 @@ def test_complete_multiple_instance_task_form_work_item_next(
     ],
 )
 @pytest.mark.parametrize(
-    "group_jexl",
+    "group_jexl,is_multiple_instance",
     [
-        '["some-group"]|groups',
-        "info.prev_work_item.controlling_groups",
-        "info.work_item.created_by_group",
-        "info.case.created_by_group",
-        "[info.case.created_by_group, info.work_item.created_by_group]|groups",
-        "[info.case.created_by_group, info.work_item.created_by_group]",
+        ('["some-group"]|groups', False),
+        ("info.prev_work_item.controlling_groups", False),
+        ("info.work_item.created_by_group", False),
+        ("info.case.created_by_group", False),
+        ("[info.case.created_by_group, info.work_item.created_by_group]|groups", False),
+        ("[info.case.created_by_group, info.work_item.created_by_group]", False),
+        ("[info.case.created_by_group, info.work_item.created_by_group]", True),
+        ("[]", False),
+        ("[]", True),
     ],
 )
 def test_complete_work_item_with_next(
     db,
     group_jexl,
+    is_multiple_instance,
     snapshot,
     work_item,
     task,
@@ -390,6 +394,7 @@ def test_complete_work_item_with_next(
         form=None,
         address_groups=group_jexl,
         control_groups=group_jexl,
+        is_multiple_instance=is_multiple_instance,
     )
     task_flow = task_flow_factory(task=task, workflow=workflow)
     task_flow.flow.next = f"'{task_next.slug}'|task"
