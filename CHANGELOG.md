@@ -1,7 +1,15 @@
+# v6.3.3 (25 August 2020)
+
+### Fix
+* Add test (31f45985d320966d266d628eaaaf848fa5bead9b)
+* Make sure that one work item is always created (defc79770b7e76840e29d543bb98e5ef65fb3f89)
+
+
 # v6.3.2 (17 August 2020)
 
 ### Fix
 * Import djangomodelfactory from actual module path (341148f74429a4f2d032731778edce819598dce3)
+
 
 # v6.3.1 (14 August 2020)
 
