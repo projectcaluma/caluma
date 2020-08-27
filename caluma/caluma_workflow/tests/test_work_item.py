@@ -880,6 +880,46 @@ def test_query_all_work_items_filter_case_meta_value(
     assert len(result.data["allWorkItems"]["edges"]) == len_results
 
 
+@pytest.mark.parametrize("value,len_results", [(1, 3), (2, 0), (3, 0), (4, 1)])
+def test_query_all_work_items_filter_root_case_meta_value(
+    db, work_item_factory, case_factory, schema_executor, value, len_results
+):
+    case = case_factory(meta={"testkey": 1})
+    child_case = case_factory(meta={"testkey": 2}, family=case)
+    child_child_case = case_factory(meta={"testkey": 3}, family=case)
+    unrelated_case = case_factory(meta={"testkey": 4})
+
+    # create a tree of case - work_item - child_case - workitem - child_child_case - work_item
+    work_item_factory(case=case, child_case=child_case)
+    work_item_factory(case=child_case, child_case=child_child_case)
+    work_item_factory(case=child_child_case)
+    work_item_factory(case=unrelated_case)
+
+    query = """
+        query WorkItems($root_case_meta_value: [JSONValueFilterType!]) {
+          allWorkItems(rootCaseMetaValue: $root_case_meta_value) {
+            totalCount
+            edges {
+              node {
+                case {
+                  meta
+                }
+              }
+            }
+          }
+        }
+    """
+
+    variables = {"key": "testkey", "value": value}
+
+    result = schema_executor(
+        query, variable_values={"root_case_meta_value": [variables]}
+    )
+
+    assert not result.errors
+    assert len(result.data["allWorkItems"]["edges"]) == len_results
+
+
 @pytest.mark.parametrize(
     "work_item__status,work_item__child_case,case__status,task__type,case__document",
     [
