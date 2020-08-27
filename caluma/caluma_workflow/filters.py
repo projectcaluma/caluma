@@ -200,6 +200,7 @@ class WorkItemFilterSet(MetaFilterSet):
     document_has_answer = HasAnswerFilter(document_id="document__pk")
     case_document_has_answer = HasAnswerFilter(document_id="case__document__pk")
     case_meta_value = JSONValueFilter(field_name="case__meta")
+    root_case_meta_value = JSONValueFilter(field_name="case__family__meta")
 
     tasks = SlugMultipleChoiceFilter(field_name="task_id")
 
