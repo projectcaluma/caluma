@@ -310,3 +310,51 @@ class CancelWorkItemLogic:
         )
 
         return work_item
+
+
+class SuspendWorkItemLogic:
+    @staticmethod
+    def validate_for_suspend(work_item):
+        if work_item.status != models.WorkItem.STATUS_READY:
+            raise ValidationError("Only READY work items can be suspended")
+
+    @staticmethod
+    def pre_suspend(validated_data, user):
+        validated_data["status"] = models.WorkItem.STATUS_SUSPENDED
+        return validated_data
+
+    @staticmethod
+    def post_suspend(work_item, user, context=None):
+        send_event(
+            events.suspended_work_item,
+            sender="post_suspend_work_item",
+            work_item=work_item,
+            user=user,
+            context=context,
+        )
+
+        return work_item
+
+
+class ResumeWorkItemLogic:
+    @staticmethod
+    def validate_for_resume(work_item):
+        if work_item.status != models.WorkItem.STATUS_SUSPENDED:
+            raise ValidationError("Only SUSPENDED work items can be resumed")
+
+    @staticmethod
+    def pre_resume(validated_data, user):
+        validated_data["status"] = models.WorkItem.STATUS_READY
+        return validated_data
+
+    @staticmethod
+    def post_resume(work_item, user, context=None):
+        send_event(
+            events.resumed_work_item,
+            sender="post_resume_work_item",
+            work_item=work_item,
+            user=user,
+            context=context,
+        )
+
+        return work_item

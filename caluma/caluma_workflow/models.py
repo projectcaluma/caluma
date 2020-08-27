@@ -167,13 +167,16 @@ class WorkItem(UUIDModel):
     STATUS_COMPLETED = "completed"
     STATUS_CANCELED = "canceled"
     STATUS_SKIPPED = "skipped"
+    STATUS_SUSPENDED = "suspended"
 
-    STATUS_CHOICES = (STATUS_READY, STATUS_COMPLETED, STATUS_CANCELED)
+    STATUS_CHOICES = (STATUS_READY, STATUS_COMPLETED, STATUS_CANCELED, STATUS_SUSPENDED)
+
     STATUS_CHOICE_TUPLE = (
         (STATUS_READY, "Task is ready to be processed."),
         (STATUS_COMPLETED, "Task is done."),
         (STATUS_CANCELED, "Task is cancelled."),
         (STATUS_SKIPPED, "Task is skipped."),
+        (STATUS_SUSPENDED, "Task is suspended."),
     )
 
     name = LocalizedField(

@@ -933,6 +933,7 @@ def test_skip_task_form_work_item(
         (models.WorkItem.STATUS_COMPLETED, False),
         (models.WorkItem.STATUS_CANCELED, False),
         (models.WorkItem.STATUS_SKIPPED, False),
+        (models.WorkItem.STATUS_SUSPENDED, False),
         (models.WorkItem.STATUS_READY, True),
     ],
 )
@@ -1113,31 +1114,71 @@ def test_complete_work_item_same_task_multiple_workflows(
 
 @pytest.mark.parametrize("use_graphql_api", [True, False])
 @pytest.mark.parametrize(
-    "work_item__status,success,expected_status",
+    "action,work_item__status,success,expected_status",
     [
-        (models.WorkItem.STATUS_READY, True, models.WorkItem.STATUS_CANCELED),
-        (models.WorkItem.STATUS_SKIPPED, False, models.WorkItem.STATUS_SKIPPED),
+        ("Cancel", models.WorkItem.STATUS_READY, True, models.WorkItem.STATUS_CANCELED),
+        (
+            "Cancel",
+            models.WorkItem.STATUS_SKIPPED,
+            False,
+            models.WorkItem.STATUS_SKIPPED,
+        ),
+        (
+            "Suspend",
+            models.WorkItem.STATUS_READY,
+            True,
+            models.WorkItem.STATUS_SUSPENDED,
+        ),
+        (
+            "Suspend",
+            models.WorkItem.STATUS_SKIPPED,
+            False,
+            models.WorkItem.STATUS_SKIPPED,
+        ),
+        ("Resume", models.WorkItem.STATUS_READY, False, models.WorkItem.STATUS_READY),
+        (
+            "Resume",
+            models.WorkItem.STATUS_SKIPPED,
+            False,
+            models.WorkItem.STATUS_SKIPPED,
+        ),
+        (
+            "Resume",
+            models.WorkItem.STATUS_SUSPENDED,
+            True,
+            models.WorkItem.STATUS_READY,
+        ),
     ],
 )
-def test_cancel_work_item(
+def test_cancel_suspend_resume_work_item(
     db,
     work_item,
     schema_executor,
     admin_user,
     use_graphql_api,
+    action,
     success,
     expected_status,
 ):
-    error_msg = "Only READY work items can be cancelled"
+    error_msg = {
+        "Cancel": "Only READY work items can be cancelled",
+        "Suspend": "Only READY work items can be suspended",
+        "Resume": "Only SUSPENDED work items can be resumed",
+    }[action]
+    _action = action.lower()
 
     if use_graphql_api:
         query = """
-            mutation CancelWorkItem($input: CancelWorkItemInput!) {
-                cancelWorkItem(input: $input) {
+            mutation %sWorkItem($input: %sWorkItemInput!) {
+                %sWorkItem(input: $input) {
                     clientMutationId
                 }
             }
-        """
+        """ % (
+            action,
+            action,
+            _action,
+        )
 
         result = schema_executor(query, variable_values={"input": {"id": work_item.pk}})
 
@@ -1147,10 +1188,10 @@ def test_cancel_work_item(
             assert error_msg in str(result.errors[0])
     else:
         if success:
-            api.cancel_work_item(work_item, admin_user)
+            getattr(api, f"{_action}_work_item")(work_item, admin_user)
         else:
             with pytest.raises(ValidationError) as error:
-                api.cancel_work_item(work_item, admin_user)
+                getattr(api, f"{_action}_work_item")(work_item, admin_user)
 
             assert error_msg in str(error.value)
 

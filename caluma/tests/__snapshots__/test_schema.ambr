@@ -1065,6 +1065,8 @@
     completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
     skipWorkItem(input: SkipWorkItemInput!): SkipWorkItemPayload
     cancelWorkItem(input: CancelWorkItemInput!): CancelWorkItemPayload
+    suspendWorkItem(input: SuspendWorkItemInput!): SuspendWorkItemPayload
+    resumeWorkItem(input: ResumeWorkItemInput!): ResumeWorkItemPayload
     saveWorkItem(input: SaveWorkItemInput!): SaveWorkItemPayload
     createWorkItem(input: CreateWorkItemInput!): CreateWorkItemPayload
     saveForm(input: SaveFormInput!): SaveFormPayload
@@ -1292,6 +1294,17 @@
   
   type ReorderFormQuestionsPayload {
     form: Form
+    clientMutationId: String
+  }
+  
+  input ResumeWorkItemInput {
+    id: ID!
+    context: JSONString
+    clientMutationId: String
+  }
+  
+  type ResumeWorkItemPayload {
+    workItem: WorkItem
     clientMutationId: String
   }
   
@@ -1938,6 +1951,7 @@
     COMPLETED
     CANCELED
     SKIPPED
+    SUSPENDED
   }
   
   type StringAnswer implements Answer, Node {
@@ -1949,6 +1963,17 @@
     question: Question!
     value: String
     meta: GenericScalar!
+  }
+  
+  input SuspendWorkItemInput {
+    id: ID!
+    context: JSONString
+    clientMutationId: String
+  }
+  
+  type SuspendWorkItemPayload {
+    workItem: WorkItem
+    clientMutationId: String
   }
   
   type TableAnswer implements Answer, Node {
@@ -2222,6 +2247,7 @@
     COMPLETED
     CANCELED
     SKIPPED
+    SUSPENDED
   }
   
   enum WorkItemStatusArgument {
@@ -2229,6 +2255,7 @@
     COMPLETED
     CANCELED
     SKIPPED
+    SUSPENDED
   }
   
   type Workflow implements Node {

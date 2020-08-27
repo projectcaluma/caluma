@@ -139,3 +139,49 @@ def cancel_work_item(
     domain_logic.CancelWorkItemLogic.post_cancel(work_item, user, context)
 
     return work_item
+
+
+def suspend_work_item(
+    work_item: models.WorkItem, user: BaseUser, context: Optional[dict] = None
+) -> models.WorkItem:
+    """
+    Suspend a work item (just like `SuspendWorkItem`).
+
+    >>> suspend_work_item(
+    ...     work_item=models.WorkItem.first(),
+    ...     user=AnonymousUser()
+    ... )
+    <WorkItem: WorkItem object (some-uuid)>
+    """
+    domain_logic.SuspendWorkItemLogic.validate_for_suspend(work_item)
+
+    validated_data = domain_logic.SuspendWorkItemLogic.pre_suspend({}, user)
+
+    update_model(work_item, validated_data)
+
+    domain_logic.SuspendWorkItemLogic.post_suspend(work_item, user, context)
+
+    return work_item
+
+
+def resume_work_item(
+    work_item: models.WorkItem, user: BaseUser, context: Optional[dict] = None
+) -> models.WorkItem:
+    """
+    Resume a work item (just like `ResumeWorkItem`).
+
+    >>> resume_work_item(
+    ...     work_item=models.WorkItem.first(),
+    ...     user=AnonymousUser()
+    ... )
+    <WorkItem: WorkItem object (some-uuid)>
+    """
+    domain_logic.ResumeWorkItemLogic.validate_for_resume(work_item)
+
+    validated_data = domain_logic.ResumeWorkItemLogic.pre_resume({}, user)
+
+    update_model(work_item, validated_data)
+
+    domain_logic.ResumeWorkItemLogic.post_resume(work_item, user, context)
+
+    return work_item
