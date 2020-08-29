@@ -110,12 +110,20 @@ class Case(UUIDModel):
     STATUS_RUNNING = "running"
     STATUS_COMPLETED = "completed"
     STATUS_CANCELED = "canceled"
+    STATUS_SUSPENDED = "suspended"
 
-    STATUS_CHOICES = (STATUS_RUNNING, STATUS_COMPLETED, STATUS_CANCELED)
+    STATUS_CHOICES = (
+        STATUS_RUNNING,
+        STATUS_COMPLETED,
+        STATUS_CANCELED,
+        STATUS_SUSPENDED,
+    )
+
     STATUS_CHOICE_TUPLE = (
         (STATUS_RUNNING, "Case is running and work items need to be completed."),
         (STATUS_COMPLETED, "Case is done."),
         (STATUS_CANCELED, "Case is cancelled."),
+        (STATUS_SUSPENDED, "Case is suspended."),
     )
 
     family = models.ForeignKey(

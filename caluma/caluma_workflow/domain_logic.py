@@ -249,10 +249,11 @@ class CancelCaseLogic:
 
     @staticmethod
     def post_cancel(case, user, context=None):
-        work_items = case.work_items.exclude(
+        work_items = case.work_items.filter(
             status__in=[
-                models.WorkItem.STATUS_COMPLETED,
-                models.WorkItem.STATUS_CANCELED,
+                models.WorkItem.STATUS_READY,
+                models.WorkItem.STATUS_SKIPPED,
+                models.WorkItem.STATUS_SUSPENDED,
             ]
         )
 
@@ -276,6 +277,108 @@ class CancelCaseLogic:
         send_event(
             events.cancelled_case,
             sender="post_cancel_case",
+            case=case,
+            user=user,
+            context=context,
+        )
+
+        return case
+
+
+class SuspendCaseLogic:
+    """
+    Shared domain logic for suspending cases.
+
+    Used in the `suspendCase` mutation and in the `suspend_case` API. The logic
+    for case suspension is split in three parts (`validate_for_suspend`,
+    `pre_suspend` and `post_suspend`) so that in between the appropriate update
+    method can be called (`super().update(...)` for the serializer and
+    `Case.objects.update(...) for the python API`).
+    """
+
+    @staticmethod
+    def validate_for_suspend(case):
+        if case.status != models.Case.STATUS_RUNNING:
+            raise ValidationError("Only running cases can be suspended.")
+
+    @staticmethod
+    def pre_suspend(validated_data, user):
+        validated_data["status"] = models.Case.STATUS_SUSPENDED
+
+        return validated_data
+
+    @staticmethod
+    def post_suspend(case, user, context=None):
+        work_items = case.work_items.filter(status=models.WorkItem.STATUS_READY)
+
+        for work_item in work_items:
+            work_item.status = models.WorkItem.STATUS_SUSPENDED
+            work_item.save()
+
+        # send events in separate loop in order to be sure all operations are finished
+        for work_item in work_items:
+            send_event(
+                events.suspended_work_item,
+                sender="post_suspend_case",
+                work_item=work_item,
+                user=user,
+                context=context,
+            )
+
+        send_event(
+            events.suspended_case,
+            sender="post_suspend_case",
+            case=case,
+            user=user,
+            context=context,
+        )
+
+        return case
+
+
+class ResumeCaseLogic:
+    """
+    Shared domain logic for resuming cases.
+
+    Used in the `resumeCase` mutation and in the `resume_case` API. The logic
+    for resuming a case is split in three parts (`validate_for_resume`,
+    `pre_resume` and `post_resume`) so that in between the appropriate update
+    method can be called (`super().update(...)` for the serializer and
+    `Case.objects.update(...) for the python API`).
+    """
+
+    @staticmethod
+    def validate_for_resume(case):
+        if case.status != models.Case.STATUS_SUSPENDED:
+            raise ValidationError("Only suspended cases can be resumed.")
+
+    @staticmethod
+    def pre_resume(validated_data, user):
+        validated_data["status"] = models.Case.STATUS_RUNNING
+
+        return validated_data
+
+    @staticmethod
+    def post_resume(case, user, context=None):
+        work_items = case.work_items.filter(status=models.WorkItem.STATUS_SUSPENDED)
+
+        for work_item in work_items:
+            work_item.status = models.WorkItem.STATUS_CANCELED
+            work_item.save()
+
+        # send events in separate loop in order to be sure all operations are finished
+        for work_item in work_items:
+            send_event(
+                events.resumed_work_item,
+                sender="post_resume_case",
+                work_item=work_item,
+                user=user,
+                context=context,
+            )
+
+        send_event(
+            events.resumed_case,
+            sender="post_resume_case",
             case=case,
             user=user,
             context=context,

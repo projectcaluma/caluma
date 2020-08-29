@@ -141,6 +141,29 @@ def cancel_work_item(
     return work_item
 
 
+def suspend_case(
+    case: models.Case, user: BaseUser, context: Optional[dict] = None
+) -> models.Case:
+    """
+    Suspend a case (just like `SuspendCase`).
+
+    >>> suspend_case(
+    ...     case=models.Case.first(),
+    ...     user=AnonymousUser()
+    ... )
+    <Case: Case object (some-uuid)>
+    """
+    domain_logic.SuspendCaseLogic.validate_for_suspend(case)
+
+    validated_data = domain_logic.SuspendCaseLogic.pre_suspend({}, user)
+
+    update_model(case, validated_data)
+
+    domain_logic.SuspendCaseLogic.post_suspend(case, user, context)
+
+    return case
+
+
 def suspend_work_item(
     work_item: models.WorkItem, user: BaseUser, context: Optional[dict] = None
 ) -> models.WorkItem:
@@ -162,6 +185,29 @@ def suspend_work_item(
     domain_logic.SuspendWorkItemLogic.post_suspend(work_item, user, context)
 
     return work_item
+
+
+def resume_case(
+    case: models.Case, user: BaseUser, context: Optional[dict] = None
+) -> models.Case:
+    """
+    Resume a case (just like `ResumeCase`).
+
+    >>> resume_case(
+    ...     case=models.Case.first(),
+    ...     user=AnonymousUser()
+    ... )
+    <Case: Case object (some-uuid)>
+    """
+    domain_logic.ResumeCaseLogic.validate_for_resume(case)
+
+    validated_data = domain_logic.ResumeCaseLogic.pre_resume({}, user)
+
+    update_model(case, validated_data)
+
+    domain_logic.ResumeCaseLogic.post_resume(case, user, context)
+
+    return case
 
 
 def resume_work_item(
