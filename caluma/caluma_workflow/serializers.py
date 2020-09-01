@@ -202,11 +202,13 @@ class CaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
 
 
 class SaveCaseSerializer(CaseSerializer):
+    @transaction.atomic
     def create(self, validated_data):
         instance = super().create(validated_data)
         self.send_event(events.created_case)
         return instance
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
         self.send_event(events.created_case, case=instance)
@@ -353,6 +355,7 @@ class SkipWorkItemSerializer(ContextModelSerializer):
 
         return super().validate(data)
 
+    @transaction.atomic
     def update(self, work_item, validated_data):
         user = self.context["request"].user
 
@@ -383,6 +386,7 @@ class CancelWorkItemSerializer(ContextModelSerializer):
 
         return super().validate(data)
 
+    @transaction.atomic
     def update(self, work_item, validated_data):
         user = self.context["request"].user
 
@@ -417,6 +421,7 @@ class SaveWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer):
         help_text=models.WorkItem._meta.get_field("description").help_text,
     )
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
         self.send_event(events.created_work_item, work_item=instance)
@@ -491,6 +496,7 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer)
 
         return super().validate(data)
 
+    @transaction.atomic
     def create(self, validated_data):
         instance = super().create(validated_data)
         self.send_event(events.created_work_item, work_item=instance)
@@ -523,6 +529,7 @@ class SuspendWorkItemSerializer(ContextModelSerializer):
 
         return super().validate(data)
 
+    @transaction.atomic
     def update(self, work_item, validated_data):
         user = self.context["request"].user
 
@@ -553,6 +560,7 @@ class ResumeWorkItemSerializer(ContextModelSerializer):
 
         return super().validate(data)
 
+    @transaction.atomic
     def update(self, work_item, validated_data):
         user = self.context["request"].user
 
