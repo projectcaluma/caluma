@@ -1011,22 +1011,27 @@ def test_skip_task_form_work_item(
         (
             models.WorkItem.STATUS_COMPLETED,
             models.Case.STATUS_RUNNING,
-            "Only READY work items can be skipped",
+            "Only ready work items can be skipped.",
         ),
         (
             models.WorkItem.STATUS_CANCELED,
             models.Case.STATUS_RUNNING,
-            "Only READY work items can be skipped",
+            "Only ready work items can be skipped.",
         ),
         (
             models.WorkItem.STATUS_SKIPPED,
             models.Case.STATUS_RUNNING,
-            "Only READY work items can be skipped",
+            "Only ready work items can be skipped.",
+        ),
+        (
+            models.WorkItem.STATUS_SUSPENDED,
+            models.Case.STATUS_RUNNING,
+            "Only ready work items can be skipped.",
         ),
         (
             models.WorkItem.STATUS_READY,
             models.Case.STATUS_COMPLETED,
-            "Only work items of RUNNING cases can be skipped",
+            "Only work items of running cases can be skipped.",
         ),
         (models.WorkItem.STATUS_READY, models.Case.STATUS_RUNNING, None),
     ],
@@ -1226,34 +1231,143 @@ def test_complete_work_item_same_task_multiple_workflows(
     assert case_2.status == models.Case.STATUS_COMPLETED
 
 
-@pytest.mark.parametrize("work_item__child_case", [None])
 @pytest.mark.parametrize("use_graphql_api", [True, False])
 @pytest.mark.parametrize(
-    "work_item__status,success,expected_status",
+    "action,work_item__status,child_case_status,success,expected_status,expected_child_case_status",
     [
-        (models.WorkItem.STATUS_READY, True, models.WorkItem.STATUS_CANCELED),
-        (models.WorkItem.STATUS_SKIPPED, False, models.WorkItem.STATUS_SKIPPED),
+        (
+            "Cancel",
+            models.WorkItem.STATUS_READY,
+            None,
+            True,
+            models.WorkItem.STATUS_CANCELED,
+            None,
+        ),
+        (
+            "Cancel",
+            models.WorkItem.STATUS_SUSPENDED,
+            None,
+            True,
+            models.WorkItem.STATUS_CANCELED,
+            None,
+        ),
+        (
+            "Cancel",
+            models.WorkItem.STATUS_READY,
+            models.Case.STATUS_RUNNING,
+            True,
+            models.WorkItem.STATUS_CANCELED,
+            models.Case.STATUS_CANCELED,
+        ),
+        (
+            "Cancel",
+            models.WorkItem.STATUS_READY,
+            models.Case.STATUS_SUSPENDED,
+            True,
+            models.WorkItem.STATUS_CANCELED,
+            models.Case.STATUS_CANCELED,
+        ),
+        (
+            "Cancel",
+            models.WorkItem.STATUS_SKIPPED,
+            None,
+            False,
+            models.WorkItem.STATUS_SKIPPED,
+            None,
+        ),
+        (
+            "Suspend",
+            models.WorkItem.STATUS_READY,
+            None,
+            True,
+            models.WorkItem.STATUS_SUSPENDED,
+            None,
+        ),
+        (
+            "Suspend",
+            models.WorkItem.STATUS_READY,
+            models.Case.STATUS_RUNNING,
+            True,
+            models.WorkItem.STATUS_SUSPENDED,
+            models.Case.STATUS_SUSPENDED,
+        ),
+        (
+            "Suspend",
+            models.WorkItem.STATUS_SKIPPED,
+            None,
+            False,
+            models.WorkItem.STATUS_SKIPPED,
+            None,
+        ),
+        (
+            "Resume",
+            models.WorkItem.STATUS_READY,
+            None,
+            False,
+            models.WorkItem.STATUS_READY,
+            None,
+        ),
+        (
+            "Resume",
+            models.WorkItem.STATUS_SKIPPED,
+            None,
+            False,
+            models.WorkItem.STATUS_SKIPPED,
+            None,
+        ),
+        (
+            "Resume",
+            models.WorkItem.STATUS_SUSPENDED,
+            None,
+            True,
+            models.WorkItem.STATUS_READY,
+            None,
+        ),
+        (
+            "Resume",
+            models.WorkItem.STATUS_SUSPENDED,
+            models.Case.STATUS_SUSPENDED,
+            True,
+            models.WorkItem.STATUS_READY,
+            models.Case.STATUS_RUNNING,
+        ),
     ],
 )
-def test_cancel_work_item(
+def test_cancel_suspend_resume_work_item(
     db,
     work_item,
     schema_executor,
     admin_user,
+    case_factory,
     use_graphql_api,
+    action,
+    child_case_status,
     success,
     expected_status,
+    expected_child_case_status,
 ):
-    error_msg = "Only READY work items can be cancelled"
+    work_item.child_case = child_case_status and case_factory(status=child_case_status)
+    work_item.save()
+
+    error_msg = {
+        "Cancel": "Only ready or suspended work items can be canceled.",
+        "Suspend": "Only ready work items can be suspended.",
+        "Resume": "Only suspended work items can be resumed.",
+    }[action]
+    _action = action.lower()
 
     if use_graphql_api:
         query = """
-            mutation CancelWorkItem($input: CancelWorkItemInput!) {
-                cancelWorkItem(input: $input) {
+            mutation %sWorkItem($input: %sWorkItemInput!) {
+                %sWorkItem(input: $input) {
                     clientMutationId
                 }
             }
-        """
+        """ % (
+            action,
+            action,
+            _action,
+        )
 
         result = schema_executor(query, variable_values={"input": {"id": work_item.pk}})
 
@@ -1262,14 +1376,19 @@ def test_cancel_work_item(
         else:
             assert error_msg in str(result.errors[0])
     else:
+        fn = getattr(api, f"{_action}_work_item")
+
         if success:
-            api.cancel_work_item(work_item, admin_user)
+            fn(work_item, admin_user)
         else:
             with pytest.raises(ValidationError) as error:
-                api.cancel_work_item(work_item, admin_user)
+                fn(work_item, admin_user)
 
             assert error_msg in str(error.value)
 
     work_item.refresh_from_db()
 
     assert work_item.status == expected_status
+
+    if expected_child_case_status:
+        assert work_item.child_case.status == expected_child_case_status

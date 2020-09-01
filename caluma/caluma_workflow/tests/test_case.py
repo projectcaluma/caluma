@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from django.core.exceptions import ValidationError
 from graphql_relay import to_global_id
 
 from ...caluma_core.relay import extract_global_id
@@ -598,23 +599,108 @@ def test_api_start_case(
     assert work_item.status == models.WorkItem.STATUS_READY
 
 
+@pytest.mark.parametrize("work_item__child_case", [None])
+@pytest.mark.parametrize("use_api", [True, False])
 @pytest.mark.parametrize(
-    "case__status,work_item__status,has_child_case",
+    "action,case__status,work_item__status,expected_case_status,expected_work_item_status,error",
     [
-        (models.Case.STATUS_RUNNING, models.WorkItem.STATUS_READY, False),
-        (models.Case.STATUS_RUNNING, models.WorkItem.STATUS_READY, True),
+        (
+            "cancel",
+            models.Case.STATUS_RUNNING,
+            models.WorkItem.STATUS_READY,
+            models.Case.STATUS_CANCELED,
+            models.WorkItem.STATUS_CANCELED,
+            None,
+        ),
+        (
+            "cancel",
+            models.Case.STATUS_SUSPENDED,
+            models.WorkItem.STATUS_SUSPENDED,
+            models.Case.STATUS_CANCELED,
+            models.WorkItem.STATUS_CANCELED,
+            None,
+        ),
+        (
+            "cancel",
+            models.Case.STATUS_COMPLETED,
+            models.WorkItem.STATUS_COMPLETED,
+            None,
+            None,
+            "Only running or suspended cases can be canceled.",
+        ),
+        (
+            "suspend",
+            models.Case.STATUS_RUNNING,
+            models.WorkItem.STATUS_READY,
+            models.Case.STATUS_SUSPENDED,
+            models.WorkItem.STATUS_SUSPENDED,
+            None,
+        ),
+        (
+            "suspend",
+            models.Case.STATUS_COMPLETED,
+            models.WorkItem.STATUS_COMPLETED,
+            None,
+            None,
+            "Only running cases can be suspended.",
+        ),
+        (
+            "resume",
+            models.Case.STATUS_SUSPENDED,
+            models.WorkItem.STATUS_SUSPENDED,
+            models.Case.STATUS_RUNNING,
+            models.WorkItem.STATUS_READY,
+            None,
+        ),
+        (
+            "resume",
+            models.Case.STATUS_RUNNING,
+            models.WorkItem.STATUS_READY,
+            None,
+            None,
+            "Only suspended cases can be resumed.",
+        ),
     ],
 )
-def test_api_cancel_case(db, admin_user, case_factory, case, work_item, has_child_case):
-    work_item.child_case = (
-        case_factory(status=models.Case.STATUS_RUNNING) if has_child_case else None
-    )
-    work_item.save()
+def test_cancel_suspend_resume_case(
+    db,
+    admin_user,
+    schema_executor,
+    use_api,
+    action,
+    case,
+    work_item,
+    expected_case_status,
+    expected_work_item_status,
+    error,
+):
+    if use_api:
+        query = f"""
+            mutation ($id: ID!) {{
+                {action}Case(input: {{ id: $id }}) {{
+                    clientMutationId
+                }}
+            }}
+        """
 
-    api.cancel_case(case=case, user=admin_user)
+        result = schema_executor(query, variable_values={"id": case.pk})
 
-    case.refresh_from_db()
-    work_item.refresh_from_db()
+        if error:
+            assert error in str(result.errors[0])
+    else:
+        fn = getattr(api, f"{action}_case")
 
-    assert case.status == models.Case.STATUS_CANCELED
-    assert work_item.status == models.WorkItem.STATUS_CANCELED
+        if error:
+            with pytest.raises(ValidationError) as msg:
+                fn(case=case, user=admin_user)
+
+            assert error in str(msg.value)
+        else:
+            fn(case=case, user=admin_user)
+
+    if not error:
+        case.refresh_from_db()
+        work_item.refresh_from_db()
+
+        assert case.status == expected_case_status
+        assert work_item.status == expected_work_item_status

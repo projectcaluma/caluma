@@ -33,7 +33,7 @@ def case_status_filter(*args, **kwargs):
 
     enum = graphene.Enum(
         "CaseStatusArgument",
-        [(i.upper(), i) for i in models.Case.STATUS_CHOICES],
+        [(key.upper(), key) for (key, desc) in models.Case.STATUS_CHOICE_TUPLE],
         type=EnumWithDescriptionsType,
     )
     return generate_list_filter_class(enum)(*args, **kwargs)

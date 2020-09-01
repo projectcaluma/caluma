@@ -268,6 +268,18 @@ class CancelCase(Mutation):
         model_operations = ["update"]
 
 
+class SuspendCase(Mutation):
+    class Meta:
+        serializer_class = serializers.SuspendCaseSerializer
+        model_operations = ["update"]
+
+
+class ResumeCase(Mutation):
+    class Meta:
+        serializer_class = serializers.ResumeCaseSerializer
+        model_operations = ["update"]
+
+
 class CompleteWorkItem(Mutation):
     class Meta:
         serializer_class = serializers.CompleteWorkItemSerializer
@@ -283,6 +295,18 @@ class SkipWorkItem(Mutation):
 class CancelWorkItem(Mutation):
     class Meta:
         serializer_class = serializers.CancelWorkItemSerializer
+        model_operations = ["update"]
+
+
+class SuspendWorkItem(Mutation):
+    class Meta:
+        serializer_class = serializers.SuspendWorkItemSerializer
+        model_operations = ["update"]
+
+
+class ResumeWorkItem(Mutation):
+    class Meta:
+        serializer_class = serializers.ResumeWorkItemSerializer
         model_operations = ["update"]
 
 
@@ -314,9 +338,13 @@ class Mutation(object):
 
     save_case = SaveCase().Field()
     cancel_case = CancelCase().Field()
+    suspend_case = SuspendCase().Field()
+    resume_case = ResumeCase().Field()
     complete_work_item = CompleteWorkItem().Field()
     skip_work_item = SkipWorkItem().Field()
     cancel_work_item = CancelWorkItem().Field()
+    suspend_work_item = SuspendWorkItem().Field()
+    resume_work_item = ResumeWorkItem().Field()
     save_work_item = SaveWorkItem().Field()
     create_work_item = CreateWorkItem().Field()
 

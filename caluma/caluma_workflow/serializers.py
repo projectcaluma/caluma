@@ -247,6 +247,68 @@ class CancelCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
         return case
 
 
+class SuspendCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
+    id = serializers.GlobalIDField()
+
+    class Meta:
+        model = models.Case
+        fields = ("id", "context")
+
+    def validate(self, data):
+        try:
+            domain_logic.SuspendCaseLogic.validate_for_suspend(self.instance)
+        except ValidationError as e:
+            raise exceptions.ValidationError(str(e))
+
+        return super().validate(data)
+
+    @transaction.atomic
+    def update(self, case, validated_data):
+        user = self.context["request"].user
+
+        super().update(
+            case,
+            domain_logic.SuspendCaseLogic.pre_suspend(
+                case, validated_data, user, self.context_data
+            ),
+        )
+
+        domain_logic.SuspendCaseLogic.post_suspend(case, user, self.context_data)
+
+        return case
+
+
+class ResumeCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
+    id = serializers.GlobalIDField()
+
+    class Meta:
+        model = models.Case
+        fields = ("id", "context")
+
+    def validate(self, data):
+        try:
+            domain_logic.ResumeCaseLogic.validate_for_resume(self.instance)
+        except ValidationError as e:
+            raise exceptions.ValidationError(str(e))
+
+        return super().validate(data)
+
+    @transaction.atomic
+    def update(self, case, validated_data):
+        user = self.context["request"].user
+
+        super().update(
+            case,
+            domain_logic.ResumeCaseLogic.pre_resume(
+                case, validated_data, user, self.context_data
+            ),
+        )
+
+        domain_logic.ResumeCaseLogic.post_resume(case, user, self.context_data)
+
+        return case
+
+
 class CompleteWorkItemSerializer(ContextModelSerializer):
     id = serializers.GlobalIDField()
 
@@ -448,3 +510,63 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer)
             "meta",
             "context",
         )
+
+
+class SuspendWorkItemSerializer(ContextModelSerializer):
+    id = serializers.GlobalIDField()
+
+    def validate(self, data):
+        try:
+            domain_logic.SuspendWorkItemLogic.validate_for_suspend(self.instance)
+        except ValidationError as e:
+            raise exceptions.ValidationError(str(e))
+
+        return super().validate(data)
+
+    def update(self, work_item, validated_data):
+        user = self.context["request"].user
+
+        validated_data = domain_logic.SuspendWorkItemLogic.pre_suspend(
+            work_item, validated_data, user, self.context_data
+        )
+
+        work_item = super().update(work_item, validated_data)
+        work_item = domain_logic.SuspendWorkItemLogic.post_suspend(
+            work_item, user, self.context_data
+        )
+
+        return work_item
+
+    class Meta:
+        model = models.WorkItem
+        fields = ("id", "context")
+
+
+class ResumeWorkItemSerializer(ContextModelSerializer):
+    id = serializers.GlobalIDField()
+
+    def validate(self, data):
+        try:
+            domain_logic.ResumeWorkItemLogic.validate_for_resume(self.instance)
+        except ValidationError as e:
+            raise exceptions.ValidationError(str(e))
+
+        return super().validate(data)
+
+    def update(self, work_item, validated_data):
+        user = self.context["request"].user
+
+        validated_data = domain_logic.ResumeWorkItemLogic.pre_resume(
+            work_item, validated_data, user, self.context_data
+        )
+
+        work_item = super().update(work_item, validated_data)
+        work_item = domain_logic.ResumeWorkItemLogic.post_resume(
+            work_item, user, self.context_data
+        )
+
+        return work_item
+
+    class Meta:
+        model = models.WorkItem
+        fields = ("id", "context")
