@@ -197,10 +197,10 @@ class SkipWorkItemLogic:
     @staticmethod
     def validate_for_skip(work_item):
         if work_item.case.status != models.Case.STATUS_RUNNING:
-            raise ValidationError("Only work items of RUNNING cases can be skipped")
+            raise ValidationError("Only work items of running cases can be skipped.")
 
         if work_item.status != models.WorkItem.STATUS_READY:
-            raise ValidationError("Only READY work items can be skipped")
+            raise ValidationError("Only ready work items can be skipped.")
 
     @staticmethod
     def pre_skip(work_item, validated_data, user, context=None):
@@ -246,8 +246,11 @@ class CancelCaseLogic:
 
     @staticmethod
     def validate_for_cancel(case):
-        if case.status != models.Case.STATUS_RUNNING:
-            raise ValidationError("Only running cases can be canceled.")
+        if case.status not in [
+            models.Case.STATUS_RUNNING,
+            models.Case.STATUS_SUSPENDED,
+        ]:
+            raise ValidationError("Only running or suspended cases can be canceled.")
 
     @staticmethod
     def pre_cancel(case, validated_data, user, context=None):
@@ -256,7 +259,9 @@ class CancelCaseLogic:
         validated_data["closed_by_user"] = user.username
         validated_data["closed_by_group"] = user.group
 
-        for work_item in case.work_items.filter(status=models.WorkItem.STATUS_READY):
+        for work_item in case.work_items.filter(
+            status__in=[models.WorkItem.STATUS_READY, models.WorkItem.STATUS_SUSPENDED]
+        ):
             api.cancel_work_item(work_item, user, context)
 
         return validated_data
@@ -274,11 +279,92 @@ class CancelCaseLogic:
         return case
 
 
+class SuspendCaseLogic:
+    """
+    Shared domain logic for suspending cases.
+
+    Used in the `suspendCase` mutation and in the `suspend_case` API. The logic
+    for case suspension is split in three parts (`validate_for_suspend`,
+    `pre_suspend` and `post_suspend`) so that in between the appropriate update
+    method can be called (`super().update(...)` for the serializer and
+    `Case.objects.update(...) for the python API`).
+    """
+
+    @staticmethod
+    def validate_for_suspend(case):
+        if case.status != models.Case.STATUS_RUNNING:
+            raise ValidationError("Only running cases can be suspended.")
+
+    @staticmethod
+    def pre_suspend(case, validated_data, user, context=None):
+        validated_data["status"] = models.Case.STATUS_SUSPENDED
+
+        for work_item in case.work_items.filter(status=models.WorkItem.STATUS_READY):
+            api.suspend_work_item(work_item, user, context)
+
+        return validated_data
+
+    @staticmethod
+    def post_suspend(case, user, context=None):
+        send_event(
+            events.suspended_case,
+            sender="post_suspend_case",
+            case=case,
+            user=user,
+            context=context,
+        )
+
+        return case
+
+
+class ResumeCaseLogic:
+    """
+    Shared domain logic for resuming cases.
+
+    Used in the `resumeCase` mutation and in the `resume_case` API. The logic
+    for resuming a case is split in three parts (`validate_for_resume`,
+    `pre_resume` and `post_resume`) so that in between the appropriate update
+    method can be called (`super().update(...)` for the serializer and
+    `Case.objects.update(...) for the python API`).
+    """
+
+    @staticmethod
+    def validate_for_resume(case):
+        if case.status != models.Case.STATUS_SUSPENDED:
+            raise ValidationError("Only suspended cases can be resumed.")
+
+    @staticmethod
+    def pre_resume(case, validated_data, user, context=None):
+        validated_data["status"] = models.Case.STATUS_RUNNING
+
+        for work_item in case.work_items.filter(
+            status=models.WorkItem.STATUS_SUSPENDED
+        ):
+            api.resume_work_item(work_item, user, context)
+
+        return validated_data
+
+    @staticmethod
+    def post_resume(case, user, context=None):
+        send_event(
+            events.resumed_case,
+            sender="post_resume_case",
+            case=case,
+            user=user,
+            context=context,
+        )
+
+        return case
+
+
 class CancelWorkItemLogic:
     @staticmethod
     def validate_for_cancel(work_item):
-        if work_item.status != models.WorkItem.STATUS_READY:
-            raise ValidationError("Only READY work items can be cancelled")
+        if work_item.status not in [
+            models.WorkItem.STATUS_READY,
+            models.WorkItem.STATUS_SUSPENDED,
+        ]:
+            raise ValidationError("Only ready or suspended work items can be canceled.")
 
     @staticmethod
     def pre_cancel(work_item, validated_data, user, context=None):
@@ -287,10 +373,10 @@ class CancelWorkItemLogic:
         validated_data["closed_by_user"] = user.username
         validated_data["closed_by_group"] = user.group
 
-        if (
-            work_item.child_case
-            and work_item.child_case.status == models.Case.STATUS_RUNNING
-        ):
+        if work_item.child_case and work_item.child_case.status in [
+            models.Case.STATUS_RUNNING,
+            models.Case.STATUS_SUSPENDED,
+        ]:
             api.cancel_case(work_item.child_case, user, context)
 
         return validated_data
@@ -300,6 +386,68 @@ class CancelWorkItemLogic:
         send_event(
             events.cancelled_work_item,
             sender="post_cancel_work_item",
+            work_item=work_item,
+            user=user,
+            context=context,
+        )
+
+        return work_item
+
+
+class SuspendWorkItemLogic:
+    @staticmethod
+    def validate_for_suspend(work_item):
+        if work_item.status != models.WorkItem.STATUS_READY:
+            raise ValidationError("Only ready work items can be suspended.")
+
+    @staticmethod
+    def pre_suspend(work_item, validated_data, user, context=None):
+        validated_data["status"] = models.WorkItem.STATUS_SUSPENDED
+
+        if (
+            work_item.child_case
+            and work_item.child_case.status == models.Case.STATUS_RUNNING
+        ):
+            api.suspend_case(work_item.child_case, user, context)
+
+        return validated_data
+
+    @staticmethod
+    def post_suspend(work_item, user, context=None):
+        send_event(
+            events.suspended_work_item,
+            sender="post_suspend_work_item",
+            work_item=work_item,
+            user=user,
+            context=context,
+        )
+
+        return work_item
+
+
+class ResumeWorkItemLogic:
+    @staticmethod
+    def validate_for_resume(work_item):
+        if work_item.status != models.WorkItem.STATUS_SUSPENDED:
+            raise ValidationError("Only suspended work items can be resumed.")
+
+    @staticmethod
+    def pre_resume(work_item, validated_data, user, context=None):
+        validated_data["status"] = models.WorkItem.STATUS_READY
+
+        if (
+            work_item.child_case
+            and work_item.child_case.status == models.Case.STATUS_SUSPENDED
+        ):
+            api.resume_case(work_item.child_case, user, context)
+
+        return validated_data
+
+    @staticmethod
+    def post_resume(work_item, user, context=None):
+        send_event(
+            events.resumed_work_item,
+            sender="post_resume_work_item",
             work_item=work_item,
             user=user,
             context=context,

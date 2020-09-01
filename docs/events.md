@@ -62,9 +62,13 @@ in case the event sends additional arguments in the future.
 | `completed_work_item` | `CompleteWorkItem`                                                | `work_item`, `user`, `context` |
 | `cancelled_work_item` | `CancelCase`, `CancelWorkItem`                                    | `work_item`, `user`, `context` |
 | `skipped_work_item`   | `SkipWorkItem`                                                    | `work_item`, `user`, `context` |
+| `suspended_work_item` | `SuspendWorkItem`                                                 | `work_item`, `user`, `context` |
+| `resumed_work_item`   | `ResumeWorkItem`                                                  | `work_item`, `user`, `context` |
 | `created_case`        | `SaveCase`, `StartCase`                                           | `case`, `user`, `context`      |
 | `completed_case`      | `CompleteWorkItem`                                                | `case`, `user`, `context`      |
 | `cancelled_case`      | `CancelCase`                                                      | `case`, `user`, `context`      |
+| `suspended_case`      | `SuspendCase`                                                     | `case`, `user`, `context`      |
+| `resumed_case`        | `ResumeCase`                                                      | `case`, `user`, `context`      |
 
 ## Event receivers are blocking
 

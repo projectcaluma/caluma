@@ -145,3 +145,99 @@ def cancel_work_item(
     domain_logic.CancelWorkItemLogic.post_cancel(work_item, user, context)
 
     return work_item
+
+
+def suspend_case(
+    case: models.Case, user: BaseUser, context: Optional[dict] = None
+) -> models.Case:
+    """
+    Suspend a case (just like `SuspendCase`).
+
+    >>> suspend_case(
+    ...     case=models.Case.first(),
+    ...     user=AnonymousUser()
+    ... )
+    <Case: Case object (some-uuid)>
+    """
+    domain_logic.SuspendCaseLogic.validate_for_suspend(case)
+
+    validated_data = domain_logic.SuspendCaseLogic.pre_suspend(case, {}, user, context)
+
+    update_model(case, validated_data)
+
+    domain_logic.SuspendCaseLogic.post_suspend(case, user, context)
+
+    return case
+
+
+def suspend_work_item(
+    work_item: models.WorkItem, user: BaseUser, context: Optional[dict] = None
+) -> models.WorkItem:
+    """
+    Suspend a work item (just like `SuspendWorkItem`).
+
+    >>> suspend_work_item(
+    ...     work_item=models.WorkItem.first(),
+    ...     user=AnonymousUser()
+    ... )
+    <WorkItem: WorkItem object (some-uuid)>
+    """
+    domain_logic.SuspendWorkItemLogic.validate_for_suspend(work_item)
+
+    validated_data = domain_logic.SuspendWorkItemLogic.pre_suspend(
+        work_item, {}, user, context
+    )
+
+    update_model(work_item, validated_data)
+
+    domain_logic.SuspendWorkItemLogic.post_suspend(work_item, user, context)
+
+    return work_item
+
+
+def resume_case(
+    case: models.Case, user: BaseUser, context: Optional[dict] = None
+) -> models.Case:
+    """
+    Resume a case (just like `ResumeCase`).
+
+    >>> resume_case(
+    ...     case=models.Case.first(),
+    ...     user=AnonymousUser()
+    ... )
+    <Case: Case object (some-uuid)>
+    """
+    domain_logic.ResumeCaseLogic.validate_for_resume(case)
+
+    validated_data = domain_logic.ResumeCaseLogic.pre_resume(case, {}, user, context)
+
+    update_model(case, validated_data)
+
+    domain_logic.ResumeCaseLogic.post_resume(case, user, context)
+
+    return case
+
+
+def resume_work_item(
+    work_item: models.WorkItem, user: BaseUser, context: Optional[dict] = None
+) -> models.WorkItem:
+    """
+    Resume a work item (just like `ResumeWorkItem`).
+
+    >>> resume_work_item(
+    ...     work_item=models.WorkItem.first(),
+    ...     user=AnonymousUser()
+    ... )
+    <WorkItem: WorkItem object (some-uuid)>
+    """
+    domain_logic.ResumeWorkItemLogic.validate_for_resume(work_item)
+
+    validated_data = domain_logic.ResumeWorkItemLogic.pre_resume(
+        work_item, {}, user, context
+    )
+
+    update_model(work_item, validated_data)
+
+    domain_logic.ResumeWorkItemLogic.post_resume(work_item, user, context)
+
+    return work_item
