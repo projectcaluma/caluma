@@ -1,4 +1,4 @@
-# name: test_cancel_case[running-True-completed]
+# name: test_cancel_case[running-True-completed-None]
   <class 'OrderedDict'> {
     'cancelCase': <class 'dict'> {
       'case': <class 'dict'> {
@@ -22,7 +22,7 @@
     },
   }
 ---
-# name: test_cancel_case[running-True-ready]
+# name: test_cancel_case[running-True-ready-None]
   <class 'OrderedDict'> {
     'cancelCase': <class 'dict'> {
       'case': <class 'dict'> {

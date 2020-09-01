@@ -63,7 +63,9 @@ def complete_work_item(
     ```
     """
     domain_logic.CompleteWorkItemLogic.validate_for_complete(work_item, user)
-    validated_data = domain_logic.CompleteWorkItemLogic.pre_complete({}, user)
+    validated_data = domain_logic.CompleteWorkItemLogic.pre_complete(
+        work_item, {}, user, context
+    )
 
     update_model(work_item, validated_data)
 
@@ -86,7 +88,9 @@ def skip_work_item(
     """
     domain_logic.SkipWorkItemLogic.validate_for_skip(work_item)
 
-    validated_data = domain_logic.SkipWorkItemLogic.pre_skip({}, user)
+    validated_data = domain_logic.SkipWorkItemLogic.pre_skip(
+        work_item, {}, user, context
+    )
 
     update_model(work_item, validated_data)
 
@@ -109,7 +113,7 @@ def cancel_case(
     """
     domain_logic.CancelCaseLogic.validate_for_cancel(case)
 
-    validated_data = domain_logic.CancelCaseLogic.pre_cancel({}, user)
+    validated_data = domain_logic.CancelCaseLogic.pre_cancel(case, {}, user, context)
 
     update_model(case, validated_data)
 
@@ -132,7 +136,9 @@ def cancel_work_item(
     """
     domain_logic.CancelWorkItemLogic.validate_for_cancel(work_item)
 
-    validated_data = domain_logic.CancelWorkItemLogic.pre_cancel({}, user)
+    validated_data = domain_logic.CancelWorkItemLogic.pre_cancel(
+        work_item, {}, user, context
+    )
 
     update_model(work_item, validated_data)
 
