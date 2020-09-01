@@ -235,10 +235,10 @@ class SkipWorkItemLogic:
 
 class CancelCaseLogic:
     """
-    Shared domain logic for cancelling cases.
+    Shared domain logic for canceling cases.
 
     Used in the `cancelCase` mutation and in the `cancel_case` API. The logic
-    for case cancellation is split in three parts (`validate_for_cancel`,
+    for case cancelation is split in three parts (`validate_for_cancel`,
     `pre_cancel` and `post_cancel`) so that in between the appropriate update
     method can be called (`super().update(...)` for the serializer and
     `Case.objects.update(...) for the python API`).
@@ -268,8 +268,18 @@ class CancelCaseLogic:
 
     @staticmethod
     def post_cancel(case, user, context=None):
+        # TODO: remove in the next major release since `events.cancelled_case`
+        # is deprecated in favor of `events.canceled_case`
         send_event(
             events.cancelled_case,
+            sender="post_cancel_case",
+            case=case,
+            user=user,
+            context=context,
+        )
+
+        send_event(
+            events.canceled_case,
             sender="post_cancel_case",
             case=case,
             user=user,
@@ -383,8 +393,19 @@ class CancelWorkItemLogic:
 
     @staticmethod
     def post_cancel(work_item, user, context=None):
+        # TODO: remove in the next major release since
+        # `events.cancelled_work_item` is deprecated in favor of
+        # `events.canceled_work_item`
         send_event(
             events.cancelled_work_item,
+            sender="post_cancel_work_item",
+            work_item=work_item,
+            user=user,
+            context=context,
+        )
+
+        send_event(
+            events.canceled_work_item,
             sender="post_cancel_work_item",
             work_item=work_item,
             user=user,

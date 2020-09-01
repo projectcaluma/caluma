@@ -115,7 +115,7 @@ class Case(UUIDModel):
     STATUS_CHOICE_TUPLE = (
         (STATUS_RUNNING, "Case is running and work items need to be completed."),
         (STATUS_COMPLETED, "Case is done."),
-        (STATUS_CANCELED, "Case is cancelled."),
+        (STATUS_CANCELED, "Case is canceled."),
         (STATUS_SUSPENDED, "Case is suspended."),
     )
 

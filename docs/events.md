@@ -37,10 +37,8 @@ def send_mail_on_complete_work_item_2(sender, work_item, user, context, **kwargs
 
 ## @on
 
-Right now `@on` is just an alias for `django.dispatch.receiver`. This very likely will change
-in the future, but the public API should stay the same.
-
-The `@on` decorator takes two arguments:
+`@on` is just a wrapper for `django.dispatch.receiver` which takes two
+arguments:
 
 1. `event` (required): Event or list of events to listen to.
 2. `sender` (optional): Class of sender.
@@ -60,13 +58,13 @@ in case the event sends additional arguments in the future.
 | --------------------- | ----------------------------------------------------------------- | ------------------------------ |
 | `created_work_item`   | `CreateWorkItem`, `SaveWorkItem`, `StartCase`, `CompleteWorkItem` | `work_item`, `user`, `context` |
 | `completed_work_item` | `CompleteWorkItem`                                                | `work_item`, `user`, `context` |
-| `cancelled_work_item` | `CancelCase`, `CancelWorkItem`                                    | `work_item`, `user`, `context` |
+| `canceled_work_item`  | `CancelCase`, `CancelWorkItem`                                    | `work_item`, `user`, `context` |
 | `skipped_work_item`   | `SkipWorkItem`                                                    | `work_item`, `user`, `context` |
 | `suspended_work_item` | `SuspendWorkItem`                                                 | `work_item`, `user`, `context` |
 | `resumed_work_item`   | `ResumeWorkItem`                                                  | `work_item`, `user`, `context` |
 | `created_case`        | `SaveCase`, `StartCase`                                           | `case`, `user`, `context`      |
 | `completed_case`      | `CompleteWorkItem`                                                | `case`, `user`, `context`      |
-| `cancelled_case`      | `CancelCase`                                                      | `case`, `user`, `context`      |
+| `canceled_case`       | `CancelCase`                                                      | `case`, `user`, `context`      |
 | `suspended_case`      | `SuspendCase`                                                     | `case`, `user`, `context`      |
 | `resumed_case`        | `ResumeCase`                                                      | `case`, `user`, `context`      |
 
