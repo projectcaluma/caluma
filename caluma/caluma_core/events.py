@@ -1,8 +1,18 @@
 import logging
+from warnings import warn
 
-from django.dispatch import receiver as on  # noqa
+from django.dispatch import receiver
 
 logger = logging.getLogger(__name__)
+
+
+def on(event, *args, **kwargs):
+    deprecation_reason = getattr(event, "_deprecation_reason", None)
+
+    if deprecation_reason:  # pragma: no cover
+        warn(deprecation_reason, DeprecationWarning)
+
+    return receiver(event, *args, **kwargs)
 
 
 def send_event(signal, **kwargs):
