@@ -15,6 +15,9 @@ class WorkItemValidator:
         DocumentValidator().validate(document, user)
 
     def validate(self, *, status, child_case, case, task, document, user, **kwargs):
+        if case.status != models.Case.STATUS_RUNNING:
+            raise ValidationError("Only work items of running cases can be completed.")
+
         if status != models.WorkItem.STATUS_READY:
             raise ValidationError("Only ready work items can be completed.")
 

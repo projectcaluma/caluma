@@ -87,15 +87,49 @@ def test_query_all_work_items_filter_groups(
 
 @pytest.mark.parametrize("task__type,task__form", [(models.Task.TYPE_SIMPLE, None)])
 @pytest.mark.parametrize(
-    "work_item__status,case__status,success",
+    "work_item__status,case__status,child_case_status,error",
     [
-        (models.WorkItem.STATUS_READY, models.Case.STATUS_COMPLETED, True),
-        (models.WorkItem.STATUS_COMPLETED, models.Case.STATUS_COMPLETED, False),
-        (models.WorkItem.STATUS_READY, models.Case.STATUS_RUNNING, False),
+        (models.WorkItem.STATUS_READY, models.Case.STATUS_RUNNING, None, None),
+        (
+            models.WorkItem.STATUS_READY,
+            models.Case.STATUS_RUNNING,
+            models.Case.STATUS_COMPLETED,
+            None,
+        ),
+        (
+            models.WorkItem.STATUS_READY,
+            models.Case.STATUS_RUNNING,
+            models.Case.STATUS_COMPLETED,
+            None,
+        ),
+        (
+            models.WorkItem.STATUS_READY,
+            models.Case.STATUS_COMPLETED,
+            None,
+            "Only work items of running cases can be completed.",
+        ),
+        (
+            models.WorkItem.STATUS_COMPLETED,
+            models.Case.STATUS_RUNNING,
+            None,
+            "Only ready work items can be completed.",
+        ),
+        (
+            models.WorkItem.STATUS_READY,
+            models.Case.STATUS_RUNNING,
+            models.Case.STATUS_RUNNING,
+            "Work item can only be completed when child case is in a finish state.",
+        ),
     ],
 )
 def test_complete_work_item_last(
-    db, snapshot, work_item, success, admin_schema_executor
+    db,
+    snapshot,
+    work_item,
+    case_factory,
+    child_case_status,
+    error,
+    admin_schema_executor,
 ):
     query = """
         mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
@@ -113,12 +147,16 @@ def test_complete_work_item_last(
           }
         }
     """
+    work_item.child_case = child_case_status and case_factory(status=child_case_status)
+    work_item.save()
 
     inp = {"input": {"id": work_item.pk}}
     result = admin_schema_executor(query, variable_values=inp)
 
-    assert not bool(result.errors) == success
-    if success:
+    assert bool(result.errors) == bool(error)
+    if error:
+        assert error in str(result.errors[0])
+    else:
         snapshot.assert_match(result.data)
 
 
@@ -968,12 +1006,29 @@ def test_skip_task_form_work_item(
 
 
 @pytest.mark.parametrize(
-    "work_item_status,success",
+    "work_item_status,case__status,error",
     [
-        (models.WorkItem.STATUS_COMPLETED, False),
-        (models.WorkItem.STATUS_CANCELED, False),
-        (models.WorkItem.STATUS_SKIPPED, False),
-        (models.WorkItem.STATUS_READY, True),
+        (
+            models.WorkItem.STATUS_COMPLETED,
+            models.Case.STATUS_RUNNING,
+            "Only READY work items can be skipped",
+        ),
+        (
+            models.WorkItem.STATUS_CANCELED,
+            models.Case.STATUS_RUNNING,
+            "Only READY work items can be skipped",
+        ),
+        (
+            models.WorkItem.STATUS_SKIPPED,
+            models.Case.STATUS_RUNNING,
+            "Only READY work items can be skipped",
+        ),
+        (
+            models.WorkItem.STATUS_READY,
+            models.Case.STATUS_COMPLETED,
+            "Only work items of RUNNING cases can be skipped",
+        ),
+        (models.WorkItem.STATUS_READY, models.Case.STATUS_RUNNING, None),
     ],
 )
 @pytest.mark.parametrize("question__type,answer__value", [(Question.TYPE_INTEGER, 1)])
@@ -981,15 +1036,18 @@ def test_skip_multiple_instance_task_form_work_item(
     db,
     task_factory,
     work_item_factory,
+    case,
     answer,
     form_question,
     work_item_status,
-    success,
+    error,
     schema_executor,
 ):
     task = task_factory(is_multiple_instance=True)
-    work_item_1 = work_item_factory(task=task, child_case=None, status=work_item_status)
-    work_item_2 = work_item_factory(task=task, child_case=None, case=work_item_1.case)
+    work_item_1 = work_item_factory(
+        task=task, case=case, child_case=None, status=work_item_status
+    )
+    work_item_2 = work_item_factory(task=task, case=case, child_case=None)
     query = """
         mutation SkipWorkItem($input: SkipWorkItemInput!) {
           skipWorkItem(input: $input) {
@@ -1007,10 +1065,10 @@ def test_skip_multiple_instance_task_form_work_item(
     inp = {"input": {"id": work_item_1.pk}}
     result = schema_executor(query, variable_values=inp)
 
-    assert bool(result.errors) != success
+    assert bool(result.errors) == bool(error)
 
-    if not success:
-        assert "Only READY work items can be skipped" in str(result.errors[0])
+    if error:
+        assert error in str(result.errors[0])
 
     else:
 
@@ -1035,8 +1093,8 @@ def test_skip_multiple_instance_task_form_work_item(
 
 @pytest.mark.parametrize("task__type,task__form", [(models.Task.TYPE_SIMPLE, None)])
 @pytest.mark.parametrize(
-    "work_item__status,case__status",
-    [(models.WorkItem.STATUS_READY, models.Case.STATUS_COMPLETED)],
+    "work_item__status,work_item__child_case,case__status",
+    [(models.WorkItem.STATUS_READY, None, models.Case.STATUS_RUNNING)],
 )
 def test_complete_work_item_last_api(db, work_item, admin_user):
     api.complete_work_item(work_item, admin_user)
@@ -1049,8 +1107,8 @@ def test_complete_work_item_last_api(db, work_item, admin_user):
 
 @pytest.mark.parametrize("task__type,task__form", [(models.Task.TYPE_SIMPLE, None)])
 @pytest.mark.parametrize(
-    "work_item__status,case__status",
-    [(models.WorkItem.STATUS_READY, models.Case.STATUS_COMPLETED)],
+    "work_item__status,work_item__child_case,case__status",
+    [(models.WorkItem.STATUS_READY, None, models.Case.STATUS_RUNNING)],
 )
 def test_skip_work_item_last_api(db, work_item, admin_user):
     api.skip_work_item(work_item, admin_user)
@@ -1059,6 +1117,23 @@ def test_skip_work_item_last_api(db, work_item, admin_user):
 
     assert work_item.status == models.WorkItem.STATUS_SKIPPED
     assert work_item.case.status == models.Case.STATUS_COMPLETED
+
+
+@pytest.mark.parametrize("task__type,task__form", [(models.Task.TYPE_SIMPLE, None)])
+@pytest.mark.parametrize(
+    "work_item__status,case__status",
+    [(models.WorkItem.STATUS_READY, models.Case.STATUS_RUNNING)],
+)
+def test_skip_work_item_child_case(db, work_item, case_factory, admin_user):
+    work_item.child_case = case_factory()
+
+    assert work_item.child_case.status == models.Case.STATUS_RUNNING
+
+    api.skip_work_item(work_item, admin_user)
+
+    work_item.refresh_from_db()
+
+    assert work_item.child_case.status == models.Case.STATUS_CANCELED
 
 
 @pytest.mark.parametrize(
@@ -1151,6 +1226,7 @@ def test_complete_work_item_same_task_multiple_workflows(
     assert case_2.status == models.Case.STATUS_COMPLETED
 
 
+@pytest.mark.parametrize("work_item__child_case", [None])
 @pytest.mark.parametrize("use_graphql_api", [True, False])
 @pytest.mark.parametrize(
     "work_item__status,success,expected_status",

@@ -232,16 +232,19 @@ class CancelCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
         return super().validate(data)
 
     @transaction.atomic
-    def update(self, instance, validated_data):
+    def update(self, case, validated_data):
         user = self.context["request"].user
 
         super().update(
-            instance, domain_logic.CancelCaseLogic.pre_cancel(validated_data, user)
+            case,
+            domain_logic.CancelCaseLogic.pre_cancel(
+                case, validated_data, user, self.context_data
+            ),
         )
 
-        domain_logic.CancelCaseLogic.post_cancel(instance, user, self.context_data)
+        domain_logic.CancelCaseLogic.post_cancel(case, user, self.context_data)
 
-        return instance
+        return case
 
 
 class CompleteWorkItemSerializer(ContextModelSerializer):
@@ -262,7 +265,7 @@ class CompleteWorkItemSerializer(ContextModelSerializer):
         user = self.context["request"].user
 
         validated_data = domain_logic.CompleteWorkItemLogic.pre_complete(
-            validated_data, user
+            work_item, validated_data, user, self.context_data
         )
 
         work_item = super().update(work_item, validated_data)
@@ -291,7 +294,9 @@ class SkipWorkItemSerializer(ContextModelSerializer):
     def update(self, work_item, validated_data):
         user = self.context["request"].user
 
-        validated_data = domain_logic.SkipWorkItemLogic.pre_skip(validated_data, user)
+        validated_data = domain_logic.SkipWorkItemLogic.pre_skip(
+            work_item, validated_data, user, self.context_data
+        )
 
         work_item = super().update(work_item, validated_data)
         work_item = domain_logic.SkipWorkItemLogic.post_skip(
@@ -320,7 +325,7 @@ class CancelWorkItemSerializer(ContextModelSerializer):
         user = self.context["request"].user
 
         validated_data = domain_logic.CancelWorkItemLogic.pre_cancel(
-            validated_data, user
+            work_item, validated_data, user, self.context_data
         )
 
         work_item = super().update(work_item, validated_data)

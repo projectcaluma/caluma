@@ -4,7 +4,7 @@ from django.utils import timezone
 from caluma.caluma_core.events import send_event
 
 from ..caluma_form.models import Document
-from . import events, models, utils, validators
+from . import api, events, models, utils, validators
 
 
 class StartCaseLogic:
@@ -113,7 +113,7 @@ class CompleteWorkItemLogic:
         )
 
     @staticmethod
-    def pre_complete(validated_data, user):
+    def pre_complete(work_item, validated_data, user, context=None):
         validated_data["status"] = models.WorkItem.STATUS_COMPLETED
         validated_data["closed_at"] = timezone.now()
         validated_data["closed_by_user"] = user.username
@@ -196,14 +196,25 @@ class CompleteWorkItemLogic:
 class SkipWorkItemLogic:
     @staticmethod
     def validate_for_skip(work_item):
+        if work_item.case.status != models.Case.STATUS_RUNNING:
+            raise ValidationError("Only work items of RUNNING cases can be skipped")
+
         if work_item.status != models.WorkItem.STATUS_READY:
             raise ValidationError("Only READY work items can be skipped")
 
     @staticmethod
-    def pre_skip(validated_data, user):
-        validated_data = CompleteWorkItemLogic.pre_complete(validated_data, user)
+    def pre_skip(work_item, validated_data, user, context=None):
+        validated_data = CompleteWorkItemLogic.pre_complete(
+            work_item, validated_data, user, context
+        )
 
         validated_data["status"] = models.WorkItem.STATUS_SKIPPED
+
+        if (
+            work_item.child_case
+            and work_item.child_case.status == models.Case.STATUS_RUNNING
+        ):
+            api.cancel_case(work_item.child_case, user, context)
 
         return validated_data
 
@@ -239,40 +250,19 @@ class CancelCaseLogic:
             raise ValidationError("Only running cases can be canceled.")
 
     @staticmethod
-    def pre_cancel(validated_data, user):
+    def pre_cancel(case, validated_data, user, context=None):
         validated_data["status"] = models.Case.STATUS_CANCELED
         validated_data["closed_at"] = timezone.now()
         validated_data["closed_by_user"] = user.username
         validated_data["closed_by_group"] = user.group
 
+        for work_item in case.work_items.filter(status=models.WorkItem.STATUS_READY):
+            api.cancel_work_item(work_item, user, context)
+
         return validated_data
 
     @staticmethod
     def post_cancel(case, user, context=None):
-        work_items = case.work_items.exclude(
-            status__in=[
-                models.WorkItem.STATUS_COMPLETED,
-                models.WorkItem.STATUS_CANCELED,
-            ]
-        )
-
-        for work_item in work_items:
-            work_item.status = models.WorkItem.STATUS_CANCELED
-            work_item.closed_at = timezone.now()
-            work_item.closed_by_user = user.username
-            work_item.closed_by_group = user.group
-            work_item.save()
-
-        # send events in separate loop in order to be sure all operations are finished
-        for work_item in work_items:
-            send_event(
-                events.cancelled_work_item,
-                sender="post_cancel_case",
-                work_item=work_item,
-                user=user,
-                context=context,
-            )
-
         send_event(
             events.cancelled_case,
             sender="post_cancel_case",
@@ -291,11 +281,17 @@ class CancelWorkItemLogic:
             raise ValidationError("Only READY work items can be cancelled")
 
     @staticmethod
-    def pre_cancel(validated_data, user):
+    def pre_cancel(work_item, validated_data, user, context=None):
         validated_data["status"] = models.WorkItem.STATUS_CANCELED
         validated_data["closed_at"] = timezone.now()
         validated_data["closed_by_user"] = user.username
         validated_data["closed_by_group"] = user.group
+
+        if (
+            work_item.child_case
+            and work_item.child_case.status == models.Case.STATUS_RUNNING
+        ):
+            api.cancel_case(work_item.child_case, user, context)
 
         return validated_data
 

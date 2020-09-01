@@ -164,6 +164,7 @@ def test_start_case_invalid_form(db, workflow, form, schema_executor):
     assert result.errors
 
 
+@pytest.mark.parametrize("work_item__child_case", [None])
 @pytest.mark.parametrize(
     "work_item__status",
     [models.WorkItem.STATUS_COMPLETED, models.WorkItem.STATUS_READY],
@@ -598,10 +599,18 @@ def test_api_start_case(
 
 
 @pytest.mark.parametrize(
-    "case__status,work_item__status",
-    [(models.Case.STATUS_RUNNING, models.WorkItem.STATUS_READY)],
+    "case__status,work_item__status,has_child_case",
+    [
+        (models.Case.STATUS_RUNNING, models.WorkItem.STATUS_READY, False),
+        (models.Case.STATUS_RUNNING, models.WorkItem.STATUS_READY, True),
+    ],
 )
-def test_api_cancel_case(db, case, work_item, admin_user):
+def test_api_cancel_case(db, admin_user, case_factory, case, work_item, has_child_case):
+    work_item.child_case = (
+        case_factory(status=models.Case.STATUS_RUNNING) if has_child_case else None
+    )
+    work_item.save()
+
     api.cancel_case(case=case, user=admin_user)
 
     case.refresh_from_db()
