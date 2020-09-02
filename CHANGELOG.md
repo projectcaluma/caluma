@@ -1,3 +1,14 @@
+# v6.4.0 (2 September 2020)
+
+### Feature
+* suspend and resume cases and work items (5d00a44d150bee2fc58890751c2cb2bbf72ae64d)
+* rootCaseMetaValue filter on allWorkItems (5aed4208fbe590ec6528ed730c35a57ecedd3379)
+
+### Fix
+* add missing transactions on serializers (9a129d1185e46329361dd4914b5c67e07f92712a)
+* fix cancelling and skipping of work items with child case (07602dbf8cc9e44a50eda0b05dff1f9b8b9d63d5)
+
+
 # v6.3.3 (25 August 2020)
 
 ### Fix
