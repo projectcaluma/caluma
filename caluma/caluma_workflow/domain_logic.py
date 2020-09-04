@@ -125,6 +125,14 @@ class CompleteWorkItemLogic:
     def post_complete(work_item, user, context=None):
         case = work_item.case
 
+        send_event(
+            events.completed_work_item,
+            sender="post_complete_work_item",
+            work_item=work_item,
+            user=user,
+            context=context,
+        )
+
         if not CompleteWorkItemLogic._can_continue(work_item, work_item.task):
             return work_item
 
@@ -160,14 +168,6 @@ class CompleteWorkItemLogic:
                         user=user,
                         context=context,
                     )
-
-        send_event(
-            events.completed_work_item,
-            sender="post_complete_work_item",
-            work_item=work_item,
-            user=user,
-            context=context,
-        )
 
         if (
             not next_tasks.exists()
