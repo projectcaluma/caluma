@@ -68,6 +68,13 @@ in case the event sends additional arguments in the future.
 | `suspended_case`      | `SuspendCase`                                                     | `case`, `user`, `context`      |
 | `resumed_case`        | `ResumeCase`                                                      | `case`, `user`, `context`      |
 
+In some cases when one mutation emits multiple events, it is important to know their respective order:
+
+- `CompleteWorkItem`:
+  1. `completed_work_item`
+  2. `created_work_item`
+  3. `completed_case`
+
 ## Event receivers are blocking
 
 For the time being, event receivers are blocking. Keep in mind that a request that leads to Caluma
