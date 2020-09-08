@@ -122,15 +122,17 @@ class CompleteWorkItemLogic:
         return validated_data
 
     @staticmethod
-    def post_complete(work_item, user, context=None):
+    def post_complete(
+        work_item,
+        user,
+        context=None,
+        event=events.completed_work_item,
+        sender="post_complete_work_item",
+    ):
         case = work_item.case
 
         send_event(
-            events.completed_work_item,
-            sender="post_complete_work_item",
-            work_item=work_item,
-            user=user,
-            context=context,
+            event, sender=sender, work_item=work_item, user=user, context=context
         )
 
         if not CompleteWorkItemLogic._can_continue(work_item, work_item.task):
@@ -163,7 +165,7 @@ class CompleteWorkItemLogic:
                 for created_work_item in created_work_items:  # pragma: no cover
                     send_event(
                         events.created_work_item,
-                        sender="post_complete_work_item",
+                        sender=sender,
                         work_item=created_work_item,
                         user=user,
                         context=context,
@@ -184,7 +186,7 @@ class CompleteWorkItemLogic:
 
             send_event(
                 events.completed_case,
-                sender="post_complete_work_item",
+                sender=sender,
                 case=case,
                 user=user,
                 context=context,
@@ -220,14 +222,12 @@ class SkipWorkItemLogic:
 
     @staticmethod
     def post_skip(work_item, user, context=None):
-        work_item = CompleteWorkItemLogic.post_complete(work_item, user, context)
-
-        send_event(
-            events.skipped_work_item,
+        work_item = CompleteWorkItemLogic.post_complete(
+            work_item,
+            user,
+            context,
+            event=events.skipped_work_item,
             sender="post_skip_work_item",
-            work_item=work_item,
-            user=user,
-            context=context,
         )
 
         return work_item
