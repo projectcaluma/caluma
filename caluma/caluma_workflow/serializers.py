@@ -205,13 +205,13 @@ class SaveCaseSerializer(CaseSerializer):
     @transaction.atomic
     def create(self, validated_data):
         instance = super().create(validated_data)
-        self.send_event(events.created_case)
+        self.send_event(events.post_create_case, case=instance)
         return instance
 
     @transaction.atomic
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
-        self.send_event(events.created_case, case=instance)
+        self.send_event(events.post_create_case, case=instance)
         return instance
 
     class Meta(CaseSerializer.Meta):
@@ -424,7 +424,7 @@ class SaveWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer):
     @transaction.atomic
     def update(self, instance, validated_data):
         instance = super().update(instance, validated_data)
-        self.send_event(events.created_work_item, work_item=instance)
+        self.send_event(events.post_create_work_item, work_item=instance)
         return instance
 
     class Meta:
@@ -499,7 +499,7 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer)
     @transaction.atomic
     def create(self, validated_data):
         instance = super().create(validated_data)
-        self.send_event(events.created_work_item, work_item=instance)
+        self.send_event(events.post_create_work_item, work_item=instance)
         return instance
 
     class Meta:

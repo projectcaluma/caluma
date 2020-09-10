@@ -1,10 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from caluma.caluma_core.events import send_event
-
 from ..caluma_form.models import Document
-from . import api, events, models, utils, validators
+from . import api, models, utils, validators
+from .events import send_event_with_deprecations
 
 
 class StartCaseLogic:
@@ -66,16 +65,17 @@ class StartCaseLogic:
 
         work_items = utils.bulk_create_work_items(tasks, case, user, None, context)
 
-        send_event(
-            events.created_case,
+        send_event_with_deprecations(
+            "post_create_case",
             sender="case_post_create",
             case=case,
             user=user,
             context=context,
         )
+
         for work_item in work_items:  # pragma: no cover
-            send_event(
-                events.created_work_item,
+            send_event_with_deprecations(
+                "post_create_work_item",
                 sender="case_post_create",
                 work_item=work_item,
                 user=user,
@@ -126,12 +126,12 @@ class CompleteWorkItemLogic:
         work_item,
         user,
         context=None,
-        event=events.completed_work_item,
+        event="post_complete_work_item",
         sender="post_complete_work_item",
     ):
         case = work_item.case
 
-        send_event(
+        send_event_with_deprecations(
             event, sender=sender, work_item=work_item, user=user, context=context
         )
 
@@ -163,8 +163,8 @@ class CompleteWorkItemLogic:
                 )
 
                 for created_work_item in created_work_items:  # pragma: no cover
-                    send_event(
-                        events.created_work_item,
+                    send_event_with_deprecations(
+                        "post_create_work_item",
                         sender=sender,
                         work_item=created_work_item,
                         user=user,
@@ -184,8 +184,8 @@ class CompleteWorkItemLogic:
             case.closed_by_group = user.group
             case.save()
 
-            send_event(
-                events.completed_case,
+            send_event_with_deprecations(
+                "post_complete_case",
                 sender=sender,
                 case=case,
                 user=user,
@@ -226,7 +226,7 @@ class SkipWorkItemLogic:
             work_item,
             user,
             context,
-            event=events.skipped_work_item,
+            event="post_skip_work_item",
             sender="post_skip_work_item",
         )
 
@@ -268,18 +268,8 @@ class CancelCaseLogic:
 
     @staticmethod
     def post_cancel(case, user, context=None):
-        # TODO: remove in the next major release since `events.cancelled_case`
-        # is deprecated in favor of `events.canceled_case`
-        send_event(
-            events.cancelled_case,
-            sender="post_cancel_case",
-            case=case,
-            user=user,
-            context=context,
-        )
-
-        send_event(
-            events.canceled_case,
+        send_event_with_deprecations(
+            "post_cancel_case",
             sender="post_cancel_case",
             case=case,
             user=user,
@@ -316,8 +306,8 @@ class SuspendCaseLogic:
 
     @staticmethod
     def post_suspend(case, user, context=None):
-        send_event(
-            events.suspended_case,
+        send_event_with_deprecations(
+            "post_suspend_case",
             sender="post_suspend_case",
             case=case,
             user=user,
@@ -356,8 +346,8 @@ class ResumeCaseLogic:
 
     @staticmethod
     def post_resume(case, user, context=None):
-        send_event(
-            events.resumed_case,
+        send_event_with_deprecations(
+            "post_resume_case",
             sender="post_resume_case",
             case=case,
             user=user,
@@ -393,19 +383,8 @@ class CancelWorkItemLogic:
 
     @staticmethod
     def post_cancel(work_item, user, context=None):
-        # TODO: remove in the next major release since
-        # `events.cancelled_work_item` is deprecated in favor of
-        # `events.canceled_work_item`
-        send_event(
-            events.cancelled_work_item,
-            sender="post_cancel_work_item",
-            work_item=work_item,
-            user=user,
-            context=context,
-        )
-
-        send_event(
-            events.canceled_work_item,
+        send_event_with_deprecations(
+            "post_cancel_work_item",
             sender="post_cancel_work_item",
             work_item=work_item,
             user=user,
@@ -435,8 +414,8 @@ class SuspendWorkItemLogic:
 
     @staticmethod
     def post_suspend(work_item, user, context=None):
-        send_event(
-            events.suspended_work_item,
+        send_event_with_deprecations(
+            "post_suspend_work_item",
             sender="post_suspend_work_item",
             work_item=work_item,
             user=user,
@@ -466,8 +445,8 @@ class ResumeWorkItemLogic:
 
     @staticmethod
     def post_resume(work_item, user, context=None):
-        send_event(
-            events.resumed_work_item,
+        send_event_with_deprecations(
+            "post_resume_work_item",
             sender="post_resume_work_item",
             work_item=work_item,
             user=user,

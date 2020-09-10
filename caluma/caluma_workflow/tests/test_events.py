@@ -1,8 +1,8 @@
 from caluma.caluma_core.events import on
 from caluma.caluma_workflow.events import (
-    completed_case,
-    completed_work_item,
-    skipped_work_item,
+    post_complete_case,
+    post_complete_work_item,
+    post_skip_work_item,
 )
 
 from .. import models
@@ -11,13 +11,13 @@ from .. import models
 def test_events(db, work_item_factory, schema_executor):
     work_item = work_item_factory(status=models.WorkItem.STATUS_READY, child_case=None)
 
-    @on(completed_work_item)
+    @on(post_complete_work_item)
     def complete_work_item_event_receiver(sender, work_item, **kwargs):
         work_item.meta = {"been-there": "done that"}
         work_item.save()
         raise Exception("this should not cause an error")
 
-    @on(completed_case)
+    @on(post_complete_case)
     def complete_case_event_receiver(sender, case, **kwargs):
         case.meta = {"been-there": "done that"}
         case.save()
@@ -42,13 +42,13 @@ def test_events(db, work_item_factory, schema_executor):
 def test_skip_event(db, work_item_factory, schema_executor):
     work_item = work_item_factory(status=models.WorkItem.STATUS_READY, child_case=None)
 
-    @on(completed_work_item)
+    @on(post_complete_work_item)
     def complete_work_item_event_receiver(sender, work_item, **kwargs):
         raise AssertionError(
             "complete event handler should not have been called!"
         )  # pragma: no cover
 
-    @on(skipped_work_item)
+    @on(post_skip_work_item)
     def skip_work_item_event_receiver(sender, work_item, **kwargs):
         work_item.meta = {"been-there": "done that"}
         work_item.save()
