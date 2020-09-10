@@ -1,7 +1,8 @@
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from ..caluma_form.models import Document
+from caluma.caluma_form.models import Document
+
 from . import api, models, utils, validators
 from .events import send_event_with_deprecations
 
@@ -34,7 +35,16 @@ class StartCaseLogic:
         return data
 
     @staticmethod
-    def pre_start(validated_data, user):
+    def pre_start(validated_data, user, context=None):
+        send_event_with_deprecations(
+            "pre_create_case",
+            sender="pre_create_case",
+            case=None,
+            validated_data=validated_data,
+            user=user,
+            context=context,
+        )
+
         parent_work_item = validated_data.get("parent_work_item")
         validated_data["status"] = models.Case.STATUS_RUNNING
 
@@ -113,7 +123,18 @@ class CompleteWorkItemLogic:
         )
 
     @staticmethod
-    def pre_complete(work_item, validated_data, user, context=None):
+    def pre_complete(
+        work_item,
+        validated_data,
+        user,
+        context=None,
+        event="pre_complete_work_item",
+        sender="pre_complete_work_item",
+    ):
+        send_event_with_deprecations(
+            event, sender=sender, work_item=work_item, user=user, context=context
+        )
+
         validated_data["status"] = models.WorkItem.STATUS_COMPLETED
         validated_data["closed_at"] = timezone.now()
         validated_data["closed_by_user"] = user.username
@@ -207,7 +228,12 @@ class SkipWorkItemLogic:
     @staticmethod
     def pre_skip(work_item, validated_data, user, context=None):
         validated_data = CompleteWorkItemLogic.pre_complete(
-            work_item, validated_data, user, context
+            work_item,
+            validated_data,
+            user,
+            context,
+            event="pre_skip_work_item",
+            sender="pre_skip_work_item",
         )
 
         validated_data["status"] = models.WorkItem.STATUS_SKIPPED
@@ -254,6 +280,14 @@ class CancelCaseLogic:
 
     @staticmethod
     def pre_cancel(case, validated_data, user, context=None):
+        send_event_with_deprecations(
+            "pre_cancel_case",
+            sender="pre_cancel_case",
+            case=case,
+            user=user,
+            context=context,
+        )
+
         validated_data["status"] = models.Case.STATUS_CANCELED
         validated_data["closed_at"] = timezone.now()
         validated_data["closed_by_user"] = user.username
@@ -297,6 +331,14 @@ class SuspendCaseLogic:
 
     @staticmethod
     def pre_suspend(case, validated_data, user, context=None):
+        send_event_with_deprecations(
+            "pre_suspend_case",
+            sender="pre_suspend_case",
+            case=case,
+            user=user,
+            context=context,
+        )
+
         validated_data["status"] = models.Case.STATUS_SUSPENDED
 
         for work_item in case.work_items.filter(status=models.WorkItem.STATUS_READY):
@@ -335,6 +377,14 @@ class ResumeCaseLogic:
 
     @staticmethod
     def pre_resume(case, validated_data, user, context=None):
+        send_event_with_deprecations(
+            "pre_resume_case",
+            sender="pre_resume_case",
+            case=case,
+            user=user,
+            context=context,
+        )
+
         validated_data["status"] = models.Case.STATUS_RUNNING
 
         for work_item in case.work_items.filter(
@@ -368,6 +418,14 @@ class CancelWorkItemLogic:
 
     @staticmethod
     def pre_cancel(work_item, validated_data, user, context=None):
+        send_event_with_deprecations(
+            "pre_cancel_work_item",
+            sender="pre_cancel_work_item",
+            work_item=work_item,
+            user=user,
+            context=context,
+        )
+
         validated_data["status"] = models.WorkItem.STATUS_CANCELED
         validated_data["closed_at"] = timezone.now()
         validated_data["closed_by_user"] = user.username
@@ -402,6 +460,14 @@ class SuspendWorkItemLogic:
 
     @staticmethod
     def pre_suspend(work_item, validated_data, user, context=None):
+        send_event_with_deprecations(
+            "pre_suspend_work_item",
+            sender="pre_suspend_work_item",
+            work_item=work_item,
+            user=user,
+            context=context,
+        )
+
         validated_data["status"] = models.WorkItem.STATUS_SUSPENDED
 
         if (
@@ -433,6 +499,14 @@ class ResumeWorkItemLogic:
 
     @staticmethod
     def pre_resume(work_item, validated_data, user, context=None):
+        send_event_with_deprecations(
+            "pre_resume_work_item",
+            sender="pre_resume_work_item",
+            work_item=work_item,
+            user=user,
+            context=context,
+        )
+
         validated_data["status"] = models.WorkItem.STATUS_READY
 
         if (

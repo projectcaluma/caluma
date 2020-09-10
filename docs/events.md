@@ -54,19 +54,30 @@ in case the event sends additional arguments in the future.
 
 ## List of emitted events
 
-| Event                     | Mutations that can emit this event                                | Arguments                      |
-| ------------------------- | ----------------------------------------------------------------- | ------------------------------ |
-| `post_create_work_item`   | `CreateWorkItem`, `SaveWorkItem`, `StartCase`, `CompleteWorkItem` | `work_item`, `user`, `context` |
-| `post_complete_work_item` | `CompleteWorkItem`                                                | `work_item`, `user`, `context` |
-| `post_cancel_work_item`   | `CancelCase`, `CancelWorkItem`                                    | `work_item`, `user`, `context` |
-| `post_skip_work_item`     | `SkipWorkItem`                                                    | `work_item`, `user`, `context` |
-| `post_suspend_work_item`  | `SuspendWorkItem`                                                 | `work_item`, `user`, `context` |
-| `post_resume_work_item`   | `ResumeWorkItem`                                                  | `work_item`, `user`, `context` |
-| `post_create_case`        | `SaveCase`, `StartCase`                                           | `case`, `user`, `context`      |
-| `post_complete_case`      | `CompleteWorkItem`                                                | `case`, `user`, `context`      |
-| `post_cancel_case`        | `CancelCase`                                                      | `case`, `user`, `context`      |
-| `post_suspend_case`       | `SuspendCase`                                                     | `case`, `user`, `context`      |
-| `post_resume_case`        | `ResumeCase`                                                      | `case`, `user`, `context`      |
+| Event                     | Mutations that can emit this event                                | Arguments                                        |
+| ------------------------- | ----------------------------------------------------------------- | ------------------------------------------------ |
+| `pre_create_work_item`    | `CreateWorkItem`, `SaveWorkItem`, `StartCase`, `CompleteWorkItem` | `work_item`, `user`, `context`, `validated_data` |
+| `post_create_work_item`   | `CreateWorkItem`, `SaveWorkItem`, `StartCase`, `CompleteWorkItem` | `work_item`, `user`, `context`                   |
+| `pre_complete_work_item`  | `CompleteWorkItem`                                                | `work_item`, `user`, `context`                   |
+| `post_complete_work_item` | `CompleteWorkItem`                                                | `work_item`, `user`, `context`                   |
+| `pre_cancel_work_item`    | `CancelCase`, `CancelWorkItem`                                    | `work_item`, `user`, `context`                   |
+| `post_cancel_work_item`   | `CancelCase`, `CancelWorkItem`                                    | `work_item`, `user`, `context`                   |
+| `pre_skip_work_item`      | `SkipWorkItem`                                                    | `work_item`, `user`, `context`                   |
+| `post_skip_work_item`     | `SkipWorkItem`                                                    | `work_item`, `user`, `context`                   |
+| `pre_suspend_work_item`   | `SuspendWorkItem`                                                 | `work_item`, `user`, `context`                   |
+| `post_suspend_work_item`  | `SuspendWorkItem`                                                 | `work_item`, `user`, `context`                   |
+| `pre_resume_work_item`    | `ResumeWorkItem`                                                  | `work_item`, `user`, `context`                   |
+| `post_resume_work_item`   | `ResumeWorkItem`                                                  | `work_item`, `user`, `context`                   |
+| `pre_create_case`         | `SaveCase`, `StartCase`                                           | `case`, `user`, `context`, `validated_data`      |
+| `post_create_case`        | `SaveCase`, `StartCase`                                           | `case`, `user`, `context`                        |
+| `pre_complete_case`       | `CompleteWorkItem`                                                | `case`, `user`, `context`                        |
+| `post_complete_case`      | `CompleteWorkItem`                                                | `case`, `user`, `context`                        |
+| `pre_cancel_case`         | `CancelCase`                                                      | `case`, `user`, `context`                        |
+| `post_cancel_case`        | `CancelCase`                                                      | `case`, `user`, `context`                        |
+| `pre_suspend_case`        | `SuspendCase`                                                     | `case`, `user`, `context`                        |
+| `post_suspend_case`       | `SuspendCase`                                                     | `case`, `user`, `context`                        |
+| `pre_resume_case`         | `ResumeCase`                                                      | `case`, `user`, `context`                        |
+| `post_resume_case`        | `ResumeCase`                                                      | `case`, `user`, `context`                        |
 
 In some cases when one mutation emits multiple events, it is important to know their respective order:
 

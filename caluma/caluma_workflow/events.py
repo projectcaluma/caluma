@@ -15,10 +15,15 @@ MODEL_ACTIONS = {
 for obj, actions in MODEL_ACTIONS.items():
     for action in actions:
         for prefix in ["pre", "post"]:
+            providing_args = [obj, "user", "context"]
+
+            if prefix == "pre" and action == "create":
+                providing_args += ["validated_data"]
+
             setattr(
                 module,
                 f"{prefix}_{action}_{obj}",
-                Signal(providing_args=[obj, "user", "context"]),
+                Signal(providing_args=providing_args),
             )
 
 # TODO: remove in the next major release since those are events are deprecated...
@@ -64,6 +69,9 @@ for new, deprecations in DEPRECATIONS.items():
 def send_event_with_deprecations(event_name, **kwargs):
     new_event = getattr(module, event_name)
     send_event(new_event, **kwargs)
+
+    if event_name not in DEPRECATIONS:
+        return
 
     for deprecation in DEPRECATIONS[event_name]:
         old_event = getattr(module, deprecation)
