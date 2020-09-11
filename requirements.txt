@@ -11,7 +11,7 @@ django_simple_history==2.11.0
 graphene-django==2.8.2
 idna==2.10
 minio==5.0.10
-psycopg2-binary==2.8.5
+psycopg2-binary==2.8.6
 pyjexl==0.2.3
 python-memcached==1.59
 requests==2.24.0
