@@ -78,6 +78,7 @@ class FlowFilterSet(FilterSet):
 
 
 class CaseFilterSet(MetaFilterSet):
+    id = GlobalIDFilter()
     order_by = OrderingFilter(label="CaseOrdering", fields=("status",))
 
     document_form = CharFilter(field_name="document__form_id")
@@ -192,6 +193,7 @@ class TaskOrderSet(FilterSet):
 
 
 class WorkItemFilterSet(MetaFilterSet):
+    id = GlobalIDFilter()
     order_by = OrderingFilter(label="WorkItemOrdering", fields=("status", "deadline"))
     addressed_groups = StringListFilter(lookup_expr="overlap")
     controlling_groups = StringListFilter(lookup_expr="overlap")
