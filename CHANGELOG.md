@@ -1,3 +1,13 @@
+# v6.5.0 (11 September 2020)
+
+### Feature
+* Emit "pre_" events (dbda0a3e97e0a0ef977259d8a4e41b2912619225)
+
+### Fix
+* Don't send complete_work_item event when skip (8236481d7da4a91b66f6102592d4b9de38bf5324)
+* Always send post_complete_work_item event (6b2361593bd1a1df50c49c8f7b00779a1c75cc07)
+
+
 # v6.4.0 (2 September 2020)
 
 ### Feature
