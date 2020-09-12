@@ -1,3 +1,9 @@
+# v6.6.0 (12 September 2020)
+
+### Feature
+* add ID filter for case and work item (b6d89f315c1d79e914de575edf10945cf08d0ef2)
+
+
 # v6.5.0 (11 September 2020)
 
 ### Feature
