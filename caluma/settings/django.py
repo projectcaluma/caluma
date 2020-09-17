@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     "caluma.caluma_form.apps.DefaultConfig",
     "caluma.caluma_workflow.apps.DefaultConfig",
     "caluma.caluma_data_source.apps.DefaultConfig",
+    "caluma.caluma_logging.apps.DefaultConfig",
 ]
 
 if DEBUG:
@@ -156,3 +157,10 @@ async_instance.disable_trampoline()
 # GraphQL
 if DEBUG:
     GRAPHENE["MIDDLEWARE"].append("graphene_django.debug.DjangoDebugMiddleware")
+
+
+# caluma access log
+ENABLE_ACCESS_LOG = env.bool("ENABLE_ACCESS_LOG", default=False)
+
+if ENABLE_ACCESS_LOG:
+    MIDDLEWARE.append("caluma.caluma_logging.middleware.AccessLogMiddleware")

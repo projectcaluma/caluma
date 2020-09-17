@@ -53,6 +53,17 @@ If you wish to expose an API for querying previous revisions of documents, you n
 If you enable this, make sure to also configure [visibilities](extending.md#visibility-classes) and
 [permissions](extending.md#permission-classes) for historical types.
 
+## Access Logging
+
+The `caluma_logging` app bundles a middleware that logs all requests using the `AccessLog` model.
+The log entries consist of username and caluma query/mutation details.
+
+It's enabled by setting the environment variable:
+`ENABLE_ACCESS_LOG`: Defaults to `false`.
+
+For cleaning up old entries it's encouraged to use the `cleanup_access_log` management command.
+Given the `--force` argument, it removes all entries older than what's given by `--keep` (default: "2 weeks").
+
 ## File question and answers
 In order to make use of Calumas file question and answer, you need to set up a storage provider.
 
