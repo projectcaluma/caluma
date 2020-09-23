@@ -15,6 +15,7 @@ from pytest_factoryboy import register
 from .caluma_core.faker import MultilangProvider
 from .caluma_core.models import HistoricalRecords
 from .caluma_form import factories as form_factories
+from .caluma_logging import factories as logging_factories
 from .caluma_user.models import AnonymousUser, OIDCUser
 from .caluma_workflow import factories as workflow_factories
 from .schema import schema
@@ -29,6 +30,7 @@ def register_module(module):
 
 
 register_module(form_factories)
+register_module(logging_factories)
 register_module(workflow_factories)
 
 
