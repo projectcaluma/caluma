@@ -33,7 +33,7 @@ class Command(BaseCommand):
         query = f"""SELECT "app" FROM "django_migrations" WHERE "app" = '{self._act_prefix}form';"""
         with connection.cursor() as cursor:
             try:
-                cursor.execute(query)
+                cursor.execute(query, params=None)
             except ProgrammingError as e:  # pragma: no cover
                 # happens only on initial migration for new project
                 if e.args[0].startswith('relation "django_migrations" does not exist'):
@@ -46,7 +46,13 @@ class Command(BaseCommand):
     def _get_table_list(self):
         query = f"""SELECT tablename FROM pg_catalog.pg_tables WHERE tablename LIKE '{self._act_prefix}form_%' OR tablename LIKE '{self._act_prefix}workflow_%';"""
         with connection.cursor() as cursor:
-            cursor.execute(query)
+            cursor.execute(query, params=None)
+            return [row[0] for row in cursor.fetchall()]
+
+    def _get_sequence_list(self):
+        query = f"""SELECT sequence_name FROM information_schema.sequences WHERE sequence_name LIKE '{self._act_prefix}form_%' OR sequence_name LIKE '{self._act_prefix}workflow_%';"""
+        with connection.cursor() as cursor:
+            cursor.execute(query, params=None)
             return [row[0] for row in cursor.fetchall()]
 
     def _collect_content_type_queries(self):
@@ -78,19 +84,33 @@ class Command(BaseCommand):
             queries.append(query)
         return queries
 
+    def _collect_prefix_sequences_queries(self, sequences: list):
+        queries = []
+        for sequence in sequences:
+            query = f"""ALTER SEQUENCE {sequence} RENAME TO {self.prefix}{sequence};"""
+            if self.revert:
+                query = f"""ALTER SEQUENCE {sequence} RENAME TO {sequence.replace(self.prefix, '')};"""
+            queries.append(query)
+        return queries
+
     def collect(self):
-        if not self._migration_needed():
-            return
-        self.queries += self._collect_content_type_queries()
-        self.queries += self._collect_django_migrations_queries()
-        tables = self._get_table_list()
-        self.queries += self._collect_prefix_tables_queries(tables)
-        return self.queries
+        if self._migration_needed():
+            self.queries += self._collect_content_type_queries()
+            self.queries += self._collect_django_migrations_queries()
+
+            tables = self._get_table_list()
+            self.queries += self._collect_prefix_tables_queries(tables)
+
+        # queries the information_schema only, should be safe even before initial django migration
+        sequences = self._get_sequence_list()
+
+        if sequences:
+            self.queries += self._collect_prefix_sequences_queries(sequences)
 
     def apply(self):
         with connection.cursor() as cursor:
             for query in self.queries:
-                cursor.execute(query)
+                cursor.execute(query, params=None)
 
     def handle(self, *args, **options):
         if options["revert"]:

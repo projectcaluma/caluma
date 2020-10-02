@@ -25,6 +25,9 @@ def test_migrate_to_prefixed_apps(db, force):
             _is_applied(
                 """SELECT tablename FROM pg_catalog.pg_tables WHERE tablename LIKE 'caluma_form_%' OR tablename LIKE 'caluma_workflow_%';"""
             ),
+            _is_applied(
+                """SELECT sequence_name FROM information_schema.sequences WHERE sequence_name LIKE 'caluma_form_%' OR sequence_name LIKE 'caluma_workflow_%';"""
+            ),
         )
         if all(applied):
             return True
