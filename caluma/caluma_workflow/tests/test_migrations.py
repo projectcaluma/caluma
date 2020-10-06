@@ -1,6 +1,12 @@
+import importlib
+
+import pytest
+from django.apps.registry import apps
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
 from django.utils import timezone
+
+from caluma.caluma_workflow.models import Case
 
 
 def test_add_case_families(transactional_db):
@@ -69,6 +75,35 @@ def test_add_case_families(transactional_db):
 
     assert historical_case.family_id == historical__child_case.family_id == case.id
     assert historical_orphan_case.family_id == historical_orphan_case.id
+
+
+@pytest.mark.parametrize(
+    "set_parent_work_item, set_family_none",
+    [(False, False), (False, True), (True, False), (True, True)],
+)
+def test_set_family_with_broken_data(
+    db, case_factory, work_item_factory, set_parent_work_item, set_family_none
+):
+    parent, child, unrelated = case_factory.create_batch(3)
+
+    Case.objects.all().update(family=None)  # not sure why factory doesn't allow this
+
+    child.parent_work_item = (
+        work_item_factory(case=parent) if set_parent_work_item else None
+    )
+    child.save()
+    if set_parent_work_item:
+        child.parent_work_item.case = unrelated if set_family_none else parent
+        child.parent_work_item.save()
+
+    migra_module = importlib.import_module(
+        "caluma.caluma_workflow.migrations.0020_case_families"
+    )
+
+    class FakeEditor:
+        connection = connection
+
+    migra_module.set_family(apps, schema_editor=FakeEditor)
 
 
 def test_workitem_name_description(transactional_db):

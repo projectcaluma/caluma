@@ -16,13 +16,23 @@ def set_family(apps, schema_editor):
 
     for case in orphan_cases:
         family = case
+
         # Navigate up the hierarchy, but avoid hanging
         # if we have a loop in the data structure
-        while (
-            hasattr(family, "parent_work_item")
-            and family.parent_work_item.case != family
-        ):
-            family = family.parent_work_item.case
+        try:
+
+            while (
+                hasattr(family, "parent_work_item")
+                and family.parent_work_item.case != family
+            ):
+                family = family.parent_work_item.case
+        except models.DoesNotExist:
+            # Some times, hasattr() succeeds, but accessing the
+            # parent_work_item still fails (seen on production).
+            # In this case, we just skip over, as there's nothing
+            # else we can do
+            pass
+
         case.family = family
 
     Case.objects.using(db_alias).bulk_update(orphan_cases, ["family"])
