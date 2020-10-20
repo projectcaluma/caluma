@@ -4,12 +4,12 @@ from django.conf import settings
 
 
 class BaseUser:  # pragma: no cover
-    def __init__(self):
-        self.username = None
-        self.groups = []
-        self.group = None
-        self.token = None
-        self.claims = {}
+    def __init__(self, username=None, groups=None, group=None, token=None, claims=None):
+        self.username = username
+        self.groups = [] if groups is None else groups
+        self.group = group
+        self.token = token
+        self.claims = {} if claims is None else claims
         self.is_authenticated = False
 
     def __getattribute__(self, name):
