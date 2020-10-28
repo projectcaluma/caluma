@@ -46,6 +46,11 @@ Here are the available transforms:
   things currently in the fridge, and you want help the user to decide what to cook:
   `'ravioli' in 'fridge-contents'|answer|mapby('food-name')` will tell you whether
   there are ravioli.
+* `debug`: Does not modify the value, but writes the value to the log. This is
+  especially useful when you are exploring the data while building forms or
+  workflows. The log message may appear in different places depending on
+  where it's being run (Browser: console log in the debug tools, Server:
+  System or container logs, might depend on your logging configuration)
 
 ### Operators
 
