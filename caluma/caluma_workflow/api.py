@@ -1,18 +1,10 @@
 from typing import Optional
 
-from django.db.models import Model
-
 from caluma.caluma_form.models import Form
 from caluma.caluma_user.models import BaseUser
+from caluma.utils import update_model
 
 from . import domain_logic, models
-
-
-def update_model(model: Model, data: dict) -> Model:
-    for key, value in data.items():
-        setattr(model, key, value)
-
-    model.save()
 
 
 def start_case(
