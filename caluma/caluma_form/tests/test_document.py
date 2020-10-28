@@ -1,4 +1,5 @@
 import pytest
+from django.utils.dateparse import parse_date
 from graphql_relay import to_global_id
 
 from ...caluma_core.relay import extract_global_id
@@ -6,7 +7,7 @@ from ...caluma_core.tests import extract_serializer_input_fields
 from ...caluma_core.visibilities import BaseVisibility, filter_queryset_for
 from ...caluma_form.models import Answer, Document, Question
 from ...caluma_form.schema import Document as DocumentNodeType
-from .. import serializers
+from .. import api, serializers
 
 
 @pytest.mark.parametrize(
@@ -385,6 +386,7 @@ def test_save_document(db, document, schema_executor, update):
     assert same_id == update
 
 
+@pytest.mark.parametrize("use_api", [True, False])  # noqa:C901
 @pytest.mark.parametrize("delete_answer", [True, False])
 @pytest.mark.parametrize("option__slug", ["option-slug"])
 @pytest.mark.parametrize(
@@ -661,6 +663,8 @@ def test_save_document_answer(
     delete_answer,
     minio_mock,
     data_source_settings,
+    use_api,
+    admin_user,
 ):
     mutation_func = mutation[0].lower() + mutation[1:]
     query = f"""
@@ -736,15 +740,34 @@ def test_save_document_answer(
         if answer.date == "1900-01-01":
             inp["input"]["value"] = "not a date"
 
+        if use_python_api and success:
+            inp["input"]["value"] = parse_date(inp["input"]["value"])
+
     if delete_answer:
         # delete answer to force create test instead of update
         Answer.objects.filter(pk=answer.pk).delete()
 
-    result = schema_executor(query, variable_values=inp)
+    if not use_api:
+        result = schema_executor(query, variable_values=inp)
 
-    assert not bool(result.errors) == success
-    if success:
-        snapshot.assert_match(result.data)
+        assert not bool(result.errors) == success
+
+        if success:
+            snapshot.assert_match(result.data)
+    else:
+        if success:
+            answer = api.save_answer(
+                question, answer.document, user=admin_user, value=inp["input"]["value"]
+            )
+            snapshot.assert_match(answer)
+        else:
+            with pytest.raises(Exception):
+                api.save_answer(
+                    question,
+                    answer.document,
+                    user=admin_user,
+                    value=inp["input"]["value"],
+                )
 
 
 @pytest.mark.parametrize("delete_answer", [True, False])
@@ -839,9 +862,8 @@ def test_save_document_table_answer_invalid_row_form(
             serializers.SaveAnswerSerializer, answer
         )
     }
-    inp["input"]["value"] = [
-        str(document.pk) for document in document_factory.create_batch(1)
-    ]
+    inp["input"]["value"] = [str(document_factory().pk)]
+
     result = schema_executor(query, variable_values=inp)
     assert result.errors
 

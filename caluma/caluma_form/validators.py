@@ -1,5 +1,6 @@
 import sys
 from collections import defaultdict
+from datetime import date
 from logging import getLogger
 
 from django_filters.constants import EMPTY_VALUES
@@ -81,7 +82,10 @@ class AnswerValidator:
             )
 
     def _validate_question_date(self, question, value, **kwargs):
-        pass
+        if not isinstance(value, date):
+            raise CustomValidationError(
+                f"Invalid value {value}. Should be of type date.", slugs=[question.slug]
+            )
 
     def _validate_question_choice(self, question, value, **kwargs):
         options = question.options.values_list("slug", flat=True)
@@ -150,15 +154,39 @@ class AnswerValidator:
                 )
             self._validate_dynamic_option(question, document, v, user)
 
-    def _validate_question_table(self, question, value, document, user, **kwargs):
+    def _validate_question_table(
+        self, question, value, document, user, instance=None, origin=False, **kwargs
+    ):
+        if not origin:
+            for row_doc in value:
+                DocumentValidator().validate(row_doc, user=user, **kwargs)
+            return
+
+        # this answer was the entry-point of the validation
+        # -> validate row form
+        value = value or instance and instance.documents.all() or []
+        question = question or instance and instance.question
 
         for row_doc in value:
-            DocumentValidator().validate(row_doc, user=user, **kwargs)
+            if row_doc.form_id != question.row_form_id:
+                raise exceptions.ValidationError(
+                    f"Document {row_doc.pk} is not of form type {question.row_form.pk}."
+                )
 
     def _validate_question_file(self, question, value, **kwargs):
         pass
 
-    def validate(self, *, question, document, user, validation_context=None, **kwargs):
+    def validate(
+        self,
+        *,
+        question,
+        document,
+        user,
+        validation_context=None,
+        instance=None,
+        origin=False,
+        **kwargs,
+    ):
         # Check all possible fields for value
         value = None
         for i in ["value", "file", "date", "documents"]:
@@ -176,6 +204,8 @@ class AnswerValidator:
                 document=document,
                 user=user,
                 validation_context=validation_context,
+                instance=instance,
+                origin=origin,
             )
 
         format_validators = get_format_validators(dic=True)

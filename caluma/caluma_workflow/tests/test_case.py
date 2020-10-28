@@ -674,7 +674,7 @@ def test_cancel_suspend_resume_case(
     expected_work_item_status,
     error,
 ):
-    if use_api:
+    if not use_api:
         query = f"""
             mutation ($id: ID!) {{
                 {action}Case(input: {{ id: $id }}) {{

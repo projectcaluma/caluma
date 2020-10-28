@@ -341,6 +341,32 @@ class Answer(core_models.BaseModel):
             self.file.delete()
         super().delete(args, kwargs)
 
+    def create_answer_documents(self, documents):
+        family = self.document.family
+        document_ids = [document.pk for document in documents]
+
+        for sort, document_id in enumerate(reversed(document_ids), start=1):
+            ans_doc, created = AnswerDocument.objects.get_or_create(
+                answer=self, document_id=document_id, defaults={"sort": sort}
+            )
+            if not created and ans_doc.sort != sort:
+                ans_doc.sort = sort
+                ans_doc.save()
+            if created:
+                # Already-existing documents are already in the family,
+                # so we're updating only the newly attached rows
+                ans_doc.document.set_family(family)
+
+    def unlink_unused_rows(self, docs_to_keep):
+        existing = AnswerDocument.objects.filter(answer=self).exclude(
+            document__in=docs_to_keep
+        )
+        for ans_doc in list(existing.select_related("document")):
+            # Set document to be its own family
+            # TODO: Can/should we delete the detached documents?
+            ans_doc.document.set_family(ans_doc.document)
+            ans_doc.delete()
+
     class Meta:
         # a question may only be answerd once per document
         unique_together = ("document", "question")
