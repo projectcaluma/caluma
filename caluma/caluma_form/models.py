@@ -164,6 +164,10 @@ class Question(core_models.SlugModel):
         }
         return empties.get(self.type, None)
 
+    def __repr__(self):
+        base = super().__repr__()
+        return base[:-1] + f", type={self.type})"
+
     class Meta:
         indexes = [GinIndex(fields=["meta"])]
 
@@ -290,6 +294,9 @@ class Document(core_models.UUIDModel):
 
         return new_document
 
+    def __repr__(self):
+        return f"Document(form={self.form!r})"
+
     class Meta:
         indexes = [GinIndex(fields=["meta"])]
 
@@ -366,6 +373,9 @@ class Answer(core_models.BaseModel):
             # TODO: Can/should we delete the detached documents?
             ans_doc.document.set_family(ans_doc.document)
             ans_doc.delete()
+
+    def __repr__(self):
+        return f"Answer(document={self.document!r}, question={self.question!r}, value={self.value!r})"
 
     class Meta:
         # a question may only be answerd once per document
