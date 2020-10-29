@@ -600,7 +600,7 @@ def test_api_start_case(
 
 
 @pytest.mark.parametrize("work_item__child_case", [None])
-@pytest.mark.parametrize("use_api", [True, False])
+@pytest.mark.parametrize("use_python_api", [True, False])
 @pytest.mark.parametrize(
     "action,case__status,work_item__status,expected_case_status,expected_work_item_status,error",
     [
@@ -666,7 +666,7 @@ def test_cancel_suspend_resume_case(
     db,
     admin_user,
     schema_executor,
-    use_api,
+    use_python_api,
     action,
     case,
     work_item,
@@ -674,7 +674,7 @@ def test_cancel_suspend_resume_case(
     expected_work_item_status,
     error,
 ):
-    if not use_api:
+    if not use_python_api:
         query = f"""
             mutation ($id: ID!) {{
                 {action}Case(input: {{ id: $id }}) {{

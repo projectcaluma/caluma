@@ -386,7 +386,7 @@ def test_save_document(db, document, schema_executor, update):
     assert same_id == update
 
 
-@pytest.mark.parametrize("use_api", [True, False])  # noqa:C901
+@pytest.mark.parametrize("use_python_api", [True, False])  # noqa:C901
 @pytest.mark.parametrize("delete_answer", [True, False])
 @pytest.mark.parametrize("option__slug", ["option-slug"])
 @pytest.mark.parametrize(
@@ -663,7 +663,7 @@ def test_save_document_answer(
     delete_answer,
     minio_mock,
     data_source_settings,
-    use_api,
+    use_python_api,
     admin_user,
 ):
     mutation_func = mutation[0].lower() + mutation[1:]
@@ -747,7 +747,7 @@ def test_save_document_answer(
         # delete answer to force create test instead of update
         Answer.objects.filter(pk=answer.pk).delete()
 
-    if not use_api:
+    if not use_python_api:
         result = schema_executor(query, variable_values=inp)
 
         assert not bool(result.errors) == success
