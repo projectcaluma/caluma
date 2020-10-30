@@ -38,3 +38,21 @@ def save_answer(
     domain_logic.SaveAnswerLogic.post_save(answer)
 
     return answer
+
+
+def save_document(
+    form: models.Form,
+    meta: Optional[dict] = None,
+    document: Optional[models.Document] = None,
+    user: Optional[BaseUser] = None,
+) -> models.Document:
+    """Save a document for a given form."""
+
+    if meta is None:
+        meta = {}
+
+    if not document:
+        return domain_logic.SaveDocumentLogic.create(form=form, meta=meta, user=user)
+
+    domain_logic.SaveDocumentLogic.update(document, form=form, meta=meta)
+    return document

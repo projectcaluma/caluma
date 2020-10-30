@@ -347,8 +347,9 @@ def test_query_all_documents_filter_answers_by_questions(
     assert set(expect_data) == set(result_lengths)
 
 
+@pytest.mark.parametrize("use_python_api", [True, False])
 @pytest.mark.parametrize("update", [True, False])
-def test_save_document(db, document, schema_executor, update):
+def test_save_document(db, document, schema_executor, update, use_python_api):
     query = """
         mutation SaveDocument($input: SaveDocumentInput!) {
           saveDocument(input: $input) {
@@ -369,21 +370,32 @@ def test_save_document(db, document, schema_executor, update):
         )
     }
 
-    if not update:
-        # not update = create = we don't pass the ID
-        del inp["input"]["id"]
+    if not use_python_api:
+        if not update:
+            # not update = create = we don't pass the ID
+            del inp["input"]["id"]
 
-    result = schema_executor(query, variable_values=inp)
+        result = schema_executor(query, variable_values=inp)
 
-    assert not result.errors
-    assert result.data["saveDocument"]["document"]["form"]["slug"] == document.form.slug
+        assert not result.errors
+        assert (
+            result.data["saveDocument"]["document"]["form"]["slug"]
+            == document.form.slug
+        )
 
-    same_id = extract_global_id(result.data["saveDocument"]["document"]["id"]) == str(
-        document.id
-    )
+        same_id = extract_global_id(
+            result.data["saveDocument"]["document"]["id"]
+        ) == str(document.id)
 
-    # if updating, the resulting document must be the same
-    assert same_id == update
+        # if updating, the resulting document must be the same
+        assert same_id == update
+    else:
+        doc = (
+            api.save_document(document.form, document=document)
+            if update
+            else api.save_document(document.form)
+        )
+        assert (doc.pk == document.pk) == update
 
 
 @pytest.mark.parametrize("use_python_api", [True, False])  # noqa:C901

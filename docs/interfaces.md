@@ -317,6 +317,8 @@ For completeness, they are listed here:
 You can also use the full business logic that is provided by the GraphQL API
 in your application that installs Caluma as a django app:
 
+- `caluma_form.api.save_answer` To save an answer for give question, document
+- `caluma_form.api.save_document` To save an document
 - `caluma_workflow.api.start_case` To start a new case of a given workflow
 - `caluma_workflow.api.cancel_case` To cancel a case
 - `caluma_workflow.api.suspend_case` To suspend a case

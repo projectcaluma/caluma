@@ -1,8 +1,22 @@
+from typing import Optional
+
 from django.db import transaction
 
+from caluma.caluma_core.models import BaseModel
 from caluma.caluma_form import models, validators
 from caluma.caluma_user.models import BaseUser
 from caluma.utils import update_model
+
+
+class BaseLogic:
+    @staticmethod
+    @transaction.atomic
+    def create(model: BaseModel, user: Optional[BaseUser] = None, **kwargs):
+        if user:
+            kwargs["created_by_user"] = user
+            kwargs["created_by_group"] = user.group
+
+        return model.objects.create(**kwargs)
 
 
 class SaveAnswerLogic:
@@ -40,18 +54,14 @@ class SaveAnswerLogic:
 
     @staticmethod
     @transaction.atomic
-    def create(validated_data, user):
+    def create(validated_data: dict, user: Optional[BaseUser] = None) -> models.Answer:
         if validated_data["question"].type == models.Question.TYPE_FILE:
             validated_data = __class__.set_file(validated_data)
 
         if validated_data["question"].type == models.Question.TYPE_TABLE:
             documents = validated_data.pop("documents")
 
-        if user:
-            validated_data["created_by_user"] = user
-            validated_data["created_by_group"] = user.group
-
-        answer = models.Answer.objects.create(**validated_data)
+        answer = BaseLogic.create(models.Answer, user, **validated_data)
 
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
@@ -83,3 +93,19 @@ class SaveAnswerLogic:
         file = models.File.objects.create(name=file_name)
         validated_data["file"] = file
         return validated_data
+
+
+class SaveDocumentLogic:
+    @staticmethod
+    @transaction.atomic
+    def create(
+        # form: models.Form, meta: Optional[dict] = None, user: Optional[BaseUser] = None
+        **kwargs,
+    ):
+        # return BaseLogic.create(models.Document, form=form, meta=meta, user=user)
+        return BaseLogic.create(models.Document, **kwargs)
+
+    @staticmethod
+    @transaction.atomic
+    def update(document, **kwargs):
+        update_model(document, kwargs)
