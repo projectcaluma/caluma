@@ -496,14 +496,14 @@ class CreateWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer)
                 task.control_groups, task, case, user, None, data.get("context", None)
             )
             if controlling_groups is not None:
-                data["controlling_groups"] = controlling_groups
+                data["controlling_groups"] = sorted(controlling_groups)
 
         if "addressed_groups" not in data:
             addressed_groups = utils.get_jexl_groups(
                 task.address_groups, task, case, user, None, data.get("context", None)
             )
             if addressed_groups is not None:
-                data["addressed_groups"] = addressed_groups
+                data["addressed_groups"] = sorted(addressed_groups)
 
         return super().validate(data)
 

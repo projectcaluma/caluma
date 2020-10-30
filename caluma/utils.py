@@ -1,5 +1,7 @@
 from logging import getLogger
 
+from django.db.models import Model
+
 log = getLogger(__name__)
 
 
@@ -79,3 +81,10 @@ def fix_foreign_key_types(apps, connection):
                     cursor.execute(
                         fix_sql % (model._meta.db_table, _field_name(field), new_type)
                     )
+
+
+def update_model(model: Model, data: dict) -> Model:
+    for key, value in data.items():
+        setattr(model, key, value)
+
+    model.save()

@@ -60,6 +60,9 @@ class SlugModel(BaseModel, HistoricalModel):
     def __str__(self):
         return self.slug
 
+    def __repr__(self):
+        return f"{self.__class__.__name__}(slug={self.slug})"
+
     class Meta:
         abstract = True
 
@@ -72,6 +75,12 @@ class UUIDModel(BaseModel, HistoricalModel):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    def __str__(self):
+        return self.id
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(id={self.id})"
 
     class Meta:
         abstract = True
@@ -88,6 +97,12 @@ class NaturalKeyModel(BaseModel, HistoricalModel):
     def save(self, *args, **kwargs):
         self.id = self.natural_key()
         return super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.id
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(id={self.id})"
 
     class Meta:
         abstract = True

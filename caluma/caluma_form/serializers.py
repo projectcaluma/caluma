@@ -10,7 +10,7 @@ from rest_framework.serializers import (
 )
 
 from ..caluma_core import serializers
-from . import models, validators
+from . import domain_logic, models, validators
 from .jexl import QuestionJexl
 
 
@@ -470,7 +470,12 @@ class SaveAnswerSerializer(serializers.ModelSerializer):
     def validate(self, data):
         if "value" not in data:
             data["value"] = None
-        validators.AnswerValidator().validate(**data, user=self.context["request"].user)
+        validators.AnswerValidator().validate(
+            **data,
+            user=self.context["request"].user,
+            instance=self.instance,
+            origin=True,
+        )
         return super().validate(data)
 
     class Meta:
@@ -522,64 +527,22 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         help_text="List of document IDs representing the rows in the table.",
     )
 
-    def validate(self, data):
-        documents = (
-            data.get("documents")
-            or self.instance
-            and self.instance.documents.all()
-            or []
-        )
-        question = data.get("question") or self.instance and self.instance.question
-
-        for document in documents:
-            if document.form_id != question.row_form_id:
-                raise exceptions.ValidationError(
-                    f"Document {document.pk} is not of form type {question.row_form.pk}."
-                )
-
-        return data
-
-    def create_answer_documents(self, answer, documents):
-        family = answer.document.family
-        document_ids = [document.pk for document in documents]
-
-        for sort, document_id in enumerate(reversed(document_ids), start=1):
-            ans_doc, created = models.AnswerDocument.objects.get_or_create(
-                answer=answer, document_id=document_id, defaults={"sort": sort}
-            )
-            if not created and ans_doc.sort != sort:
-                ans_doc.sort = sort
-                ans_doc.save()
-            if created:
-                # Already-existing documents are already in the family,
-                # so we're updating only the newly attached rows
-                ans_doc.document.set_family(family)
-
     @transaction.atomic
     def create(self, validated_data):
         documents = validated_data.pop("documents")
         instance = super().create(validated_data)
-        self.create_answer_documents(instance, documents)
+        instance.create_answer_documents(documents)
         return instance
-
-    def unlink_unused_rows(self, docs_to_keep):
-        existing = models.AnswerDocument.objects.filter(answer=self.instance).exclude(
-            document__in=docs_to_keep
-        )
-        for ans_doc in list(existing.select_related("document")):
-            # Set document to be its own family
-            # TODO: Can/should we delete the detached documents?
-            ans_doc.document.set_family(ans_doc.document)
-            ans_doc.delete()
 
     @transaction.atomic
     def update(self, instance, validated_data):
         documents = validated_data.pop("documents")
 
-        self.unlink_unused_rows(docs_to_keep=documents)
+        instance.unlink_unused_rows(docs_to_keep=documents)
+        instance.refresh_from_db()
 
         instance = super().update(instance, validated_data)
-        self.create_answer_documents(instance, documents)
+        instance.create_answer_documents(documents)
         return instance
 
     class Meta(SaveAnswerSerializer.Meta):
@@ -590,20 +553,16 @@ class SaveDocumentFileAnswerSerializer(SaveAnswerSerializer):
     value = CharField(write_only=True, source="file", required=False)
     value_id = PrimaryKeyRelatedField(read_only=True, source="file", required=False)
 
-    def set_file(self, validated_data):
-        file_name = validated_data.get("file")
-        file = models.File.objects.create(name=file_name)
-        validated_data["file"] = file
-        return validated_data
-
+    @transaction.atomic
     def create(self, validated_data):
-        validated_data = self.set_file(validated_data)
+        validated_data = domain_logic.SaveAnswerLogic.set_file(validated_data)
         return super().create(validated_data)
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         if instance.file.name is not validated_data["file"]:
             instance.file.delete()
-            validated_data = self.set_file(validated_data)
+            validated_data = domain_logic.SaveAnswerLogic.set_file(validated_data)
         return super().update(instance, validated_data)
 
     class Meta(SaveAnswerSerializer.Meta):
@@ -613,6 +572,7 @@ class SaveDocumentFileAnswerSerializer(SaveAnswerSerializer):
 class RemoveAnswerSerializer(serializers.ModelSerializer):
     answer = PrimaryKeyRelatedField(queryset=models.Answer.objects.all())
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         instance.delete()
         return instance
@@ -625,6 +585,7 @@ class RemoveAnswerSerializer(serializers.ModelSerializer):
 class RemoveDocumentSerializer(serializers.ModelSerializer):
     document = serializers.GlobalIDField(source="id")
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         if hasattr(instance, "case"):
             raise Exception("You cannot remove a Document, if it's attached to a case.")

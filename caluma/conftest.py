@@ -294,7 +294,7 @@ def sorted_snapshot(snapshot):
     The second arg (key) is passed to the builtin `sorted` function.
     """
 
-    def _sorted(name, key):
+    def _sorted(name, key=None):
         def _(data, path):
             if isinstance(data, list) and path[-1][0] == name:
                 return sorted(data, key=key)

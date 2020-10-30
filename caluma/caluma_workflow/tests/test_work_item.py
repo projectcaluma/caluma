@@ -406,7 +406,7 @@ def test_complete_work_item_with_next(
     db,
     group_jexl,
     is_multiple_instance,
-    snapshot,
+    sorted_snapshot,
     work_item,
     task,
     task_factory,
@@ -466,7 +466,7 @@ def test_complete_work_item_with_next(
     result = schema_executor(query, variable_values=inp, info=info)
 
     assert not result.errors
-    snapshot.assert_match(result.data)
+    assert result.data == sorted_snapshot("edges", lambda x: json.dumps(x))
 
 
 @pytest.mark.parametrize(
