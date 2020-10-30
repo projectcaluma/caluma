@@ -47,6 +47,10 @@ Here are the available transforms:
   `'ravioli' in 'fridge-contents'|answer|mapby('food-name')` will tell you whether
   there are ravioli.
 
+Note: The `answer` transform only works on string literals. It is not
+possible to calculate a question slug, for example, and then fetch the
+answer of that.
+
 ### Operators
 
 Other operators that aren't transforms are also available:

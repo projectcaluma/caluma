@@ -21,7 +21,8 @@ def test_extract_transforms(expression, expected_transforms):
     jexl.add_transform("transform2", lambda x: x)
 
     assert set(
-        jexl.analyze(
+        expr.value
+        for expr in jexl.analyze(
             expression,
             functools.partial(
                 ExtractTransformSubjectAnalyzer, transforms=["transform1"]

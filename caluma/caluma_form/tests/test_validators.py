@@ -747,3 +747,40 @@ def test_validate_form_in_table(
         # Should not raise, as the "form" referenced by the
         # question's jexl is the rowform, which is wrong
         DocumentValidator().validate(document, admin_user)
+
+
+@pytest.mark.parametrize(
+    "question__is_required, question__is_hidden, expected_validation_error",
+    [
+        ("true", "false", None),
+        ("'foo'|answer", "false", None),
+        ("true", "'foo'|answer", None),
+        (
+            "'foo'|debug|answer",
+            "false",
+            "Expression `'foo'|debug|answer` contains invalid question reference",
+        ),
+        (
+            "true",
+            "(3+5)|answer",
+            "Expression `(3+5)|answer` contains invalid question reference",
+        ),
+        (
+            "true",
+            "1337|answer",
+            "Expression `1337|answer` contains invalid question reference",
+        ),
+    ],
+)
+def test_validate_answer_transforms(db, question, expected_validation_error):
+    serializer = serializers.SaveQuestionSerializer
+
+    data = extract_serializer_input_fields(serializer, question)
+    data["type"] = question.type
+
+    if expected_validation_error:
+        with pytest.raises(ValidationError) as exc_info:
+            QuestionValidator().validate(data)
+        assert exc_info.value.args[0] == expected_validation_error
+    else:
+        QuestionValidator().validate(data)

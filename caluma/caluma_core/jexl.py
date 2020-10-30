@@ -75,7 +75,7 @@ class JEXL(pyjexl.JEXL):
 
 class ExtractTransformSubjectAnalyzer(ValidatingAnalyzer):
     """
-    Extract all subject values of given transforms.
+    Extract all subjects of given transforms.
 
     If no transforms are given all subjects of all transforms will be extracted.
     """
@@ -86,7 +86,16 @@ class ExtractTransformSubjectAnalyzer(ValidatingAnalyzer):
 
     def visit_Transform(self, transform):
         if not self.transforms or transform.name in self.transforms:
-            # can only extract subject's value if subject is not a transform itself
-            if not isinstance(transform.subject, type(transform)):
-                yield transform.subject.value
+            yield transform.subject
         yield from self.generic_visit(transform)
+
+
+class ExtractTransformSubjectValueAnalyzer(ExtractTransformSubjectAnalyzer):
+    """
+    Extract all subject values of given transforms.
+
+    If no transforms are given all subjects of all transforms will be extracted.
+    """
+
+    def visit_Transform(self, transform):
+        return (literal.value for literal in super().visit_Transform(transform))

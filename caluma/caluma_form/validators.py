@@ -366,11 +366,22 @@ class QuestionValidator:
         if data_source not in data_sources:
             raise exceptions.ValidationError(f'Invalid data_source: "{data_source}"')
 
+    def _validate_jexl(self, expr):
+        q_jexl = jexl.QuestionJexl({})
+        # Extraction of referenced questions triggers validation.
+        # It implies that the expression is parseable and the `mapby` and
+        # `answer` transforms are only applied to string literals
+        list(q_jexl.extract_referenced_questions(expr))
+
     def validate(self, data):
         if data["type"] in ["text", "textarea"]:
             self._validate_format_validators(data)
         if "dataSource" in data:
             self._validate_data_source(data["dataSource"])
+        if "isRequired" in data:
+            self._validate_jexl(data["isRequired"])
+        if "isHidden" in data:
+            self._validate_jexl(data["isHidden"])
 
 
 def get_document_validity(document, user):

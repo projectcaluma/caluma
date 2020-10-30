@@ -2,8 +2,10 @@ from collections import defaultdict
 from contextlib import contextmanager
 from functools import partial
 
+from pyjexl import parser
 from pyjexl.analysis import ValidatingAnalyzer
 from pyjexl.evaluator import Context
+from rest_framework import exceptions
 
 from ..caluma_core.jexl import JEXL, ExtractTransformSubjectAnalyzer
 from .models import Question
@@ -76,10 +78,16 @@ class QuestionJexl(JEXL):
         return super().validate(expression, QuestionValidatingAnalyzer)
 
     def extract_referenced_questions(self, expr):
-        transforms = ["answer", "mapby"]
-        yield from self.analyze(
+        transforms = ["answer"]
+        for node in self.analyze(
             expr, partial(ExtractTransformSubjectAnalyzer, transforms=transforms)
-        )
+        ):
+            if isinstance(node, parser.Literal) and isinstance(node.value, str):
+                yield node.value
+            else:
+                raise exceptions.ValidationError(
+                    f"Expression `{expr}` contains invalid question reference"
+                )
 
     def _question(self, slug):
         field = self._structure.get_field(slug)
