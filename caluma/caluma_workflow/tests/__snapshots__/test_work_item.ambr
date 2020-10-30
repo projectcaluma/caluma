@@ -95,23 +95,23 @@
               <class 'dict'> {
                 'node': <class 'dict'> {
                   'addressedGroups': <class 'list'> [
-                    'some-group',
-                  ],
-                  'controllingGroups': <class 'list'> [
-                    'some-group',
-                  ],
-                  'status': 'READY',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
                   ],
                   'controllingGroups': <class 'list'> [
                     'controlling-group1',
                     'controlling-group2',
                   ],
                   'status': 'COMPLETED',
+                },
+              },
+              <class 'dict'> {
+                'node': <class 'dict'> {
+                  'addressedGroups': <class 'list'> [
+                    'some-group',
+                  ],
+                  'controllingGroups': <class 'list'> [
+                    'some-group',
+                  ],
+                  'status': 'READY',
                 },
               },
             ],
@@ -137,8 +137,10 @@
                   'addressedGroups': <class 'list'> [
                   ],
                   'controllingGroups': <class 'list'> [
+                    'controlling-group1',
+                    'controlling-group2',
                   ],
-                  'status': 'READY',
+                  'status': 'COMPLETED',
                 },
               },
               <class 'dict'> {
@@ -146,10 +148,8 @@
                   'addressedGroups': <class 'list'> [
                   ],
                   'controllingGroups': <class 'list'> [
-                    'controlling-group1',
-                    'controlling-group2',
                   ],
-                  'status': 'COMPLETED',
+                  'status': 'READY',
                 },
               },
             ],
@@ -175,8 +175,10 @@
                   'addressedGroups': <class 'list'> [
                   ],
                   'controllingGroups': <class 'list'> [
+                    'controlling-group1',
+                    'controlling-group2',
                   ],
-                  'status': 'READY',
+                  'status': 'COMPLETED',
                 },
               },
               <class 'dict'> {
@@ -184,10 +186,8 @@
                   'addressedGroups': <class 'list'> [
                   ],
                   'controllingGroups': <class 'list'> [
-                    'controlling-group1',
-                    'controlling-group2',
                   ],
-                  'status': 'COMPLETED',
+                  'status': 'READY',
                 },
               },
             ],
@@ -211,6 +211,17 @@
               <class 'dict'> {
                 'node': <class 'dict'> {
                   'addressedGroups': <class 'list'> [
+                  ],
+                  'controllingGroups': <class 'list'> [
+                    'controlling-group1',
+                    'controlling-group2',
+                  ],
+                  'status': 'COMPLETED',
+                },
+              },
+              <class 'dict'> {
+                'node': <class 'dict'> {
+                  'addressedGroups': <class 'list'> [
                     'case-creating-group',
                     'fake-user-group',
                   ],
@@ -219,17 +230,6 @@
                     'fake-user-group',
                   ],
                   'status': 'READY',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
-                    'controlling-group1',
-                    'controlling-group2',
-                  ],
-                  'status': 'COMPLETED',
                 },
               },
             ],
@@ -253,36 +253,36 @@
               <class 'dict'> {
                 'node': <class 'dict'> {
                   'addressedGroups': <class 'list'> [
-                    'fake-user-group',
-                  ],
-                  'controllingGroups': <class 'list'> [
-                    'case-creating-group',
-                    'fake-user-group',
-                  ],
-                  'status': 'READY',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                    'case-creating-group',
-                  ],
-                  'controllingGroups': <class 'list'> [
-                    'case-creating-group',
-                    'fake-user-group',
-                  ],
-                  'status': 'READY',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
                   ],
                   'controllingGroups': <class 'list'> [
                     'controlling-group1',
                     'controlling-group2',
                   ],
                   'status': 'COMPLETED',
+                },
+              },
+              <class 'dict'> {
+                'node': <class 'dict'> {
+                  'addressedGroups': <class 'list'> [
+                    'case-creating-group',
+                  ],
+                  'controllingGroups': <class 'list'> [
+                    'case-creating-group',
+                    'fake-user-group',
+                  ],
+                  'status': 'READY',
+                },
+              },
+              <class 'dict'> {
+                'node': <class 'dict'> {
+                  'addressedGroups': <class 'list'> [
+                    'fake-user-group',
+                  ],
+                  'controllingGroups': <class 'list'> [
+                    'case-creating-group',
+                    'fake-user-group',
+                  ],
+                  'status': 'READY',
                 },
               },
             ],
@@ -306,6 +306,17 @@
               <class 'dict'> {
                 'node': <class 'dict'> {
                   'addressedGroups': <class 'list'> [
+                  ],
+                  'controllingGroups': <class 'list'> [
+                    'controlling-group1',
+                    'controlling-group2',
+                  ],
+                  'status': 'COMPLETED',
+                },
+              },
+              <class 'dict'> {
+                'node': <class 'dict'> {
+                  'addressedGroups': <class 'list'> [
                     'case-creating-group',
                     'fake-user-group',
                   ],
@@ -314,17 +325,6 @@
                     'fake-user-group',
                   ],
                   'status': 'READY',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
-                    'controlling-group1',
-                    'controlling-group2',
-                  ],
-                  'status': 'COMPLETED',
                 },
               },
             ],
@@ -348,23 +348,23 @@
               <class 'dict'> {
                 'node': <class 'dict'> {
                   'addressedGroups': <class 'list'> [
-                    'case-creating-group',
-                  ],
-                  'controllingGroups': <class 'list'> [
-                    'case-creating-group',
-                  ],
-                  'status': 'READY',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
                   ],
                   'controllingGroups': <class 'list'> [
                     'controlling-group1',
                     'controlling-group2',
                   ],
                   'status': 'COMPLETED',
+                },
+              },
+              <class 'dict'> {
+                'node': <class 'dict'> {
+                  'addressedGroups': <class 'list'> [
+                    'case-creating-group',
+                  ],
+                  'controllingGroups': <class 'list'> [
+                    'case-creating-group',
+                  ],
+                  'status': 'READY',
                 },
               },
             ],
@@ -388,6 +388,17 @@
               <class 'dict'> {
                 'node': <class 'dict'> {
                   'addressedGroups': <class 'list'> [
+                  ],
+                  'controllingGroups': <class 'list'> [
+                    'controlling-group1',
+                    'controlling-group2',
+                  ],
+                  'status': 'COMPLETED',
+                },
+              },
+              <class 'dict'> {
+                'node': <class 'dict'> {
+                  'addressedGroups': <class 'list'> [
                     'controlling-group1',
                     'controlling-group2',
                   ],
@@ -396,17 +407,6 @@
                     'controlling-group2',
                   ],
                   'status': 'READY',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
-                    'controlling-group1',
-                    'controlling-group2',
-                  ],
-                  'status': 'COMPLETED',
                 },
               },
             ],
@@ -430,23 +430,23 @@
               <class 'dict'> {
                 'node': <class 'dict'> {
                   'addressedGroups': <class 'list'> [
-                    'fake-user-group',
-                  ],
-                  'controllingGroups': <class 'list'> [
-                    'fake-user-group',
-                  ],
-                  'status': 'READY',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
                   ],
                   'controllingGroups': <class 'list'> [
                     'controlling-group1',
                     'controlling-group2',
                   ],
                   'status': 'COMPLETED',
+                },
+              },
+              <class 'dict'> {
+                'node': <class 'dict'> {
+                  'addressedGroups': <class 'list'> [
+                    'fake-user-group',
+                  ],
+                  'controllingGroups': <class 'list'> [
+                    'fake-user-group',
+                  ],
+                  'status': 'READY',
                 },
               },
             ],

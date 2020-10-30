@@ -466,7 +466,7 @@ def test_complete_work_item_with_next(
     result = schema_executor(query, variable_values=inp, info=info)
 
     assert not result.errors
-    assert result.data == sorted_snapshot("addressedGroups")
+    assert result.data == sorted_snapshot("edges", lambda x: json.dumps(x))
 
 
 @pytest.mark.parametrize(
