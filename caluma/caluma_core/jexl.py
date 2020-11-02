@@ -1,9 +1,12 @@
 from itertools import count
+from logging import getLogger
 
 import pyjexl
 from pyjexl.analysis import ValidatingAnalyzer
 from pyjexl.exceptions import ParseError
 from rest_framework import exceptions
+
+log = getLogger(__name__)
 
 
 class Cache:
@@ -59,6 +62,11 @@ class JexlValidator(object):
 class JEXL(pyjexl.JEXL):
     expr_cache = Cache()
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.add_transform("debug", self._debug_transform)
+        self._expr_stack = []
+
     def parse(self, expression):
         parsed_expression = self.expr_cache.get_or_set(
             expression, lambda: super(JEXL, self).parse(expression)
@@ -71,6 +79,23 @@ class JEXL(pyjexl.JEXL):
                 yield res
         except ParseError as err:
             yield str(err)
+
+    def _debug_transform(self, value, label=None):
+        expr = self._expr_stack[-1]
+
+        log.info(
+            f"JEXL debug ({label}): value = `{value}`"
+            if label
+            else f"JEXL debug: in expression `{expr}`, value = `{value}`"
+        )
+        return value
+
+    def evaluate(self, expression, context=None):
+        self._expr_stack.append(expression)
+        try:
+            return super().evaluate(expression, context)
+        finally:
+            self._expr_stack.pop()
 
 
 class ExtractTransformSubjectAnalyzer(ValidatingAnalyzer):

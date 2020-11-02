@@ -1,9 +1,9 @@
 import functools
 
+import pyjexl
 import pytest
-from pyjexl import JEXL
 
-from ..jexl import Cache, ExtractTransformSubjectAnalyzer
+from ..jexl import JEXL, Cache, ExtractTransformSubjectAnalyzer
 
 
 @pytest.mark.parametrize(
@@ -16,7 +16,7 @@ from ..jexl import Cache, ExtractTransformSubjectAnalyzer
     ],
 )
 def test_extract_transforms(expression, expected_transforms):
-    jexl = JEXL()
+    jexl = pyjexl.JEXL()
     jexl.add_transform("transform1", lambda x: x)
     jexl.add_transform("transform2", lambda x: x)
 
@@ -28,6 +28,50 @@ def test_extract_transforms(expression, expected_transforms):
             ),
         )
     ) == set(expected_transforms)
+
+
+@pytest.mark.parametrize(
+    "expression, expected_log, expected_output",
+    [
+        ("'foo'", [], "foo"),
+        (
+            "'foo'|debug",
+            ["JEXL debug: in expression `'foo'|debug`, value = `foo`"],
+            "foo",
+        ),
+        (
+            "'foo'|debug|debug",
+            [
+                "JEXL debug: in expression `'foo'|debug|debug`, value = `foo`",
+                "JEXL debug: in expression `'foo'|debug|debug`, value = `foo`",
+            ],
+            "foo",
+        ),
+        (
+            "'\"bar\"|debug'|sub_expr|debug",
+            [
+                'JEXL debug: in expression `"bar"|debug`, value = `bar`',
+                "JEXL debug: in expression `'\"bar\"|debug'|sub_expr|debug`, value = `bar`",
+            ],
+            "bar",
+        ),
+        (
+            "'hello world'|debug('The world debugger')",
+            ["JEXL debug (The world debugger): value = `hello world`"],
+            "hello world",
+        ),
+    ],
+)
+def test_debug_transform(expression, expected_log, expected_output, caplog):
+    jexl = JEXL()
+
+    def sub_expr(val):
+        return jexl.evaluate(val)
+
+    jexl.add_transform("sub_expr", sub_expr)
+
+    assert jexl.evaluate(expression) == expected_output
+    assert caplog.messages == expected_log
 
 
 def test_jexl_cache():
