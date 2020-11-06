@@ -242,14 +242,20 @@ def test_save_question(db, snapshot, question, mutation, schema_executor, succes
 
 
 @pytest.mark.parametrize(
-    "question__type,question__configuration,question__format_validators,success",
+    "question__type,question__configuration,question__format_validators,answer__value,success",
     [
-        (models.Question.TYPE_TEXT, {"max_length": 10}, [], True),
-        (models.Question.TYPE_TEXT, {"max_length": 10}, ["email"], True),
-        (models.Question.TYPE_TEXT, {"max_length": 10}, ["notavalidator"], False),
+        (models.Question.TYPE_TEXT, {"max_length": 10}, [], "foo", True),
+        (models.Question.TYPE_TEXT, {"max_length": 10}, ["email"], "foo", True),
+        (
+            models.Question.TYPE_TEXT,
+            {"max_length": 10},
+            ["notavalidator"],
+            "foo",
+            False,
+        ),
     ],
 )
-def test_save_text_question(db, question, schema_executor, success):
+def test_save_text_question(db, question, schema_executor, answer, success):
     query = """
         mutation SaveTextQuestion($input: SaveTextQuestionInput!) {
           saveTextQuestion(input: $input) {
@@ -271,12 +277,18 @@ def test_save_text_question(db, question, schema_executor, success):
                     }
                   }
                 }
+                defaultAnswer {
+                  value
+                }
               }
             }
             clientMutationId
           }
         }
     """
+
+    question.default_answer = answer
+    question.save()
 
     inp = {
         "input": extract_serializer_input_fields(
@@ -294,13 +306,17 @@ def test_save_text_question(db, question, schema_executor, success):
                 ][0]["node"]["slug"]
                 == "email"
             )
+        assert (
+            result.data["saveTextQuestion"]["question"]["defaultAnswer"]["value"]
+            == "foo"
+        )
 
 
 @pytest.mark.parametrize(
-    "question__type,question__configuration",
-    [(models.Question.TYPE_TEXTAREA, {"max_length": 10})],
+    "question__type,question__configuration,answer__value",
+    [(models.Question.TYPE_TEXTAREA, {"max_length": 10}, "foo")],
 )
-def test_save_textarea_question(db, question, schema_executor):
+def test_save_textarea_question(db, question, answer, schema_executor):
     query = """
         mutation SaveTextareaQuestion($input: SaveTextareaQuestionInput!) {
           saveTextareaQuestion(input: $input) {
@@ -312,12 +328,18 @@ def test_save_textarea_question(db, question, schema_executor):
               __typename
               ... on TextareaQuestion {
                 maxLength
+                defaultAnswer {
+                  value
+                }
               }
             }
             clientMutationId
           }
         }
     """
+
+    question.default_answer = answer
+    question.save()
 
     inp = {
         "input": extract_serializer_input_fields(
@@ -327,16 +349,20 @@ def test_save_textarea_question(db, question, schema_executor):
     result = schema_executor(query, variable_values=inp)
     assert not result.errors
     assert result.data["saveTextareaQuestion"]["question"]["maxLength"] == 10
+    assert (
+        result.data["saveTextareaQuestion"]["question"]["defaultAnswer"]["value"]
+        == "foo"
+    )
 
 
 @pytest.mark.parametrize(
-    "question__type,question__configuration,success",
+    "question__type,question__configuration,answer__value,success",
     [
-        (models.Question.TYPE_FLOAT, {"max_value": 10.0, "min_value": 0.0}, True),
-        (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 10.0}, False),
+        (models.Question.TYPE_FLOAT, {"max_value": 10.0, "min_value": 0.0}, 0.3, True),
+        (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 10.0}, 0.3, False),
     ],
 )
-def test_save_float_question(db, snapshot, question, schema_executor, success):
+def test_save_float_question(db, snapshot, question, schema_executor, answer, success):
     query = """
         mutation SaveFloatQuestion($input: SaveFloatQuestionInput!) {
           saveFloatQuestion(input: $input) {
@@ -349,12 +375,18 @@ def test_save_float_question(db, snapshot, question, schema_executor, success):
               ... on FloatQuestion {
                 minValue
                 maxValue
+                defaultAnswer {
+                  value
+                }
               }
             }
             clientMutationId
           }
         }
     """
+
+    question.default_answer = answer
+    question.save()
 
     inp = {
         "input": extract_serializer_input_fields(
@@ -365,16 +397,22 @@ def test_save_float_question(db, snapshot, question, schema_executor, success):
     assert not bool(result.errors) == success
     if success:
         snapshot.assert_match(result.data)
+        assert (
+            result.data["saveFloatQuestion"]["question"]["defaultAnswer"]["value"]
+            == 0.3
+        )
 
 
 @pytest.mark.parametrize(
-    "question__type,question__configuration,success",
+    "question__type,question__configuration,answer__value,success",
     [
-        (models.Question.TYPE_INTEGER, {"max_value": 10, "min_value": 0}, True),
-        (models.Question.TYPE_INTEGER, {"max_value": 1, "min_value": 10}, False),
+        (models.Question.TYPE_INTEGER, {"max_value": 10, "min_value": 0}, 23, True),
+        (models.Question.TYPE_INTEGER, {"max_value": 1, "min_value": 10}, 23, False),
     ],
 )
-def test_save_integer_question(db, snapshot, question, success, schema_executor):
+def test_save_integer_question(
+    db, snapshot, question, answer, success, schema_executor
+):
     query = """
         mutation SaveIntegerQuestion($input: SaveIntegerQuestionInput!) {
           saveIntegerQuestion(input: $input) {
@@ -384,15 +422,21 @@ def test_save_integer_question(db, snapshot, question, success, schema_executor)
               label
               meta
               __typename
-              ... on FloatQuestion {
+              ... on IntegerQuestion {
                 minValue
                 maxValue
+                defaultAnswer {
+                  value
+                }
               }
             }
             clientMutationId
           }
         }
     """
+
+    question.default_answer = answer
+    question.save()
 
     inp = {
         "input": extract_serializer_input_fields(
@@ -403,15 +447,22 @@ def test_save_integer_question(db, snapshot, question, success, schema_executor)
     assert not bool(result.errors) == success
     if success:
         snapshot.assert_match(result.data)
+        assert (
+            result.data["saveIntegerQuestion"]["question"]["defaultAnswer"]["value"]
+            == 23
+        )
 
 
 @pytest.mark.parametrize("question__type", [models.Question.TYPE_MULTIPLE_CHOICE])
 def test_save_multiple_choice_question(
-    db, snapshot, question, question_option_factory, schema_executor
+    db, snapshot, question, question_option_factory, answer_factory, schema_executor
 ):
     question_option_factory.create_batch(2, question=question)
 
     option_ids = question.options.order_by("-slug").values_list("slug", flat=True)
+
+    question.default_answer = answer_factory(value=list(option_ids), question=question)
+    question.save()
 
     query = """
         mutation SaveMultipleChoiceQuestion($input: SaveMultipleChoiceQuestionInput!) {
@@ -431,6 +482,9 @@ def test_save_multiple_choice_question(
                     }
                   }
                 }
+                defaultAnswer {
+                  value
+                }
               }
             }
             clientMutationId
@@ -449,8 +503,17 @@ def test_save_multiple_choice_question(
     snapshot.assert_match(result.data)
 
 
+@pytest.mark.parametrize("with_default", [True, False])
 @pytest.mark.parametrize("question__type", [models.Question.TYPE_CHOICE])
-def test_save_choice_question(db, snapshot, question, question_option, schema_executor):
+def test_save_choice_question(
+    db,
+    snapshot,
+    question,
+    question_option,
+    answer_factory,
+    schema_executor,
+    with_default,
+):
     query = """
         mutation SaveChoiceQuestion($input: SaveChoiceQuestionInput!) {
           saveChoiceQuestion(input: $input) {
@@ -469,6 +532,9 @@ def test_save_choice_question(db, snapshot, question, question_option, schema_ex
                     }
                   }
                 }
+                defaultAnswer {
+                  value
+                }
               }
             }
             clientMutationId
@@ -476,12 +542,19 @@ def test_save_choice_question(db, snapshot, question, question_option, schema_ex
         }
     """
 
+    if with_default:
+        question.default_answer = answer_factory(
+            value=question_option.option.slug, question=question
+        )
+        question.save()
+
     inp = {
         "input": extract_serializer_input_fields(
             serializers.SaveChoiceQuestionSerializer, question
         )
     }
-    question.delete()  # test creation
+    if not with_default:
+        question.delete()
     result = schema_executor(query, variable_values=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -610,6 +683,72 @@ def test_save_table_question(db, snapshot, question, schema_executor):
         )
     }
     question.delete()  # test creation
+    result = schema_executor(query, variable_values=inp)
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_TABLE])
+def test_save_table_question_with_default_answer(
+    db,
+    snapshot,
+    question,
+    question_factory,
+    answer,
+    answer_factory,
+    document_factory,
+    schema_executor,
+):
+    row_question = question_factory(type=models.Question.TYPE_TEXT)
+    question.row_form.questions.add(row_question)
+    row_doc = document_factory(form=question.row_form)
+    answer_factory(document=row_doc, question=row_question, value="foo")
+    answer.documents.add(row_doc)
+    question.default_answer = answer
+    question.save()
+
+    query = """
+        mutation SaveTableQuestion($input: SaveTableQuestionInput!) {
+          saveTableQuestion(input: $input) {
+            question {
+              id
+              slug
+              label
+              meta
+              __typename
+              ... on TableQuestion {
+                rowForm {
+                  slug
+                }
+                defaultAnswer {
+                  tableValue: value {
+                    answers {
+                      edges {
+                        node {
+                          ... on StringAnswer {
+                            value
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveTableQuestionSerializer, question
+        )
+    }
+
+    question.default_answer = None  # remove default to make sure it gets set correctly
+    question.save()
+
     result = schema_executor(query, variable_values=inp)
     assert not result.errors
     snapshot.assert_match(result.data)

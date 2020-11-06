@@ -122,6 +122,10 @@ class Question(core_models.SlugModel):
         models.CharField(max_length=255), blank=True, default=list
     )
 
+    default_answer = models.ForeignKey(
+        "Answer", on_delete=models.CASCADE, related_name="+", null=True, blank=True
+    )
+
     @property
     def min_length(self):
         return self.configuration.get("min_length")
@@ -324,7 +328,11 @@ class Answer(core_models.BaseModel):
     value = JSONField(null=True, blank=True)
     meta = JSONField(default=dict)
     document = models.ForeignKey(
-        Document, on_delete=models.CASCADE, related_name="answers"
+        Document,
+        on_delete=models.CASCADE,
+        related_name="answers",
+        null=True,
+        blank=True,
     )
     documents = models.ManyToManyField(
         Document, through="AnswerDocument", related_name="+"

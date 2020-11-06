@@ -193,6 +193,7 @@ class SaveQuestionSerializer(serializers.ModelSerializer):
             "is_hidden",
             "meta",
             "is_archived",
+            "default_answer",
         )
 
 

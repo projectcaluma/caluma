@@ -6,7 +6,7 @@ from caluma.caluma_user.models import BaseUser
 
 def save_answer(
     question: models.Question,
-    document: models.Document,
+    document: Optional[models.Document] = None,
     user: Optional[BaseUser] = None,
     value: Optional[Any] = None,
     context: Optional[dict] = None,
