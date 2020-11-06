@@ -583,7 +583,7 @@ def test_save_dynamic_multiple_choice_question(
 
 
 @pytest.mark.parametrize("question__type", [models.Question.TYPE_TABLE])
-def test_save_table_question(db, snapshot, question, question_option, schema_executor):
+def test_save_table_question(db, snapshot, question, schema_executor):
     query = """
         mutation SaveTableQuestion($input: SaveTableQuestionInput!) {
           saveTableQuestion(input: $input) {
