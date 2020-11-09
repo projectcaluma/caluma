@@ -349,7 +349,15 @@ def test_query_all_documents_filter_answers_by_questions(
 
 @pytest.mark.parametrize("use_python_api", [True, False])
 @pytest.mark.parametrize("update", [True, False])
-def test_save_document(db, document, schema_executor, update, use_python_api):
+def test_save_document(
+    db,
+    document,
+    schema_executor,
+    form_question_factory,
+    answer_factory,
+    update,
+    use_python_api,
+):
     query = """
         mutation SaveDocument($input: SaveDocumentInput!) {
           saveDocument(input: $input) {
@@ -358,11 +366,27 @@ def test_save_document(db, document, schema_executor, update, use_python_api):
                   slug
                 }
                 id
+                answers {
+                  edges {
+                    node {
+                      ... on StringAnswer {
+                        value
+                      }
+                    }
+                  }
+                }
             }
             clientMutationId
           }
         }
     """
+
+    form_question = form_question_factory(
+        question__type=Question.TYPE_TEXT, form=document.form
+    )
+    answer = answer_factory(question=form_question.question, value="foo")
+    form_question.question.default_answer = answer
+    form_question.question.save()
 
     inp = {
         "input": extract_serializer_input_fields(
@@ -389,6 +413,19 @@ def test_save_document(db, document, schema_executor, update, use_python_api):
 
         # if updating, the resulting document must be the same
         assert same_id == update
+
+        assert (
+            len(result.data["saveDocument"]["document"]["answers"]["edges"]) == 0
+            if update
+            else 1
+        )
+        if not update:
+            assert (
+                result.data["saveDocument"]["document"]["answers"]["edges"][0]["node"][
+                    "value"
+                ]
+                == "foo"
+            )
     else:
         doc = (
             api.save_document(document.form, document=document)
@@ -396,6 +433,10 @@ def test_save_document(db, document, schema_executor, update, use_python_api):
             else api.save_document(document.form)
         )
         assert (doc.pk == document.pk) == update
+
+        assert doc.answers.count() == 0 if update else 1
+        if not update:
+            assert doc.answers.first().value == "foo"
 
 
 @pytest.mark.parametrize("use_python_api", [True, False])  # noqa:C901

@@ -98,12 +98,14 @@ class SaveAnswerLogic:
 class SaveDocumentLogic:
     @staticmethod
     @transaction.atomic
-    def create(
-        # form: models.Form, meta: Optional[dict] = None, user: Optional[BaseUser] = None
-        **kwargs,
-    ):
-        # return BaseLogic.create(models.Document, form=form, meta=meta, user=user)
-        return BaseLogic.create(models.Document, **kwargs)
+    def create(**kwargs):
+        document = BaseLogic.create(models.Document, **kwargs)
+
+        for question in document.form.questions.filter(
+            default_answer__isnull=False
+        ).iterator():
+            document.answers.add(question.default_answer.copy())
+        return document
 
     @staticmethod
     @transaction.atomic
