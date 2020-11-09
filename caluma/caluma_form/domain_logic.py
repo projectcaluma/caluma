@@ -104,7 +104,22 @@ class SaveDocumentLogic:
         for question in document.form.questions.filter(
             default_answer__isnull=False
         ).iterator():
-            document.answers.add(question.default_answer.copy())
+            new_answer = question.default_answer.copy(document_family=document.family)
+            if question.type == models.Question.TYPE_TABLE:
+                # In case of table questions, we have to evaluate what default to use.
+                # The default value in a row_document wins over the default_answer of a
+                # row_form question
+                for sub_question in question.row_form.questions.filter(
+                    default_answer__isnull=False
+                ).iterator():
+                    for row in new_answer.documents.iterator():
+                        if not row.answers.filter(question=sub_question).exists():
+                            row.answers.add(
+                                sub_question.default_answer.copy(
+                                    document_family=document.family
+                                )
+                            )
+            document.answers.add(new_answer)
         return document
 
     @staticmethod

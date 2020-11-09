@@ -982,6 +982,37 @@ def test_save_document_table_answer_setting_family(
     assert to_be_deleted_table_row.family == to_be_deleted_document.family
 
 
+@pytest.mark.parametrize("default_on_table,value", [(True, 1979), (False, 23)])
+def test_save_document_table_answer_default_answer(
+    db, form_and_document, answer_factory, default_on_table, value
+):
+    form, document, questions_dict, answers_dict = form_and_document(use_table=True)
+
+    table_question = form.questions.filter(type=Question.TYPE_TABLE).first()
+    row_question = table_question.row_form.questions.first()
+
+    row_question_default_answer = answer_factory(question=row_question, value=23)
+    row_question.default_answer = row_question_default_answer
+    row_question.save()
+
+    table_answer = document.answers.filter(question__type=Question.TYPE_TABLE).first()
+
+    if not default_on_table:
+        table_answer.documents.first().answers.first().delete()
+
+    table_question.default_answer = table_answer
+    table_question.save()
+
+    assert Document.objects.filter(form=form).count() == 1
+
+    doc = api.save_document(document.form)
+
+    assert Document.objects.filter(form=form).count() == 2
+
+    assert doc.answers.count() == 1
+    assert doc.answers.first().documents.first().answers.first().value == value
+
+
 @pytest.mark.parametrize("answer__value", [1.1])
 def test_query_answer_node(db, answer, schema_executor):
     global_id = to_global_id("FloatAnswer", answer.pk)
