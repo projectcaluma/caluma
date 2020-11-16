@@ -95,6 +95,7 @@ class QuestionOrderSet(FilterSet):
             "source",
             "static_content",
             "sub_form",
+            "default_answer",
         ],
     )
 

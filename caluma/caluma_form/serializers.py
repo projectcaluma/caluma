@@ -193,6 +193,7 @@ class SaveQuestionSerializer(serializers.ModelSerializer):
             "is_hidden",
             "meta",
             "is_archived",
+            "default_answer",
         )
 
 
@@ -461,6 +462,12 @@ class CopyOptionSerializer(serializers.ModelSerializer):
 
 
 class DocumentSerializer(serializers.ModelSerializer):
+    def create(self, validated_data):
+        document = domain_logic.SaveDocumentLogic.create(
+            user=self.context["request"].user, **validated_data
+        )
+        return document
+
     class Meta:
         model = models.Document
         fields = ("id", "form", "meta")

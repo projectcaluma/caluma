@@ -349,7 +349,15 @@ def test_query_all_documents_filter_answers_by_questions(
 
 @pytest.mark.parametrize("use_python_api", [True, False])
 @pytest.mark.parametrize("update", [True, False])
-def test_save_document(db, document, schema_executor, update, use_python_api):
+def test_save_document(
+    db,
+    document,
+    schema_executor,
+    form_question_factory,
+    answer_factory,
+    update,
+    use_python_api,
+):
     query = """
         mutation SaveDocument($input: SaveDocumentInput!) {
           saveDocument(input: $input) {
@@ -358,11 +366,27 @@ def test_save_document(db, document, schema_executor, update, use_python_api):
                   slug
                 }
                 id
+                answers {
+                  edges {
+                    node {
+                      ... on StringAnswer {
+                        value
+                      }
+                    }
+                  }
+                }
             }
             clientMutationId
           }
         }
     """
+
+    form_question = form_question_factory(
+        question__type=Question.TYPE_TEXT, form=document.form
+    )
+    answer = answer_factory(question=form_question.question, value="foo")
+    form_question.question.default_answer = answer
+    form_question.question.save()
 
     inp = {
         "input": extract_serializer_input_fields(
@@ -389,6 +413,19 @@ def test_save_document(db, document, schema_executor, update, use_python_api):
 
         # if updating, the resulting document must be the same
         assert same_id == update
+
+        assert (
+            len(result.data["saveDocument"]["document"]["answers"]["edges"]) == 0
+            if update
+            else 1
+        )
+        if not update:
+            assert (
+                result.data["saveDocument"]["document"]["answers"]["edges"][0]["node"][
+                    "value"
+                ]
+                == "foo"
+            )
     else:
         doc = (
             api.save_document(document.form, document=document)
@@ -396,6 +433,10 @@ def test_save_document(db, document, schema_executor, update, use_python_api):
             else api.save_document(document.form)
         )
         assert (doc.pk == document.pk) == update
+
+        assert doc.answers.count() == 0 if update else 1
+        if not update:
+            assert doc.answers.first().value == "foo"
 
 
 @pytest.mark.parametrize("use_python_api", [True, False])  # noqa:C901
@@ -939,6 +980,37 @@ def test_save_document_table_answer_setting_family(
     assert to_be_deleted_document.family == to_be_deleted_document
     to_be_deleted_table_row.refresh_from_db()
     assert to_be_deleted_table_row.family == to_be_deleted_document.family
+
+
+@pytest.mark.parametrize("default_on_table,value", [(True, 1979), (False, 23)])
+def test_save_document_table_answer_default_answer(
+    db, form_and_document, answer_factory, default_on_table, value
+):
+    form, document, questions_dict, answers_dict = form_and_document(use_table=True)
+
+    table_question = form.questions.filter(type=Question.TYPE_TABLE).first()
+    row_question = table_question.row_form.questions.first()
+
+    row_question_default_answer = answer_factory(question=row_question, value=23)
+    row_question.default_answer = row_question_default_answer
+    row_question.save()
+
+    table_answer = document.answers.filter(question__type=Question.TYPE_TABLE).first()
+
+    if not default_on_table:
+        table_answer.documents.first().answers.first().delete()
+
+    table_question.default_answer = table_answer
+    table_question.save()
+
+    assert Document.objects.filter(form=form).count() == 1
+
+    doc = api.save_document(document.form)
+
+    assert Document.objects.filter(form=form).count() == 2
+
+    assert doc.answers.count() == 1
+    assert doc.answers.first().documents.first().answers.first().value == value
 
 
 @pytest.mark.parametrize("answer__value", [1.1])

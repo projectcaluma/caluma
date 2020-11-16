@@ -4,19 +4,15 @@ import logging
 from django.db import migrations, models
 from django.db.migrations import RunPython
 
-from caluma.caluma_form.models import FormQuestion
-
 logger = logging.getLogger(__name__)
 
 
 def save_natural_keys(apps, schema_editor):
+    FormQuestion = apps.get_model("caluma_form", "FormQuestion")
     for fq in FormQuestion.objects.all():
         FormQuestion.objects.filter(form=fq.form, question=fq.question).delete()
+        fq.pk = f"{fq.form_id}.{fq.question_id}"
         fq.save()
-
-
-def not_supported(apps, schema_editor):
-    logger.warning("The reverse migration of this step is not supported.")
 
 
 class Migration(migrations.Migration):
@@ -36,5 +32,5 @@ class Migration(migrations.Migration):
             name="id",
             field=models.CharField(db_index=True, max_length=255),
         ),
-        RunPython(save_natural_keys, not_supported),
+        RunPython(save_natural_keys, RunPython.noop),
     ]

@@ -122,6 +122,10 @@ class Question(core_models.SlugModel):
         models.CharField(max_length=255), blank=True, default=list
     )
 
+    default_answer = models.ForeignKey(
+        "Answer", on_delete=models.CASCADE, related_name="+", null=True, blank=True
+    )
+
     @property
     def min_length(self):
         return self.configuration.get("min_length")
@@ -273,24 +277,7 @@ class Document(core_models.UUIDModel):
 
         # copy answers
         for source_answer in self.answers.all():
-            new_answer = new_document.answers.create(
-                question=source_answer.question,
-                value=source_answer.value,
-                meta=dict(source_answer.meta),
-                date=source_answer.date,
-            )
-
-            if source_answer.question.type == Question.TYPE_FILE:
-                new_answer.file = source_answer.file.copy()
-                new_answer.save()
-
-            # TableAnswer: copy AnswerDocument too
-            for answer_doc in AnswerDocument.objects.filter(answer=source_answer):
-                new_doc = answer_doc.document.copy(family=family)
-
-                AnswerDocument.objects.create(
-                    answer=new_answer, document=new_doc, sort=answer_doc.sort
-                )
+            source_answer.copy(document_family=family, to_document=new_document)
 
         return new_document
 
@@ -324,7 +311,11 @@ class Answer(core_models.BaseModel):
     value = JSONField(null=True, blank=True)
     meta = JSONField(default=dict)
     document = models.ForeignKey(
-        Document, on_delete=models.CASCADE, related_name="answers"
+        Document,
+        on_delete=models.CASCADE,
+        related_name="answers",
+        null=True,
+        blank=True,
     )
     documents = models.ManyToManyField(
         Document, through="AnswerDocument", related_name="+"
@@ -373,6 +364,28 @@ class Answer(core_models.BaseModel):
             # TODO: Can/should we delete the detached documents?
             ans_doc.document.set_family(ans_doc.document)
             ans_doc.delete()
+
+    def copy(self, document_family=None, to_document=None):
+        new_answer = type(self).objects.create(
+            question=self.question,
+            value=self.value,
+            meta=dict(self.meta),
+            date=self.date,
+            document=to_document,
+        )
+
+        if self.question.type == Question.TYPE_FILE:
+            new_answer.file = self.file.copy()
+            new_answer.save()
+
+        # TableAnswer: copy AnswerDocument too
+        for answer_doc in AnswerDocument.objects.filter(answer=self):
+            new_doc = answer_doc.document.copy(family=document_family)
+
+            AnswerDocument.objects.create(
+                answer=new_answer, document=new_doc, sort=answer_doc.sort
+            )
+        return new_answer
 
     def __repr__(self):
         return f"Answer(document={self.document!r}, question={self.question!r}, value={self.value!r})"

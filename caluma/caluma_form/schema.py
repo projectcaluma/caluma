@@ -162,6 +162,7 @@ class TextQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     max_length = graphene.Int()
     placeholder = graphene.String()
     format_validators = ConnectionField(FormatValidatorConnection)
+    default_answer = graphene.Field("caluma.caluma_form.schema.StringAnswer")
 
     def resolve_format_validators(self, info):
         return get_format_validators(include=self.format_validators)
@@ -188,6 +189,7 @@ class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     max_length = graphene.Int()
     placeholder = graphene.String()
     format_validators = ConnectionField(FormatValidatorConnection)
+    default_answer = graphene.Field("caluma.caluma_form.schema.StringAnswer")
 
     def resolve_format_validators(self, info):
         return get_format_validators(include=self.format_validators)
@@ -210,6 +212,8 @@ class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class DateQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    default_answer = graphene.Field("caluma.caluma_form.schema.DateAnswer")
+
     class Meta:
         model = models.Question
         exclude = (
@@ -233,6 +237,7 @@ class ChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
+    default_answer = graphene.Field("caluma.caluma_form.schema.StringAnswer")
 
     class Meta:
         model = models.Question
@@ -256,6 +261,7 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
+    default_answer = graphene.Field("caluma.caluma_form.schema.ListAnswer")
 
     class Meta:
         model = models.Question
@@ -293,6 +299,7 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "static_content",
             "format_validators",
             "dynamicoption_set",
+            "default_answer",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -317,6 +324,7 @@ class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType)
             "static_content",
             "format_validators",
             "dynamicoption_set",
+            "default_answer",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -333,6 +341,7 @@ class IntegerQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     max_value = graphene.Int()
     min_value = graphene.Int()
     placeholder = graphene.String()
+    default_answer = graphene.Field("caluma.caluma_form.schema.IntegerAnswer")
 
     class Meta:
         model = models.Question
@@ -356,6 +365,7 @@ class FloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     min_value = graphene.Float()
     max_value = graphene.Float()
     placeholder = graphene.String()
+    default_answer = graphene.Field("caluma.caluma_form.schema.FloatAnswer")
 
     class Meta:
         model = models.Question
@@ -376,6 +386,8 @@ class FloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class TableQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    default_answer = graphene.Field("caluma.caluma_form.schema.TableAnswer")
+
     class Meta:
         model = models.Question
         exclude = (
@@ -408,6 +420,7 @@ class FormQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "static_content",
             "format_validators",
             "dynamicoption_set",
+            "default_answer",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -428,6 +441,7 @@ class FileQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "static_content",
             "format_validators",
             "dynamicoption_set",
+            "default_answer",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -452,6 +466,7 @@ class StaticQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "placeholder",
             "format_validators",
             "dynamicoption_set",
+            "default_answer",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
