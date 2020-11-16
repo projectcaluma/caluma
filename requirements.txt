@@ -2,7 +2,7 @@ dateparser==1.0.0
 django==2.2.16
 django-cors-headers==3.5.0
 django-environ==0.4.5
-django-extensions==3.0.8
+django-extensions==3.0.9
 django-filter==2.3.0
 django-localized-fields==5.4.2
 django-postgres-extra==1.22
