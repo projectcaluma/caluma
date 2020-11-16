@@ -156,9 +156,16 @@ def test_query_all_questions(
 
 
 @pytest.mark.parametrize("question__meta", [{"meta": "set"}])
-def test_copy_question(
-    db, snapshot, question, question_option_factory, schema_executor
-):
+def test_copy_question(db, question, question_option_factory, schema_executor):
+    def sorted_option_list(q):
+        return sorted(
+            list(
+                models.QuestionOption.objects.filter(question=q).values_list(
+                    "option", flat=True
+                )
+            )
+        )
+
     question_option_factory.create_batch(5, question=question)
     query = """
         mutation CopyQuestion($input: CopyQuestionInput!) {
@@ -193,9 +200,7 @@ def test_copy_question(
     assert new_question.is_hidden == question.is_hidden
     assert new_question.is_required == question.is_required
     assert new_question.source == question
-    assert list(
-        models.QuestionOption.objects.filter(question=new_question).values("option")
-    ) == list(models.QuestionOption.objects.filter(question=question).values("option"))
+    assert sorted_option_list(new_question) == sorted_option_list(question)
 
 
 @pytest.mark.parametrize(
