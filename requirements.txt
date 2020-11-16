@@ -15,5 +15,5 @@ psycopg2-binary==2.8.6
 pyjexl==0.2.3
 python-memcached==1.59
 requests==2.25.0
-urllib3==1.25.10
+urllib3==1.26.2
 uwsgi==2.0.19.1
