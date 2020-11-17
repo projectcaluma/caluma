@@ -285,7 +285,7 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     data_source = graphene.String(required=True)
 
     def resolve_options(self, info, *args):
-        return get_data_source_data(info, self.data_source)
+        return get_data_source_data(info.context.user, self.data_source)
 
     class Meta:
         model = models.Question
@@ -310,7 +310,7 @@ class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType)
     data_source = graphene.String(required=True)
 
     def resolve_options(self, info, *args):
-        return get_data_source_data(info, self.data_source)
+        return get_data_source_data(info.context.user, self.data_source)
 
     class Meta:
         model = models.Question

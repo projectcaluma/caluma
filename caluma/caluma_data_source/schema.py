@@ -33,4 +33,4 @@ class Query(object):
         return get_data_sources()
 
     def resolve_data_source(self, info, name):
-        return get_data_source_data(info, name)
+        return get_data_source_data(info.context.user, name)

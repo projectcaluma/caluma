@@ -214,10 +214,8 @@ class CustomDataSource(BaseDataSource):
    info = 'User choices from "someapi"'
 
    @data_source_cache(timeout=3600)
-   def get_data(self, info):
-       response = requests.get(
-           f"https://someapi/?user={info.context.user.username}"
-       )
+   def get_data(self, user):
+       response = requests.get(f"https://someapi/?user={user.username}")
        return [result["value"] for result in response.json()["results"]]
 ```
 
