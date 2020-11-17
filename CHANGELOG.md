@@ -1,3 +1,26 @@
+# v6.7.0 (17 November 2020)
+
+### Feature
+* Handle table_questions ([`33d303c`](https://github.com/projectcaluma/caluma/commit/33d303c7427c88f9dfcde06e9828960e2d9ee795))
+* Set default answers when creating new documents ([`d9c2b2e`](https://github.com/projectcaluma/caluma/commit/d9c2b2e2d49db2021e6e066d8a853f309310327b))
+* Implement default_answers ([`e3dae80`](https://github.com/projectcaluma/caluma/commit/e3dae80bbe50a45051bdd826773c13eb32d582fb))
+* Implement save_document form api ([`ffb422d`](https://github.com/projectcaluma/caluma/commit/ffb422d8e4ff6a146cf631a3b7f86f261ce195a7))
+* Debug transforms ([`fbc5cd6`](https://github.com/projectcaluma/caluma/commit/fbc5cd663e1893770a5c2a07e59e2abf7f2b14b6))
+* Useful __repr__ for most models ([`e6186cc`](https://github.com/projectcaluma/caluma/commit/e6186cc243e7d498918248fd814052db3c77dd2e))
+* Add api for save_answer ([`4457413`](https://github.com/projectcaluma/caluma/commit/445741333fd77494bd323078c70d3717ad54135a))
+* Create caluma_logging app for access logging ([`2602aa2`](https://github.com/projectcaluma/caluma/commit/2602aa2d8738f0e59bf4635a8b5a5fca20d4b2ce))
+
+### Fix
+* Do not use actual model in migration ([`073f01c`](https://github.com/projectcaluma/caluma/commit/073f01ceab2d5099e548bd51bda672e604b5cd78))
+* Fix flaky ordering ([`1170242`](https://github.com/projectcaluma/caluma/commit/1170242d4490c70c4d5c63d3b248bc735406f0e8))
+* Flaky snapshort ordering ([`73e57ea`](https://github.com/projectcaluma/caluma/commit/73e57ea58a695030cc9bbb09fa50d30d322027c7))
+* Sort addressed_ and controlling_groups ([`e8eaae9`](https://github.com/projectcaluma/caluma/commit/e8eaae976e5b5417313ca14e8dad5dadbb221800))
+* Do not crash during migrations ([`d6887d0`](https://github.com/projectcaluma/caluma/commit/d6887d06d99f7c6ff799055738edfeaaeaabceb6))
+* Call cursor.execute with params=None ([`151394a`](https://github.com/projectcaluma/caluma/commit/151394abf46d9726391fd892e99fdc0c3e8cb7e8))
+* Migrate db sequences with prefix "caluma_" ([`baf303c`](https://github.com/projectcaluma/caluma/commit/baf303c9b10a682a4e52ec2e5dde4d2325e85f13))
+* Do not hang in migrations on broken data ([`bfc4304`](https://github.com/projectcaluma/caluma/commit/bfc4304bd9a22d8fc1591273c41c235c77dc7fba))
+
+
 # v6.6.0 (12 September 2020)
 
 ### Feature
