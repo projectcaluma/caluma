@@ -10,7 +10,7 @@ services:
     build:
       context: .
       args:
-        REQUIREMENTS: requirements-dev.txt
+        REQUIREMENTS: requirements-all.txt
     user: "${UID:?Set UID env variable to your user id}"
     volumes:
       - ./:/app

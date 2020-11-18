@@ -26,16 +26,6 @@ pipenv install -d -r requirements-dev.txt
 """.strip().splitlines()
 
 
-def deps_from_file(filename):
-    lines = [line.strip().split("#")[0] for line in open(filename).readlines()]
-    # filter out comment lines
-    return [line for line in lines if line]
-
-
-dependencies = deps_from_file("requirements.txt")
-dev_dependencies = deps_from_file("requirements-dev.txt")
-
-
 class PipenvCommand(distutils.cmd.Command):
     description = "setup local development with pipenv"
     user_options = []
@@ -66,11 +56,32 @@ setup(
     download_url="https://github.com/projectcaluma/caluma",
     license="License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Programming Language :: Python :: 3.7",
     ],
     packages=find_packages(),
-    install_requires=dependencies,
+    python_requires=">=3.6, <4",
+    install_requires=[
+        "dateparser<2",
+        "django>=2.2, <3",
+        "django-cors-headers<4",
+        "django-environ<0.5",
+        "django-extensions<4",
+        "django-filter<3",
+        "django-localized-fields<6",
+        "django-postgres-extra<2",
+        "djangorestframework<4",
+        "django_simple_history<3",
+        "graphene-django<=2.8.2",
+        "idna<3",
+        "minio<6",
+        "psycopg2-binary<3",
+        "pyjexl<0.3",
+        "python-memcached<2",
+        "requests<3",
+        "urllib3<2",
+        "uwsgi<2.1",
+    ],
 )

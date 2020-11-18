@@ -19,7 +19,7 @@ ENV DJANGO_SETTINGS_MODULE caluma.settings.django
 ENV UWSGI_INI /app/uwsgi.ini
 
 ARG REQUIREMENTS=requirements.txt
-COPY requirements.txt requirements-dev.txt $APP_HOME/
+COPY requirements.txt requirements-dev.txt requirements-all.txt $APP_HOME/
 RUN pip install --no-cache-dir --upgrade -r $REQUIREMENTS --disable-pip-version-check
 
 USER caluma
