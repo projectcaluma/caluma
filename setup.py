@@ -4,7 +4,7 @@ import distutils.cmd
 import os
 from os import path
 
-from setuptools import find_packages, setup
+from setuptools import setup
 
 version = {}
 with open("caluma/caluma_metadata.py") as fp:
@@ -60,28 +60,5 @@ setup(
         "Intended Audience :: Developers",
         "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
         "Programming Language :: Python :: 3.7",
-    ],
-    packages=find_packages(),
-    python_requires=">=3.6, <4",
-    install_requires=[
-        "dateparser<2",
-        "django>=2.2, <3",
-        "django-cors-headers<4",
-        "django-environ<0.5",
-        "django-extensions<4",
-        "django-filter<3",
-        "django-localized-fields<6",
-        "django-postgres-extra<2",
-        "djangorestframework<4",
-        "django_simple_history<3",
-        "graphene-django<=2.8.2",
-        "idna<3",
-        "minio<6",
-        "psycopg2-binary<3",
-        "pyjexl<0.3",
-        "python-memcached<2",
-        "requests<3",
-        "urllib3<2",
-        "uwsgi<2.1",
     ],
 )
