@@ -9,7 +9,7 @@ class MyDataSource(BaseDataSource):
     default = [1, 2, 3]
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info):
+    def get_data(self, user):
         return [
             1,
             (5.5,),
@@ -45,7 +45,7 @@ class MyFaultyDataSource(BaseDataSource):
     default = None
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info):
+    def get_data(self, user):
         return "just a string"
 
 
@@ -54,7 +54,7 @@ class MyOtherFaultyDataSource(BaseDataSource):
     default = None
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info):
+    def get_data(self, user):
         return [["just", "some", "strings"]]
 
 
@@ -63,7 +63,7 @@ class MyBrokenDataSource(BaseDataSource):
     default = [1, 2, 3]
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info):
+    def get_data(self, user):
         raise Exception()
 
 
@@ -72,5 +72,5 @@ class MyOtherBrokenDataSource(BaseDataSource):
     default = None
 
     @data_source_cache(timeout=3600)
-    def get_data(self, info):
+    def get_data(self, user):
         raise Exception()
