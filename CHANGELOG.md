@@ -1,3 +1,12 @@
+# v7.0.0 (19 November 2020)
+
+### Fix
+* Pass user instead of info object to data source ([`213d84a`](https://github.com/projectcaluma/caluma/commit/213d84ad6567405f77ae9392dba024a8d06767fa))
+
+### Breaking
+* Pass the `user` to the `get_data` method of a data source instead of the whole `info` object since we don't have an info object when calling the python API. ([`213d84a`](https://github.com/projectcaluma/caluma/commit/213d84ad6567405f77ae9392dba024a8d06767fa))
+
+
 # v6.7.0 (17 November 2020)
 
 ### Feature
