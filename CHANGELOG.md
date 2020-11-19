@@ -1,3 +1,9 @@
+# v7.0.1 (19 November 2020)
+
+### Fix
+* Move deps to setup.py ([`39e46f3`](https://github.com/projectcaluma/caluma/commit/39e46f39dd192c0b22393f05b4f401e0b55cf8d3))
+
+
 # v7.0.0 (19 November 2020)
 
 ### Fix
