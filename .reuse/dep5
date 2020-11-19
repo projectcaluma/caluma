@@ -21,6 +21,7 @@ Files:
     manage.py
     MANIFEST.in
     renovate.json
+    requirements-all.txt
     requirements-dev.txt
     requirements.txt
     setup.cfg

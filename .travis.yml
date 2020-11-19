@@ -13,12 +13,6 @@ env:
     - DOCKER_COMPOSE_VERSION=1.24.0
 
 before_install:
-  # install newer compose version
-  - sudo rm /usr/local/bin/docker-compose
-  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
-  - chmod +x docker-compose
-  - sudo mv docker-compose /usr/local/bin
-
   # Workaround for https://github.com/travis-ci/travis-ci/issues/4842
   # Let's stop postgresql
   - sudo service postgresql stop
@@ -45,3 +39,16 @@ jobs:
         PIPENV_IGNORE_VIRTUALENVS=1
       install: python3 setup.py pipenv
       script: pipenv run pytest
+    - env:
+        BUILD_TYPE=package
+      install:
+        - echo UID=$(id -u) > .env
+        - echo ENV=dev >> .env
+        - docker-compose up -d db
+        - rm -rf dist/
+        - python -m pip install --upgrade pip
+        - pip install setuptools wheel
+        - python setup.py bdist_wheel
+        - pip install dist/caluma-*.whl
+        - pip install -r requirements-dev.txt
+      script: pytest --no-cov-on-fail --cov --create-db -vv
