@@ -762,6 +762,9 @@ def test_create_work_item(
             self.username = "foo"
             self.groups = ["group-work-item"]
 
+        def __str__(self):
+            return f"<{self.username}>"
+
         @property
         def group(self):
             return self.groups[0]

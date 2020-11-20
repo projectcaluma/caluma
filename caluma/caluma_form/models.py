@@ -211,11 +211,10 @@ class DocumentManager(models.Manager):
     def create_document_for_task(self, task, user):
         """Create a document for a given task."""
         if task.form_id is not None:
-            return Document.objects.create(
-                form_id=task.form_id,
-                created_by_user=user.username,
-                created_by_group=user.group,
-            )
+            # import domain logic here, in order to avoid recursive import error
+            from .domain_logic import SaveDocumentLogic
+
+            return SaveDocumentLogic.create(form=task.form, user=user)
 
 
 class Document(core_models.UUIDModel):
