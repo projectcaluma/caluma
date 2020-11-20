@@ -1,7 +1,7 @@
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
-from caluma.caluma_form.models import Document
+from caluma.caluma_form.domain_logic import SaveDocumentLogic
 
 from . import api, models, utils, validators
 from .events import send_event_with_deprecations
@@ -50,9 +50,7 @@ class StartCaseLogic:
 
         form = validated_data.pop("form", None)
         if form:
-            validated_data["document"] = Document.objects.create(
-                form=form, created_by_user=user.username, created_by_group=user.group
-            )
+            validated_data["document"] = SaveDocumentLogic.create(form=form, user=user)
 
         if parent_work_item:
             case = parent_work_item.case
