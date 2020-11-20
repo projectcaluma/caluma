@@ -5,6 +5,7 @@ from django.core import exceptions
 from django.db import ProgrammingError
 from django.db.models import Q
 from django.forms import BooleanField
+from django.utils import translation
 from django_filters.constants import EMPTY_VALUES
 from django_filters.rest_framework import CharFilter, Filter, FilterSet
 from graphene import Enum, InputObjectType, List
@@ -21,7 +22,7 @@ from ..caluma_core.filters import (
     SlugMultipleChoiceFilter,
 )
 from ..caluma_core.ordering import AttributeOrderingFactory, MetaFieldOrdering
-from ..caluma_form.models import Answer, Question
+from ..caluma_form.models import Answer, DynamicOption, Question
 from ..caluma_form.ordering import AnswerValueOrdering
 from . import models, validators
 
@@ -292,7 +293,9 @@ class SearchAnswersFilter(Filter):
         Question.TYPE_TEXTAREA: "value",
         Question.TYPE_DATE: "date",
         Question.TYPE_CHOICE: "value",
+        Question.TYPE_MULTIPLE_CHOICE: "value",
         Question.TYPE_DYNAMIC_CHOICE: "value",
+        Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: "value",
         Question.TYPE_INTEGER: "value",
         Question.TYPE_FLOAT: "value",
     }
@@ -331,19 +334,62 @@ class SearchAnswersFilter(Filter):
 
         return qs
 
-    def _answers_with_word(self, questions, word, lookup):
-        exprs = [
-            Q(
+    def _word_lookup_for_question(self, question, word, lookup):
+        if question.type not in (
+            Question.TYPE_CHOICE,
+            Question.TYPE_DYNAMIC_CHOICE,
+            Question.TYPE_MULTIPLE_CHOICE,
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+        ):
+            return Q(
                 **{
                     f"{self.FIELD_MAP[question.type]}__{lookup}": word,
                     "question": question,
                 }
             )
+
+        # (Multiple) choice lookups need more specific treatment...
+        lang = translation.get_language()
+        is_multiple = question.type in (
+            Question.TYPE_MULTIPLE_CHOICE,
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+        )
+        is_dynamic = question.type in (
+            Question.TYPE_DYNAMIC_CHOICE,
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+        )
+
+        # find all options of our given question that match the
+        # word, then use their slugs for lookup
+        if is_dynamic:
+            matching_options = (
+                DynamicOption.objects.all()
+                .filter(question=question, **{f"label__{lang}__{lookup}": word})
+                .values_list("slug", flat=True)
+            )
+        else:
+            matching_options = question.options.filter(
+                **{f"label__{lang}__{lookup}": word}
+            ).values_list("slug", flat=True)
+
+        if not matching_options:
+            # no labels = no results
+            return Q(value=False) & Q(value=True)
+
+        filt = "value__contains" if is_multiple else "value"
+        return reduce(
+            lambda a, b: a | b, [Q(**{filt: slug}) for slug in matching_options]
+        )
+
+    def _answers_with_word(self, questions, word, lookup):
+        exprs = [
+            self._word_lookup_for_question(question, word, lookup)
             for q_slug, question in questions.items()
         ]
 
         # join expressions with OR
-        return Answer.objects.filter(reduce(lambda a, b: a | b, exprs))
+        answer_qs = Answer.objects.filter(reduce(lambda a, b: a | b, exprs))
+        return answer_qs
 
     def _validate_and_get_questions(self, questions):
         res = {}

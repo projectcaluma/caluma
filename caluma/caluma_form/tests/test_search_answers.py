@@ -1,3 +1,5 @@
+import pytest
+
 from ...caluma_core.relay import extract_global_id
 from .. import models
 
@@ -56,6 +58,89 @@ def test_search(
     assert set([str(doc_a.id), str(doc_b.id)]) == set(
         extract_global_id(e["node"]["id"]) for e in edges
     )
+
+
+@pytest.mark.parametrize(
+    "question_type, search_text",
+    [
+        (models.Question.TYPE_CHOICE, "hello world"),
+        (models.Question.TYPE_DYNAMIC_CHOICE, "hello world"),
+        (models.Question.TYPE_MULTIPLE_CHOICE, "hello world"),
+        (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, "hello world"),
+        (models.Question.TYPE_CHOICE, "unrelated"),
+    ],
+)
+def test_search_choice(
+    schema_executor,
+    db,
+    form_factory,
+    form_question_factory,
+    question_factory,
+    document_factory,
+    answer_factory,
+    form,
+    question_option_factory,
+    question_type,
+    search_text,
+):
+    dynamic = "dynamic" in question_type
+
+    option_factory = (
+        models.DynamicOption.objects.create if dynamic else models.Option.objects.create
+    )
+
+    doc_a, doc_b = document_factory.create_batch(2, form=form)
+
+    question_a = question_factory(type=question_type)
+    if not dynamic:
+        opt_a = option_factory(slug="nonmatching-slug", label="hello world")
+        opt_b = option_factory(slug="another-slug", label="irrelevant")
+        question_option_factory(question=question_a, option=opt_a)
+        question_option_factory(question=question_a, option=opt_b)
+    question_b = question_factory(type=models.Question.TYPE_TEXT)
+
+    doc_a.answers.create(question=question_a, value="nonmatching-slug")
+    doc_a.answers.create(question=question_b, value="whatsup planet")
+    if dynamic:
+        opt_a = option_factory(
+            question=question_a,
+            document=doc_a,
+            slug="nonmatching-slug",
+            label="hello world",
+        )
+        opt_b = option_factory(
+            question=question_a, document=doc_a, slug="another-slug", label="irrelevant"
+        )
+
+    doc_b.answers.create(question=question_a, value="another-slug")
+    doc_b.answers.create(question=question_b, value="seeya world")
+
+    query = """
+        query ($search: [SearchAnswersFilterType!]) {
+          allDocuments (searchAnswers: $search) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+    """
+
+    def _search(slugs, word, expect_count):
+        variables = {"search": [{"questions": slugs, "value": word}]}
+        result = schema_executor(query, variable_values=variables)
+
+        assert not result.errors
+        edges = result.data["allDocuments"]["edges"]
+        assert len(edges) == expect_count
+        return edges
+
+    edges = _search(
+        [question_a.slug], search_text, 0 if search_text == "unrelated" else 1
+    )
+    if search_text != "unrelated":
+        assert extract_global_id(edges[0]["node"]["id"]) == str(doc_a.id)
 
 
 def test_search_multiple(
