@@ -104,6 +104,7 @@ class SaveDocumentLogic:
     def create(**kwargs):
         document = BaseLogic.create(models.Document, **kwargs)
 
+        answers = []
         for question in document.form.questions.filter(
             default_answer__isnull=False
         ).iterator():
@@ -112,17 +113,20 @@ class SaveDocumentLogic:
                 # In case of table questions, we have to evaluate what default to use.
                 # The default value in a row_document wins over the default_answer of a
                 # row_form question
-                for sub_question in question.row_form.questions.filter(
-                    default_answer__isnull=False
-                ).iterator():
-                    for row in new_answer.documents.iterator():
-                        if not row.answers.filter(question=sub_question).exists():
-                            row.answers.add(
+                for row_doc in new_answer.documents.iterator():
+                    row_doc_answers = []
+                    for sub_question in question.row_form.questions.filter(
+                        default_answer__isnull=False
+                    ).iterator():
+                        if not row_doc.answers.filter(question=sub_question).exists():
+                            row_doc_answers.append(
                                 sub_question.default_answer.copy(
                                     document_family=document.family
                                 )
                             )
-            document.answers.add(new_answer)
+                    row_doc.answers.add(*row_doc_answers)
+            answers.append(new_answer)
+        document.answers.add(*answers)
         return document
 
     @staticmethod
