@@ -361,7 +361,7 @@
   }
 ---
 # name: test_save_document_answer[choice-question__configuration17-None-question__format_validators17-option-slug-None-SaveDocumentStringAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=choice), value='option-slug')
 ---
 # name: test_save_document_answer[choice-question__configuration17-None-question__format_validators17-option-slug-None-SaveDocumentStringAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -389,7 +389,7 @@
   }
 ---
 # name: test_save_document_answer[date-question__configuration7-None-question__format_validators7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=date), value=None)
 ---
 # name: test_save_document_answer[date-question__configuration7-None-question__format_validators7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -417,7 +417,7 @@
   }
 ---
 # name: test_save_document_answer[dynamic_choice-question__configuration21-MyDataSource-question__format_validators21-5.5-None-SaveDocumentStringAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=dynamic_choice), value='5.5')
 ---
 # name: test_save_document_answer[dynamic_choice-question__configuration21-MyDataSource-question__format_validators21-5.5-None-SaveDocumentStringAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -448,7 +448,7 @@
   }
 ---
 # name: test_save_document_answer[dynamic_multiple_choice-question__configuration19-MyDataSource-question__format_validators19-answer__value19-None-SaveDocumentListAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=dynamic_multiple_choice), value=['5.5', '1'])
 ---
 # name: test_save_document_answer[dynamic_multiple_choice-question__configuration19-MyDataSource-question__format_validators19-answer__value19-None-SaveDocumentListAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -482,7 +482,7 @@
   }
 ---
 # name: test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=file), value=None)
 ---
 # name: test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -516,7 +516,7 @@
   }
 ---
 # name: test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=file), value=None)
 ---
 # name: test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -547,7 +547,7 @@
   }
 ---
 # name: test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=float), value=2.1)
 ---
 # name: test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -575,7 +575,7 @@
   }
 ---
 # name: test_save_document_answer[integer-question__configuration0-None-question__format_validators0-1-None-SaveDocumentIntegerAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=integer), value=1)
 ---
 # name: test_save_document_answer[integer-question__configuration0-None-question__format_validators0-1-None-SaveDocumentIntegerAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -605,7 +605,7 @@
   }
 ---
 # name: test_save_document_answer[multiple_choice-question__configuration15-None-question__format_validators15-answer__value15-None-SaveDocumentListAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=multiple_choice), value=['option-slug'])
 ---
 # name: test_save_document_answer[multiple_choice-question__configuration15-None-question__format_validators15-answer__value15-None-SaveDocumentListAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -646,7 +646,7 @@
   }
 ---
 # name: test_save_document_answer[table-question__configuration12-None-question__format_validators12-None-None-SaveDocumentTableAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=treatment-radio)), question=Question(slug=effort-meet, type=table), value=None)
 ---
 # name: test_save_document_answer[table-question__configuration12-None-question__format_validators12-None-None-SaveDocumentTableAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -685,7 +685,7 @@
   }
 ---
 # name: test_save_document_answer[text-question__configuration24-None-question__format_validators24-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=text), value='test@example.com')
 ---
 # name: test_save_document_answer[text-question__configuration24-None-question__format_validators24-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -713,7 +713,7 @@
   }
 ---
 # name: test_save_document_answer[text-question__configuration4-None-question__format_validators4-Test-None-SaveDocumentStringAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=text), value='Test')
 ---
 # name: test_save_document_answer[text-question__configuration4-None-question__format_validators4-Test-None-SaveDocumentStringAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -741,7 +741,7 @@
   }
 ---
 # name: test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=textarea), value='Test')
 ---
 # name: test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
@@ -769,7 +769,7 @@
   }
 ---
 # name: test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-False-True]
-  None
+  Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=textarea), value='test@example.com')
 ---
 # name: test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True-False]
   <class 'OrderedDict'> {
