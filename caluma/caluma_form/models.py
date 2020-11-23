@@ -3,7 +3,7 @@ import uuid
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
-from django.db.models.signals import post_init
+from django.db.models.signals import post_delete, post_init
 from django.dispatch import receiver
 from localized_fields.fields import LocalizedField, LocalizedTextField
 from simple_history.models import HistoricalRecords
@@ -122,8 +122,8 @@ class Question(core_models.SlugModel):
         models.CharField(max_length=255), blank=True, default=list
     )
 
-    default_answer = models.ForeignKey(
-        "Answer", on_delete=models.CASCADE, related_name="+", null=True, blank=True
+    default_answer = models.OneToOneField(
+        "Answer", on_delete=models.SET_NULL, related_name="+", null=True, blank=True
     )
 
     @property
@@ -174,6 +174,13 @@ class Question(core_models.SlugModel):
 
     class Meta:
         indexes = [GinIndex(fields=["meta"])]
+
+
+@receiver(post_delete, sender=Question)
+def cleanup_default_answer(sender, instance, **kwargs):
+    """Ensure default_answers are cleanedup."""
+    if instance.default_answer is not None:
+        instance.default_answer.delete()
 
 
 class QuestionOption(core_models.NaturalKeyModel):
@@ -346,7 +353,7 @@ class Answer(core_models.BaseModel):
         super().delete(args, kwargs)
 
     def create_answer_documents(self, documents):
-        family = self.document.family
+        family = getattr(self.document, "family", None)
         document_ids = [document.pk for document in documents]
 
         for sort, document_id in enumerate(reversed(document_ids), start=1):
