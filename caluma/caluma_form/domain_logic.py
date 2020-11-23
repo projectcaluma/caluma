@@ -26,13 +26,13 @@ class SaveAnswerLogic:
     ) -> dict:
         question = data["question"]
 
-        if question.type == models.Question.TYPE_TABLE:
+        if question.type == models.Question.TYPE_TABLE and not data.get("documents"):
             data["documents"] = models.Document.objects.filter(pk__in=data["value"])
             del data["value"]
-        elif question.type == models.Question.TYPE_FILE:
+        elif question.type == models.Question.TYPE_FILE and not data.get("file"):
             data["file"] = data["value"]
             del data["value"]
-        elif question.type == models.Question.TYPE_DATE:
+        elif question.type == models.Question.TYPE_DATE and not data.get("date"):
             data["date"] = data["value"]
             del data["value"]
 
@@ -86,6 +86,9 @@ class SaveAnswerLogic:
 
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
+
+        answer.refresh_from_db()
+        return answer
 
     @staticmethod
     def set_file(validated_data):

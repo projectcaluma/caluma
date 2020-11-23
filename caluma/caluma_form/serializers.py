@@ -475,15 +475,19 @@ class DocumentSerializer(serializers.ModelSerializer):
 
 class SaveAnswerSerializer(serializers.ModelSerializer):
     def validate(self, data):
-        if "value" not in data:
-            data["value"] = None
-        validators.AnswerValidator().validate(
-            **data,
-            user=self.context["request"].user,
-            instance=self.instance,
-            origin=True,
+        return domain_logic.SaveAnswerLogic.validate_for_save(
+            data, self.context["request"].user, self.instance, True
         )
-        return super().validate(data)
+
+    @transaction.atomic
+    def create(self, validated_data):
+        return domain_logic.SaveAnswerLogic.create(
+            validated_data, self.context["request"].user
+        )
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        return domain_logic.SaveAnswerLogic.update(validated_data, instance)
 
     class Meta:
         model = models.Answer
@@ -534,24 +538,6 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         help_text="List of document IDs representing the rows in the table.",
     )
 
-    @transaction.atomic
-    def create(self, validated_data):
-        documents = validated_data.pop("documents")
-        instance = super().create(validated_data)
-        instance.create_answer_documents(documents)
-        return instance
-
-    @transaction.atomic
-    def update(self, instance, validated_data):
-        documents = validated_data.pop("documents")
-
-        instance.unlink_unused_rows(docs_to_keep=documents)
-        instance.refresh_from_db()
-
-        instance = super().update(instance, validated_data)
-        instance.create_answer_documents(documents)
-        return instance
-
     class Meta(SaveAnswerSerializer.Meta):
         pass
 
@@ -559,18 +545,6 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
 class SaveDocumentFileAnswerSerializer(SaveAnswerSerializer):
     value = CharField(write_only=True, source="file", required=False)
     value_id = PrimaryKeyRelatedField(read_only=True, source="file", required=False)
-
-    @transaction.atomic
-    def create(self, validated_data):
-        validated_data = domain_logic.SaveAnswerLogic.set_file(validated_data)
-        return super().create(validated_data)
-
-    @transaction.atomic
-    def update(self, instance, validated_data):
-        if instance.file.name is not validated_data["file"]:
-            instance.file.delete()
-            validated_data = domain_logic.SaveAnswerLogic.set_file(validated_data)
-        return super().update(instance, validated_data)
 
     class Meta(SaveAnswerSerializer.Meta):
         fields = SaveAnswerSerializer.Meta.fields + ("value_id",)
