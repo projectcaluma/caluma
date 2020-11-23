@@ -353,6 +353,7 @@ def test_save_document(
     db,
     document,
     schema_executor,
+    form_factory,
     form_question_factory,
     answer_factory,
     update,
@@ -384,9 +385,25 @@ def test_save_document(
     form_question = form_question_factory(
         question__type=Question.TYPE_TEXT, form=document.form
     )
-    answer = answer_factory(question=form_question.question, value="foo")
-    form_question.question.default_answer = answer
+    default_answer = answer_factory(question=form_question.question, value="foo")
+    form_question.question.default_answer = default_answer
     form_question.question.save()
+
+    # create a sub-form with a question with a default_answer
+    sub_form = form_factory()
+    form_question_factory(
+        question__type=Question.TYPE_FORM,
+        form=document.form,
+        question__sub_form=sub_form,
+    )
+    sub_form_question = form_question_factory(
+        question__type=Question.TYPE_TEXT, form=sub_form
+    )
+    sub_default_answer = answer_factory(
+        question=sub_form_question.question, value="bar"
+    )
+    sub_form_question.question.default_answer = sub_default_answer
+    sub_form_question.question.save()
 
     inp = {
         "input": extract_serializer_input_fields(
@@ -417,15 +434,15 @@ def test_save_document(
         assert (
             len(result.data["saveDocument"]["document"]["answers"]["edges"]) == 0
             if update
-            else 1
+            else 2
         )
         if not update:
-            assert (
-                result.data["saveDocument"]["document"]["answers"]["edges"][0]["node"][
-                    "value"
+            assert sorted(
+                [
+                    a["node"]["value"]
+                    for a in result.data["saveDocument"]["document"]["answers"]["edges"]
                 ]
-                == "foo"
-            )
+            ) == ["bar", "foo"]
     else:
         doc = (
             api.save_document(document.form, document=document)
@@ -434,9 +451,9 @@ def test_save_document(
         )
         assert (doc.pk == document.pk) == update
 
-        assert doc.answers.count() == 0 if update else 1
+        assert doc.answers.count() == 0 if update else 2
         if not update:
-            assert doc.answers.first().value == "foo"
+            assert sorted([a.value for a in doc.answers.iterator()]) == ["bar", "foo"]
 
 
 @pytest.mark.parametrize("use_python_api", [True, False])  # noqa:C901
