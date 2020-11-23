@@ -1,3 +1,9 @@
+# v7.0.2 (23 November 2020)
+
+### Fix
+* Consequently use domain_logic for saveDocument ([`fe30966`](https://github.com/projectcaluma/caluma/commit/fe3096696bab0e3b4f62991eec643515313772b0))
+
+
 # v7.0.1 (19 November 2020)
 
 ### Fix
