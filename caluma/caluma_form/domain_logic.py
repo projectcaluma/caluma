@@ -1,6 +1,7 @@
 from typing import Optional
 
 from django.db import transaction
+from django.db.models import Q
 
 from caluma.caluma_core.models import BaseModel
 from caluma.caluma_form import models, validators
@@ -100,14 +101,26 @@ class SaveAnswerLogic:
 
 class SaveDocumentLogic:
     @staticmethod
-    @transaction.atomic
-    def create(**kwargs):
-        document = BaseLogic.create(models.Document, **kwargs)
+    def _set_default_answers_for_form(form, document):
+        """
+        Set answers for questions with a default_answer.
 
+        This method sets the default_answers on a new document. It recusively travels
+        through the form and it's subforms, looking for questions that have a
+        default_answer.
+        For adding the answers, it does one query per form and one query per
+        row_document.
+        """
         answers = []
-        for question in document.form.questions.filter(
-            default_answer__isnull=False
+        for question in form.questions.filter(
+            Q(default_answer__isnull=False) | Q(type=models.Question.TYPE_FORM)
         ).iterator():
+            if question.type == models.Question.TYPE_FORM:
+                if question.sub_form is not None:
+                    document = SaveDocumentLogic._set_default_answers_for_form(
+                        question.sub_form, document
+                    )
+                continue
             new_answer = question.default_answer.copy(document_family=document.family)
             if question.type == models.Question.TYPE_TABLE:
                 # In case of table questions, we have to evaluate what default to use.
@@ -127,6 +140,16 @@ class SaveDocumentLogic:
                     row_doc.answers.add(*row_doc_answers)
             answers.append(new_answer)
         document.answers.add(*answers)
+        return document
+
+    @staticmethod
+    @transaction.atomic
+    def create(**kwargs):
+        document = BaseLogic.create(models.Document, **kwargs)
+
+        document = SaveDocumentLogic._set_default_answers_for_form(
+            document.form, document
+        )
         return document
 
     @staticmethod
