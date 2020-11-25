@@ -999,9 +999,9 @@ def test_save_document_table_answer_setting_family(
     assert to_be_deleted_table_row.family == to_be_deleted_document.family
 
 
-@pytest.mark.parametrize("default_on_table,value", [(True, 1979), (False, 23)])
+@pytest.mark.parametrize("default_on_table", [True, False])
 def test_save_document_table_answer_default_answer(
-    db, form_and_document, answer_factory, default_on_table, value
+    db, form_and_document, answer_factory, default_on_table
 ):
     form, document, questions_dict, answers_dict = form_and_document(use_table=True)
 
@@ -1027,7 +1027,10 @@ def test_save_document_table_answer_default_answer(
     assert Document.objects.filter(form=form).count() == 2
 
     assert doc.answers.count() == 1
-    assert doc.answers.first().documents.first().answers.first().value == value
+    if default_on_table:
+        assert doc.answers.first().documents.first().answers.first().value == 1979
+    else:
+        assert doc.answers.first().documents.first().answers.first() is None
 
 
 @pytest.mark.parametrize("answer__value", [1.1])
