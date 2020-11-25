@@ -1,3 +1,11 @@
+# v7.0.3 (25 November 2020)
+
+### Fix
+* Don't use default on row_question if default table_answer exists ([`30ce974`](https://github.com/projectcaluma/caluma/commit/30ce974849b0a1d1d304e01d7158966a477bcb03))
+* Fix setting default answers for sub forms ([`24d2899`](https://github.com/projectcaluma/caluma/commit/24d289941e464b90279042cbc73eb9fb897794b0))
+* Use domain_logic for saving answers in form app ([`6b71559`](https://github.com/projectcaluma/caluma/commit/6b71559eb7a1dca280de625c89d7b4e65c02decc))
+
+
 # v7.0.2 (23 November 2020)
 
 ### Fix
