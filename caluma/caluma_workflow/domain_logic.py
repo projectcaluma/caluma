@@ -50,7 +50,9 @@ class StartCaseLogic:
 
         form = validated_data.pop("form", None)
         if form:
-            validated_data["document"] = SaveDocumentLogic.create(form=form, user=user)
+            validated_data["document"] = SaveDocumentLogic.create(
+                {"form": form}, user=user
+            )
 
         if parent_work_item:
             case = parent_work_item.case
