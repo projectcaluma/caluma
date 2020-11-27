@@ -101,7 +101,7 @@ class SaveAnswerLogic:
 
 class SaveDocumentLogic:
     @staticmethod
-    def _set_default_answers_for_form(form, document):
+    def _set_default_answers_for_form(form, document, user):
         """
         Set answers for questions with a default_answer.
 
@@ -118,11 +118,11 @@ class SaveDocumentLogic:
             if question.type == models.Question.TYPE_FORM:
                 if question.sub_form is not None:
                     document = SaveDocumentLogic._set_default_answers_for_form(
-                        question.sub_form, document
+                        question.sub_form, document, user
                     )
                 continue
             answers.append(
-                question.default_answer.copy(document_family=document.family)
+                question.default_answer.copy(document_family=document.family, user=user)
             )
         document.answers.add(*answers)
         return document
@@ -130,10 +130,11 @@ class SaveDocumentLogic:
     @staticmethod
     @transaction.atomic
     def create(**kwargs):
-        document = BaseLogic.create(models.Document, **kwargs)
+        user = kwargs.pop("user", None)
+        document = BaseLogic.create(models.Document, user, **kwargs)
 
         document = SaveDocumentLogic._set_default_answers_for_form(
-            document.form, document
+            document.form, document, user
         )
         return document
 

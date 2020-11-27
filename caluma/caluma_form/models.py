@@ -265,18 +265,25 @@ class Document(core_models.UUIDModel):
         for answer_document in child_documents:
             answer_document.document.set_family(root_doc)
 
-    def copy(self, family=None):
+    def copy(self, family=None, user=None):
         """Create a copy including all its answers."""
 
         new_document = type(self).objects.create(
-            form=self.form, meta=dict(self.meta), source=self, family=family
+            form=self.form,
+            meta=dict(self.meta),
+            source=self,
+            family=family,
+            created_by_user=user.username if user else None,
+            created_by_group=user.group if user else None,
         )
         if not family:
             family = new_document
 
         # copy answers
         for source_answer in self.answers.all():
-            source_answer.copy(document_family=family, to_document=new_document)
+            source_answer.copy(
+                document_family=family, to_document=new_document, user=user
+            )
 
         return new_document
 
@@ -364,13 +371,15 @@ class Answer(core_models.BaseModel):
             ans_doc.document.set_family(ans_doc.document)
             ans_doc.delete()
 
-    def copy(self, document_family=None, to_document=None):
+    def copy(self, document_family=None, to_document=None, user=None):
         new_answer = type(self).objects.create(
             question=self.question,
             value=self.value,
             meta=dict(self.meta),
             date=self.date,
             document=to_document,
+            created_by_user=user.username if user else None,
+            created_by_group=user.group if user else None,
         )
 
         if self.question.type == Question.TYPE_FILE:
@@ -379,10 +388,14 @@ class Answer(core_models.BaseModel):
 
         # TableAnswer: copy AnswerDocument too
         for answer_doc in AnswerDocument.objects.filter(answer=self):
-            new_doc = answer_doc.document.copy(family=document_family)
+            new_doc = answer_doc.document.copy(family=document_family, user=user)
 
             AnswerDocument.objects.create(
-                answer=new_answer, document=new_doc, sort=answer_doc.sort
+                answer=new_answer,
+                document=new_doc,
+                sort=answer_doc.sort,
+                created_by_user=user.username if user else None,
+                created_by_group=user.group if user else None,
             )
         return new_answer
 
