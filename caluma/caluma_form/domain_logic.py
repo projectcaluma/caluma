@@ -41,6 +41,11 @@ class SaveAnswerLogic:
     ) -> dict:
         question = data["question"]
 
+        # Save empty answer by omitting the value property since graphql-core
+        # doesn't allow `null` literals yet
+        if "value" not in data:
+            data["value"] = None
+
         if question.type == models.Question.TYPE_TABLE and not data.get("documents"):
             data["documents"] = models.Document.objects.filter(pk__in=data["value"])
             del data["value"]

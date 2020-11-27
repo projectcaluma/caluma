@@ -843,7 +843,7 @@ def test_save_document_answer(
 @pytest.mark.parametrize("delete_answer", [True, False])
 @pytest.mark.parametrize(
     "question__type,question__is_required,answer__value",
-    [(Question.TYPE_TEXT, "false", None)],
+    [(Question.TYPE_TEXT, "false", "old value that needs to be deleted")],
 )
 def test_save_document_answer_empty(
     db, snapshot, question, answer, schema_executor, delete_answer

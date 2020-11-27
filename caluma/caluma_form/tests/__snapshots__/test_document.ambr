@@ -785,7 +785,7 @@
 # name: test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=suggest-traditional)), question=Question(slug=effort-meet, type=textarea), value='test@example.com')
 ---
-# name: test_save_document_answer_empty[text-false-None-False]
+# name: test_save_document_answer_empty[text-false-old value that needs to be deleted-False]
   <class 'OrderedDict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
@@ -796,7 +796,7 @@
     },
   }
 ---
-# name: test_save_document_answer_empty[text-false-None-True]
+# name: test_save_document_answer_empty[text-false-old value that needs to be deleted-True]
   <class 'OrderedDict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
