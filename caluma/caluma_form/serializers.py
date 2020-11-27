@@ -463,10 +463,9 @@ class CopyOptionSerializer(serializers.ModelSerializer):
 
 class DocumentSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
-        document = domain_logic.SaveDocumentLogic.create(
-            user=self.context["request"].user, **validated_data
+        return domain_logic.SaveDocumentLogic.create(
+            validated_data, user=self.context["request"].user
         )
-        return document
 
     class Meta:
         model = models.Document
@@ -482,7 +481,7 @@ class SaveAnswerSerializer(serializers.ModelSerializer):
     @transaction.atomic
     def create(self, validated_data):
         return domain_logic.SaveAnswerLogic.create(
-            validated_data, self.context["request"].user
+            validated_data, user=self.context["request"].user
         )
 
     @transaction.atomic

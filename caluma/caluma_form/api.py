@@ -52,7 +52,9 @@ def save_document(
         meta = {}
 
     if not document:
-        return domain_logic.SaveDocumentLogic.create(form=form, meta=meta, user=user)
+        return domain_logic.SaveDocumentLogic.create(
+            {"form": form, "meta": meta}, user=user
+        )
 
     domain_logic.SaveDocumentLogic.update(document, form=form, meta=meta)
     return document

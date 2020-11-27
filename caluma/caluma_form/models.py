@@ -214,7 +214,7 @@ class DocumentManager(models.Manager):
             # import domain logic here, in order to avoid recursive import error
             from .domain_logic import SaveDocumentLogic
 
-            return SaveDocumentLogic.create(form=task.form, user=user)
+            return SaveDocumentLogic.create({"form": task.form}, user=user)
 
 
 class Document(core_models.UUIDModel):

@@ -129,9 +129,10 @@ class SaveDocumentLogic:
 
     @staticmethod
     @transaction.atomic
-    def create(**kwargs):
-        user = kwargs.pop("user", None)
-        document = BaseLogic.create(models.Document, user, **kwargs)
+    def create(
+        validated_data: dict, user: Optional[BaseUser] = None
+    ) -> models.Document:
+        document = BaseLogic.create(model=models.Document, user=user, **validated_data)
 
         document = SaveDocumentLogic._set_default_answers_for_form(
             document.form, document, user
