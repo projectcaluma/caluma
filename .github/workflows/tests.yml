@@ -65,7 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
       - name: Setup Python
         uses: actions/setup-python@v1
         with:
