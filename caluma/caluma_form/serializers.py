@@ -178,6 +178,7 @@ class CopyQuestionSerializer(serializers.ModelSerializer):
 class SaveQuestionSerializer(serializers.ModelSerializer):
     is_hidden = QuestionJexlField(required=False)
     is_required = QuestionJexlField(required=False)
+    default_answer = PrimaryKeyRelatedField(read_only=True)
 
     def validate(self, data):
         validators.QuestionValidator().validate(data)
@@ -550,7 +551,9 @@ class SaveDocumentFileAnswerSerializer(SaveAnswerSerializer):
 
 
 class RemoveAnswerSerializer(serializers.ModelSerializer):
-    answer = PrimaryKeyRelatedField(queryset=models.Answer.objects.all())
+    answer = PrimaryKeyRelatedField(
+        queryset=models.Answer.objects.filter(document__isnull=False)
+    )
 
     @transaction.atomic
     def update(self, instance, validated_data):
@@ -560,6 +563,86 @@ class RemoveAnswerSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("answer",)
         model = models.Answer
+
+
+class SaveDefaultAnswerSerializer(serializers.ModelSerializer):
+    def validate(self, data):
+        return domain_logic.SaveDefaultAnswerLogic.validate_for_save(
+            data, self.context["request"].user, self.instance, True
+        )
+
+    def create(self, validated_data):
+        return domain_logic.SaveDefaultAnswerLogic.create(
+            validated_data, self.context["request"].user
+        )
+
+    def update(self, instance, validated_data):
+        return domain_logic.SaveDefaultAnswerLogic.update(validated_data, instance)
+
+    class Meta:
+        model = models.Answer
+        fields = ("question", "meta", "value")
+
+
+class SaveDefaultStringAnswerSerializer(SaveDefaultAnswerSerializer):
+    value = CharField(trim_whitespace=False, allow_blank=True, required=False)
+
+    class Meta(SaveDefaultAnswerSerializer.Meta):
+        pass
+
+
+class SaveDefaultListAnswerSerializer(SaveDefaultAnswerSerializer):
+    value = ListField(child=CharField(), required=False)
+
+    class Meta(SaveDefaultAnswerSerializer.Meta):
+        pass
+
+
+class SaveDefaultIntegerAnswerSerializer(SaveDefaultAnswerSerializer):
+    value = IntegerField(required=False)
+
+    class Meta(SaveDefaultAnswerSerializer.Meta):
+        pass
+
+
+class SaveDefaultFloatAnswerSerializer(SaveDefaultAnswerSerializer):
+    value = FloatField(required=False)
+
+    class Meta(SaveDefaultAnswerSerializer.Meta):
+        pass
+
+
+class SaveDefaultDateAnswerSerializer(SaveDefaultAnswerSerializer):
+    value = DateField(source="date", required=False)
+
+    class Meta(SaveDefaultAnswerSerializer.Meta):
+        pass
+
+
+class SaveDefaultTableAnswerSerializer(SaveDefaultAnswerSerializer):
+    value = serializers.GlobalIDPrimaryKeyRelatedField(
+        source="documents",
+        queryset=models.Document.objects,
+        many=True,
+        required=False,
+        help_text="List of document IDs representing the rows in the table.",
+    )
+
+    class Meta(SaveDefaultAnswerSerializer.Meta):
+        pass
+
+
+class RemoveDefaultAnswerSerializer(serializers.ModelSerializer):
+    question = PrimaryKeyRelatedField(queryset=models.Question.objects)
+
+    @transaction.atomic
+    def update(self, instance, validated_data):
+        instance.default_answer.delete()
+        return instance
+
+    class Meta:
+        fields = ("question",)
+        model = models.Question
 
 
 class RemoveDocumentSerializer(serializers.ModelSerializer):

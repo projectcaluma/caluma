@@ -2,6 +2,7 @@ from typing import Optional
 
 from django.db import transaction
 from django.db.models import Q
+from rest_framework.exceptions import ValidationError
 
 from caluma.caluma_core.models import BaseModel
 from caluma.caluma_form import models, validators
@@ -21,6 +22,19 @@ class BaseLogic:
 
 
 class SaveAnswerLogic:
+    @classmethod
+    def get_new_answer(cls, data, user, answer):
+        validated_data = cls.pre_save(
+            cls.validate_for_save(data, user, answer=answer, origin=True)
+        )
+
+        if answer is None:
+            answer = cls.create(validated_data, user)
+        else:
+            answer = cls.update(validated_data, answer)
+
+        return cls.post_save(answer)
+
     @staticmethod
     def validate_for_save(
         data: dict, user: BaseUser, answer: models.Answer = None, origin: bool = False
@@ -97,6 +111,39 @@ class SaveAnswerLogic:
         file = models.File.objects.create(name=file_name)
         validated_data["file"] = file
         return validated_data
+
+
+class SaveDefaultAnswerLogic(SaveAnswerLogic):
+    @staticmethod
+    def validate_for_save(
+        data: dict, user: BaseUser, answer: models.Answer = None, origin: bool = False
+    ) -> dict:
+        if data["question"].type in [
+            models.Question.TYPE_FILE,
+            models.Question.TYPE_STATIC,
+            models.Question.TYPE_DYNAMIC_CHOICE,
+            models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+        ]:
+            raise ValidationError(
+                f'Can\'t save default_answer for question of type "{data["question"].type}"'
+            )
+
+        data["document"] = None  # send None as document for validation
+        return SaveAnswerLogic.validate_for_save(data, user, answer, origin)
+
+    @staticmethod
+    @transaction.atomic
+    def create(validated_data: dict, user: Optional[BaseUser] = None) -> models.Answer:
+        answer = SaveAnswerLogic.create(validated_data, user)
+        answer.question.default_answer = answer
+        answer.question.save()
+
+        return answer
+
+    @staticmethod
+    @transaction.atomic
+    def update(validated_data, answer):
+        return SaveAnswerLogic.update(validated_data, answer)
 
 
 class SaveDocumentLogic:

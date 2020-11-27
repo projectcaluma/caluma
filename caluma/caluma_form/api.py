@@ -23,19 +23,29 @@ def save_answer(
     data.update(kwargs)
 
     answer = models.Answer.objects.filter(question=question, document=document).first()
+    answer = domain_logic.SaveAnswerLogic.get_new_answer(data, user, answer)
 
-    validated_data = domain_logic.SaveAnswerLogic.pre_save(
-        domain_logic.SaveAnswerLogic.validate_for_save(
-            data, user, answer=answer, origin=True
-        )
-    )
+    return answer
 
-    if answer is None:
-        answer = domain_logic.SaveAnswerLogic.create(validated_data, user)
-    else:
-        answer = domain_logic.SaveAnswerLogic.update(validated_data, answer)
 
-    domain_logic.SaveAnswerLogic.post_save(answer)
+def save_default_answer(
+    question: models.Question,
+    user: Optional[BaseUser] = None,
+    value: Optional[Any] = None,
+    **kwargs
+) -> models.Answer:
+    """
+    Save default_answer for given question.
+
+    Similar to saveDefaultStringAnswer and the likes, it performes upsert.
+    :param value: Must match the question type
+    """
+
+    data = {"question": question, "value": value}
+    data.update(kwargs)
+
+    answer = question.default_answer
+    answer = domain_logic.SaveDefaultAnswerLogic.get_new_answer(data, user, answer)
 
     return answer
 

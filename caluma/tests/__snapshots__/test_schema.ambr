@@ -1109,7 +1109,14 @@
     saveDocumentListAnswer(input: SaveDocumentListAnswerInput!): SaveDocumentListAnswerPayload
     saveDocumentTableAnswer(input: SaveDocumentTableAnswerInput!): SaveDocumentTableAnswerPayload
     saveDocumentFileAnswer(input: SaveDocumentFileAnswerInput!): SaveDocumentFileAnswerPayload
+    saveDefaultStringAnswer(input: SaveDefaultStringAnswerInput!): SaveDefaultStringAnswerPayload
+    saveDefaultIntegerAnswer(input: SaveDefaultIntegerAnswerInput!): SaveDefaultIntegerAnswerPayload
+    saveDefaultFloatAnswer(input: SaveDefaultFloatAnswerInput!): SaveDefaultFloatAnswerPayload
+    saveDefaultDateAnswer(input: SaveDefaultDateAnswerInput!): SaveDefaultDateAnswerPayload
+    saveDefaultListAnswer(input: SaveDefaultListAnswerInput!): SaveDefaultListAnswerPayload
+    saveDefaultTableAnswer(input: SaveDefaultTableAnswerInput!): SaveDefaultTableAnswerPayload
     removeAnswer(input: RemoveAnswerInput!): RemoveAnswerPayload
+    removeDefaultAnswer(input: RemoveDefaultAnswerInput!): RemoveDefaultAnswerPayload
     removeDocument(input: RemoveDocumentInput!): RemoveDocumentPayload
   }
   
@@ -1265,6 +1272,16 @@
     clientMutationId: String
   }
   
+  input RemoveDefaultAnswerInput {
+    question: ID!
+    clientMutationId: String
+  }
+  
+  type RemoveDefaultAnswerPayload {
+    question: Question
+    clientMutationId: String
+  }
+  
   input RemoveDocumentInput {
     document: ID!
     clientMutationId: String
@@ -1413,6 +1430,78 @@
   
   type SaveDateQuestionPayload {
     question: Question
+    clientMutationId: String
+  }
+  
+  input SaveDefaultDateAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: Date
+    clientMutationId: String
+  }
+  
+  type SaveDefaultDateAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+  
+  input SaveDefaultFloatAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: Float
+    clientMutationId: String
+  }
+  
+  type SaveDefaultFloatAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+  
+  input SaveDefaultIntegerAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: Int
+    clientMutationId: String
+  }
+  
+  type SaveDefaultIntegerAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+  
+  input SaveDefaultListAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: [String]
+    clientMutationId: String
+  }
+  
+  type SaveDefaultListAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+  
+  input SaveDefaultStringAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: String
+    clientMutationId: String
+  }
+  
+  type SaveDefaultStringAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+  
+  input SaveDefaultTableAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: [ID]
+    clientMutationId: String
+  }
+  
+  type SaveDefaultTableAnswerPayload {
+    answer: Answer
     clientMutationId: String
   }
   

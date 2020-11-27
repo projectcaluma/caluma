@@ -828,11 +828,65 @@ class SaveDocumentFileAnswer(SaveDocumentAnswer):
         return_field_type = Answer
 
 
+class SaveDefaultAnswer(Mutation):
+    @classmethod
+    def get_object(cls, root, info, queryset, **input):
+        question_id = extract_global_id(input["question"])
+        instance = models.Question.objects.get(pk=question_id).default_answer
+        return instance
+
+    class Meta:
+        abstract = True
+
+
+class SaveDefaultStringAnswer(SaveDefaultAnswer):
+    class Meta:
+        serializer_class = serializers.SaveDefaultStringAnswerSerializer
+        return_field_type = Answer
+
+
+class SaveDefaultListAnswer(SaveDefaultAnswer):
+    class Meta:
+        serializer_class = serializers.SaveDefaultListAnswerSerializer
+        return_field_type = Answer
+
+
+class SaveDefaultIntegerAnswer(SaveDefaultAnswer):
+    class Meta:
+        serializer_class = serializers.SaveDefaultIntegerAnswerSerializer
+        return_field_type = Answer
+
+
+class SaveDefaultFloatAnswer(SaveDefaultAnswer):
+    class Meta:
+        serializer_class = serializers.SaveDefaultFloatAnswerSerializer
+        return_field_type = Answer
+
+
+class SaveDefaultDateAnswer(SaveDefaultAnswer):
+    class Meta:
+        serializer_class = serializers.SaveDefaultDateAnswerSerializer
+        return_field_type = Answer
+
+
+class SaveDefaultTableAnswer(SaveDefaultAnswer):
+    class Meta:
+        serializer_class = serializers.SaveDefaultTableAnswerSerializer
+        return_field_type = Answer
+
+
 class RemoveAnswer(Mutation):
     class Meta:
         lookup_input_kwarg = "answer"
         serializer_class = serializers.RemoveAnswerSerializer
         return_field_type = Answer
+
+
+class RemoveDefaultAnswer(Mutation):
+    class Meta:
+        lookup_input_kwarg = "question"
+        serializer_class = serializers.RemoveDefaultAnswerSerializer
+        return_field_type = Question
 
 
 class RemoveDocument(Mutation):
@@ -875,7 +929,16 @@ class Mutation(object):
     save_document_list_answer = SaveDocumentListAnswer().Field()
     save_document_table_answer = SaveDocumentTableAnswer().Field()
     save_document_file_answer = SaveDocumentFileAnswer().Field()
+
+    save_default_string_answer = SaveDefaultStringAnswer().Field()
+    save_default_integer_answer = SaveDefaultIntegerAnswer().Field()
+    save_default_float_answer = SaveDefaultFloatAnswer().Field()
+    save_default_date_answer = SaveDefaultDateAnswer().Field()
+    save_default_list_answer = SaveDefaultListAnswer().Field()
+    save_default_table_answer = SaveDefaultTableAnswer().Field()
+
     remove_answer = RemoveAnswer().Field()
+    remove_default_answer = RemoveDefaultAnswer().Field()
     remove_document = RemoveDocument().Field()
 
 
