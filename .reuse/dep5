@@ -8,10 +8,10 @@ Files:
     .dockerignore
     .editorconfig
     .github/workflows/pypi.yml
+    .github/workflows/tests.yml
     .gitignore
     .pre-commit-config.yaml
     .flake8
-    .travis.yml
     .gitlint
     Dockerfile
     commit-msg
