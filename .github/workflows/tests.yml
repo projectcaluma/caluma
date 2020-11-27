@@ -1,0 +1,76 @@
+name: Tests
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron:  '0 0 * * 0'
+
+jobs:
+  standard-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the project
+        run: |
+          echo "UID=$(id --user)" > .env
+          docker-compose up -d --build
+      - name: Lint the code
+        run: |
+          docker-compose exec -T caluma black --check .
+          docker-compose exec -T caluma flake8
+          docker-compose exec -T caluma ./manage.py makemigrations --check --dry-run --no-input
+          docker-compose exec -T caluma reuse lint
+      - name: Run pytest
+        run: docker-compose exec -T caluma pytest --no-cov-on-fail --cov --create-db -vv
+  pipenv-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.7'
+      - name: Install requirements
+        env:
+          PIPENV_IGNORE_VIRTUALENVS: 1
+        run: |
+          pip install pipenv
+          python3 setup.py pipenv
+      - name: Run pytest
+        run: pipenv run pytest
+  package-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.7'
+      - name: Install package
+        run: |
+          echo UID=$(id -u) > .env
+          echo ENV=dev >> .env
+          docker-compose up -d db
+          rm -rf dist/
+          python -m pip install --upgrade pip
+          pip install setuptools wheel
+          python setup.py bdist_wheel
+          pip install dist/caluma-*.whl
+          pip install -r requirements-dev.txt
+      - name: Run pytest
+        run: pytest --no-cov-on-fail --cov --create-db -vv
+  gitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Setup Python
+        uses: actions/setup-python@v1
+        with:
+          python-version: '3.7'
+      - name: Install gitlint
+        run: pip install gitlint
+      - name: Run gitlint
+        run: gitlint --contrib contrib-title-conventional-commits
