@@ -1,3 +1,13 @@
+# v7.1.0 (30 November 2020)
+
+### Feature
+* Introduce API for managing default_answers ([`995138a`](https://github.com/projectcaluma/caluma/commit/995138a735ab736abe771c2b0574d72bf55fe286))
+* Pass user to copy method on answer and doc ([`38941b0`](https://github.com/projectcaluma/caluma/commit/38941b0e6a336d2578b5786fd1c641565bd788a7))
+
+### Fix
+* Fix empty answers ([`fc6300b`](https://github.com/projectcaluma/caluma/commit/fc6300bd578faee85fd8ecc1b1109cd1976d3bfa))
+
+
 # v7.0.3 (25 November 2020)
 
 ### Fix
