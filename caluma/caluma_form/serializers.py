@@ -475,9 +475,10 @@ class DocumentSerializer(serializers.ModelSerializer):
 
 class SaveAnswerSerializer(serializers.ModelSerializer):
     def validate(self, data):
-        return domain_logic.SaveAnswerLogic.validate_for_save(
+        data = domain_logic.SaveAnswerLogic.validate_for_save(
             data, self.context["request"].user, self.instance, True
         )
+        return super().validate(data)
 
     @transaction.atomic
     def create(self, validated_data):
