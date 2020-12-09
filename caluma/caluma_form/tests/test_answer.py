@@ -1,7 +1,9 @@
 import pytest
 from django.utils.dateparse import parse_date
+from graphql_relay import to_global_id
 
 from ...caluma_core.tests import extract_serializer_input_fields
+from ...caluma_core.validations import BaseValidation
 from .. import api, models, serializers
 from ..models import Answer, Question
 
@@ -267,4 +269,46 @@ def test_delete_question_with_default(db, question, answer):
     assert models.Answer.history.count() == 2
     assert all(
         h.history_question_type == question.type for h in models.Answer.history.all()
+    )
+
+
+@pytest.mark.parametrize("question__type", [Question.TYPE_TEXT])
+def test_validation_class_save_document_answer(db, mocker, answer, schema_executor):
+    class CustomValidation(BaseValidation):
+        def validate(self, mutation, data, info):
+            data["value"] += " (validated)"
+            return data
+
+    mocker.patch(
+        "caluma.caluma_form.serializers.SaveAnswerSerializer.validation_classes",
+        [CustomValidation],
+    )
+
+    query = """
+        mutation saveDocumentStringAnswer($input: SaveDocumentStringAnswerInput!) {
+          saveDocumentStringAnswer(input: $input) {
+            answer {
+              __typename
+              ... on StringAnswer {
+                stringValue: value
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    variables = {
+        "input": {
+            "document": to_global_id("StringAnswer", answer.document.pk),
+            "question": to_global_id("StringAnswer", answer.question.pk),
+            "value": "Test",
+        }
+    }
+
+    result = schema_executor(query, variable_values=variables)
+
+    assert (
+        result.data["saveDocumentStringAnswer"]["answer"]["stringValue"]
+        == "Test (validated)"
     )
