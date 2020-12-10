@@ -1,3 +1,9 @@
+# v7.1.1 (10 December 2020)
+
+### Fix
+* Fix custom validation for save answer mutations ([`5e91341`](https://github.com/projectcaluma/caluma/commit/5e91341bad29751436ca94c8faac879277e7cb6c))
+
+
 # v7.1.0 (30 November 2020)
 
 ### Feature
