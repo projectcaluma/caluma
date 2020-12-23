@@ -46,8 +46,13 @@ class SaveAnswerLogic:
         if "value" not in data:
             data["value"] = None
 
+        # make data from python api similar to graphql api
         if question.type == models.Question.TYPE_TABLE and not data.get("documents"):
-            data["documents"] = models.Document.objects.filter(pk__in=data["value"])
+            data["documents"] = (
+                models.Document.objects.filter(pk__in=data["value"])
+                if data["value"]
+                else models.Document.objects.none()
+            )
             del data["value"]
         elif question.type == models.Question.TYPE_FILE and not data.get("file"):
             data["file"] = data["value"]
