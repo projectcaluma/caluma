@@ -1,3 +1,12 @@
+# v7.2.0 (23 December 2020)
+
+### Feature
+* Support multiple choice and improve choice search ([`456bf08`](https://github.com/projectcaluma/caluma/commit/456bf0805329f7c6170dcedea37545351acc7a4a))
+
+### Fix
+* Validate empty table answers correctly ([`8b00505`](https://github.com/projectcaluma/caluma/commit/8b0050532fe16f04e9ac7bf02fbe80a402645bad))
+
+
 # v7.1.1 (10 December 2020)
 
 ### Fix

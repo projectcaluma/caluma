@@ -2,4 +2,4 @@
 
 __title__ = "caluma"
 __description__ = "Caluma Service providing GraphQL API"
-__version__ = "7.1.1"
+__version__ = "7.2.0"
