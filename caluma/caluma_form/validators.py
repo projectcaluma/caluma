@@ -8,7 +8,7 @@ from rest_framework import exceptions
 
 from caluma.caluma_data_source.data_source_handlers import get_data_sources
 
-from . import jexl, structure
+from . import jexl, models, structure
 from .format_validators import get_format_validators
 from .models import DynamicOption, Question
 
@@ -175,6 +175,11 @@ class AnswerValidator:
 
     def _validate_question_file(self, question, value, **kwargs):
         pass
+
+    def _validate_question_calculated_float(self, question, value, **kwargs):
+        raise CustomValidationError(
+            "Cannot save read-only answer of of type calculated float."
+        )
 
     def validate(
         self,
@@ -396,9 +401,31 @@ class QuestionValidator:
         if data_source not in data_sources:
             raise exceptions.ValidationError(f'Invalid data_source: "{data_source}"')
 
+    @staticmethod
+    def _validate_calc_dependencies(data):
+        expr = data.get("calc_expression")
+        if not expr:
+            return
+
+        question_jexl = jexl.QuestionJexl()
+        deps = set(question_jexl.extract_referenced_questions(expr))
+        illegal_deps = ", ".join(
+            models.Question.objects.filter(
+                pk__in=deps, type=models.Question.TYPE_CALCULATED_FLOAT
+            ).values_list("slug", flat=True)
+        )
+
+        if illegal_deps:
+            raise exceptions.ValidationError(
+                f"Calc expression references other calculated question: {illegal_deps}"
+            )
+
     def validate(self, data):
-        if data["type"] in ["text", "textarea"]:
+        if data["type"] in [models.Question.TYPE_TEXT, models.Question.TYPE_TEXTAREA]:
             self._validate_format_validators(data)
+        elif data["type"] == models.Question.TYPE_CALCULATED_FLOAT:
+            self._validate_calc_dependencies(data)
+
         if "dataSource" in data:
             self._validate_data_source(data["dataSource"])
 

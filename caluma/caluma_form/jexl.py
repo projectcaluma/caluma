@@ -193,3 +193,9 @@ class QuestionJexl(JEXL):
                 ret = self.evaluate(question.is_required)
         self._cache["required"][cache_key] = ret
         return ret
+
+    def evaluate_calc_value(self, question_field):
+        try:
+            return self.evaluate(question_field.question.calc_expression)
+        except TypeError:
+            return None

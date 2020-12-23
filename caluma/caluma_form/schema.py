@@ -179,6 +179,8 @@ class TextQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "sub_form",
             "static_content",
             "dynamicoption_set",
+            "calc_expression",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -206,6 +208,8 @@ class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "sub_form",
             "static_content",
             "dynamicoption_set",
+            "calc_expression",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -228,6 +232,8 @@ class DateQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "static_content",
             "format_validators",
             "dynamicoption_set",
+            "calc_expression",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -252,6 +258,8 @@ class ChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "static_content",
             "format_validators",
             "dynamicoption_set",
+            "calc_expression",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -275,6 +283,8 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "placeholder",
             "format_validators",
             "dynamicoption_set",
+            "calc_expression",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -300,6 +310,8 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "format_validators",
             "dynamicoption_set",
             "default_answer",
+            "calc_expression",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -325,6 +337,8 @@ class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType)
             "format_validators",
             "dynamicoption_set",
             "default_answer",
+            "calc_expression",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -356,6 +370,8 @@ class IntegerQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "static_content",
             "format_validators",
             "dynamicoption_set",
+            "calc_expression",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -380,6 +396,8 @@ class FloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "static_content",
             "format_validators",
             "dynamicoption_set",
+            "calc_expression",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -401,6 +419,8 @@ class TableQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "static_content",
             "format_validators",
             "dynamicoption_set",
+            "calc_expression",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -421,6 +441,8 @@ class FormQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "format_validators",
             "dynamicoption_set",
             "default_answer",
+            "calc_expression",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -442,6 +464,8 @@ class FileQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "format_validators",
             "dynamicoption_set",
             "default_answer",
+            "calc_expression",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -467,6 +491,30 @@ class StaticQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "format_validators",
             "dynamicoption_set",
             "default_answer",
+            "calc_expression",
+            "calc_dependents",
+        )
+        use_connection = False
+        interfaces = (Question, graphene.Node)
+
+
+class CalculatedFloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    class Meta:
+        model = models.Question
+        exclude = (
+            "type",
+            "configuration",
+            "data_source",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+            "placeholder",
+            "static_content",
+            "format_validators",
+            "dynamicoption_set",
+            "default_answer",
+            "calc_dependents",
         )
         use_connection = False
         interfaces = (Question, graphene.Node)
@@ -612,6 +660,12 @@ class SaveFileQuestion(SaveQuestion):
 class SaveStaticQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveStaticQuestionSerializer
+        return_field_type = Question
+
+
+class SaveCalculatedFloatQuestion(SaveQuestion):
+    class Meta:
+        serializer_class = serializers.SaveCalculatedFloatQuestionSerializer
         return_field_type = Question
 
 
@@ -919,6 +973,7 @@ class Mutation(object):
     save_form_question = SaveFormQuestion().Field()
     save_file_question = SaveFileQuestion().Field()
     save_static_question = SaveStaticQuestion().Field()
+    save_calculated_float_question = SaveCalculatedFloatQuestion().Field()
 
     copy_document = CopyDocument().Field()
     save_document = SaveDocument().Field()
@@ -1025,6 +1080,7 @@ QUESTION_ANSWER_TYPES = {
     models.Question.TYPE_FILE: FileAnswer,
     models.Question.TYPE_DYNAMIC_CHOICE: StringAnswer,
     models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: ListAnswer,
+    models.Question.TYPE_CALCULATED_FLOAT: FloatAnswer,
 }
 
 QUESTION_OBJECT_TYPES = {
@@ -1041,4 +1097,5 @@ QUESTION_OBJECT_TYPES = {
     models.Question.TYPE_FORM: FormQuestion,
     models.Question.TYPE_FILE: FileQuestion,
     models.Question.TYPE_STATIC: StaticQuestion,
+    models.Question.TYPE_CALCULATED_FLOAT: CalculatedFloatQuestion,
 }

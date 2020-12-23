@@ -1,9 +1,11 @@
 import pytest
 
-from ...caluma_core.tests import (
+from caluma.caluma_core.relay import extract_global_id
+from caluma.caluma_core.tests import (
     extract_global_id_input_fields,
     extract_serializer_input_fields,
 )
+
 from .. import models, serializers
 
 
@@ -23,6 +25,7 @@ from .. import models, serializers
         (models.Question.TYPE_DYNAMIC_CHOICE, {}, "MyDataSource", []),
         (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, {}, "MyDataSource", []),
         (models.Question.TYPE_STATIC, {}, None, []),
+        (models.Question.TYPE_CALCULATED_FLOAT, {}, None, []),
     ],
 )
 def test_query_all_questions(
@@ -137,6 +140,9 @@ def test_query_all_questions(
                 ... on StaticQuestion {
                   staticContent
                 }
+                ... on CalculatedFloatQuestion {
+                  calcExpression
+                }
               }
             }
           }
@@ -212,6 +218,7 @@ def test_copy_question(db, question, question_option_factory, schema_executor):
         "SaveFloatQuestion",
         "SaveDateQuestion",
         "SaveFileQuestion",
+        "SaveCalculatedFloatQuestion",
     ],
 )
 @pytest.mark.parametrize(
@@ -789,3 +796,205 @@ def test_all_questions_slug_filter(
 
     assert not result.errors
     assert len(result.data["allQuestions"]["edges"]) == num_questions
+
+
+def test_calc_dependents(db, question_factory):
+    dep1, dep2, dep3 = question_factory.create_batch(3)
+
+    assert not any([dep1.calc_dependents, dep2.calc_dependents, dep3.calc_dependents])
+
+    calc_q = question_factory(
+        type=models.Question.TYPE_CALCULATED_FLOAT,
+        calc_expression=f"'{dep1.slug}'|answer + '{dep2.slug}'|answer",
+    )
+    other_calc_q = question_factory(
+        type=models.Question.TYPE_CALCULATED_FLOAT,
+        calc_expression=f"'{dep1.slug}'|answer + '{dep2.slug}'|answer * '{dep3.slug}'|answer",
+    )
+    dep1.refresh_from_db()
+    dep2.refresh_from_db()
+    dep3.refresh_from_db()
+
+    def slug_in_deps(slug, deps):
+        return [slug in dependents for dependents in [q.calc_dependents for q in deps]]
+
+    assert all(slug_in_deps(calc_q.slug, [dep1, dep2]))
+    assert all(slug_in_deps(other_calc_q.slug, [dep1, dep2, dep3]))
+
+    calc_q.calc_expression = f"'{dep2.slug}'|answer + '{dep3.slug}'|answer"
+    calc_q.save()
+    dep1.refresh_from_db()
+    dep2.refresh_from_db()
+    dep3.refresh_from_db()
+
+    assert dep1.calc_dependents == [other_calc_q.slug]
+    assert all(slug_in_deps(calc_q.slug, [dep2, dep3]))
+    assert all(slug_in_deps(other_calc_q.slug, [dep1, dep2, dep3]))
+
+    calc_q.delete()
+
+    dep1.refresh_from_db()
+    dep2.refresh_from_db()
+    dep3.refresh_from_db()
+    assert not any(slug_in_deps(calc_q.slug, [dep1, dep2, dep3]))
+    assert all(slug_in_deps(other_calc_q.slug, [dep1, dep2, dep3]))
+
+
+@pytest.mark.parametrize(
+    "question__type,answer_value,calc_expression,expected",
+    [
+        (models.Question.TYPE_FLOAT, 1.5, "'{question_slug}'|answer * 3", 4.5),
+        (models.Question.TYPE_FLOAT, 0, "'{question_slug}'|answer * 3", 0),
+        (models.Question.TYPE_INTEGER, 100, "'{question_slug}'|answer", 100.0),
+        (
+            models.Question.TYPE_INTEGER,
+            100,
+            "'{question_slug}'|answer / 10 * 99",
+            990.0,
+        ),
+    ],
+)
+def test_calculated_question(
+    db,
+    schema_executor,
+    form_question,
+    question_factory,
+    answer_factory,
+    answer_value,
+    calc_expression,
+    expected,
+):
+    form = form_question.form
+    question = form_question.question
+
+    query = """
+        mutation SaveCalculatedQuestion($input: SaveCalculatedFloatQuestionInput!) {
+          saveCalculatedFloatQuestion (input: $input) {
+            question {
+              slug
+             __typename
+             ... on CalculatedFloatQuestion {
+               calcExpression
+             }
+            }
+          }
+        }
+    """
+
+    inp = {
+        "input": {
+            "slug": "calc-question",
+            "label": "Calculated Float Question",
+            "calcExpression": calc_expression.format(question_slug=question.slug),
+        }
+    }
+    result = schema_executor(query, variable_values=inp)
+
+    assert not result.errors
+
+    question.refresh_from_db()
+    assert "calc-question" in question.calc_dependents
+
+    calc_question = models.Question.objects.get(slug="calc-question")
+    form.questions.add(calc_question)
+
+    query = """
+        mutation SaveDocument($input: SaveDocumentInput!) {
+          saveDocument (input: $input) {
+            document {
+              id
+              answers {
+                edges {
+                  node {
+                    ... on FloatAnswer {
+                      value
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    inp = {"input": {"form": form.slug}}
+    result = schema_executor(query, variable_values=inp)
+    assert not result.errors
+
+    calc_answer = calc_question.answers.first()
+    assert calc_answer
+    assert calc_answer.value is None
+
+    q_type = question.type.capitalize()
+    query = f"""
+        mutation SaveDocument{q_type}Answer($input: SaveDocument{q_type}AnswerInput!) {{
+          saveDocument{q_type}Answer (input: $input) {{
+            answer {{
+              id
+            }}
+          }}
+        }}
+    """
+
+    inp = {
+        "input": {
+            "document": extract_global_id(
+                result.data["saveDocument"]["document"]["id"]
+            ),
+            "question": question.slug,
+            "value": answer_value,
+        }
+    }
+    result = schema_executor(query, variable_values=inp)
+    assert not result.errors
+
+    calc_answer = calc_question.answers.filter().first()
+    assert calc_answer
+    assert calc_answer.value == expected
+
+
+@pytest.mark.parametrize(
+    "expr,expected,calc_deps",
+    [
+        ("'sub_question'|answer", 100.0, ["sub_question"]),
+        ("'table'|answer|mapby('column')[0]", 1979, ["table", "column"]),
+    ],
+)
+def test_nested_calculated_question(
+    db,
+    schema_executor,
+    form_and_document,
+    form_question_factory,
+    answer_factory,
+    expr,
+    expected,
+    calc_deps,
+):
+    form, document, questions_dict, answers_dict = form_and_document(True, True)
+
+    sub_question = questions_dict["sub_question"]
+    sub_question.type = models.Question.TYPE_INTEGER
+    sub_question.save()
+    sub_question_a = answers_dict["sub_question"]
+    sub_question_a.value = 100
+    sub_question_a.save()
+
+    form_question_factory(
+        form=form,
+        question__slug="calc_question",
+        question__type=models.Question.TYPE_CALCULATED_FLOAT,
+        question__calc_expression=expr,
+    )
+
+    calc_ans = document.answers.get(question_id="calc_question")
+    assert calc_ans.value == expected
+
+    if expected == 100.0:
+        sub_question.refresh_from_db()
+        assert sub_question.calc_dependents
+
+    elif expected == 1979:
+        for slug in ["table", "column"]:
+            q = questions_dict[slug]
+            q.refresh_from_db()
+            assert q.calc_dependents
