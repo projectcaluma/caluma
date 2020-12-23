@@ -441,6 +441,17 @@ class SaveStaticQuestionSerializer(SaveQuestionSerializer):
         )
 
 
+class SaveCalculatedFloatQuestionSerializer(SaveQuestionSerializer):
+    calc_expression = QuestionJexlField(required=False)
+
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_CALCULATED_FLOAT
+        return super().validate(data)
+
+    class Meta(SaveQuestionSerializer.Meta):
+        fields = SaveQuestionSerializer.Meta.fields + ("calc_expression",)
+
+
 class SaveOptionSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ("slug", "label", "is_archived", "meta")

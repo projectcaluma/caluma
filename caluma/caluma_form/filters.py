@@ -97,6 +97,7 @@ class QuestionOrderSet(FilterSet):
             "static_content",
             "sub_form",
             "default_answer",
+            "calc_dependents",
         ],
     )
 
@@ -178,6 +179,7 @@ class HasAnswerFilter(Filter):
     VALID_LOOKUPS["dynamic_multiple_choice"] = VALID_LOOKUPS["multiple_choice"]
     VALID_LOOKUPS["textarea"] = VALID_LOOKUPS["text"]
     VALID_LOOKUPS["datetime"] = VALID_LOOKUPS["integer"]
+    VALID_LOOKUPS["calculated_float"] = VALID_LOOKUPS["float"]
 
     def filter(self, qs, value):
         if value in EMPTY_VALUES:

@@ -16,6 +16,7 @@ TEST_VALUES = {
     },
     "date": {"matching": "2018-05-09", "nomatch": "2019-05-09"},
     "choice": {"matching": "a", "nomatch": "x"},
+    "calculated_float": {"matching": 11.5, "nomatch": 99.5},
 }
 
 
@@ -111,6 +112,12 @@ def test_query_all_questions(
                 document=subform_document,
                 date=TEST_VALUES[qtype][form_value],
             )
+        elif qtype == models.Question.TYPE_CALCULATED_FLOAT:
+            answer = models.Answer.objects.get(
+                question__type=models.Question.TYPE_CALCULATED_FLOAT
+            )
+            answer.value = TEST_VALUES[qtype][form_value]
+            answer.save()
         else:
             answer_factory(
                 question=question,

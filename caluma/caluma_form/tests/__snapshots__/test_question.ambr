@@ -1,3 +1,24 @@
+# name: test_query_all_questions[calculated_float-question__configuration13-None-question__format_validators13]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'CalculatedFloatQuestion',
+            'calcExpression': '-1.0',
+            'id': 'Q2FsY3VsYXRlZEZsb2F0UXVlc3Rpb246ZWZmb3J0LW1lZXQ=',
+            'infoText': '',
+            'label': 'Brian Williams',
+            'meta': <class 'dict'> {
+            },
+            'slug': 'effort-meet',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
 # name: test_query_all_questions[choice-question__configuration6-None-question__format_validators6]
   <class 'dict'> {
     'allQuestions': <class 'dict'> {
@@ -869,6 +890,21 @@
               },
             },
           ],
+        },
+        'slug': 'effort-meet',
+      },
+    },
+  }
+---
+# name: test_save_question[true-True-SaveCalculatedFloatQuestion]
+  <class 'OrderedDict'> {
+    'saveCalculatedFloatQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'CalculatedFloatQuestion',
+        'id': 'Q2FsY3VsYXRlZEZsb2F0UXVlc3Rpb246ZWZmb3J0LW1lZXQ=',
+        'label': 'Brian Williams',
+        'meta': <class 'dict'> {
         },
         'slug': 'effort-meet',
       },

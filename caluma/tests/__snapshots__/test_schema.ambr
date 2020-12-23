@@ -108,6 +108,24 @@
     DESC
   }
   
+  type CalculatedFloatQuestion implements Question, Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    slug: String!
+    label: String!
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    calcExpression: String
+    id: ID!
+  }
+  
   input CancelCaseInput {
     id: ID!
     context: JSONString
@@ -563,7 +581,7 @@
     slug: String!
     label: String!
     document: Document!
-    question: StaticQuestion!
+    question: CalculatedFloatQuestion!
   }
   
   type DynamicOptionConnection {
@@ -1100,6 +1118,7 @@
     saveFormQuestion(input: SaveFormQuestionInput!): SaveFormQuestionPayload
     saveFileQuestion(input: SaveFileQuestionInput!): SaveFileQuestionPayload
     saveStaticQuestion(input: SaveStaticQuestionInput!): SaveStaticQuestionPayload
+    saveCalculatedFloatQuestion(input: SaveCalculatedFloatQuestionInput!): SaveCalculatedFloatQuestionPayload
     copyDocument(input: CopyDocumentInput!): CopyDocumentPayload
     saveDocument(input: SaveDocumentInput!): SaveDocumentPayload
     saveDocumentStringAnswer(input: SaveDocumentStringAnswerInput!): SaveDocumentStringAnswerPayload
@@ -1343,6 +1362,24 @@
   
   type ResumeWorkItemPayload {
     workItem: WorkItem
+    clientMutationId: String
+  }
+  
+  input SaveCalculatedFloatQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    defaultAnswer: ID
+    calcExpression: QuestionJexl
+    clientMutationId: String
+  }
+  
+  type SaveCalculatedFloatQuestionPayload {
+    question: Question
     clientMutationId: String
   }
   
@@ -1993,6 +2030,7 @@
     IS_ARCHIVED
     PLACEHOLDER
     INFO_TEXT
+    CALC_EXPRESSION
   }
   
   enum SortableTaskAttributes {

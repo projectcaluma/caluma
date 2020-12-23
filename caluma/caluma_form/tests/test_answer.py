@@ -2,9 +2,10 @@ import pytest
 from django.utils.dateparse import parse_date
 from graphql_relay import to_global_id
 
-from ...caluma_core.tests import extract_serializer_input_fields
-from ...caluma_core.validations import BaseValidation
-from .. import api, models, serializers
+from caluma.caluma_core.tests import extract_serializer_input_fields
+from caluma.caluma_core.validations import BaseValidation
+
+from .. import api, models, serializers, validators
 from ..models import Answer, Question
 
 
@@ -312,3 +313,11 @@ def test_validation_class_save_document_answer(db, mocker, answer, schema_execut
         result.data["saveDocumentStringAnswer"]["answer"]["stringValue"]
         == "Test (validated)"
     )
+
+
+@pytest.mark.parametrize("question__type", [Question.TYPE_CALCULATED_FLOAT])
+def test_validate_save_calculated_float_answer(
+    db, mocker, document, question, schema_executor
+):
+    with pytest.raises(validators.CustomValidationError):
+        api.save_answer(document=document, question=question, value=1.0)
