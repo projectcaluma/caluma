@@ -1,7 +1,7 @@
 """Hierarchical representation of a document / form."""
 import weakref
 from functools import singledispatch
-from typing import Optional
+from typing import List
 
 from .models import AnswerDocument, Question
 
@@ -140,35 +140,40 @@ class FieldSet(Element):
         return self._fields
 
     @property
-    def sub_forms(self):
+    def sub_forms(self) -> List[Field]:
         if self._sub_forms is None:
-            self._sub_forms = {
-                field.question.slug: field
+            self._sub_forms = [
+                field
                 for field in self.children()
                 if field.question.type == Question.TYPE_FORM
-            }
+            ] + [
+                child
+                for field in self.children()
+                for child in field.children()
+                if field.question.type == Question.TYPE_TABLE
+            ]
         return self._sub_forms
 
-    def get_field(
-        self, question_slug: str, check_parent: bool = True
-    ) -> Optional[Field]:
+    def get_fields(self, question_slug: str, check_parent: bool = True) -> List[Field]:
 
         field = self.fields.get(question_slug)
 
-        if not field and check_parent:
-            field = self.parent().get_field(question_slug) if self.parent() else None
         if field:
-            return field
+            return [field]
+        if not field and check_parent:
+            fields = self.parent().get_fields(question_slug) if self.parent() else []
+            if fields:
+                return fields
 
         # OK start looking in subforms / row forms below our level.
         # Since we're looking down, we're disallowing recursing to outer context
         # to avoid recursing back to where we are
-        for subform in self.sub_forms.values():
-            sub_field = subform.get_field(question_slug, check_parent=False)
-            if sub_field:
-                return sub_field
+        for subform in self.sub_forms:
+            sub_fields = subform.get_fields(question_slug, check_parent=False)
+            if sub_fields:
+                return sub_fields
         # if we reach this line, we didn't find the question
-        return None
+        return []
 
     @object_local_memoise
     def children(self):

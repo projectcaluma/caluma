@@ -270,7 +270,7 @@ class DocumentValidator:
         for field in validation_context["structure"].children():
             question = field.question
             try:
-                is_hidden = q_jexl.is_hidden(question)
+                is_hidden = q_jexl.is_hidden(field)
 
                 if is_hidden:
                     # no need to descend further
@@ -334,8 +334,8 @@ class DocumentValidator:
                 # in another row, but would still be hidden in the local row, if this is a
                 # table question context.  Thus, in this case we need to re-evaluate it's
                 # hiddenness. Luckily, the JEXL evaluator caches those values (locally).
-                with q_jexl.use_question_context(question.pk):
-                    if q_jexl.is_hidden(question):
+                with q_jexl.use_field_context(field):
+                    if q_jexl.is_hidden(field):
                         continue
 
                 is_required = q_jexl.is_required(field)

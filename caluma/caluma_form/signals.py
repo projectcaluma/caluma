@@ -81,28 +81,23 @@ def _update_or_create_calc_answer(question, document):
 
     struc = structure.FieldSet(root_doc, root_form)
 
-    for path in struc.paths_to_question(question.slug):
-        element = struc
-        for formquestion in path:
-            element = element.get_field(formquestion.slug)
-
+    for field in struc.get_fields(question.slug):
         jexl = QuestionJexl(
             {
-                "form": element.form,
-                "document": element.document,
-                "structure": element.parent(),
+                "form": field.form,
+                "document": field.document,
+                "structure": field.parent(),
             }
         )
-        value = jexl.evaluate_calc_value(element)
+
+        value = jexl.evaluate(field.question.calc_expression, raise_on_error=False)
 
         try:
-            ans = models.Answer.objects.get(
-                question=question, document=element.document
-            )
+            ans = models.Answer.objects.get(question=question, document=field.document)
             update_model(ans, {"value": value})
         except models.Answer.DoesNotExist:
             models.Answer.objects.create(
-                question=question, document=element.document, value=value
+                question=question, document=field.document, value=value
             )
 
 

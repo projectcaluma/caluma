@@ -82,8 +82,9 @@ def test_all_deps_hidden(db, form, document_factory, form_question_factory):
             "structure": structure.FieldSet(document, document.form),
         }
     )
-    assert qj.is_hidden(q2)
-    assert not qj.is_required(structure.Field(document, document.form, q2))
+    field = structure.Field(document, document.form, q2)
+    assert qj.is_hidden(field)
+    assert not qj.is_required(field)
 
 
 @pytest.mark.parametrize("fq_is_hidden", ["true", "false"])
@@ -346,7 +347,8 @@ def test_answer_transform_on_hidden_question_types(
         }
     )
 
-    assert qj.is_hidden(questions["form"])
+    field = structure.Field(document, form, questions["form"])
+    assert qj.is_hidden(field)
 
 
 @pytest.mark.parametrize(
