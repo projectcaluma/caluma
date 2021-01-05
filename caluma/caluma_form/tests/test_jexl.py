@@ -327,11 +327,11 @@ def test_answer_transform_on_hidden_question_types(
     )
 
     questions[
-        "form_question"
+        "form"
     ].is_hidden = (
         f"'top_question'|answer == {expected_value} && 'table'|answer|mapby('column')"
     )
-    questions["form_question"].save()
+    questions["form"].save()
 
     questions["top_question"].is_hidden = "true"
     questions["top_question"].type = question_type
@@ -346,7 +346,7 @@ def test_answer_transform_on_hidden_question_types(
         }
     )
 
-    assert qj.is_hidden(questions["form_question"])
+    assert qj.is_hidden(questions["form"])
 
 
 @pytest.mark.parametrize(
@@ -369,7 +369,7 @@ def test_answer_transform_in_tables(
         use_table=True, use_subform=False
     )
 
-    table_question = questions["table_question"]
+    table_question = questions["table"]
 
     col2_question = form_question_factory(
         **{
@@ -383,7 +383,7 @@ def test_answer_transform_in_tables(
     ).question
     assert getattr(col2_question, jexl_field) == expr
 
-    table_answer = answers["table_question"]
+    table_answer = answers["table"]
 
     row2_doc = answer_document_factory(
         answer=table_answer, document__form=table_question.row_form, sort=10

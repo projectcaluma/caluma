@@ -239,39 +239,39 @@ def form_and_document(
 
         if use_table:
             row_form = form_factory(slug="row_form")
-            questions["table_question"] = question_factory(
+            questions["table"] = question_factory(
                 type="table",
                 slug="table",
                 row_form=row_form,
                 is_required="true",
                 is_hidden="false",
             )
-            form_question_factory(form=form, question=questions["table_question"])
+            form_question_factory(form=form, question=questions["table"])
             questions["column"] = question_factory(
                 slug="column", is_required="true", is_hidden="false"
             )
             form_question_factory(form=row_form, question=questions["column"])
 
-            answers["table_question"] = answer_factory(
-                document=document, question=questions["table_question"]
+            answers["table"] = answer_factory(
+                document=document, question=questions["table"]
             )
 
             row_doc = document_factory(form=row_form)
             answers["column"] = answer_factory(
                 document=row_doc, question=questions["column"]
             )
-            answers["table_question"].documents.add(row_doc)
+            answers["table"].documents.add(row_doc)
 
         if use_subform:
             sub_form = form_factory(slug="sub_form")
-            questions["form_question"] = question_factory(
+            questions["form"] = question_factory(
                 type="form",
-                slug="form_question",
+                slug="form",
                 sub_form=sub_form,
                 is_required="true",
                 is_hidden="false",
             )
-            form_question_factory(form=form, question=questions["form_question"])
+            form_question_factory(form=form, question=questions["form"])
             questions["sub_question"] = question_factory(
                 slug="sub_question", is_required="true", is_hidden="false"
             )
