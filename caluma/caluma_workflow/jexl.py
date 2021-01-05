@@ -6,7 +6,7 @@ from pyjexl.analysis import ValidatingAnalyzer
 from pyjexl.evaluator import Context
 from pyjexl.parser import Literal
 
-from ..caluma_core.jexl import JEXL, ExtractTransformSubjectAnalyzer
+from ..caluma_core.jexl import JEXL, ExtractTransformReferenceAnalyzer
 from .models import Task
 
 
@@ -155,7 +155,7 @@ class FlowJexl(JEXL):
 
     def extract_tasks(self, expr):
         yield from self.analyze(
-            expr, partial(ExtractTransformSubjectAnalyzer, transforms=["task"])
+            expr, partial(ExtractTransformReferenceAnalyzer, transforms=["task"])
         )
 
         # tasks transforms return a list of literals
@@ -163,7 +163,8 @@ class FlowJexl(JEXL):
             literal.value
             for literal in chain(
                 *self.analyze(
-                    expr, partial(ExtractTransformSubjectAnalyzer, transforms=["tasks"])
+                    expr,
+                    partial(ExtractTransformReferenceAnalyzer, transforms=["tasks"]),
                 )
             )
         )
