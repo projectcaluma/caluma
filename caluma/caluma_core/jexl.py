@@ -4,6 +4,7 @@ from logging import getLogger
 import pyjexl
 from pyjexl.analysis import ValidatingAnalyzer
 from pyjexl.exceptions import ParseError
+from pyjexl.parser import Literal
 from rest_framework import exceptions
 
 log = getLogger(__name__)
@@ -111,7 +112,7 @@ class ExtractTransformReferenceAnalyzer(ValidatingAnalyzer):
 
     def visit_Transform(self, transform):
         if not self.transforms or transform.name in self.transforms:
-            # can only extract subject's value if subject is not a transform itself
+            # can only extract subject's value if subject is a Literal
             if not isinstance(transform.subject, type(transform)):
                 yield transform.subject.value
 
@@ -123,7 +124,7 @@ class ExtractTransformReferenceAnalyzer(ValidatingAnalyzer):
                 transform.name == "mapby"
                 and transform.subject
                 and transform.subject.name == "answer"
-                and not isinstance(transform.args[0], type(transform))
+                and isinstance(transform.args[0], Literal)
             ):
                 yield transform.args[0].value
 

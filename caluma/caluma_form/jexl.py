@@ -111,7 +111,7 @@ class QuestionJexl(JEXL):
                     f"Question `{slug}` could not be found in form {field.form}"
                 )
 
-        return deps, referenced_fields
+        return referenced_fields
 
     def is_hidden(self, field: Field):
         """Return True if the given field is hidden.
@@ -128,13 +128,11 @@ class QuestionJexl(JEXL):
         # expression. If all dependencies are hidden,
         # there is no way to evaluate our own visibility, so we default to
         # hidden state as well.
-        deps, referenced_fields = self._get_referenced_fields(
-            field, field.question.is_hidden
-        )
+        referenced_fields = self._get_referenced_fields(field, field.question.is_hidden)
 
         # all() returns True for the empty set, thus we need to
         # check that we have some deps at all first
-        all_deps_hidden = bool(deps) and all(
+        all_deps_hidden = bool(referenced_fields) and all(
             self.is_hidden(ref_field) for ref_field in referenced_fields
         )
         if all_deps_hidden:
@@ -163,13 +161,11 @@ class QuestionJexl(JEXL):
         if cache_key in self._cache["required"]:
             return self._cache["required"][cache_key]
 
-        deps, referenced_fields = self._get_referenced_fields(
-            field, question.is_required
-        )
+        referenced_fields = self._get_referenced_fields(field, question.is_required)
 
         # all() returns True for the empty set, thus we need to
         # check that we have some deps at all first
-        all_deps_hidden = bool(deps) and all(
+        all_deps_hidden = bool(referenced_fields) and all(
             self.is_hidden(ref_field) for ref_field in referenced_fields
         )
         if all_deps_hidden:

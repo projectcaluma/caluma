@@ -1101,12 +1101,19 @@ def test_calculated_question_answer_document(
     assert calc_ans.value is None
 
     # adding another row will make make the expression valid
-    row_doc = document_factory(form=row_form)
-    answer_factory(document=row_doc, question=column, value=200)
+    row_doc = document_factory(form=row_form, family=document)
+    column_a2 = answer_factory(document=row_doc, question_id=column.slug, value=200)
     table_a.documents.add(row_doc)
 
     calc_ans.refresh_from_db()
     assert calc_ans.value == 300
+
+    column_a2.value = 100
+    column_a2.save()
+    calc_ans.refresh_from_db()
+    column.refresh_from_db()
+    assert column.calc_dependents == ["calc_question"]
+    assert calc_ans.value == 200
 
     # removing the row will make it invalid again
     table_a.documents.remove(row_doc)
