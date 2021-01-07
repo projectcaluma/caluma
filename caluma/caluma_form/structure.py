@@ -155,6 +155,26 @@ class FieldSet(Element):
         return self._sub_forms
 
     def get_fields(self, question_slug: str, check_parent: bool = True) -> List[Field]:
+        """Collect fields where the question occurs throughout this structure.
+
+        Cases:
+        0. question not in structure
+        1. question is in the same form (-> greedily returns the question)
+        2. question in a neighbor form, ie. answer would be in same document (excluding tables)
+        3. question in multiple neighbor forms
+        4. question in a table form (same fieldset)
+        5. (question in a table form (different row))
+        6. question in a table form, lower than current fieldset
+        7. question in upper structure (from table row)
+
+        Expected:
+        0: return []
+        1-3: answer exists once, but might be in multiple forms -> multiple fields
+        4: return only row-local fields (not looking up / other rows)
+        5: incomplete row missing answer -> return fields with empty value (like case 4)
+        6: return all fields for all rows
+        7: same as 1-3
+        """
 
         field = self.fields.get(question_slug)
 

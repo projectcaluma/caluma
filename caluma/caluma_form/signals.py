@@ -90,6 +90,9 @@ def _update_or_create_calc_answer(question, document):
             }
         )
 
+        # Ignore errors because we evaluate greedy as soon as possible. At
+        # this moment we might be missing some answers or the expression might
+        # be invalid, in which case we return None
         value = jexl.evaluate(field.question.calc_expression, raise_on_error=False)
 
         try:
@@ -99,6 +102,13 @@ def _update_or_create_calc_answer(question, document):
             models.Answer.objects.create(
                 question=question, document=field.document, value=value
             )
+
+
+# Update calc dependents on pre_save
+#
+# Every question that is referenced in a `calcExpression` will memoize the
+# referencing calculated question. This list of calculation dependents is
+# mutated whenever a calculated question is created, updated or deleted.
 
 
 @receiver(pre_save, sender=models.Question)
@@ -128,6 +138,12 @@ def remove_calc_dependents(sender, instance, **kwargs):
     _update_calc_dependents(
         instance.slug, old_expr=instance.calc_expression, new_expr="false"
     )
+
+
+# Update calculated answer on post_save
+#
+# Try to update the calculated answer value whenever a mutation on a possibly
+# related model is performed.
 
 
 @receiver(post_save, sender=models.Question)
