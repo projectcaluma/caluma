@@ -189,7 +189,7 @@ class AnswerValidator:
     ):
         # Check all possible fields for value
         value = None
-        for i in ["value", "file", "date", "documents"]:
+        for i in ["documents", "file", "date", "value"]:
             value = kwargs.get(i, value)
             if value:
                 break
