@@ -41,6 +41,9 @@ class BaseModel(models.Model):
         max_length=150, blank=True, null=True, db_index=True
     )
 
+    def __str__(self):
+        return str(self.pk)
+
     class Meta:
         abstract = True
 
@@ -57,9 +60,6 @@ class SlugModel(BaseModel, HistoricalModel):
     # (see below) to reference two slugs, separated with a dot.
     slug = models.SlugField(max_length=127, primary_key=True)
 
-    def __str__(self):
-        return self.slug
-
     def __repr__(self):
         return f"{self.__class__.__name__}(slug={self.slug})"
 
@@ -75,9 +75,6 @@ class UUIDModel(BaseModel, HistoricalModel):
     """
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    def __str__(self):
-        return self.id
 
     def __repr__(self):
         return f"{self.__class__.__name__}(id={self.id})"
@@ -97,9 +94,6 @@ class NaturalKeyModel(BaseModel, HistoricalModel):
     def save(self, *args, **kwargs):
         self.id = self.natural_key()
         return super().save(*args, **kwargs)
-
-    def __str__(self):
-        return self.id
 
     def __repr__(self):
         return f"{self.__class__.__name__}(id={self.id})"
