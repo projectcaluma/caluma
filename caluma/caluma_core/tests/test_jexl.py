@@ -3,7 +3,7 @@ import functools
 import pyjexl
 import pytest
 
-from ..jexl import JEXL, Cache, ExtractTransformSubjectAnalyzer
+from ..jexl import JEXL, Cache, ExtractTransformReferenceAnalyzer
 
 
 @pytest.mark.parametrize(
@@ -24,7 +24,7 @@ def test_extract_transforms(expression, expected_transforms):
         jexl.analyze(
             expression,
             functools.partial(
-                ExtractTransformSubjectAnalyzer, transforms=["transform1"]
+                ExtractTransformReferenceAnalyzer, transforms=["transform1"]
             ),
         )
     ) == set(expected_transforms)

@@ -82,8 +82,9 @@ def test_all_deps_hidden(db, form, document_factory, form_question_factory):
             "structure": structure.FieldSet(document, document.form),
         }
     )
-    assert qj.is_hidden(q2)
-    assert not qj.is_required(structure.Field(document, document.form, q2))
+    field = structure.Field(document, document.form, q2)
+    assert qj.is_hidden(field)
+    assert not qj.is_required(field)
 
 
 @pytest.mark.parametrize("fq_is_hidden", ["true", "false"])
@@ -320,18 +321,28 @@ def test_answer_transform_on_hidden_question(info, form_and_document):
     ],
 )
 def test_answer_transform_on_hidden_question_types(
-    info, form_and_document, question_type, expected_value
+    info,
+    form_and_document,
+    document_factory,
+    answer_factory,
+    question_type,
+    expected_value,
 ):
     form, document, questions, answers = form_and_document(
         use_table=True, use_subform=True
     )
+    table = questions["table"]
+    row_form = table.row_form
+    row_doc = document_factory(form=row_form)
+    answer_factory(document=row_doc, question_id="column")
+    answers["table"].documents.add(row_doc)
 
-    questions[
-        "form_question"
-    ].is_hidden = (
-        f"'top_question'|answer == {expected_value} && 'table'|answer|mapby('column')"
+    questions["form"].is_hidden = (
+        f"'top_question'|answer == {expected_value}"
+        " && 'table'|answer|mapby('column')[0]"
+        " && 'table'|answer|mapby('column')[1]"
     )
-    questions["form_question"].save()
+    questions["form"].save()
 
     questions["top_question"].is_hidden = "true"
     questions["top_question"].type = question_type
@@ -346,7 +357,8 @@ def test_answer_transform_on_hidden_question_types(
         }
     )
 
-    assert qj.is_hidden(questions["form_question"])
+    field = structure.Field(document, form, questions["form"])
+    assert qj.is_hidden(field)
 
 
 @pytest.mark.parametrize(
@@ -369,7 +381,7 @@ def test_answer_transform_in_tables(
         use_table=True, use_subform=False
     )
 
-    table_question = questions["table_question"]
+    table_question = questions["table"]
 
     col2_question = form_question_factory(
         **{
@@ -383,7 +395,7 @@ def test_answer_transform_in_tables(
     ).question
     assert getattr(col2_question, jexl_field) == expr
 
-    table_answer = answers["table_question"]
+    table_answer = answers["table"]
 
     row2_doc = answer_document_factory(
         answer=table_answer, document__form=table_question.row_form, sort=10

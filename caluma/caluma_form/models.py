@@ -3,8 +3,6 @@ import uuid
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
-from django.db.models.signals import post_delete, post_init
-from django.dispatch import receiver
 from localized_fields.fields import LocalizedField, LocalizedTextField
 from simple_history.models import HistoricalRecords
 
@@ -61,6 +59,7 @@ class Question(core_models.SlugModel):
     TYPE_DYNAMIC_CHOICE = "dynamic_choice"
     TYPE_DYNAMIC_MULTIPLE_CHOICE = "dynamic_multiple_choice"
     TYPE_STATIC = "static"
+    TYPE_CALCULATED_FLOAT = "calculated_float"
 
     TYPE_CHOICES = (
         TYPE_MULTIPLE_CHOICE,
@@ -76,6 +75,7 @@ class Question(core_models.SlugModel):
         TYPE_DYNAMIC_CHOICE,
         TYPE_DYNAMIC_MULTIPLE_CHOICE,
         TYPE_STATIC,
+        TYPE_CALCULATED_FLOAT,
     )
     TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
 
@@ -126,6 +126,11 @@ class Question(core_models.SlugModel):
         "Answer", on_delete=models.SET_NULL, related_name="+", null=True, blank=True
     )
 
+    calc_expression = models.TextField(null=True, blank=True)
+    calc_dependents = ArrayField(
+        models.CharField(max_length=255, blank=True), default=list
+    )
+
     @property
     def min_length(self):
         return self.configuration.get("min_length")
@@ -174,13 +179,6 @@ class Question(core_models.SlugModel):
 
     class Meta:
         indexes = [GinIndex(fields=["meta"])]
-
-
-@receiver(post_delete, sender=Question)
-def cleanup_default_answer(sender, instance, **kwargs):
-    """Ensure default_answers are cleanedup."""
-    if instance.default_answer is not None:
-        instance.default_answer.delete()
 
 
 class QuestionOption(core_models.NaturalKeyModel):
@@ -454,21 +452,6 @@ class File(core_models.UUIDModel):
     @property
     def metadata(self):
         return client.stat_object(self.object_name).__dict__
-
-
-@receiver(post_init, sender=Document)
-def set_document_family(sender, instance, **kwargs):
-    """
-    Ensure document has the family pointer set.
-
-    This sets the document's family if not overruled or set already.
-    The family will be in the corresponding mutations when a tree
-    structure is created or restructured.
-    """
-    if instance.family_id is None:
-        # can't use instance.set_family() here as the instance isn't
-        # in DB yet, causing integrity errors
-        instance.family = instance
 
 
 class AnswerDocument(core_models.UUIDModel):

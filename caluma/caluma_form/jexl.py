@@ -5,8 +5,8 @@ from functools import partial
 from pyjexl.analysis import ValidatingAnalyzer
 from pyjexl.evaluator import Context
 
-from ..caluma_core.jexl import JEXL, ExtractTransformSubjectAnalyzer
-from .models import Question
+from ..caluma_core.jexl import JEXL, ExtractTransformReferenceAnalyzer
+from .structure import Field
 
 
 class QuestionMissing(Exception):
@@ -58,19 +58,18 @@ class QuestionJexl(JEXL):
         )
 
     def answer_transform(self, question_slug):
-        question = self._question(question_slug)
+        fields = self._structure.get_fields(question_slug)
 
-        if self.is_hidden(question):
-            if question.type in [
-                Question.TYPE_MULTIPLE_CHOICE,
-                Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
-                Question.TYPE_TABLE,
-            ]:
-                return []
+        if len(fields) == 0 or len(fields) > 1:  # pragma: no cover
+            raise RuntimeError(
+                "Answer transform cannot reference row_form questions from outside row context"
+            )
 
-            return None
+        field = fields[0]
+        if self.is_hidden(field):
+            return field.question.empty_value()
 
-        return self._structure.get_field(question_slug).value()
+        return field.value()
 
     def validate(self, expression, **kwargs):
         return super().validate(expression, QuestionValidatingAnalyzer)
@@ -78,20 +77,11 @@ class QuestionJexl(JEXL):
     def extract_referenced_questions(self, expr):
         transforms = ["answer", "mapby"]
         yield from self.analyze(
-            expr, partial(ExtractTransformSubjectAnalyzer, transforms=transforms)
-        )
-
-    def _question(self, slug):
-        field = self._structure.get_field(slug)
-        if field:
-            return field.question
-
-        raise QuestionMissing(
-            f"Question `{slug}` could not be found in form {self.context['form']}"
+            expr, partial(ExtractTransformReferenceAnalyzer, transforms=transforms)
         )
 
     @contextmanager
-    def use_question_context(self, question_slug):
+    def use_field_context(self, field: Field):
         """Context manger to temporarily overwrite self._structure.
 
         This is used so we can evaluate each JEXL expression in the context
@@ -103,60 +93,47 @@ class QuestionJexl(JEXL):
 
         # field's parent is the fieldset - which is a valid structure object
         old_structure = self._structure
-        self._structure = self._structure.get_field(question_slug).parent()
+        self._structure = field.parent() or self._structure
         yield
         self._structure = old_structure
 
-    def _all_containers_hidden(self, question):
-        """Check whether all containers of the given question are hidden.
+    def _get_referenced_fields(self, field: Field, expr: str):
+        deps = list(self.extract_referenced_questions(expr))
+        referenced_fields = [
+            ref_field for slug in deps for ref_field in self._structure.get_fields(slug)
+        ]
 
-        The question could be used in multiple sub-forms in the given
-        document structure. This goes through all paths from the main form
-        to the given question, and checks if they're hidden.
+        referenced_slugs = [ref.question.slug for ref in referenced_fields]
 
-        If all subforms are hidden where the question shows up,
-        the question shall be hidden as well.
-        """
-        paths = self._structure.root().paths_to_question(question.slug)
+        for slug in deps:
+            if slug not in referenced_slugs:
+                raise QuestionMissing(
+                    f"Question `{slug}` could not be found in form {field.form}"
+                )
 
-        res = bool(paths) and all(
-            # the "inner" check here represents a single path. If any
-            # question is hidden, the question is not reachable via
-            # this path
-            bool(path) and any(self.is_hidden(fq) for fq in path if fq != question)
-            for path in paths
-        )
-        # The outer check verifies if all paths are "hidden" (ie have a hidden
-        # question in them). If all paths from the root form to the
-        # question are hidden, the question must indeed be hidden itself.
+        return referenced_fields
 
-        return res
-
-    def _cache_key(self, question_slug):
-        field = self._structure.get_field(question_slug)
-        return (field.document.pk, question_slug)
-
-    def is_hidden(self, question):
-        """Return True if the given question is hidden.
+    def is_hidden(self, field: Field):
+        """Return True if the given field is hidden.
 
         This checks whether the dependency questions are hidden, then
-        evaluates the question's is_hidden expression itself.
+        evaluates the field's is_hidden expression itself.
         """
-        cache_key = self._cache_key(question.pk)
+        cache_key = (field.document.pk, field.question.pk)
 
         if cache_key in self._cache["hidden"]:
             return self._cache["hidden"][cache_key]
+
         # Check visibility of dependencies before actually evaluating the `is_hidden`
         # expression. If all dependencies are hidden,
         # there is no way to evaluate our own visibility, so we default to
         # hidden state as well.
-
-        deps = list(self.extract_referenced_questions(question.is_hidden))
+        referenced_fields = self._get_referenced_fields(field, field.question.is_hidden)
 
         # all() returns True for the empty set, thus we need to
         # check that we have some deps at all first
-        all_deps_hidden = bool(deps) and all(
-            self.is_hidden(self._question(dep)) for dep in deps
+        all_deps_hidden = bool(referenced_fields) and all(
+            self.is_hidden(ref_field) for ref_field in referenced_fields
         )
         if all_deps_hidden:
             self._cache["hidden"][cache_key] = True
@@ -164,32 +141,45 @@ class QuestionJexl(JEXL):
 
         # Also check if the question is hidden indirectly,
         # for example via parent formquestion.
-        if self._all_containers_hidden(question):
+        parent = field.parent()
+        if parent and parent.question and self.is_hidden(parent):
             # no way this is shown somewhere
             self._cache["hidden"][cache_key] = True
             return True
+
         # if the question is visible-in-context and not hidden by invisible dependencies,
         # we can evaluate it's own is_hidden expression
+        with self.use_field_context(field):
+            self._cache["hidden"][cache_key] = self.evaluate(field.question.is_hidden)
 
-        with self.use_question_context(question.pk):
-            self._cache["hidden"][cache_key] = self.evaluate(question.is_hidden)
         return self._cache["hidden"][cache_key]
 
-    def is_required(self, question_field):
-        cache_key = (question_field.document.pk, question_field.question.pk)
-        question = question_field.question
+    def is_required(self, field: Field):
+        cache_key = (field.document.pk, field.question.pk)
+        question = field.question
 
         if cache_key in self._cache["required"]:
             return self._cache["required"][cache_key]
 
-        deps = list(self.extract_referenced_questions(question.is_required))
+        referenced_fields = self._get_referenced_fields(field, question.is_required)
 
-        if bool(deps) and all(self.is_hidden(self._question(dep)) for dep in deps):
-            # all dependent questions are hidden. cannot evaluate,
-            # so assume requiredness to be False
+        # all() returns True for the empty set, thus we need to
+        # check that we have some deps at all first
+        all_deps_hidden = bool(referenced_fields) and all(
+            self.is_hidden(ref_field) for ref_field in referenced_fields
+        )
+        if all_deps_hidden:
             ret = False
         else:
-            with self.use_question_context(question.pk):
+            with self.use_field_context(field):
                 ret = self.evaluate(question.is_required)
         self._cache["required"][cache_key] = ret
         return ret
+
+    def evaluate(self, expr, raise_on_error=True):
+        try:
+            return super().evaluate(expr)
+        except TypeError:
+            if raise_on_error:
+                raise
+            return None

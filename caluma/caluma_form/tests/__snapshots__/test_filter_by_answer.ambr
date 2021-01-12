@@ -1,3 +1,899 @@
+# name: test_query_all_questions[calculated_float-11.5-matching-CONTAINS]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'CONTAINS',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': '[GraphQLLocatedError("[\'Invalid lookup for question slug=calculated_float (CALCULATED_FLOAT): CONTAINS\']")]',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-matching-EXACT]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'EXACT',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-matching-GTE]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'GTE',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-matching-GT]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'GT',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-matching-ICONTAINS]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'ICONTAINS',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': '[GraphQLLocatedError("[\'Invalid lookup for question slug=calculated_float (CALCULATED_FLOAT): ICONTAINS\']")]',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-matching-INTERSECTS]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'INTERSECTS',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': '[GraphQLLocatedError("[\'Invalid lookup for question slug=calculated_float (CALCULATED_FLOAT): INTERSECTS\']")]',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-matching-ISNULL]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'ISNULL',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-matching-LTE]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'LTE',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-matching-LT]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'LT',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-matching-None]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-matching-STARTSWITH]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'STARTSWITH',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': '[GraphQLLocatedError("[\'Invalid lookup for question slug=calculated_float (CALCULATED_FLOAT): STARTSWITH\']")]',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-nomatch-CONTAINS]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'CONTAINS',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': '[GraphQLLocatedError("[\'Invalid lookup for question slug=calculated_float (CALCULATED_FLOAT): CONTAINS\']")]',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-nomatch-EXACT]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'EXACT',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-nomatch-GTE]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'GTE',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-nomatch-GT]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'GT',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-nomatch-ICONTAINS]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'ICONTAINS',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': '[GraphQLLocatedError("[\'Invalid lookup for question slug=calculated_float (CALCULATED_FLOAT): ICONTAINS\']")]',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-nomatch-INTERSECTS]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'INTERSECTS',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': '[GraphQLLocatedError("[\'Invalid lookup for question slug=calculated_float (CALCULATED_FLOAT): INTERSECTS\']")]',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-nomatch-ISNULL]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'ISNULL',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-nomatch-LTE]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'LTE',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-nomatch-LT]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'LT',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-nomatch-None]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[calculated_float-11.5-nomatch-STARTSWITH]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'STARTSWITH',
+            'question': 'calculated_float',
+            'value': 11.5,
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': '[GraphQLLocatedError("[\'Invalid lookup for question slug=calculated_float (CALCULATED_FLOAT): STARTSWITH\']")]',
+    },
+  }
+---
 # name: test_query_all_questions[choice-a-matching-CONTAINS]
   <class 'dict'> {
     'request': <class 'dict'> {

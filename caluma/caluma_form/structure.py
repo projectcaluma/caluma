@@ -1,7 +1,7 @@
 """Hierarchical representation of a document / form."""
 import weakref
 from functools import singledispatch
-from typing import Optional
+from typing import List
 
 from .models import AnswerDocument, Question
 
@@ -140,35 +140,60 @@ class FieldSet(Element):
         return self._fields
 
     @property
-    def sub_forms(self):
+    def sub_forms(self) -> List[Field]:
         if self._sub_forms is None:
-            self._sub_forms = {
-                field.question.slug: field
+            self._sub_forms = [
+                field
                 for field in self.children()
                 if field.question.type == Question.TYPE_FORM
-            }
+            ] + [
+                child
+                for field in self.children()
+                for child in field.children()
+                if field.question.type == Question.TYPE_TABLE
+            ]
         return self._sub_forms
 
-    def get_field(
-        self, question_slug: str, check_parent: bool = True
-    ) -> Optional[Field]:
+    def get_fields(self, question_slug: str, check_parent: bool = True) -> List[Field]:
+        """Collect fields where the question occurs throughout this structure.
+
+        Cases:
+        0. question not in structure
+        1. question is in the same form (-> greedily returns the question)
+        2. question in a neighbor form, ie. answer would be in same document (excluding tables)
+        3. question in multiple neighbor forms
+        4. question in a table form (same fieldset)
+        5. (question in a table form (different row))
+        6. question in a table form, lower than current fieldset
+        7. question in upper structure (from table row)
+
+        Expected:
+        0: return []
+        1-3: answer exists once, but might be in multiple forms -> multiple fields
+        4: return only row-local fields (not looking up / other rows)
+        5: incomplete row missing answer -> return fields with empty value (like case 4)
+        6: return all fields for all rows
+        7: same as 1-3
+        """
 
         field = self.fields.get(question_slug)
 
-        if not field and check_parent:
-            field = self.parent().get_field(question_slug) if self.parent() else None
         if field:
-            return field
+            return [field]
+        elif check_parent:
+            fields = self.parent().get_fields(question_slug) if self.parent() else []
+            if fields:
+                return fields
 
         # OK start looking in subforms / row forms below our level.
         # Since we're looking down, we're disallowing recursing to outer context
         # to avoid recursing back to where we are
-        for subform in self.sub_forms.values():
-            sub_field = subform.get_field(question_slug, check_parent=False)
-            if sub_field:
-                return sub_field
+        for subform in self.sub_forms:
+            sub_fields = subform.get_fields(question_slug, check_parent=False)
+            if sub_fields:
+                return sub_fields
         # if we reach this line, we didn't find the question
-        return None
+        return []
 
     @object_local_memoise
     def children(self):
@@ -183,27 +208,6 @@ class FieldSet(Element):
             )
             for question in self.form.questions.all()
         ]
-
-    @object_local_memoise
-    def paths_to_question(self, slug):
-        res = []
-        prefix = [self.question] if self.question else []
-
-        if slug in self.fields:
-            res.append(prefix + [self.fields[slug].question])
-        for field in self.children():
-
-            if field.question.type == Question.TYPE_FORM:
-                for sub_path in field.paths_to_question(slug):
-                    res.append(prefix + sub_path)
-
-            elif field.question.type == Question.TYPE_TABLE:
-                for child in field.children():
-                    for sub_path in child.paths_to_question(slug):
-                        # TODO: This should be covered, but is a case that will probably
-                        # never happen in real life
-                        res.append(prefix + sub_path)  # pragma: no cover
-        return res
 
     def __repr__(self):
         q_slug = self.question.slug if self.question else None
