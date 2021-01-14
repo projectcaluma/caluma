@@ -1,3 +1,4 @@
+from functools import wraps
 from logging import getLogger
 
 from django.db.models import Model
@@ -88,3 +89,15 @@ def update_model(model: Model, data: dict) -> Model:
         setattr(model, key, value)
 
     model.save()
+
+
+def disable_raw(signal_handler):  # pragma: no cover
+    """Disable signal handlers during loaddata."""
+
+    @wraps(signal_handler)
+    def wrapper(*args, **kwargs):
+        if kwargs.get("raw"):
+            return
+        signal_handler(*args, **kwargs)
+
+    return wrapper
