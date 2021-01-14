@@ -1,3 +1,9 @@
+# v7.2.1 (14 January 2020)
+
+### Fix
+* Fix validation of table questions ([`36e3a0e`](https://github.com/anehx/caluma/commit/36e3a0e8d74e77dd49fc8818c68055e06641f244))
+
+
 # v7.2.0 (23 December 2020)
 
 ### Feature
