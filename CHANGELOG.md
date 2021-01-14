@@ -1,14 +1,19 @@
 # v7.3.0 (14 January 2021)
 
 ### Feature
-* Calculated float question ([`6a7c7ca`](https://github.com/anehx/caluma/commit/6a7c7ca631a8aca66827124512c02c3e54cc5173))
+* Calculated float question ([`6a7c7ca`](https://github.com/projectcaluma/caluma/commit/6a7c7ca631a8aca66827124512c02c3e54cc5173))
 
 ### Fix
-* Fix validation of table questions ([`6e1cf82`](https://github.com/anehx/caluma/commit/6e1cf826e84b0dc6c866ba801b1c213bc85049d4))
-* __str__() should return string ([`df5ba3b`](https://github.com/anehx/caluma/commit/df5ba3b36547492f45c02cab1904a73efa792a80))
-* Use mapby args if literal, fix calculated test ([`cb49617`](https://github.com/anehx/caluma/commit/cb496173b48aa282af07a01e6f91b1e314a065a8))
-* Support validation of nested table answers ([`7937220`](https://github.com/anehx/caluma/commit/7937220b8872faadadb0f13c6e7ca004afcf1f02))
-* Use "mapby" arg if subject is answer transform ([`3a595a8`](https://github.com/anehx/caluma/commit/3a595a829a6a8ab1e1499999c792a7a30bb00458))
+* __str__() should return string ([`df5ba3b`](https://github.com/projectcaluma/caluma/commit/df5ba3b36547492f45c02cab1904a73efa792a80))
+* Use mapby args if literal, fix calculated test ([`cb49617`](https://github.com/projectcaluma/caluma/commit/cb496173b48aa282af07a01e6f91b1e314a065a8))
+* Support validation of nested table answers ([`7937220`](https://github.com/projectcaluma/caluma/commit/7937220b8872faadadb0f13c6e7ca004afcf1f02))
+* Use "mapby" arg if subject is answer transform ([`3a595a8`](https://github.com/projectcaluma/caluma/commit/3a595a829a6a8ab1e1499999c792a7a30bb00458))
+
+
+# v7.2.1 (14 January 2021)
+
+### Fix
+* Fix validation of table questions ([`6e1cf82`](https://github.com/projectcaluma/caluma/commit/6e1cf826e84b0dc6c866ba801b1c213bc85049d4))
 
 
 # v7.2.0 (23 December 2020)
