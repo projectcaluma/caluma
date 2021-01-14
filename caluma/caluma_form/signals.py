@@ -11,7 +11,7 @@ from django.db.models.signals import (
 from django.dispatch import receiver
 from simple_history.signals import pre_create_historical_record
 
-from caluma.utils import update_model
+from caluma.utils import disable_raw, update_model
 
 from . import models, structure
 from .jexl import QuestionJexl
@@ -112,6 +112,7 @@ def _update_or_create_calc_answer(question, document):
 
 
 @receiver(pre_save, sender=models.Question)
+@disable_raw
 def save_calc_dependents(sender, instance, **kwargs):
     if instance.type != models.Question.TYPE_CALCULATED_FLOAT:
         return
@@ -147,6 +148,7 @@ def remove_calc_dependents(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=models.Question)
+@disable_raw
 def update_calc_from_question(sender, instance, created, update_fields, **kwargs):
     if instance.type != models.Question.TYPE_CALCULATED_FLOAT:
         return
@@ -159,6 +161,7 @@ def update_calc_from_question(sender, instance, created, update_fields, **kwargs
 
 
 @receiver(post_save, sender=models.FormQuestion)
+@disable_raw
 def update_calc_from_form_question(sender, instance, created, **kwargs):
     if instance.question.type != models.Question.TYPE_CALCULATED_FLOAT:
         return
@@ -168,6 +171,7 @@ def update_calc_from_form_question(sender, instance, created, **kwargs):
 
 
 @receiver(post_save, sender=models.Answer)
+@disable_raw
 def update_calc_from_answer(sender, instance, **kwargs):
     for question in models.Question.objects.filter(
         pk__in=instance.question.calc_dependents or []
@@ -176,6 +180,7 @@ def update_calc_from_answer(sender, instance, **kwargs):
 
 
 @receiver(post_save, sender=models.Document)
+@disable_raw
 def update_calc_from_document(sender, instance, created, **kwargs):
     if not created:
         return
