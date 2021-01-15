@@ -86,28 +86,24 @@ def _update_or_create_calc_answer(question, document):
     root_doc = document.family
 
     struc = structure.FieldSet(root_doc, root_doc.form)
+    field = struc.get_field(question.slug)
 
-    for field in struc.get_fields(question.slug):
-        jexl = QuestionJexl(
-            {
-                "form": field.form,
-                "document": field.document,
-                "structure": field.parent(),
-            }
+    jexl = QuestionJexl(
+        {"form": field.form, "document": field.document, "structure": field.parent()}
+    )
+
+    # Ignore errors because we evaluate greedy as soon as possible. At
+    # this moment we might be missing some answers or the expression might
+    # be invalid, in which case we return None
+    value = jexl.evaluate(field.question.calc_expression, raise_on_error=False)
+
+    try:
+        ans = models.Answer.objects.get(question=question, document=field.document)
+        update_model(ans, {"value": value})
+    except models.Answer.DoesNotExist:
+        models.Answer.objects.create(
+            question=question, document=field.document, value=value
         )
-
-        # Ignore errors because we evaluate greedy as soon as possible. At
-        # this moment we might be missing some answers or the expression might
-        # be invalid, in which case we return None
-        value = jexl.evaluate(field.question.calc_expression, raise_on_error=False)
-
-        try:
-            ans = models.Answer.objects.get(question=question, document=field.document)
-            update_model(ans, {"value": value})
-        except models.Answer.DoesNotExist:
-            models.Answer.objects.create(
-                question=question, document=field.document, value=value
-            )
 
 
 # Update calc dependents on pre_save

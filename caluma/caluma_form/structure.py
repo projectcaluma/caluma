@@ -1,7 +1,7 @@
 """Hierarchical representation of a document / form."""
 import weakref
 from functools import singledispatch
-from typing import List
+from typing import List, Optional
 
 from .models import AnswerDocument, Question
 
@@ -154,7 +154,9 @@ class FieldSet(Element):
             ]
         return self._sub_forms
 
-    def get_fields(self, question_slug: str, check_parent: bool = True) -> List[Field]:
+    def get_field(
+        self, question_slug: str, check_parent: bool = True
+    ) -> Optional[Field]:
         """Collect fields where the question occurs throughout this structure.
 
         Cases:
@@ -179,21 +181,23 @@ class FieldSet(Element):
         field = self.fields.get(question_slug)
 
         if field:
-            return [field]
+            return field
+
         elif check_parent:
-            fields = self.parent().get_fields(question_slug) if self.parent() else []
-            if fields:
-                return fields
+            field = self.parent().get_field(question_slug) if self.parent() else None
+            if field:
+                return field
 
         # OK start looking in subforms / row forms below our level.
         # Since we're looking down, we're disallowing recursing to outer context
         # to avoid recursing back to where we are
         for subform in self.sub_forms:
-            sub_fields = subform.get_fields(question_slug, check_parent=False)
-            if sub_fields:
-                return sub_fields
+            sub_field = subform.get_field(question_slug, check_parent=False)
+            if sub_field:
+                return sub_field
+
         # if we reach this line, we didn't find the question
-        return []
+        return None
 
     @object_local_memoise
     def children(self):

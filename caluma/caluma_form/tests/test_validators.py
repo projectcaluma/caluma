@@ -295,7 +295,7 @@ def test_validate_empty_answers(
 ):
 
     struct = structure.FieldSet(document, document.form)
-    field = struct.get_fields(question.slug)[0]
+    field = struct.get_field(question.slug)
     answer_value = field.value() if field else field
     assert answer_value == expected_value
 
