@@ -48,3 +48,8 @@ The answer is modified when:
 ### Limitations
 
 Currently the calculated questions cannot reference other calculated questions. This is an intentional limitation to avoid implementation complexity (dependency calculation "propagation", circular dependency checks).
+
+Additionally only existing questions can be referenced at the time of saving.
+This is because of optimizations in the way caluma tracks references of calculated questions.
+Specifically, caluma writes the reverse-dependencies to the database at the moment a calculated question is saved.
+If a referenced question would be missing at this point, it couldn't memoise the calculated question and thus not update if an answer is created or updated.
