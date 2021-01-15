@@ -99,9 +99,9 @@ class JEXL(pyjexl.JEXL):
             self._expr_stack.pop()
 
 
-class ExtractTransformReferenceAnalyzer(ValidatingAnalyzer):
+class ExtractTransformSubjectAnalyzer(ValidatingAnalyzer):
     """
-    Extract all referenced values of given transforms, be it arguments or subjects.
+    Extract all referenced subjects of given transforms.
 
     If no transforms are given all references of all transforms will be extracted.
     """
@@ -116,6 +116,22 @@ class ExtractTransformReferenceAnalyzer(ValidatingAnalyzer):
             if not isinstance(transform.subject, type(transform)):
                 yield transform.subject.value
 
+        yield from self.generic_visit(transform)
+
+
+class ExtractTransformArgumentAnalyzer(ValidatingAnalyzer):
+    """
+    Extract all referenced arguments of given transforms.
+
+    If no transforms are given all references of all transforms will be extracted.
+    """
+
+    def __init__(self, config, transforms=None):
+        self.transforms = transforms if transforms else []
+        super().__init__(config)
+
+    def visit_Transform(self, transform):
+        if not self.transforms or transform.name in self.transforms:
             # "mapby" is the only transform that accepts args, those can hold
             # references. We need a "lookahead" to peek if the subject is an
             # answer transform in this case we assume the arguments are
@@ -124,6 +140,7 @@ class ExtractTransformReferenceAnalyzer(ValidatingAnalyzer):
                 transform.name == "mapby"
                 and transform.subject
                 and transform.subject.name == "answer"
+                and len(transform.args)
                 and isinstance(transform.args[0], Literal)
             ):
                 yield transform.args[0].value

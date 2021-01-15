@@ -5,7 +5,11 @@ from functools import partial
 from pyjexl.analysis import ValidatingAnalyzer
 from pyjexl.evaluator import Context
 
-from ..caluma_core.jexl import JEXL, ExtractTransformReferenceAnalyzer
+from ..caluma_core.jexl import (
+    JEXL,
+    ExtractTransformArgumentAnalyzer,
+    ExtractTransformSubjectAnalyzer,
+)
 from .structure import Field
 
 
@@ -77,7 +81,13 @@ class QuestionJexl(JEXL):
     def extract_referenced_questions(self, expr):
         transforms = ["answer", "mapby"]
         yield from self.analyze(
-            expr, partial(ExtractTransformReferenceAnalyzer, transforms=transforms)
+            expr, partial(ExtractTransformSubjectAnalyzer, transforms=transforms)
+        )
+
+    def extract_referenced_mapby_questions(self, expr):
+        transforms = ["answer", "mapby"]
+        yield from self.analyze(
+            expr, partial(ExtractTransformArgumentAnalyzer, transforms=transforms)
         )
 
     @contextmanager

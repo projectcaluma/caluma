@@ -58,8 +58,14 @@ def set_document_family(sender, instance, **kwargs):
 
 def _update_calc_dependents(slug, old_expr, new_expr):
     jexl = QuestionJexl()
-    old_q = set(jexl.extract_referenced_questions(old_expr))
-    new_q = set(jexl.extract_referenced_questions(new_expr))
+    old_q = set(
+        list(jexl.extract_referenced_questions(old_expr))
+        + list(jexl.extract_referenced_mapby_questions(old_expr))
+    )
+    new_q = set(
+        list(jexl.extract_referenced_questions(new_expr))
+        + list(jexl.extract_referenced_mapby_questions(new_expr))
+    )
 
     to_add = new_q - old_q
     to_remove = old_q - new_q

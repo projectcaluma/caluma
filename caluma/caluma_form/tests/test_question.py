@@ -6,7 +6,7 @@ from caluma.caluma_core.tests import (
     extract_serializer_input_fields,
 )
 
-from .. import models, serializers
+from .. import api, models, serializers
 
 
 @pytest.mark.parametrize(
@@ -953,6 +953,12 @@ def test_calculated_question(
     [
         ("'sub_question'|answer", 100.0, ["sub_question"]),
         ("'table'|answer|mapby('column')[0]", 1979, ["table", "column"]),
+        ("'other'|answer", 3.0, ["other"]),
+        (
+            "'sub_question'|answer && 'table'|answer|mapby('column') ? 'other'|answer: -1",
+            3.0,
+            ["sub_question", "table", "column", "other"],
+        ),
     ],
 )
 def test_nested_calculated_question(
@@ -964,34 +970,34 @@ def test_nested_calculated_question(
     expected,
     calc_deps,
 ):
-    form, document, questions_dict, answers_dict = form_and_document(True, True)
+    form, document, questions, answers_dict = form_and_document(True, True)
 
-    sub_question = questions_dict["sub_question"]
+    sub_question = questions["sub_question"]
     sub_question.type = models.Question.TYPE_INTEGER
     sub_question.save()
     sub_question_a = answers_dict["sub_question"]
     sub_question_a.value = 100
     sub_question_a.save()
 
-    form_question_factory(
+    questions["other"] = form_question_factory(
+        form=form, question__slug="other", question__type=models.Question.TYPE_INTEGER
+    ).question
+
+    api.save_answer(question=questions["other"], document=document, value=3)
+
+    questions["calc"] = form_question_factory(
         form=form,
-        question__slug="calc_question",
+        question__slug="calc",
         question__type=models.Question.TYPE_CALCULATED_FLOAT,
         question__calc_expression=expr,
     )
 
-    calc_ans = document.answers.get(question_id="calc_question")
+    calc_ans = document.answers.get(question_id="calc")
     assert calc_ans.value == expected
 
-    if expected == 100.0:
-        sub_question.refresh_from_db()
-        assert sub_question.calc_dependents
-
-    elif expected == 1979:
-        for slug in ["table", "column"]:
-            q = questions_dict[slug]
-            q.refresh_from_db()
-            assert q.calc_dependents
+    for dep in calc_deps:
+        questions[dep].refresh_from_db()
+        assert questions[dep].calc_dependents == ["calc"]
 
 
 @pytest.mark.parametrize("question__slug", ["simple-question"])
