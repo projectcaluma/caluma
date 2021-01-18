@@ -11,7 +11,7 @@ from django.db.models.signals import (
 from django.dispatch import receiver
 from simple_history.signals import pre_create_historical_record
 
-from caluma.utils import disable_raw, update_model
+from caluma.utils import disable_raw
 
 from . import models, structure
 from .jexl import QuestionJexl
@@ -97,13 +97,9 @@ def _update_or_create_calc_answer(question, document):
     # be invalid, in which case we return None
     value = jexl.evaluate(field.question.calc_expression, raise_on_error=False)
 
-    try:
-        ans = models.Answer.objects.get(question=question, document=field.document)
-        update_model(ans, {"value": value})
-    except models.Answer.DoesNotExist:
-        models.Answer.objects.create(
-            question=question, document=field.document, value=value
-        )
+    models.Answer.objects.update_or_create(
+        question=question, document=field.document, defaults={"value": value}
+    )
 
 
 # Update calc dependents on pre_save
