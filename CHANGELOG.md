@@ -1,3 +1,10 @@
+# v7.4.0 (19 January 2021)
+
+### Fix
+* Validate inexisting references in calc questions ([`f4de05a`](https://github.com/projectcaluma/caluma/commit/f4de05a2e1506c15861a11a3274846d06949d7ab))
+* Separate extractor for mapby arguments ([`34c6d2b`](https://github.com/projectcaluma/caluma/commit/34c6d2b370a2415517127c5f5e3e48238a00ab7c))
+
+
 # v7.3.0 (14 January 2021)
 
 ### Feature
