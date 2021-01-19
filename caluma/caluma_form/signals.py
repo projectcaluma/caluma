@@ -11,7 +11,7 @@ from django.db.models.signals import (
 from django.dispatch import receiver
 from simple_history.signals import pre_create_historical_record
 
-from caluma.utils import disable_raw, update_model
+from caluma.utils import disable_raw
 
 from . import models, structure
 from .jexl import QuestionJexl
@@ -58,8 +58,14 @@ def set_document_family(sender, instance, **kwargs):
 
 def _update_calc_dependents(slug, old_expr, new_expr):
     jexl = QuestionJexl()
-    old_q = set(jexl.extract_referenced_questions(old_expr))
-    new_q = set(jexl.extract_referenced_questions(new_expr))
+    old_q = set(
+        list(jexl.extract_referenced_questions(old_expr))
+        + list(jexl.extract_referenced_mapby_questions(old_expr))
+    )
+    new_q = set(
+        list(jexl.extract_referenced_questions(new_expr))
+        + list(jexl.extract_referenced_mapby_questions(new_expr))
+    )
 
     to_add = new_q - old_q
     to_remove = old_q - new_q
@@ -80,28 +86,20 @@ def _update_or_create_calc_answer(question, document):
     root_doc = document.family
 
     struc = structure.FieldSet(root_doc, root_doc.form)
+    field = struc.get_field(question.slug)
 
-    for field in struc.get_fields(question.slug):
-        jexl = QuestionJexl(
-            {
-                "form": field.form,
-                "document": field.document,
-                "structure": field.parent(),
-            }
-        )
+    jexl = QuestionJexl(
+        {"form": field.form, "document": field.document, "structure": field.parent()}
+    )
 
-        # Ignore errors because we evaluate greedy as soon as possible. At
-        # this moment we might be missing some answers or the expression might
-        # be invalid, in which case we return None
-        value = jexl.evaluate(field.question.calc_expression, raise_on_error=False)
+    # Ignore errors because we evaluate greedy as soon as possible. At
+    # this moment we might be missing some answers or the expression might
+    # be invalid, in which case we return None
+    value = jexl.evaluate(field.question.calc_expression, raise_on_error=False)
 
-        try:
-            ans = models.Answer.objects.get(question=question, document=field.document)
-            update_model(ans, {"value": value})
-        except models.Answer.DoesNotExist:
-            models.Answer.objects.create(
-                question=question, document=field.document, value=value
-            )
+    models.Answer.objects.update_or_create(
+        question=question, document=field.document, defaults={"value": value}
+    )
 
 
 # Update calc dependents on pre_save

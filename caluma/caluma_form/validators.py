@@ -402,29 +402,35 @@ class QuestionValidator:
             raise exceptions.ValidationError(f'Invalid data_source: "{data_source}"')
 
     @staticmethod
-    def _validate_calc_dependencies(data):
+    def _validate_calc_expression(data):
+        """Don't allow other calc questions or non-existent questions."""
         expr = data.get("calc_expression")
         if not expr:
             return
 
         question_jexl = jexl.QuestionJexl()
         deps = set(question_jexl.extract_referenced_questions(expr))
-        illegal_deps = ", ".join(
+
+        calc_slugs = set(
             models.Question.objects.filter(
                 pk__in=deps, type=models.Question.TYPE_CALCULATED_FLOAT
             ).values_list("slug", flat=True)
         )
+        inexistent_slugs = deps - set(
+            models.Question.objects.filter(pk__in=deps).values_list("slug", flat=True)
+        )
+        illegal_deps = ", ".join(calc_slugs.union(inexistent_slugs))
 
         if illegal_deps:
             raise exceptions.ValidationError(
-                f"Calc expression references other calculated question: {illegal_deps}"
+                f"Calc expression references other calculated or inexistent questions: {illegal_deps}"
             )
 
     def validate(self, data):
         if data["type"] in [models.Question.TYPE_TEXT, models.Question.TYPE_TEXTAREA]:
             self._validate_format_validators(data)
         elif data["type"] == models.Question.TYPE_CALCULATED_FLOAT:
-            self._validate_calc_dependencies(data)
+            self._validate_calc_expression(data)
 
         if "dataSource" in data:
             self._validate_data_source(data["dataSource"])

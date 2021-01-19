@@ -1,6 +1,6 @@
 import pytest
 
-from .. import structure, validators
+from .. import models, structure, validators
 from ..jexl import QuestionJexl, QuestionMissing
 from ..models import Question
 
@@ -408,5 +408,75 @@ def test_answer_transform_in_tables(
     validator = validators.DocumentValidator()
     # we expect this to fail, as in the second row, the 'column' answer is 5,
     # so 'column2' should be required
+    with pytest.raises(validators.CustomValidationError):
+        validator.validate(document, info)
+
+
+def test_is_hidden_neighboring_table(
+    info, form_question_factory, form_factory, form_and_document
+):
+    """
+    Test a more complicated, nested setup.
+
+    The structure looks like this:
+
+    * form: top_form
+       * question: top_question
+       * question: form_question
+           * sub_form: sub_form
+               * question: sub_question
+           * question: table
+               * row_form: row_form
+                   * question: column
+
+       * question: neighbor_form_question
+           * neighbor_form
+               * question: neighbor_sub_question
+
+    The is_hidden on neighbor_sub_question references the column question.
+    """
+
+    form, document, questions, answers = form_and_document(
+        use_table=True, use_subform=True
+    )
+
+    # delete table answer documents
+    answers["table"].documents.first().delete()
+    assert not models.Document.objects.filter(form_id="row_form").exists()
+    assert not models.Answer.objects.filter(question_id="column").exists()
+
+    form_q = questions["form"]
+    table_q = questions["table"]
+
+    table_q.forms.remove(form)
+    table_q.forms.add(form_q.sub_form)
+
+    neighbor_form = form_factory()
+    neighbor_sub_question = form_question_factory(
+        form=neighbor_form,
+        question__is_hidden="!('foo' in 'table'|answer|mapby('column'))",
+        question__is_required=True,
+    ).question
+
+    form_question_factory(
+        form=form, question__type=Question.TYPE_FORM, question__sub_form=neighbor_form
+    )
+
+    qj = QuestionJexl(
+        {
+            "document": document,
+            "answers": answers,
+            "form": form,
+            "structure": structure.FieldSet(document, document.form),
+        }
+    )
+
+    field = structure.Field(document, form, neighbor_sub_question)
+
+    assert qj.is_hidden(field)
+
+    validator = validators.DocumentValidator()
+    assert neighbor_sub_question not in validator.visible_questions(document)
+
     with pytest.raises(validators.CustomValidationError):
         validator.validate(document, info)

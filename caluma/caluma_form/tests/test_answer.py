@@ -316,8 +316,6 @@ def test_validation_class_save_document_answer(db, mocker, answer, schema_execut
 
 
 @pytest.mark.parametrize("question__type", [Question.TYPE_CALCULATED_FLOAT])
-def test_validate_save_calculated_float_answer(
-    db, mocker, document, question, schema_executor
-):
+def test_validate_save_calculated_float_answer(db, document, question):
     with pytest.raises(validators.CustomValidationError):
         api.save_answer(document=document, question=question, value=1.0)

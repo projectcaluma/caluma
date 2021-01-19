@@ -5,7 +5,11 @@ from functools import partial
 from pyjexl.analysis import ValidatingAnalyzer
 from pyjexl.evaluator import Context
 
-from ..caluma_core.jexl import JEXL, ExtractTransformReferenceAnalyzer
+from ..caluma_core.jexl import (
+    JEXL,
+    ExtractTransformArgumentAnalyzer,
+    ExtractTransformSubjectAnalyzer,
+)
 from .structure import Field
 
 
@@ -58,14 +62,8 @@ class QuestionJexl(JEXL):
         )
 
     def answer_transform(self, question_slug):
-        fields = self._structure.get_fields(question_slug)
+        field = self._structure.get_field(question_slug)
 
-        if len(fields) == 0 or len(fields) > 1:  # pragma: no cover
-            raise RuntimeError(
-                "Answer transform cannot reference row_form questions from outside row context"
-            )
-
-        field = fields[0]
         if self.is_hidden(field):
             return field.question.empty_value()
 
@@ -77,7 +75,13 @@ class QuestionJexl(JEXL):
     def extract_referenced_questions(self, expr):
         transforms = ["answer", "mapby"]
         yield from self.analyze(
-            expr, partial(ExtractTransformReferenceAnalyzer, transforms=transforms)
+            expr, partial(ExtractTransformSubjectAnalyzer, transforms=transforms)
+        )
+
+    def extract_referenced_mapby_questions(self, expr):
+        transforms = ["answer", "mapby"]
+        yield from self.analyze(
+            expr, partial(ExtractTransformArgumentAnalyzer, transforms=transforms)
         )
 
     @contextmanager
@@ -99,11 +103,9 @@ class QuestionJexl(JEXL):
 
     def _get_referenced_fields(self, field: Field, expr: str):
         deps = list(self.extract_referenced_questions(expr))
-        referenced_fields = [
-            ref_field for slug in deps for ref_field in self._structure.get_fields(slug)
-        ]
+        referenced_fields = [self._structure.get_field(slug) for slug in deps]
 
-        referenced_slugs = [ref.question.slug for ref in referenced_fields]
+        referenced_slugs = [ref.question.slug for ref in referenced_fields if ref]
 
         for slug in deps:
             if slug not in referenced_slugs:
