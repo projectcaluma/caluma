@@ -203,9 +203,18 @@ def test_reference_missing_question(
     "question,expr,expectation,features",
     [
         ("sub_question", "info.form == 'sub_form'", True, "subform"),
+        ("sub_question", "info.formMeta.level == 1", True, "subform"),
+        ("sub_question", "info.formMeta['is-top-form']", False, "subform"),
+        ("sub_question", "info.formMeta['non-existent-key'] == null", True, "subform"),
         ("sub_question", "info.parent.form == 'top_form'", True, "subform"),
+        ("sub_question", "info.parent.formMeta.level == 0", True, "subform"),
+        ("sub_question", "info.parent.formMeta['is-top-form']", True, "subform"),
         ("column", "info.parent.form == 'top_form'", True, "table"),
+        ("column", "info.parent.formMeta.level == 0", True, "table"),
+        ("column", "info.parent.formMeta['is-top-form']", True, "table"),
         ("column", "info.root.form == 'top_form'", True, "table"),
+        ("column", "info.root.formMeta.level == 0", True, "table"),
+        ("column", "info.root.formMeta['is-top-form']", True, "table"),
     ],
 )
 def test_new_jexl_expressions(
