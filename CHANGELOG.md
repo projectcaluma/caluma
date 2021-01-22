@@ -1,3 +1,9 @@
+# v7.5.0 (22 January 2021)
+
+### Feature
+* Allow usage of form meta in question jexl ([`f3f1223`](https://github.com/projectcaluma/caluma/commit/f3f1223790fcf1aebf0908657365429557e5ed68))
+
+
 # v7.4.0 (19 January 2021)
 
 ### Fix
