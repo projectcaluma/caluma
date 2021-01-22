@@ -22,6 +22,8 @@ def object_local_memoise(method):
 
 
 class Element:
+    aliases = {}
+
     def __init__(self, parent=None):
         self._parent = weakref.ref(parent) if parent else None
 
@@ -38,12 +40,14 @@ class Element:
         return self
 
     def get(self, name, default=None):
+        name = self.aliases.get(name, name)
+
         out = getattr(self, name)
 
         # if a method is requested, execute it before continuing
         if callable(out):
             out = out()
-        if isinstance(out, Element):
+        if isinstance(out, Element) or isinstance(out, dict):
             return out
         return str(out)
 
@@ -125,10 +129,13 @@ class RowField(Field):
 
 
 class FieldSet(Element):
+    aliases = {"formMeta": "form_meta"}
+
     def __init__(self, document, form, question=None, parent=None):
         super().__init__(parent)
         self.document = document
         self.form = form
+        self.form_meta = form.meta
         self.question = question
         self._fields = None
         self._sub_forms = None

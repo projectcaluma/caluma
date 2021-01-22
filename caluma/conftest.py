@@ -222,7 +222,7 @@ def form_and_document(
     """
 
     def factory(use_table=False, use_subform=False):
-        form = form_factory(slug="top_form")
+        form = form_factory(slug="top_form", meta={"is-top-form": True, "level": 0})
         document = document_factory(form=form)
 
         questions = {}
@@ -263,7 +263,9 @@ def form_and_document(
             answers["table"].documents.add(row_doc)
 
         if use_subform:
-            sub_form = form_factory(slug="sub_form")
+            sub_form = form_factory(
+                slug="sub_form", meta={"is-top-form": False, "level": 1}
+            )
             questions["form"] = question_factory(
                 type="form",
                 slug="form",
