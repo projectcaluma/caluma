@@ -24,6 +24,9 @@
     },
   }
 ---
+# name: test_save_calculated_dependency_default_answer[float-0.1]
+  Answer(document=None, question=Question(slug=effort-meet, type=float), value=0.1)
+---
 # name: test_save_default_answer_graphql[choice-option-slug-None-SaveDefaultStringAnswer-True-option-slug-False]
   <class 'OrderedDict'> {
     'saveDefaultStringAnswer': <class 'dict'> {
