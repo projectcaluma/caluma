@@ -256,6 +256,26 @@ def test_save_default_answer_python_api(
             api.save_default_answer(question, user=admin_user, value=inp["value"])
 
 
+@pytest.mark.parametrize("question__type,answer__value", [(Question.TYPE_FLOAT, 0.1)])
+def test_save_calculated_dependency_default_answer(
+    db, snapshot, question, answer, question_factory, admin_user
+):
+    question_factory(
+        type=Question.TYPE_CALCULATED_FLOAT,
+        calc_expression=f"'{question.slug}'|answer * 10",
+    )
+
+    inp = extract_serializer_input_fields(
+        serializers.SaveDefaultAnswerSerializer, answer
+    )
+
+    question.default_answer = answer
+    question.save()
+
+    answer = api.save_default_answer(question, user=admin_user, value=inp["value"])
+    snapshot.assert_match(answer)
+
+
 @pytest.mark.parametrize(
     "question__type,answer__value", [(models.Question.TYPE_TEXT, "foo")]
 )

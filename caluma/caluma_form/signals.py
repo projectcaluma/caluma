@@ -171,6 +171,12 @@ def update_calc_from_form_question(sender, instance, created, **kwargs):
 @receiver(post_save, sender=models.Answer)
 @disable_raw
 def update_calc_from_answer(sender, instance, **kwargs):
+    if not instance.document:
+        # If there is no document on the answer it means that it's a default
+        # answer. They shouldn't trigger a recalculation of a calculated field
+        # even when they are technically listed as a dependency
+        return
+
     for question in models.Question.objects.filter(
         pk__in=instance.question.calc_dependents or []
     ):
