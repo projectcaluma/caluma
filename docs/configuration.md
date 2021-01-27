@@ -148,3 +148,16 @@ We are using the sane uWSGI-defaults researched by [bloomberg](https://www.techa
 - `UWSGI_PROCNAME_PREFIX`=`"caluma "`
 
 See https://git.io/JemA2 for more information.
+
+
+## Healthz Endpoint
+The `healthz` endpoint performs a number of health checks using the
+django-watchman package extended by custom checks. This allows systems, such
+as Kubernetes, to perform monitoring and readiness checks on caluma.
+
+Please note that when you enable it, make sure it is not reachable from the
+outside (proxy configuration!). Due to it's nature, it takes some resources to
+check everything, which makes it prone to abuse (denial of service, DoS).
+
+It's enabled by setting the environment variable:
+`ENABLE_HEALTHZ_ENDPOINT`: Defaults to `false`.

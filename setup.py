@@ -72,6 +72,7 @@ setup(
         "django-filter<3",
         "django-localized-fields<7",
         "django-postgres-extra<3",
+        "django-watchman~=1.2.0",
         "djangorestframework<4",
         "django_simple_history<3",
         "graphene-django<=2.8.2",
