@@ -1,3 +1,9 @@
+# v7.5.1 (2. February 2021)
+
+### Fix
+* Prevent recalculation of calculated answers for default answer changes ([`62f507c`](https://github.com/projectcaluma/caluma/commit/62f507c64e41cc5bf21deb7443d8a226c4639d67))
+
+
 # v7.5.0 (22 January 2021)
 
 ### Feature
