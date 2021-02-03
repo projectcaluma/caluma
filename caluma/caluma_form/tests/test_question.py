@@ -862,6 +862,12 @@ def test_calculated_question(
     form = form_question.form
     question = form_question.question
 
+    question_factory(
+        slug="not_in_form",
+        type=models.Question.TYPE_CALCULATED_FLOAT,
+        calc_expression=f"'{question.slug}'|answer",
+    )
+
     query = """
         mutation SaveCalculatedQuestion($input: SaveCalculatedFloatQuestionInput!) {
           saveCalculatedFloatQuestion (input: $input) {
@@ -888,7 +894,7 @@ def test_calculated_question(
     assert not result.errors
 
     question.refresh_from_db()
-    assert "calc-question" in question.calc_dependents
+    assert set(question.calc_dependents) == set(["calc-question", "not_in_form"])
 
     calc_question = models.Question.objects.get(slug="calc-question")
     form.questions.add(calc_question)
