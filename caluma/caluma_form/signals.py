@@ -88,11 +88,15 @@ def _update_or_create_calc_answer(question, document):
     struc = structure.FieldSet(root_doc, root_doc.form)
     field = struc.get_field(question.slug)
 
+    # skip if question doesn't exist in this document structure
+    if field is None:
+        return
+
     jexl = QuestionJexl(
         {"form": field.form, "document": field.document, "structure": field.parent()}
     )
 
-    # Ignore errors because we evaluate greedy as soon as possible. At
+    # Ignore errors because we evaluate greedily as soon as possible. At
     # this moment we might be missing some answers or the expression might
     # be invalid, in which case we return None
     value = jexl.evaluate(field.question.calc_expression, raise_on_error=False)
@@ -171,14 +175,15 @@ def update_calc_from_form_question(sender, instance, created, **kwargs):
 @receiver(post_save, sender=models.Answer)
 @disable_raw
 def update_calc_from_answer(sender, instance, **kwargs):
-    if not instance.document:
+    if not instance.document or not instance.question.calc_dependents:
         # If there is no document on the answer it means that it's a default
         # answer. They shouldn't trigger a recalculation of a calculated field
-        # even when they are technically listed as a dependency
+        # even when they are technically listed as a dependency.
+        # Also skip non-referenced answers.
         return
 
     for question in models.Question.objects.filter(
-        pk__in=instance.question.calc_dependents or []
+        pk__in=instance.question.calc_dependents
     ):
         _update_or_create_calc_answer(question, instance.document)
 
