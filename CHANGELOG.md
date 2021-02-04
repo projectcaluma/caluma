@@ -1,3 +1,12 @@
+# v7.6.0 (4. February 2021)
+
+### Feature
+* Add argument to on decorator to raise exceptions in the receiver ([`c3a3a90`](https://github.com/projectcaluma/caluma/commit/c3a3a902a30d7483f2d1ade3e2959a77a75ab7a8))
+
+### Fix
+* Calc questions not present in document ([`e111741`](https://github.com/projectcaluma/caluma/commit/e111741c90dc82d185dd3ba29ef334b8bd5e7aeb))
+
+
 # v7.5.1 (2. February 2021)
 
 ### Fix
