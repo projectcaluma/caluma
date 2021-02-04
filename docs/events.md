@@ -37,11 +37,12 @@ def send_mail_on_complete_work_item_2(sender, work_item, user, context, **kwargs
 
 ## @on
 
-`@on` is just a wrapper for `django.dispatch.receiver` which takes two
-arguments:
+`@on` is a customized implementation of `django.dispatch.receiver` which
+takes three arguments:
 
 1. `event` (required): Event or list of events to listen to.
 2. `sender` (optional): Class of sender.
+3. `raise_exception` (optional): Whether to raise exceptions inside the receivers. This is `False` by default.
 
 ## Event receiver signature
 
@@ -97,6 +98,8 @@ There are plans to provide non-blocking event receivers, so stay tuned.
 
 Exceptions in event receivers are logged, but will not affect the current db transaction.
 That way, you can be sure the transaction will not be rolled-back because of an Exception in an event receiver.
+However, if the `raise_exception` argument of the receiver is `True` it will raise any
+exception that ocurred in the receiver function and the transaction will be rolled back.
 
 ## Built-in django signals
 
