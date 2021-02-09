@@ -343,7 +343,7 @@ def test_answer_transform_on_hidden_question_types(
     table = questions["table"]
     row_form = table.row_form
     row_doc = document_factory(form=row_form)
-    answer_factory(document=row_doc, question_id="column")
+    answer_factory(document=row_doc, question=questions["column"])
     answers["table"].documents.add(row_doc)
 
     questions["form"].is_hidden = (

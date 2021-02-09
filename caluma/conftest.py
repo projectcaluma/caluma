@@ -234,7 +234,7 @@ def form_and_document(
 
         form_question_factory(form=form, question=questions["top_question"])
         answers["top_question"] = answer_factory(
-            document=document, question_id="top_question"
+            document=document, question=questions["top_question"]
         )
 
         if use_table:
@@ -280,7 +280,7 @@ def form_and_document(
             form_question_factory(form=sub_form, question=questions["sub_question"])
 
             answers["sub_question"] = answer_factory(
-                document=document, question_id="sub_question"
+                document=document, question=questions["sub_question"]
             )
 
         return (form, document, questions, answers)
