@@ -54,12 +54,6 @@ class QuestionJexl(JEXL):
         self.context = Context(context_data)
 
         self.add_transform("answer", self.answer_transform)
-        self.add_transform(
-            "mapby", lambda arr, key: [obj.get(key, None) for obj in arr]
-        )
-        self.add_binary_operator(
-            "intersects", 20, lambda left, right: any(x in right for x in left)
-        )
 
     def answer_transform(self, question_slug):
         field = self._structure.get_field(question_slug)

@@ -1,3 +1,6 @@
+import math
+import numbers
+from functools import partial
 from itertools import count
 from logging import getLogger
 
@@ -67,6 +70,55 @@ class JEXL(pyjexl.JEXL):
         super().__init__(*args, **kwargs)
         self.add_transform("debug", self._debug_transform)
         self._expr_stack = []
+
+        self.add_transform(
+            "mapby", lambda arr, key: [obj.get(key, None) for obj in arr]
+        )
+        self.add_binary_operator(
+            "intersects", 20, lambda left, right: any(x in right for x in left)
+        )
+
+        def _handle_error(func, subject, *args):
+            try:
+                if not args:
+                    return func(subject)
+                return func(subject, *args)
+            except (TypeError, ValueError, ZeroDivisionError):
+                return None
+
+        def _handle_error_with_filter(func, subject, *args):
+            return _handle_error(
+                func,
+                [
+                    s
+                    for s in subject
+                    if isinstance(s, numbers.Number) and not math.isnan(s)
+                ],
+                *args,
+            )
+
+        # list operations
+        self.add_transform("min", partial(_handle_error_with_filter, min))
+        self.add_transform("max", partial(_handle_error_with_filter, max))
+        self.add_transform("sum", partial(_handle_error_with_filter, sum))
+        self.add_transform(
+            "avg",
+            partial(_handle_error_with_filter, lambda arr: sum(arr) / len(arr)),
+        )
+        # float operations
+        self.add_transform("ceil", partial(_handle_error, math.ceil))
+        self.add_transform("floor", partial(_handle_error, math.floor))
+        self.add_transform(
+            "round",
+            partial(
+                _handle_error,
+                self._round_compat,
+            ),
+        )
+
+    def _round_compat(self, num, ndigits=0):
+        power = 10 ** ndigits
+        return float(math.floor((num * power) + 0.5) / power)
 
     def parse(self, expression):
         parsed_expression = self.expr_cache.get_or_set(
