@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 
 from ...caluma_core.tests import extract_serializer_input_fields
 from ...caluma_form.models import DynamicOption, Question
-from .. import api, serializers, structure
+from .. import serializers, structure
 from ..jexl import QuestionMissing
 from ..validators import DocumentValidator, QuestionValidator
 
@@ -49,6 +49,20 @@ def test_validate_special_fields(
 ):
     document = document_factory(form=form_question.form)
     answer_factory(document=document, question=question)
+    DocumentValidator().validate(document, admin_user)
+
+
+@pytest.mark.parametrize(
+    "question__type,question__is_required",
+    [
+        (Question.TYPE_CALCULATED_FLOAT, "false"),
+    ],
+)
+def test_validate_calc_fields(
+    db, form_question, question, document_factory, answer_factory, admin_user
+):
+    document = document_factory(form=form_question.form)
+    assert document.answers.filter(question_id=question.pk).exists()
     DocumentValidator().validate(document, admin_user)
 
 
@@ -747,29 +761,3 @@ def test_validate_form_in_table(
         # Should not raise, as the "form" referenced by the
         # question's jexl is the rowform, which is wrong
         DocumentValidator().validate(document, admin_user)
-
-
-@pytest.mark.parametrize("question__type", [Question.TYPE_CALCULATED_FLOAT])
-def test_validate_save_calculated_float_answer(db, document, question):
-    with pytest.raises(ValidationError):
-        api.save_answer(document=document, question=question, value=1.0)
-
-
-@pytest.mark.parametrize("question__type", [Question.TYPE_CALCULATED_FLOAT])
-def test_validate_save_calculated_float_question(db, document, question):
-
-    with pytest.raises(ValidationError):
-        QuestionValidator().validate(
-            data={
-                "type": Question.TYPE_CALCULATED_FLOAT,
-                "calc_expression": f"'{question.slug}'|answer",
-            }
-        )
-
-    with pytest.raises(ValidationError):
-        QuestionValidator().validate(
-            data={
-                "type": Question.TYPE_CALCULATED_FLOAT,
-                "calc_expression": "'foo'|answer",
-            }
-        )

@@ -177,9 +177,7 @@ class AnswerValidator:
         pass
 
     def _validate_question_calculated_float(self, question, value, **kwargs):
-        raise CustomValidationError(
-            "Cannot save read-only answer of of type calculated float."
-        )
+        pass
 
     def validate(
         self,
