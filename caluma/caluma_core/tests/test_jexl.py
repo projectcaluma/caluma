@@ -103,3 +103,89 @@ def test_jexl_cache():
 
     # validate invariants
     assert cache._cache.keys() == cache._mru.keys()
+
+
+@pytest.mark.parametrize(
+    "expression,result",
+    [
+        ("[{ key: 1 }]|mapby('key')", [1]),
+        ("[{ otherkey: 1 }]|mapby('key')", [None]),
+        ("[]|mapby('key')", []),
+    ],
+)
+def test_mapby_operator(expression, result):
+    assert JEXL().evaluate(expression) == result
+
+
+@pytest.mark.parametrize(
+    "expression,result",
+    [
+        ("[1,2] intersects [2,3]", True),
+        ("[1,2] intersects [3,4]", False),
+        ("[] intersects []", False),
+        ("[1] intersects []", False),
+        ("['foo'] intersects ['bar', 'bazz']", False),
+        ("['foo'] intersects ['foo', 'foo']", True),
+        ("[1] intersects [1] && [2] intersects [2]", True),
+        ("[2] intersects [1] + [2]", True),
+    ],
+)
+def test_intersects_operator(expression, result):
+    assert JEXL().evaluate(expression) == result
+
+
+@pytest.mark.parametrize(
+    "expression,result",
+    [
+        ("[1, 2, 3]|min", 1),
+        ("['a', 'b']|min", None),
+        ("[1, 2, '3']|min", 1),
+        ("['a', None]|min", None),
+        ("[1, 2, 3]|max", 3),
+        ("['a', 'b']|max", None),
+        ("[1, 2, '3']|max", 2),
+        ("['a', None]|max", None),
+        ("[1, 2, 3]|sum", 6),
+        ("['a', 'b']|sum", 0),
+        ("[1, 2, '3']|sum", 3),
+        ("['a', None]|sum", 0),
+        ("1.2|ceil", 2),
+        ("18.00001|ceil", 19),
+        ("None|ceil", None),
+        ("'a'|ceil", None),
+        ("[1.2]|ceil", None),
+        ("1.2|floor", 1),
+        ("18.00001|floor", 18),
+        ("None|floor", None),
+        ("'a'|floor", None),
+        ("[1.2]|floor", None),
+        ("[1]|avg", 1),
+        ("[2, 3]|avg", 2.5),
+        ("[2, 3, None, 'foo']|avg", 2.5),
+        ("[None, 'foo']|avg", None),
+        ("1.49|round", 1),
+        ("1.51|round", 2),
+        ("1.49|round(1)", 1.5),
+        ("1.49|round(2)", 1.49),
+        ("1.4445|round(3)", 1.445),
+        ("-0.5|round", 0),
+        ("-1.14|round(1)", -1.1),
+        ("-1.15|round(1)", -1.1),
+        ("-1.16|round(1)", -1.2),
+        ("'foo'|round", None),
+        ("'foo'|round(1)", None),
+        ("['foo']|round", None),
+        ("['foo']|round(1)", None),
+        ("[{ key: 1.4 }, {key: 2.6}]|mapby('key')", [1.4, 2.6]),
+        ("[{ key: 1.4 }, {key: 2.6}]|mapby('key')|min", 1.4),
+        ("[{ key: 1.4 }, {key: 2.6}]|mapby('key')|max", 2.6),
+        ("[{ key: 1.4 }, {key: 2.6}]|mapby('key')|min|round", 1),
+        ("[{ key: 1.4 }, {key: 2.6}]|mapby('key')|max|round", 3),
+        ("[{ key: 1.4 }, {key: 2.6}]|mapby('key')|max|round(1)", 2.6),
+        ("[{ key: 1.4 }, {key: 2.6}]|mapby('key')|sum", 4),
+        ("[{ key: 1.4 }, {key: 2.6}]|mapby('key')|sum", 4),
+        ("[[{ key: 1.4 }, {key: 2.6}]|mapby('key')|sum]|round", None),
+    ],
+)
+def test_math_transforms(expression, result):
+    assert JEXL().evaluate(expression) == result

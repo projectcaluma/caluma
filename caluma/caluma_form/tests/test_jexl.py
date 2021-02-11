@@ -26,18 +26,6 @@ def test_question_jexl_validate(expression, num_errors):
 @pytest.mark.parametrize(
     "expression,result",
     [
-        ("[{ key: 1 }]|mapby('key')", [1]),
-        ("[{ otherkey: 1 }]|mapby('key')", [None]),
-        ("[]|mapby('key')", []),
-    ],
-)
-def test_mapby_operator(expression, result):
-    assert QuestionJexl().evaluate(expression) == result
-
-
-@pytest.mark.parametrize(
-    "expression,result",
-    [
         ("[1,2] intersects [2,3]", True),
         ("[1,2] intersects [3,4]", False),
         ("[] intersects []", False),
