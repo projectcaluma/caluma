@@ -68,3 +68,25 @@ def save_document(
 
     domain_logic.SaveDocumentLogic.update(document, form=form, meta=meta)
     return document
+
+
+def copy_form(
+    source: models.Form,
+    slug: str,
+    name: Optional[str] = None,
+    description: Optional[str] = None,
+    is_published: Optional[bool] = None,
+    user: Optional[BaseUser] = None,
+) -> models.Form:
+    """Copy a form."""
+
+    return domain_logic.CopyFormLogic.copy(
+        {
+            "source": source,
+            "slug": slug,
+            "name": name,
+            "description": description,
+            "is_published": False if is_published is None else is_published,
+        },
+        user=user,
+    )

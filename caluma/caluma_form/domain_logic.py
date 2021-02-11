@@ -200,3 +200,22 @@ class SaveDocumentLogic:
     @transaction.atomic
     def update(document, **kwargs):
         update_model(document, kwargs)
+
+
+class CopyFormLogic:
+    @staticmethod
+    def copy(validated_data: dict, user: Optional[BaseUser] = None):
+        source = validated_data["source"]
+        validated_data["meta"] = dict(source.meta)
+        form = BaseLogic.create(model=models.Form, user=user, **validated_data)
+
+        for form_question in models.FormQuestion.objects.filter(form=source):
+            models.FormQuestion.objects.create(
+                form=form,
+                sort=form_question.sort,
+                question=form_question.question,
+                created_by_user=user.username if user else None,
+                created_by_group=user.group if user else None,
+            )
+
+        return form
