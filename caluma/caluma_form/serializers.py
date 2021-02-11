@@ -32,23 +32,9 @@ class CopyFormSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        user = self.context["request"].user
-        source = validated_data["source"]
-        validated_data["meta"] = dict(source.meta)
-        form = super().create(validated_data)
-
-        for sort, form_question in enumerate(
-            reversed(models.FormQuestion.objects.filter(form=source)), start=1
-        ):
-            models.FormQuestion.objects.create(
-                sort=sort,
-                form=form,
-                question=form_question.question,
-                created_by_user=user.username,
-                created_by_group=user.group,
-            )
-
-        return form
+        return domain_logic.CopyFormLogic.copy(
+            validated_data, user=self.context["request"].user
+        )
 
     class Meta:
         model = models.Form

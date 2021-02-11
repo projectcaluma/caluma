@@ -4,6 +4,7 @@ from graphql_relay import to_global_id
 
 from ...caluma_core.tests import extract_serializer_input_fields
 from .. import models
+from ..api import copy_form
 from ..serializers import SaveFormSerializer
 
 
@@ -128,6 +129,21 @@ def test_copy_form(db, form, form_question_factory, schema_executor):
     form_slug = result.data["copyForm"]["form"]["slug"]
     assert form_slug == "new-form"
     new_form = models.Form.objects.get(pk=form_slug)
+    assert new_form.name == "Test Form"
+    assert new_form.meta == form.meta
+    assert new_form.source == form
+    assert list(
+        models.FormQuestion.objects.filter(form=new_form).values("question")
+    ) == list(models.FormQuestion.objects.filter(form=form).values("question"))
+
+
+@pytest.mark.parametrize("form__meta", [{"meta": "set"}])
+def test_copy_form_api(db, form, form_question_factory, schema_executor):
+    form_question_factory.create_batch(5, form=form)
+
+    new_form = copy_form(source=form, slug="new-form", name="Test Form")
+
+    assert new_form.pk == "new-form"
     assert new_form.name == "Test Form"
     assert new_form.meta == form.meta
     assert new_form.source == form
