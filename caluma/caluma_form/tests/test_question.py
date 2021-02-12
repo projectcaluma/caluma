@@ -805,7 +805,7 @@ def test_calc_dependents(db, question_factory):
 
     calc_q = question_factory(
         type=models.Question.TYPE_CALCULATED_FLOAT,
-        calc_expression=f"'{dep1.slug}'|answer + '{dep2.slug}'|answer",
+        calc_expression=f"['{dep1.slug}'|answer, '{dep2.slug}'|answer]|sum",
     )
     other_calc_q = question_factory(
         type=models.Question.TYPE_CALCULATED_FLOAT,

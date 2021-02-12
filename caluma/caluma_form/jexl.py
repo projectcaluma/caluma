@@ -67,13 +67,13 @@ class QuestionJexl(JEXL):
         return super().validate(expression, QuestionValidatingAnalyzer)
 
     def extract_referenced_questions(self, expr):
-        transforms = ["answer", "mapby"]
+        transforms = ["answer"]
         yield from self.analyze(
             expr, partial(ExtractTransformSubjectAnalyzer, transforms=transforms)
         )
 
     def extract_referenced_mapby_questions(self, expr):
-        transforms = ["answer", "mapby"]
+        transforms = ["mapby"]
         yield from self.analyze(
             expr, partial(ExtractTransformArgumentAnalyzer, transforms=transforms)
         )
