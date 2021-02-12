@@ -3,7 +3,7 @@ import functools
 import pyjexl
 import pytest
 
-from ..jexl import JEXL, Cache, ExtractTransformSubjectAnalyzer
+from ..jexl import JEXL, Cache, CalumaAnalyzer, ExtractTransformSubjectAnalyzer
 
 
 @pytest.mark.parametrize(
@@ -189,3 +189,21 @@ def test_intersects_operator(expression, result):
 )
 def test_math_transforms(expression, result):
     assert JEXL().evaluate(expression) == result
+
+
+@pytest.mark.parametrize(
+    "expression,expected",
+    [
+        ("1 + 1", [1, 1]),
+        ('["1", 2, 3]', ["1", 2, 3]),
+        ('{key: ["foo", "bar"]}', ["foo", "bar"]),
+        ("[1|round, [2, 3]|min]|avg", [1, 2, 3]),
+    ],
+)
+def test_caluma_analyzer(expression, expected):
+    class NodeAnalyzer(CalumaAnalyzer):
+        def visit_Literal(self, node):
+            yield node.value
+
+    jexl = JEXL()
+    assert list(jexl.analyze(expression, NodeAnalyzer)) == expected

@@ -5,9 +5,9 @@ from itertools import count
 from logging import getLogger
 
 import pyjexl
-from pyjexl.analysis import ValidatingAnalyzer
+from pyjexl.analysis import JEXLAnalyzer, ValidatingAnalyzer
 from pyjexl.exceptions import ParseError
-from pyjexl.parser import Literal
+from pyjexl.parser import ArrayLiteral, Literal, ObjectLiteral
 from rest_framework import exceptions
 
 log = getLogger(__name__)
@@ -151,7 +151,32 @@ class JEXL(pyjexl.JEXL):
             self._expr_stack.pop()
 
 
-class ExtractTransformSubjectAnalyzer(ValidatingAnalyzer):
+class CalumaAnalyzer(JEXLAnalyzer):
+    """Analyzer visiting Object and ArrayLiterals.
+
+    TODO: Upstream this.
+    """
+
+    def generic_visit(self, expression):
+        for child in expression.children:
+            assert child is not None
+            for c in self.visit(child):
+                yield c
+
+        if isinstance(expression, ArrayLiteral):
+            for child in expression.value:
+                assert child is not None
+                for c in self.visit(child):
+                    yield c
+
+        elif isinstance(expression, ObjectLiteral):
+            for child in expression.value.values():
+                assert child is not None
+                for c in self.visit(child):
+                    yield c
+
+
+class ExtractTransformSubjectAnalyzer(CalumaAnalyzer):
     """
     Extract all referenced subjects of given transforms.
 
@@ -171,7 +196,7 @@ class ExtractTransformSubjectAnalyzer(ValidatingAnalyzer):
         yield from self.generic_visit(transform)
 
 
-class ExtractTransformArgumentAnalyzer(ValidatingAnalyzer):
+class ExtractTransformArgumentAnalyzer(CalumaAnalyzer):
     """
     Extract all referenced arguments of given transforms.
 
