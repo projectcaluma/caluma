@@ -1,3 +1,15 @@
+# v7.7.0 (12. February 2021)
+
+### Feature
+* **form:** Add python API and command for copying forms ([`7620eec`](https://github.com/projectcaluma/caluma/commit/7620eec898b70dd641b758f0f4e09c6d3bdbacf8))
+* **jexl:** Add min, max, sum, round transforms ([`beb714a`](https://github.com/projectcaluma/caluma/commit/beb714ad3c95ea4d32ef81ede84c023ed635511c))
+* Dump_caluma command for entire forms ([#1367](https://github.com/projectcaluma/caluma/issues/1367)) ([`20b2a79`](https://github.com/projectcaluma/caluma/commit/20b2a79fea22f2b197d5f0238b33089ce063cde5))
+
+### Fix
+* Use homebrew jexl analyzer for question extraction ([`a81c089`](https://github.com/projectcaluma/caluma/commit/a81c0898a6f5e9d847133bdf4700ad75c228a925))
+* **form:** Don't validate calculated answer ([`014a804`](https://github.com/projectcaluma/caluma/commit/014a80434988d121f5cd92b8ca298a8ccf84316d))
+
+
 # v7.6.0 (4. February 2021)
 
 ### Feature
