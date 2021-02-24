@@ -256,7 +256,7 @@ def test_reorder_form_questions(db, form, form_question_factory, schema_executor
             "input": {
                 "form": to_global_id(type(form).__name__, form.pk),
                 "questions": [
-                    to_global_id(type(models.Question).__name__, question_id)
+                    to_global_id(models.Question.__name__, question_id)
                     for question_id in question_ids
                 ],
             }
