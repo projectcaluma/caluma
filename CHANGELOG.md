@@ -1,3 +1,10 @@
+# v7.7.1 (24. February 2021)
+
+### Fix
+* Extract_global_id should not be too eager in decoding
+([#1389](https://github.com/projectcaluma/caluma/issues/1389))
+([`8f97dc6`](https://github.com/projectcaluma/caluma/commit/8f97dc6ef30684653d1eba8036606d28386e554a))
+
 # v7.7.0 (12. February 2021)
 
 ### Feature
