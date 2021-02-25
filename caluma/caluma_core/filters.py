@@ -81,7 +81,7 @@ class FilterCollectionFilter(Filter):
             invert = flt.pop("invert", False)
             flt_key = list(flt.keys())[0]
             flt_val = flt[flt_key]
-            filter = filter_coll.get_filters()[flt_key]
+            filter = filter_coll.filters[flt_key]
 
             new_qs = filter.filter(qs, flt_val)
 
@@ -99,7 +99,7 @@ class FilterCollectionOrdering(Filter):
 
         assert len(ord) == 1
         filt_name = list(ord.keys())[0]
-        filter = filter_coll.get_filters()[filt_name]
+        filter = filter_coll.filters[filt_name]
         qs, field = filter.get_ordering_value(qs, ord[filt_name])
 
         # Normally, people use ascending order, and in this context it seems
