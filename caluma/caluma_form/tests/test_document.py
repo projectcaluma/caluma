@@ -265,7 +265,7 @@ def test_complex_document_query_performance(
         }
     """
 
-    with django_assert_num_queries(8):
+    with django_assert_num_queries(7):
         result = schema_executor(query, variable_values={"id": str(document.pk)})
     assert not result.errors
 
@@ -1028,7 +1028,10 @@ def test_save_document_table_answer_default_answer(
 
     assert doc.answers.count() == 1
     if default_on_table:
-        assert doc.answers.first().documents.first().answers.first().value == 1979
+        assert (
+            doc.answers.first().documents.first().answers.first().value
+            == answers_dict["column"].value
+        )
     else:
         assert doc.answers.first().documents.first().answers.first() is None
 

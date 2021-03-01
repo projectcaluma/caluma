@@ -958,7 +958,7 @@ def test_calculated_question(
     "expr,expected,calc_deps",
     [
         ("'sub_question'|answer", 100.0, ["sub_question"]),
-        ("'table'|answer|mapby('column')[0]", 1979, ["table", "column"]),
+        ("'table'|answer|mapby('column')[0]", 722550.2, ["table", "column"]),
         ("'other'|answer", 3.0, ["other"]),
         (
             "'sub_question'|answer && 'table'|answer|mapby('column') ? 'other'|answer: -1",

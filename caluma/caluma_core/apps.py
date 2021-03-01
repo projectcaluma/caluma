@@ -10,8 +10,8 @@ class DefaultConfig(AppConfig):
 
     def ready(self):
         from .mutation import Mutation
-        from .types import Node
         from .serializers import ModelSerializer
+        from .types import Node
 
         # to avoid recursive import error, load extension classes
         # only once the app is ready

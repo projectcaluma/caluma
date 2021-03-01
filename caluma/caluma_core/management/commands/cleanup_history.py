@@ -3,9 +3,11 @@ from simple_history.models import registered_models
 
 # Instances which are created at run-time, referencing config-time models
 # eg. Answers are created at run-time by users and referencing Question
+# NOTE: This checks indirectly if not-nullable referenced objects exist.
+# Theoretically it doesn't matter which field to check for, but localized fields seem flaky.
 RELATED_HISTORICAL_MODELS = {
     "Answer": {"question__type__isnull": True},
-    "Document": {"form__name__isnull": True},
+    "Document": {"form__is_published__isnull": True},
     "DynamicOption": {"question__type__isnull": True},
 }
 

@@ -2,17 +2,17 @@
 # enable auto-merge
 
 black==20.8b1
-factory-boy==3.0.1
-faker==4.18.0
+factory-boy==3.2.0
+faker==6.5.0
 flake8==3.8.4
-flake8-bugbear==20.1.4
-flake8-debugger==3.2.1
+flake8-bugbear==20.11.1
+flake8-debugger==4.0.0
 flake8-docstrings==1.5.0
 flake8-isort==4.0.0
 flake8-string-format==0.3.0
 flake8-tuple==0.4.1
 gitlint==0.15.0
-isort==4.3.21
+isort==5.7.0
 pdbpp==0.10.2
 pre-commit==2.10.1
 pydocstyle==5.1.1
@@ -27,4 +27,4 @@ pytest-xdist==2.2.1
 python-semantic-release==7.15.0
 requests-mock==1.8.0
 reuse==0.12.1
-syrupy==0.9.0
+syrupy==1.1.0
