@@ -8,7 +8,7 @@ django-localized-fields==5.4.2
 django-postgres-extra==1.22
 djangorestframework==3.12.2
 django_simple_history==2.12.0
-graphene-django==2.8.2
+graphene-django==2.15.0
 idna==2.10
 minio==5.0.10
 psycopg2-binary==2.8.6
