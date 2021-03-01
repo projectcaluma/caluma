@@ -7,7 +7,7 @@ class DefaultConfig(AppConfig):
     name = "caluma.caluma_workflow"
 
     def ready(self):
-        from .jexl import GroupJexl, FlowJexl
+        from .jexl import FlowJexl, GroupJexl
 
         # to avoid recursive import error, load extension classes
         # only once the app is ready

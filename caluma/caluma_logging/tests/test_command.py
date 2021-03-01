@@ -36,4 +36,4 @@ def test_cleanup_access_log(db, access_log_factory, force, keep, exist):
     if force:
         assert count == exist
     else:
-        count == 10
+        assert count == 10

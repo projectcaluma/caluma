@@ -9,7 +9,7 @@ from factory import Faker
 from factory.base import FactoryMetaClass
 from graphene import ResolveInfo
 from minio import Minio
-from minio.definitions import Object as MinioStatObject
+from minio.datatypes import Object as MinioStatObject
 from pytest_factoryboy import register
 
 from .caluma_core.faker import MultilangProvider
@@ -135,7 +135,6 @@ def minio_mock(mocker):
         "0c81da684e6aaef48e8f3113e5b8769b",
         8200,
         content_type="application/pdf",
-        is_dir=False,
         metadata={"X-Amz-Meta-Testtag": "super_file"},
     )
     mocker.patch.object(Minio, "presigned_get_object")
@@ -229,7 +228,10 @@ def form_and_document(
         answers = {}
 
         questions["top_question"] = question_factory(
-            slug="top_question", is_required="true", is_hidden="false"
+            slug="top_question",
+            type="text",
+            is_required="true",
+            is_hidden="false",
         )
 
         form_question_factory(form=form, question=questions["top_question"])
@@ -275,7 +277,10 @@ def form_and_document(
             )
             form_question_factory(form=form, question=questions["form"])
             questions["sub_question"] = question_factory(
-                slug="sub_question", is_required="true", is_hidden="false"
+                slug="sub_question",
+                type="text",
+                is_required="true",
+                is_hidden="false",
             )
             form_question_factory(form=sub_form, question=questions["sub_question"])
 

@@ -264,7 +264,7 @@ def test_answer_transform_on_hidden_question(info, form_and_document):
     questions["sub_question"].is_required = "true"
     questions["sub_question"].save()
 
-    # sub_question and top_question are referenced in a JEXL expresison later on
+    # sub_question and top_question are referenced in a JEXL expression later on
     answers["sub_question"].value = "hello"
     answers["sub_question"].save()
     answers["top_question"].value = "xyz"
@@ -274,8 +274,6 @@ def test_answer_transform_on_hidden_question(info, form_and_document):
     # The required state depends on two questions, so we can check the expression's
     # result by checking whether the validator throws an exception.
     answers["column"].delete()
-
-    validator = validators.DocumentValidator()
 
     # expression references two other questions, so it will still be evaluated
     # even if one question is hidden.
@@ -287,6 +285,7 @@ def test_answer_transform_on_hidden_question(info, form_and_document):
     questions["column"].is_hidden = "false"
     questions["column"].save()
 
+    validator = validators.DocumentValidator()
     with pytest.raises(validators.CustomValidationError):
         validator.validate(document, info)
 

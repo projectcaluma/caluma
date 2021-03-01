@@ -1,3 +1,4 @@
+import faker
 from factory import Faker, LazyAttribute, Maybe, SubFactory, lazy_attribute
 
 from ..caluma_core.factories import DjangoModelFactory
@@ -134,17 +135,17 @@ class AnswerFactory(DjangoModelFactory):
             self.question.type == models.Question.TYPE_MULTIPLE_CHOICE
             or self.question.type == models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE
         ):
-            return [Faker("name").generate({}), Faker("name").generate({})]
+            return [faker.Faker().name(), faker.Faker().name()]
         elif self.question.type == models.Question.TYPE_FLOAT:
-            return Faker("pyfloat").generate({})
+            return faker.Faker().pyfloat()
         elif self.question.type == models.Question.TYPE_INTEGER:
-            return Faker("pyint").generate({})
+            return faker.Faker().pyint()
         elif self.question.type not in [
             models.Question.TYPE_TABLE,
             models.Question.TYPE_FILE,
             models.Question.TYPE_DATE,
         ]:
-            return Faker("name").generate({})
+            return faker.Faker().name()
 
         return None
 
