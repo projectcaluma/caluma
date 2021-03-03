@@ -5,6 +5,7 @@ Source: https://github.com/projectcaluma/caluma
 
 # Files below the threshold of originality (metadata, config and project-information)
 Files:
+    .dependabot/config.yml
     .dockerignore
     .editorconfig
     .github/workflows/pypi.yml
@@ -20,7 +21,6 @@ Files:
     docker-compose.yml
     manage.py
     MANIFEST.in
-    renovate.json
     requirements-all.txt
     requirements-dev.txt
     requirements.txt
