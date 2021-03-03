@@ -71,7 +71,7 @@ setup(
         "django-extensions<4",
         "django-filter<3",
         "django-localized-fields<6",
-        "django-postgres-extra<2",
+        "django-postgres-extra<3",
         "djangorestframework<4",
         "django_simple_history<3",
         "graphene-django<=2.8.2",
