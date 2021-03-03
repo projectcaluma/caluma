@@ -27,4 +27,4 @@ pytest-xdist==2.2.1
 python-semantic-release==7.15.0
 requests-mock==1.8.0
 reuse==0.12.1
-syrupy==0.9.0
+syrupy==1.1.0
