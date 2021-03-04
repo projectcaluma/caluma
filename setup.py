@@ -70,7 +70,7 @@ setup(
         "django-environ<0.5",
         "django-extensions<4",
         "django-filter<3",
-        "django-localized-fields<6",
+        "django-localized-fields<7",
         "django-postgres-extra<2",
         "djangorestframework<4",
         "django_simple_history<3",
