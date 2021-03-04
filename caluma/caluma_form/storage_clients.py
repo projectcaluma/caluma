@@ -18,7 +18,7 @@ class Minio:
             # just with the cert checking disabled.
             minio_http_client = urllib3.PoolManager(
                 timeout=urllib3.Timeout.DEFAULT_TIMEOUT,
-                maxsize=minio.api.MAX_POOL_SIZE,
+                maxsize=10,
                 cert_reqs="CERT_NONE",
                 ca_certs=None,
                 retries=urllib3.Retry(
