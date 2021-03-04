@@ -1,6 +1,7 @@
 from datetime import timedelta
 
 import minio
+import urllib3
 from django.conf import settings
 
 
@@ -10,8 +11,26 @@ class Minio:
         access_key = settings.MINIO_STORAGE_ACCESS_KEY
         secret_key = settings.MINIO_STORAGE_SECRET_KEY
         secure = settings.MINIO_STORAGE_USE_HTTPS
+
+        minio_http_client = None
+        if settings.DEBUG and settings.MINIO_DISABLE_CERT_CHECKS:
+            # This is a copy of what the minio client does internally,
+            # just with the cert checking disabled.
+            minio_http_client = urllib3.PoolManager(
+                timeout=urllib3.Timeout.DEFAULT_TIMEOUT,
+                maxsize=minio.api.MAX_POOL_SIZE,
+                cert_reqs="CERT_NONE",
+                ca_certs=None,
+                retries=urllib3.Retry(
+                    total=5, backoff_factor=0.2, status_forcelist=[500, 502, 503, 504]
+                ),
+            )
         self.client = minio.Minio(
-            endpoint, access_key=access_key, secret_key=secret_key, secure=secure
+            endpoint,
+            access_key=access_key,
+            secret_key=secret_key,
+            secure=secure,
+            http_client=minio_http_client,
         )
         self.bucket = settings.MINIO_STORAGE_MEDIA_BUCKET_NAME
 
