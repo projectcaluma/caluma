@@ -90,6 +90,12 @@ will return a presigned `uploadUrl`, which the client can use to upload the file
 The same goes for retrieving files. Caluma will respond with a presigned `downloadUrl` for
 the client to directly download the file from the storage provider.
 
+In case you run HTTPS in your local development environment, you might have a
+self-signed certificate. The Minio client by default verifies the TLS
+certificates, so would fail in this case. You can set `MINIO_DISABLE_CERT_CHECKS`
+to `true` to avoid this. Note: This setting only works if you also set `DEBUG`
+to `true` as well.
+
 ## Client tokens
 If you want to use additional services that need to talk to caluma (e.g.
 [caluma-interval](https://github.com/projectcaluma/caluma-interval)), you need to have
