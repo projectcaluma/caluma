@@ -451,7 +451,22 @@ class File(core_models.UUIDModel):
 
     @property
     def metadata(self):
-        return client.stat_object(self.object_name).__dict__
+        stat = client.stat_object(self.object_name)
+        if not stat:
+            # This could happen if no file was uploaded, but the client
+            # still requests the property
+            return None
+        return {
+            # There are some more metadata values, but we're
+            # not showing everything here. Most of the remaining
+            # stuff is not set, or not useful for clients anyway
+            "bucket_name": stat.bucket_name,
+            "content_type": stat.content_type,
+            "etag": stat.etag,
+            "last_modified": stat.last_modified.isoformat(),
+            "metadata": dict(stat.metadata),
+            "size": stat.size,
+        }
 
 
 class AnswerDocument(core_models.UUIDModel):
