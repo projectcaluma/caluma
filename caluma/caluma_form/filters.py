@@ -48,6 +48,8 @@ class FormOrderSet(FilterSet):
             "modified_at",
             "created_by_user",
             "created_by_group",
+            "modified_by_user",
+            "modified_by_group",
             "slug",
             "name",
             "description",

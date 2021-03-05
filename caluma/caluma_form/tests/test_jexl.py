@@ -376,6 +376,9 @@ def test_answer_transform_in_tables(
     form, document, questions, answers = form_and_document(
         use_table=True, use_subform=False
     )
+    column_a = answers["column"]
+    column_a.value = 11
+    column_a.save()
 
     table_question = questions["table"]
 

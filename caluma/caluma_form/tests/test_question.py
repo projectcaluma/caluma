@@ -958,7 +958,7 @@ def test_calculated_question(
     "expr,expected,calc_deps",
     [
         ("'sub_question'|answer", 100.0, ["sub_question"]),
-        ("'table'|answer|mapby('column')[0]", 722550.2, ["table", "column"]),
+        ("'table'|answer|mapby('column')[0]", 99.99, ["table", "column"]),
         ("'other'|answer", 3.0, ["other"]),
         (
             "'sub_question'|answer && 'table'|answer|mapby('column') ? 'other'|answer: -1",
@@ -984,6 +984,10 @@ def test_nested_calculated_question(
     sub_question_a = answers_dict["sub_question"]
     sub_question_a.value = 100
     sub_question_a.save()
+
+    column_a = answers_dict["column"]
+    column_a.value = 99.99
+    column_a.save()
 
     questions["other"] = form_question_factory(
         form=form, question__slug="other", question__type=models.Question.TYPE_INTEGER

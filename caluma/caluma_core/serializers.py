@@ -74,6 +74,13 @@ class ModelSerializer(serializers.ModelSerializer):
 
         return super().create(validated_data)
 
+    def update(self, instance, validated_data):
+        user = self.context["request"].user
+        validated_data["modified_by_user"] = user.username
+        validated_data["modified_by_group"] = user.group
+
+        return super().update(instance, validated_data)
+
     def build_standard_field(self, field_name, model_field):
         field_class, field_kwargs = super().build_standard_field(
             field_name, model_field
