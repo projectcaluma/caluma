@@ -272,7 +272,7 @@ def form_and_document(
             )
             form_question_factory(form=form, question=questions["table"])
             questions["column"] = question_factory(
-                slug="column", is_required="true", is_hidden="false"
+                type="float", slug="column", is_required="true", is_hidden="false"
             )
             form_question_factory(form=row_form, question=questions["column"])
 
@@ -280,7 +280,7 @@ def form_and_document(
                 document=document, question=questions["table"]
             )
 
-            row_doc = document_factory(form=row_form)
+            row_doc = document_factory(form=row_form, family=document)
             answers["column"] = answer_factory(
                 document=row_doc, question=questions["column"]
             )

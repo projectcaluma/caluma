@@ -280,6 +280,8 @@ class Document(core_models.UUIDModel):
             family=family,
             created_by_user=user.username if user else None,
             created_by_group=user.group if user else None,
+            modified_by_user=user.username if user else None,
+            modified_by_group=user.group if user else None,
         )
         if not family:
             family = new_document
@@ -385,6 +387,8 @@ class Answer(core_models.BaseModel):
             document=to_document,
             created_by_user=user.username if user else None,
             created_by_group=user.group if user else None,
+            modified_by_user=user.username if user else None,
+            modified_by_group=user.group if user else None,
         )
 
         if self.question.type == Question.TYPE_FILE:
@@ -401,6 +405,8 @@ class Answer(core_models.BaseModel):
                 sort=answer_doc.sort,
                 created_by_user=user.username if user else None,
                 created_by_group=user.group if user else None,
+                modified_by_user=user.username if user else None,
+                modified_by_group=user.group if user else None,
             )
         return new_answer
 

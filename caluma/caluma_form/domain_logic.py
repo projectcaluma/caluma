@@ -13,12 +13,26 @@ from caluma.utils import update_model
 class BaseLogic:
     @staticmethod
     @transaction.atomic
-    def create(model: BaseModel, user: Optional[BaseUser] = None, **kwargs):
+    def create(model: BaseModel, validated_data, user: Optional[BaseUser] = None):
         if user:
-            kwargs["created_by_user"] = user
-            kwargs["created_by_group"] = user.group
+            validated_data["created_by_user"] = user.username if user else None
+            validated_data["created_by_group"] = user.group if user else None
+            validated_data["modified_by_user"] = user.username if user else None
+            validated_data["modified_by_group"] = user.group if user else None
 
-        return model.objects.create(**kwargs)
+        return model.objects.create(**validated_data)
+
+    @staticmethod
+    @transaction.atomic
+    def update(instance: BaseModel, validated_data, user: Optional[BaseUser] = None):
+        if user:
+            validated_data["modified_by_user"] = user.username
+            validated_data["modified_by_group"] = user.group
+
+        update_model(instance, validated_data)
+        instance.refresh_from_db()
+
+        return instance
 
 
 class SaveAnswerLogic:
@@ -31,7 +45,7 @@ class SaveAnswerLogic:
         if answer is None:
             answer = cls.create(validated_data, user)
         else:
-            answer = cls.update(validated_data, answer)
+            answer = cls.update(answer, validated_data, user)
 
         return cls.post_save(answer)
 
@@ -86,7 +100,7 @@ class SaveAnswerLogic:
         if validated_data["question"].type == models.Question.TYPE_TABLE:
             documents = validated_data.pop("documents")
 
-        answer = BaseLogic.create(models.Answer, user, **validated_data)
+        answer = BaseLogic.create(models.Answer, validated_data, user)
 
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
@@ -95,7 +109,7 @@ class SaveAnswerLogic:
 
     @staticmethod
     @transaction.atomic
-    def update(validated_data, answer):
+    def update(answer, validated_data, user: Optional[BaseUser] = None):
         if answer.question.type == models.Question.TYPE_TABLE:
             documents = validated_data.pop("documents")
             answer.unlink_unused_rows(docs_to_keep=documents)
@@ -107,7 +121,7 @@ class SaveAnswerLogic:
             answer.file.delete()
             validated_data = __class__.set_file(validated_data)
 
-        update_model(answer, validated_data)
+        BaseLogic.update(answer, validated_data, user)
 
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
@@ -152,8 +166,10 @@ class SaveDefaultAnswerLogic(SaveAnswerLogic):
 
     @staticmethod
     @transaction.atomic
-    def update(validated_data, answer):
-        return SaveAnswerLogic.update(validated_data, answer)
+    def update(
+        answer, validated_data, user: Optional[BaseUser] = None
+    ) -> models.Answer:
+        return SaveAnswerLogic.update(answer, validated_data, user)
 
 
 class SaveDocumentLogic:
@@ -189,7 +205,7 @@ class SaveDocumentLogic:
     def create(
         validated_data: dict, user: Optional[BaseUser] = None
     ) -> models.Document:
-        document = BaseLogic.create(model=models.Document, user=user, **validated_data)
+        document = BaseLogic.create(models.Document, validated_data, user=user)
 
         document = SaveDocumentLogic._set_default_answers_for_form(
             document.form, document, user
@@ -198,8 +214,8 @@ class SaveDocumentLogic:
 
     @staticmethod
     @transaction.atomic
-    def update(document, **kwargs):
-        update_model(document, kwargs)
+    def update(document, validated_data, user: Optional[BaseUser] = None):
+        BaseLogic.update(document, validated_data, user)
 
 
 class CopyFormLogic:
@@ -207,15 +223,17 @@ class CopyFormLogic:
     def copy(validated_data: dict, user: Optional[BaseUser] = None):
         source = validated_data["source"]
         validated_data["meta"] = dict(source.meta)
-        form = BaseLogic.create(model=models.Form, user=user, **validated_data)
+        form = BaseLogic.create(models.Form, validated_data, user=user)
 
         for form_question in models.FormQuestion.objects.filter(form=source):
-            models.FormQuestion.objects.create(
-                form=form,
-                sort=form_question.sort,
-                question=form_question.question,
-                created_by_user=user.username if user else None,
-                created_by_group=user.group if user else None,
+            BaseLogic.create(
+                models.FormQuestion,
+                {
+                    "form": form,
+                    "sort": form_question.sort,
+                    "question": form_question.question,
+                },
+                user,
             )
 
         return form

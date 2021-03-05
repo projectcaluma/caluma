@@ -88,6 +88,8 @@ class Question(Node, graphene.Interface):
     modified_at = graphene.DateTime(required=True)
     created_by_user = graphene.String()
     created_by_group = graphene.String()
+    modified_by_user = graphene.String()
+    modified_by_group = graphene.String()
     slug = graphene.String(required=True)
     label = graphene.String(required=True)
     info_text = graphene.String()
@@ -683,9 +685,11 @@ class CopyOption(UserDefinedPrimaryKeyMixin, Mutation):
 class Answer(Node, graphene.Interface):
     id = graphene.ID()
     created_at = graphene.DateTime(required=True)
+    modified_at = graphene.DateTime(required=True)
     created_by_user = graphene.String()
     created_by_group = graphene.String()
-    modified_at = graphene.DateTime(required=True)
+    modified_by_user = graphene.String()
+    modified_by_group = graphene.String()
     question = graphene.Field(Question, required=True)
     meta = generic.GenericScalar(required=True)
 

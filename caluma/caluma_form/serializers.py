@@ -146,6 +146,8 @@ class CopyQuestionSerializer(serializers.ModelSerializer):
                 option=question_option.option,
                 created_by_user=user.username,
                 created_by_group=user.group,
+                modified_by_user=user.username,
+                modified_by_group=user.group,
             )
             for sort, question_option in enumerate(
                 reversed(models.QuestionOption.objects.filter(question=source)), start=1
@@ -237,6 +239,8 @@ class SaveQuestionOptionsMixin(object):
                 option=option,
                 created_by_user=user.username,
                 created_by_group=user.group,
+                modified_by_user=user.username,
+                modified_by_group=user.group,
             )
             for sort, option in enumerate(reversed(options), start=1)
         ]
@@ -485,7 +489,7 @@ class SaveAnswerSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        return domain_logic.SaveAnswerLogic.update(validated_data, instance)
+        return domain_logic.SaveAnswerLogic.update(instance, validated_data)
 
     class Meta:
         model = models.Answer
@@ -579,7 +583,7 @@ class SaveDefaultAnswerSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
-        return domain_logic.SaveDefaultAnswerLogic.update(validated_data, instance)
+        return domain_logic.SaveDefaultAnswerLogic.update(instance, validated_data)
 
     class Meta:
         model = models.Answer

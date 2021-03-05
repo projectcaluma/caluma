@@ -1005,8 +1005,8 @@ def test_save_document_table_answer_default_answer(
 ):
     form, document, questions_dict, answers_dict = form_and_document(use_table=True)
 
-    table_question = form.questions.filter(type=Question.TYPE_TABLE).first()
-    row_question = table_question.row_form.questions.first()
+    table_question = questions_dict["table"]
+    row_question = questions_dict["column"]
 
     row_question_default_answer = answer_factory(question=row_question, value=23)
     row_question.default_answer = row_question_default_answer
