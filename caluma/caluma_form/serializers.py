@@ -473,7 +473,11 @@ class DocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Document
-        fields = ["id", "form", "meta"]
+        fields = [
+            "id",
+            "form",
+            "meta",
+        ]
 
 
 class SaveAnswerSerializer(serializers.ModelSerializer):

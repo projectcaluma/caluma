@@ -500,6 +500,9 @@
     answers(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], question: ID, search: String, orderBy: [AnswerOrdering], filter: [AnswerFilterSetType], order: [AnswerOrderSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, questions: [ID], visibleInContext: Boolean): AnswerConnection
     case: Case
     workItem: WorkItem
+    modifiedContentAt: DateTime
+    modifiedContentByUser: String
+    modifiedContentByGroup: String
   }
   
   type DocumentConnection {

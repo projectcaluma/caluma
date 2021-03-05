@@ -1346,3 +1346,92 @@ def test_copy_document(
     assert set(ans.value for ans in result_table_answer_document.answers.all()) == set(
         ans.value for ans in row_document_1.answers.all()
     )
+
+
+def test_document_modified_content_properties(
+    db, form_and_document, answer_factory, admin_user, schema_executor
+):
+    form, document, questions_dict, answers_dict = form_and_document(
+        use_table=True, use_subform=True
+    )
+
+    top_a = answers_dict["top_question"]
+    api.save_answer(top_a.question, document, user=admin_user, value="new value")
+    top_a.refresh_from_db()
+
+    def assert_props(doc, answer):
+        assert doc.last_modified_answer == answer
+        assert doc.modified_content_at == answer.modified_at
+        assert doc.modified_content_by_user == answer.modified_by_user
+        assert doc.modified_content_by_group == answer.modified_by_group
+
+    assert_props(document, top_a)
+
+    column_a = answers_dict["column"]
+    api.save_answer(column_a.question, column_a.document, user=admin_user, value=111.11)
+
+    column_a.refresh_from_db()
+
+    # cached property on document still points to top_a as intended
+    assert_props(document, top_a)
+
+    # new instance is pointing to column_a
+    assert_props(Document.objects.get(form="top_form"), column_a)
+
+    sub_a = answers_dict["sub_question"]
+
+    # same works with graphql
+    query = """
+        mutation saveDocumentStringAnswer($input: SaveDocumentStringAnswerInput!) {
+          saveDocumentStringAnswer(input: $input) {
+            answer {
+              __typename
+              ... on StringAnswer {
+                stringValue: value
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    variables = {
+        "input": {
+            "document": to_global_id("StringAnswer", sub_a.document.pk),
+            "question": to_global_id("StringAnswer", sub_a.question.pk),
+            "value": "Test",
+        }
+    }
+
+    result = schema_executor(query, variable_values=variables)
+    assert not result.errors
+
+    sub_a.refresh_from_db()
+    assert sub_a.value == "Test"
+
+    query = """
+        query AllDocumentsQuery($id: ID) {
+          allDocuments(id: $id) {
+            totalCount
+            edges {
+              node {
+                createdByUser
+                modifiedContentAt
+                modifiedContentByUser
+                modifiedContentByGroup
+                answers {
+                  totalCount
+                }
+              }
+            }
+          }
+        }
+    """
+
+    result = schema_executor(query, variable_values={"id": document.pk})
+    assert not result.errors
+
+    node = result.data["allDocuments"]["edges"][0]["node"]
+    assert node["modifiedContentAt"] == sub_a.modified_at.isoformat()
+    assert node["modifiedContentByUser"] == sub_a.modified_by_user
+    assert node["modifiedContentByGroup"] == sub_a.modified_by_group
