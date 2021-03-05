@@ -3,6 +3,7 @@ import uuid
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
+from django.utils.functional import cached_property
 from localized_fields.fields import LocalizedField, LocalizedTextField
 from simple_history.models import HistoricalRecords
 
@@ -293,6 +294,24 @@ class Document(core_models.UUIDModel):
             )
 
         return new_document
+
+    @cached_property
+    def last_modified_answer(self):
+        return (
+            Answer.objects.filter(document__family=self).order_by("modified_at").last()
+        )
+
+    @property
+    def modified_content_at(self):
+        return getattr(self.last_modified_answer, "modified_at", None)
+
+    @property
+    def modified_content_by_user(self):
+        return getattr(self.last_modified_answer, "modified_by_user", None)
+
+    @property
+    def modified_content_by_group(self):
+        return getattr(self.last_modified_answer, "modified_by_group", None)
 
     def __repr__(self):
         return f"Document(form={self.form!r})"

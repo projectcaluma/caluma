@@ -772,6 +772,9 @@ class Document(FormDjangoObjectType):
         ),
     )
     meta = generic.GenericScalar()
+    modified_content_at = graphene.DateTime()
+    modified_content_by_user = graphene.String()
+    modified_content_by_group = graphene.String()
 
     class Meta:
         model = models.Document

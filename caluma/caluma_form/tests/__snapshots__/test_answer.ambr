@@ -17,7 +17,7 @@
       'clientMutationId': None,
       'question': <class 'dict'> {
         '__typename': 'IntegerQuestion',
-        'id': 'SW50ZWdlclF1ZXN0aW9uOmJvZHktcGVyaGFwcw==',
+        'id': 'SW50ZWdlclF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'meta': <class 'dict'> {
         },
       },
@@ -25,7 +25,7 @@
   }
 ---
 # name: test_save_calculated_dependency_default_answer[float-0.1]
-  Answer(document=None, question=Question(slug=body-perhaps, type=float), value=0.1)
+  Answer(document=None, question=Question(slug=environmental-ten, type=float), value=0.1)
 ---
 # name: test_save_default_answer_graphql[choice-option-slug-None-SaveDefaultStringAnswer-True-option-slug-False]
   <class 'OrderedDict'> {
@@ -149,12 +149,12 @@
         'table_value': <class 'list'> [
           <class 'dict'> {
             'form': <class 'dict'> {
-              'slug': 'religious-huge-unit',
+              'slug': 'eight-traditional',
             },
           },
           <class 'dict'> {
             'form': <class 'dict'> {
-              'slug': 'religious-huge-unit',
+              'slug': 'eight-traditional',
             },
           },
         ],
@@ -171,12 +171,12 @@
         'table_value': <class 'list'> [
           <class 'dict'> {
             'form': <class 'dict'> {
-              'slug': 'religious-huge-unit',
+              'slug': 'eight-traditional',
             },
           },
           <class 'dict'> {
             'form': <class 'dict'> {
-              'slug': 'religious-huge-unit',
+              'slug': 'eight-traditional',
             },
           },
         ],
@@ -230,50 +230,50 @@
   }
 ---
 # name: test_save_default_answer_python_api[choice-option-slug-None-True-option-slug-False]
-  Answer(document=None, question=Question(slug=body-perhaps, type=choice), value='option-slug')
+  Answer(document=None, question=Question(slug=environmental-ten, type=choice), value='option-slug')
 ---
 # name: test_save_default_answer_python_api[choice-option-slug-None-True-option-slug-True]
-  Answer(document=None, question=Question(slug=body-perhaps, type=choice), value='option-slug')
+  Answer(document=None, question=Question(slug=environmental-ten, type=choice), value='option-slug')
 ---
 # name: test_save_default_answer_python_api[date-None-2019-02-22-True-option-slug-False]
-  Answer(document=None, question=Question(slug=body-perhaps, type=date), value=None)
+  Answer(document=None, question=Question(slug=environmental-ten, type=date), value=None)
 ---
 # name: test_save_default_answer_python_api[date-None-2019-02-22-True-option-slug-True]
-  Answer(document=None, question=Question(slug=body-perhaps, type=date), value=None)
+  Answer(document=None, question=Question(slug=environmental-ten, type=date), value=None)
 ---
 # name: test_save_default_answer_python_api[float-2.1-None-True-option-slug-False]
-  Answer(document=None, question=Question(slug=body-perhaps, type=float), value=2.1)
+  Answer(document=None, question=Question(slug=environmental-ten, type=float), value=2.1)
 ---
 # name: test_save_default_answer_python_api[float-2.1-None-True-option-slug-True]
-  Answer(document=None, question=Question(slug=body-perhaps, type=float), value=2.1)
+  Answer(document=None, question=Question(slug=environmental-ten, type=float), value=2.1)
 ---
 # name: test_save_default_answer_python_api[integer-1-None-True-option-slug-False]
-  Answer(document=None, question=Question(slug=body-perhaps, type=integer), value=1)
+  Answer(document=None, question=Question(slug=environmental-ten, type=integer), value=1)
 ---
 # name: test_save_default_answer_python_api[integer-1-None-True-option-slug-True]
-  Answer(document=None, question=Question(slug=body-perhaps, type=integer), value=1)
+  Answer(document=None, question=Question(slug=environmental-ten, type=integer), value=1)
 ---
 # name: test_save_default_answer_python_api[multiple_choice-answer__value5-None-True-option-slug-False]
-  Answer(document=None, question=Question(slug=body-perhaps, type=multiple_choice), value=['option-slug'])
+  Answer(document=None, question=Question(slug=environmental-ten, type=multiple_choice), value=['option-slug'])
 ---
 # name: test_save_default_answer_python_api[multiple_choice-answer__value5-None-True-option-slug-True]
-  Answer(document=None, question=Question(slug=body-perhaps, type=multiple_choice), value=['option-slug'])
+  Answer(document=None, question=Question(slug=environmental-ten, type=multiple_choice), value=['option-slug'])
 ---
 # name: test_save_default_answer_python_api[table-None-None-True-option-slug-False]
-  Answer(document=None, question=Question(slug=body-perhaps, type=table), value=None)
+  Answer(document=None, question=Question(slug=environmental-ten, type=table), value=None)
 ---
 # name: test_save_default_answer_python_api[table-None-None-True-option-slug-True]
-  Answer(document=None, question=Question(slug=body-perhaps, type=table), value=None)
+  Answer(document=None, question=Question(slug=environmental-ten, type=table), value=None)
 ---
 # name: test_save_default_answer_python_api[text-Test-None-True-option-slug-False]
-  Answer(document=None, question=Question(slug=body-perhaps, type=text), value='Test')
+  Answer(document=None, question=Question(slug=environmental-ten, type=text), value='Test')
 ---
 # name: test_save_default_answer_python_api[text-Test-None-True-option-slug-True]
-  Answer(document=None, question=Question(slug=body-perhaps, type=text), value='Test')
+  Answer(document=None, question=Question(slug=environmental-ten, type=text), value='Test')
 ---
 # name: test_save_default_answer_python_api[textarea-Test-None-True-option-slug-False]
-  Answer(document=None, question=Question(slug=body-perhaps, type=textarea), value='Test')
+  Answer(document=None, question=Question(slug=environmental-ten, type=textarea), value='Test')
 ---
 # name: test_save_default_answer_python_api[textarea-Test-None-True-option-slug-True]
-  Answer(document=None, question=Question(slug=body-perhaps, type=textarea), value='Test')
+  Answer(document=None, question=Question(slug=environmental-ten, type=textarea), value='Test')
 ---
