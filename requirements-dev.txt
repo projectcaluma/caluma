@@ -28,3 +28,4 @@ python-semantic-release==7.16.1
 requests-mock==1.9.3
 reuse==0.12.1
 syrupy==1.3.1
+pytest-xfaillist @ git+https://github.com/ganwell/pytest-xfaillist@master#egg=pytest-xfaillist
