@@ -1,4 +1,5 @@
 from django.db import migrations
+
 from caluma.caluma_form.models import Question
 
 

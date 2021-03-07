@@ -21,8 +21,8 @@ echo ENV=dev >> .env
 docker-compose up -d db
 rm -f Pipfile*
 touch Pipfile
-pipenv install --python 3.7 -r requirements.txt
-pipenv install -d -r requirements-dev.txt
+pipenv install --pre --python 3.7 -r requirements.txt
+pipenv install --pre -d -r requirements-dev.txt
 """.strip().splitlines()
 
 
@@ -74,9 +74,15 @@ setup(
         "django-postgres-extra<3",
         "django-watchman<2",
         "djangorestframework<4",
+<<<<<<< HEAD
         "django_simple_history<4",
         "graphene-django>=3.0.0",
         "idna<4",
+=======
+        "django_simple_history<3",
+        "graphene-django<=3.0.0b7",
+        "idna<3",
+>>>>>>> 6679e49 (chore(deps): switch to graphql 3.0)
         "minio >= 7, < 8",
         "psycopg2-binary >= 2.8, <2.9",
         "pyjexl >= 0.3.0",
