@@ -2,7 +2,7 @@ import json
 
 import pytest
 from django.core.exceptions import ValidationError
-from graphene.utils.str_converters import to_const
+from graphene_django.utils.str_converters import to_const
 
 from ...caluma_core.relay import extract_global_id
 from ...caluma_form.models import Question

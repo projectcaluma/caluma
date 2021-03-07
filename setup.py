@@ -21,8 +21,8 @@ echo ENV=dev >> .env
 docker-compose up -d db
 rm -f Pipfile*
 touch Pipfile
-pipenv install --python 3.7 -r requirements.txt
-pipenv install -d -r requirements-dev.txt
+pipenv install --pre --python 3.7 -r requirements.txt
+pipenv install --pre -d -r requirements-dev.txt
 """.strip().splitlines()
 
 
@@ -74,7 +74,7 @@ setup(
         "django-postgres-extra<3",
         "djangorestframework<4",
         "django_simple_history<3",
-        "graphene-django<=2.12.1",
+        "graphene-django<=3.0.0b7",
         "idna<3",
         "minio >= 7, < 8",
         "psycopg2-binary<3",
