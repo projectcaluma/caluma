@@ -1,8 +1,9 @@
+import datetime
 import functools
 import inspect
-import time
 
 import pytest
+import urllib3
 from django.apps import apps
 from django.core.cache import cache
 from factory import Faker
@@ -129,13 +130,34 @@ def minio_mock(mocker):
         return f"http://minio/download-url/{object_name}"
 
     stat_response = MinioStatObject(
-        "caluma-media",
-        "some-file.pdf",
-        time.struct_time((2019, 4, 5, 7, 0, 49, 4, 95, 0)),
-        "0c81da684e6aaef48e8f3113e5b8769b",
-        8200,
+        # taken from a real-world minio stat() call
+        bucket_name="caluma-media",
+        object_name="a3d0429d-5400-47ac-9d02-124592302631_attack.wav",
+        etag="5d41402abc4b2a76b9719d911017c592",
+        size=8200,
+        last_modified=datetime.datetime(
+            2021, 3, 5, 15, 24, 33, tzinfo=datetime.timezone.utc
+        ),
         content_type="application/pdf",
-        metadata={"X-Amz-Meta-Testtag": "super_file"},
+        metadata=urllib3._collections.HTTPHeaderDict(
+            {
+                "Accept-Ranges": "bytes",
+                "Content-Length": "5",
+                "Content-Security-Policy": "block-all-mixed-content",
+                "Content-Type": "binary/octet-stream",
+                "ETag": '"5d41402abc4b2a76b9719d911017c592"',
+                "Last-Modified": "Fri, 05 Mar 2021 15:24:33 GMT",
+                "Server": "MinIO",
+                "Vary": "Origin",
+                "X-Amz-Request-Id": "16697BAAD69D2214",
+                "X-Xss-Protection": "1; mode=block",
+                "Date": "Fri, 05 Mar 2021 15:25:15 GMT",
+            }
+        ),
+        owner_id=None,
+        owner_name=None,
+        storage_class=None,
+        version_id=None,
     )
     mocker.patch.object(Minio, "presigned_get_object")
     mocker.patch.object(Minio, "presigned_put_object")

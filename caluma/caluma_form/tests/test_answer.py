@@ -1,3 +1,7 @@
+import json
+from datetime import datetime
+
+import minio.error
 import pytest
 from django.utils.dateparse import parse_date
 from graphql_relay import to_global_id
@@ -333,3 +337,56 @@ def test_validation_class_save_document_answer(db, mocker, answer, schema_execut
         result.data["saveDocumentStringAnswer"]["answer"]["stringValue"]
         == "Test (validated)"
     )
+
+
+@pytest.mark.parametrize("question__type", ["file"])
+def test_file_answer_metadata(db, answer, schema_executor, minio_mock):
+    query = """
+        query ans($id: ID!) {
+            node(id:$id) {
+                ... on FileAnswer {
+                    fileValue: value {
+                        name
+                        downloadUrl
+                        metadata
+                    }
+                }
+            }
+        }
+    """
+    vars = {"id": to_global_id("FileAnswer", str(answer.pk))}
+
+    # before "upload"
+    old_stat = minio_mock.stat_object.return_value
+    minio_mock.stat_object.side_effect = minio.error.S3Error(
+        "NoSuchKey",
+        "object does not exist",
+        resource="bla",
+        request_id=134,
+        host_id="minio",
+        response="bla",
+    )
+
+    # Before upload, no metadata is available
+    result = schema_executor(query, variable_values=vars)
+    assert not result.errors
+    assert result.data["node"]["fileValue"]["metadata"] is None
+
+    # After "upload", metadata should contain some useful data
+    minio_mock.stat_object.return_value = old_stat
+    minio_mock.stat_object.side_effect = None
+
+    result = schema_executor(query, variable_values=vars)
+    assert not result.errors
+
+    # Make sure all the values (especially in metadata) are JSON serializable.
+    # This is something the schema_executor doesn't test, but may bite us in prod
+    metadata = result.data["node"]["fileValue"]["metadata"]
+    assert json.dumps(metadata)
+
+    # Ensure some of the important properties having the right types,
+    # and being correctly parseable
+    assert isinstance(metadata["last_modified"], str)
+    assert isinstance(metadata["size"], int)
+    assert all(isinstance(m, str) for m in metadata["metadata"].values())
+    assert datetime.fromisoformat(metadata["last_modified"])
