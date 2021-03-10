@@ -164,7 +164,6 @@ class CopyQuestionSerializer(serializers.ModelSerializer):
 class SaveQuestionSerializer(serializers.ModelSerializer):
     is_hidden = QuestionJexlField(required=False)
     is_required = QuestionJexlField(required=False)
-    default_answer = PrimaryKeyRelatedField(read_only=True)
 
     def validate(self, data):
         validators.QuestionValidator().validate(data)
@@ -180,7 +179,6 @@ class SaveQuestionSerializer(serializers.ModelSerializer):
             "is_hidden",
             "meta",
             "is_archived",
-            "default_answer",
         ]
 
 
