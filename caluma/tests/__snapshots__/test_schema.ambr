@@ -1373,7 +1373,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     calcExpression: QuestionJexl
     clientMutationId: String
   }
@@ -1406,7 +1405,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     options: [ID]!
     clientMutationId: String
   }
@@ -1461,7 +1459,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     clientMutationId: String
   }
   
@@ -1654,7 +1651,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     dataSource: String!
     clientMutationId: String
   }
@@ -1672,7 +1668,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     dataSource: String!
     clientMutationId: String
   }
@@ -1690,7 +1685,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     clientMutationId: String
   }
   
@@ -1707,7 +1701,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     minValue: Float
     maxValue: Float
     placeholder: String
@@ -1742,7 +1735,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     subForm: ID!
     clientMutationId: String
   }
@@ -1760,7 +1752,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     minValue: Int
     maxValue: Int
     placeholder: String
@@ -1780,7 +1771,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     options: [ID]!
     clientMutationId: String
   }
@@ -1845,7 +1835,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     rowForm: ID!
     clientMutationId: String
   }
@@ -1863,7 +1852,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     minLength: Int
     maxLength: Int
     placeholder: String
@@ -1884,7 +1872,6 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
-    defaultAnswer: ID
     minLength: Int
     maxLength: Int
     placeholder: String
