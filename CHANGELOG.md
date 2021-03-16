@@ -1,3 +1,20 @@
+# v7.8.0 (16. March 2021)
+
+### Feature
+
+* Improve mapby and add stringify transform ([`5fc1c73`](https://github.com/projectcaluma/caluma/commit/5fc1c737f15deab3e4ca7457dedac8f6ba00bd82))
+* Modified_content properties on document ([`e333af0`](https://github.com/projectcaluma/caluma/commit/e333af0ca5fb251d00e8c65a1c4dfc3078c55dec))
+* Add modified_by_user and modified_by_group fields ([`2868866`](https://github.com/projectcaluma/caluma/commit/286886689a9ca3908b9e84c96e0c3c54949a872f))
+* Allow disabling ssl verification (#1408) ([`e0d6652`](https://github.com/projectcaluma/caluma/commit/e0d6652d1274ac8f8d8a6c2f901df82c2970b9c6))
+
+### Fix
+* Minio client requires different call signature for copy ([`f878bf1`](https://github.com/projectcaluma/caluma/commit/f878bf17d67dc819b44f0a40fca458cac7e6b7d1))
+* Remove unneeded default_answer field on serializer ([`3104840`](https://github.com/projectcaluma/caluma/commit/3104840f9a9c7b48c203f2b36171cf3e2b208c2a))
+* New minio has different metadata structure (#1412) ([`4f021af`](https://github.com/projectcaluma/caluma/commit/4f021af1fceb36ccedd7d0671b79c66fb50f1e0a))
+* Update minio client to adjust for changed exceptions ([`0783629`](https://github.com/projectcaluma/caluma/commit/07836299823ac32c0591d8034a5f9f9d92321596))
+* Use fixed maxsize from newest version ([`a0ac175`](https://github.com/projectcaluma/caluma/commit/a0ac175ce6674485030b82b2df46239e05663931))
+* Fix search filter when used in collection (#1392) ([`d99db68`](https://github.com/projectcaluma/caluma/commit/d99db6858b9339704bd8b52fb2d2b8eb0dea4123))
+
 # v7.7.1 (24. February 2021)
 
 ### Fix
