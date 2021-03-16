@@ -1,3 +1,4 @@
+import json
 import math
 import numbers
 from functools import partial
@@ -71,9 +72,8 @@ class JEXL(pyjexl.JEXL):
         self.add_transform("debug", self._debug_transform)
         self._expr_stack = []
 
-        self.add_transform(
-            "mapby", lambda arr, key: [obj.get(key, None) for obj in arr]
-        )
+        self.add_transform("mapby", self._mapby_transform)
+        self.add_transform("stringify", lambda obj: json.dumps(obj))
         self.add_binary_operator(
             "intersects", 20, lambda left, right: any(x in right for x in left)
         )
@@ -142,6 +142,15 @@ class JEXL(pyjexl.JEXL):
             else f"JEXL debug: in expression `{expr}`, value = `{value}`"
         )
         return value
+
+    def _mapby_transform(self, arr, *keys):
+        if not isinstance(arr, list):
+            return None
+
+        return [
+            [obj.get(key) for key in keys] if len(keys) > 1 else obj.get(keys[0])
+            for obj in arr
+        ]
 
     def evaluate(self, expression, context=None):
         self._expr_stack.append(expression)
@@ -218,8 +227,9 @@ class ExtractTransformArgumentAnalyzer(CalumaAnalyzer):
                 and transform.subject
                 and transform.subject.name == "answer"
                 and len(transform.args)
-                and isinstance(transform.args[0], Literal)
             ):
-                yield transform.args[0].value
+                for arg in transform.args:
+                    if isinstance(arg, Literal):
+                        yield arg.value
 
         yield from self.generic_visit(transform)
