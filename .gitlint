@@ -1,2 +1,6 @@
 [general]
 ignore=body-is-missing
+
+[ignore-by-title]
+regex=^chore\(deps\)(.*)
+ignore=all
