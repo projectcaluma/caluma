@@ -3,4 +3,4 @@ ignore=body-is-missing
 
 [ignore-by-title]
 regex=^chore\(deps\)(.*)
-ignore=all
+ignore=title-max-length, body-is-missing, body-max-line-length, body-min-length
