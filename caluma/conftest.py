@@ -69,17 +69,21 @@ def anonymous_request(rf):
 @pytest.fixture
 def info(anonymous_request):
     """Mock for GraphQL resolve info embedding django request as context."""
+
     return ResolveInfo(
         None,
         None,
         None,
         None,
-        schema=None,
-        fragments=None,
-        root_value=None,
-        operation=None,
-        variable_values=None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
         context=anonymous_request,
+        # TODO: see if this has an influence on execution, might need parametrization
+        is_awaitable=lambda x: False,
     )
 
 
@@ -91,12 +95,15 @@ def admin_info(admin_request):
         None,
         None,
         None,
-        schema=None,
-        fragments=None,
-        root_value=None,
-        operation=None,
-        variable_values=None,
+        None,
+        None,
+        None,
+        None,
+        None,
+        None,
         context=admin_request,
+        # TODO: see if this has an influence on execution, might need parametrization
+        is_awaitable=lambda x: False,
     )
 
 
