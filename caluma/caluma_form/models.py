@@ -3,6 +3,7 @@ import uuid
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
+from django.db.models import Q
 from django.utils.functional import cached_property
 from localized_fields.fields import LocalizedField, LocalizedTextField
 from simple_history.models import HistoricalRecords
@@ -297,8 +298,16 @@ class Document(core_models.UUIDModel):
 
     @cached_property
     def last_modified_answer(self):
+        """Get most recently modified answer of the document.
+
+        For root documents, we want to look through the whole document, while
+        for row documents only the table-local answer is wanted.
+        """
+
         return (
-            Answer.objects.filter(document__family=self).order_by("modified_at").last()
+            Answer.objects.filter(Q(document=self) | Q(document__family=self))
+            .order_by("-modified_at")
+            .first()
         )
 
     @property
