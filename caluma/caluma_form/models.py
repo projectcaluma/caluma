@@ -1,10 +1,12 @@
 import uuid
+from functools import wraps
 
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
 from django.utils.functional import cached_property
 from localized_fields.fields import LocalizedField, LocalizedTextField
+from minio import S3Error
 from simple_history.models import HistoricalRecords
 
 from ..caluma_core import models as core_models
@@ -438,9 +440,29 @@ class Answer(core_models.BaseModel):
         indexes = [models.Index(fields=["date"]), GinIndex(fields=["meta", "value"])]
 
 
+def _ignore_missing_file(fn):
+    """Ignore errors due to missing file.
+
+    If no file is uploaded to the storage service, we want to ignore the resulting
+    exceptions in order to still be able to modify/delete the File.
+    """
+
+    @wraps(fn)
+    def wrapper(self, *args, **kwargs):
+        try:
+            return fn(self, *args, **kwargs)
+        except S3Error as exc:
+            if exc.code == "NoSuchKey":
+                return
+            raise
+
+    return wrapper
+
+
 class File(core_models.UUIDModel):
     name = models.CharField(max_length=255)
 
+    @_ignore_missing_file
     def _move_blob(self):
         # move the file on update
         # this makes sure it stays available when querying the history
@@ -448,9 +470,13 @@ class File(core_models.UUIDModel):
         new_name = f"{old_file.pk}_{old_file.name}"
         client.move_object(self.object_name, new_name)
 
-    def copy(self, *args, **kwargs):
+    @_ignore_missing_file
+    def _copy(self, new_object_name):
+        client.copy_object(self.object_name, new_object_name)
+
+    def copy(self):
         copy = File.objects.create(name=self.name)
-        client.copy_object(self.object_name, copy.object_name)
+        self._copy(copy.object_name)
         return copy
 
     def delete(self, *args, **kwargs):
