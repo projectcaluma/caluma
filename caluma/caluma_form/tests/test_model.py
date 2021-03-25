@@ -1,5 +1,5 @@
 import pytest
-from minio import Minio
+from minio import Minio, S3Error
 
 from ...caluma_form.models import File, Question
 
@@ -34,3 +34,25 @@ def test_update_file(db, file_factory, mocker):
     file.save()
     Minio.copy_object.assert_called()
     Minio.remove_object.assert_called()
+
+
+@pytest.mark.parametrize("should_raise", [False, True])
+def test_missing_file(db, file, mocker, should_raise):
+    mocker.patch.object(
+        Minio,
+        "copy_object",
+        side_effect=S3Error(
+            code="SomeOtherError" if should_raise else "NoSuchKey",
+            message="",
+            resource="test_object",
+            request_id="",
+            host_id="",
+            response=None,
+        ),
+    )
+
+    if should_raise:
+        with pytest.raises(S3Error):
+            file.copy()
+    else:
+        file.copy()
