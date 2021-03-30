@@ -1,3 +1,10 @@
+# v.7.8.1 (30. March 2021)
+
+### Fix
+* **form:** Modified_content on row documents ([`75822ef`](https://github.com/projectcaluma/caluma/commit/75822efd29bc5cfc96af205631cfb4975666b43a))
+* **file:** Ignore errors due to missing file ([#1440](https://github.com/projectcaluma/caluma/issues/1440)) ([`63d9f94`](https://github.com/projectcaluma/caluma/commit/63d9f94a5fb7de749dd2074f28acdaebd3409ec5))
+
+
 # v7.8.0 (16. March 2021)
 
 ### Feature
