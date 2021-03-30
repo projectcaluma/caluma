@@ -465,6 +465,11 @@ def test_complete_work_item_with_next(
     inp = {"input": {"id": work_item.pk}}
     result = schema_executor(query, variable_values=inp, info=info)
 
+    # newly created work items must inherit task's name and description
+    next_work_item = task_next.work_items.all().first()
+    assert next_work_item.name == task_next.name
+    assert next_work_item.description == task_next.description
+
     assert not result.errors
     assert result.data == sorted_snapshot("edges", lambda x: json.dumps(x))
 
