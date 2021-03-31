@@ -93,3 +93,6 @@ ENABLE_HISTORICAL_API = env.bool("ENABLE_HISTORICAL_API", default=False)
 # Configure the fields you intend to use in the "meta" fields. This will
 # provide corresponding constants in the ordreBy filter.
 META_FIELDS = env.list("META_FIELDS", default=[])
+
+# enable caluma healthz endpoint
+ENABLE_HEALTHZ_ENDPOINT = env.bool("ENABLE_HEALTHZ_ENDPOINT", default=False)

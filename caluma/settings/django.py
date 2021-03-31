@@ -12,7 +12,6 @@ DEBUG = env.bool("DEBUG", default=default(True, False))
 SECRET_KEY = env.str("SECRET_KEY", default=default("uuuuuuuuuu"))
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=default(["*"]))
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -29,6 +28,7 @@ INSTALLED_APPS = [
     "caluma.caluma_workflow.apps.DefaultConfig",
     "caluma.caluma_data_source.apps.DefaultConfig",
     "caluma.caluma_logging.apps.DefaultConfig",
+    "watchman",
 ]
 
 if DEBUG:
@@ -164,3 +164,17 @@ ENABLE_ACCESS_LOG = env.bool("ENABLE_ACCESS_LOG", default=False)
 
 if ENABLE_ACCESS_LOG:
     MIDDLEWARE.append("caluma.caluma_logging.middleware.AccessLogMiddleware")
+
+
+# health checks
+WATCHMAN_CHECKS = env.list(
+    "WATCHMAN_CHECKS",
+    default=(
+        "caluma.caluma_core.health_checks.check_migrations",
+        "caluma.caluma_core.health_checks.check_media_storage_service",
+        "caluma.caluma_core.health_checks.check_models",
+        "watchman.checks.caches",
+        "watchman.checks.databases",
+    ),
+)
+WATCHMAN_ERROR_CODE = 503

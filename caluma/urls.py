@@ -1,3 +1,3 @@
-from django.conf.urls import include, url
+from django.urls import include, path
 
-urlpatterns = [url(r"^graphql", include("caluma.caluma_core.urls"))]
+urlpatterns = [path("", include("caluma.caluma_core.urls"))]
