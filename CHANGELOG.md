@@ -1,4 +1,13 @@
-# v.7.8.1 (30. March 2021)
+# v7.9.0 (31 March 2021)
+
+### Feature
+* Health endpoint ([#1354](https://github.com/winged/caluma/issues/1354)) ([`bfc4951`](https://github.com/winged/caluma/commit/bfc49516caafaef216d00bfec4bdfb1047af77c9))
+
+### Fix
+* **workflow:** Correctly set workitem name from task ([#1448](https://github.com/winged/caluma/issues/1448)) ([`1095de4`](https://github.com/winged/caluma/commit/1095de43e319c4b89ab80a304ff031763beca4c4))
+
+
+# v7.8.1 (30. March 2021)
 
 ### Fix
 * **form:** Modified_content on row documents ([`75822ef`](https://github.com/projectcaluma/caluma/commit/75822efd29bc5cfc96af205631cfb4975666b43a))
