@@ -76,7 +76,7 @@ setup(
         "djangorestframework<4",
         "django_simple_history<3",
         "graphene-django<=2.8.2",
-        "idna<3",
+        "idna<4",
         "minio >= 7, < 8",
         "psycopg2-binary<3",
         "pyjexl<0.3",
