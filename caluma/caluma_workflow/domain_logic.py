@@ -73,7 +73,7 @@ class StartCaseLogic:
         workflow = case.workflow
         tasks = workflow.start_tasks.all()
 
-        work_items = utils.bulk_create_work_items(tasks, case, user, None, context)
+        work_items = utils.create_work_items(tasks, case, user, None, context)
 
         send_event_with_deprecations(
             "post_create_case",
@@ -179,7 +179,7 @@ class CompleteWorkItemLogic:
             )
 
             if all_siblings_complete:
-                created_work_items = utils.bulk_create_work_items(
+                created_work_items = utils.create_work_items(
                     next_tasks, case, user, work_item, context
                 )
 

@@ -2,7 +2,6 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from rest_framework import exceptions
 from rest_framework.serializers import CharField, JSONField, ListField
-from simple_history.utils import bulk_create_with_history
 
 from caluma.caluma_core.events import SendEventSerializerMixin
 
@@ -82,10 +81,9 @@ class AddWorkflowFlowSerializer(serializers.ModelSerializer):
             created_by_user=user.username,
             created_by_group=user.group,
         )
-        task_flows = [
-            models.TaskFlow(task=task, workflow=instance, flow=flow) for task in tasks
-        ]
-        bulk_create_with_history(task_flows, models.TaskFlow)
+
+        for task in tasks:
+            models.TaskFlow.objects.create(task=task, workflow=instance, flow=flow)
 
         return instance
 

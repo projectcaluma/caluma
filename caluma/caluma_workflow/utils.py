@@ -1,5 +1,3 @@
-from simple_history.utils import bulk_create_with_history
-
 from ..caluma_form.models import Document
 from . import models
 from .jexl import FlowJexl, GroupJexl
@@ -49,9 +47,7 @@ def get_jexl_tasks(jexl, case, user, prev_work_item, context=None):
     return []
 
 
-def bulk_create_work_items(
-    tasks, case, user, prev_work_item=None, context: dict = None
-):
+def create_work_items(tasks, case, user, prev_work_item=None, context: dict = None):
     work_items = []
 
     for task in tasks:
@@ -84,7 +80,7 @@ def bulk_create_work_items(
 
         for groups in work_item_groups:
             work_items.append(
-                models.WorkItem(
+                models.WorkItem.objects.create(
                     addressed_groups=groups,
                     controlling_groups=controlling_groups,
                     task_id=task.pk,
@@ -98,5 +94,4 @@ def bulk_create_work_items(
                 )
             )
 
-    bulk_create_with_history(work_items, models.WorkItem)
     return work_items
