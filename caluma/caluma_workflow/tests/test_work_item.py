@@ -881,6 +881,8 @@ def test_filter_document_has_answer(
         ("CONTAINS", False, "alue", 2),
         ("CONTAINS", False, "AlUe", 0),
         ("ICONTAINS", False, "AlUe", 2),
+        ("IN", True, [2, 5], 2),
+        ("IN", True, [1], 0),
         ("GTE", True, 2, 2),
         ("GTE", True, 5, 1),
         ("GTE", True, 6, 0),

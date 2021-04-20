@@ -445,6 +445,7 @@ class JSONLookupMode(Enum):
     STARTSWITH = "startswith"
     CONTAINS = "contains"
     ICONTAINS = "icontains"
+    IN = "in"
     GTE = "gte"
     GT = "gt"
     LTE = "lte"

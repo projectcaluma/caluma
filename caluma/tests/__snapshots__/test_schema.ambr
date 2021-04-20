@@ -1124,6 +1124,7 @@
     STARTSWITH
     CONTAINS
     ICONTAINS
+    IN
     GTE
     GT
     LTE
