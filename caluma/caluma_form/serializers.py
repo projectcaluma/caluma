@@ -686,7 +686,10 @@ class CopyDocumentSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        return validated_data["source"].copy()
+        return validated_data["source"].copy(
+            family=None,
+            user=self.context["request"].user,
+        )
 
     class Meta:
         model = models.Document
