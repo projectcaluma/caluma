@@ -1,10 +1,16 @@
+# v7.9.1 (20 April 2021)
+
+### Fix
+* **document:** Pass current user to copy document function ([`178602f`](https://github.com/projectcaluma/caluma/commit/178602f1d57c1413cbc5d84a38f98923fa4c4f10))
+
+
 # v7.9.0 (31 March 2021)
 
 ### Feature
-* Health endpoint ([#1354](https://github.com/winged/caluma/issues/1354)) ([`bfc4951`](https://github.com/winged/caluma/commit/bfc49516caafaef216d00bfec4bdfb1047af77c9))
+* Health endpoint ([#1354](https://github.com/projectcaluma/caluma/issues/1354)) ([`bfc4951`](https://github.com/projectcaluma/caluma/commit/bfc49516caafaef216d00bfec4bdfb1047af77c9))
 
 ### Fix
-* **workflow:** Correctly set workitem name from task ([#1448](https://github.com/winged/caluma/issues/1448)) ([`1095de4`](https://github.com/winged/caluma/commit/1095de43e319c4b89ab80a304ff031763beca4c4))
+* **workflow:** Correctly set workitem name from task ([#1448](https://github.com/projectcaluma/caluma/issues/1448)) ([`1095de4`](https://github.com/projectcaluma/caluma/commit/1095de43e319c4b89ab80a304ff031763beca4c4))
 
 
 # v7.8.1 (30. March 2021)
