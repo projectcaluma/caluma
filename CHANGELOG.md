@@ -1,3 +1,12 @@
+# v7.10.0 (23 April 2021)
+
+### Feature
+* Add IN lookup for json fields (#1472) (95bc2c3c88cab3d68137996a3daafdf3a1dd6c42)
+
+### Fix
+* Fix regression for union visibilities (e9a948c851e1bb9266e3e64205c9f21d0b3dca72)
+
+
 # v7.9.1 (20 April 2021)
 
 ### Fix
