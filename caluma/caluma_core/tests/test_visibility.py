@@ -1,6 +1,6 @@
 import pytest
 from django.core.exceptions import ImproperlyConfigured
-from django.db.models import CharField
+from django.db.models import CharField, QuerySet
 
 from .. import models
 from ..types import DjangoObjectType, Node
@@ -165,6 +165,42 @@ def test_union_visibility_none(db, history_mock):
     assert result.count() == 0
     queryset = ConfiguredUnion().filter_queryset(CustomNode, queryset, None)
     assert queryset.count() == 0
+
+
+def test_union_visibility_return_managers(db, history_mock):
+    FakeModel = get_fake_model(
+        dict(name=CharField(max_length=255)), model_base=models.UUIDModel
+    )
+    FakeModel.objects.create(name="Name1")
+    FakeModel.objects.create(name="Name2")
+    FakeModel.objects.create(name="Name3")
+    FakeModel.objects.create(name="Name4")
+
+    class CustomNode(DjangoObjectType):
+        class Meta:
+            model = FakeModel
+
+    class Name1Visibility(BaseVisibility):
+        @filter_queryset_for(Node)
+        def filter_queryset_for_node(self, node, queryset, info):
+            return queryset
+
+    class Name2Visibility(BaseVisibility):
+        @filter_queryset_for(CustomNode)
+        def filter_queryset_for_custom_node(self, node, queryset, info):
+            return queryset
+
+    class ConfiguredUnion(Union):
+        visibility_classes = [Name1Visibility, Name2Visibility]
+
+    queryset = FakeModel.objects
+    result = Name1Visibility().filter_queryset(CustomNode, queryset, None)
+    assert result.count() == 4
+    result = Name2Visibility().filter_queryset(CustomNode, queryset, None)
+    assert result.count() == 4
+    queryset = ConfiguredUnion().filter_queryset(CustomNode, queryset, None)
+    assert queryset.count() == 4
+    assert isinstance(queryset, QuerySet)
 
 
 def test_custom_visibility_chained_decorators(db, history_mock):

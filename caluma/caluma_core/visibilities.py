@@ -78,7 +78,9 @@ class Union(BaseVisibility):
     def filter_queryset(self, node, queryset, info):
         result_queryset = None
         for visibility_class in self.visibility_classes:
-            class_result = visibility_class().filter_queryset(node, queryset, info)
+            class_result = (
+                visibility_class().filter_queryset(node, queryset, info).all()
+            )
             if result_queryset is None:
                 result_queryset = class_result
             else:
