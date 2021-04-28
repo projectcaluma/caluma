@@ -82,7 +82,15 @@ class QuestionFilterSet(MetaFilterSet):
 
     class Meta:
         model = models.Question
-        fields = ("slug", "label", "is_required", "is_hidden", "is_archived")
+        fields = (
+            "slug",
+            "label",
+            "is_required",
+            "is_hidden",
+            "is_archived",
+            "sub_form",
+            "row_form",
+        )
 
 
 class QuestionOrderSet(FilterSet):
