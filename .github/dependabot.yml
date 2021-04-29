@@ -1,0 +1,71 @@
+version: 2
+updates:
+- package-ecosystem: pip
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: django
+    versions:
+    - ">=3"
+  - dependency-name: black
+    versions:
+    - 21.4b0
+    - 21.4b1
+  - dependency-name: django-extensions
+    versions:
+    - 3.1.1.post1
+    - 3.1.2
+  - dependency-name: faker
+    versions:
+    - 6.5.1
+    - 6.5.2
+    - 6.6.0
+    - 7.0.0
+  - dependency-name: djangorestframework
+    versions:
+    - 3.12.3
+  - dependency-name: django-localized-fields
+    versions:
+    - "6.2"
+    - "6.3"
+  - dependency-name: pre-commit
+    versions:
+    - 2.11.0
+  - dependency-name: flake8-bugbear
+    versions:
+    - 21.3.1
+  - dependency-name: minio
+    versions:
+    - 7.0.2
+  - dependency-name: flake8-debugger
+    versions:
+    - 4.0.0
+  - dependency-name: isort
+    versions:
+    - 5.7.0
+  - dependency-name: syrupy
+    versions:
+    - 1.1.0
+  - dependency-name: django-postgres-extra
+    versions:
+    - 2.0.2
+  - dependency-name: factory-boy
+    versions:
+    - 3.2.0
+  commit-message:
+    prefix: chore
+    include: scope
+- package-ecosystem: docker
+  directory: "/"
+  schedule:
+    interval: daily
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: python
+    versions:
+    - ">=3.7"
+  commit-message:
+    prefix: chore
+    include: scope
