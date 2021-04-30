@@ -3,12 +3,11 @@ from functools import reduce, singledispatch
 
 import graphene
 from django import forms
-from django.conf import settings
 from django.contrib.postgres.fields.hstore import KeyTransform
 from django.contrib.postgres.search import SearchVector
 from django.db import models
 from django.db.models.constants import LOOKUP_SEP
-from django.db.models.expressions import OrderBy, RawSQL
+from django.db.models.expressions import OrderBy
 from django.db.models.fields.json import KeyTextTransform
 from django.db.models.functions import Cast
 from django.utils import translation
@@ -21,7 +20,6 @@ from django_filters.rest_framework import (
     Filter,
     FilterSet,
     MultipleChoiceFilter,
-    OrderingFilter,
 )
 from graphene import Enum, InputObjectType, List
 from graphene.types import generic
@@ -183,8 +181,7 @@ def FilterCollectionFactory(filterset_class, ordering):  # noqa:C901
         filter_fields = {
             name: _get_or_make_field(name, filt)
             for name, filt in _filter_coll.filters.items()
-            # exclude orderBy in our fields. We want only new-style order filters
-            if _should_include_filter(filt) and name != "orderBy"
+            if _should_include_filter(filt)
         }
 
         if ordering:
@@ -238,7 +235,7 @@ def CollectionFilterSetFactory(filterset_class, orderset_class=None):
 
     ret = CollectionFilterSetFactory._cache[cache_key] = type(
         f"{filterset_class.__name__}Collection",
-        (filterset_class, FilterSet),
+        (FilterSet,),
         {
             **coll_fields,
             "Meta": type(
@@ -246,7 +243,7 @@ def CollectionFilterSetFactory(filterset_class, orderset_class=None):
                 (filterset_class.Meta,),
                 {
                     "model": filterset_class.Meta.model,
-                    "fields": filterset_class.Meta.fields + tuple(coll_fields.keys()),
+                    "fields": tuple(coll_fields.keys()),
                 },
             ),
         },
@@ -371,62 +368,11 @@ class ListField(forms.Field):
     pass
 
 
-class OrderingFilter(OrderingFilter):
-    """Ordering filter adding default fields from models.BaseModel.
-
-    Label is required and is used for enum naming in GraphQL schema.
-
-    This filter additionally allows sorting by meta field values.
-    """
-
-    base_field_class = ListField
-    field_class = OrderingField
-
-    def __init__(self, label, *args, fields=tuple(), **kwargs):
-        fields = tuple(fields) + (
-            "created_at",
-            "modified_at",
-            "created_by_user",
-            "created_by_group",
-            "modified_by_user",
-            "modified_by_group",
-            *[f"meta_{f}" for f in settings.META_FIELDS],
-        )
-
-        super().__init__(
-            *args,
-            fields=fields,
-            label=label,
-            empty_label=None,
-            null_label=None,
-            **kwargs,
-        )
-
-    def get_ordering_value(self, param):
-        if not any(param.startswith(prefix) for prefix in ("meta_", "-meta_")):
-            return super().get_ordering_value(param)
-
-        descending = False
-        if param.startswith("-"):
-            descending = True
-            param = param[1:]
-
-        meta_field_key = param[5:]
-
-        # order_by works on json field keys only without dashes
-        # but we want to support dasherized keys as well as this is
-        # valid json, hence need to use raw sql
-        return OrderBy(
-            RawSQL(f'"{self.model._meta.db_table}"."meta"->%s', (meta_field_key,)),
-            descending=descending,
-        )
-
-
 class IntegerFilter(Filter):
     field_class = forms.IntegerField
 
 
-class FilterSet(GrapheneFilterSetMixin, FilterSet):
+class BaseFilterSet(GrapheneFilterSetMixin, FilterSet):
     created_by_user = CharFilter()
     created_by_group = CharFilter()
     modified_by_user = CharFilter()
@@ -517,7 +463,7 @@ class JSONValueFilter(Filter):
         return converted
 
 
-class MetaFilterSet(FilterSet):
+class MetaFilterSet(BaseFilterSet):
     meta_has_key = CharFilter(lookup_expr="has_key", field_name="meta")
     meta_value = JSONValueFilter(field_name="meta")
 

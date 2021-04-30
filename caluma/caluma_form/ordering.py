@@ -31,7 +31,6 @@ class AnswerValueOrdering(CalumaOrdering):
     ) -> Tuple[QuerySet, OrderingFieldType]:
         # First, join the requested answer, then annotate the QS accordingly.
         # Last, return a field corresponding to the value
-        #
         question = Question.objects.get(pk=value)
         QUESTION_TYPE_TO_FIELD = {
             Question.TYPE_INTEGER: "value",
@@ -40,7 +39,7 @@ class AnswerValueOrdering(CalumaOrdering):
             Question.TYPE_CHOICE: "value",
             Question.TYPE_TEXTAREA: "value",
             Question.TYPE_TEXT: "value",
-            Question.TYPE_FILE: "file",
+            Question.TYPE_FILE: "file__name",
             Question.TYPE_DYNAMIC_CHOICE: "value",
         }
 
