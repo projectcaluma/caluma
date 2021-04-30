@@ -29,7 +29,6 @@ from . import models, validators
 
 class FormFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
-    order_by = OrderingFilter(label="FormOrdering", fields=("name",))
     slugs = SlugMultipleChoiceFilter(field_name="slug")
     slug = CharFilter()
     slug.deprecation_reason = "Use the `slugs` (plural) filter instead, which allows filtering for multiple slugs"
@@ -49,6 +48,7 @@ class FormFilterSet(MetaFilterSet):
 
 class FormOrderSet(FilterSet):
     meta = MetaFieldOrdering()
+    order_by = OrderingFilter(label="FormOrdering", fields=("name",))
     attribute = AttributeOrderingFactory(
         models.Form,
         fields=[
@@ -83,7 +83,6 @@ class OptionFilterSet(MetaFilterSet):
 class QuestionFilterSet(MetaFilterSet):
     exclude_forms = GlobalIDMultipleChoiceFilter(field_name="forms", exclude=True)
     search = SearchFilter(fields=("slug", "label"))
-    order_by = OrderingFilter(label="QuestionOrdering", fields=("label",))
     slugs = SlugMultipleChoiceFilter(field_name="slug")
     slug = CharFilter()
     slug.deprecation_reason = "Use the `slugs` (plural) filter instead, which allows filtering for multiple slugs"
@@ -103,6 +102,7 @@ class QuestionFilterSet(MetaFilterSet):
 
 class QuestionOrderSet(FilterSet):
     meta = MetaFieldOrdering()
+    order_by = OrderingFilter(label="QuestionOrdering", fields=("label",))
     attribute = AttributeOrderingFactory(
         models.Question,
         exclude_fields=[

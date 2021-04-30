@@ -234,7 +234,7 @@ def CollectionFilterSetFactory(filterset_class, orderset_class=None):
 
     ret = CollectionFilterSetFactory._cache[cache_key] = type(
         f"{filterset_class.__name__}Collection",
-        (filterset_class, FilterSet),
+        (FilterSet,),
         {
             **coll_fields,
             "Meta": type(
@@ -242,7 +242,7 @@ def CollectionFilterSetFactory(filterset_class, orderset_class=None):
                 (filterset_class.Meta,),
                 {
                     "model": filterset_class.Meta.model,
-                    "fields": filterset_class.Meta.fields + tuple(coll_fields.keys()),
+                    "fields": tuple(coll_fields.keys()),
                 },
             ),
         },

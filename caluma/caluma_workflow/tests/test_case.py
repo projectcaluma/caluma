@@ -16,7 +16,7 @@ from .. import api, models
 def test_query_all_cases(db, snapshot, case, result_count, flow, schema_executor):
     query = """
         query AllCases {
-          allCases (status: RUNNING){
+          allCases(filter: [{status: RUNNING}]){
             totalCount
             edges {
               node {
@@ -234,7 +234,7 @@ def test_status_filter(db, case_factory, schema_executor):
 
     query = """
         query AllCases {
-          allCases (status: [RUNNING, CANCELED]){
+          allCases (filter: [{status: [RUNNING, CANCELED]}]){
             totalCount
             edges {
               node {
@@ -264,7 +264,7 @@ def test_root_case_filter(schema_executor, db, workflow_factory, case_factory):
 
     query = """
         query AllCases ($case: ID!) {
-          allCases(rootCase: $case) {
+          allCases(filter: [{rootCase: $case}]) {
             edges {
               node {
                 id

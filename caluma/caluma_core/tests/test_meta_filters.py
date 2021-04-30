@@ -34,7 +34,7 @@ def test_meta_value_filter(
 
     query = """
         query AllDocumentsQuery($filter: [JSONValueFilterType]) {
-          allDocuments(metaValue: $filter) {
+          allDocuments(filter: [{metaValue: $filter}]) {
             edges {
               node {
                 id

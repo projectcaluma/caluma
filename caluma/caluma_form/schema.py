@@ -101,7 +101,10 @@ class Question(Node, graphene.Interface):
     is_archived = graphene.Boolean(required=True)
     meta = generic.GenericScalar(required=True)
     forms = DjangoFilterConnectionField(
-        "caluma.caluma_form.schema.Form", filterset_class=filters.FormFilterSet
+        "caluma.caluma_form.schema.Form",
+        filterset_class=CollectionFilterSetFactory(
+            filters.FormFilterSet, orderset_class=filters.FormOrderSet
+        ),
     )
     source = graphene.Field("caluma.caluma_form.schema.Question")
 

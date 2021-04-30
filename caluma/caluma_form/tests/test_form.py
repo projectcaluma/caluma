@@ -28,7 +28,7 @@ def test_query_all_forms(
 
     query = """
         query AllFormsQuery($name: String, $question: String, $orderBy: [FormOrdering]) {
-          allForms(name: $name, orderBy: $orderBy) {
+          allForms(filter: [{name: $name}], order: [{attribute: $orderBy}]) {
             edges {
               node {
                 id

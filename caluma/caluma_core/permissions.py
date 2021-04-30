@@ -66,6 +66,7 @@ class BasePermission(object):
         ]
         perm_muts_dups = list_duplicates(perm_muts)
         if perm_muts_dups:
+            # HMM: would be interesting if we'd be able to chain them
             raise ImproperlyConfigured(
                 f"`permission_for` defined multiple times for "
                 f"{', '.join(perm_muts_dups)} in {str(self)}"
