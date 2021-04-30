@@ -33,10 +33,18 @@ class FormFilterSet(MetaFilterSet):
     slugs = SlugMultipleChoiceFilter(field_name="slug")
     slug = CharFilter()
     slug.deprecation_reason = "Use the `slugs` (plural) filter instead, which allows filtering for multiple slugs"
+    questions = SlugMultipleChoiceFilter(field_name="questions__slug")
 
     class Meta:
         model = models.Form
-        fields = ("slug", "name", "description", "is_published", "is_archived")
+        fields = (
+            "slug",
+            "name",
+            "description",
+            "is_published",
+            "is_archived",
+            "questions",
+        )
 
 
 class FormOrderSet(FilterSet):
