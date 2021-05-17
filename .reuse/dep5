@@ -8,7 +8,6 @@ Files:
     .dockerignore
     .editorconfig
     .github/dependabot.yml
-    .github/workflows/auto-approve-dependabot.yml
     .github/workflows/pypi.yml
     .github/workflows/tests.yml
     .gitignore
