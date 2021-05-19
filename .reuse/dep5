@@ -5,10 +5,9 @@ Source: https://github.com/projectcaluma/caluma
 
 # Files below the threshold of originality (metadata, config and project-information)
 Files:
-    .dependabot/config.yml
     .dockerignore
     .editorconfig
-    .github/workflows/auto-approve-dependabot.yml
+    .github/dependabot.yml
     .github/workflows/pypi.yml
     .github/workflows/tests.yml
     .gitignore
