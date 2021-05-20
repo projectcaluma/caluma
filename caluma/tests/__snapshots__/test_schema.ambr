@@ -1043,6 +1043,7 @@
     historyDate: DateTime!
     historyChangeReason: String
     historyType: String
+    selectedOptions(before: String, after: String, first: Int, last: Int): SelectedOptionConnection
   }
   
   type HistoricalStringAnswer implements HistoricalAnswer, Node {
@@ -1062,6 +1063,7 @@
     historyDate: DateTime!
     historyChangeReason: String
     historyType: String
+    selectedOption: SelectedOption
   }
   
   type HistoricalTableAnswer implements HistoricalAnswer, Node {
@@ -1151,6 +1153,7 @@
     question: Question!
     value: [String]
     meta: GenericScalar!
+    selectedOptions(before: String, after: String, first: Int, last: Int): SelectedOptionConnection
   }
   
   type MultipleChoiceQuestion implements Question, Node {
@@ -2043,6 +2046,22 @@
     TEXT
   }
   
+  type SelectedOption {
+    label: String!
+    slug: String!
+  }
+  
+  type SelectedOptionConnection {
+    pageInfo: PageInfo!
+    edges: [SelectedOptionEdge]!
+    totalCount: Int
+  }
+  
+  type SelectedOptionEdge {
+    node: SelectedOption
+    cursor: String!
+  }
+  
   type SimpleTask implements Task, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -2237,6 +2256,7 @@
     question: Question!
     value: String
     meta: GenericScalar!
+    selectedOption: SelectedOption
   }
   
   input SuspendCaseInput {

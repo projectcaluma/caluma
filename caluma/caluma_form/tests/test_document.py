@@ -1444,3 +1444,87 @@ def test_document_modified_content_properties(
     assert node["modifiedContentAt"] == sub_a.modified_at.isoformat()
     assert node["modifiedContentByUser"] == sub_a.modified_by_user
     assert node["modifiedContentByGroup"] == sub_a.modified_by_group
+
+
+@pytest.mark.parametrize(
+    "question__type,answer__value",
+    [
+        (Question.TYPE_CHOICE, "somevalue"),
+        (Question.TYPE_MULTIPLE_CHOICE, ["somevalue", "anothervalue"]),
+        (Question.TYPE_DYNAMIC_CHOICE, "somevalue"),
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["somevalue", "anothervalue"]),
+        (Question.TYPE_TEXT, "somevalue"),
+    ],
+)
+def test_selected_options(
+    db,
+    snapshot,
+    document,
+    answer,
+    question_option_factory,
+    dynamic_option_factory,
+    schema_executor,
+    question,
+):
+    query = """
+        query node($id: ID!) {
+          node(id: $id) {
+            ... on StringAnswer {
+              string_value: value
+              selectedOption {
+                slug
+                label
+              }
+            }
+            ... on ListAnswer {
+              list_value: value
+              selectedOptions {
+                edges {
+                  node {
+                    slug
+                    label
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    answer_type = "StringAnswer"
+
+    if question.type == Question.TYPE_CHOICE:
+        question_option_factory(option__slug=answer.value, question=question)
+    elif question.type == Question.TYPE_DYNAMIC_CHOICE:
+        dynamic_option_factory(slug=answer.value, question=question, document=document)
+
+    elif question.type == Question.TYPE_MULTIPLE_CHOICE:
+        answer_type = "ListAnswer"
+        for slug in answer.value:
+            question_option_factory(option__slug=slug, question=question)
+    elif question.type == Question.TYPE_DYNAMIC_MULTIPLE_CHOICE:
+        answer_type = "ListAnswer"
+        for slug in answer.value:
+            dynamic_option_factory(slug=slug, question=question, document=document)
+
+    # add some options that must NOT show up in response
+    question_option_factory(question=question)
+    dynamic_option_factory(question=question, document=document)
+
+    result = schema_executor(
+        query, variable_values={"id": to_global_id(answer_type, answer)}
+    )
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+    if question.type == Question.TYPE_TEXT:
+        return
+
+    elif question.type in [Question.TYPE_CHOICE, Question.TYPE_DYNAMIC_CHOICE]:
+        assert result.data["node"]["selectedOption"]["slug"] == "somevalue"
+    else:
+        assert len(result.data["node"]["selectedOptions"]["edges"]) == 2
+        assert (
+            result.data["node"]["selectedOptions"]["edges"][0]["node"]["slug"]
+            == "somevalue"
+        )
