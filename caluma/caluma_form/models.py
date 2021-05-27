@@ -440,6 +440,24 @@ class Answer(core_models.BaseModel):
             )
         return new_answer
 
+    @property
+    def selected_options(self):
+        map = {
+            Question.TYPE_CHOICE: (Option, {"slug": self.value}),
+            Question.TYPE_MULTIPLE_CHOICE: (Option, {"slug__in": self.value}),
+            Question.TYPE_DYNAMIC_CHOICE: (DynamicOption, {"slug": self.value}),
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: (
+                DynamicOption,
+                {"slug__in": self.value},
+            ),
+        }
+
+        if not self.value or self.question.type not in map:
+            return None
+
+        model, filters = map[self.question.type]
+        return model.objects.filter(**filters)
+
     def __repr__(self):
         return f"Answer(document={self.document!r}, question={self.question!r}, value={self.value!r})"
 

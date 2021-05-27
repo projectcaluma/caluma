@@ -739,8 +739,23 @@ class DateAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
         interfaces = (Answer, graphene.Node)
 
 
+class SelectedOption(ObjectType):
+    label = graphene.String(required=True)
+    slug = graphene.String(required=True)
+
+
+class SelectedOptionConnection(CountableConnectionBase):
+    class Meta:
+        node = SelectedOption
+
+
 class StringAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
     value = graphene.String()
+    selected_option = graphene.Field(SelectedOption)
+
+    def resolve_selected_option(self, info, **args):
+        selected_options = self.selected_options
+        return selected_options.first() if selected_options else None
 
     class Meta:
         model = models.Answer
@@ -751,6 +766,7 @@ class StringAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
 class ListAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
     value = graphene.List(graphene.String)
+    selected_options = ConnectionField(SelectedOptionConnection)
 
     class Meta:
         model = models.Answer
