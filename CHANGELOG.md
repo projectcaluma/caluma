@@ -1,3 +1,14 @@
+# v7.11.0
+
+### Feature
+* Make selected option(s) accessible from answers
+([`824d9a8`](https://github.com/projectcaluma/caluma/commit/824d9a87bf0ffb498e11b93388e84150c497ae2b))
+* **forms:** Add question filter for forms
+([`142e18b`](https://github.com/projectcaluma/caluma/commit/142e18b592a8d1ca6987be18f2245edbc4577ccd))
+* **question:** Add filters for sub and row form on questions
+([`3b14abf`](https://github.com/projectcaluma/caluma/commit/3b14abf825840aeaf9e97e0a2c3c4085a43f9bb0))
+
+
 # v7.10.0 (23 April 2021)
 
 ### Feature
