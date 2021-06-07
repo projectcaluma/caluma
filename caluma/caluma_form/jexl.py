@@ -10,6 +10,7 @@ from ..caluma_core.jexl import (
     ExtractTransformArgumentAnalyzer,
     ExtractTransformSubjectAnalyzer,
 )
+from .models import Question
 from .structure import Field
 
 
@@ -60,6 +61,18 @@ class QuestionJexl(JEXL):
 
         if self.is_hidden(field):
             return field.question.empty_value()
+
+        # This overrides the logic in field.value() to consider visibility for
+        # table cells
+        elif field.question.type == Question.TYPE_TABLE and field.answer is not None:
+            return [
+                {
+                    cell.question.slug: cell.value()
+                    for cell in row.children()
+                    if not self.is_hidden(cell)
+                }
+                for row in field.children()
+            ]
 
         return field.value()
 
