@@ -1,4 +1,10 @@
-# v7.11.0
+# v7.11.1 (7 June 2021)
+
+### Fix
+* **validation:** Exclude hidden cells in answer transforms for tables ([`36b0972`](https://github.com/projectcaluma/caluma/commit/36b09720da6ef3e5a57da725ce65c1b6ba4e9ee3))
+
+
+# v7.11.0 (28 May 2021)
 
 ### Feature
 * Make selected option(s) accessible from answers
