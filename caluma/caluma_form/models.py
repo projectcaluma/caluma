@@ -445,10 +445,21 @@ class Answer(core_models.BaseModel):
         map = {
             Question.TYPE_CHOICE: (Option, {"slug": self.value}),
             Question.TYPE_MULTIPLE_CHOICE: (Option, {"slug__in": self.value}),
-            Question.TYPE_DYNAMIC_CHOICE: (DynamicOption, {"slug": self.value}),
+            Question.TYPE_DYNAMIC_CHOICE: (
+                DynamicOption,
+                {
+                    "slug": self.value,
+                    "question": self.question,
+                    "document": self.document,
+                },
+            ),
             Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: (
                 DynamicOption,
-                {"slug__in": self.value},
+                {
+                    "slug__in": self.value,
+                    "question": self.question,
+                    "document": self.document,
+                },
             ),
         }
 
