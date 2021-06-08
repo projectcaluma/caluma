@@ -1,3 +1,9 @@
+# v7.11.2 (8 June 2021)
+
+### Fix
+* Extend uwsgi buffer ([`324d9d3`](https://github.com/projectcaluma/caluma/commit/324d9d397173cf2033600d12316dbce7bf23156c))
+* **form:** Fetch selected_options of corresp. question and document ([`df97a5d`](https://github.com/projectcaluma/caluma/commit/df97a5de83c3190164dda57aa3712d5b421b4867))
+
 # v7.11.1 (7 June 2021)
 
 ### Fix
