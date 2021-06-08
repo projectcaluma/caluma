@@ -1465,6 +1465,8 @@ def test_selected_options(
     dynamic_option_factory,
     schema_executor,
     question,
+    form,
+    form_question_factory,
 ):
     query = """
         query node($id: ID!) {
@@ -1496,20 +1498,38 @@ def test_selected_options(
     if question.type == Question.TYPE_CHOICE:
         question_option_factory(option__slug=answer.value, question=question)
     elif question.type == Question.TYPE_DYNAMIC_CHOICE:
+        # should not be displayed
+        dynamic_option_factory(
+            slug=answer.value,
+            question=form_question_factory(form=form).question,
+            document=document,
+        )
+        # should be displayed
         dynamic_option_factory(slug=answer.value, question=question, document=document)
 
     elif question.type == Question.TYPE_MULTIPLE_CHOICE:
         answer_type = "ListAnswer"
         for slug in answer.value:
             question_option_factory(option__slug=slug, question=question)
+
     elif question.type == Question.TYPE_DYNAMIC_MULTIPLE_CHOICE:
         answer_type = "ListAnswer"
         for slug in answer.value:
+            # should not be displayed
+            dynamic_option_factory(
+                slug=slug,
+                question=form_question_factory(form=form).question,
+                document=document,
+            )
+            # should be displayed
             dynamic_option_factory(slug=slug, question=question, document=document)
 
     # add some options that must NOT show up in response
     question_option_factory(question=question)
     dynamic_option_factory(question=question, document=document)
+    dynamic_option_factory(
+        question=form_question_factory(form=form).question, document=document
+    )
 
     result = schema_executor(
         query, variable_values={"id": to_global_id(answer_type, answer)}
@@ -1524,7 +1544,6 @@ def test_selected_options(
         assert result.data["node"]["selectedOption"]["slug"] == "somevalue"
     else:
         assert len(result.data["node"]["selectedOptions"]["edges"]) == 2
-        assert (
-            result.data["node"]["selectedOptions"]["edges"][0]["node"]["slug"]
-            == "somevalue"
-        )
+        assert set(
+            [e["node"]["slug"] for e in result.data["node"]["selectedOptions"]["edges"]]
+        ) == set(["somevalue", "anothervalue"])

@@ -818,7 +818,7 @@
   <class 'dict'> {
     'node': <class 'dict'> {
       'selectedOption': <class 'dict'> {
-        'label': 'Angela Brown',
+        'label': 'William Sloan',
         'slug': 'somevalue',
       },
       'string_value': 'somevalue',
@@ -836,14 +836,14 @@
         'edges': <class 'list'> [
           <class 'dict'> {
             'node': <class 'dict'> {
-              'label': 'Angela Brown',
-              'slug': 'somevalue',
+              'label': 'Felicia Adams',
+              'slug': 'anothervalue',
             },
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'label': 'Michael Sherman',
-              'slug': 'anothervalue',
+              'label': 'William Sloan',
+              'slug': 'somevalue',
             },
           },
         ],
