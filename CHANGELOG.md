@@ -1,3 +1,13 @@
+# v7.11.3 (10 June 2011)
+
+Minor release only containing dependency updates. The release is done mainly because if this commit:
+
+ * chore: update pyjexl [`03546ce`]\
+   The bugfix https://github.com/mozilla/pyjexl/pull/23 (short-circuit
+   evaluation) is critical for us, so we're pulling it in explicitly until
+   there is a new pyjexl release.
+
+
 # v7.11.2 (8 June 2021)
 
 ### Fix
