@@ -166,6 +166,10 @@ class CalumaAnalyzer(JEXLAnalyzer):
     TODO: Upstream this.
     """
 
+    def __init__(self, config, transforms=None):
+        self.transforms = transforms if transforms else []
+        super().__init__(config)
+
     def generic_visit(self, expression):
         for child in expression.children:
             assert child is not None
@@ -192,10 +196,6 @@ class ExtractTransformSubjectAnalyzer(CalumaAnalyzer):
     If no transforms are given all references of all transforms will be extracted.
     """
 
-    def __init__(self, config, transforms=None):
-        self.transforms = transforms if transforms else []
-        super().__init__(config)
-
     def visit_Transform(self, transform):
         if not self.transforms or transform.name in self.transforms:
             # can only extract subject's value if subject is a Literal
@@ -212,10 +212,6 @@ class ExtractTransformArgumentAnalyzer(CalumaAnalyzer):
     If no transforms are given all references of all transforms will be extracted.
     """
 
-    def __init__(self, config, transforms=None):
-        self.transforms = transforms if transforms else []
-        super().__init__(config)
-
     def visit_Transform(self, transform):
         if not self.transforms or transform.name in self.transforms:
             # "mapby" is the only transform that accepts args, those can hold
@@ -231,5 +227,20 @@ class ExtractTransformArgumentAnalyzer(CalumaAnalyzer):
                 for arg in transform.args:
                     if isinstance(arg, Literal):
                         yield arg.value
+
+        yield from self.generic_visit(transform)
+
+
+class ExtractTransformSubjectAndArgumentsAnalyzer(CalumaAnalyzer):
+    """
+    Extract all referenced subjects and arguments of a given transforms.
+
+    If no transforms are given all references of all transforms will be extracted.
+    """
+
+    def visit_Transform(self, transform):
+        if not self.transforms or transform.name in self.transforms:
+            if not isinstance(transform.subject, type(transform)):
+                yield (transform.subject.value, transform.args)
 
         yield from self.generic_visit(transform)

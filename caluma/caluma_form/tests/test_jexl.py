@@ -522,3 +522,26 @@ def test_is_hidden_neighboring_table(
 
     with pytest.raises(validators.CustomValidationError):
         validator.validate(document, info)
+
+
+def test_optional_answer_transform(info, form_and_document):
+    form, document, questions, answers = form_and_document(
+        use_table=False, use_subform=False
+    )
+
+    questions["top_question"].is_hidden = "'nonexistent'|answer('default') == 'default'"
+    questions["top_question"].save()
+
+    validator = validators.DocumentValidator()
+    assert validator.validate(document, info) is None
+
+    questions["top_question"].is_hidden = "'nonexistent'|answer(null) == null"
+    questions["top_question"].save()
+
+    assert validator.validate(document, info) is None
+
+    questions["top_question"].is_hidden = "'nonexistent'|answer == 'default'"
+    questions["top_question"].save()
+
+    with pytest.raises(QuestionMissing):
+        validator.validate(document, info)
