@@ -1,4 +1,10 @@
-# v7.11.3 (10 June 2011)
+# v7.12.0 (23 June 2021)
+
+### Feature
+* **jexl:** Allow optional answer transforms with default value ([`72dfa5b`](https://github.com/projectcaluma/caluma/commit/72dfa5bdf532025cb4ea35d671b944c011969a4a))
+
+
+# v7.11.3 (10 June 2021)
 
 Minor release only containing dependency updates. The release is done mainly because if this commit:
 
