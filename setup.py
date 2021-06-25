@@ -74,7 +74,7 @@ setup(
         "django-postgres-extra<3",
         "django-watchman<2",
         "djangorestframework<4",
-        "django_simple_history<3",
+        "django_simple_history<4",
         "graphene-django<=2.8.2",
         "idna<3",
         "minio >= 7, < 8",
