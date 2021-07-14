@@ -92,7 +92,7 @@ class AnswerValidator:
         if not isinstance(value, str) or value not in options:
             raise CustomValidationError(
                 f"Invalid value {value}. "
-                f"Should be of type str and one of the options {'.'.join(options)}",
+                f"Should be of type str and one of the options {', '.join(options)}",
                 slugs=[question.slug],
             )
 
