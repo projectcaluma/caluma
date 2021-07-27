@@ -10,7 +10,7 @@ django-watchman==1.2.0
 djangorestframework==3.12.4
 django_simple_history==2.12.0
 graphene-django==2.8.2
-idna==2.10
+idna==3.2
 minio==7.0.3
 psycopg2-binary==2.8.6
 pyjexl @ git+https://github.com/mozilla/pyjexl.git@dab0618f0d81926759cd0e6ccfd3dcdb08a13ca1#egg=pyjexl
