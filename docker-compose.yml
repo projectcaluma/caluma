@@ -23,7 +23,8 @@ services:
     #   - ./validations.py:/app/caluma/extensions/validations.py
     #   - ./data_sources.py:/app/caluma/extensions/data_sources.py
     #   - ./format_validators.py:/app/caluma/extensions/format_validators.py
-    environment:
+    environment
+      - ENV=dev
       - DATABASE_HOST=db
       # following options are a must to configure on production system:
       # https://docs.djangoproject.com/en/2.1/ref/settings/#std:setting-SECRET_KEY
