@@ -31,11 +31,7 @@ After installing and configuring those, download [docker-compose.yml](https://gi
 ```bash
 docker-compose up -d
 ```
-
-You can now access [GraphiQL](https://github.com/graphql/graphiql) at
-[http://localhost:8000/graphql](http://localhost:8000/graphql) which
-includes a schema documentation. The API allows to query and mutate form
-and workflow entities which are described below.
+Schema introspection and documentation is available at http://localhost:8000/graphql and can be accessed using a GraphQL client such as [Altair](https://altair.sirmuel.design/). The API allows to query and mutate form and workflow entities which are described below.
 
 Caluma is a [12factor app](https://12factor.net/) which
 means that configuration is stored in environment variables.
