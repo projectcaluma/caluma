@@ -32,6 +32,7 @@ Caluma expects a bearer token to be passed on as [Authorization Request Header F
 * `OIDC_GROUPS_CLAIM`: Name of claim to be used to represent groups (default: caluma_groups)
 * `OIDC_USERNAME_CLAIM`: Name of claim to be used to represent the username (default: sub)
 * `OIDC_BEARER_TOKEN_REVALIDATION_TIME`: Time in seconds before bearer token validity is verified again. For best security token is validated on each request per default. It might be helpful though in case of slow Open ID Connect provider to cache it. It uses [cache](#cache) mechanism for memorizing userinfo result. Number has to be lower than access token expiration time. (default: 0)
+* `CALUMA_OIDC_USER_FACTORY`: User object factory (default: `caluma.caluma_user.models.OIDCUser`). Use it to provide a custom OIDC user object. The factory is expected to accept a mandatory `token` parameter and two optional parameters `userinfo` and `introspection`. Only one of them will be filled, depending on which OIDC endpoint the user information comes from.
 
 ## Cache
 

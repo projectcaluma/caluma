@@ -62,6 +62,11 @@ OIDC_INTROSPECT_ENDPOINT = env.str("OIDC_INTROSPECT_ENDPOINT", default=None)
 OIDC_INTROSPECT_CLIENT_ID = env.str("OIDC_INTROSPECT_CLIENT_ID", default=None)
 OIDC_INTROSPECT_CLIENT_SECRET = env.str("OIDC_INTROSPECT_CLIENT_SECRET", default=None)
 
+CALUMA_OIDC_USER_FACTORY = env.str(
+    "CALUMA_OIDC_USER_FACTORY", default="caluma.caluma_user.models.OIDCUser"
+)
+
+
 # Extensions
 
 VISIBILITY_CLASSES = env.list(
