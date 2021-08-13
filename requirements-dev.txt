@@ -22,7 +22,7 @@ pytest-django==4.4.0
 pytest-env==0.6.2
 pytest-factoryboy==2.1.0
 pytest-mock==3.6.1
-pytest-randomly==3.8.0
+pytest-randomly==3.10.0
 pytest-xdist==2.2.1
 python-semantic-release==7.16.1
 requests-mock==1.9.3
