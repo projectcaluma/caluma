@@ -571,7 +571,9 @@ class AnswerDocument(core_models.UUIDModel):
 class DynamicOption(core_models.UUIDModel):
     slug = models.CharField(max_length=255)
     label = LocalizedField(blank=False, null=False, required=False)
-    document = models.ForeignKey("Document", on_delete=models.CASCADE)
+    document = models.ForeignKey(
+        "Document", on_delete=models.CASCADE, related_name="dynamic_options"
+    )
     question = models.ForeignKey("Question", on_delete=models.CASCADE)
 
     class Meta:
