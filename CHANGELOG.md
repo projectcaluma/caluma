@@ -1,3 +1,15 @@
+# v7.13.0
+
+### Feature
+* **config:** Introduce configurable user factory ([`8a49aaf`](https://github.com/projectcaluma/caluma/commit/8a49aaf7f911d4df50a354915530bfcd034ec91b))
+
+### Fix
+* **documentation:** Updated readme to reflect that GraphiQL is not available anymore ([`b6204e8`](https://github.com/projectcaluma/caluma/commit/b6204e8c89308a4878590c7026744af547f69a90))
+* **serializers:** Do not implicitly monkeypatch rest framework ([`86b8a05`](https://github.com/projectcaluma/caluma/commit/86b8a05eaa7de391a2e650445f4f4cbb2ac02d25))
+* Prettier choice question error message ([`acbc25c`](https://github.com/projectcaluma/caluma/commit/acbc25ca55b6e0dc339ec67ee19e1f712376938b))
+
+
+
 # v7.12.0 (23 June 2021)
 
 ### Feature
