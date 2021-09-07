@@ -101,6 +101,38 @@ That way, you can be sure the transaction will not be rolled-back because of an 
 However, if the `raise_exception` argument of the receiver is `True` it will raise any
 exception that ocurred in the receiver function and the transaction will be rolled back.
 
+
+## Event filtering
+
+In many cases, the first thing an event handler does is to check some
+conditions before continuing. For example, if you want to trigger some
+side effect when a certain answer is saved, you may be tempted to write
+something like this:
+
+```python
+@on(post_save, sender=models.Answer)
+def set_document_family(sender, instance, **kwargs):
+    if instance.question_id != 'the-relevant-question':
+        return
+    do_the_actual_work_here()
+```
+This gets cumbersome and hard to read, especially when the checks get more
+complex. Caluma provides an `filter_events()` decorator that helps with this.
+
+Here's the same example from above, but this time, using the event filter:
+
+```python
+@on(post_save, sender=models.Answer)
+@filter_events(lambda instance: instance.question_id == 'the-relevant-question')
+def set_document_family(sender, instance, **kwargs):
+    do_the_actual_work_here()
+```
+
+Any parameter that is passed to a signal handler can also be accepted by
+the predicate function, it just has to take the same name. Even multiple
+parameters can be read in the same way.
+
+
 ## Built-in django signals
 
 Under the hood, Caluma uses Django signals for now. If you are familiar with them, you can also listen
