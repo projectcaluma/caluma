@@ -11,6 +11,7 @@ from django.db.models.signals import (
 from django.dispatch import receiver
 from simple_history.signals import pre_create_historical_record
 
+from caluma.caluma_core.events import filter_events
 from caluma.utils import disable_raw
 
 from . import models, structure
@@ -35,13 +36,14 @@ def set_historical_answer_type(sender, **kwargs):
 
 
 @receiver(post_delete, sender=models.Question)
+@filter_events(lambda instance: instance.default_answer is not None)
 def cleanup_default_answer(sender, instance, **kwargs):
     """Ensure default_answers are cleanedup."""
-    if instance.default_answer is not None:
-        instance.default_answer.delete()
+    instance.default_answer.delete()
 
 
 @receiver(post_init, sender=models.Document)
+@filter_events(lambda instance: instance.family_id is None)
 def set_document_family(sender, instance, **kwargs):
     """
     Ensure document has the family pointer set.
@@ -50,10 +52,10 @@ def set_document_family(sender, instance, **kwargs):
     The family will be in the corresponding mutations when a tree
     structure is created or restructured.
     """
-    if instance.family_id is None:
-        # can't use instance.set_family() here as the instance isn't
-        # in DB yet, causing integrity errors
-        instance.family = instance
+
+    # can't use instance.set_family() here as the instance isn't
+    # in DB yet, causing integrity errors
+    instance.family = instance
 
 
 def _update_calc_dependents(slug, old_expr, new_expr):
@@ -115,9 +117,8 @@ def _update_or_create_calc_answer(question, document):
 
 @receiver(pre_save, sender=models.Question)
 @disable_raw
+@filter_events(lambda instance: instance.type == models.Question.TYPE_CALCULATED_FLOAT)
 def save_calc_dependents(sender, instance, **kwargs):
-    if instance.type != models.Question.TYPE_CALCULATED_FLOAT:
-        return
 
     original = models.Question.objects.filter(pk=instance.pk).first()
     if not original:
@@ -134,10 +135,8 @@ def save_calc_dependents(sender, instance, **kwargs):
 
 
 @receiver(pre_delete, sender=models.Question)
+@filter_events(lambda instance: instance.type == models.Question.TYPE_CALCULATED_FLOAT)
 def remove_calc_dependents(sender, instance, **kwargs):
-    if instance.type != models.Question.TYPE_CALCULATED_FLOAT:
-        return
-
     _update_calc_dependents(
         instance.slug, old_expr=instance.calc_expression, new_expr="false"
     )
@@ -151,9 +150,8 @@ def remove_calc_dependents(sender, instance, **kwargs):
 
 @receiver(post_save, sender=models.Question)
 @disable_raw
+@filter_events(lambda instance: instance.type == models.Question.TYPE_CALCULATED_FLOAT)
 def update_calc_from_question(sender, instance, created, update_fields, **kwargs):
-    if instance.type != models.Question.TYPE_CALCULATED_FLOAT:
-        return
 
     # TODO optimize: only update answers if calc_expression is updated
     # needs to happen during save() or __init__()
@@ -164,23 +162,22 @@ def update_calc_from_question(sender, instance, created, update_fields, **kwargs
 
 @receiver(post_save, sender=models.FormQuestion)
 @disable_raw
+@filter_events(
+    lambda instance: instance.question.type == models.Question.TYPE_CALCULATED_FLOAT
+)
 def update_calc_from_form_question(sender, instance, created, **kwargs):
-    if instance.question.type != models.Question.TYPE_CALCULATED_FLOAT:
-        return
-
     for document in instance.form.documents.all():
         _update_or_create_calc_answer(instance.question, document)
 
 
 @receiver(post_save, sender=models.Answer)
 @disable_raw
+@filter_events(lambda instance: instance.document and instance.question.calc_dependents)
 def update_calc_from_answer(sender, instance, **kwargs):
-    if not instance.document or not instance.question.calc_dependents:
-        # If there is no document on the answer it means that it's a default
-        # answer. They shouldn't trigger a recalculation of a calculated field
-        # even when they are technically listed as a dependency.
-        # Also skip non-referenced answers.
-        return
+    # If there is no document on the answer it means that it's a default
+    # answer. They shouldn't trigger a recalculation of a calculated field
+    # even when they are technically listed as a dependency.
+    # Also skip non-referenced answers.
 
     for question in models.Question.objects.filter(
         pk__in=instance.question.calc_dependents
@@ -190,9 +187,8 @@ def update_calc_from_answer(sender, instance, **kwargs):
 
 @receiver(post_save, sender=models.Document)
 @disable_raw
+@filter_events(lambda created: created)
 def update_calc_from_document(sender, instance, created, **kwargs):
-    if not created:
-        return
 
     for question in instance.form.questions.filter(
         type=models.Question.TYPE_CALCULATED_FLOAT
