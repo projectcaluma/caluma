@@ -51,7 +51,12 @@ class AddFormQuestionSerializer(serializers.ModelSerializer):
         # default sort is 0, as per default form question are sorted
         # in descending order this will be at the end
         _, created = models.FormQuestion.objects.get_or_create(
-            form=self.instance, question=validated_data["question"]
+            form=self.instance,
+            question=validated_data["question"],
+            defaults={
+                "created_by_user": self.context["request"].user.username,
+                "created_by_group": self.context["request"].user.group,
+            },
         )
 
         if created:
