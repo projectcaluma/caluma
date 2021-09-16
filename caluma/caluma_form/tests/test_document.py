@@ -1437,7 +1437,7 @@ def test_document_modified_content_properties(
         }
     """
 
-    result = schema_executor(query, variable_values={"id": document.pk})
+    result = schema_executor(query, variable_values={"id": str(document.pk)})
     assert not result.errors
 
     node = result.data["allDocuments"]["edges"][0]["node"]
