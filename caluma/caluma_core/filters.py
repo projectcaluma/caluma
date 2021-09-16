@@ -384,6 +384,8 @@ class OrderingFilter(OrderingFilter):
             "modified_at",
             "created_by_user",
             "created_by_group",
+            "modified_by_user",
+            "modified_by_group",
             *[f"meta_{f}" for f in settings.META_FIELDS],
         )
 
@@ -423,6 +425,8 @@ class IntegerFilter(Filter):
 class FilterSet(GrapheneFilterSetMixin, FilterSet):
     created_by_user = CharFilter()
     created_by_group = CharFilter()
+    modified_by_user = CharFilter()
+    modified_by_group = CharFilter()
 
     created_before = DateTimeFilter(
         field_name="created_at",
@@ -441,6 +445,7 @@ class JSONLookupMode(Enum):
     STARTSWITH = "startswith"
     CONTAINS = "contains"
     ICONTAINS = "icontains"
+    IN = "in"
     GTE = "gte"
     GT = "gt"
     LTE = "lte"

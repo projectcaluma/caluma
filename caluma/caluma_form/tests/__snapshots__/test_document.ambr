@@ -803,3 +803,85 @@
     },
   }
 ---
+# name: test_selected_options[choice-somevalue]
+  <class 'dict'> {
+    'node': <class 'dict'> {
+      'selectedOption': <class 'dict'> {
+        'label': 'Calvin Graham',
+        'slug': 'somevalue',
+      },
+      'string_value': 'somevalue',
+    },
+  }
+---
+# name: test_selected_options[dynamic_choice-somevalue]
+  <class 'dict'> {
+    'node': <class 'dict'> {
+      'selectedOption': <class 'dict'> {
+        'label': 'William Sloan',
+        'slug': 'somevalue',
+      },
+      'string_value': 'somevalue',
+    },
+  }
+---
+# name: test_selected_options[dynamic_multiple_choice-answer__value3]
+  <class 'dict'> {
+    'node': <class 'dict'> {
+      'list_value': <class 'list'> [
+        'somevalue',
+        'anothervalue',
+      ],
+      'selectedOptions': <class 'dict'> {
+        'edges': <class 'list'> [
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'label': 'Felicia Adams',
+              'slug': 'anothervalue',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'label': 'William Sloan',
+              'slug': 'somevalue',
+            },
+          },
+        ],
+      },
+    },
+  }
+---
+# name: test_selected_options[multiple_choice-answer__value1]
+  <class 'dict'> {
+    'node': <class 'dict'> {
+      'list_value': <class 'list'> [
+        'somevalue',
+        'anothervalue',
+      ],
+      'selectedOptions': <class 'dict'> {
+        'edges': <class 'list'> [
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'label': 'Calvin Graham',
+              'slug': 'somevalue',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'label': 'Mary White',
+              'slug': 'anothervalue',
+            },
+          },
+        ],
+      },
+    },
+  }
+---
+# name: test_selected_options[text-somevalue]
+  <class 'dict'> {
+    'node': <class 'dict'> {
+      'selectedOption': None,
+      'string_value': 'somevalue',
+    },
+  }
+---

@@ -5,6 +5,7 @@ from logging import getLogger
 import minio
 import urllib3
 from django.conf import settings
+from minio.commonconfig import CopySource
 from minio.error import S3Error
 
 log = getLogger(__name__)
@@ -99,14 +100,19 @@ class Minio:
             timedelta(minutes=settings.MINIO_PRESIGNED_TTL_MINUTES),
         )
 
+    @_retry_on_missing_bucket
     def remove_object(self, object_name):
         self.client.remove_object(self.bucket, object_name)
 
+    @_retry_on_missing_bucket
     def copy_object(self, object_name, new_object_name):
         self.client.copy_object(
-            self.bucket, new_object_name, f"/{self.bucket}/{object_name}"
+            self.bucket,
+            new_object_name,
+            CopySource(self.bucket, object_name),
         )
 
+    @_retry_on_missing_bucket
     def move_object(self, object_name, new_object_name):
         self.copy_object(object_name, new_object_name)
         self.remove_object(object_name)

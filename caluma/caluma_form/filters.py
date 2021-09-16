@@ -33,10 +33,18 @@ class FormFilterSet(MetaFilterSet):
     slugs = SlugMultipleChoiceFilter(field_name="slug")
     slug = CharFilter()
     slug.deprecation_reason = "Use the `slugs` (plural) filter instead, which allows filtering for multiple slugs"
+    questions = SlugMultipleChoiceFilter(field_name="questions__slug")
 
     class Meta:
         model = models.Form
-        fields = ("slug", "name", "description", "is_published", "is_archived")
+        fields = (
+            "slug",
+            "name",
+            "description",
+            "is_published",
+            "is_archived",
+            "questions",
+        )
 
 
 class FormOrderSet(FilterSet):
@@ -48,6 +56,8 @@ class FormOrderSet(FilterSet):
             "modified_at",
             "created_by_user",
             "created_by_group",
+            "modified_by_user",
+            "modified_by_group",
             "slug",
             "name",
             "description",
@@ -80,7 +90,15 @@ class QuestionFilterSet(MetaFilterSet):
 
     class Meta:
         model = models.Question
-        fields = ("slug", "label", "is_required", "is_hidden", "is_archived")
+        fields = (
+            "slug",
+            "label",
+            "is_required",
+            "is_hidden",
+            "is_archived",
+            "sub_form",
+            "row_form",
+        )
 
 
 class QuestionOrderSet(FilterSet):

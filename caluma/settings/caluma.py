@@ -62,6 +62,11 @@ OIDC_INTROSPECT_ENDPOINT = env.str("OIDC_INTROSPECT_ENDPOINT", default=None)
 OIDC_INTROSPECT_CLIENT_ID = env.str("OIDC_INTROSPECT_CLIENT_ID", default=None)
 OIDC_INTROSPECT_CLIENT_SECRET = env.str("OIDC_INTROSPECT_CLIENT_SECRET", default=None)
 
+CALUMA_OIDC_USER_FACTORY = env.str(
+    "CALUMA_OIDC_USER_FACTORY", default="caluma.caluma_user.models.OIDCUser"
+)
+
+
 # Extensions
 
 VISIBILITY_CLASSES = env.list(
@@ -93,3 +98,6 @@ ENABLE_HISTORICAL_API = env.bool("ENABLE_HISTORICAL_API", default=False)
 # Configure the fields you intend to use in the "meta" fields. This will
 # provide corresponding constants in the ordreBy filter.
 META_FIELDS = env.list("META_FIELDS", default=[])
+
+# enable caluma healthz endpoint
+ENABLE_HEALTHZ_ENDPOINT = env.bool("ENABLE_HEALTHZ_ENDPOINT", default=False)

@@ -47,6 +47,10 @@ class JexlField(serializers.CharField):
 
 class ModelSerializer(serializers.ModelSerializer):
     serializer_related_field = GlobalIDPrimaryKeyRelatedField
+    serializer_field_mapping = {
+        **serializers.ModelSerializer.serializer_field_mapping,
+        LocalizedField: serializers.CharField,
+    }
 
     # will be set in caluma_core.AppConfig.ready hook, see apps.py
     # to avoid recursive import error
@@ -74,6 +78,13 @@ class ModelSerializer(serializers.ModelSerializer):
 
         return super().create(validated_data)
 
+    def update(self, instance, validated_data):
+        user = self.context["request"].user
+        validated_data["modified_by_user"] = user.username
+        validated_data["modified_by_group"] = user.group
+
+        return super().update(instance, validated_data)
+
     def build_standard_field(self, field_name, model_field):
         field_class, field_kwargs = super().build_standard_field(
             field_name, model_field
@@ -85,9 +96,6 @@ class ModelSerializer(serializers.ModelSerializer):
             field_kwargs["allow_blank"] = allow_blank
 
         return field_class, field_kwargs
-
-
-ModelSerializer.serializer_field_mapping.update({LocalizedField: serializers.CharField})
 
 
 @serializer_converter.get_graphene_type_from_serializer_field.register(

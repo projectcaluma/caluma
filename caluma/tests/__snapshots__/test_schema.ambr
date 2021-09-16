@@ -31,9 +31,11 @@
   interface Answer {
     id: ID
     createdAt: DateTime!
+    modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
-    modifiedAt: DateTime!
+    modifiedByUser: String
+    modifiedByGroup: String
     question: Question!
     meta: GenericScalar!
   }
@@ -54,6 +56,8 @@
     search: String
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
     metaHasKey: String
@@ -97,6 +101,10 @@
     CREATED_BY_USER_DESC
     CREATED_BY_GROUP_ASC
     CREATED_BY_GROUP_DESC
+    MODIFIED_BY_USER_ASC
+    MODIFIED_BY_USER_DESC
+    MODIFIED_BY_GROUP_ASC
+    MODIFIED_BY_GROUP_DESC
     META_TEST_KEY_ASC
     META_TEST_KEY_DESC
     META_FOOBAR_ASC
@@ -113,6 +121,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -121,7 +131,7 @@
     infoText: String
     meta: GenericScalar!
     source: Question
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     calcExpression: String
     id: ID!
   }
@@ -153,6 +163,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     closedAt: DateTime
     closedByUser: String
@@ -161,9 +173,9 @@
     status: CaseStatus!
     meta: GenericScalar
     document: Document
-    workItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, name: String, task: ID, tasks: [String], case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, deadline: DateTime, hasDeadline: Boolean, caseFamily: ID, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, id: ID, addressedGroups: [String], controllingGroups: [String], assignedUsers: [String], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], rootCaseMetaValue: [JSONValueFilterType]): WorkItemConnection
+    workItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, name: String, task: ID, tasks: [String], case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, deadline: DateTime, hasDeadline: Boolean, caseFamily: ID, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, id: ID, addressedGroups: [String], controllingGroups: [String], assignedUsers: [String], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], rootCaseMetaValue: [JSONValueFilterType]): WorkItemConnection
     parentWorkItem: WorkItem
-    familyWorkItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], rootCaseMetaValue: [JSONValueFilterType], name: String, task: ID, tasks: [String], case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, deadline: DateTime, hasDeadline: Boolean, caseFamily: ID, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, id: ID, addressedGroups: [String], controllingGroups: [String], assignedUsers: [String]): WorkItemConnection
+    familyWorkItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], rootCaseMetaValue: [JSONValueFilterType], name: String, task: ID, tasks: [String], case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, deadline: DateTime, hasDeadline: Boolean, caseFamily: ID, createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, id: ID, addressedGroups: [String], controllingGroups: [String], assignedUsers: [String]): WorkItemConnection
   }
   
   type CaseConnection {
@@ -181,6 +193,8 @@
     workflow: ID
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
     metaHasKey: String
@@ -216,6 +230,10 @@
     CREATED_BY_USER_DESC
     CREATED_BY_GROUP_ASC
     CREATED_BY_GROUP_DESC
+    MODIFIED_BY_USER_ASC
+    MODIFIED_BY_USER_DESC
+    MODIFIED_BY_GROUP_ASC
+    MODIFIED_BY_GROUP_DESC
     META_TEST_KEY_ASC
     META_TEST_KEY_DESC
     META_FOOBAR_ASC
@@ -241,6 +259,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -250,8 +270,8 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: StringAnswer
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
-    options(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, label: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, orderBy: [OptionOrdering]): OptionConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    options(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, label: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, orderBy: [OptionOrdering]): OptionConnection
     id: ID!
   }
   
@@ -260,6 +280,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     name: String!
     description: String
@@ -290,6 +312,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     name: String!
     description: String
@@ -409,6 +433,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     question: Question!
     value: Date
@@ -421,6 +447,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -430,7 +458,7 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: DateAnswer
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     id: ID!
   }
   
@@ -462,14 +490,19 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     form: Form!
     source: Document
     meta: GenericScalar
     copies(before: String, after: String, first: Int, last: Int): DocumentConnection!
-    answers(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], question: ID, search: String, orderBy: [AnswerOrdering], filter: [AnswerFilterSetType], order: [AnswerOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, questions: [ID], visibleInContext: Boolean): AnswerConnection
+    answers(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], question: ID, search: String, orderBy: [AnswerOrdering], filter: [AnswerFilterSetType], order: [AnswerOrderSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, questions: [ID], visibleInContext: Boolean): AnswerConnection
     case: Case
     workItem: WorkItem
+    modifiedContentAt: DateTime
+    modifiedContentByUser: String
+    modifiedContentByGroup: String
   }
   
   type DocumentConnection {
@@ -490,6 +523,8 @@
     id: ID
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
     metaHasKey: String
@@ -517,6 +552,10 @@
     CREATED_BY_USER_DESC
     CREATED_BY_GROUP_ASC
     CREATED_BY_GROUP_DESC
+    MODIFIED_BY_USER_ASC
+    MODIFIED_BY_USER_DESC
+    MODIFIED_BY_GROUP_ASC
+    MODIFIED_BY_GROUP_DESC
     META_TEST_KEY_ASC
     META_TEST_KEY_DESC
     META_FOOBAR_ASC
@@ -539,6 +578,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -547,7 +588,7 @@
     infoText: String
     meta: GenericScalar!
     source: Question
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
     dataSource: String!
     id: ID!
@@ -558,6 +599,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -566,7 +609,7 @@
     infoText: String
     meta: GenericScalar!
     source: Question
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
     dataSource: String!
     id: ID!
@@ -577,6 +620,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     slug: String!
     label: String!
@@ -606,6 +651,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     name: String!
     answer: FileAnswer
@@ -619,6 +666,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     question: Question!
     value: File!
@@ -631,6 +680,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -639,7 +690,7 @@
     infoText: String
     meta: GenericScalar!
     source: Question
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     id: ID!
   }
   
@@ -648,6 +699,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     question: Question!
     value: Float
@@ -659,6 +712,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -669,7 +724,7 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: FloatAnswer
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     id: ID!
     minValue: Float
     maxValue: Float
@@ -680,6 +735,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     next: FlowJexl!
     tasks: [Task]!
@@ -700,6 +757,8 @@
     task: ID
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
     invert: Boolean
@@ -712,13 +771,15 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     name: String!
     description: String
     meta: GenericScalar
     isPublished: Boolean!
     isArchived: Boolean!
-    questions(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, excludeForms: [ID], search: String, orderBy: [QuestionOrdering], slugs: [String]): QuestionConnection
+    questions(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, subForm: ID, rowForm: ID, createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, excludeForms: [ID], search: String, orderBy: [QuestionOrdering], slugs: [String]): QuestionConnection
     source: Form
     documents(before: String, after: String, first: Int, last: Int): DocumentConnection!
     id: ID!
@@ -742,8 +803,11 @@
     description: String
     isPublished: Boolean
     isArchived: Boolean
+    questions: [String]
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
     metaHasKey: String
@@ -770,6 +834,10 @@
     CREATED_BY_USER_DESC
     CREATED_BY_GROUP_ASC
     CREATED_BY_GROUP_DESC
+    MODIFIED_BY_USER_ASC
+    MODIFIED_BY_USER_DESC
+    MODIFIED_BY_GROUP_ASC
+    MODIFIED_BY_GROUP_DESC
     META_TEST_KEY_ASC
     META_TEST_KEY_DESC
     META_FOOBAR_ASC
@@ -781,6 +849,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -789,7 +859,7 @@
     infoText: String
     meta: GenericScalar!
     source: Question
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     subForm: Form
     id: ID!
   }
@@ -826,9 +896,11 @@
   interface HistoricalAnswer {
     id: ID
     createdAt: DateTime!
+    modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
-    modifiedAt: DateTime!
+    modifiedByUser: String
+    modifiedByGroup: String
     question: Question!
     meta: GenericScalar!
     historyDate: DateTime!
@@ -852,6 +924,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     value: Date
     meta: GenericScalar!
@@ -870,6 +944,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     meta: GenericScalar
     historyUserId: String
@@ -897,6 +973,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     value(asOf: DateTime!): HistoricalFile
     meta: GenericScalar!
@@ -915,6 +993,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     value: Float
     meta: GenericScalar!
@@ -932,6 +1012,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     value: Int
     meta: GenericScalar!
@@ -949,6 +1031,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     value: [String]
     meta: GenericScalar!
@@ -959,6 +1043,7 @@
     historyDate: DateTime!
     historyChangeReason: String
     historyType: String
+    selectedOptions(before: String, after: String, first: Int, last: Int): SelectedOptionConnection
   }
   
   type HistoricalStringAnswer implements HistoricalAnswer, Node {
@@ -966,6 +1051,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     value: String
     meta: GenericScalar!
@@ -976,6 +1063,7 @@
     historyDate: DateTime!
     historyChangeReason: String
     historyType: String
+    selectedOption: SelectedOption
   }
   
   type HistoricalTableAnswer implements HistoricalAnswer, Node {
@@ -983,6 +1071,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     value(asOf: DateTime!): [HistoricalDocument]
     meta: GenericScalar!
@@ -1001,6 +1091,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     question: Question!
     value: Int
@@ -1012,6 +1104,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -1022,7 +1116,7 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: IntegerAnswer
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     id: ID!
     maxValue: Int
     minValue: Int
@@ -1033,6 +1127,7 @@
     STARTSWITH
     CONTAINS
     ICONTAINS
+    IN
     GTE
     GT
     LTE
@@ -1052,10 +1147,13 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     question: Question!
     value: [String]
     meta: GenericScalar!
+    selectedOptions(before: String, after: String, first: Int, last: Int): SelectedOptionConnection
   }
   
   type MultipleChoiceQuestion implements Question, Node {
@@ -1063,6 +1161,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -1072,8 +1172,8 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: ListAnswer
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
-    options(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [OptionOrdering], slug: String, label: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String): OptionConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    options(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [OptionOrdering], slug: String, label: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String): OptionConnection
     staticContent: String
     id: ID!
   }
@@ -1148,6 +1248,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isArchived: Boolean!
@@ -1178,6 +1280,10 @@
     CREATED_BY_USER_DESC
     CREATED_BY_GROUP_ASC
     CREATED_BY_GROUP_DESC
+    MODIFIED_BY_USER_ASC
+    MODIFIED_BY_USER_DESC
+    MODIFIED_BY_GROUP_ASC
+    MODIFIED_BY_GROUP_DESC
     META_TEST_KEY_ASC
     META_TEST_KEY_DESC
     META_FOOBAR_ASC
@@ -1195,15 +1301,15 @@
     documentAsOf(id: ID!, asOf: DateTime!): HistoricalDocument
     allDataSources(before: String, after: String, first: Int, last: Int): DataSourceConnection
     dataSource(name: String!, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
-    allWorkflows(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, orderBy: [WorkflowOrdering], filter: [WorkflowFilterSetType], order: [WorkflowOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String): WorkflowConnection
-    allTasks(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, orderBy: [TaskOrdering], filter: [TaskFilterSetType], order: [TaskOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String): TaskConnection
-    allCases(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], workflow: ID, orderBy: [CaseOrdering], filter: [CaseFilterSetType], order: [CaseOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, id: ID, documentForm: String, documentForms: [String], hasAnswer: [HasAnswerFilterType], workItemDocumentHasAnswer: [HasAnswerFilterType], rootCase: ID, searchAnswers: [SearchAnswersFilterType], status: [CaseStatusArgument], orderByQuestionAnswerValue: String): CaseConnection
-    allWorkItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], rootCaseMetaValue: [JSONValueFilterType], name: String, task: ID, tasks: [String], case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, deadline: DateTime, hasDeadline: Boolean, caseFamily: ID, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, id: ID, addressedGroups: [String], controllingGroups: [String], assignedUsers: [String]): WorkItemConnection
-    allForms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, filter: [FormFilterSetType], order: [FormOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
-    allQuestions(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, filter: [QuestionFilterSetType], order: [QuestionOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, excludeForms: [ID], search: String, slugs: [String]): QuestionConnection
-    allDocuments(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], form: ID, forms: [ID], search: String, id: ID, orderBy: [DocumentOrdering], filter: [DocumentFilterSetType], order: [DocumentOrderSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, rootDocument: ID, hasAnswer: [HasAnswerFilterType], searchAnswers: [SearchAnswersFilterType]): DocumentConnection
+    allWorkflows(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, orderBy: [WorkflowOrdering], filter: [WorkflowFilterSetType], order: [WorkflowOrderSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String): WorkflowConnection
+    allTasks(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, type: TaskTypeArgument, isArchived: Boolean, orderBy: [TaskOrdering], filter: [TaskFilterSetType], order: [TaskOrderSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String): TaskConnection
+    allCases(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], workflow: ID, orderBy: [CaseOrdering], filter: [CaseFilterSetType], order: [CaseOrderSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, id: ID, documentForm: String, documentForms: [String], hasAnswer: [HasAnswerFilterType], workItemDocumentHasAnswer: [HasAnswerFilterType], rootCase: ID, searchAnswers: [SearchAnswersFilterType], status: [CaseStatusArgument], orderByQuestionAnswerValue: String): CaseConnection
+    allWorkItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], rootCaseMetaValue: [JSONValueFilterType], name: String, task: ID, tasks: [String], case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, deadline: DateTime, hasDeadline: Boolean, caseFamily: ID, createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, id: ID, addressedGroups: [String], controllingGroups: [String], assignedUsers: [String]): WorkItemConnection
+    allForms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], filter: [FormFilterSetType], order: [FormOrderSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    allQuestions(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [QuestionOrdering], slug: String, label: String, isRequired: String, isHidden: String, isArchived: Boolean, subForm: ID, rowForm: ID, filter: [QuestionFilterSetType], order: [QuestionOrderSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, excludeForms: [ID], search: String, slugs: [String]): QuestionConnection
+    allDocuments(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], form: ID, forms: [ID], search: String, id: ID, orderBy: [DocumentOrdering], filter: [DocumentFilterSetType], order: [DocumentOrderSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, rootDocument: ID, hasAnswer: [HasAnswerFilterType], searchAnswers: [SearchAnswersFilterType]): DocumentConnection
     allFormatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
-    allUsedDynamicOptions(before: String, after: String, first: Int, last: Int, question: ID, document: ID, filter: [DynamicOptionFilterSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime): DynamicOptionConnection
+    allUsedDynamicOptions(before: String, after: String, first: Int, last: Int, question: ID, document: ID, filter: [DynamicOptionFilterSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime): DynamicOptionConnection
     documentValidity(id: ID!, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
     node(id: ID!): Node
     _debug: DjangoDebug
@@ -1215,6 +1321,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     infoText: String
@@ -1222,7 +1330,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     meta: GenericScalar!
-    forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, metaValue: [JSONValueFilterType], search: String, orderBy: [FormOrdering], slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, metaValue: [JSONValueFilterType], search: String, orderBy: [FormOrdering], slugs: [String]): FormConnection
     source: Question
   }
   
@@ -1244,8 +1352,12 @@
     isRequired: String
     isHidden: String
     isArchived: Boolean
+    subForm: ID
+    rowForm: ID
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
     metaHasKey: String
@@ -1275,6 +1387,10 @@
     CREATED_BY_USER_DESC
     CREATED_BY_GROUP_ASC
     CREATED_BY_GROUP_DESC
+    MODIFIED_BY_USER_ASC
+    MODIFIED_BY_USER_DESC
+    MODIFIED_BY_GROUP_ASC
+    MODIFIED_BY_GROUP_DESC
     META_TEST_KEY_ASC
     META_TEST_KEY_DESC
     META_FOOBAR_ASC
@@ -1929,11 +2045,29 @@
     TEXT
   }
   
+  type SelectedOption {
+    label: String!
+    slug: String!
+  }
+  
+  type SelectedOptionConnection {
+    pageInfo: PageInfo!
+    edges: [SelectedOptionEdge]!
+    totalCount: Int
+  }
+  
+  type SelectedOptionEdge {
+    node: SelectedOption
+    cursor: String!
+  }
+  
   type SimpleTask implements Task, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     name: String!
     description: String
@@ -1963,6 +2097,8 @@
     MODIFIED_AT
     CREATED_BY_USER
     CREATED_BY_GROUP
+    MODIFIED_BY_USER
+    MODIFIED_BY_GROUP
     QUESTION
     VALUE
     DOCUMENT
@@ -1987,6 +2123,8 @@
     MODIFIED_AT
     CREATED_BY_USER
     CREATED_BY_GROUP
+    MODIFIED_BY_USER
+    MODIFIED_BY_GROUP
     FORM
     SOURCE
   }
@@ -1996,6 +2134,8 @@
     MODIFIED_AT
     CREATED_BY_USER
     CREATED_BY_GROUP
+    MODIFIED_BY_USER
+    MODIFIED_BY_GROUP
     SLUG
     NAME
     DESCRIPTION
@@ -2008,6 +2148,8 @@
     MODIFIED_AT
     CREATED_BY_USER
     CREATED_BY_GROUP
+    MODIFIED_BY_USER
+    MODIFIED_BY_GROUP
     SLUG
     LABEL
     TYPE
@@ -2078,6 +2220,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -2086,7 +2230,7 @@
     infoText: String
     meta: GenericScalar!
     source: Question
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     staticContent: String
     dataSource: String
     id: ID!
@@ -2105,10 +2249,13 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     question: Question!
     value: String
     meta: GenericScalar!
+    selectedOption: SelectedOption
   }
   
   input SuspendCaseInput {
@@ -2138,6 +2285,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     question: Question!
     value: [Document]
@@ -2150,6 +2299,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -2159,7 +2310,7 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: TableAnswer
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     rowForm: Form
     id: ID!
   }
@@ -2199,6 +2350,8 @@
     isArchived: Boolean
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
     metaHasKey: String
@@ -2229,6 +2382,10 @@
     CREATED_BY_USER_DESC
     CREATED_BY_GROUP_ASC
     CREATED_BY_GROUP_DESC
+    MODIFIED_BY_USER_ASC
+    MODIFIED_BY_USER_DESC
+    MODIFIED_BY_GROUP_ASC
+    MODIFIED_BY_GROUP_DESC
     META_TEST_KEY_ASC
     META_TEST_KEY_DESC
     META_FOOBAR_ASC
@@ -2252,6 +2409,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -2263,7 +2422,7 @@
     source: Question
     formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     defaultAnswer: StringAnswer
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     id: ID!
     minLength: Int
     maxLength: Int
@@ -2274,6 +2433,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     label: String!
     isRequired: QuestionJexl!
@@ -2285,7 +2446,7 @@
     source: Question
     formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     defaultAnswer: StringAnswer
-    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     id: ID!
     minLength: Int
     maxLength: Int
@@ -2315,6 +2476,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     id: ID!
     name: String!
     description: String
@@ -2360,6 +2523,8 @@
     caseFamily: ID
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
     metaHasKey: String
@@ -2398,6 +2563,10 @@
     CREATED_BY_USER_DESC
     CREATED_BY_GROUP_ASC
     CREATED_BY_GROUP_DESC
+    MODIFIED_BY_USER_ASC
+    MODIFIED_BY_USER_DESC
+    MODIFIED_BY_GROUP_ASC
+    MODIFIED_BY_GROUP_DESC
     META_TEST_KEY_ASC
     META_TEST_KEY_DESC
     META_FOOBAR_ASC
@@ -2425,6 +2594,8 @@
     modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     slug: String!
     name: String!
     description: String
@@ -2436,7 +2607,7 @@
     allowForms(before: String, after: String, first: Int, last: Int): FormConnection!
     id: ID!
     tasks: [Task]!
-    flows(before: String, after: String, first: Int, last: Int, task: ID, filter: [FlowFilterSetType], createdByUser: String, createdByGroup: String, createdBefore: DateTime, createdAfter: DateTime): FlowConnection
+    flows(before: String, after: String, first: Int, last: Int, task: ID, filter: [FlowFilterSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime): FlowConnection
   }
   
   type WorkflowConnection {
@@ -2458,6 +2629,8 @@
     isArchived: Boolean
     createdByUser: String
     createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
     metaHasKey: String
@@ -2486,6 +2659,10 @@
     CREATED_BY_USER_DESC
     CREATED_BY_GROUP_ASC
     CREATED_BY_GROUP_DESC
+    MODIFIED_BY_USER_ASC
+    MODIFIED_BY_USER_DESC
+    MODIFIED_BY_GROUP_ASC
+    MODIFIED_BY_GROUP_DESC
     META_TEST_KEY_ASC
     META_TEST_KEY_DESC
     META_FOOBAR_ASC

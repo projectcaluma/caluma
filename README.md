@@ -1,6 +1,6 @@
 # ![Caluma Service](https://user-images.githubusercontent.com/6150577/60805422-51b1bf80-a180-11e9-9ae5-c794249c7a98.png)
 
-[![Build Status](https://travis-ci.com/projectcaluma/caluma.svg?branch=master)](https://travis-ci.com/projectcaluma/caluma)
+[![Build Status](https://github.com/projectcaluma/caluma/workflows/Tests/badge.svg)](https://github.com/projectcaluma/caluma/actions?query=workflow%3ATests)
 [![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](https://github.com/projectcaluma/caluma/blob/master/setup.cfg#L57)
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/python/black)
 [![PyPI](https://img.shields.io/pypi/v/caluma)](https://pypi.org/project/caluma/)
@@ -31,11 +31,7 @@ After installing and configuring those, download [docker-compose.yml](https://gi
 ```bash
 docker-compose up -d
 ```
-
-You can now access [GraphiQL](https://github.com/graphql/graphiql) at
-[http://localhost:8000/graphql](http://localhost:8000/graphql) which
-includes a schema documentation. The API allows to query and mutate form
-and workflow entities which are described below.
+Schema introspection and documentation is available at http://localhost:8000/graphql and can be accessed using a GraphQL client such as [Altair](https://altair.sirmuel.design/). The API allows to query and mutate form and workflow entities which are described below.
 
 Caluma is a [12factor app](https://12factor.net/) which
 means that configuration is stored in environment variables.

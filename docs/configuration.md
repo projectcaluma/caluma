@@ -32,6 +32,7 @@ Caluma expects a bearer token to be passed on as [Authorization Request Header F
 * `OIDC_GROUPS_CLAIM`: Name of claim to be used to represent groups (default: caluma_groups)
 * `OIDC_USERNAME_CLAIM`: Name of claim to be used to represent the username (default: sub)
 * `OIDC_BEARER_TOKEN_REVALIDATION_TIME`: Time in seconds before bearer token validity is verified again. For best security token is validated on each request per default. It might be helpful though in case of slow Open ID Connect provider to cache it. It uses [cache](#cache) mechanism for memorizing userinfo result. Number has to be lower than access token expiration time. (default: 0)
+* `CALUMA_OIDC_USER_FACTORY`: User object factory (default: `caluma.caluma_user.models.OIDCUser`). Use it to provide a custom OIDC user object. The factory is expected to accept a mandatory `token` parameter and two optional parameters `userinfo` and `introspection`. Only one of them will be filled, depending on which OIDC endpoint the user information comes from.
 
 ## Cache
 
@@ -148,3 +149,16 @@ We are using the sane uWSGI-defaults researched by [bloomberg](https://www.techa
 - `UWSGI_PROCNAME_PREFIX`=`"caluma "`
 
 See https://git.io/JemA2 for more information.
+
+
+## Healthz Endpoint
+The `healthz` endpoint performs a number of health checks using the
+django-watchman package extended by custom checks. This allows systems, such
+as Kubernetes, to perform monitoring and readiness checks on caluma.
+
+Please note that when you enable it, make sure it is not reachable from the
+outside (proxy configuration!). Due to it's nature, it takes some resources to
+check everything, which makes it prone to abuse (denial of service, DoS).
+
+It's enabled by setting the environment variable:
+`ENABLE_HEALTHZ_ENDPOINT`: Defaults to `false`.

@@ -9,6 +9,7 @@ Files:
     .dependabot/config.yml
     .dockerignore
     .editorconfig
+    .github/dependabot.yml
     .github/workflows/pypi.yml
     .github/workflows/tests.yml
     .gitignore

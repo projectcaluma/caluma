@@ -8,6 +8,7 @@ from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.http.response import HttpResponse
 from django.utils.encoding import force_bytes, smart_text
+from django.utils.module_loading import import_string
 from graphene_django.views import GraphQLView, HttpError
 from rest_framework.authentication import get_authorization_header
 
@@ -69,6 +70,10 @@ class AuthenticationGraphQLView(GraphQLView):
         response.raise_for_status()
         return response.json()
 
+    def _oidc_user(self, *args, **kwargs):
+        factory = import_string(settings.CALUMA_OIDC_USER_FACTORY)
+        return factory(*args, **kwargs)
+
     def get_user(self, request):
         token = self.get_bearer_token(request)
 
@@ -90,7 +95,7 @@ class AuthenticationGraphQLView(GraphQLView):
                 userinfo_method,
                 timeout=settings.OIDC_BEARER_TOKEN_REVALIDATION_TIME,
             )
-            return models.OIDCUser(token=token, userinfo=userinfo)
+            return self._oidc_user(token=token, userinfo=userinfo)
         except requests.HTTPError as e:
             try:
                 if (
@@ -108,7 +113,7 @@ class AuthenticationGraphQLView(GraphQLView):
                     if "client_id" not in introspection:
                         response = HttpResponse(status=401)
                         raise HttpError(response)
-                    return models.OIDCUser(token=token, introspection=introspection)
+                    return self._oidc_user(token=token, introspection=introspection)
                 else:
                     raise e
             except requests.HTTPError as internal_exception:

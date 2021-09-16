@@ -1,3 +1,102 @@
+# v7.13.0
+
+### Feature
+* **config:** Introduce configurable user factory ([`8a49aaf`](https://github.com/projectcaluma/caluma/commit/8a49aaf7f911d4df50a354915530bfcd034ec91b))
+
+### Fix
+* **documentation:** Updated readme to reflect that GraphiQL is not available anymore ([`b6204e8`](https://github.com/projectcaluma/caluma/commit/b6204e8c89308a4878590c7026744af547f69a90))
+* **serializers:** Do not implicitly monkeypatch rest framework ([`86b8a05`](https://github.com/projectcaluma/caluma/commit/86b8a05eaa7de391a2e650445f4f4cbb2ac02d25))
+* Prettier choice question error message ([`acbc25c`](https://github.com/projectcaluma/caluma/commit/acbc25ca55b6e0dc339ec67ee19e1f712376938b))
+
+
+
+# v7.12.0 (23 June 2021)
+
+### Feature
+* **jexl:** Allow optional answer transforms with default value ([`72dfa5b`](https://github.com/projectcaluma/caluma/commit/72dfa5bdf532025cb4ea35d671b944c011969a4a))
+
+
+# v7.11.3 (10 June 2021)
+
+Minor release only containing dependency updates. The release is done mainly because if this commit:
+
+ * chore: update pyjexl [`03546ce`]\
+   The bugfix https://github.com/mozilla/pyjexl/pull/23 (short-circuit
+   evaluation) is critical for us, so we're pulling it in explicitly until
+   there is a new pyjexl release.
+
+
+# v7.11.2 (8 June 2021)
+
+### Fix
+* Extend uwsgi buffer ([`324d9d3`](https://github.com/projectcaluma/caluma/commit/324d9d397173cf2033600d12316dbce7bf23156c))
+* **form:** Fetch selected_options of corresp. question and document ([`df97a5d`](https://github.com/projectcaluma/caluma/commit/df97a5de83c3190164dda57aa3712d5b421b4867))
+
+# v7.11.1 (7 June 2021)
+
+### Fix
+* **validation:** Exclude hidden cells in answer transforms for tables ([`36b0972`](https://github.com/projectcaluma/caluma/commit/36b09720da6ef3e5a57da725ce65c1b6ba4e9ee3))
+
+
+# v7.11.0 (28 May 2021)
+
+### Feature
+* Make selected option(s) accessible from answers
+([`824d9a8`](https://github.com/projectcaluma/caluma/commit/824d9a87bf0ffb498e11b93388e84150c497ae2b))
+* **forms:** Add question filter for forms
+([`142e18b`](https://github.com/projectcaluma/caluma/commit/142e18b592a8d1ca6987be18f2245edbc4577ccd))
+* **question:** Add filters for sub and row form on questions
+([`3b14abf`](https://github.com/projectcaluma/caluma/commit/3b14abf825840aeaf9e97e0a2c3c4085a43f9bb0))
+
+
+# v7.10.0 (23 April 2021)
+
+### Feature
+* Add IN lookup for json fields (#1472) (95bc2c3c88cab3d68137996a3daafdf3a1dd6c42)
+
+### Fix
+* Fix regression for union visibilities (e9a948c851e1bb9266e3e64205c9f21d0b3dca72)
+
+
+# v7.9.1 (20 April 2021)
+
+### Fix
+* **document:** Pass current user to copy document function ([`178602f`](https://github.com/projectcaluma/caluma/commit/178602f1d57c1413cbc5d84a38f98923fa4c4f10))
+
+
+# v7.9.0 (31 March 2021)
+
+### Feature
+* Health endpoint ([#1354](https://github.com/projectcaluma/caluma/issues/1354)) ([`bfc4951`](https://github.com/projectcaluma/caluma/commit/bfc49516caafaef216d00bfec4bdfb1047af77c9))
+
+### Fix
+* **workflow:** Correctly set workitem name from task ([#1448](https://github.com/projectcaluma/caluma/issues/1448)) ([`1095de4`](https://github.com/projectcaluma/caluma/commit/1095de43e319c4b89ab80a304ff031763beca4c4))
+
+
+# v7.8.1 (30. March 2021)
+
+### Fix
+* **form:** Modified_content on row documents ([`75822ef`](https://github.com/projectcaluma/caluma/commit/75822efd29bc5cfc96af205631cfb4975666b43a))
+* **file:** Ignore errors due to missing file ([#1440](https://github.com/projectcaluma/caluma/issues/1440)) ([`63d9f94`](https://github.com/projectcaluma/caluma/commit/63d9f94a5fb7de749dd2074f28acdaebd3409ec5))
+
+
+# v7.8.0 (16. March 2021)
+
+### Feature
+
+* Improve mapby and add stringify transform ([`5fc1c73`](https://github.com/projectcaluma/caluma/commit/5fc1c737f15deab3e4ca7457dedac8f6ba00bd82))
+* Modified_content properties on document ([`e333af0`](https://github.com/projectcaluma/caluma/commit/e333af0ca5fb251d00e8c65a1c4dfc3078c55dec))
+* Add modified_by_user and modified_by_group fields ([`2868866`](https://github.com/projectcaluma/caluma/commit/286886689a9ca3908b9e84c96e0c3c54949a872f))
+* Allow disabling ssl verification (#1408) ([`e0d6652`](https://github.com/projectcaluma/caluma/commit/e0d6652d1274ac8f8d8a6c2f901df82c2970b9c6))
+
+### Fix
+* Minio client requires different call signature for copy ([`f878bf1`](https://github.com/projectcaluma/caluma/commit/f878bf17d67dc819b44f0a40fca458cac7e6b7d1))
+* Remove unneeded default_answer field on serializer ([`3104840`](https://github.com/projectcaluma/caluma/commit/3104840f9a9c7b48c203f2b36171cf3e2b208c2a))
+* New minio has different metadata structure (#1412) ([`4f021af`](https://github.com/projectcaluma/caluma/commit/4f021af1fceb36ccedd7d0671b79c66fb50f1e0a))
+* Update minio client to adjust for changed exceptions ([`0783629`](https://github.com/projectcaluma/caluma/commit/07836299823ac32c0591d8034a5f9f9d92321596))
+* Use fixed maxsize from newest version ([`a0ac175`](https://github.com/projectcaluma/caluma/commit/a0ac175ce6674485030b82b2df46239e05663931))
+* Fix search filter when used in collection (#1392) ([`d99db68`](https://github.com/projectcaluma/caluma/commit/d99db6858b9339704bd8b52fb2d2b8eb0dea4123))
+
 # v7.7.1 (24. February 2021)
 
 ### Fix

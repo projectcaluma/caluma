@@ -51,7 +51,12 @@ class AddFormQuestionSerializer(serializers.ModelSerializer):
         # default sort is 0, as per default form question are sorted
         # in descending order this will be at the end
         _, created = models.FormQuestion.objects.get_or_create(
-            form=self.instance, question=validated_data["question"]
+            form=self.instance,
+            question=validated_data["question"],
+            defaults={
+                "created_by_user": self.context["request"].user.username,
+                "created_by_group": self.context["request"].user.group,
+            },
         )
 
         if created:
@@ -146,6 +151,8 @@ class CopyQuestionSerializer(serializers.ModelSerializer):
                 option=question_option.option,
                 created_by_user=user.username,
                 created_by_group=user.group,
+                modified_by_user=user.username,
+                modified_by_group=user.group,
             )
             for sort, question_option in enumerate(
                 reversed(models.QuestionOption.objects.filter(question=source)), start=1
@@ -237,6 +244,8 @@ class SaveQuestionOptionsMixin(object):
                 option=option,
                 created_by_user=user.username,
                 created_by_group=user.group,
+                modified_by_user=user.username,
+                modified_by_group=user.group,
             )
             for sort, option in enumerate(reversed(options), start=1)
         ]
@@ -467,7 +476,11 @@ class DocumentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Document
-        fields = ["id", "form", "meta"]
+        fields = [
+            "id",
+            "form",
+            "meta",
+        ]
 
 
 class SaveAnswerSerializer(serializers.ModelSerializer):
@@ -485,7 +498,7 @@ class SaveAnswerSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        return domain_logic.SaveAnswerLogic.update(validated_data, instance)
+        return domain_logic.SaveAnswerLogic.update(instance, validated_data)
 
     class Meta:
         model = models.Answer
@@ -579,7 +592,7 @@ class SaveDefaultAnswerSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
-        return domain_logic.SaveDefaultAnswerLogic.update(validated_data, instance)
+        return domain_logic.SaveDefaultAnswerLogic.update(instance, validated_data)
 
     class Meta:
         model = models.Answer
@@ -678,7 +691,10 @@ class CopyDocumentSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def create(self, validated_data):
-        return validated_data["source"].copy()
+        return validated_data["source"].copy(
+            family=None,
+            user=self.context["request"].user,
+        )
 
     class Meta:
         model = models.Document

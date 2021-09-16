@@ -1,4 +1,6 @@
+import inspect
 import logging
+from functools import wraps
 from warnings import warn
 
 logger = logging.getLogger(__name__)
@@ -31,6 +33,29 @@ def on(event, raise_exception=False, *args, **kwargs):
         return func
 
     return _decorator
+
+
+def filter_events(predicate):
+    """Decorate event handler to only run on condition.
+
+    The given predicate can accept any (keyword) parameter of the signal handler,
+    and is expected to return a boolean result.
+    If the predicate returns `True`, the handler will run, otherwise, it will
+    be skipped.
+    """
+
+    predicate_arg_names = inspect.signature(predicate).parameters.keys()
+
+    def decorate(func):
+        @wraps(func)
+        def wrapper(sender, *args, **kwargs):
+            predicate_args = {arg: kwargs[arg] for arg in predicate_arg_names}
+            if predicate(**predicate_args):
+                return func(sender, *args, **kwargs)
+
+        return wrapper
+
+    return decorate
 
 
 def send_event(signal, **kwargs):

@@ -1,0 +1,420 @@
+# name: test_db_connection_broken
+  <class 'dict'> {
+    'caches': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database migrations': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': False,
+        },
+      },
+    ],
+    'database models': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': False,
+        },
+      },
+    ],
+    'databases': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': False,
+        },
+      },
+    ],
+    'media storage service': <class 'dict'> {
+      'ok': True,
+    },
+  }
+---
+# name: test_db_connection_working
+  <class 'dict'> {
+    'caches': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database migrations': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database models': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'databases': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'media storage service': <class 'dict'> {
+      'ok': True,
+    },
+  }
+---
+# name: test_db_migrations_applied
+  <class 'dict'> {
+    'caches': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database migrations': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database models': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'databases': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'media storage service': <class 'dict'> {
+      'ok': True,
+    },
+  }
+---
+# name: test_db_migrations_not_applied
+  <class 'dict'> {
+    'caches': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database migrations': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': False,
+        },
+      },
+    ],
+    'database models': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'databases': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'media storage service': <class 'dict'> {
+      'ok': True,
+    },
+  }
+---
+# name: test_db_model_accessible
+  <class 'dict'> {
+    'caches': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database migrations': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database models': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'databases': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'media storage service': <class 'dict'> {
+      'ok': True,
+    },
+  }
+---
+# name: test_db_model_read_error
+  <class 'dict'> {
+    'caches': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database migrations': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database models': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': False,
+        },
+      },
+    ],
+    'databases': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'media storage service': <class 'dict'> {
+      'ok': True,
+    },
+  }
+---
+# name: test_db_model_write_error
+  <class 'dict'> {
+    'caches': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database migrations': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database models': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': False,
+        },
+      },
+    ],
+    'databases': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'media storage service': <class 'dict'> {
+      'ok': True,
+    },
+  }
+---
+# name: test_minio_connection_broken
+  <class 'dict'> {
+    'caches': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database migrations': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database models': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'databases': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'media storage service': <class 'dict'> {
+      'ok': False,
+    },
+  }
+---
+# name: test_minio_connection_working
+  <class 'dict'> {
+    'caches': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database migrations': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database models': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'databases': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'media storage service': <class 'dict'> {
+      'ok': True,
+    },
+  }
+---
+# name: test_minio_not_configured
+  <class 'dict'> {
+    'caches': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database migrations': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database models': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'databases': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'media storage service (not configured)': <class 'dict'> {
+      'ok': True,
+    },
+  }
+---
+# name: test_minio_read_error
+  <class 'dict'> {
+    'caches': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database migrations': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database models': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'databases': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'media storage service': <class 'dict'> {
+      'ok': False,
+    },
+  }
+---
+# name: test_minio_write_error
+  <class 'dict'> {
+    'caches': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database migrations': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'database models': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'databases': <class 'list'> [
+      <class 'dict'> {
+        'default': <class 'dict'> {
+          'ok': True,
+        },
+      },
+    ],
+    'media storage service': <class 'dict'> {
+      'ok': False,
+    },
+  }
+---

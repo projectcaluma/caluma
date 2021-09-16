@@ -66,7 +66,9 @@ def save_document(
             {"form": form, "meta": meta}, user=user
         )
 
-    domain_logic.SaveDocumentLogic.update(document, form=form, meta=meta)
+    domain_logic.SaveDocumentLogic.update(
+        document, {"form": form, "meta": meta}, user=user
+    )
     return document
 
 

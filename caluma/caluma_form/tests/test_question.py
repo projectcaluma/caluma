@@ -958,12 +958,12 @@ def test_calculated_question(
     "expr,expected,calc_deps",
     [
         ("'sub_question'|answer", 100.0, ["sub_question"]),
-        ("'table'|answer|mapby('column')[0]", 722550.2, ["table", "column"]),
+        ("'table'|answer|mapby('column')[0]", 99.99, ["table", "column"]),
         ("'other'|answer", 3.0, ["other"]),
         (
-            "'sub_question'|answer && 'table'|answer|mapby('column') ? 'other'|answer: -1",
+            "'sub_question'|answer && 'table'|answer|mapby('column', 'column2') ? 'other'|answer: -1",
             3.0,
-            ["sub_question", "table", "column", "other"],
+            ["sub_question", "table", "column", "column2", "other"],
         ),
     ],
 )
@@ -972,6 +972,7 @@ def test_nested_calculated_question(
     schema_executor,
     form_and_document,
     form_question_factory,
+    question_factory,
     expr,
     expected,
     calc_deps,
@@ -985,9 +986,20 @@ def test_nested_calculated_question(
     sub_question_a.value = 100
     sub_question_a.save()
 
+    column_a = answers_dict["column"]
+    column_a.value = 99.99
+    column_a.save()
+
     questions["other"] = form_question_factory(
         form=form, question__slug="other", question__type=models.Question.TYPE_INTEGER
     ).question
+
+    questions["column2"] = question_factory(
+        slug="column2", is_required="false", is_hidden="false"
+    )
+    form_question_factory(
+        form=questions["table"].row_form, question=questions["column2"]
+    )
 
     api.save_answer(question=questions["other"], document=document, value=3)
 

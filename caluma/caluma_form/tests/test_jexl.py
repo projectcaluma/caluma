@@ -376,6 +376,9 @@ def test_answer_transform_in_tables(
     form, document, questions, answers = form_and_document(
         use_table=True, use_subform=False
     )
+    column_a = answers["column"]
+    column_a.value = 11
+    column_a.save()
 
     table_question = questions["table"]
 
@@ -406,6 +409,49 @@ def test_answer_transform_in_tables(
     # so 'column2' should be required
     with pytest.raises(validators.CustomValidationError):
         validator.validate(document, info)
+
+
+def test_answer_transform_hidden_table_cell(
+    info,
+    form_and_document,
+    form_question_factory,
+):
+    form, document, questions, answers = form_and_document(
+        use_table=True, use_subform=False
+    )
+    column_a = answers["column"]
+    column_a.value = 11.0
+    column_a.save()
+
+    table_question = questions["table"]
+
+    # create column that is always hidden
+    col2_question = form_question_factory(
+        form=table_question.row_form,
+        question__slug="column2",
+        question__is_hidden="true",
+        question__is_required="false",
+    ).question
+
+    # create question that depends on the value of the previously created hidden
+    # column
+    form_question_factory(
+        form=form,
+        question__is_hidden=f"!('yes' in '{table_question.slug}'|answer|mapby('{col2_question.slug}'))",
+        question__is_required="true",
+    )
+
+    # answer the hidden column with the value that would make the dependant
+    # question visible
+    row = answers["table"].documents.first()
+    row.answers.create(question_id=col2_question.slug, value="yes")
+
+    # validation should suceed since the check question should be hidden even
+    # though the dependant column has the proper value but is hidden
+    validator = validators.DocumentValidator()
+    validator.validate(document, info)
+
+    assert True
 
 
 def test_is_hidden_neighboring_table(
@@ -475,4 +521,27 @@ def test_is_hidden_neighboring_table(
     assert neighbor_sub_question not in validator.visible_questions(document)
 
     with pytest.raises(validators.CustomValidationError):
+        validator.validate(document, info)
+
+
+def test_optional_answer_transform(info, form_and_document):
+    form, document, questions, answers = form_and_document(
+        use_table=False, use_subform=False
+    )
+
+    questions["top_question"].is_hidden = "'nonexistent'|answer('default') == 'default'"
+    questions["top_question"].save()
+
+    validator = validators.DocumentValidator()
+    assert validator.validate(document, info) is None
+
+    questions["top_question"].is_hidden = "'nonexistent'|answer(null) == null"
+    questions["top_question"].save()
+
+    assert validator.validate(document, info) is None
+
+    questions["top_question"].is_hidden = "'nonexistent'|answer == 'default'"
+    questions["top_question"].save()
+
+    with pytest.raises(QuestionMissing):
         validator.validate(document, info)

@@ -111,6 +111,8 @@ def test_jexl_cache():
         ("[{ key: 1 }]|mapby('key')", [1]),
         ("[{ otherkey: 1 }]|mapby('key')", [None]),
         ("[]|mapby('key')", []),
+        ("[{ a: 1, b: 2 }]|mapby('a', 'b', 'c')", [[1, 2, None]]),
+        ("0|mapby('key')", None),
     ],
 )
 def test_mapby_operator(expression, result):
@@ -188,6 +190,17 @@ def test_intersects_operator(expression, result):
     ],
 )
 def test_math_transforms(expression, result):
+    assert JEXL().evaluate(expression) == result
+
+
+@pytest.mark.parametrize(
+    "expression,result",
+    [
+        ("[['test1', 'test2'], [1,2]]|stringify", '[["test1", "test2"], [1, 2]]'),
+        ("1|stringify", "1"),
+    ],
+)
+def test_stringify_transform(expression, result):
     assert JEXL().evaluate(expression) == result
 
 

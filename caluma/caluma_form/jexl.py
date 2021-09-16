@@ -9,7 +9,9 @@ from ..caluma_core.jexl import (
     JEXL,
     ExtractTransformArgumentAnalyzer,
     ExtractTransformSubjectAnalyzer,
+    ExtractTransformSubjectAndArgumentsAnalyzer,
 )
+from .models import Question
 from .structure import Field
 
 
@@ -55,11 +57,28 @@ class QuestionJexl(JEXL):
 
         self.add_transform("answer", self.answer_transform)
 
-    def answer_transform(self, question_slug):
+    def answer_transform(self, question_slug, *args):
         field = self._structure.get_field(question_slug)
+
+        # The first and only argument is the default value. If passed the field
+        # is not required and we return that argument.
+        if not field and len(args):
+            return args[0]
 
         if self.is_hidden(field):
             return field.question.empty_value()
+
+        # This overrides the logic in field.value() to consider visibility for
+        # table cells
+        elif field.question.type == Question.TYPE_TABLE and field.answer is not None:
+            return [
+                {
+                    cell.question.slug: cell.value()
+                    for cell in row.children()
+                    if not self.is_hidden(cell)
+                }
+                for row in field.children()
+            ]
 
         return field.value()
 
@@ -70,6 +89,13 @@ class QuestionJexl(JEXL):
         transforms = ["answer"]
         yield from self.analyze(
             expr, partial(ExtractTransformSubjectAnalyzer, transforms=transforms)
+        )
+
+    def extract_referenced_questions_with_arguments(self, expr):
+        transforms = ["answer"]
+        yield from self.analyze(
+            expr,
+            partial(ExtractTransformSubjectAndArgumentsAnalyzer, transforms=transforms),
         )
 
     def extract_referenced_mapby_questions(self, expr):
@@ -96,18 +122,19 @@ class QuestionJexl(JEXL):
         self._structure = old_structure
 
     def _get_referenced_fields(self, field: Field, expr: str):
-        deps = list(self.extract_referenced_questions(expr))
-        referenced_fields = [self._structure.get_field(slug) for slug in deps]
+        deps = list(self.extract_referenced_questions_with_arguments(expr))
+        referenced_fields = [self._structure.get_field(slug) for slug, _ in deps]
 
         referenced_slugs = [ref.question.slug for ref in referenced_fields if ref]
 
-        for slug in deps:
-            if slug not in referenced_slugs:
+        for slug, args in deps:
+            required = len(args) == 0
+            if slug not in referenced_slugs and required:
                 raise QuestionMissing(
                     f"Question `{slug}` could not be found in form {field.form}"
                 )
 
-        return referenced_fields
+        return [field for field in referenced_fields if field]
 
     def is_hidden(self, field: Field):
         """Return True if the given field is hidden.

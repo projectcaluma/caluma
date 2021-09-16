@@ -1,3 +1,4 @@
+import json
 import math
 import numbers
 from functools import partial
@@ -71,9 +72,8 @@ class JEXL(pyjexl.JEXL):
         self.add_transform("debug", self._debug_transform)
         self._expr_stack = []
 
-        self.add_transform(
-            "mapby", lambda arr, key: [obj.get(key, None) for obj in arr]
-        )
+        self.add_transform("mapby", self._mapby_transform)
+        self.add_transform("stringify", lambda obj: json.dumps(obj))
         self.add_binary_operator(
             "intersects", 20, lambda left, right: any(x in right for x in left)
         )
@@ -143,6 +143,15 @@ class JEXL(pyjexl.JEXL):
         )
         return value
 
+    def _mapby_transform(self, arr, *keys):
+        if not isinstance(arr, list):
+            return None
+
+        return [
+            [obj.get(key) for key in keys] if len(keys) > 1 else obj.get(keys[0])
+            for obj in arr
+        ]
+
     def evaluate(self, expression, context=None):
         self._expr_stack.append(expression)
         try:
@@ -156,6 +165,10 @@ class CalumaAnalyzer(JEXLAnalyzer):
 
     TODO: Upstream this.
     """
+
+    def __init__(self, config, transforms=None):
+        self.transforms = transforms if transforms else []
+        super().__init__(config)
 
     def generic_visit(self, expression):
         for child in expression.children:
@@ -183,10 +196,6 @@ class ExtractTransformSubjectAnalyzer(CalumaAnalyzer):
     If no transforms are given all references of all transforms will be extracted.
     """
 
-    def __init__(self, config, transforms=None):
-        self.transforms = transforms if transforms else []
-        super().__init__(config)
-
     def visit_Transform(self, transform):
         if not self.transforms or transform.name in self.transforms:
             # can only extract subject's value if subject is a Literal
@@ -203,10 +212,6 @@ class ExtractTransformArgumentAnalyzer(CalumaAnalyzer):
     If no transforms are given all references of all transforms will be extracted.
     """
 
-    def __init__(self, config, transforms=None):
-        self.transforms = transforms if transforms else []
-        super().__init__(config)
-
     def visit_Transform(self, transform):
         if not self.transforms or transform.name in self.transforms:
             # "mapby" is the only transform that accepts args, those can hold
@@ -218,8 +223,24 @@ class ExtractTransformArgumentAnalyzer(CalumaAnalyzer):
                 and transform.subject
                 and transform.subject.name == "answer"
                 and len(transform.args)
-                and isinstance(transform.args[0], Literal)
             ):
-                yield transform.args[0].value
+                for arg in transform.args:
+                    if isinstance(arg, Literal):
+                        yield arg.value
+
+        yield from self.generic_visit(transform)
+
+
+class ExtractTransformSubjectAndArgumentsAnalyzer(CalumaAnalyzer):
+    """
+    Extract all referenced subjects and arguments of a given transforms.
+
+    If no transforms are given all references of all transforms will be extracted.
+    """
+
+    def visit_Transform(self, transform):
+        if not self.transforms or transform.name in self.transforms:
+            if not isinstance(transform.subject, type(transform)):
+                yield (transform.subject.value, transform.args)
 
         yield from self.generic_visit(transform)

@@ -1005,8 +1005,8 @@ def test_save_document_table_answer_default_answer(
 ):
     form, document, questions_dict, answers_dict = form_and_document(use_table=True)
 
-    table_question = form.questions.filter(type=Question.TYPE_TABLE).first()
-    row_question = table_question.row_form.questions.first()
+    table_question = questions_dict["table"]
+    row_question = questions_dict["column"]
 
     row_question_default_answer = answer_factory(question=row_question, value=23)
     row_question.default_answer = row_question_default_answer
@@ -1346,3 +1346,204 @@ def test_copy_document(
     assert set(ans.value for ans in result_table_answer_document.answers.all()) == set(
         ans.value for ans in row_document_1.answers.all()
     )
+
+
+def assert_props(doc, answer):
+    assert doc.last_modified_answer == answer
+    assert doc.modified_content_at == answer.modified_at
+    assert doc.modified_content_by_user == answer.modified_by_user
+    assert doc.modified_content_by_group == answer.modified_by_group
+
+
+def test_document_modified_content_properties(
+    db, form_and_document, answer_factory, admin_user, schema_executor
+):
+    form, document, questions_dict, answers_dict = form_and_document(
+        use_table=True, use_subform=True
+    )
+
+    row_document = Document.objects.get(form_id=questions_dict["table"].row_form_id)
+    column_a = answers_dict["column"]
+
+    top_a = answers_dict["top_question"]
+    api.save_answer(top_a.question, document, user=admin_user, value="new value")
+    top_a.refresh_from_db()
+
+    # root doc points to newest changed answer, row doc to column answer
+    assert_props(document, top_a)
+    assert_props(row_document, column_a)
+
+    # cached property on document still points to top_a as intended
+    api.save_answer(column_a.question, column_a.document, user=admin_user, value=111.11)
+    column_a.refresh_from_db()
+
+    assert_props(document, top_a)
+
+    # refreshed instance is pointing to column_a
+    del document.last_modified_answer
+    assert_props(document, column_a)
+
+    # row document too
+    del row_document.last_modified_answer
+    assert_props(row_document, column_a)
+
+    # same works with graphql
+    query = """
+        mutation saveDocumentStringAnswer($input: SaveDocumentStringAnswerInput!) {
+          saveDocumentStringAnswer(input: $input) {
+            answer {
+              __typename
+              ... on StringAnswer {
+                stringValue: value
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    sub_a = answers_dict["sub_question"]
+
+    variables = {
+        "input": {
+            "document": to_global_id("StringAnswer", sub_a.document.pk),
+            "question": to_global_id("StringAnswer", sub_a.question.pk),
+            "value": "Test",
+        }
+    }
+
+    result = schema_executor(query, variable_values=variables)
+    assert not result.errors
+
+    sub_a.refresh_from_db()
+    assert sub_a.value == "Test"
+
+    query = """
+        query AllDocumentsQuery($id: ID) {
+          allDocuments(id: $id) {
+            totalCount
+            edges {
+              node {
+                createdByUser
+                modifiedContentAt
+                modifiedContentByUser
+                modifiedContentByGroup
+                answers {
+                  totalCount
+                }
+              }
+            }
+          }
+        }
+    """
+
+    result = schema_executor(query, variable_values={"id": document.pk})
+    assert not result.errors
+
+    node = result.data["allDocuments"]["edges"][0]["node"]
+    assert node["modifiedContentAt"] == sub_a.modified_at.isoformat()
+    assert node["modifiedContentByUser"] == sub_a.modified_by_user
+    assert node["modifiedContentByGroup"] == sub_a.modified_by_group
+
+
+@pytest.mark.parametrize(
+    "question__type,answer__value",
+    [
+        (Question.TYPE_CHOICE, "somevalue"),
+        (Question.TYPE_MULTIPLE_CHOICE, ["somevalue", "anothervalue"]),
+        (Question.TYPE_DYNAMIC_CHOICE, "somevalue"),
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["somevalue", "anothervalue"]),
+        (Question.TYPE_TEXT, "somevalue"),
+    ],
+)
+def test_selected_options(
+    db,
+    snapshot,
+    document,
+    answer,
+    question_option_factory,
+    dynamic_option_factory,
+    schema_executor,
+    question,
+    form,
+    form_question_factory,
+):
+    query = """
+        query node($id: ID!) {
+          node(id: $id) {
+            ... on StringAnswer {
+              string_value: value
+              selectedOption {
+                slug
+                label
+              }
+            }
+            ... on ListAnswer {
+              list_value: value
+              selectedOptions {
+                edges {
+                  node {
+                    slug
+                    label
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    answer_type = "StringAnswer"
+
+    if question.type == Question.TYPE_CHOICE:
+        question_option_factory(option__slug=answer.value, question=question)
+    elif question.type == Question.TYPE_DYNAMIC_CHOICE:
+        # should not be displayed
+        dynamic_option_factory(
+            slug=answer.value,
+            question=form_question_factory(form=form).question,
+            document=document,
+        )
+        # should be displayed
+        dynamic_option_factory(slug=answer.value, question=question, document=document)
+
+    elif question.type == Question.TYPE_MULTIPLE_CHOICE:
+        answer_type = "ListAnswer"
+        for slug in answer.value:
+            question_option_factory(option__slug=slug, question=question)
+
+    elif question.type == Question.TYPE_DYNAMIC_MULTIPLE_CHOICE:
+        answer_type = "ListAnswer"
+        for slug in answer.value:
+            # should not be displayed
+            dynamic_option_factory(
+                slug=slug,
+                question=form_question_factory(form=form).question,
+                document=document,
+            )
+            # should be displayed
+            dynamic_option_factory(slug=slug, question=question, document=document)
+
+    # add some options that must NOT show up in response
+    question_option_factory(question=question)
+    dynamic_option_factory(question=question, document=document)
+    dynamic_option_factory(
+        question=form_question_factory(form=form).question, document=document
+    )
+
+    result = schema_executor(
+        query, variable_values={"id": to_global_id(answer_type, answer)}
+    )
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+    if question.type == Question.TYPE_TEXT:
+        return
+
+    elif question.type in [Question.TYPE_CHOICE, Question.TYPE_DYNAMIC_CHOICE]:
+        assert result.data["node"]["selectedOption"]["slug"] == "somevalue"
+    else:
+        assert len(result.data["node"]["selectedOptions"]["edges"]) == 2
+        assert set(
+            [e["node"]["slug"] for e in result.data["node"]["selectedOptions"]["edges"]]
+        ) == set(["somevalue", "anothervalue"])

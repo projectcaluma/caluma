@@ -85,7 +85,7 @@ class Field(Element):
         elif self.answer.value is not None:
             return self.answer.value
 
-        elif self.question.type == Question.TYPE_TABLE:
+        elif self.question.type == Question.TYPE_TABLE:  # pragma: no cover
             return [
                 {cell.question.slug: cell.value() for cell in row.children()}
                 for row in self.children()

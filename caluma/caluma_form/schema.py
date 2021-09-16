@@ -88,6 +88,8 @@ class Question(Node, graphene.Interface):
     modified_at = graphene.DateTime(required=True)
     created_by_user = graphene.String()
     created_by_group = graphene.String()
+    modified_by_user = graphene.String()
+    modified_by_group = graphene.String()
     slug = graphene.String(required=True)
     label = graphene.String(required=True)
     info_text = graphene.String()
@@ -683,9 +685,11 @@ class CopyOption(UserDefinedPrimaryKeyMixin, Mutation):
 class Answer(Node, graphene.Interface):
     id = graphene.ID()
     created_at = graphene.DateTime(required=True)
+    modified_at = graphene.DateTime(required=True)
     created_by_user = graphene.String()
     created_by_group = graphene.String()
-    modified_at = graphene.DateTime(required=True)
+    modified_by_user = graphene.String()
+    modified_by_group = graphene.String()
     question = graphene.Field(Question, required=True)
     meta = generic.GenericScalar(required=True)
 
@@ -735,8 +739,23 @@ class DateAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
         interfaces = (Answer, graphene.Node)
 
 
+class SelectedOption(ObjectType):
+    label = graphene.String(required=True)
+    slug = graphene.String(required=True)
+
+
+class SelectedOptionConnection(CountableConnectionBase):
+    class Meta:
+        node = SelectedOption
+
+
 class StringAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
     value = graphene.String()
+    selected_option = graphene.Field(SelectedOption)
+
+    def resolve_selected_option(self, info, **args):
+        selected_options = self.selected_options
+        return selected_options.first() if selected_options else None
 
     class Meta:
         model = models.Answer
@@ -747,6 +766,7 @@ class StringAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
 class ListAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
     value = graphene.List(graphene.String)
+    selected_options = ConnectionField(SelectedOptionConnection)
 
     class Meta:
         model = models.Answer
@@ -768,6 +788,9 @@ class Document(FormDjangoObjectType):
         ),
     )
     meta = generic.GenericScalar()
+    modified_content_at = graphene.DateTime()
+    modified_content_by_user = graphene.String()
+    modified_content_by_group = graphene.String()
 
     class Meta:
         model = models.Document

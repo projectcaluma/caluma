@@ -1,9 +1,13 @@
 import uuid
+from functools import wraps
 
 from django.contrib.postgres.fields import ArrayField, JSONField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
+from django.db.models import Q
+from django.utils.functional import cached_property
 from localized_fields.fields import LocalizedField, LocalizedTextField
+from minio import S3Error
 from simple_history.models import HistoricalRecords
 
 from ..caluma_core import models as core_models
@@ -280,6 +284,8 @@ class Document(core_models.UUIDModel):
             family=family,
             created_by_user=user.username if user else None,
             created_by_group=user.group if user else None,
+            modified_by_user=user.username if user else None,
+            modified_by_group=user.group if user else None,
         )
         if not family:
             family = new_document
@@ -291,6 +297,32 @@ class Document(core_models.UUIDModel):
             )
 
         return new_document
+
+    @cached_property
+    def last_modified_answer(self):
+        """Get most recently modified answer of the document.
+
+        For root documents, we want to look through the whole document, while
+        for row documents only the table-local answer is wanted.
+        """
+
+        return (
+            Answer.objects.filter(Q(document=self) | Q(document__family=self))
+            .order_by("-modified_at")
+            .first()
+        )
+
+    @property
+    def modified_content_at(self):
+        return getattr(self.last_modified_answer, "modified_at", None)
+
+    @property
+    def modified_content_by_user(self):
+        return getattr(self.last_modified_answer, "modified_by_user", None)
+
+    @property
+    def modified_content_by_group(self):
+        return getattr(self.last_modified_answer, "modified_by_group", None)
 
     def __repr__(self):
         return f"Document(form={self.form!r})"
@@ -385,6 +417,8 @@ class Answer(core_models.BaseModel):
             document=to_document,
             created_by_user=user.username if user else None,
             created_by_group=user.group if user else None,
+            modified_by_user=user.username if user else None,
+            modified_by_group=user.group if user else None,
         )
 
         if self.question.type == Question.TYPE_FILE:
@@ -401,8 +435,39 @@ class Answer(core_models.BaseModel):
                 sort=answer_doc.sort,
                 created_by_user=user.username if user else None,
                 created_by_group=user.group if user else None,
+                modified_by_user=user.username if user else None,
+                modified_by_group=user.group if user else None,
             )
         return new_answer
+
+    @property
+    def selected_options(self):
+        map = {
+            Question.TYPE_CHOICE: (Option, {"slug": self.value}),
+            Question.TYPE_MULTIPLE_CHOICE: (Option, {"slug__in": self.value}),
+            Question.TYPE_DYNAMIC_CHOICE: (
+                DynamicOption,
+                {
+                    "slug": self.value,
+                    "question": self.question,
+                    "document": self.document,
+                },
+            ),
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: (
+                DynamicOption,
+                {
+                    "slug__in": self.value,
+                    "question": self.question,
+                    "document": self.document,
+                },
+            ),
+        }
+
+        if not self.value or self.question.type not in map:
+            return None
+
+        model, filters = map[self.question.type]
+        return model.objects.filter(**filters)
 
     def __repr__(self):
         return f"Answer(document={self.document!r}, question={self.question!r}, value={self.value!r})"
@@ -413,9 +478,29 @@ class Answer(core_models.BaseModel):
         indexes = [models.Index(fields=["date"]), GinIndex(fields=["meta", "value"])]
 
 
+def _ignore_missing_file(fn):
+    """Ignore errors due to missing file.
+
+    If no file is uploaded to the storage service, we want to ignore the resulting
+    exceptions in order to still be able to modify/delete the File.
+    """
+
+    @wraps(fn)
+    def wrapper(self, *args, **kwargs):
+        try:
+            return fn(self, *args, **kwargs)
+        except S3Error as exc:
+            if exc.code == "NoSuchKey":
+                return
+            raise
+
+    return wrapper
+
+
 class File(core_models.UUIDModel):
     name = models.CharField(max_length=255)
 
+    @_ignore_missing_file
     def _move_blob(self):
         # move the file on update
         # this makes sure it stays available when querying the history
@@ -423,9 +508,13 @@ class File(core_models.UUIDModel):
         new_name = f"{old_file.pk}_{old_file.name}"
         client.move_object(self.object_name, new_name)
 
-    def copy(self, *args, **kwargs):
+    @_ignore_missing_file
+    def _copy(self, new_object_name):
+        client.copy_object(self.object_name, new_object_name)
+
+    def copy(self):
         copy = File.objects.create(name=self.name)
-        client.copy_object(self.object_name, copy.object_name)
+        self._copy(copy.object_name)
         return copy
 
     def delete(self, *args, **kwargs):
