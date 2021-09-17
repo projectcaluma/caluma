@@ -170,7 +170,6 @@
     "caluma.caluma_form.tests.test_filter_by_answer.test_query_all_questions[multiple_choice-search_value0-matching-ICONTAINS]",
     "caluma.caluma_workflow.tests.test_work_item.test_complete_work_item_with_next[[info.case.created_by_group, info.work_item.created_by_group]-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]",
     "caluma.caluma_form.tests.test_filter_by_answer.test_query_all_questions[datetime-2018-05-09T14:54:51.728786-matching-ISNULL]",
-    "caluma.caluma_core.tests.test_mutation_params.test_get_mutation_params_inline",
     "caluma.caluma_form.tests.test_document.test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-False-False]",
     "caluma.caluma_form.tests.test_question.test_save_choice_question[choice-False]",
     "caluma.caluma_form.tests.test_format_validators.test_base_format_validators[question__format_validators3-+411234567890-True-text]",
