@@ -51,6 +51,7 @@ class MetaFieldOrdering(CalumaOrdering):
 
 class AttributeOrderingMixin(CalumaOrdering):
     def get_ordering_value(self, qs, value):
+        value = (getattr(value, "value") and value.value) or value  # noqa: B009
         if value not in self._fields:  # pragma: no cover
             # this is normally covered by graphene enforcing its schema,
             # but we still need to handle it
