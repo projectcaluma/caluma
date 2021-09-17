@@ -2671,7 +2671,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -2708,7 +2708,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -2745,7 +2745,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -2782,7 +2782,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -2819,7 +2819,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -2856,7 +2856,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -2893,7 +2893,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -2930,7 +2930,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -2967,7 +2967,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3003,7 +3003,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3040,7 +3040,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3077,7 +3077,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3114,7 +3114,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3151,7 +3151,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3188,7 +3188,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3225,7 +3225,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3262,7 +3262,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3299,7 +3299,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3336,7 +3336,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3373,7 +3373,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3409,7 +3409,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -3446,7 +3446,7 @@
       'data': <class 'dict'> {
         'allDocuments': None,
       },
-      'errors': "[GraphQLLocatedError('Question matching query does not exist.')]",
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
