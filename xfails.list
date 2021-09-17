@@ -37,7 +37,6 @@
     "caluma.caluma_form.tests.test_filter_by_answer.test_query_all_questions[textarea-foo-matching-GT]",
     "caluma.caluma_form.tests.test_filter_by_answer.test_query_all_questions[textarea-foo-matching-ICONTAINS]",
     "caluma.caluma_workflow.tests.test_work_item.test_create_work_item[Task name-Task description-None-group-case-True-info.case.created_by_group-expected_groups3-ready-False-True]",
-    "caluma.caluma_core.tests.test_ordersets.test_inversible_with_vars[text]",
     "caluma.caluma_form.tests.test_filter_by_answer.test_query_all_questions[datetime-2018-05-09T14:54:51.728786-nomatch-GT]",
     "caluma.caluma_form.tests.test_answer.test_remove_answer[integer-23]",
     "caluma.caluma_form.tests.test_filter_by_answer.test_query_all_questions[float-11.5-matching-GTE]",
