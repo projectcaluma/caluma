@@ -26,22 +26,22 @@ class ASTAnalyzer:
         def _parse_ast_value(arg, info):  # pragma: no cover
             raise RuntimeError(f"Unknown arg {arg}")
 
-        @_parse_ast_value.register(ast.ObjectValue)
+        @_parse_ast_value.register(ast.ObjectValueNode)
         def _(arg, info):
             return {
                 field.name.value: _parse_ast_value(field.value, info)
                 for field in arg.fields
             }
 
-        @_parse_ast_value.register(ast.ListValue)
+        @_parse_ast_value.register(ast.ListValueNode)
         def _(arg, info):
             return [_parse_ast_value(val, info) for val in arg.values]
 
-        @_parse_ast_value.register(ast.StringValue)
+        @_parse_ast_value.register(ast.StringValueNode)
         def _(arg, info):
             return arg.value
 
-        @_parse_ast_value.register(ast.Variable)
+        @_parse_ast_value.register(ast.VariableNode)
         def _(arg, info):
             return info.variable_values[arg.name.value]
 
@@ -54,7 +54,7 @@ class ASTAnalyzer:
             for sel in info.operation.selection_set.selections
             if sel.name.value == info.field_name
             # if aliases are used, we need to compare them as well
-            and (sel.alias is None or sel.alias.value == info.path[0])
+            and (sel.alias is None or sel.alias.value == info.path.key)
         ][0]
 
         return {
