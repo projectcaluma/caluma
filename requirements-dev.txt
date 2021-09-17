@@ -27,5 +27,5 @@ pytest-xdist==2.4.0
 python-semantic-release==7.19.2
 requests-mock==1.9.3
 reuse==0.13.0
+pytest-xfaillist==0.1
 syrupy==1.5.0
-pytest-xfaillist @ git+https://github.com/ganwell/pytest-xfaillist@master#egg=pytest-xfaillist
