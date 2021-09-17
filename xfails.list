@@ -210,7 +210,6 @@
     "caluma.caluma_form.tests.test_history.test_historical_file_answer",
     "caluma.caluma_form.tests.test_history.test_historical_table_answer",
     "caluma.caluma_form.tests.test_history.test_history_answer_type",
-    "caluma.caluma_form.tests.test_minio.test_minio_disable_cert_checks[True-True]",
     "caluma.caluma_form.tests.test_option.test_save_option",
     "caluma.caluma_form.tests.test_order_by_meta.test_order_by_meta[case_factory-allCases-False]",
     "caluma.caluma_form.tests.test_order_by_meta.test_order_by_meta[case_factory-allCases-True]",
