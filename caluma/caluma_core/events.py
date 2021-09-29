@@ -49,7 +49,10 @@ def filter_events(predicate):
     def decorate(func):
         @wraps(func)
         def wrapper(sender, *args, **kwargs):
-            predicate_args = {arg: kwargs[arg] for arg in predicate_arg_names}
+            # add sender to kwargs as well, so predicates can work on it
+            kwargs_lookup = kwargs.copy()
+            kwargs_lookup["sender"] = sender
+            predicate_args = {arg: kwargs_lookup[arg] for arg in predicate_arg_names}
             if predicate(**predicate_args):
                 return func(sender, *args, **kwargs)
 
