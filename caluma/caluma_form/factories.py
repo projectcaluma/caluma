@@ -131,10 +131,10 @@ class AnswerFactory(DjangoModelFactory):
 
     @lazy_attribute
     def value(self):
-        if (
-            self.question.type == models.Question.TYPE_MULTIPLE_CHOICE
-            or self.question.type == models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE
-        ):
+        if self.question.type in [
+            models.Question.TYPE_MULTIPLE_CHOICE,
+            models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+        ]:
             return [faker.Faker().name(), faker.Faker().name()]
         elif self.question.type == models.Question.TYPE_FLOAT:
             return faker.Faker().pyfloat()

@@ -8,7 +8,7 @@ from django.dispatch import receiver
 from django.utils import timezone
 from localized_fields.fields import LocalizedField
 
-from ..caluma_core.models import ChoicesCharField, SlugModel, UUIDModel
+from ..caluma_core.models import ChoicesCharField, PathModelMixin, SlugModel, UUIDModel
 
 
 class Task(SlugModel):
@@ -106,7 +106,7 @@ class TaskFlow(UUIDModel):
         unique_together = ("workflow", "task")
 
 
-class Case(UUIDModel):
+class Case(UUIDModel, PathModelMixin):
     STATUS_RUNNING = "running"
     STATUS_COMPLETED = "completed"
     STATUS_CANCELED = "canceled"
@@ -118,6 +118,8 @@ class Case(UUIDModel):
         (STATUS_CANCELED, "Case is canceled."),
         (STATUS_SUSPENDED, "Case is suspended."),
     )
+
+    path_parent_attrs = ["parent_work_item"]
 
     family = models.ForeignKey(
         "self",
@@ -163,7 +165,7 @@ def set_case_family(sender, instance, **kwargs):
         instance.family = instance
 
 
-class WorkItem(UUIDModel):
+class WorkItem(UUIDModel, PathModelMixin):
     STATUS_READY = "ready"
     STATUS_COMPLETED = "completed"
     STATUS_CANCELED = "canceled"
@@ -177,6 +179,8 @@ class WorkItem(UUIDModel):
         (STATUS_SKIPPED, "Work item is skipped."),
         (STATUS_SUSPENDED, "Work item is suspended."),
     )
+
+    path_parent_attrs = ["case"]
 
     name = LocalizedField(
         blank=False,

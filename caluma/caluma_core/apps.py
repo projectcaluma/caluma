@@ -28,3 +28,4 @@ class DefaultConfig(AppConfig):
             import_module(module)
 
         import_module("caluma.caluma_form.signals")
+        import_module("caluma.caluma_core.signals")
