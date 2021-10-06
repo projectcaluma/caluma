@@ -13,6 +13,7 @@ from minio import Minio
 from minio.datatypes import Object as MinioStatObject
 from pytest_factoryboy import register
 
+from .caluma_analytics import factories as analytics_factories
 from .caluma_core.faker import MultilangProvider
 from .caluma_core.models import HistoricalRecords
 from .caluma_form import factories as form_factories
@@ -33,6 +34,7 @@ def register_module(module):
 register_module(form_factories)
 register_module(logging_factories)
 register_module(workflow_factories)
+register_module(analytics_factories)
 
 
 @pytest.fixture(scope="function", autouse=True)

@@ -96,7 +96,8 @@ SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
 ENABLE_HISTORICAL_API = env.bool("ENABLE_HISTORICAL_API", default=False)
 
 # Configure the fields you intend to use in the "meta" fields. This will
-# provide corresponding constants in the ordreBy filter.
+# provide corresponding constants in the ordreBy filter, as well as allow
+# you to use those fields in the analytics module.
 META_FIELDS = env.list("META_FIELDS", default=[])
 
 # enable caluma healthz endpoint

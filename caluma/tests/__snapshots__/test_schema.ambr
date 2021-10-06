@@ -51,6 +51,132 @@
     clientMutationId: String
   }
   
+  type AnalyticsCell {
+    alias: String
+    value: String
+  }
+  
+  type AnalyticsField implements Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    id: ID!
+    alias: String!
+    meta: GenericScalar
+    dataSource: String!
+    table: AnalyticsTable!
+    filters: [String]
+  }
+  
+  type AnalyticsFieldConnection {
+    pageInfo: PageInfo!
+    edges: [AnalyticsFieldEdge]!
+    totalCount: Int
+  }
+  
+  type AnalyticsFieldEdge {
+    node: AnalyticsField
+    cursor: String!
+  }
+  
+  input AnalyticsFieldFilterSetType {
+    alias: String
+    table: ID
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    createdBefore: DateTime
+    createdAfter: DateTime
+    metaHasKey: String
+    metaValue: [JSONValueFilterType]
+    search: String
+    slugs: [String]
+    invert: Boolean
+  }
+  
+  type AnalyticsOutput {
+    records(before: String, after: String, first: Int, last: Int): AnalyticsTableContentConnection
+  }
+  
+  type AnalyticsRowConnection {
+    pageInfo: PageInfo!
+    edges: [AnalyticsRowEdge]!
+  }
+  
+  type AnalyticsRowEdge {
+    node: AnalyticsCell
+    cursor: String!
+  }
+  
+  type AnalyticsTable implements Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    meta: JSONString!
+    disableVisibilities: Boolean!
+    name: String!
+    startingObject: AnalyticsTableStartingObject!
+    fields(before: String, after: String, first: Int, last: Int): AnalyticsFieldConnection!
+    id: ID!
+    availableFields(prefix: String, depth: Int, before: String, after: String, first: Int, last: Int): AvailableFieldConnection
+    resultData: AnalyticsOutput
+  }
+  
+  type AnalyticsTableConnection {
+    pageInfo: PageInfo!
+    edges: [AnalyticsTableEdge]!
+    totalCount: Int
+  }
+  
+  type AnalyticsTableContentConnection {
+    pageInfo: PageInfo!
+    edges: [AnalyticsTableContentEdge]!
+  }
+  
+  type AnalyticsTableContentEdge {
+    node: AnalyticsRowConnection
+    cursor: String!
+  }
+  
+  type AnalyticsTableEdge {
+    node: AnalyticsTable
+    cursor: String!
+  }
+  
+  input AnalyticsTableFilterSetType {
+    slug: String
+    name: String
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    createdBefore: DateTime
+    createdAfter: DateTime
+    metaHasKey: String
+    metaValue: [JSONValueFilterType]
+    search: String
+    slugs: [String]
+    invert: Boolean
+  }
+  
+  input AnalyticsTableOrderSetType {
+    meta: String
+    attribute: SortableAnalyticsTableAttributes
+    direction: AscDesc
+  }
+  
+  enum AnalyticsTableStartingObject {
+    CASES
+  }
+  
   interface Answer {
     id: ID
     createdAt: DateTime!
@@ -137,6 +263,26 @@
   enum AscDesc {
     ASC
     DESC
+  }
+  
+  type AvailableField implements Node {
+    id: ID!
+    label: String
+    fullLabel: String
+    sourcePath: String
+    isLeaf: Boolean
+    isValue: Boolean
+  }
+  
+  type AvailableFieldConnection {
+    pageInfo: PageInfo!
+    edges: [AvailableFieldEdge]!
+    totalCount: Int
+  }
+  
+  type AvailableFieldEdge {
+    node: AvailableField
+    cursor: String!
   }
   
   enum ButtonAction {
@@ -1246,6 +1392,10 @@
   }
   
   type Mutation {
+    saveAnalyticsTable(input: SaveAnalyticsTableInput!): SaveAnalyticsTablePayload
+    removeAnalyticsTable(input: RemoveAnalyticsTableInput!): RemoveAnalyticsTablePayload
+    saveAnalyticsField(input: SaveAnalyticsFieldInput!): SaveAnalyticsFieldPayload
+    removeAnalyticsField(input: RemoveAnalyticsFieldInput!): RemoveAnalyticsFieldPayload
     saveWorkflow(input: SaveWorkflowInput!): SaveWorkflowPayload
     addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
     removeFlow(input: RemoveFlowInput!): RemoveFlowPayload
@@ -1368,6 +1518,9 @@
   
   type Query {
     documentAsOf(id: ID!, asOf: DateTime!): HistoricalDocument
+    allAnalyticsTables(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, filter: [AnalyticsTableFilterSetType], order: [AnalyticsTableOrderSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): AnalyticsTableConnection
+    analyticsTable(slug: String!): AnalyticsTable
+    allAnalyticsFields(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], alias: String, table: ID, filter: [AnalyticsFieldFilterSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): AnalyticsFieldConnection
     allDataSources(before: String, after: String, first: Int, last: Int): DataSourceConnection
     dataSource(name: String!, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
     allWorkflows(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, orderBy: [WorkflowOrdering], filter: [WorkflowFilterSetType], order: [WorkflowOrderSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String): WorkflowConnection
@@ -1477,6 +1630,26 @@
     clientMutationId: String
   }
   
+  input RemoveAnalyticsFieldInput {
+    id: ID!
+    clientMutationId: String
+  }
+  
+  type RemoveAnalyticsFieldPayload {
+    analyticsField: AnalyticsField
+    clientMutationId: String
+  }
+  
+  input RemoveAnalyticsTableInput {
+    slug: ID!
+    clientMutationId: String
+  }
+  
+  type RemoveAnalyticsTablePayload {
+    analyticsTable: AnalyticsTable
+    clientMutationId: String
+  }
+  
   input RemoveAnswerInput {
     answer: ID!
     clientMutationId: String
@@ -1576,6 +1749,43 @@
   
   type SaveActionButtonQuestionPayload {
     question: Question
+    clientMutationId: String
+  }
+  
+  input SaveAnalyticsFieldInput {
+    id: ID
+    alias: String!
+    table: ID!
+    dataSource: String!
+    filters: [String]
+    meta: JSONString
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    clientMutationId: String
+  }
+  
+  type SaveAnalyticsFieldPayload {
+    analyticsField: AnalyticsField
+    clientMutationId: String
+  }
+  
+  input SaveAnalyticsTableInput {
+    slug: String!
+    name: String!
+    startingObject: starting_object!
+    disableVisibilities: Boolean
+    meta: JSONString
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    clientMutationId: String
+  }
+  
+  type SaveAnalyticsTablePayload {
+    analyticsTable: AnalyticsTable
     clientMutationId: String
   }
   
@@ -2202,6 +2412,17 @@
     clientMutationId: String
   }
   
+  enum SortableAnalyticsTableAttributes {
+    CREATED_AT
+    MODIFIED_AT
+    CREATED_BY_USER
+    CREATED_BY_GROUP
+    MODIFIED_BY_USER
+    MODIFIED_BY_GROUP
+    SLUG
+    NAME
+  }
+  
   enum SortableAnswerAttributes {
     CREATED_AT
     MODIFIED_AT
@@ -2784,6 +3005,10 @@
     META_TEST_KEY_DESC
     META_FOOBAR_ASC
     META_FOOBAR_DESC
+  }
+  
+  enum starting_object {
+    CASES
   }
   
   '

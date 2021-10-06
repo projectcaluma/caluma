@@ -1,0 +1,418 @@
+# name: test_cmdline_output[output_mode0-False-expect_output1]
+  <class 'dict'> {
+    'data': '
+      case_id                                blablub          
+      ------------------------------------   ---------------  
+      case1pk   Shelly Watson    
+      case2pk   Ruben Ibarra     
+      case3pk   Katelyn Mcgrath  
+  
+    ',
+    'stderr': '',
+  }
+---
+# name: test_cmdline_output[output_mode0-True-expect_output0]
+  <class 'dict'> {
+    'data': '
+      case_id                                blablub        
+      ------------------------------------   -------------  
+      case1pk   Shelly Watson  
+      case2pk   Ruben Ibarra   
+  
+    ',
+    'stderr': '',
+  }
+---
+# name: test_cmdline_output[output_mode1-False-expect_output1]
+  <class 'dict'> {
+    'data': '
+      case_id                                blablub          
+      ------------------------------------   ---------------  
+      case1pk   Shelly Watson    
+      case2pk   Ruben Ibarra     
+      case3pk   Katelyn Mcgrath  
+  
+    ',
+    'stderr': '
+      -- SQL: 
+      WITH
+          case_ac50e AS (SELECT "caluma_workflow_case"."created_at",  
+          "caluma_workflow_case"."modified_at",  
+          "caluma_workflow_case"."created_by_user",  
+          "caluma_workflow_case"."created_by_group",  
+          "caluma_workflow_case"."modified_by_user",  
+          "caluma_workflow_case"."modified_by_group",  
+          "caluma_workflow_case"."id",  
+          "caluma_workflow_case"."family_id",  
+          "caluma_workflow_case"."closed_at",  
+          "caluma_workflow_case"."closed_by_user",  
+          "caluma_workflow_case"."closed_by_group",  
+          "caluma_workflow_case"."workflow_id",  
+          "caluma_workflow_case"."status",  
+          "caluma_workflow_case"."meta",  
+          "caluma_workflow_case"."document_id"
+          FROM
+                 "caluma_workflow_case" INNER JOIN "caluma_workflow_workflow" ON ("caluma_workflow_case"."workflow_id" = "caluma_workflow_workflow"."slug") -- qs ref
+          ),
+          document_2a07e AS (SELECT "caluma_form_document"."created_at",  
+          "caluma_form_document"."modified_at",  
+          "caluma_form_document"."created_by_user",  
+          "caluma_form_document"."created_by_group",  
+          "caluma_form_document"."modified_by_user",  
+          "caluma_form_document"."modified_by_group",  
+          "caluma_form_document"."id",  
+          "caluma_form_document"."family_id",  
+          "caluma_form_document"."form_id",  
+          "caluma_form_document"."source_id",  
+          "caluma_form_document"."meta"
+          FROM
+                 "caluma_form_document" INNER JOIN "caluma_form_form" ON ("caluma_form_document"."form_id" = "caluma_form_form"."slug") -- qs ref
+          ),
+          answer_b4215 AS (SELECT "caluma_form_answer"."created_at",  
+          "caluma_form_answer"."modified_at",  
+          "caluma_form_answer"."created_by_user",  
+          "caluma_form_answer"."created_by_group",  
+          "caluma_form_answer"."modified_by_user",  
+          "caluma_form_answer"."modified_by_group",  
+          "caluma_form_answer"."id",  
+          "caluma_form_answer"."question_id",  
+          "caluma_form_answer"."value",  
+          "caluma_form_answer"."meta",  
+          "caluma_form_answer"."document_id",  
+          "caluma_form_answer"."date",  
+          "caluma_form_answer"."file_id"
+          FROM
+                 "caluma_form_answer" INNER JOIN "caluma_form_question" ON ("caluma_form_answer"."question_id" = "caluma_form_question"."slug") -- qs ref
+          )
+      SELECT * FROM (SELECT 
+             case_ac50e.id AS "analytics_result_case_id",
+             analytics_result_blablub
+      FROM case_ac50e AS case_ac50e 
+      LEFT JOIN (
+          SELECT DISTINCT ON (id)
+                 id,
+                 analytics_result_blablub
+          FROM document_2a07e AS document_2a07e 
+          LEFT JOIN (
+                  SELECT DISTINCT ON (document_id)
+                         (answer_b4215.value #>>'{}') AS "analytics_result_blablub",
+                         document_id
+                  FROM answer_b4215 AS answer_b4215 
+                  WHERE "question_id" = 'top_question' 
+                  ORDER BY document_id
+      
+          ) AS answer_b4215_caea5 ON (document_2a07e.id = "answer_b4215_caea5".document_id)
+          WHERE form_id = 'top_form'
+          ORDER BY id
+      
+      ) AS document_2a07e_27f15 ON (case_ac50e.document_id = "document_2a07e_27f15".id)
+      
+      ) AS analytics_76b97
+      -- PARAMS: 
+  
+    ',
+  }
+---
+# name: test_cmdline_output[output_mode1-True-expect_output0]
+  <class 'dict'> {
+    'data': '
+      case_id                                blablub        
+      ------------------------------------   -------------  
+      case1pk   Shelly Watson  
+      case2pk   Ruben Ibarra   
+  
+    ',
+    'stderr': '
+      -- SQL: 
+      WITH
+          case_ac50e AS (SELECT "caluma_workflow_case"."created_at",  
+          "caluma_workflow_case"."modified_at",  
+          "caluma_workflow_case"."created_by_user",  
+          "caluma_workflow_case"."created_by_group",  
+          "caluma_workflow_case"."modified_by_user",  
+          "caluma_workflow_case"."modified_by_group",  
+          "caluma_workflow_case"."id",  
+          "caluma_workflow_case"."family_id",  
+          "caluma_workflow_case"."closed_at",  
+          "caluma_workflow_case"."closed_by_user",  
+          "caluma_workflow_case"."closed_by_group",  
+          "caluma_workflow_case"."workflow_id",  
+          "caluma_workflow_case"."status",  
+          "caluma_workflow_case"."meta",  
+          "caluma_workflow_case"."document_id"
+          FROM
+                 "caluma_workflow_case" INNER JOIN "caluma_workflow_workflow" ON ("caluma_workflow_case"."workflow_id" = "caluma_workflow_workflow"."slug") -- qs ref
+          ),
+          document_2a07e AS (SELECT "caluma_form_document"."created_at",  
+          "caluma_form_document"."modified_at",  
+          "caluma_form_document"."created_by_user",  
+          "caluma_form_document"."created_by_group",  
+          "caluma_form_document"."modified_by_user",  
+          "caluma_form_document"."modified_by_group",  
+          "caluma_form_document"."id",  
+          "caluma_form_document"."family_id",  
+          "caluma_form_document"."form_id",  
+          "caluma_form_document"."source_id",  
+          "caluma_form_document"."meta"
+          FROM
+                 "caluma_form_document" INNER JOIN "caluma_form_form" ON ("caluma_form_document"."form_id" = "caluma_form_form"."slug") -- qs ref
+          ),
+          answer_b4215 AS (SELECT "caluma_form_answer"."created_at",  
+          "caluma_form_answer"."modified_at",  
+          "caluma_form_answer"."created_by_user",  
+          "caluma_form_answer"."created_by_group",  
+          "caluma_form_answer"."modified_by_user",  
+          "caluma_form_answer"."modified_by_group",  
+          "caluma_form_answer"."id",  
+          "caluma_form_answer"."question_id",  
+          "caluma_form_answer"."value",  
+          "caluma_form_answer"."meta",  
+          "caluma_form_answer"."document_id",  
+          "caluma_form_answer"."date",  
+          "caluma_form_answer"."file_id"
+          FROM
+                 "caluma_form_answer" INNER JOIN "caluma_form_question" ON ("caluma_form_answer"."question_id" = "caluma_form_question"."slug") -- qs ref
+          )
+      SELECT * FROM (SELECT 
+             case_ac50e.id AS "analytics_result_case_id",
+             analytics_result_blablub
+      FROM case_ac50e AS case_ac50e 
+      LEFT JOIN (
+          SELECT DISTINCT ON (id)
+                 id,
+                 analytics_result_blablub
+          FROM document_2a07e AS document_2a07e 
+          LEFT JOIN (
+                  SELECT DISTINCT ON (document_id)
+                         (answer_b4215.value #>>'{}') AS "analytics_result_blablub",
+                         document_id
+                  FROM answer_b4215 AS answer_b4215 
+                  WHERE "question_id" = 'top_question' 
+                  ORDER BY document_id
+      
+          ) AS answer_b4215_caea5 ON (document_2a07e.id = "answer_b4215_caea5".document_id)
+          WHERE form_id = 'top_form'
+          ORDER BY id
+      
+      ) AS document_2a07e_27f15 ON (case_ac50e.document_id = "document_2a07e_27f15".id)
+      
+      ) AS analytics_76b97
+      WHERE analytics_result_blablub IN (%(flt_analytics_result_blablub_8201d)s, %(flt_analytics_result_blablub_ba3ff)s)
+      -- PARAMS: 
+      --     flt_analytics_result_blablub_8201d: Shelly Watson
+      --     flt_analytics_result_blablub_ba3ff: Ruben Ibarra
+  
+    ',
+  }
+---
+# name: test_cmdline_output[output_mode2-False-expect_output1]
+  <class 'dict'> {
+    'data': '',
+    'stderr': '
+      -- SQL: 
+      WITH
+          case_ac50e AS (SELECT "caluma_workflow_case"."created_at",  
+          "caluma_workflow_case"."modified_at",  
+          "caluma_workflow_case"."created_by_user",  
+          "caluma_workflow_case"."created_by_group",  
+          "caluma_workflow_case"."modified_by_user",  
+          "caluma_workflow_case"."modified_by_group",  
+          "caluma_workflow_case"."id",  
+          "caluma_workflow_case"."family_id",  
+          "caluma_workflow_case"."closed_at",  
+          "caluma_workflow_case"."closed_by_user",  
+          "caluma_workflow_case"."closed_by_group",  
+          "caluma_workflow_case"."workflow_id",  
+          "caluma_workflow_case"."status",  
+          "caluma_workflow_case"."meta",  
+          "caluma_workflow_case"."document_id"
+          FROM
+                 "caluma_workflow_case" INNER JOIN "caluma_workflow_workflow" ON ("caluma_workflow_case"."workflow_id" = "caluma_workflow_workflow"."slug") -- qs ref
+          ),
+          document_2a07e AS (SELECT "caluma_form_document"."created_at",  
+          "caluma_form_document"."modified_at",  
+          "caluma_form_document"."created_by_user",  
+          "caluma_form_document"."created_by_group",  
+          "caluma_form_document"."modified_by_user",  
+          "caluma_form_document"."modified_by_group",  
+          "caluma_form_document"."id",  
+          "caluma_form_document"."family_id",  
+          "caluma_form_document"."form_id",  
+          "caluma_form_document"."source_id",  
+          "caluma_form_document"."meta"
+          FROM
+                 "caluma_form_document" INNER JOIN "caluma_form_form" ON ("caluma_form_document"."form_id" = "caluma_form_form"."slug") -- qs ref
+          ),
+          answer_b4215 AS (SELECT "caluma_form_answer"."created_at",  
+          "caluma_form_answer"."modified_at",  
+          "caluma_form_answer"."created_by_user",  
+          "caluma_form_answer"."created_by_group",  
+          "caluma_form_answer"."modified_by_user",  
+          "caluma_form_answer"."modified_by_group",  
+          "caluma_form_answer"."id",  
+          "caluma_form_answer"."question_id",  
+          "caluma_form_answer"."value",  
+          "caluma_form_answer"."meta",  
+          "caluma_form_answer"."document_id",  
+          "caluma_form_answer"."date",  
+          "caluma_form_answer"."file_id"
+          FROM
+                 "caluma_form_answer" INNER JOIN "caluma_form_question" ON ("caluma_form_answer"."question_id" = "caluma_form_question"."slug") -- qs ref
+          )
+      SELECT * FROM (SELECT 
+             case_ac50e.id AS "analytics_result_case_id",
+             analytics_result_blablub
+      FROM case_ac50e AS case_ac50e 
+      LEFT JOIN (
+          SELECT DISTINCT ON (id)
+                 id,
+                 analytics_result_blablub
+          FROM document_2a07e AS document_2a07e 
+          LEFT JOIN (
+                  SELECT DISTINCT ON (document_id)
+                         (answer_b4215.value #>>'{}') AS "analytics_result_blablub",
+                         document_id
+                  FROM answer_b4215 AS answer_b4215 
+                  WHERE "question_id" = 'top_question' 
+                  ORDER BY document_id
+      
+          ) AS answer_b4215_caea5 ON (document_2a07e.id = "answer_b4215_caea5".document_id)
+          WHERE form_id = 'top_form'
+          ORDER BY id
+      
+      ) AS document_2a07e_27f15 ON (case_ac50e.document_id = "document_2a07e_27f15".id)
+      
+      ) AS analytics_76b97
+      -- PARAMS: 
+  
+    ',
+  }
+---
+# name: test_cmdline_output[output_mode2-True-expect_output0]
+  <class 'dict'> {
+    'data': '',
+    'stderr': '
+      -- SQL: 
+      WITH
+          case_ac50e AS (SELECT "caluma_workflow_case"."created_at",  
+          "caluma_workflow_case"."modified_at",  
+          "caluma_workflow_case"."created_by_user",  
+          "caluma_workflow_case"."created_by_group",  
+          "caluma_workflow_case"."modified_by_user",  
+          "caluma_workflow_case"."modified_by_group",  
+          "caluma_workflow_case"."id",  
+          "caluma_workflow_case"."family_id",  
+          "caluma_workflow_case"."closed_at",  
+          "caluma_workflow_case"."closed_by_user",  
+          "caluma_workflow_case"."closed_by_group",  
+          "caluma_workflow_case"."workflow_id",  
+          "caluma_workflow_case"."status",  
+          "caluma_workflow_case"."meta",  
+          "caluma_workflow_case"."document_id"
+          FROM
+                 "caluma_workflow_case" INNER JOIN "caluma_workflow_workflow" ON ("caluma_workflow_case"."workflow_id" = "caluma_workflow_workflow"."slug") -- qs ref
+          ),
+          document_2a07e AS (SELECT "caluma_form_document"."created_at",  
+          "caluma_form_document"."modified_at",  
+          "caluma_form_document"."created_by_user",  
+          "caluma_form_document"."created_by_group",  
+          "caluma_form_document"."modified_by_user",  
+          "caluma_form_document"."modified_by_group",  
+          "caluma_form_document"."id",  
+          "caluma_form_document"."family_id",  
+          "caluma_form_document"."form_id",  
+          "caluma_form_document"."source_id",  
+          "caluma_form_document"."meta"
+          FROM
+                 "caluma_form_document" INNER JOIN "caluma_form_form" ON ("caluma_form_document"."form_id" = "caluma_form_form"."slug") -- qs ref
+          ),
+          answer_b4215 AS (SELECT "caluma_form_answer"."created_at",  
+          "caluma_form_answer"."modified_at",  
+          "caluma_form_answer"."created_by_user",  
+          "caluma_form_answer"."created_by_group",  
+          "caluma_form_answer"."modified_by_user",  
+          "caluma_form_answer"."modified_by_group",  
+          "caluma_form_answer"."id",  
+          "caluma_form_answer"."question_id",  
+          "caluma_form_answer"."value",  
+          "caluma_form_answer"."meta",  
+          "caluma_form_answer"."document_id",  
+          "caluma_form_answer"."date",  
+          "caluma_form_answer"."file_id"
+          FROM
+                 "caluma_form_answer" INNER JOIN "caluma_form_question" ON ("caluma_form_answer"."question_id" = "caluma_form_question"."slug") -- qs ref
+          )
+      SELECT * FROM (SELECT 
+             case_ac50e.id AS "analytics_result_case_id",
+             analytics_result_blablub
+      FROM case_ac50e AS case_ac50e 
+      LEFT JOIN (
+          SELECT DISTINCT ON (id)
+                 id,
+                 analytics_result_blablub
+          FROM document_2a07e AS document_2a07e 
+          LEFT JOIN (
+                  SELECT DISTINCT ON (document_id)
+                         (answer_b4215.value #>>'{}') AS "analytics_result_blablub",
+                         document_id
+                  FROM answer_b4215 AS answer_b4215 
+                  WHERE "question_id" = 'top_question' 
+                  ORDER BY document_id
+      
+          ) AS answer_b4215_caea5 ON (document_2a07e.id = "answer_b4215_caea5".document_id)
+          WHERE form_id = 'top_form'
+          ORDER BY id
+      
+      ) AS document_2a07e_27f15 ON (case_ac50e.document_id = "document_2a07e_27f15".id)
+      
+      ) AS analytics_76b97
+      WHERE analytics_result_blablub IN (%(flt_analytics_result_blablub_8201d)s, %(flt_analytics_result_blablub_ba3ff)s)
+      -- PARAMS: 
+      --     flt_analytics_result_blablub_8201d: Shelly Watson
+      --     flt_analytics_result_blablub_ba3ff: Ruben Ibarra
+  
+    ',
+  }
+---
+# name: test_cmdline_output[output_mode3-False-expect_output1]
+  <class 'dict'> {
+    'data': <class 'list'> [
+      <class 'dict'> {
+        'blablub': 'Shelly Watson',
+        'case_id': 'case1pk',
+      },
+      <class 'dict'> {
+        'blablub': 'Ruben Ibarra',
+        'case_id': 'case2pk',
+      },
+      <class 'dict'> {
+        'blablub': 'Katelyn Mcgrath',
+        'case_id': 'case3pk',
+      },
+    ],
+    'stderr': '',
+  }
+---
+# name: test_cmdline_output[output_mode3-True-expect_output0]
+  <class 'dict'> {
+    'data': <class 'list'> [
+      <class 'dict'> {
+        'blablub': 'Shelly Watson',
+        'case_id': 'case1pk',
+      },
+      <class 'dict'> {
+        'blablub': 'Ruben Ibarra',
+        'case_id': 'case2pk',
+      },
+    ],
+    'stderr': '',
+  }
+---
+# name: test_list_tables
+  '
+  No analytics table specified. The following tables are available:
+    ID:                  NAME:
+    environmental-ten    Bonnie Moreno
+  
+  '
+---

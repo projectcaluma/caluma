@@ -5,6 +5,7 @@ from graphene_django.converter import convert_django_field, convert_field_to_str
 from graphene_django.debug import DjangoDebug
 from localized_fields.fields import LocalizedField
 
+from .caluma_analytics import schema as analytics_schema
 from .caluma_data_source import schema as data_source_schema
 from .caluma_form import (
     historical_schema as form_historical_schema,
@@ -18,7 +19,12 @@ convert_django_field.register(LocalizedField, convert_field_to_string)
 # exporting it as `Mutation`, which can be confusing
 _mutation = type(
     "Mutation",
-    (form_schema.Mutation, workflow_schema.Mutation, graphene.ObjectType),
+    (
+        form_schema.Mutation,
+        workflow_schema.Mutation,
+        analytics_schema.Mutation,
+        graphene.ObjectType,
+    ),
     {},
 )
 
@@ -26,6 +32,7 @@ query_inherit_from = [
     form_schema.Query,
     workflow_schema.Query,
     data_source_schema.Query,
+    analytics_schema.Query,
     graphene.ObjectType,
 ]
 
@@ -55,6 +62,8 @@ types = [
     workflow_schema.SimpleTask,
     workflow_schema.CompleteWorkflowFormTask,
     workflow_schema.CompleteTaskFormTask,
+    analytics_schema.AnalyticsTable,
+    analytics_schema.AnalyticsField,
 ]
 
 historical_types = [
