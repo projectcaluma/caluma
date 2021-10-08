@@ -3,6 +3,7 @@
 ## About this guide
 
 Goals:
+
 - get a simple app running
 - understand concepts behind caluma
   - build a form
@@ -52,22 +53,22 @@ Create a new ember app
 ember new caluma-demo
 ```
 
-Inside the new app install the ember-caluma addon
+Inside the new app install the Ember.js addons for Caluma forms
 
 ```bash
-ember install ember-caluma
+ember install @projectcaluma/ember-form-builder @projectcaluma/ember-form
 ```
 
-## Ember-caluma (set up the frontend)
+## ember-caluma (set up the frontend)
 
-To make `ember-caluma` work a few steps must be followed. The
+To make `@projectcaluma/ember-form-builder` work a few steps must be followed. The
 form builder is a [routable engine](http://ember-engines.com) which must be mounted in `app/router.js`:
 
 ```bash
 Router.map(function() {
   // ...
 
-  this.mount("ember-caluma", {
+  this.mount("@projectcaluma/ember-form-builder", {
     as: "form-builder",
     path: "/form-builder"
   });
@@ -81,12 +82,11 @@ const App = Application.extend({
   // ...
 
   engines: {
-    emberCaluma: {
+    "@projectcaluma/ember-form-builder": {
       dependencies: {
         services: [
           "apollo", // ember-apollo-client for graphql
           "notification", // ember-uikit for notifications
-          "router", // ember router for navigation
           "intl", // ember-intl for i18n
           "caluma-options", // service to configure ember-caluma
           "validator" // service for generic regex validation
@@ -101,7 +101,7 @@ Also, since our form builder needs to customize the apollo service in order to s
 
 ```bash
 import ApolloService from "ember-apollo-client/services/apollo";
-import CalumaApolloServiceMixin from "ember-caluma/mixins/caluma-apollo-service-mixin";
+import CalumaApolloServiceMixin from "@projectcaluma/ember-core/mixins/caluma-apollo-service-mixin";
 
 export default ApolloService.extend(CalumaApolloServiceMixin, {});
 ```
@@ -119,7 +119,7 @@ module.exports = function(environment) {
 };
 ```
 
-To use the ember-uikit notification service, it ist important to 
+To use the ember-uikit notification service, it ist important to
 config some attributes in `ember-cli-build.js`:
 
 ```bash
@@ -135,16 +135,19 @@ module.exports = function(defaults) {
   });
 ```
 
-Last but not least import `ember-uikit` and `ember-caluma` to
-apply styling in `app/styles/app.scss`:
+Last but not least import `ember-uikit`, `@projectcaluma/ember-form-builder`
+and `@projectcaluma/ember-form` to apply styling in `app/styles/app.scss`:
 
 ```bash
 // https://github.com/uikit/uikit/blob/master/src/scss/variables-theme.scss
 // custom variable definitions go here
 
 $modal-z-index: 1;
+
 @import "ember-uikit";
-@import "ember-caluma";
+
+@import "@projectcaluma/ember-form";
+@import "@projectcaluma/ember-form-builder";
 ```
 
 To show some texts in the form-builder you have to add translations to
@@ -161,7 +164,7 @@ caluma:
         powerselect: Powerselect
     form:
       all: All petitions
-      new: New petition 
+      new: New petition
       empty: You don't have any petitions yet.
       name: Name
       slug: Slug
