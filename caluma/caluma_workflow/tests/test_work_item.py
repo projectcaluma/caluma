@@ -1402,3 +1402,40 @@ def test_cancel_suspend_resume_work_item(
 
     if expected_child_case_status:
         assert work_item.child_case.status == expected_child_case_status
+
+
+@pytest.mark.parametrize(
+    "work_item__addressed_groups,work_item__child_case,context,group_jexl,expected_groups",
+    [
+        (
+            ["group-1"],
+            None,
+            {"addressed_groups": ["group-2"], "controlling_groups": ["group-3"]},
+            "info.prev_work_item.addressed_groups + info.context.addressed_groups + info.context.controlling_groups",
+            ["group-1", "group-2", "group-3"],
+        )
+    ],
+)
+def test_work_item_group_jexl(
+    admin_user,
+    context,
+    db,
+    expected_groups,
+    flow_factory,
+    group_jexl,
+    task_factory,
+    task_flow_factory,
+    work_item,
+):
+    task = task_factory(control_groups=group_jexl)
+    task_flow_factory(
+        workflow=work_item.case.workflow,
+        task=work_item.task,
+        flow=flow_factory(next=f"'{task.slug}'|task"),
+    )
+
+    api.complete_work_item(work_item=work_item, user=admin_user, context=context)
+
+    new_work_item = models.WorkItem.objects.filter(task=task).first()
+
+    assert new_work_item.controlling_groups == expected_groups

@@ -70,7 +70,12 @@ class GroupJexl(JEXL):
             "created_by_group": str,
         },
         "prev_work_item": {
+            "addressed_groups": list of str,
             "controlling_groups": list of str,
+        },
+        "context": {
+            "addressed_groups: list of str,
+            "controlling_groups: list of str,
         },
     }
     """
