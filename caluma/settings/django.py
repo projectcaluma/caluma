@@ -130,6 +130,28 @@ ADMINS = parse_admins(env.list("ADMINS", default=[]))
 # Cors headers
 CORS_ORIGIN_ALLOW_ALL = env.bool("CORS_ORIGIN_ALLOW_ALL", default=False)
 CORS_ORIGIN_WHITELIST = env.list("CORS_ORIGIN_WHITELIST", default=[])
+CORS_ALLOW_CREDENTIALS = env.bool("CORS_ALLOW_CREDENTIALS", default=True)
+CORS_ALLOW_HEADERS = env.list("CORS_ALLOW_HEADERS", default=[
+    'accept',
+    'accept-encoding',
+    'accept-language', # Custom added default value since ember-caluma uses it
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'language', # Custom added default value since ember-caluma uses it
+    'x-csrftoken',
+    'x-requested-with'
+])
+CORS_ALLOW_METHODS = env.list("CORS_ALLOW_METHODS", default=[
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT'
+])
 
 
 # Logging
