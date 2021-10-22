@@ -32,7 +32,7 @@ from caluma.caluma_form.schema import Form
 class CustomVisibility(BaseVisibility):
     @filter_queryset_for(Node)
     def filter_queryset_for_all(self, node, queryset, info):
-        return queryset.filter(created_by_user=info.context.request.user.username)
+        return queryset.filter(created_by_user=info.context.user.username)
 
     @filter_queryset_for(Form)
     def filter_queryset_for_form(self, node, queryset, info):
