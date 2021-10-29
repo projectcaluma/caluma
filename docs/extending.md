@@ -46,7 +46,7 @@ Arguments:
 - `info`: [The `info` object](interfaces.md#the-info-object)
 
 Save your visibility module as `visibilities.py` and inject it as Docker volume to path `/app/caluma/extensions/visibilities.py`,
-see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) for an example.
+see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/main/docker-compose.yml) for an example.
 
 Afterwards you can configure it in `VISIBILITY_CLASSES` as `caluma.extensions.visibilities.CustomVisibility`.
 
@@ -94,7 +94,7 @@ Arguments:
 - `instance`: instance being edited by specific mutation
 
 Save your permission module as `permissions.py` and inject it as Docker volume to path `/app/caluma/extensions/permissions.py`,
-see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) for an example.
+see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/main/docker-compose.yml) for an example.
 
 Afterwards you can configure it in `PERMISSION_CLASSES` as `caluma.extensions.permissions.CustomPermission`.
 
@@ -148,7 +148,7 @@ Arguments:
 - `info`: [The `info` object](interfaces.md#the-info-object)
 
 Save your validation module as `validations.py` and inject it as Docker volume to path `/app/caluma/extensions/validations.py`,
-see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) for an example.
+see [docker-compose.yml](https://github.com/projectcaluma/caluma/blob/main/docker-compose.yml) for an example.
 
 Afterwards you can configure it in `VALIDATION_CLASSES` as `caluma.extensions.validations.CustomValidation`.
 
