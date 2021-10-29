@@ -15,6 +15,6 @@ minio==7.0.3
 psycopg2-binary==2.8.6
 pyjexl @ git+https://github.com/mozilla/pyjexl.git@dab0618f0d81926759cd0e6ccfd3dcdb08a13ca1#egg=pyjexl
 python-memcached==1.59
-requests==2.25.1
+requests==2.26.0
 urllib3==1.26.5
 uwsgi==2.0.19.1
