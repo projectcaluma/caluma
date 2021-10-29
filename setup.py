@@ -69,7 +69,7 @@ setup(
         "django-cors-headers<4",
         "django-environ<0.9",
         "django-extensions<4",
-        "django-filter<3",
+        "django-filter<22",
         "django-localized-fields<7",
         "django-postgres-extra<3",
         "django-watchman<2",
