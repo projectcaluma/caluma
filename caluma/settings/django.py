@@ -145,12 +145,8 @@ CORS_ALLOW_HEADERS = env.list("CORS_ALLOW_HEADERS", default=[
     'x-requested-with'
 ])
 CORS_ALLOW_METHODS = env.list("CORS_ALLOW_METHODS", default=[
-    'DELETE',
-    'GET',
     'OPTIONS',
-    'PATCH',
-    'POST',
-    'PUT'
+    'POST'
 ])
 
 
