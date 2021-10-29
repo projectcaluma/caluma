@@ -2,12 +2,49 @@ name: Tests
 
 on:
   push:
+    branches:
+      - main
   pull_request:
+    branches:
+      - main
   schedule:
-    - cron:  '0 0 * * 0'
+    - cron: "0 0 * * 0"
 
 jobs:
+  gitlint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+      - name: Install gitlint
+        run: pip install gitlint
+      - name: Run gitlint
+        run: gitlint --contrib contrib-title-conventional-commits
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build the project
+        run: |
+          echo "UID=$(id --user)" > .env
+          docker-compose up -d --build caluma
+      - name: Lint the code
+        run: |
+          docker-compose exec -T caluma black --check .
+          docker-compose exec -T caluma flake8
+          docker-compose exec -T caluma ./manage.py makemigrations --check --dry-run --no-input
+          docker-compose exec -T caluma reuse lint
+
   standard-tests:
+    needs:
+      - gitlint
+      - lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -15,22 +52,20 @@ jobs:
         run: |
           echo "UID=$(id --user)" > .env
           docker-compose up -d --build
-      - name: Lint the code
-        run: |
-          docker-compose exec -T caluma black --check .
-          docker-compose exec -T caluma flake8
-          docker-compose exec -T caluma ./manage.py makemigrations --check --dry-run --no-input
-          docker-compose exec -T caluma reuse lint
       - name: Run pytest
         run: docker-compose exec -T caluma pytest --no-cov-on-fail --cov --create-db -vv
+
   pipenv-tests:
+    needs:
+      - gitlint
+      - lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: "3.7"
       - name: Install requirements
         env:
           PIPENV_IGNORE_VIRTUALENVS: 1
@@ -39,14 +74,18 @@ jobs:
           python3 setup.py pipenv
       - name: Run pytest
         run: pipenv run pytest
+
   package-tests:
+    needs:
+      - gitlint
+      - lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Setup Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.7'
+          python-version: "3.7"
       - name: Install package
         run: |
           echo UID=$(id -u) > .env
@@ -60,17 +99,3 @@ jobs:
           pip install -r requirements-dev.txt
       - name: Run pytest
         run: pytest --no-cov-on-fail --cov --create-db -vv
-  gitlint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Setup Python
-        uses: actions/setup-python@v1
-        with:
-          python-version: '3.7'
-      - name: Install gitlint
-        run: pip install gitlint
-      - name: Run gitlint
-        run: gitlint --contrib contrib-title-conventional-commits
