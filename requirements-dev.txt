@@ -26,5 +26,5 @@ pytest-randomly==3.10.1
 pytest-xdist==2.2.1
 python-semantic-release==7.19.2
 requests-mock==1.9.3
-reuse==0.12.1
+reuse==0.13.0
 syrupy==1.3.1
