@@ -13,7 +13,7 @@ Goals:
 
 To install Caluma, you'll need to have [Docker](https://docs.docker.com/install/) and [docker-compose](https://docs.docker.com/compose/install/) installed on your system.
 
-Afterwards, create a new directory for your project, copy our [example docker-compose.yml file](https://github.com/projectcaluma/caluma/blob/master/docker-compose.yml) into it and finally run the following command:
+Afterwards, create a new directory for your project, copy our [example docker-compose.yml file](https://github.com/projectcaluma/caluma/blob/main/docker-compose.yml) into it and finally run the following command:
 
 Per default, Caluma is running with production settings. To bypass the security-related configuration steps needed for a prodoction system, create a new file called `docker-compose.override.yml` with the following content:
 
