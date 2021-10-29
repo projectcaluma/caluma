@@ -5,7 +5,7 @@ black==21.5b2
 factory-boy==3.2.0
 faker==8.4.0
 flake8==3.9.2
-flake8-bugbear==21.4.3
+flake8-bugbear==21.9.2
 flake8-debugger==4.0.0
 flake8-docstrings==1.6.0
 flake8-isort==4.0.0
@@ -14,7 +14,7 @@ flake8-tuple==0.4.1
 gitlint==0.15.1
 isort==5.9.3
 pdbpp==0.10.2
-pre-commit==2.13.0
+pre-commit==2.15.0
 pydocstyle==6.1.1
 pytest==6.2.4
 pytest-cov==2.12.1
@@ -22,7 +22,7 @@ pytest-django==4.4.0
 pytest-env==0.6.2
 pytest-factoryboy==2.1.0
 pytest-mock==3.6.1
-pytest-randomly==3.8.0
+pytest-randomly==3.10.1
 pytest-xdist==2.2.1
 python-semantic-release==7.16.1
 requests-mock==1.9.3

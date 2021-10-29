@@ -3,14 +3,25 @@ from . import models
 from .jexl import FlowJexl, GroupJexl
 
 
-def get_group_jexl_structure(work_item_created_by_group, case, prev_work_item=None):
+def get_group_jexl_structure(
+    work_item_created_by_group, case, prev_work_item=None, context=None
+):
     return {
         "case": {"created_by_group": case.created_by_group},
         "work_item": {"created_by_group": work_item_created_by_group},
         "prev_work_item": {
+            "addressed_groups": prev_work_item.addressed_groups
+            if prev_work_item
+            else None,
             "controlling_groups": prev_work_item.controlling_groups
             if prev_work_item
-            else None
+            else None,
+        },
+        "context": {
+            "addressed_groups": context.get("addressed_groups") if context else None,
+            "controlling_groups": context.get("controlling_groups")
+            if context
+            else None,
         },
     }
 
@@ -21,7 +32,7 @@ def get_jexl_groups(
     if jexl:
         return GroupJexl(
             validation_context=get_group_jexl_structure(
-                work_item_created_by_user.group, case, prev_work_item
+                work_item_created_by_user.group, case, prev_work_item, context
             ),
             task=task,
             case=case,
