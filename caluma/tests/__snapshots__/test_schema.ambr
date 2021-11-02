@@ -5,6 +5,28 @@
     mutation: Mutation
   }
   
+  type ActionButtonQuestion implements Question, Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
+    id: ID!
+    action: ButtonAction!
+    color: ButtonColor!
+    validateOnEnter: Boolean!
+  }
+  
   input AddFormQuestionInput {
     form: ID!
     question: ID!
@@ -114,6 +136,17 @@
   enum AscDesc {
     ASC
     DESC
+  }
+  
+  enum ButtonAction {
+    COMPLETE
+    SKIP
+  }
+  
+  enum ButtonColor {
+    PRIMARY
+    SECONDARY
+    DEFAULT
   }
   
   type CalculatedFloatQuestion implements Question, Node {
@@ -1227,6 +1260,7 @@
     saveFileQuestion(input: SaveFileQuestionInput!): SaveFileQuestionPayload
     saveStaticQuestion(input: SaveStaticQuestionInput!): SaveStaticQuestionPayload
     saveCalculatedFloatQuestion(input: SaveCalculatedFloatQuestionInput!): SaveCalculatedFloatQuestionPayload
+    saveActionButtonQuestion(input: SaveActionButtonQuestionInput!): SaveActionButtonQuestionPayload
     copyDocument(input: CopyDocumentInput!): CopyDocumentPayload
     saveDocument(input: SaveDocumentInput!): SaveDocumentPayload
     saveDocumentStringAnswer(input: SaveDocumentStringAnswerInput!): SaveDocumentStringAnswerPayload
@@ -1486,6 +1520,24 @@
   
   type ResumeWorkItemPayload {
     workItem: WorkItem
+    clientMutationId: String
+  }
+  
+  input SaveActionButtonQuestionInput {
+    label: String!
+    slug: String!
+    infoText: String
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    action: ButtonAction!
+    color: ButtonColor!
+    validateOnEnter: Boolean!
+    clientMutationId: String
+  }
+  
+  type SaveActionButtonQuestionPayload {
+    question: Question
     clientMutationId: String
   }
   

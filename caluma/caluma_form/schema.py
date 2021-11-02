@@ -25,8 +25,13 @@ from .validators import get_document_validity
 
 
 def resolve_answer(answer):
-    if answer.question.type == models.Question.TYPE_STATIC:
-        raise Exception('Questions of type "static" should never have an answer!')
+    if answer.question.type in [
+        models.Question.TYPE_STATIC,
+        models.Question.TYPE_ACTION_BUTTON,
+    ]:
+        raise Exception(
+            'Questions of type "static" and "action_button" should never have an answer!'
+        )
     return QUESTION_ANSWER_TYPES[answer.question.type]
 
 
@@ -79,6 +84,25 @@ class QuestionJexl(graphene.String):
 
 serializer_converter.get_graphene_type_from_serializer_field.register(
     serializers.QuestionJexlField, lambda field: QuestionJexl
+)
+
+
+ButtonAction = graphene.Enum(
+    "ButtonAction",
+    [(key.upper(), key) for key in models.Question.ACTION_CHOICES],
+)
+ButtonColor = graphene.Enum(
+    "ButtonColor",
+    [(key.upper(), key) for key in models.Question.COLOR_CHOICES],
+)
+
+
+serializer_converter.get_graphene_type_from_serializer_field.register(
+    serializers.ButtonActionField, lambda field: ButtonAction
+)
+
+serializer_converter.get_graphene_type_from_serializer_field.register(
+    serializers.ButtonColorField, lambda field: ButtonColor
 )
 
 
@@ -522,6 +546,33 @@ class CalculatedFloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
+class ActionButtonQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    action = ButtonAction(required=True)
+    color = ButtonColor(required=True)
+    validate_on_enter = graphene.Boolean(required=True)
+
+    class Meta:
+        model = models.Question
+        exclude = (
+            "type",
+            "configuration",
+            "data_source",
+            "options",
+            "answers",
+            "row_form",
+            "sub_form",
+            "placeholder",
+            "static_content",
+            "format_validators",
+            "dynamicoption_set",
+            "default_answer",
+            "calc_expression",
+            "calc_dependents",
+        )
+        use_connection = False
+        interfaces = (Question, graphene.Node)
+
+
 class Form(FormDjangoObjectType):
     questions = DjangoFilterSetConnectionField(
         QuestionConnection, filterset_class=filters.QuestionFilterSet
@@ -668,6 +719,12 @@ class SaveStaticQuestion(SaveQuestion):
 class SaveCalculatedFloatQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveCalculatedFloatQuestionSerializer
+        return_field_type = Question
+
+
+class SaveActionButtonQuestion(SaveQuestion):
+    class Meta:
+        serializer_class = serializers.SaveActionButtonQuestionSerializer
         return_field_type = Question
 
 
@@ -997,6 +1054,7 @@ class Mutation(object):
     save_file_question = SaveFileQuestion().Field()
     save_static_question = SaveStaticQuestion().Field()
     save_calculated_float_question = SaveCalculatedFloatQuestion().Field()
+    save_action_button_question = SaveActionButtonQuestion().Field()
 
     copy_document = CopyDocument().Field()
     save_document = SaveDocument().Field()
@@ -1121,4 +1179,5 @@ QUESTION_OBJECT_TYPES = {
     models.Question.TYPE_FILE: FileQuestion,
     models.Question.TYPE_STATIC: StaticQuestion,
     models.Question.TYPE_CALCULATED_FLOAT: CalculatedFloatQuestion,
+    models.Question.TYPE_ACTION_BUTTON: ActionButtonQuestion,
 }

@@ -26,6 +26,7 @@ from .. import api, models, serializers
         (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, {}, "MyDataSource", []),
         (models.Question.TYPE_STATIC, {}, None, []),
         (models.Question.TYPE_CALCULATED_FLOAT, {}, None, []),
+        (models.Question.TYPE_ACTION_BUTTON, {}, None, []),
     ],
 )
 def test_query_all_questions(
@@ -1144,3 +1145,35 @@ def test_calculated_question_answer_document(
     row_doc.delete()
     calc_ans.refresh_from_db()
     assert calc_ans.value is None
+
+
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_ACTION_BUTTON])
+def test_save_action_button_question(db, snapshot, question, schema_executor):
+    query = """
+        mutation SaveActionButtonQuestion($input: SaveActionButtonQuestionInput!) {
+          saveActionButtonQuestion(input: $input) {
+            question {
+              id
+              slug
+              label
+              meta
+              __typename
+              ... on ActionButtonQuestion {
+                action
+                color
+                validateOnEnter
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveActionButtonQuestionSerializer, question
+        )
+    }
+    result = schema_executor(query, variable_values=inp)
+    assert not bool(result.errors)
+    snapshot.assert_match(result.data)
