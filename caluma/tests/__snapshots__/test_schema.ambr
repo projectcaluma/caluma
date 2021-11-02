@@ -575,7 +575,7 @@
     cursor: String!
   }
   
-  type DynamicChoiceQuestion implements Question, Node {
+  type DynamicChoiceQuestion implements Question, DynamicQuestion, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -596,7 +596,7 @@
     id: ID!
   }
   
-  type DynamicMultipleChoiceQuestion implements Question, Node {
+  type DynamicMultipleChoiceQuestion implements Question, DynamicQuestion, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -628,7 +628,7 @@
     slug: String!
     label: String!
     document: Document!
-    question: CalculatedFloatQuestion!
+    question: DynamicQuestion!
   }
   
   type DynamicOptionConnection {
@@ -646,6 +646,11 @@
     question: ID
     document: ID
     invert: Boolean
+  }
+  
+  interface DynamicQuestion {
+    options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+    dataSource: String!
   }
   
   type File implements Node {
