@@ -292,13 +292,15 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+class DynamicQuestion(graphene.Interface):
     options = ConnectionField(DataSourceDataConnection)
     data_source = graphene.String(required=True)
 
     def resolve_options(self, info, *args):
         return get_data_source_data(info.context.user, self.data_source)
 
+
+class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     class Meta:
         model = models.Question
         exclude = (
@@ -316,16 +318,10 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "calc_dependents",
         )
         use_connection = False
-        interfaces = (Question, graphene.Node)
+        interfaces = (Question, DynamicQuestion, graphene.Node)
 
 
 class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
-    options = ConnectionField(DataSourceDataConnection)
-    data_source = graphene.String(required=True)
-
-    def resolve_options(self, info, *args):
-        return get_data_source_data(info.context.user, self.data_source)
-
     class Meta:
         model = models.Question
         exclude = (
@@ -343,10 +339,14 @@ class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType)
             "calc_dependents",
         )
         use_connection = False
-        interfaces = (Question, graphene.Node)
+        interfaces = (Question, DynamicQuestion, graphene.Node)
 
 
 class DynamicOption(DjangoObjectType):
+    question = graphene.Field(
+        "caluma.caluma_form.schema.DynamicQuestion", required=True
+    )
+
     class Meta:
         model = models.DynamicOption
         interfaces = (relay.Node,)
