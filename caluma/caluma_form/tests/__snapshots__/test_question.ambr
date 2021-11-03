@@ -1,3 +1,23 @@
+# name: test_query_all_questions[action_button-question__configuration14-None-question__format_validators14]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'ActionButtonQuestion',
+            'id': 'QWN0aW9uQnV0dG9uUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
+            'infoText': '',
+            'label': 'Bonnie Moreno',
+            'meta': <class 'dict'> {
+            },
+            'slug': 'environmental-ten',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
 # name: test_query_all_questions[calculated_float-question__configuration13-None-question__format_validators13]
   <class 'dict'> {
     'allQuestions': <class 'dict'> {
@@ -414,6 +434,24 @@
         },
       ],
       'totalCount': 1,
+    },
+  }
+---
+# name: test_save_action_button_question[action_button]
+  <class 'OrderedDict'> {
+    'saveActionButtonQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'ActionButtonQuestion',
+        'action': 'SKIP',
+        'color': 'PRIMARY',
+        'id': 'QWN0aW9uQnV0dG9uUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
+        'label': 'Bonnie Moreno',
+        'meta': <class 'dict'> {
+        },
+        'slug': 'environmental-ten',
+        'validateOnEnter': False,
+      },
     },
   }
 ---

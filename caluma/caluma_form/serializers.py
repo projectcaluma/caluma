@@ -1,7 +1,9 @@
 from django.db import transaction
 from rest_framework import exceptions
 from rest_framework.serializers import (
+    BooleanField,
     CharField,
+    ChoiceField,
     DateField,
     FloatField,
     IntegerField,
@@ -17,6 +19,16 @@ from .jexl import QuestionJexl
 class QuestionJexlField(serializers.JexlField):
     def __init__(self, **kwargs):
         super().__init__(QuestionJexl(), **kwargs)
+
+
+class ButtonActionField(ChoiceField):
+    def __init__(self, **kwargs):
+        super().__init__(models.Question.ACTION_CHOICES, **kwargs)
+
+
+class ButtonColorField(ChoiceField):
+    def __init__(self, **kwargs):
+        super().__init__(models.Question.COLOR_CHOICES, **kwargs)
 
 
 class SaveFormSerializer(serializers.ModelSerializer):
@@ -444,6 +456,29 @@ class SaveCalculatedFloatQuestionSerializer(SaveQuestionSerializer):
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + [
             "calc_expression",
+        ]
+
+
+class SaveActionButtonQuestionSerializer(SaveQuestionSerializer):
+    action = ButtonActionField(required=True)
+    color = ButtonColorField(required=True)
+    validate_on_enter = BooleanField(required=True)
+
+    def validate(self, data):
+        data["type"] = models.Question.TYPE_ACTION_BUTTON
+        return super().validate(data)
+
+    class Meta(SaveQuestionSerializer.Meta):
+        fields = [
+            "label",
+            "slug",
+            "info_text",
+            "is_hidden",
+            "meta",
+            "is_archived",
+            "action",
+            "color",
+            "validate_on_enter",
         ]
 
 

@@ -64,6 +64,7 @@ class Question(core_models.SlugModel):
     TYPE_DYNAMIC_MULTIPLE_CHOICE = "dynamic_multiple_choice"
     TYPE_STATIC = "static"
     TYPE_CALCULATED_FLOAT = "calculated_float"
+    TYPE_ACTION_BUTTON = "action_button"
 
     TYPE_CHOICES = (
         TYPE_MULTIPLE_CHOICE,
@@ -80,8 +81,25 @@ class Question(core_models.SlugModel):
         TYPE_DYNAMIC_MULTIPLE_CHOICE,
         TYPE_STATIC,
         TYPE_CALCULATED_FLOAT,
+        TYPE_ACTION_BUTTON,
     )
     TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
+
+    ACTION_COMPLETE = "complete"
+    ACTION_SKIP = "skip"
+    ACTION_CHOICES = (
+        ACTION_COMPLETE,
+        ACTION_SKIP,
+    )
+
+    COLOR_PRIMARY = "primary"
+    COLOR_SECONDARY = "secondary"
+    COLOR_DEFAULT = "default"
+    COLOR_CHOICES = (
+        COLOR_PRIMARY,
+        COLOR_SECONDARY,
+        COLOR_DEFAULT,
+    )
 
     label = LocalizedField(blank=False, null=False, required=False)
     type = models.CharField(choices=TYPE_CHOICES_TUPLE, max_length=23)
@@ -166,6 +184,30 @@ class Question(core_models.SlugModel):
     @min_value.setter
     def min_value(self, value):
         self.configuration["min_value"] = value
+
+    @property
+    def action(self):
+        return self.configuration.get("action")
+
+    @action.setter
+    def action(self, value):
+        self.configuration["action"] = value
+
+    @property
+    def color(self):
+        return self.configuration.get("color")
+
+    @color.setter
+    def color(self, value):
+        self.configuration["color"] = value
+
+    @property
+    def validate_on_enter(self):
+        return self.configuration.get("validate_on_enter")
+
+    @validate_on_enter.setter
+    def validate_on_enter(self, value):
+        self.configuration["validate_on_enter"] = value
 
     def empty_value(self):
         """Return empty value for this question type."""

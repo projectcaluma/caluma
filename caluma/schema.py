@@ -48,6 +48,7 @@ types = [
     form_schema.TableAnswer,
     form_schema.FileAnswer,
     form_schema.CalculatedFloatQuestion,
+    form_schema.ActionButtonQuestion,
     workflow_schema.SimpleTask,
     workflow_schema.CompleteWorkflowFormTask,
     workflow_schema.CompleteTaskFormTask,

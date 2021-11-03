@@ -14,6 +14,7 @@ AUTO_QUESTION_TYPES = [
         models.Question.TYPE_DYNAMIC_CHOICE,
         models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
         models.Question.TYPE_CALCULATED_FLOAT,
+        models.Question.TYPE_ACTION_BUTTON,
     ]
 ]
 
@@ -53,13 +54,33 @@ class QuestionFactory(DjangoModelFactory):
         no_declaration=None,
     )
 
+    # dynamic question
     data_source = Maybe(
         "is_dynamic", yes_declaration="MyDataSource", no_declaration=None
     )
+
+    # calculated float question
     calc_expression = Maybe(
         "is_calc_float", yes_declaration="-1.0", no_declaration=None
     )
     calc_dependents = []
+
+    # action button question
+    action = Maybe(
+        "is_action_button",
+        yes_declaration=Faker("word", ext_word_list=models.Question.ACTION_CHOICES),
+        no_declaration=None,
+    )
+    color = Maybe(
+        "is_action_button",
+        yes_declaration=Faker("word", ext_word_list=models.Question.COLOR_CHOICES),
+        no_declaration=None,
+    )
+    validate_on_enter = Maybe(
+        "is_action_button",
+        yes_declaration=False,
+        no_declaration=None,
+    )
 
     class Meta:
         model = models.Question
@@ -77,6 +98,9 @@ class QuestionFactory(DjangoModelFactory):
         is_static = LazyAttribute(lambda q: q.type == models.Question.TYPE_STATIC)
         is_calc_float = LazyAttribute(
             lambda q: q.type == models.Question.TYPE_CALCULATED_FLOAT
+        )
+        is_action_button = LazyAttribute(
+            lambda q: q.type == models.Question.TYPE_ACTION_BUTTON
         )
 
 

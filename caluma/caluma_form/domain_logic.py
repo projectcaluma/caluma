@@ -147,6 +147,8 @@ class SaveDefaultAnswerLogic(SaveAnswerLogic):
             models.Question.TYPE_STATIC,
             models.Question.TYPE_DYNAMIC_CHOICE,
             models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            models.Question.TYPE_CALCULATED_FLOAT,
+            models.Question.TYPE_ACTION_BUTTON,
         ]:
             raise ValidationError(
                 f'Can\'t save default_answer for question of type "{data["question"].type}"'

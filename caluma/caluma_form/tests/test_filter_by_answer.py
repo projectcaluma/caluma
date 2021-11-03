@@ -82,6 +82,7 @@ def test_query_all_questions(
             models.Question.TYPE_DYNAMIC_CHOICE,
             models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
             models.Question.TYPE_STATIC,
+            models.Question.TYPE_ACTION_BUTTON,
         )
     }
 

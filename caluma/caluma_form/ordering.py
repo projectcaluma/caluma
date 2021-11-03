@@ -42,7 +42,6 @@ class AnswerValueOrdering(CalumaOrdering):
             Question.TYPE_TEXT: "value",
             Question.TYPE_FILE: "file",
             Question.TYPE_DYNAMIC_CHOICE: "value",
-            Question.TYPE_STATIC: "value",
         }
 
         try:

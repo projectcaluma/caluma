@@ -4,6 +4,8 @@ from graphene.utils.str_converters import to_camel_case
 from graphql_relay import to_global_id
 from rest_framework import fields
 
+from caluma.caluma_form.serializers import ButtonActionField, ButtonColorField
+
 
 def extract_serializer_input_fields(serializer_class, instance):
     serializer = serializer_class(instance)
@@ -14,6 +16,10 @@ def extract_serializer_input_fields(serializer_class, instance):
 
         if isinstance(field, fields.JSONField) and key == "meta":
             value = json.dumps(value)
+
+        if isinstance(field, (ButtonActionField, ButtonColorField)):
+            value = value.upper()
+
         result[to_camel_case(key)] = value
 
     result["clientMutationId"] = "testid"
