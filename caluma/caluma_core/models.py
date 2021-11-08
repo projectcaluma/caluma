@@ -111,7 +111,13 @@ class PathModelMixin(models.Model):
         help_text="Stores a path to the given object",
     )
 
-    def calculate_path(self, _seen_keys=None):
+    def calculate_path(self, _seen_keys=None, path_parent_attrs=None):
+        """Calculate path to this object.
+
+        Note: In Migrations, you should call PathModelMixin.calculate_path(obj) instead of
+        obj.calculate_path(), as the class of the migration object will not be linked to
+        the code here. Also, in those cases you MUST pass in the path_parent_attrs kwarg.
+        """
         if not _seen_keys:
             _seen_keys = set()
         self_pk_list = [str(self.pk)]
@@ -120,7 +126,8 @@ class PathModelMixin(models.Model):
             # to themselves in certain circumstances
             return []
 
-        path_parent_attrs = getattr(self, "path_parent_attrs", None)
+        if not path_parent_attrs:
+            path_parent_attrs = getattr(self, "path_parent_attrs", None)
 
         if not isinstance(path_parent_attrs, list):
             raise ProgrammingError(  # pragma: no cover
@@ -132,7 +139,11 @@ class PathModelMixin(models.Model):
         for attr in path_parent_attrs:
             parent = getattr(self, attr, None)
             if parent:
-                parent_path = parent.calculate_path(set([*self_pk_list, *_seen_keys]))
+                # Don't call method directly on self - this won't work
+                # in migrations
+                parent_path = PathModelMixin.calculate_path(
+                    parent, set([*self_pk_list, *_seen_keys])
+                )
                 if parent_path:
                     return parent_path + self_pk_list
 

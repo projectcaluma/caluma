@@ -2,14 +2,20 @@
 
 from django.db import migrations
 
+from caluma.caluma_core.models import PathModelMixin
+from caluma.caluma_workflow.models import Case, WorkItem
+
 
 def add_path_attribute(apps, schema_editor):
-    for model in [
-        "caluma_workflow.workitem",
-        "caluma_workflow.case",
+    for model, cls in [
+        ("caluma_workflow.workitem", WorkItem),
+        ("caluma_workflow.case", Case),
     ]:
         for obj in apps.get_model(model).objects.all():
-            obj.path = obj.calculate_path()
+
+            obj.path = PathModelMixin.calculate_path(
+                obj, path_parent_attrs=cls.path_parent_attrs
+            )
             obj.save()
 
 

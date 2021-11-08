@@ -2,10 +2,15 @@
 
 from django.db import migrations
 
+from caluma.caluma_core.models import PathModelMixin
+from caluma.caluma_form.models import Document
+
 
 def add_path_attribute(apps, schema_editor):
     for doc in apps.get_model("caluma_form.document").objects.all():
-        doc.path = doc.calculate_path()
+        doc.path = PathModelMixin.calculate_path(
+            doc, path_parent_attrs=Document.path_parent_attrs
+        )
         doc.save()
 
 
