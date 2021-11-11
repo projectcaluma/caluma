@@ -14,10 +14,13 @@ from .caluma_workflow import schema as workflow_schema
 
 convert_django_field.register(LocalizedField, convert_field_to_string)
 
-
-class Mutation(form_schema.Mutation, workflow_schema.Mutation, graphene.ObjectType):
-    pass
-
+# The consolidated mutation is created procedurally here to avoid
+# exporting it as `Mutation`, which can be confusing
+_mutation = type(
+    "Mutation",
+    (form_schema.Mutation, workflow_schema.Mutation, graphene.ObjectType),
+    {},
+)
 
 query_inherit_from = [
     form_schema.Query,
@@ -77,7 +80,7 @@ class Query(*query_inherit_from):
 
 schema = graphene.Schema(
     query=Query,
-    mutation=Mutation,
+    mutation=_mutation,
     # TODO: define what app exposes what types
     types=types,
 )
