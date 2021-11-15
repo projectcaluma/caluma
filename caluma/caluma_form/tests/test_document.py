@@ -1447,13 +1447,22 @@ def test_document_modified_content_properties(
 
 
 @pytest.mark.parametrize(
-    "question__type,answer__value",
+    "question__type,answer__value,expected_values",
     [
-        (Question.TYPE_CHOICE, "somevalue"),
-        (Question.TYPE_MULTIPLE_CHOICE, ["somevalue", "anothervalue"]),
-        (Question.TYPE_DYNAMIC_CHOICE, "somevalue"),
-        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["somevalue", "anothervalue"]),
-        (Question.TYPE_TEXT, "somevalue"),
+        (Question.TYPE_CHOICE, "somevalue", "somevalue"),
+        (
+            Question.TYPE_MULTIPLE_CHOICE,
+            ["somevalue", "anothervalue"],
+            set(["somevalue", "anothervalue"]),
+        ),
+        (Question.TYPE_MULTIPLE_CHOICE, [], set()),
+        (Question.TYPE_DYNAMIC_CHOICE, "somevalue", "somevalue"),
+        (
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            ["somevalue", "anothervalue"],
+            set(["somevalue", "anothervalue"]),
+        ),
+        (Question.TYPE_TEXT, "somevalue", None),
     ],
 )
 def test_selected_options(
@@ -1467,6 +1476,7 @@ def test_selected_options(
     question,
     form,
     form_question_factory,
+    expected_values,
 ):
     query = """
         query node($id: ID!) {
@@ -1541,9 +1551,10 @@ def test_selected_options(
         return
 
     elif question.type in [Question.TYPE_CHOICE, Question.TYPE_DYNAMIC_CHOICE]:
-        assert result.data["node"]["selectedOption"]["slug"] == "somevalue"
+        returned_value = result.data["node"]["selectedOption"]["slug"]
     else:
-        assert len(result.data["node"]["selectedOptions"]["edges"]) == 2
-        assert set(
+        returned_value = set(
             [e["node"]["slug"] for e in result.data["node"]["selectedOptions"]["edges"]]
-        ) == set(["somevalue", "anothervalue"])
+        )
+
+    assert returned_value == expected_values

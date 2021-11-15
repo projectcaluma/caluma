@@ -803,7 +803,7 @@
     },
   }
 ---
-# name: test_selected_options[choice-somevalue]
+# name: test_selected_options[choice-somevalue-somevalue]
   <class 'dict'> {
     'node': <class 'dict'> {
       'selectedOption': <class 'dict'> {
@@ -814,7 +814,7 @@
     },
   }
 ---
-# name: test_selected_options[dynamic_choice-somevalue]
+# name: test_selected_options[dynamic_choice-somevalue-somevalue]
   <class 'dict'> {
     'node': <class 'dict'> {
       'selectedOption': <class 'dict'> {
@@ -825,7 +825,7 @@
     },
   }
 ---
-# name: test_selected_options[dynamic_multiple_choice-answer__value3]
+# name: test_selected_options[dynamic_multiple_choice-answer__value4-expected_values4]
   <class 'dict'> {
     'node': <class 'dict'> {
       'list_value': <class 'list'> [
@@ -851,7 +851,7 @@
     },
   }
 ---
-# name: test_selected_options[multiple_choice-answer__value1]
+# name: test_selected_options[multiple_choice-answer__value1-expected_values1]
   <class 'dict'> {
     'node': <class 'dict'> {
       'list_value': <class 'list'> [
@@ -877,7 +877,19 @@
     },
   }
 ---
-# name: test_selected_options[text-somevalue]
+# name: test_selected_options[multiple_choice-answer__value2-expected_values2]
+  <class 'dict'> {
+    'node': <class 'dict'> {
+      'list_value': <class 'list'> [
+      ],
+      'selectedOptions': <class 'dict'> {
+        'edges': <class 'list'> [
+        ],
+      },
+    },
+  }
+---
+# name: test_selected_options[text-somevalue-None]
   <class 'dict'> {
     'node': <class 'dict'> {
       'selectedOption': None,

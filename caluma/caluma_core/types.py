@@ -106,6 +106,8 @@ class ConnectionField(ConnectionField):
 
     @classmethod
     def resolve_connection(cls, connection_type, args, resolved):
+        if not resolved:
+            resolved = []
         if isinstance(resolved, connection_type):  # pragma: no cover
             return resolved
 
