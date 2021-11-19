@@ -199,7 +199,6 @@
     modifiedByUser: String
     modifiedByGroup: String
     id: ID!
-    path: [String]!
     closedAt: DateTime
     closedByUser: String
     closedByGroup: String
@@ -527,7 +526,6 @@
     modifiedByUser: String
     modifiedByGroup: String
     id: ID!
-    path: [String]!
     form: Form!
     source: Document
     meta: GenericScalar
@@ -987,7 +985,6 @@
     modifiedByUser: String
     modifiedByGroup: String
     id: ID!
-    path: [String]!
     meta: GenericScalar
     historyUserId: String
     form: Form
@@ -2186,7 +2183,6 @@
     CREATED_BY_GROUP
     MODIFIED_BY_USER
     MODIFIED_BY_GROUP
-    PATH
     FORM
     SOURCE
   }
@@ -2541,7 +2537,6 @@
     modifiedByUser: String
     modifiedByGroup: String
     id: ID!
-    path: [String]!
     name: String!
     description: String
     closedAt: DateTime

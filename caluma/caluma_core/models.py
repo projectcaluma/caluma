@@ -1,8 +1,6 @@
 import uuid
 
-from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django.db.utils import ProgrammingError
 from graphene.utils.str_converters import to_camel_case
 from simple_history.models import HistoricalRecords
 
@@ -86,62 +84,6 @@ class UUIDModel(BaseModel, HistoricalModel):
 
     def __repr__(self):
         return f"{self.__class__.__name__}(id={self.id})"
-
-    class Meta:
-        abstract = True
-
-
-class PathModelMixin(models.Model):
-    """
-    Mixin that stores a path to the object.
-
-    The path attribute is used for analytics and allows direct access
-    and faster SELECTs.
-
-    To you use this mixin, you must define  a property named `path_parent_attrs`
-    on the model class. It's supposed to be a list of strings that contain the
-    attributes to check. The first attribute that exists will be used.
-    This way, you can define multiple possible parents (in a document, for example
-    you can first check if it's attached to a case, or a work item, then a document family)
-    """
-
-    path = ArrayField(
-        models.CharField(max_length=150),
-        default=list,
-        help_text="Stores a path to the given object",
-    )
-
-    def calculate_path(self, _seen_keys=None):
-        if not _seen_keys:
-            _seen_keys = set()
-        self_pk_list = [str(self.pk)]
-        if str(self.pk) in _seen_keys:
-            # Not recursing any more. Root elements *may* point
-            # to themselves in certain circumstances
-            return []
-
-        path_parent_attrs = getattr(self, "path_parent_attrs", None)
-
-        if not isinstance(path_parent_attrs, list):
-            raise ProgrammingError(  # pragma: no cover
-                "If you use the PathModelMixin, you must define "
-                "`path_parent_attrs` on the model (a list of "
-                "strings that contains the attributes to check)"
-            )
-
-        for attr in path_parent_attrs:
-            parent = getattr(self, attr, None)
-            if parent:
-                parent_path = parent.calculate_path(set([*self_pk_list, *_seen_keys]))
-                if parent_path:
-                    return parent_path + self_pk_list
-
-                # Else case: If parent returns an empty list (loop case), we may
-                # be in the wrong parent attribute. We continue checking the other
-                # attributes (if any). If we don't find any other parents that work,
-                # we'll just return as if we're the root object.
-
-        return self_pk_list
 
     class Meta:
         abstract = True
