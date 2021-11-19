@@ -268,10 +268,8 @@ class DocumentManager(models.Manager):
             return SaveDocumentLogic.create({"form": task.form}, user=user)
 
 
-class Document(core_models.UUIDModel, core_models.PathModelMixin):
+class Document(core_models.UUIDModel):
     objects = DocumentManager()
-
-    path_parent_attrs = ["work_item", "case", "family"]
 
     family = models.ForeignKey(
         "self",
