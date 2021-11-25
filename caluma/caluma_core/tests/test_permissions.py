@@ -1,6 +1,8 @@
 import pytest
 from django.core.exceptions import ImproperlyConfigured
 
+from caluma.caluma_core.types import Node
+
 from .. import models, serializers
 from ..mutation import Mutation
 from ..permissions import BasePermission, object_permission_for, permission_for
@@ -150,3 +152,18 @@ def test_custom_permission_override_has_object_permission_with_multiple_mutation
 
     assert not CustomPermission().has_object_permission(CustomMutation, info, instance)
     assert not CustomPermission().has_object_permission(AnotherMutation, info, instance)
+
+
+def test_validate_permission():
+
+    with pytest.raises(ImproperlyConfigured) as exc:
+
+        @object_permission_for(Node)
+        def has_object_permission_for_both_mutations(
+            self, mutation, info, instance
+        ):  # pragma: no cover
+            return False
+
+    assert exc.match(
+        r"Mutation caluma.caluma_core.types.Node is not a recognized mutation"
+    )

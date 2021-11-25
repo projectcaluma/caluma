@@ -3,14 +3,13 @@ import json
 from graphql_relay import to_global_id
 
 from ...caluma_form import models as form_models, schema as form_schema
-from .. import permissions, types
+from .. import permissions
 
 
 class _TestPermission(permissions.BasePermission):
     def permission_impl(self, mutation, info):  # pragma: no cover
         raise NotImplementedError("You need to mock permission_impl")
 
-    @permissions.permission_for(types.Node)
     def has_permission(self, mutation, info):
         # We need this indirection as this method will be registered
         # with the permissions system, but we need to mock the functionality

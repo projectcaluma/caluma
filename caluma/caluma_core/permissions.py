@@ -5,8 +5,33 @@ from django.core.exceptions import ImproperlyConfigured
 from .collections import list_duplicates
 
 
+def _full_class_name(cls):
+    return f"{cls.__module__}.{cls.__name__}"
+
+
+def _collect_subclasses(cls):
+    yield cls
+    for sub in cls.__subclasses__():
+        yield from _collect_subclasses(sub)
+
+
+def _validate_mutation_type(mutation):
+    from caluma.caluma_core.mutation import Mutation
+
+    if not issubclass(mutation, Mutation):
+        valid_subclasses = [
+            _full_class_name(cls) for cls in _collect_subclasses(Mutation)
+        ]
+        raise ImproperlyConfigured(
+            f"Mutation {_full_class_name(mutation)} is not a recognized mutation. "
+            f"Valid mutations are: {', '.join(valid_subclasses)}"
+        )
+
+
 def permission_for(mutation):
     """Decorate function to overwriting permission of specific mutation."""
+
+    _validate_mutation_type(mutation)
 
     def decorate(fn):
         if not hasattr(fn, "_permissions"):
@@ -19,6 +44,8 @@ def permission_for(mutation):
 
 def object_permission_for(mutation):
     """Decorate function to overwriting object permission of specific mutation."""
+
+    _validate_mutation_type(mutation)
 
     def decorate(fn):
         if not hasattr(fn, "_object_permissions"):
