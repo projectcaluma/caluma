@@ -8,6 +8,7 @@ Files:
     .dockerignore
     .editorconfig
     .github/dependabot.yml
+    .github/workflows/ghcr.yml
     .github/workflows/pypi.yml
     .github/workflows/tests.yml
     .gitignore

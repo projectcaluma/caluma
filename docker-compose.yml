@@ -11,7 +11,7 @@ services:
       - dbdata:/var/lib/postgresql/data
     command: -p ${DATABASE_PORT:-5432}
   caluma:
-    image: projectcaluma/caluma:latest
+    image: ghcr.io/projectcaluma/caluma:latest
     ports:
       - "8000:8000"
     depends_on:
