@@ -20,7 +20,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.7"
+          python-version: "3.8"
       - name: Install gitlint
         run: pip install gitlint
       - name: Run gitlint
@@ -65,7 +65,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.7"
+          python-version: "3.8"
       - name: Install requirements
         env:
           PIPENV_IGNORE_VIRTUALENVS: 1
@@ -85,7 +85,7 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v2
         with:
-          python-version: "3.7"
+          python-version: "3.8"
       - name: Install package
         run: |
           echo UID=$(id -u) > .env
