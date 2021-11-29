@@ -79,7 +79,7 @@ setup(
         "idna<4",
         "minio >= 7, < 8",
         "psycopg2-binary >= 2.8, <2.9",
-        "pyjexl @ https://github.com/projectcaluma/pyjexl/archive/edd40f4b14b6b14c9915d40d4ad37a540adeec0a.tar.gz",
+        "pyjexl >= 0.3.0",
         "python-memcached<2",
         "requests<3",
         "urllib3<2",
