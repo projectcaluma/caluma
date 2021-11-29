@@ -78,7 +78,7 @@ setup(
         "graphene-django<=2.8.2",
         "idna<4",
         "minio >= 7, < 8",
-        "psycopg2-binary >= 2.8, <2.9",
+        "psycopg2-binary >= 2.8, < 2.10",
         "pyjexl >= 0.3.0",
         "python-memcached<2",
         "requests<3",
