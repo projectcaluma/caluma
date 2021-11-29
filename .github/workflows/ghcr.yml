@@ -52,8 +52,17 @@ jobs:
           # Strip "v" prefix from tag name
           [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
           # Use Docker `latest` tag convention
-          [ "$VERSION" == "main" ] && VERSION=latest
-          echo IMAGE_ID=$IMAGE_ID
-          echo VERSION=$VERSION
-          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-          docker push $IMAGE_ID:$VERSION
+          if [[ "$VERSION" == "main" ]]; then
+            # only push "dev" image from main branch build
+            echo "Pushing $IMAGE_ID:dev"
+            docker tag $IMAGE_NAME $IMAGE_ID:dev
+            docker push $IMAGE_ID:dev
+          else
+            # new version released - push "latest" and version tag
+            echo "Pushing $IMAGE_ID:$VERSION"
+            docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+            docker push $IMAGE_ID:$VERSION
+            echo "Pushing $IMAGE_ID:latest"
+            docker tag $IMAGE_NAME $IMAGE_ID:latest
+            docker push $IMAGE_ID:latest
+          fi
