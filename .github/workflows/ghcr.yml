@@ -1,22 +1,18 @@
 name: Container image
 
 on:
-  workflow_run:
-    # only run if tests complete
-    workflows: [ "Tests" ]
-    types:
-      - completed
+  release:
+    types: [created]
 
-    # Publish `main` as Docker `latest` image.
+  # Run build for any PRs - we won't push in those however
+  pull_request:
     branches:
       - main
 
-    # Publish `v1.2.3` tags as releases.
-    tags:
-      - v*
-
-  # Run build for any PRs.
-  pull_request:
+  # Publish `main` as Docker `latest` image.
+  push:
+    branches:
+      - main
 
 env:
   IMAGE_NAME: caluma
@@ -24,7 +20,7 @@ env:
 jobs:
   # Push image to GitHub Packages.
   # See also https://docs.docker.com/docker-hub/builds/
-  push:
+  container-registry:
     runs-on: ubuntu-latest
     permissions:
       packages: write
@@ -37,11 +33,11 @@ jobs:
         run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
 
       - name: Log in to registry
-        if: github.event_name != 'pull_request' && github.event.workflow_run.conclusion == 'success'
+        if: github.event_name != 'pull_request'
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
       - name: Push image
-        if: github.event_name != 'pull_request' && github.event.workflow_run.conclusion == 'success'
+        if: github.event_name != 'pull_request'
         run: |
           IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
 
