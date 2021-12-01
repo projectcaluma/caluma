@@ -1,3 +1,25 @@
+# v7.14.0
+
+### Feature
+* **config:** Validate permission decorators ([#1615](https://github.com/projectcaluma/caluma/issues/1615)) ([`a63a6d3`](https://github.com/projectcaluma/caluma/commit/a63a6d34e075fd086647cdfbd36b5eb8cbf83850))
+* Expose more CORS related configurations via environment variables ([`d88165c`](https://github.com/projectcaluma/caluma/commit/d88165c3fbb738fc9fc675cb74c4730a2d91ce4e))
+* **form:** Add new action button question type ([`2b3086f`](https://github.com/projectcaluma/caluma/commit/2b3086fec19658c2ea27a6f7ed089817d31da550))
+* **workflow:** Extend group jexl context object ([`ce3f4fe`](https://github.com/projectcaluma/caluma/commit/ce3f4feaed3434ddb3008623920371edc37a6331))
+* **analysis:** Add path attribute / mixin to structural models ([`9f762f6`](https://github.com/projectcaluma/caluma/commit/9f762f6e0bee4cccab8eb2ee207dc548cc683ba8))
+* **events:** Allow the `sender` to be used in filter_events ([`6104cbd`](https://github.com/projectcaluma/caluma/commit/6104cbd5589ed9dba00b973c2ed0cb085314611c))
+* **signals:** Introduce event filter ([`e597a99`](https://github.com/projectcaluma/caluma/commit/e597a99020f937538605fe02c494ec05e0354ec1))
+
+### Fix
+* Revert path attribute ([`a90a6b7`](https://github.com/projectcaluma/caluma/commit/a90a6b7bcf3ec06ece266f447f51bb964f6f83b7))
+* **selected_options:** Handle selected options if value is empty array ([#1621](https://github.com/projectcaluma/caluma/issues/1621)) ([`f097912`](https://github.com/projectcaluma/caluma/commit/f097912575dc213b3a70b4e51610bc8ffe620aad))
+* **schema:** Define interface for dynamic questions ([`d607544`](https://github.com/projectcaluma/caluma/commit/d60754476884ba97447f4ed4aef93c800849ba1a))
+* Set created_by fields on FormQuestions ([`89ba971`](https://github.com/projectcaluma/caluma/commit/89ba971a342c958abfd08c7858ce9b507ec319ab))
+
+### Documentation
+* Fix custom visibility code snippet ([`d4abb69`](https://github.com/projectcaluma/caluma/commit/d4abb695c1391d6153a3b8e80109d86235b1c740))
+* **guide:** Update guide to use ember-caluma v9 addons ([`4d3c9fc`](https://github.com/projectcaluma/caluma/commit/4d3c9fcd0b4d78cefa58c73bb4383daf318c03be))
+
+
 # v7.13.0
 
 ### Feature
