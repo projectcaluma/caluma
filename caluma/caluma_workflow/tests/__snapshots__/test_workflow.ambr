@@ -1,135 +1,42 @@
-# name: test_add_workflow_flow[task-slug-"task-slug"|task-"task-slug"|task-True]
-  <class 'OrderedDict'> {
-    'addWorkflowFlow': <class 'dict'> {
-      'clientMutationId': None,
-      'workflow': <class 'dict'> {
-        'flows': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'createdByGroup': 'admin',
-                'createdByUser': 'admin',
-                'next': '"task-slug"|task',
-                'tasks': <class 'list'> [
-                  <class 'dict'> {
-                    'slug': 'task-slug',
-                  },
-                ],
-              },
-            },
-          ],
-          'totalCount': 1,
-        },
-        'tasks': <class 'list'> [
-          <class 'dict'> {
-            'slug': 'more-form-level',
-          },
-          <class 'dict'> {
-            'slug': 'song-light',
-          },
-          <class 'dict'> {
-            'slug': 'task-slug',
-          },
-        ],
-      },
-    },
-  }
----
-# name: test_add_workflow_flow[task-slug-"task-slug"|task-None-True]
-  <class 'OrderedDict'> {
-    'addWorkflowFlow': <class 'dict'> {
-      'clientMutationId': None,
-      'workflow': <class 'dict'> {
-        'flows': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'createdByGroup': 'admin',
-                'createdByUser': 'admin',
-                'next': '"task-slug"|task',
-                'tasks': <class 'list'> [
-                  <class 'dict'> {
-                    'slug': 'task-slug',
-                  },
-                ],
-              },
-            },
-          ],
-          'totalCount': 1,
-        },
-        'tasks': <class 'list'> [
-          <class 'dict'> {
-            'slug': 'more-form-level',
-          },
-          <class 'dict'> {
-            'slug': 'song-light',
-          },
-          <class 'dict'> {
-            'slug': 'task-slug',
-          },
-        ],
-      },
-    },
-  }
----
-# name: test_query_all_workflows
+# name: test_add_workflow_flow[task-slug-"task-slug"|task-True]
   <class 'dict'> {
-    'allWorkflows': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'allowAllForms': False,
-            'allowForms': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
-                    'slug': 'suggest-adult-allow',
+    'addWorkflowFlow': <class 'dict'> {
+      'clientMutationId': None,
+      'workflow': <class 'dict'> {
+        'flows': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'createdByGroup': 'admin',
+                'createdByUser': 'admin',
+                'next': '"task-slug"|task',
+                'tasks': <class 'list'> [
+                  <class 'dict'> {
+                    'slug': 'task-slug',
                   },
-                },
-              ],
-            },
-            'description': '
-              Station story first. Team suggest traditional boy above. Argue move appear catch toward help wind.
-              Kid avoid player relationship to range whose. Draw free property consider.
-            ',
-            'flows': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
-                    'next': 'life-just-live',
-                    'tasks': <class 'list'> [
-                      <class 'dict'> {
-                        'slug': 'team-start-worker',
-                      },
-                    ],
-                  },
-                },
-              ],
-              'totalCount': 1,
-            },
-            'meta': <class 'dict'> {
-            },
-            'name': 'Bonnie Moreno',
-            'slug': 'environmental-ten',
-            'startTasks': <class 'list'> [
-              <class 'dict'> {
-                'slug': 'team-start-worker',
+                ],
               },
-            ],
-            'tasks': <class 'list'> [
-              <class 'dict'> {
-                'slug': 'team-start-worker',
-              },
-            ],
-          },
+            },
+          ],
+          'totalCount': 1,
         },
-      ],
-      'totalCount': 1,
+        'tasks': <class 'list'> [
+          <class 'dict'> {
+            'slug': 'more-form-level',
+          },
+          <class 'dict'> {
+            'slug': 'song-light',
+          },
+          <class 'dict'> {
+            'slug': 'task-slug',
+          },
+        ],
+      },
     },
   }
 ---
 # name: test_save_workflow
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveWorkflow': <class 'dict'> {
       'clientMutationId': 'testid',
       'workflow': <class 'dict'> {

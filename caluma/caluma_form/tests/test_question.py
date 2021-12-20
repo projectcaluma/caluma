@@ -168,7 +168,7 @@ def test_query_all_questions(
     result = schema_executor(
         query,
         variable_values={
-            "search": question.label,
+            "search": str(question.label),
             "forms": [extract_global_id_input_fields(form)["id"]],
         },
     )

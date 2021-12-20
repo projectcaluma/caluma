@@ -2,28 +2,8 @@
   <class 'dict'> {
     'allDocuments': <class 'dict'> {
       'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'answers': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
-                    '__typename': 'DateAnswer',
-                    'date_value': '2019-02-22',
-                    'question': <class 'dict'> {
-                      'label': 'Taylor Williams',
-                      'slug': 'suggest-adult-allow',
-                    },
-                  },
-                },
-              ],
-              'totalCount': 1,
-            },
-            'createdByUser': 'a18c653a-d278-47f1-8d6e-9ced73aeeea4',
-          },
-        },
       ],
-      'totalCount': 1,
+      'totalCount': 0,
     },
   }
 ---
@@ -285,34 +265,8 @@
   <class 'dict'> {
     'allDocuments': <class 'dict'> {
       'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'answers': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
-                    '__typename': 'TableAnswer',
-                    'question': <class 'dict'> {
-                      'label': 'Taylor Williams',
-                      'slug': 'suggest-adult-allow',
-                    },
-                    'table_value': <class 'list'> [
-                      <class 'dict'> {
-                        'form': <class 'dict'> {
-                          'slug': 'environmental-ten',
-                        },
-                      },
-                    ],
-                  },
-                },
-              ],
-              'totalCount': 1,
-            },
-            'createdByUser': '872d1b6f-790c-473c-b5e9-2e714d607695',
-          },
-        },
       ],
-      'totalCount': 1,
+      'totalCount': 0,
     },
   }
 ---
@@ -346,7 +300,7 @@
   }
 ---
 # name: test_save_document_answer[choice-question__configuration17-None-question__format_validators17-option-slug-None-SaveDocumentStringAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -360,7 +314,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=choice), value='option-slug')
 ---
 # name: test_save_document_answer[choice-question__configuration17-None-question__format_validators17-option-slug-None-SaveDocumentStringAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -374,7 +328,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=choice), value='option-slug')
 ---
 # name: test_save_document_answer[date-question__configuration7-None-question__format_validators7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentDateAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'DateAnswer',
@@ -388,7 +342,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=date), value=None)
 ---
 # name: test_save_document_answer[date-question__configuration7-None-question__format_validators7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentDateAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'DateAnswer',
@@ -402,7 +356,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=date), value=None)
 ---
 # name: test_save_document_answer[dynamic_choice-question__configuration21-MyDataSource-question__format_validators21-5.5-None-SaveDocumentStringAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -416,7 +370,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=dynamic_choice), value='5.5')
 ---
 # name: test_save_document_answer[dynamic_choice-question__configuration21-MyDataSource-question__format_validators21-5.5-None-SaveDocumentStringAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -430,7 +384,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=dynamic_choice), value='5.5')
 ---
 # name: test_save_document_answer[dynamic_multiple_choice-question__configuration19-MyDataSource-question__format_validators19-answer__value19-None-SaveDocumentListAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentListAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'ListAnswer',
@@ -447,7 +401,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=dynamic_multiple_choice), value=['5.5', '1'])
 ---
 # name: test_save_document_answer[dynamic_multiple_choice-question__configuration19-MyDataSource-question__format_validators19-answer__value19-None-SaveDocumentListAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentListAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'ListAnswer',
@@ -464,7 +418,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=dynamic_multiple_choice), value=['5.5', '1'])
 ---
 # name: test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentFileAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'FileAnswer',
@@ -481,7 +435,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=file), value=None)
 ---
 # name: test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentFileAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'FileAnswer',
@@ -498,7 +452,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=file), value=None)
 ---
 # name: test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentFileAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'FileAnswer',
@@ -515,7 +469,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=file), value=None)
 ---
 # name: test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentFileAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'FileAnswer',
@@ -532,7 +486,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=file), value=None)
 ---
 # name: test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentFloatAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'FloatAnswer',
@@ -546,7 +500,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=float), value=2.1)
 ---
 # name: test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentFloatAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'FloatAnswer',
@@ -560,7 +514,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=float), value=2.1)
 ---
 # name: test_save_document_answer[integer-question__configuration0-None-question__format_validators0-1-None-SaveDocumentIntegerAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentIntegerAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'IntegerAnswer',
@@ -574,7 +528,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=integer), value=1)
 ---
 # name: test_save_document_answer[integer-question__configuration0-None-question__format_validators0-1-None-SaveDocumentIntegerAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentIntegerAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'IntegerAnswer',
@@ -588,7 +542,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=integer), value=1)
 ---
 # name: test_save_document_answer[multiple_choice-question__configuration15-None-question__format_validators15-answer__value15-None-SaveDocumentListAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentListAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'ListAnswer',
@@ -604,7 +558,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=multiple_choice), value=['option-slug'])
 ---
 # name: test_save_document_answer[multiple_choice-question__configuration15-None-question__format_validators15-answer__value15-None-SaveDocumentListAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentListAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'ListAnswer',
@@ -620,7 +574,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=multiple_choice), value=['option-slug'])
 ---
 # name: test_save_document_answer[table-question__configuration12-None-question__format_validators12-None-None-SaveDocumentTableAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentTableAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'TableAnswer',
@@ -645,7 +599,7 @@
   Answer(document=Document(form=Form(slug=measure-evening)), question=Question(slug=environmental-ten, type=table), value=None)
 ---
 # name: test_save_document_answer[table-question__configuration12-None-question__format_validators12-None-None-SaveDocumentTableAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentTableAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'TableAnswer',
@@ -670,7 +624,7 @@
   Answer(document=Document(form=Form(slug=measure-evening)), question=Question(slug=environmental-ten, type=table), value=None)
 ---
 # name: test_save_document_answer[text-question__configuration24-None-question__format_validators24-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -684,7 +638,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=text), value='test@example.com')
 ---
 # name: test_save_document_answer[text-question__configuration24-None-question__format_validators24-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -698,7 +652,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=text), value='test@example.com')
 ---
 # name: test_save_document_answer[text-question__configuration4-None-question__format_validators4-Test-None-SaveDocumentStringAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -712,7 +666,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=text), value='Test')
 ---
 # name: test_save_document_answer[text-question__configuration4-None-question__format_validators4-Test-None-SaveDocumentStringAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -726,7 +680,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=text), value='Test')
 ---
 # name: test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -740,7 +694,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=textarea), value='Test')
 ---
 # name: test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -754,7 +708,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=textarea), value='Test')
 ---
 # name: test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-False-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -768,7 +722,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=textarea), value='test@example.com')
 ---
 # name: test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -782,7 +736,7 @@
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=textarea), value='test@example.com')
 ---
 # name: test_save_document_answer_empty[text-false-old value that needs to be deleted-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -793,7 +747,7 @@
   }
 ---
 # name: test_save_document_answer_empty[text-false-old value that needs to be deleted-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',

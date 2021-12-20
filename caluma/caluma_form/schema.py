@@ -1165,10 +1165,10 @@ class Query:
         DocumentValidityConnection, id=graphene.ID(required=True)
     )
 
-    def resolve_all_format_validators(self, info):
+    def resolve_all_format_validators(self, info, **kwargs):
         return get_format_validators()
 
-    def resolve_document_validity(self, info, id):
+    def resolve_document_validity(self, info, id, **kwargs):
         return validate_document(info, id)
 
 
