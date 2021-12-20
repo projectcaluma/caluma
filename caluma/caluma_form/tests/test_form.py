@@ -54,7 +54,7 @@ def test_query_all_forms(
     result = schema_executor(
         query,
         variable_values={
-            "question": question.label,
+            "question": str(question.label),
             "orderBy": ["NAME_ASC", "CREATED_AT_ASC"],
         },
     )

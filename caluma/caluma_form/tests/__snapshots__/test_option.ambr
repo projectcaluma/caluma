@@ -1,5 +1,5 @@
 # name: test_save_option
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveOption': <class 'dict'> {
       'option': <class 'dict'> {
         'label': 'Bonnie Moreno',

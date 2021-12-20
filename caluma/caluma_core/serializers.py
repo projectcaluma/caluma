@@ -1,3 +1,5 @@
+import enum
+
 import graphene
 from django.core.exceptions import ImproperlyConfigured
 from django.utils import translation
@@ -6,9 +8,25 @@ from graphene_django.rest_framework import serializer_converter
 from graphql_relay import to_global_id
 from localized_fields.fields import LocalizedField
 from rest_framework import relations, serializers
+from rest_framework.serializers import ChoiceField
 
 from .jexl import JexlValidator
 from .relay import extract_global_id
+
+
+class CalumaChoiceField(ChoiceField):
+    """Custom choice field.
+
+    Correctly handles Enum values that graphene parses before the
+    value gets to the DRF serializer.
+    """
+
+    def to_internal_value(self, data):
+        # TODO: This shouldn't be required IMHO - find out why
+        # graphene parses the enum value before we get to it
+        if isinstance(data, enum.Enum):
+            data = data.value
+        return super().to_internal_value(data)
 
 
 class GlobalIDPrimaryKeyRelatedField(relations.PrimaryKeyRelatedField):

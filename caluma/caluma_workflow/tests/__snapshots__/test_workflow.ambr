@@ -1,5 +1,5 @@
 # name: test_add_workflow_flow[task-slug-"task-slug"|task-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'addWorkflowFlow': <class 'dict'> {
       'clientMutationId': None,
       'workflow': <class 'dict'> {
@@ -35,64 +35,8 @@
     },
   }
 ---
-# name: test_query_all_workflows
-  <class 'dict'> {
-    'allWorkflows': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'allowAllForms': False,
-            'allowForms': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
-                    'slug': 'suggest-adult-allow',
-                  },
-                },
-              ],
-            },
-            'description': '
-              Station story first. Team suggest traditional boy above. Argue move appear catch toward help wind.
-              Kid avoid player relationship to range whose. Draw free property consider.
-            ',
-            'flows': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
-                    'next': 'life-just-live',
-                    'tasks': <class 'list'> [
-                      <class 'dict'> {
-                        'slug': 'team-start-worker',
-                      },
-                    ],
-                  },
-                },
-              ],
-              'totalCount': 1,
-            },
-            'meta': <class 'dict'> {
-            },
-            'name': 'Bonnie Moreno',
-            'slug': 'environmental-ten',
-            'startTasks': <class 'list'> [
-              <class 'dict'> {
-                'slug': 'team-start-worker',
-              },
-            ],
-            'tasks': <class 'list'> [
-              <class 'dict'> {
-                'slug': 'team-start-worker',
-              },
-            ],
-          },
-        },
-      ],
-      'totalCount': 1,
-    },
-  }
----
 # name: test_save_workflow
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveWorkflow': <class 'dict'> {
       'clientMutationId': 'testid',
       'workflow': <class 'dict'> {
