@@ -1,28 +1,5 @@
-# name: test_query_all_tasks[simple]
-  <class 'dict'> {
-    'allTasks': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            '__typename': 'SimpleTask',
-            'description': '
-              All response later state. Rock event recent public final.
-              Hope star check record well.
-              With Mr letter eye way society. Move enter them his half long.
-            ',
-            'meta': <class 'dict'> {
-            },
-            'name': 'Taylor Williams',
-            'slug': 'suggest-adult-allow',
-          },
-        },
-      ],
-      'totalCount': 1,
-    },
-  }
----
 # name: test_save_comlete_task_form_task
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCompleteTaskFormTask': <class 'dict'> {
       'clientMutationId': 'testid',
       'task': <class 'dict'> {
@@ -36,7 +13,7 @@
   }
 ---
 # name: test_save_task[SaveCompleteWorkflowFormTask]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCompleteWorkflowFormTask': <class 'dict'> {
       'clientMutationId': 'testid',
       'task': <class 'dict'> {
@@ -50,7 +27,7 @@
   }
 ---
 # name: test_save_task[SaveSimpleTask]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveSimpleTask': <class 'dict'> {
       'clientMutationId': 'testid',
       'task': <class 'dict'> {

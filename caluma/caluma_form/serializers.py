@@ -3,7 +3,6 @@ from rest_framework import exceptions
 from rest_framework.serializers import (
     BooleanField,
     CharField,
-    ChoiceField,
     DateField,
     FloatField,
     IntegerField,
@@ -21,12 +20,12 @@ class QuestionJexlField(serializers.JexlField):
         super().__init__(QuestionJexl(), **kwargs)
 
 
-class ButtonActionField(ChoiceField):
+class ButtonActionField(serializers.CalumaChoiceField):
     def __init__(self, **kwargs):
         super().__init__(models.Question.ACTION_CHOICES, **kwargs)
 
 
-class ButtonColorField(ChoiceField):
+class ButtonColorField(serializers.CalumaChoiceField):
     def __init__(self, **kwargs):
         super().__init__(models.Question.COLOR_CHOICES, **kwargs)
 

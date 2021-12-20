@@ -1,62 +1,5 @@
-# name: test_query_all_forms[First result-1st-float]
-  <class 'dict'> {
-    'allForms': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'description': 'First result',
-            'id': 'Rm9ybTplbnZpcm9ubWVudGFsLXRlbg==',
-            'meta': <class 'dict'> {
-            },
-            'name': '1st',
-            'questions': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
-                    'id': 'RmxvYXRRdWVzdGlvbjpyZWR1Y2UtYWdhaW5zdA==',
-                    'label': 'Derek Mendoza',
-                    'slug': 'reduce-against',
-                  },
-                },
-              ],
-            },
-            'slug': 'environmental-ten',
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'description': 'Second result',
-            'id': 'Rm9ybTpsb3NzLWxlYXJu',
-            'meta': <class 'dict'> {
-            },
-            'name': '2nd',
-            'questions': <class 'dict'> {
-              'edges': <class 'list'> [
-              ],
-            },
-            'slug': 'loss-learn',
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'description': 'Second result',
-            'id': 'Rm9ybTpzb25nLWxpZ2h0',
-            'meta': <class 'dict'> {
-            },
-            'name': '3rd',
-            'questions': <class 'dict'> {
-              'edges': <class 'list'> [
-              ],
-            },
-            'slug': 'song-light',
-          },
-        },
-      ],
-    },
-  }
----
 # name: test_remove_form_question
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'removeFormQuestion': <class 'dict'> {
       'clientMutationId': None,
       'form': <class 'dict'> {
@@ -69,7 +12,7 @@
   }
 ---
 # name: test_save_form[-de]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveForm': <class 'dict'> {
       'clientMutationId': 'testid',
       'form': <class 'dict'> {
@@ -83,7 +26,7 @@
   }
 ---
 # name: test_save_form[-en]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveForm': <class 'dict'> {
       'clientMutationId': 'testid',
       'form': <class 'dict'> {
@@ -97,7 +40,7 @@
   }
 ---
 # name: test_save_form[some description text-de]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveForm': <class 'dict'> {
       'clientMutationId': 'testid',
       'form': <class 'dict'> {
@@ -111,7 +54,7 @@
   }
 ---
 # name: test_save_form[some description text-en]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveForm': <class 'dict'> {
       'clientMutationId': 'testid',
       'form': <class 'dict'> {
