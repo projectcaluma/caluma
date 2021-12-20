@@ -1,7 +1,5 @@
 [
-    "caluma.caluma_data_source.tests.test_data_source.test_data_source_defaults",
     "caluma.caluma_data_source.tests.test_data_source.test_data_sources_stores_user[dynamic_choice-MyDataSource]",
-    "caluma.caluma_data_source.tests.test_data_source.test_fetch_data_from_data_source",
     "caluma.caluma_data_source.tests.test_data_source.test_fetch_data_sources",
     "caluma.caluma_form.tests.test_answer.test_remove_answer[integer-23]",
     "caluma.caluma_form.tests.test_answer.test_remove_default_answer[integer-23]",
