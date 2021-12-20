@@ -24,6 +24,12 @@ class CalumaChoiceField(ChoiceField):
     def to_internal_value(self, data):
         # TODO: This shouldn't be required IMHO - find out why
         # graphene parses the enum value before we get to it
+        #
+        # This is a workaround for the following bug:
+        # https://github.com/graphql-python/graphene-django/issues/1280
+        #
+        # If/when this bug is fixed, this whole intermediate class may
+        # become obsolete
         if isinstance(data, enum.Enum):
             data = data.value
         return super().to_internal_value(data)
