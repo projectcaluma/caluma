@@ -1,4 +1,5 @@
-from functools import reduce
+import enum
+from functools import reduce, singledispatch
 
 import graphene
 from django import forms
@@ -26,13 +27,14 @@ from django_filters.rest_framework import (
 from graphene import Enum, InputObjectType, List
 from graphene.types import generic
 from graphene.types.utils import get_type
-from graphene.utils.str_converters import to_camel_case
+from graphene.utils.str_converters import to_camel_case, to_snake_case
 from graphene_django import filter
 from graphene_django.converter import convert_choice_name
 from graphene_django.filter.filterset import GrapheneFilterSetMixin
 from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
 from localized_fields.fields import LocalizedField
+from rest_framework.exceptions import ValidationError
 
 from .forms import (
     GlobalIDFormField,
@@ -522,6 +524,88 @@ class DjangoFilterConnectionField(
     @property
     def filterset_class(self):
         return self._provided_filterset_class
+
+    @classmethod
+    def connection_resolver(
+        cls,
+        resolver,
+        connection,
+        default_manager,
+        queryset_resolver,
+        max_limit,
+        enforce_first_or_last,
+        root,
+        info,
+        **args,
+    ):
+        return super().connection_resolver(
+            resolver=resolver,
+            connection=connection,
+            default_manager=default_manager,
+            queryset_resolver=queryset_resolver,
+            max_limit=max_limit,
+            enforce_first_or_last=enforce_first_or_last,
+            root=root,
+            info=info,
+            **cls._clean_args_for_queryset_resolver(args),
+        )
+
+    @classmethod
+    def _clean_args_for_queryset_resolver(cls, args):
+        # Graphend parses incoming data into Enums too early, thus our filters
+        # will receive enum objects that cannot be parsed
+        #
+        # TODO: check if this is still required after the below
+        # resolve_queryset() is completely implemented (we assumed it's
+        # the Enums, but it was actually the list in order_by. We'll keep
+        # it here until we KNOW we can remove it again..)
+        @singledispatch
+        def clean(data):
+            return data
+
+        @clean.register(enum.Enum)
+        def _(data):
+            return data.value
+
+        @clean.register(list)
+        def _(data):
+            return [clean(e) for e in data]
+
+        @clean.register(dict)
+        def _(data):
+            return {k: clean(v) for k, v in data.items()}
+
+        return clean(args)
+
+    @classmethod
+    def resolve_queryset(
+        cls, connection, iterable, info, args, filtering_args, filterset_class
+    ):
+        # Overload the parent class' resolve_queryset() because (for now)
+        # it is unable to deal with multiple order_by values. It's more or less
+        # a literal copy of DjangoFilterConnectionField.resolve_queryset() except
+        # for a "better" filter_kwargs() that doesn't fail on lists in the order_by
+        # parameter.
+        def filter_kwargs():
+            kwargs = {}
+            for k, v in args.items():
+                if k in filtering_args:
+                    if k == "order_by" and v is not None:
+                        if isinstance(v, list):
+                            v = [to_snake_case(e) for e in v]
+                        else:
+                            v = to_snake_case(v)
+                    kwargs[k] = v
+            return kwargs
+
+        qs = connection._meta.node.get_queryset(iterable, info)
+
+        filterset = filterset_class(
+            data=filter_kwargs(), queryset=qs, request=info.context
+        )
+        if filterset.form.is_valid():
+            return filterset.qs
+        raise ValidationError(filterset.form.errors.as_json())
 
 
 class DjangoFilterSetConnectionField(DjangoFilterConnectionField):
