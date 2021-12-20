@@ -29,7 +29,7 @@ class Query(ObjectType):
     all_data_sources = ConnectionField(DataSourceConnection)
     data_source = ConnectionField(DataSourceDataConnection, name=String(required=True))
 
-    def resolve_all_data_sources(self, info):
+    def resolve_all_data_sources(self, info, **kwargs):
         return get_data_sources()
 
     def resolve_data_source(self, info, name, **kwargs):
