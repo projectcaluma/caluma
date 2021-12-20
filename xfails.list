@@ -1,5 +1,4 @@
 [
-    "caluma.caluma_data_source.tests.test_data_source.test_fetch_data_sources",
     "caluma.caluma_form.tests.test_form.test_query_all_forms[First result-1st-float]",
     "caluma.caluma_form.tests.test_history.test_document_as_of",
     "caluma.caluma_form.tests.test_history.test_historical_file_answer",
