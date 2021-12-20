@@ -1,5 +1,5 @@
 # name: test_remove_answer[integer-23]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'removeAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'IntegerAnswer',
@@ -12,7 +12,7 @@
   }
 ---
 # name: test_remove_default_answer[integer-23]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'removeDefaultAnswer': <class 'dict'> {
       'clientMutationId': None,
       'question': <class 'dict'> {
@@ -28,7 +28,7 @@
   Answer(document=None, question=Question(slug=environmental-ten, type=float), value=0.1)
 ---
 # name: test_save_default_answer_graphql[choice-option-slug-None-SaveDefaultStringAnswer-True-option-slug-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -39,7 +39,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[choice-option-slug-None-SaveDefaultStringAnswer-True-option-slug-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -50,7 +50,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[date-None-2019-02-22-SaveDefaultDateAnswer-True-option-slug-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultDateAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'DateAnswer',
@@ -61,7 +61,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[date-None-2019-02-22-SaveDefaultDateAnswer-True-option-slug-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultDateAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'DateAnswer',
@@ -72,7 +72,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[float-2.1-None-SaveDefaultFloatAnswer-True-option-slug-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultFloatAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'FloatAnswer',
@@ -83,7 +83,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[float-2.1-None-SaveDefaultFloatAnswer-True-option-slug-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultFloatAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'FloatAnswer',
@@ -94,7 +94,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[integer-1-None-SaveDefaultIntegerAnswer-True-option-slug-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultIntegerAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'IntegerAnswer',
@@ -105,7 +105,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[integer-1-None-SaveDefaultIntegerAnswer-True-option-slug-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultIntegerAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'IntegerAnswer',
@@ -116,7 +116,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[multiple_choice-answer__value5-None-SaveDefaultListAnswer-True-option-slug-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultListAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'ListAnswer',
@@ -129,7 +129,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[multiple_choice-answer__value5-None-SaveDefaultListAnswer-True-option-slug-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultListAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'ListAnswer',
@@ -142,7 +142,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[table-None-None-SaveDefaultTableAnswer-True-option-slug-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultTableAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'TableAnswer',
@@ -164,7 +164,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[table-None-None-SaveDefaultTableAnswer-True-option-slug-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultTableAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'TableAnswer',
@@ -186,7 +186,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[text-Test-None-SaveDefaultStringAnswer-True-option-slug-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -197,7 +197,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[text-Test-None-SaveDefaultStringAnswer-True-option-slug-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -208,7 +208,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[textarea-Test-None-SaveDefaultStringAnswer-True-option-slug-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
@@ -219,7 +219,7 @@
   }
 ---
 # name: test_save_default_answer_graphql[textarea-Test-None-SaveDefaultStringAnswer-True-option-slug-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDefaultStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
         '__typename': 'StringAnswer',
