@@ -1,3 +1,573 @@
+# name: test_order_by_question_answer_value[date-True-False]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-31',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-26',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-29',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-30',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-27',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-28',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[date-True-True]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-27',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-28',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-29',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-30',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-31',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'dateValue': '2019-05-26',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[file-True-False]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'f',
+                      },
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'a',
+                      },
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'd',
+                      },
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'c',
+                      },
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'b',
+                      },
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'e',
+                      },
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[file-True-True]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'b',
+                      },
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'e',
+                      },
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'd',
+                      },
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'c',
+                      },
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'f',
+                      },
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'fileValue': <class 'dict'> {
+                        'name': 'a',
+                      },
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[form-True-False]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'f',
+                    },
+                  },
+                ],
+                'totalCount': 1,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'd',
+                    },
+                  },
+                ],
+                'totalCount': 1,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'b',
+                    },
+                  },
+                ],
+                'totalCount': 1,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[form-True-True]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'b',
+                    },
+                  },
+                ],
+                'totalCount': 1,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'd',
+                    },
+                  },
+                ],
+                'totalCount': 1,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'f',
+                    },
+                  },
+                ],
+                'totalCount': 1,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[text-True-False]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'c',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'a2',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'b',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'c2',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'a',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'b2',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
+# name: test_order_by_question_answer_value[text-True-True]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'a',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'b2',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'b',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'c2',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'document': <class 'dict'> {
+              'answers': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'c',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'stringValue': 'a2',
+                    },
+                  },
+                ],
+                'totalCount': 2,
+              },
+            },
+          },
+        },
+      ],
+      'totalCount': 3,
+    },
+  }
+---
 # name: test_query_all_cases[completed-0]
   <class 'dict'> {
     'allCases': <class 'dict'> {
