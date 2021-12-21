@@ -1,3 +1,26 @@
+# name: test_query_all_tasks[simple]
+  <class 'dict'> {
+    'allTasks': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'SimpleTask',
+            'description': '
+              All response later state. Rock event recent public final.
+              Hope star check record well.
+              With Mr letter eye way society. Move enter them his half long.
+            ',
+            'meta': <class 'dict'> {
+            },
+            'name': 'Taylor Williams',
+            'slug': 'suggest-adult-allow',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
 # name: test_save_comlete_task_form_task
   <class 'dict'> {
     'saveCompleteTaskFormTask': <class 'dict'> {

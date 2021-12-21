@@ -57,7 +57,7 @@ def test_query_all_workflows(
         }
     """
 
-    result = schema_executor(query, variable_values={"name": workflow.name})
+    result = schema_executor(query, variable_values={"name": str(workflow.name)})
 
     assert not result.errors
     snapshot.assert_match(result.data)

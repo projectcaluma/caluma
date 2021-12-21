@@ -1,4 +1,1 @@
-[
-    "caluma.caluma_workflow.tests.test_task.test_query_all_tasks[simple]",
-    "caluma.caluma_workflow.tests.test_workflow.test_query_all_workflows"
-]
+[]
