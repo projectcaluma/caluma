@@ -591,10 +591,9 @@ class DjangoFilterConnectionField(
             for k, v in args.items():
                 if k in filtering_args:
                     if k == "order_by" and v is not None:
-                        if isinstance(v, list):
-                            v = [to_snake_case(e) for e in v]
-                        else:
-                            v = to_snake_case(v)
+                        # in Caluma, order_by is always a list
+                        assert isinstance(v, list)
+                        v = [to_snake_case(e) for e in v]
                     kwargs[k] = v
             return kwargs
 
@@ -605,7 +604,7 @@ class DjangoFilterConnectionField(
         )
         if filterset.form.is_valid():
             return filterset.qs
-        raise ValidationError(filterset.form.errors.as_json())
+        raise ValidationError(filterset.form.errors.as_json())  # pragma: no cover
 
 
 class DjangoFilterSetConnectionField(DjangoFilterConnectionField):

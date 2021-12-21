@@ -77,10 +77,10 @@ class DjangoConnectionField(DjangoConnectionField):
             # only query count on database when pagination is needed
             # resolve_connection may be removed again once following issue is fixed:
             # https://github.com/graphql-python/graphene-django/issues/177
-            if "before" in args or "after" in args or "first" in args or "last" in args:
-                _len = iterable.count()
-            else:
+            if all(args.get(x) is None for x in ["before", "after", "first", "last"]):
                 _len = len(iterable)
+            else:
+                _len = iterable.count()
         else:  # pragma: no cover
             _len = len(iterable)
         connection = connection_from_list_slice(
