@@ -53,6 +53,5 @@
     "caluma.caluma_workflow.tests.test_work_item.test_skip_multiple_instance_task_form_work_item[integer-1-suspended-running-Only ready work items can be skipped.]",
     "caluma.caluma_workflow.tests.test_work_item.test_skip_task_form_work_item[choice--ready-None-running-complete_task_form-None]",
     "caluma.caluma_workflow.tests.test_work_item.test_skip_task_form_work_item[integer-1-ready-None-running-complete_task_form-None]",
-    "caluma.caluma_workflow.tests.test_workflow.test_query_all_workflows",
-    "caluma.tests.test_schema.test_schema_introspect"
+    "caluma.caluma_workflow.tests.test_workflow.test_query_all_workflows"
 ]
