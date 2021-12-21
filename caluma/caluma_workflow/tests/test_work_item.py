@@ -150,7 +150,7 @@ def test_complete_work_item_last(
     work_item.child_case = child_case_status and case_factory(status=child_case_status)
     work_item.save()
 
-    inp = {"input": {"id": work_item.pk}}
+    inp = {"input": {"id": str(work_item.pk)}}
     result = admin_schema_executor(query, variable_values=inp)
 
     assert bool(result.errors) == bool(error)
@@ -215,7 +215,7 @@ def test_complete_workflow_form_work_item(
         }
     """
 
-    inp = {"input": {"id": work_item.pk}}
+    inp = {"input": {"id": str(work_item.pk)}}
     result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors) == success
@@ -261,7 +261,7 @@ def test_complete_task_form_work_item(
         }
     """
 
-    inp = {"input": {"id": work_item.pk}}
+    inp = {"input": {"id": str(work_item.pk)}}
     result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors) == success
@@ -295,7 +295,7 @@ def test_complete_multiple_instance_task_form_work_item(
         }
     """
 
-    inp = {"input": {"id": work_item_1.pk}}
+    inp = {"input": {"id": str(work_item_1.pk)}}
     result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors)
@@ -306,7 +306,7 @@ def test_complete_multiple_instance_task_form_work_item(
         models.Case.STATUS_RUNNING
     )
 
-    inp = {"input": {"id": work_item_2.pk}}
+    inp = {"input": {"id": str(work_item_2.pk)}}
     result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors)
@@ -368,7 +368,7 @@ def test_complete_multiple_instance_task_form_work_item_next(
         }
     """
 
-    inp = {"input": {"id": work_item.pk}}
+    inp = {"input": {"id": str(work_item.pk)}}
     result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors)
@@ -462,8 +462,8 @@ def test_complete_work_item_with_next(
         }
     """
 
-    inp = {"input": {"id": work_item.pk}}
-    result = schema_executor(query, variable_values=inp, info=info)
+    inp = {"input": {"id": str(work_item.pk)}}
+    result = schema_executor(query, variable_values=inp, context_value=info.context)
 
     # newly created work items must inherit task's name and description
     next_work_item = task_next.work_items.all().first()
@@ -517,7 +517,7 @@ def test_complete_work_item_with_next_multiple_tasks(
         }
     """
 
-    inp = {"input": {"id": work_item.pk}}
+    inp = {"input": {"id": str(work_item.pk)}}
     result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
@@ -572,7 +572,7 @@ def test_complete_work_item_with_next_multiple_instance_task(
         }
     """
 
-    inp = {"input": {"id": work_item.pk}}
+    inp = {"input": {"id": str(work_item.pk)}}
     result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
@@ -625,7 +625,7 @@ def test_complete_work_item_with_merge(
           }
         }
     """
-    inp = {"input": {"id": work_item_1.pk}}
+    inp = {"input": {"id": str(work_item_1.pk)}}
     result = schema_executor(query, variable_values=inp)
     assert not result.errors
 
@@ -635,7 +635,7 @@ def test_complete_work_item_with_merge(
     assert ready_workitems.first().pk == work_item_2.pk
 
     # complete second work item
-    inp = {"input": {"id": work_item_2.pk}}
+    inp = {"input": {"id": str(work_item_2.pk)}}
     result = schema_executor(query, variable_values=inp)
     assert not result.errors
 
@@ -802,7 +802,7 @@ def test_create_work_item(
         inp["input"]["controllingGroups"] = []
         inp["input"]["addressedGroups"] = []
 
-    result = schema_executor(query, variable_values=inp, info=info)
+    result = schema_executor(query, variable_values=inp, context_value=info.context)
 
     assert not bool(result.errors) == success
     if success:
@@ -1001,7 +1001,7 @@ def test_skip_task_form_work_item(
         }
     """
 
-    inp = {"input": {"id": work_item.pk}}
+    inp = {"input": {"id": str(work_item.pk)}}
     result = schema_executor(query, variable_values=inp)
 
     # when skipping, both valid and invalid forms don't matter (contrary
@@ -1077,7 +1077,7 @@ def test_skip_multiple_instance_task_form_work_item(
         }
     """
 
-    inp = {"input": {"id": work_item_1.pk}}
+    inp = {"input": {"id": str(work_item_1.pk)}}
     result = schema_executor(query, variable_values=inp)
 
     assert bool(result.errors) == bool(error)
@@ -1094,7 +1094,7 @@ def test_skip_multiple_instance_task_form_work_item(
             models.Case.STATUS_RUNNING
         )
 
-        inp = {"input": {"id": work_item_2.pk}}
+        inp = {"input": {"id": str(work_item_2.pk)}}
         result = schema_executor(query, variable_values=inp)
 
         assert not bool(result.errors)
@@ -1379,7 +1379,9 @@ def test_cancel_suspend_resume_work_item(
             _action,
         )
 
-        result = schema_executor(query, variable_values={"input": {"id": work_item.pk}})
+        result = schema_executor(
+            query, variable_values={"input": {"id": str(work_item.pk)}}
+        )
 
         if success:
             assert not bool(result.errors)
