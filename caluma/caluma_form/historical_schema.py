@@ -149,10 +149,10 @@ class HistoricalDocument(FormDjangoObjectType):
     meta = generic.GenericScalar()
     document_id = graphene.UUID()
 
-    def resolve_document_id(self, info, *args):
+    def resolve_document_id(self, info, *args, **kwargs):
         return self.id
 
-    def resolve_historical_answers(self, info, as_of, *args):
+    def resolve_historical_answers(self, info, as_of, *args, **kwargs):
         return historical_qs_as_of(
             models.Answer.history.filter(document_id=self.id), as_of, "id"
         )
