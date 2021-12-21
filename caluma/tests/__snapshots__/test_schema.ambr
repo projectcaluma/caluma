@@ -4,8 +4,11 @@
     query: Query
     mutation: Mutation
   }
-  
+
   type ActionButtonQuestion implements Question, Node {
+# name: test_schema_introspect_direct
+  '
+  type TextQuestion implements Question & Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -26,18 +29,18 @@
     color: ButtonColor!
     validateOnEnter: Boolean!
   }
-  
+
   input AddFormQuestionInput {
     form: ID!
     question: ID!
     clientMutationId: String
   }
-  
+
   type AddFormQuestionPayload {
     form: Form
     clientMutationId: String
   }
-  
+
   input AddWorkflowFlowInput {
     workflow: ID!
     tasks: [ID]!
@@ -45,17 +48,17 @@
     redoable: FlowJexl
     clientMutationId: String
   }
-  
+
   type AddWorkflowFlowPayload {
     workflow: Workflow
     clientMutationId: String
   }
-  
+
   type AnalyticsCell {
     alias: String
     value: String
   }
-  
+
   type AnalyticsField implements Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -70,18 +73,18 @@
     table: AnalyticsTable!
     filters: [String]
   }
-  
+
   type AnalyticsFieldConnection {
     pageInfo: PageInfo!
     edges: [AnalyticsFieldEdge]!
     totalCount: Int
   }
-  
+
   type AnalyticsFieldEdge {
     node: AnalyticsField
     cursor: String!
   }
-  
+
   input AnalyticsFieldFilterSetType {
     alias: String
     table: ID
@@ -97,22 +100,74 @@
     slugs: [String]
     invert: Boolean
   }
-  
+
   type AnalyticsOutput {
     records(before: String, after: String, first: Int, last: Int): AnalyticsTableContentConnection
   }
-  
+
   type AnalyticsRowConnection {
     pageInfo: PageInfo!
     edges: [AnalyticsRowEdge]!
   }
-  
+
   type AnalyticsRowEdge {
     node: AnalyticsCell
     cursor: String!
   }
-  
+
   type AnalyticsTable implements Node {
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    placeholder: String
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    formatValidators(before: String = null, after: String = null, first: Int = null, last: Int = null): FormatValidatorConnection
+    defaultAnswer: StringAnswer
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+
+    """The ID of the object"""
+    id: ID!
+    minLength: Int
+    maxLength: Int
+  }
+
+  interface Question {
+    id: ID!
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -129,54 +184,388 @@
     availableFields(prefix: String, depth: Int, before: String, after: String, first: Int, last: Int): AvailableFieldConnection
     resultData: AnalyticsOutput
   }
-  
+
   type AnalyticsTableConnection {
     pageInfo: PageInfo!
     edges: [AnalyticsTableEdge]!
     totalCount: Int
   }
-  
+
   type AnalyticsTableContentConnection {
     pageInfo: PageInfo!
     edges: [AnalyticsTableContentEdge]!
   }
-  
+
   type AnalyticsTableContentEdge {
     node: AnalyticsRowConnection
     cursor: String!
   }
-  
+
   type AnalyticsTableEdge {
     node: AnalyticsTable
     cursor: String!
   }
-  
+
   input AnalyticsTableFilterSetType {
     slug: String
     name: String
+    label: String!
+    infoText: String
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    meta: GenericScalar!
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+    source: Question
+  }
+
+  """
+  The `DateTime` scalar type represents a DateTime
+  value as specified by
+  [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+  """
+  scalar DateTime
+
+  """
+  Question jexl expression returning boolean.
+
+  Following transform can be used:
+  * answer - access answer of document by question slug
+  * mapby - map list by key. Helpful to work with table answers
+    whereas an answer is a list of dicts.
+
+  Following context is available:
+  * form - access form of document
+
+  Examples:
+  * 'answer' == 'question-slug'|answer
+  * 'answer' in 'list-question-slug'|answer
+  * 'answer' in 'table-question-slug'|answer|mapby('column-question')
+  * 'form-slug' == form
+  """
+  scalar QuestionJexl
+
+  """
+  The `GenericScalar` scalar type represents a generic
+  GraphQL scalar value that could be:
+  String, Boolean, Int, Float, List or Object.
+  """
+  scalar GenericScalar
+
+  type FormConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [FormEdge]!
+    totalCount: Int
+  }
+
+  """
+  The Relay compliant `PageInfo` type, containing data necessary to paginate this connection.
+  """
+  type PageInfo {
+    """When paginating forwards, are there more items?"""
+    hasNextPage: Boolean!
+
+    """When paginating backwards, are there more items?"""
+    hasPreviousPage: Boolean!
+
+    """When paginating backwards, the cursor to continue."""
+    startCursor: String
+
+    """When paginating forwards, the cursor to continue."""
+    endCursor: String
+  }
+
+  """A Relay edge containing a `Form` and its cursor."""
+  type FormEdge {
+    """The item at the end of the edge"""
+    node: Form
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  type Form implements Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
     createdByUser: String
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
-    createdBefore: DateTime
-    createdAfter: DateTime
-    metaHasKey: String
-    metaValue: [JSONValueFilterType]
-    search: String
-    slugs: [String]
-    invert: Boolean
+    slug: String!
+    name: String!
+    description: String
+    meta: GenericScalar
+    isPublished: Boolean!
+    isArchived: Boolean!
+    questions(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+      slug: String = null
+      label: String = null
+      isRequired: String = null
+      isHidden: String = null
+      isArchived: Boolean = null
+      subForm: ID = null
+      rowForm: ID = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      excludeForms: [ID] = null
+      search: String = null
+
+      """QuestionOrdering"""
+      orderBy: [QuestionOrdering] = null
+      slugs: [String] = null
+    ): QuestionConnection
+
+    """Reference this form has been copied from"""
+    source: Form
+    documents(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): DocumentConnection!
+
+    """The ID of the object"""
+    id: ID!
   }
-  
-  input AnalyticsTableOrderSetType {
-    meta: String
-    attribute: SortableAnalyticsTableAttributes
-    direction: AscDesc
+
+  """An object with an ID"""
+  interface Node {
+    """The ID of the object"""
+    id: ID!
   }
-  
-  enum AnalyticsTableStartingObject {
-    CASES
+
+  type QuestionConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [QuestionEdge]!
+    totalCount: Int
   }
-  
+
+  """A Relay edge containing a `Question` and its cursor."""
+  type QuestionEdge {
+    """The item at the end of the edge"""
+    node: Question
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  input JSONValueFilterType {
+    key: String!
+    value: GenericScalar!
+    lookup: JSONLookupMode
+  }
+
+  enum JSONLookupMode {
+    EXACT
+    STARTSWITH
+    CONTAINS
+    ICONTAINS
+    IN
+    GTE
+    GT
+    LTE
+    LT
+  }
+
+  """An enumeration."""
+  enum QuestionOrdering {
+    """Label"""
+    LABEL_ASC
+
+    """Label (descending)"""
+    LABEL_DESC
+
+    """Created at"""
+    CREATED_AT_ASC
+
+    """Created at (descending)"""
+    CREATED_AT_DESC
+
+    """Modified at"""
+    MODIFIED_AT_ASC
+
+    """Modified at (descending)"""
+    MODIFIED_AT_DESC
+
+    """Created by user"""
+    CREATED_BY_USER_ASC
+
+    """Created by user (descending)"""
+    CREATED_BY_USER_DESC
+
+    """Created by group"""
+    CREATED_BY_GROUP_ASC
+
+    """Created by group (descending)"""
+    CREATED_BY_GROUP_DESC
+
+    """Modified by user"""
+    MODIFIED_BY_USER_ASC
+
+    """Modified by user (descending)"""
+    MODIFIED_BY_USER_DESC
+
+    """Modified by group"""
+    MODIFIED_BY_GROUP_ASC
+
+    """Modified by group (descending)"""
+    MODIFIED_BY_GROUP_DESC
+
+    """Meta test-key"""
+    META_TEST_KEY_ASC
+
+    """Meta test-key (descending)"""
+    META_TEST_KEY_DESC
+
+    """Meta foobar"""
+    META_FOOBAR_ASC
+
+    """Meta foobar (descending)"""
+    META_FOOBAR_DESC
+  }
+
+  type DocumentConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [DocumentEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `Document` and its cursor."""
+  type DocumentEdge {
+    """The item at the end of the edge"""
+    node: Document
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  type Document implements Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    form: Form!
+
+    """Reference this document has been copied from"""
+    source: Document
+    meta: GenericScalar
+
+    """Reference this document has been copied from"""
+    copies(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): DocumentConnection!
+    answers(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+      question: ID = null
+      search: String = null
+
+      """AnswerOrdering"""
+      orderBy: [AnswerOrdering] = null
+      filter: [AnswerFilterSetType] = null
+      order: [AnswerOrderSetType] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      questions: [ID] = null
+      visibleInContext: Boolean = null
+    ): AnswerConnection
+    case: Case
+    workItem: WorkItem
+    modifiedContentAt: DateTime
+    modifiedContentByUser: String
+    modifiedContentByGroup: String
+  }
+
+  type AnswerConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [AnswerEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `Answer` and its cursor."""
+  type AnswerEdge {
+    """The item at the end of the edge"""
+    node: Answer
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
   interface Answer {
     id: ID
     createdAt: DateTime!
@@ -188,18 +577,67 @@
     question: Question!
     meta: GenericScalar!
   }
-  
+
   type AnswerConnection {
     pageInfo: PageInfo!
     edges: [AnswerEdge]!
     totalCount: Int
   }
-  
+
   type AnswerEdge {
     node: Answer
     cursor: String!
+  """An enumeration."""
+  enum AnswerOrdering {
+    """Created at"""
+    CREATED_AT_ASC
+
+    """Created at (descending)"""
+    CREATED_AT_DESC
+
+    """Modified at"""
+    MODIFIED_AT_ASC
+
+    """Modified at (descending)"""
+    MODIFIED_AT_DESC
+
+    """Created by user"""
+    CREATED_BY_USER_ASC
+
+    """Created by user (descending)"""
+    CREATED_BY_USER_DESC
+
+    """Created by group"""
+    CREATED_BY_GROUP_ASC
+
+    """Created by group (descending)"""
+    CREATED_BY_GROUP_DESC
+
+    """Modified by user"""
+    MODIFIED_BY_USER_ASC
+
+    """Modified by user (descending)"""
+    MODIFIED_BY_USER_DESC
+
+    """Modified by group"""
+    MODIFIED_BY_GROUP_ASC
+
+    """Modified by group (descending)"""
+    MODIFIED_BY_GROUP_DESC
+
+    """Meta test-key"""
+    META_TEST_KEY_ASC
+
+    """Meta test-key (descending)"""
+    META_TEST_KEY_DESC
+
+    """Meta foobar"""
+    META_FOOBAR_ASC
+
+    """Meta foobar (descending)"""
+    META_FOOBAR_DESC
   }
-  
+
   input AnswerFilterSetType {
     question: ID
     search: String
@@ -216,12 +654,521 @@
     visibleInContext: Boolean
     invert: Boolean
   }
-  
+
   enum AnswerHierarchyMode {
     DIRECT
     FAMILY
+  input AnswerOrderSetType {
+    meta: String
+    attribute: SortableAnswerAttributes
+    direction: AscDesc
   }
-  
+
+  enum SortableAnswerAttributes {
+    CREATED_AT
+    MODIFIED_AT
+    CREATED_BY_USER
+    CREATED_BY_GROUP
+    MODIFIED_BY_USER
+    MODIFIED_BY_GROUP
+    QUESTION
+    VALUE
+    DOCUMENT
+    DATE
+    FILE
+  }
+
+  enum AscDesc {
+    ASC
+    DESC
+  }
+
+  type Case implements Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+
+    """Time when case has either been canceled or completed"""
+    closedAt: DateTime
+    closedByUser: String
+    closedByGroup: String
+    workflow: Workflow!
+    status: CalumaWorkflowCaseStatusChoices!
+    meta: GenericScalar
+    document: Document
+    workItems(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+      status: WorkItemStatusArgument = null
+      name: String = null
+      task: ID = null
+      tasks: [String] = null
+      case: ID = null
+      createdAt: DateTime = null
+      closedAt: DateTime = null
+      modifiedAt: DateTime = null
+      deadline: DateTime = null
+      hasDeadline: Boolean = null
+      caseFamily: ID = null
+
+      """WorkItemOrdering"""
+      orderBy: [WorkItemOrdering] = null
+      filter: [WorkItemFilterSetType] = null
+      order: [WorkItemOrderSetType] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      id: ID = null
+      addressedGroups: [String] = null
+      controllingGroups: [String] = null
+      assignedUsers: [String] = null
+      documentHasAnswer: [HasAnswerFilterType] = null
+      caseDocumentHasAnswer: [HasAnswerFilterType] = null
+      caseMetaValue: [JSONValueFilterType] = null
+      rootCaseMetaValue: [JSONValueFilterType] = null
+    ): WorkItemConnection
+    parentWorkItem: WorkItem
+    familyWorkItems(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+      status: WorkItemStatusArgument = null
+
+      """WorkItemOrdering"""
+      orderBy: [WorkItemOrdering] = null
+      filter: [WorkItemFilterSetType] = null
+      order: [WorkItemOrderSetType] = null
+      documentHasAnswer: [HasAnswerFilterType] = null
+      caseDocumentHasAnswer: [HasAnswerFilterType] = null
+      caseMetaValue: [JSONValueFilterType] = null
+      rootCaseMetaValue: [JSONValueFilterType] = null
+      name: String = null
+      task: ID = null
+      tasks: [String] = null
+      case: ID = null
+      createdAt: DateTime = null
+      closedAt: DateTime = null
+      modifiedAt: DateTime = null
+      deadline: DateTime = null
+      hasDeadline: Boolean = null
+      caseFamily: ID = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      id: ID = null
+      addressedGroups: [String] = null
+      controllingGroups: [String] = null
+      assignedUsers: [String] = null
+    ): WorkItemConnection
+  }
+
+  type Workflow implements Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    name: String!
+    description: String
+    meta: GenericScalar
+    isPublished: Boolean!
+    isArchived: Boolean!
+    startTasks: [Task]!
+
+    """Allow workflow to be started with any form"""
+    allowAllForms: Boolean!
+
+    """List of forms which are allowed to start workflow with"""
+    allowForms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): FormConnection!
+
+    """The ID of the object"""
+    id: ID!
+
+    """List of tasks referenced in workflow"""
+    tasks: [Task]!
+    flows(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      task: ID = null
+      filter: [FlowFilterSetType] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+    ): FlowConnection
+  }
+
+  interface Task {
+    id: ID!
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    slug: String!
+    name: String!
+    description: String
+    isArchived: Boolean!
+    addressGroups: GroupJexl
+    controlGroups: GroupJexl
+    meta: GenericScalar!
+    isMultipleInstance: Boolean!
+  }
+
+  """
+  Group jexl represents a jexl expression returning group names.
+
+  Following transforms can be used:
+  * groups - return list of group names
+
+  Examples:
+  * ['group-name1', 'group-name2']|groups
+  """
+  scalar GroupJexl
+
+  type FlowConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [FlowEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `Flow` and its cursor."""
+  type FlowEdge {
+    """The item at the end of the edge"""
+    node: Flow
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  type Flow implements Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    next: FlowJexl!
+    tasks: [Task]!
+  }
+
+  """
+  Flow jexl represents a jexl expression returning task slugs.
+
+  Following transforms can be used:
+  * task - return single task
+  * tasks - return multiple tasks
+
+  Examples:
+  * 'task-slug'|task
+  * ['task-slug1', 'task-slug2']|tasks
+  """
+  scalar FlowJexl
+
+  input FlowFilterSetType {
+    task: ID
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    createdBefore: DateTime
+    createdAfter: DateTime
+    invert: Boolean
+  }
+
+  """An enumeration."""
+  enum CalumaWorkflowCaseStatusChoices {
+    """Case is running and work items need to be completed."""
+    RUNNING
+
+    """Case is done."""
+    COMPLETED
+
+    """Case is canceled."""
+    CANCELED
+
+    """Case is suspended."""
+    SUSPENDED
+  }
+
+  type WorkItemConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [WorkItemEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `WorkItem` and its cursor."""
+  type WorkItemEdge {
+    """The item at the end of the edge"""
+    node: WorkItem
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  type WorkItem implements Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+
+    """Will be set from Task, if not provided."""
+    name: String!
+
+    """Will be set from Task, if not provided."""
+    description: String
+
+    """Time when work item has either been canceled or completed"""
+    closedAt: DateTime
+    closedByUser: String
+    closedByGroup: String
+    deadline: DateTime
+    task: Task!
+    status: CalumaWorkflowWorkItemStatusChoices!
+    meta: GenericScalar
+
+    """
+    Offer work item to be processed by a group of users, such are not committed to process it though.
+    """
+    addressedGroups: [String!]!
+
+    """List of groups this work item is assigned to for controlling."""
+    controllingGroups: [String!]!
+
+    """Users responsible to undertake given work item."""
+    assignedUsers: [String!]!
+    case: Case!
+
+    """Defines case of a sub-workflow"""
+    childCase: Case
+    document: Document
+    previousWorkItem: WorkItem
+    succeedingWorkItems(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): WorkItemConnection!
+  }
+
+  """An enumeration."""
+  enum CalumaWorkflowWorkItemStatusChoices {
+    """Work item is ready to be processed."""
+    READY
+
+    """Work item is done."""
+    COMPLETED
+
+    """Work item is canceled."""
+    CANCELED
+
+    """Work item is skipped."""
+    SKIPPED
+
+    """Work item is suspended."""
+    SUSPENDED
+  }
+
+  """An enumeration."""
+  enum WorkItemStatusArgument {
+    """Work item is ready to be processed."""
+    READY
+
+    """Work item is done."""
+    COMPLETED
+
+    """Work item is canceled."""
+    CANCELED
+
+    """Work item is skipped."""
+    SKIPPED
+
+    """Work item is suspended."""
+    SUSPENDED
+  }
+
+  """An enumeration."""
+  enum WorkItemOrdering {
+    """Status"""
+    STATUS_ASC
+
+    """Status (descending)"""
+    STATUS_DESC
+
+    """Deadline"""
+    DEADLINE_ASC
+
+    """Deadline (descending)"""
+    DEADLINE_DESC
+
+    """Created at"""
+    CREATED_AT_ASC
+
+    """Created at (descending)"""
+    CREATED_AT_DESC
+
+    """Modified at"""
+    MODIFIED_AT_ASC
+
+    """Modified at (descending)"""
+    MODIFIED_AT_DESC
+
+    """Created by user"""
+    CREATED_BY_USER_ASC
+
+    """Created by user (descending)"""
+    CREATED_BY_USER_DESC
+
+    """Created by group"""
+    CREATED_BY_GROUP_ASC
+
+    """Created by group (descending)"""
+    CREATED_BY_GROUP_DESC
+
+    """Modified by user"""
+    MODIFIED_BY_USER_ASC
+
+    """Modified by user (descending)"""
+    MODIFIED_BY_USER_DESC
+
+    """Modified by group"""
+    MODIFIED_BY_GROUP_ASC
+
+    """Modified by group (descending)"""
+    MODIFIED_BY_GROUP_DESC
+
+    """Meta test-key"""
+    META_TEST_KEY_ASC
+
+    """Meta test-key (descending)"""
+    META_TEST_KEY_DESC
+
+    """Meta foobar"""
+    META_FOOBAR_ASC
+
+    """Meta foobar (descending)"""
+    META_FOOBAR_DESC
+  }
+
+  input WorkItemFilterSetType {
+    """"""
+    status: Status
+    name: String
+    task: ID
+    tasks: [String]
+    case: ID
+    createdAt: DateTime
+    closedAt: DateTime
+    modifiedAt: DateTime
+    deadline: DateTime
+    hasDeadline: Boolean
+    caseFamily: ID
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    createdBefore: DateTime
+    createdAfter: DateTime
+    metaHasKey: String
+    metaValue: [JSONValueFilterType]
+    id: ID
+
+    """"""
+    orderBy: [WorkItemOrdering]
+    addressedGroups: [String]
+    controllingGroups: [String]
+    assignedUsers: [String]
+    documentHasAnswer: [HasAnswerFilterType]
+    caseDocumentHasAnswer: [HasAnswerFilterType]
+    caseMetaValue: [JSONValueFilterType]
+    rootCaseMetaValue: [JSONValueFilterType]
+    invert: Boolean
+  }
+
+  """An enumeration."""
+  enum Status {
+    """Work item is ready to be processed."""
+    READY
+
+    """Work item is done."""
+    COMPLETED
+
+    """Work item is canceled."""
+    CANCELED
+
+    """Work item is skipped."""
+    SKIPPED
+
+    """Work item is suspended."""
+    SUSPENDED
+  }
+
+  """
+  Lookup type to search document structures.
+
+  When using lookup `ISNULL`, the provided `value` will be ignored.
+  """
+  input HasAnswerFilterType {
+    question: ID!
+    value: GenericScalar
+    lookup: AnswerLookupMode
+    hierarchy: AnswerHierarchyMode
+  }
+
   enum AnswerLookupMode {
     EXACT
     STARTSWITH
@@ -234,69 +1181,120 @@
     LTE
     LT
   }
-  
-  input AnswerOrderSetType {
+
+  enum AnswerHierarchyMode {
+    DIRECT
+    FAMILY
+  }
+
+  input WorkItemOrderSetType {
     meta: String
-    attribute: SortableAnswerAttributes
+    caseMeta: String
+    attribute: SortableWorkItemAttributes
+    documentAnswer: String
+    caseDocumentAnswer: String
     direction: AscDesc
   }
-  
-  enum AnswerOrdering {
+
+  enum SortableWorkItemAttributes {
+    ALLOW_ALL_FORMS
+    CREATED_BY_GROUP
+    CREATED_BY_USER
+    DESCRIPTION
+    CREATED_AT
+    MODIFIED_AT
+    CLOSED_AT
+    IS_ARCHIVED
+    IS_PUBLISHED
+    NAME
+    DEADLINE
+    STATUS
+    SLUG
+  }
+
+  """An enumeration."""
+  enum FormOrdering {
+    """Name"""
+    NAME_ASC
+
+    """Name (descending)"""
+    NAME_DESC
+
+    """Created at"""
     CREATED_AT_ASC
+
+    """Created at (descending)"""
     CREATED_AT_DESC
+
+    """Modified at"""
     MODIFIED_AT_ASC
+
+    """Modified at (descending)"""
     MODIFIED_AT_DESC
+
+    """Created by user"""
     CREATED_BY_USER_ASC
+
+    """Created by user (descending)"""
     CREATED_BY_USER_DESC
+
+    """Created by group"""
     CREATED_BY_GROUP_ASC
+
+    """Created by group (descending)"""
     CREATED_BY_GROUP_DESC
+
+    """Modified by user"""
     MODIFIED_BY_USER_ASC
+
+    """Modified by user (descending)"""
     MODIFIED_BY_USER_DESC
+
+    """Modified by group"""
     MODIFIED_BY_GROUP_ASC
+
+    """Modified by group (descending)"""
     MODIFIED_BY_GROUP_DESC
+
+    """Meta test-key"""
     META_TEST_KEY_ASC
+
+    """Meta test-key (descending)"""
     META_TEST_KEY_DESC
+
+    """Meta foobar"""
     META_FOOBAR_ASC
+
+    """Meta foobar (descending)"""
     META_FOOBAR_DESC
   }
-  
-  enum AscDesc {
-    ASC
-    DESC
-  }
-  
-  type AvailableField implements Node {
-    id: ID!
-    label: String
-    fullLabel: String
-    sourcePath: String
-    isLeaf: Boolean
-    isValue: Boolean
-  }
-  
-  type AvailableFieldConnection {
+
+  type FormatValidatorConnection {
+    """Pagination data for this connection."""
     pageInfo: PageInfo!
-    edges: [AvailableFieldEdge]!
+
+    """Contains the nodes in this connection."""
+    edges: [FormatValidatorEdge]!
     totalCount: Int
   }
-  
-  type AvailableFieldEdge {
-    node: AvailableField
+
+  """A Relay edge containing a `FormatValidator` and its cursor."""
+  type FormatValidatorEdge {
+    """The item at the end of the edge"""
+    node: FormatValidator
+
+    """A cursor for use in pagination"""
     cursor: String!
   }
-  
-  enum ButtonAction {
-    COMPLETE
-    SKIP
+
+  type FormatValidator {
+    slug: String!
+    name: String!
+    regex: String!
+    errorMsg: String!
   }
-  
-  enum ButtonColor {
-    PRIMARY
-    SECONDARY
-    DEFAULT
-  }
-  
-  type CalculatedFloatQuestion implements Question, Node {
+
+  type ChoiceQuestion implements Question & Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -305,6 +1303,8 @@
     modifiedByGroup: String
     slug: String!
     label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
     isRequired: QuestionJexl!
     isHidden: QuestionJexl!
     isArchived: Boolean!
@@ -316,30 +1316,117 @@
     calcExpression: String
     id: ID!
   }
-  
+
   input CancelCaseInput {
     id: ID!
     context: JSONString
     clientMutationId: String
   }
-  
+
   type CancelCasePayload {
     case: Case
     clientMutationId: String
   }
-  
+
   input CancelWorkItemInput {
     id: ID!
     context: JSONString
     clientMutationId: String
   }
-  
+
   type CancelWorkItemPayload {
     workItem: WorkItem
     clientMutationId: String
   }
-  
+
   type Case implements Node {
+    meta: GenericScalar!
+    source: Question
+    defaultAnswer: StringAnswer
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+    options(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+      slug: String = null
+      label: String = null
+      isArchived: Boolean = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      search: String = null
+
+      """OptionOrdering"""
+      orderBy: [OptionOrdering] = null
+    ): OptionConnection
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  type OptionConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [OptionEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `Option` and its cursor."""
+  type OptionEdge {
+    """The item at the end of the edge"""
+    node: Option
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  type Option implements Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -358,18 +1445,2009 @@
     parentWorkItem: WorkItem
     familyWorkItems(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], status: WorkItemStatusArgument, orderBy: [WorkItemOrdering], filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType], documentHasAnswer: [HasAnswerFilterType], caseDocumentHasAnswer: [HasAnswerFilterType], caseMetaValue: [JSONValueFilterType], rootCaseMetaValue: [JSONValueFilterType], name: String, task: ID, tasks: [String], case: ID, createdAt: DateTime, closedAt: DateTime, modifiedAt: DateTime, deadline: DateTime, hasDeadline: Boolean, caseFamily: ID, createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, id: ID, addressedGroups: [String], controllingGroups: [String], assignedUsers: [String]): WorkItemConnection
   }
-  
+
   type CaseConnection {
     pageInfo: PageInfo!
+    slug: String!
+    label: String!
+    isArchived: Boolean!
+    meta: GenericScalar
+
+    """Reference this option has been copied from"""
+    source: Option
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  """An enumeration."""
+  enum OptionOrdering {
+    """Label"""
+    LABEL_ASC
+
+    """Label (descending)"""
+    LABEL_DESC
+
+    """Created at"""
+    CREATED_AT_ASC
+
+    """Created at (descending)"""
+    CREATED_AT_DESC
+
+    """Modified at"""
+    MODIFIED_AT_ASC
+
+    """Modified at (descending)"""
+    MODIFIED_AT_DESC
+
+    """Created by user"""
+    CREATED_BY_USER_ASC
+
+    """Created by user (descending)"""
+    CREATED_BY_USER_DESC
+
+    """Created by group"""
+    CREATED_BY_GROUP_ASC
+
+    """Created by group (descending)"""
+    CREATED_BY_GROUP_DESC
+
+    """Modified by user"""
+    MODIFIED_BY_USER_ASC
+
+    """Modified by user (descending)"""
+    MODIFIED_BY_USER_DESC
+
+    """Modified by group"""
+    MODIFIED_BY_GROUP_ASC
+
+    """Modified by group (descending)"""
+    MODIFIED_BY_GROUP_DESC
+
+    """Meta test-key"""
+    META_TEST_KEY_ASC
+
+    """Meta test-key (descending)"""
+    META_TEST_KEY_DESC
+
+    """Meta foobar"""
+    META_FOOBAR_ASC
+
+    """Meta foobar (descending)"""
+    META_FOOBAR_DESC
+  }
+
+  type MultipleChoiceQuestion implements Question & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    defaultAnswer: ListAnswer
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+    options(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+
+      """OptionOrdering"""
+      orderBy: [OptionOrdering] = null
+      slug: String = null
+      label: String = null
+      isArchived: Boolean = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      search: String = null
+    ): OptionConnection
+    staticContent: String
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  type DynamicChoiceQuestion implements Question & DynamicQuestion & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+    options(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
+    dataSource: String!
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  interface DynamicQuestion {
+    options(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
+    dataSource: String!
+  }
+
+  type DataSourceDataConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [DataSourceDataEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `DataSourceData` and its cursor."""
+  type DataSourceDataEdge {
+    """The item at the end of the edge"""
+    node: DataSourceData
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  type DataSourceData {
+    label: String!
+    slug: String!
+  }
+
+  type DynamicMultipleChoiceQuestion implements Question & DynamicQuestion & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+    options(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
+    dataSource: String!
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  type TextareaQuestion implements Question & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    placeholder: String
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    formatValidators(before: String = null, after: String = null, first: Int = null, last: Int = null): FormatValidatorConnection
+    defaultAnswer: StringAnswer
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+
+    """The ID of the object"""
+    id: ID!
+    minLength: Int
+    maxLength: Int
+  }
+
+  type FloatQuestion implements Question & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    placeholder: String
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    defaultAnswer: FloatAnswer
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+
+    """The ID of the object"""
+    id: ID!
+    minValue: Float
+    maxValue: Float
+  }
+
+  type IntegerQuestion implements Question & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    placeholder: String
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    defaultAnswer: IntegerAnswer
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+
+    """The ID of the object"""
+    id: ID!
+    maxValue: Int
+    minValue: Int
+  }
+
+  type DateQuestion implements Question & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    defaultAnswer: DateAnswer
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  type TableQuestion implements Question & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    defaultAnswer: TableAnswer
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+
+    """Form that represents rows of a TableQuestion"""
+    rowForm: Form
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  type FormQuestion implements Question & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+
+    """Form referenced in a FormQuestion"""
+    subForm: Form
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  type FileQuestion implements Question & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  type StaticQuestion implements Question & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """
+    Required expression is only evaluated when question is not hidden. This should not be used for `StaticQuestion`, because it can never be satisfied.
+    """
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+    staticContent: String
+    dataSource: String
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  type StringAnswer implements Answer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    question: Question!
+    value: String
+    meta: GenericScalar!
+    selectedOption: SelectedOption
+  }
+
+  type SelectedOption {
+    label: String!
+    slug: String!
+  }
+
+  type ListAnswer implements Answer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    question: Question!
+    value: [String]
+    meta: GenericScalar!
+    selectedOptions(before: String = null, after: String = null, first: Int = null, last: Int = null): SelectedOptionConnection
+  }
+
+  type SelectedOptionConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [SelectedOptionEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `SelectedOption` and its cursor."""
+  type SelectedOptionEdge {
+    """The item at the end of the edge"""
+    node: SelectedOption
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  type IntegerAnswer implements Answer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    question: Question!
+    value: Int
+    meta: GenericScalar!
+  }
+
+  type FloatAnswer implements Answer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    question: Question!
+    value: Float
+    meta: GenericScalar!
+  }
+
+  type DateAnswer implements Answer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    question: Question!
+    value: Date
+    meta: GenericScalar!
+    date: Date
+  }
+
+  """
+  The `Date` scalar type represents a Date
+  value as specified by
+  [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+  """
+  scalar Date
+
+  type TableAnswer implements Answer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    question: Question!
+    value: [Document]
+    meta: GenericScalar!
+    document: Document
+  }
+
+  type FileAnswer implements Answer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    question: Question!
+    value: File!
+    meta: GenericScalar!
+    file: File
+  }
+
+  type File implements Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    name: String!
+    answer: FileAnswer
+    uploadUrl: String
+    downloadUrl: String
+    metadata: GenericScalar
+  }
+
+  type CalculatedFloatQuestion implements Question & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+    calcExpression: String
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  type ActionButtonQuestion implements Question & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    label: String!
+
+    """Required expression is only evaluated when question is not hidden."""
+    isRequired: QuestionJexl!
+    isHidden: QuestionJexl!
+    isArchived: Boolean!
+    infoText: String
+    meta: GenericScalar!
+    source: Question
+    forms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
+      search: String = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slugs: [String] = null
+    ): FormConnection
+
+    """The ID of the object"""
+    id: ID!
+    action: ButtonAction!
+    color: ButtonColor!
+    validateOnEnter: Boolean!
+  }
+
+  """An enumeration."""
+  enum ButtonAction {
+    COMPLETE
+    SKIP
+  }
+
+  """An enumeration."""
+  enum ButtonColor {
+    PRIMARY
+    SECONDARY
+    DEFAULT
+  }
+
+  type SimpleTask implements Task & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    name: String!
+    description: String
+    type: CalumaWorkflowTaskTypeChoices!
+    meta: GenericScalar!
+    addressGroups: GroupJexl
+    controlGroups: GroupJexl
+    isArchived: Boolean!
+
+    """Time in seconds task may take to be processed."""
+    leadTime: Int
+    isMultipleInstance: Boolean!
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  """An enumeration."""
+  enum CalumaWorkflowTaskTypeChoices {
+    """Task which can simply be marked as completed."""
+    SIMPLE
+
+    """Task to complete a defined workflow form."""
+    COMPLETE_WORKFLOW_FORM
+
+    """Task to complete a defined task form."""
+    COMPLETE_TASK_FORM
+  }
+
+  type CompleteWorkflowFormTask implements Task & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    name: String!
+    description: String
+    type: CalumaWorkflowTaskTypeChoices!
+    meta: GenericScalar!
+    addressGroups: GroupJexl
+    controlGroups: GroupJexl
+    isArchived: Boolean!
+
+    """Time in seconds task may take to be processed."""
+    leadTime: Int
+    isMultipleInstance: Boolean!
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  type CompleteTaskFormTask implements Task & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    name: String!
+    description: String
+    type: CalumaWorkflowTaskTypeChoices!
+    meta: GenericScalar!
+    addressGroups: GroupJexl
+    controlGroups: GroupJexl
+    isArchived: Boolean!
+
+    """Time in seconds task may take to be processed."""
+    leadTime: Int
+    isMultipleInstance: Boolean!
+    form: Form!
+
+    """The ID of the object"""
+    id: ID!
+  }
+
+  type HistoricalStringAnswer implements HistoricalAnswer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    value: String
+    meta: GenericScalar!
+    historyQuestionType: String!
+    historyUserId: String
+    question: Question!
+    historyId: UUID!
+    historyDate: DateTime!
+    historyChangeReason: String
+    historyType: String
+    selectedOption: SelectedOption
+  }
+
+  interface HistoricalAnswer {
+    id: ID
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    question: Question!
+    meta: GenericScalar!
+    historyDate: DateTime!
+    historyUserId: String
+    historyType: String
+  }
+
+  """
+  Leverages the internal Python implementation of UUID (uuid.UUID) to provide native UUID objects
+  in fields, resolvers and input.
+  """
+  scalar UUID
+
+  type HistoricalListAnswer implements HistoricalAnswer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    value: [String]
+    meta: GenericScalar!
+    historyQuestionType: String!
+    historyUserId: String
+    question: Question!
+    historyId: UUID!
+    historyDate: DateTime!
+    historyChangeReason: String
+    historyType: String
+    selectedOptions(before: String = null, after: String = null, first: Int = null, last: Int = null): SelectedOptionConnection
+  }
+
+  type HistoricalIntegerAnswer implements HistoricalAnswer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    value: Int
+    meta: GenericScalar!
+    historyQuestionType: String!
+    historyUserId: String
+    question: Question!
+    historyId: UUID!
+    historyDate: DateTime!
+    historyChangeReason: String
+    historyType: String
+  }
+
+  type HistoricalFloatAnswer implements HistoricalAnswer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    value: Float
+    meta: GenericScalar!
+    historyQuestionType: String!
+    historyUserId: String
+    question: Question!
+    historyId: UUID!
+    historyDate: DateTime!
+    historyChangeReason: String
+    historyType: String
+  }
+
+  type HistoricalDateAnswer implements HistoricalAnswer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    value: Date
+    meta: GenericScalar!
+    date: Date
+    historyQuestionType: String!
+    historyUserId: String
+    question: Question!
+    historyId: UUID!
+    historyDate: DateTime!
+    historyChangeReason: String
+    historyType: String
+  }
+
+  type HistoricalTableAnswer implements HistoricalAnswer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    value(asOf: DateTime!): [HistoricalDocument]
+    meta: GenericScalar!
+    historyQuestionType: String!
+    historyUserId: String
+    question: Question!
+    historyId: UUID!
+    historyDate: DateTime!
+    historyChangeReason: String
+    historyType: String
+    document: Document
+  }
+
+  type HistoricalDocument implements Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    meta: GenericScalar
+    historyUserId: String
+    form: Form
+
+    """Reference this document has been copied from"""
+    source: Document
+    historyDate: DateTime!
+    historyType: String
+    historicalAnswers(asOf: DateTime!, before: String = null, after: String = null, first: Int = null, last: Int = null): HistoricalAnswerConnection
+    documentId: UUID
+  }
+
+  type HistoricalAnswerConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [HistoricalAnswerEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `HistoricalAnswer` and its cursor."""
+  type HistoricalAnswerEdge {
+    """The item at the end of the edge"""
+    node: HistoricalAnswer
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  type HistoricalFileAnswer implements HistoricalAnswer & Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+
+    """The ID of the object"""
+    id: ID!
+    value(asOf: DateTime!): HistoricalFile
+    meta: GenericScalar!
+    historyQuestionType: String!
+    historyUserId: String
+    question: Question!
+    historyId: UUID!
+    historyDate: DateTime!
+    historyChangeReason: String
+    historyType: String
+    file: File
+  }
+
+  type HistoricalFile implements Node {
+    """The ID of the object"""
+    id: ID!
+    name: String!
+    downloadUrl: String
+    metadata: GenericScalar
+    historicalAnswer: HistoricalFileAnswer
+    historyDate: DateTime!
+    historyUserId: String
+    historyType: String
+  }
+
+  type Query {
+    documentAsOf(id: ID!, asOf: DateTime!): HistoricalDocument
+    allDataSources(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceConnection
+    dataSource(name: String!, before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
+    allWorkflows(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+
+      """WorkflowOrdering"""
+      orderBy: [WorkflowOrdering] = null
+      filter: [WorkflowFilterSetType] = null
+      order: [WorkflowOrderSetType] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      search: String = null
+    ): WorkflowConnection
+    allTasks(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      type: TaskTypeArgument = null
+      isArchived: Boolean = null
+
+      """TaskOrdering"""
+      orderBy: [TaskOrdering] = null
+      filter: [TaskFilterSetType] = null
+      order: [TaskOrderSetType] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      search: String = null
+    ): TaskConnection
+    allCases(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+      workflow: ID = null
+
+      """CaseOrdering"""
+      orderBy: [CaseOrdering] = null
+      filter: [CaseFilterSetType] = null
+      order: [CaseOrderSetType] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      id: ID = null
+      documentForm: String = null
+      documentForms: [String] = null
+      hasAnswer: [HasAnswerFilterType] = null
+      workItemDocumentHasAnswer: [HasAnswerFilterType] = null
+      rootCase: ID = null
+      searchAnswers: [SearchAnswersFilterType] = null
+      status: [[CaseStatusArgument]] = null
+
+      """
+      Expects a question slug. If the slug is prefixed with a hyphen, the order will be reversed
+
+      For file questions, the filename is used for sorting.
+
+      Table questions are not supported at this time.
+      """
+      orderByQuestionAnswerValue: String = null
+    ): CaseConnection
+    allWorkItems(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+      status: WorkItemStatusArgument = null
+
+      """WorkItemOrdering"""
+      orderBy: [WorkItemOrdering] = null
+      filter: [WorkItemFilterSetType] = null
+      order: [WorkItemOrderSetType] = null
+      documentHasAnswer: [HasAnswerFilterType] = null
+      caseDocumentHasAnswer: [HasAnswerFilterType] = null
+      caseMetaValue: [JSONValueFilterType] = null
+      rootCaseMetaValue: [JSONValueFilterType] = null
+      name: String = null
+      task: ID = null
+      tasks: [String] = null
+      case: ID = null
+      createdAt: DateTime = null
+      closedAt: DateTime = null
+      modifiedAt: DateTime = null
+      deadline: DateTime = null
+      hasDeadline: Boolean = null
+      caseFamily: ID = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      id: ID = null
+      addressedGroups: [String] = null
+      controllingGroups: [String] = null
+      assignedUsers: [String] = null
+    ): WorkItemConnection
+    allForms(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+
+      """FormOrdering"""
+      orderBy: [FormOrdering] = null
+      slug: String = null
+      name: String = null
+      description: String = null
+      isPublished: Boolean = null
+      isArchived: Boolean = null
+      questions: [String] = null
+      filter: [FormFilterSetType] = null
+      order: [FormOrderSetType] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      search: String = null
+      slugs: [String] = null
+    ): FormConnection
+    allQuestions(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+
+      """QuestionOrdering"""
+      orderBy: [QuestionOrdering] = null
+      slug: String = null
+      label: String = null
+      isRequired: String = null
+      isHidden: String = null
+      isArchived: Boolean = null
+      subForm: ID = null
+      rowForm: ID = null
+      filter: [QuestionFilterSetType] = null
+      order: [QuestionOrderSetType] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      excludeForms: [ID] = null
+      search: String = null
+      slugs: [String] = null
+    ): QuestionConnection
+    allDocuments(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+      form: ID = null
+      forms: [ID] = null
+      search: String = null
+      id: ID = null
+
+      """DocumentOrdering"""
+      orderBy: [DocumentOrdering] = null
+      filter: [DocumentFilterSetType] = null
+      order: [DocumentOrderSetType] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      rootDocument: ID = null
+      hasAnswer: [HasAnswerFilterType] = null
+      searchAnswers: [SearchAnswersFilterType] = null
+    ): DocumentConnection
+    allFormatValidators(before: String = null, after: String = null, first: Int = null, last: Int = null): FormatValidatorConnection
+    allUsedDynamicOptions(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      question: ID = null
+      document: ID = null
+      filter: [DynamicOptionFilterSetType] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+    ): DynamicOptionConnection
+    documentValidity(id: ID!, before: String = null, after: String = null, first: Int = null, last: Int = null): DocumentValidityConnection
+    node(
+      """The ID of the object"""
+      id: ID!
+    ): Node
+    _debug: DjangoDebug
+  }
+
+  type DataSourceConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [DataSourceEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `DataSource` and its cursor."""
+  type DataSourceEdge {
+    """The item at the end of the edge"""
+    node: DataSource
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  type DataSource {
+    info: String
+    name: String!
+  }
+
+  type WorkflowConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [WorkflowEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `Workflow` and its cursor."""
+  type WorkflowEdge {
+    """The item at the end of the edge"""
+    node: Workflow
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  """An enumeration."""
+  enum WorkflowOrdering {
+    """Name"""
+    NAME_ASC
+
+    """Name (descending)"""
+    NAME_DESC
+
+    """Description"""
+    DESCRIPTION_ASC
+
+    """Description (descending)"""
+    DESCRIPTION_DESC
+
+    """Created at"""
+    CREATED_AT_ASC
+
+    """Created at (descending)"""
+    CREATED_AT_DESC
+
+    """Modified at"""
+    MODIFIED_AT_ASC
+
+    """Modified at (descending)"""
+    MODIFIED_AT_DESC
+
+    """Created by user"""
+    CREATED_BY_USER_ASC
+
+    """Created by user (descending)"""
+    CREATED_BY_USER_DESC
+
+    """Created by group"""
+    CREATED_BY_GROUP_ASC
+
+    """Created by group (descending)"""
+    CREATED_BY_GROUP_DESC
+
+    """Modified by user"""
+    MODIFIED_BY_USER_ASC
+
+    """Modified by user (descending)"""
+    MODIFIED_BY_USER_DESC
+
+    """Modified by group"""
+    MODIFIED_BY_GROUP_ASC
+
+    """Modified by group (descending)"""
+    MODIFIED_BY_GROUP_DESC
+
+    """Meta test-key"""
+    META_TEST_KEY_ASC
+
+    """Meta test-key (descending)"""
+    META_TEST_KEY_DESC
+
+    """Meta foobar"""
+    META_FOOBAR_ASC
+
+    """Meta foobar (descending)"""
+    META_FOOBAR_DESC
+  }
+
+  input WorkflowFilterSetType {
+    slug: String
+    name: String
+    description: String
+    isPublished: Boolean
+    isArchived: Boolean
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    createdBefore: DateTime
+    createdAfter: DateTime
+    metaHasKey: String
+    metaValue: [JSONValueFilterType]
+    search: String
+
+    """"""
+    orderBy: [WorkflowOrdering]
+    invert: Boolean
+  }
+
+  input WorkflowOrderSetType {
+    meta: String
+    attribute: SortableWorkflowAttributes
+    direction: AscDesc
+  }
+
+  enum SortableWorkflowAttributes {
+    ALLOW_ALL_FORMS
+    CREATED_BY_GROUP
+    CREATED_BY_USER
+    DESCRIPTION
+    IS_ARCHIVED
+    IS_PUBLISHED
+    NAME
+    SLUG
+  }
+
+  type TaskConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [TaskEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `Task` and its cursor."""
+  type TaskEdge {
+    """The item at the end of the edge"""
+    node: Task
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  """An enumeration."""
+  enum TaskTypeArgument {
+    """Task which can simply be marked as completed."""
+    SIMPLE
+
+    """Task to complete a defined workflow form."""
+    COMPLETE_WORKFLOW_FORM
+
+    """Task to complete a defined task form."""
+    COMPLETE_TASK_FORM
+  }
+
+  """An enumeration."""
+  enum TaskOrdering {
+    """Name"""
+    NAME_ASC
+
+    """Name (descending)"""
+    NAME_DESC
+
+    """Description"""
+    DESCRIPTION_ASC
+
+    """Description (descending)"""
+    DESCRIPTION_DESC
+
+    """Type"""
+    TYPE_ASC
+
+    """Type (descending)"""
+    TYPE_DESC
+
+    """Created at"""
+    CREATED_AT_ASC
+
+    """Created at (descending)"""
+    CREATED_AT_DESC
+
+    """Modified at"""
+    MODIFIED_AT_ASC
+
+    """Modified at (descending)"""
+    MODIFIED_AT_DESC
+
+    """Created by user"""
+    CREATED_BY_USER_ASC
+
+    """Created by user (descending)"""
+    CREATED_BY_USER_DESC
+
+    """Created by group"""
+    CREATED_BY_GROUP_ASC
+
+    """Created by group (descending)"""
+    CREATED_BY_GROUP_DESC
+
+    """Modified by user"""
+    MODIFIED_BY_USER_ASC
+
+    """Modified by user (descending)"""
+    MODIFIED_BY_USER_DESC
+
+    """Modified by group"""
+    MODIFIED_BY_GROUP_ASC
+
+    """Modified by group (descending)"""
+    MODIFIED_BY_GROUP_DESC
+
+    """Meta test-key"""
+    META_TEST_KEY_ASC
+
+    """Meta test-key (descending)"""
+    META_TEST_KEY_DESC
+
+    """Meta foobar"""
+    META_FOOBAR_ASC
+
+    """Meta foobar (descending)"""
+    META_FOOBAR_DESC
+  }
+
+  input TaskFilterSetType {
+    slug: String
+    name: String
+    description: String
+
+    """"""
+    type: Type
+    isArchived: Boolean
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    createdBefore: DateTime
+    createdAfter: DateTime
+    metaHasKey: String
+    metaValue: [JSONValueFilterType]
+    search: String
+
+    """"""
+    orderBy: [TaskOrdering]
+    invert: Boolean
+  }
+
+  """An enumeration."""
+  enum Type {
+    """Task which can simply be marked as completed."""
+    SIMPLE
+
+    """Task to complete a defined workflow form."""
+    COMPLETE_WORKFLOW_FORM
+
+    """Task to complete a defined task form."""
+    COMPLETE_TASK_FORM
+  }
+
+  input TaskOrderSetType {
+    meta: String
+    attribute: SortableTaskAttributes
+    direction: AscDesc
+  }
+
+  enum SortableTaskAttributes {
+    ALLOW_ALL_FORMS
+    LEAD_TIME
+    TYPE
+    CREATED_BY_GROUP
+    CREATED_BY_USER
+    DESCRIPTION
+    IS_ARCHIVED
+    IS_PUBLISHED
+    NAME
+    SLUG
+  }
+
+  type CaseConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
     edges: [CaseEdge]!
     totalCount: Int
   }
-  
+
+  """A Relay edge containing a `Case` and its cursor."""
   type CaseEdge {
     node: Case
     cursor: String!
   }
-  
+
+  """An enumeration."""
+  enum CaseOrdering {
+    """Status"""
+    STATUS_ASC
+
+    """Status (descending)"""
+    STATUS_DESC
+
+    """Created at"""
+    CREATED_AT_ASC
+
+    """Created at (descending)"""
+    CREATED_AT_DESC
+
+    """Modified at"""
+    MODIFIED_AT_ASC
+
+    """Modified at (descending)"""
+    MODIFIED_AT_DESC
+
+    """Created by user"""
+    CREATED_BY_USER_ASC
+
+    """Created by user (descending)"""
+    CREATED_BY_USER_DESC
+
+    """Created by group"""
+    CREATED_BY_GROUP_ASC
+
+    """Created by group (descending)"""
+    CREATED_BY_GROUP_DESC
+
+    """Modified by user"""
+    MODIFIED_BY_USER_ASC
+
+    """Modified by user (descending)"""
+    MODIFIED_BY_USER_DESC
+
+    """Modified by group"""
+    MODIFIED_BY_GROUP_ASC
+
+    """Modified by group (descending)"""
+    MODIFIED_BY_GROUP_DESC
+
+    """Meta test-key"""
+    META_TEST_KEY_ASC
+
+    """Meta test-key (descending)"""
+    META_TEST_KEY_DESC
+
+    """Meta foobar"""
+    META_FOOBAR_ASC
+
+    """Meta foobar (descending)"""
+    META_FOOBAR_DESC
+  }
+
   input CaseFilterSetType {
     workflow: ID
     createdByUser: String
@@ -381,6 +3459,8 @@
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     id: ID
+
+    """"""
     orderBy: [CaseOrdering]
     documentForm: String
     documentForms: [String]
@@ -392,14 +3472,42 @@
     orderByQuestionAnswerValue: String
     invert: Boolean
   }
-  
+
+  """Lookup type to search in answers."""
+  input SearchAnswersFilterType {
+    questions: [ID]
+    value: GenericScalar!
+    lookup: SearchLookupMode
+  }
+
+  enum SearchLookupMode {
+    STARTSWITH
+    CONTAINS
+    TEXT
+  }
+
+  """An enumeration."""
+  enum CaseStatusArgument {
+    """Case is running and work items need to be completed."""
+    RUNNING
+
+    """Case is done."""
+    COMPLETED
+
+    """Case is canceled."""
+    CANCELED
+
+    """Case is suspended."""
+    SUSPENDED
+  }
+
   input CaseOrderSetType {
     meta: String
     attribute: SortableCaseAttributes
     documentAnswer: String
     direction: AscDesc
   }
-  
+
   enum CaseOrdering {
     STATUS_ASC
     STATUS_DESC
@@ -420,21 +3528,21 @@
     META_FOOBAR_ASC
     META_FOOBAR_DESC
   }
-  
+
   enum CaseStatus {
     RUNNING
     COMPLETED
     CANCELED
     SUSPENDED
   }
-  
+
   enum CaseStatusArgument {
     RUNNING
     COMPLETED
     CANCELED
     SUSPENDED
   }
-  
+
   type ChoiceQuestion implements Question, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -456,7 +3564,7 @@
     options(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, label: String, isArchived: Boolean, createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, orderBy: [OptionOrdering]): OptionConnection
     id: ID!
   }
-  
+
   type CompleteTaskFormTask implements Task, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -477,18 +3585,18 @@
     form: Form!
     id: ID!
   }
-  
+
   input CompleteWorkItemInput {
     id: ID!
     context: JSONString
     clientMutationId: String
   }
-  
+
   type CompleteWorkItemPayload {
     workItem: WorkItem
     clientMutationId: String
   }
-  
+
   type CompleteWorkflowFormTask implements Task, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -508,17 +3616,17 @@
     isMultipleInstance: Boolean!
     id: ID!
   }
-  
+
   input CopyDocumentInput {
     source: ID!
     clientMutationId: String
   }
-  
+
   type CopyDocumentPayload {
     document: Document
     clientMutationId: String
   }
-  
+
   input CopyFormInput {
     slug: String!
     name: String!
@@ -527,36 +3635,36 @@
     isPublished: Boolean
     clientMutationId: String
   }
-  
+
   type CopyFormPayload {
     form: Form
     clientMutationId: String
   }
-  
+
   input CopyOptionInput {
     slug: String!
     label: String!
     source: ID!
     clientMutationId: String
   }
-  
+
   type CopyOptionPayload {
     option: Option
     clientMutationId: String
   }
-  
+
   input CopyQuestionInput {
     slug: String!
     label: String!
     source: ID!
     clientMutationId: String
   }
-  
+
   type CopyQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input CreateWorkItemInput {
     case: ID!
     multipleInstanceTask: ID!
@@ -570,46 +3678,46 @@
     context: JSONString
     clientMutationId: String
   }
-  
+
   type CreateWorkItemPayload {
     workItem: WorkItem
     clientMutationId: String
   }
-  
+
   type DataSource {
     info: String
     name: String!
   }
-  
+
   type DataSourceConnection {
     pageInfo: PageInfo!
     edges: [DataSourceEdge]!
     totalCount: Int
   }
-  
+
   type DataSourceData {
     label: String!
     slug: String!
   }
-  
+
   type DataSourceDataConnection {
     pageInfo: PageInfo!
     edges: [DataSourceDataEdge]!
     totalCount: Int
   }
-  
+
   type DataSourceDataEdge {
     node: DataSourceData
     cursor: String!
   }
-  
+
   type DataSourceEdge {
     node: DataSource
     cursor: String!
   }
-  
+
   scalar Date
-  
+
   type DateAnswer implements Answer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -623,7 +3731,7 @@
     meta: GenericScalar!
     date: Date
   }
-  
+
   type DateQuestion implements Question, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -644,13 +3752,13 @@
     forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     id: ID!
   }
-  
+
   scalar DateTime
-  
+
   type DjangoDebug {
     sql: [DjangoDebugSQL]
   }
-  
+
   type DjangoDebugSQL {
     vendor: String!
     alias: String!
@@ -667,7 +3775,7 @@
     isoLevel: String
     encoding: String
   }
-  
+
   type Document implements Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -687,18 +3795,18 @@
     modifiedContentByUser: String
     modifiedContentByGroup: String
   }
-  
+
   type DocumentConnection {
     pageInfo: PageInfo!
     edges: [DocumentEdge]!
     totalCount: Int
   }
-  
+
   type DocumentEdge {
     node: Document
     cursor: String!
   }
-  
+
   input DocumentFilterSetType {
     form: ID
     forms: [ID]
@@ -718,14 +3826,14 @@
     searchAnswers: [SearchAnswersFilterType]
     invert: Boolean
   }
-  
+
   input DocumentOrderSetType {
     meta: String
     answerValue: String
     attribute: SortableDocumentAttributes
     direction: AscDesc
   }
-  
+
   enum DocumentOrdering {
     CREATED_AT_ASC
     CREATED_AT_DESC
@@ -744,18 +3852,18 @@
     META_FOOBAR_ASC
     META_FOOBAR_DESC
   }
-  
+
   type DocumentValidityConnection {
     pageInfo: PageInfo!
     edges: [DocumentValidityEdge]!
     totalCount: Int
   }
-  
+
   type DocumentValidityEdge {
     node: ValidationResult
     cursor: String!
   }
-  
+
   type DynamicChoiceQuestion implements Question, DynamicQuestion, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -777,7 +3885,7 @@
     dataSource: String!
     id: ID!
   }
-  
+
   type DynamicMultipleChoiceQuestion implements Question, DynamicQuestion, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -799,7 +3907,7 @@
     dataSource: String!
     id: ID!
   }
-  
+
   type DynamicOption implements Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -813,30 +3921,30 @@
     document: Document!
     question: DynamicQuestion!
   }
-  
+
   type DynamicOptionConnection {
     pageInfo: PageInfo!
     edges: [DynamicOptionEdge]!
     totalCount: Int
   }
-  
+
   type DynamicOptionEdge {
     node: DynamicOption
     cursor: String!
   }
-  
+
   input DynamicOptionFilterSetType {
     question: ID
     document: ID
     invert: Boolean
   }
-  
+
   interface DynamicQuestion {
     options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
     dataSource: String!
     hintText: String
   }
-  
+
   type File implements Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -851,7 +3959,7 @@
     downloadUrl: String
     metadata: GenericScalar
   }
-  
+
   type FileAnswer implements Answer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -865,7 +3973,7 @@
     meta: GenericScalar!
     file: File
   }
-  
+
   type FileQuestion implements Question, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -885,7 +3993,7 @@
     forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
     id: ID!
   }
-  
+
   type FloatAnswer implements Answer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -898,7 +4006,7 @@
     value: Float
     meta: GenericScalar!
   }
-  
+
   type FloatQuestion implements Question, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -922,7 +4030,7 @@
     minValue: Float
     maxValue: Float
   }
-  
+
   type Flow implements Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -934,18 +4042,18 @@
     next: FlowJexl!
     tasks: [Task]!
   }
-  
+
   type FlowConnection {
     pageInfo: PageInfo!
     edges: [FlowEdge]!
     totalCount: Int
   }
-  
+
   type FlowEdge {
     node: Flow
     cursor: String!
   }
-  
+
   input FlowFilterSetType {
     task: ID
     createdByUser: String
@@ -956,9 +4064,9 @@
     createdAfter: DateTime
     invert: Boolean
   }
-  
+
   scalar FlowJexl
-  
+
   type Form implements Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -977,19 +4085,33 @@
     documents(before: String, after: String, first: Int, last: Int): DocumentConnection!
     id: ID!
   }
-  
+
   type FormConnection {
     pageInfo: PageInfo!
     edges: [FormEdge]!
     totalCount: Int
   }
-  
+
   type FormEdge {
     node: Form
     cursor: String!
   }
-  
+
   input FormFilterSetType {
+  enum SortableCaseAttributes {
+    ALLOW_ALL_FORMS
+    CREATED_BY_GROUP
+    CREATED_BY_USER
+    DESCRIPTION
+    IS_ARCHIVED
+    IS_PUBLISHED
+    NAME
+    STATUS
+    SLUG
+  }
+
+  input FormFilterSetType {
+    """"""
     orderBy: [FormOrdering]
     slug: String
     name: String
@@ -1009,13 +4131,185 @@
     slugs: [String]
     invert: Boolean
   }
-  
+
   input FormOrderSetType {
     meta: String
     attribute: SortableFormAttributes
     direction: AscDesc
   }
-  
+
+  enum SortableFormAttributes {
+    CREATED_AT
+    MODIFIED_AT
+    CREATED_BY_USER
+    CREATED_BY_GROUP
+    MODIFIED_BY_USER
+    MODIFIED_BY_GROUP
+    SLUG
+    NAME
+    DESCRIPTION
+    IS_PUBLISHED
+    IS_ARCHIVED
+  }
+
+  input QuestionFilterSetType {
+    """"""
+    orderBy: [QuestionOrdering]
+    slug: String
+    label: String
+    isRequired: String
+    isHidden: String
+    isArchived: Boolean
+    subForm: ID
+    rowForm: ID
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    createdBefore: DateTime
+    createdAfter: DateTime
+    metaHasKey: String
+    metaValue: [JSONValueFilterType]
+    excludeForms: [ID]
+    search: String
+    slugs: [String]
+    invert: Boolean
+  }
+
+  input QuestionOrderSetType {
+    meta: String
+    attribute: SortableQuestionAttributes
+    direction: AscDesc
+  }
+
+  enum SortableQuestionAttributes {
+    CREATED_AT
+    MODIFIED_AT
+    CREATED_BY_USER
+    CREATED_BY_GROUP
+    MODIFIED_BY_USER
+    MODIFIED_BY_GROUP
+    SLUG
+    LABEL
+    TYPE
+    IS_REQUIRED
+    IS_HIDDEN
+    IS_ARCHIVED
+    PLACEHOLDER
+    INFO_TEXT
+    CALC_EXPRESSION
+  }
+
+  """An enumeration."""
+  enum DocumentOrdering {
+    """Created at"""
+    CREATED_AT_ASC
+
+    """Created at (descending)"""
+    CREATED_AT_DESC
+
+    """Modified at"""
+    MODIFIED_AT_ASC
+
+    """Modified at (descending)"""
+    MODIFIED_AT_DESC
+
+    """Created by user"""
+    CREATED_BY_USER_ASC
+
+    """Created by user (descending)"""
+    CREATED_BY_USER_DESC
+
+    """Created by group"""
+    CREATED_BY_GROUP_ASC
+
+    """Created by group (descending)"""
+    CREATED_BY_GROUP_DESC
+
+    """Modified by user"""
+    MODIFIED_BY_USER_ASC
+
+    """Modified by user (descending)"""
+    MODIFIED_BY_USER_DESC
+
+    """Modified by group"""
+    MODIFIED_BY_GROUP_ASC
+
+    """Modified by group (descending)"""
+    MODIFIED_BY_GROUP_DESC
+
+    """Meta test-key"""
+    META_TEST_KEY_ASC
+
+    """Meta test-key (descending)"""
+    META_TEST_KEY_DESC
+
+    """Meta foobar"""
+    META_FOOBAR_ASC
+
+    """Meta foobar (descending)"""
+    META_FOOBAR_DESC
+  }
+
+  input DocumentFilterSetType {
+    form: ID
+    forms: [ID]
+    search: String
+    id: ID
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    createdBefore: DateTime
+    createdAfter: DateTime
+    metaHasKey: String
+    metaValue: [JSONValueFilterType]
+
+    """"""
+    orderBy: [DocumentOrdering]
+    rootDocument: ID
+    hasAnswer: [HasAnswerFilterType]
+    searchAnswers: [SearchAnswersFilterType]
+    invert: Boolean
+  }
+
+  input DocumentOrderSetType {
+    meta: String
+    answerValue: String
+    attribute: SortableDocumentAttributes
+    direction: AscDesc
+  }
+
+  enum SortableDocumentAttributes {
+    CREATED_AT
+    MODIFIED_AT
+    CREATED_BY_USER
+    CREATED_BY_GROUP
+    MODIFIED_BY_USER
+    MODIFIED_BY_GROUP
+    FORM
+    SOURCE
+  }
+
+  type DynamicOptionConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [DynamicOptionEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `DynamicOption` and its cursor."""
+  type DynamicOptionEdge {
+    """The item at the end of the edge"""
+    node: DynamicOption
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  type DynamicOption implements Node {
   enum FormOrdering {
     NAME_ASC
     NAME_DESC
@@ -1036,7 +4330,7 @@
     META_FOOBAR_ASC
     META_FOOBAR_DESC
   }
-  
+
   type FormQuestion implements Question, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1056,36 +4350,36 @@
     subForm: Form
     id: ID!
   }
-  
+
   type FormatValidator {
     slug: String!
     name: String!
     regex: String!
     errorMsg: String!
   }
-  
+
   type FormatValidatorConnection {
     pageInfo: PageInfo!
     edges: [FormatValidatorEdge]!
     totalCount: Int
   }
-  
+
   type FormatValidatorEdge {
     node: FormatValidator
     cursor: String!
   }
-  
+
   scalar GenericScalar
-  
+
   scalar GroupJexl
-  
+
   input HasAnswerFilterType {
     question: ID!
     value: GenericScalar
     lookup: AnswerLookupMode
     hierarchy: AnswerHierarchyMode
   }
-  
+
   interface HistoricalAnswer {
     id: ID
     createdAt: DateTime!
@@ -1100,18 +4394,18 @@
     historyUserId: String
     historyType: String
   }
-  
+
   type HistoricalAnswerConnection {
     pageInfo: PageInfo!
     edges: [HistoricalAnswerEdge]!
     totalCount: Int
   }
-  
+
   type HistoricalAnswerEdge {
     node: HistoricalAnswer
     cursor: String!
   }
-  
+
   enum HistoricalAnswerHistoryQuestionType {
     MULTIPLE_CHOICE
     INTEGER
@@ -1129,7 +4423,7 @@
     CALCULATED_FLOAT
     ACTION_BUTTON
   }
-  
+
   type HistoricalDateAnswer implements HistoricalAnswer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1149,7 +4443,7 @@
     historyType: String
     date: Date
   }
-  
+
   type HistoricalDocument implements Node {
     historyUserId: String
     createdAt: DateTime!
@@ -1167,7 +4461,7 @@
     historicalAnswers(asOf: DateTime!, before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
     documentId: UUID
   }
-  
+
   type HistoricalFile implements Node {
     id: ID!
     name: String!
@@ -1178,7 +4472,7 @@
     historyUserId: String
     historyType: String
   }
-  
+
   type HistoricalFileAnswer implements HistoricalAnswer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1198,7 +4492,7 @@
     historyType: String
     file: File
   }
-  
+
   type HistoricalFloatAnswer implements HistoricalAnswer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1217,7 +4511,7 @@
     historyChangeReason: String
     historyType: String
   }
-  
+
   type HistoricalIntegerAnswer implements HistoricalAnswer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1236,7 +4530,7 @@
     historyChangeReason: String
     historyType: String
   }
-  
+
   type HistoricalListAnswer implements HistoricalAnswer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1256,7 +4550,7 @@
     historyType: String
     selectedOptions(before: String, after: String, first: Int, last: Int): SelectedOptionConnection
   }
-  
+
   type HistoricalStringAnswer implements HistoricalAnswer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1276,7 +4570,7 @@
     historyType: String
     selectedOption: SelectedOption
   }
-  
+
   type HistoricalTableAnswer implements HistoricalAnswer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1296,7 +4590,7 @@
     historyType: String
     document: Document
   }
-  
+
   type IntegerAnswer implements Answer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1309,7 +4603,7 @@
     value: Int
     meta: GenericScalar!
   }
-  
+
   type IntegerQuestion implements Question, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1333,7 +4627,7 @@
     maxValue: Int
     minValue: Int
   }
-  
+
   enum JSONLookupMode {
     EXACT
     STARTSWITH
@@ -1345,15 +4639,15 @@
     LTE
     LT
   }
-  
+
   scalar JSONString
-  
+
   input JSONValueFilterType {
     key: String!
     value: GenericScalar!
     lookup: JSONLookupMode
   }
-  
+
   type ListAnswer implements Answer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1367,7 +4661,7 @@
     meta: GenericScalar!
     selectedOptions(before: String, after: String, first: Int, last: Int): SelectedOptionConnection
   }
-  
+
   type MultipleChoiceQuestion implements Question, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1390,12 +4684,108 @@
     staticContent: String
     id: ID!
   }
-  
+
   type Mutation {
     saveAnalyticsTable(input: SaveAnalyticsTableInput!): SaveAnalyticsTablePayload
     removeAnalyticsTable(input: RemoveAnalyticsTableInput!): RemoveAnalyticsTablePayload
     saveAnalyticsField(input: SaveAnalyticsFieldInput!): SaveAnalyticsFieldPayload
     removeAnalyticsField(input: RemoveAnalyticsFieldInput!): RemoveAnalyticsFieldPayload
+
+    """The ID of the object"""
+    id: ID!
+    slug: String!
+    label: String!
+    document: Document!
+    question: DynamicQuestion!
+  }
+
+  input DynamicOptionFilterSetType {
+    question: ID
+    document: ID
+    invert: Boolean
+  }
+
+  type DocumentValidityConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+
+    """Contains the nodes in this connection."""
+    edges: [DocumentValidityEdge]!
+    totalCount: Int
+  }
+
+  """A Relay edge containing a `DocumentValidity` and its cursor."""
+  type DocumentValidityEdge {
+    """The item at the end of the edge"""
+    node: ValidationResult
+
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+
+  type ValidationResult {
+    id: ID
+    isValid: Boolean
+    errors: [ValidationEntry]
+  }
+
+  type ValidationEntry {
+    slug: String!
+    errorMsg: String!
+  }
+
+  """Debugging information for the current query."""
+  type DjangoDebug {
+    """Executed SQL queries for this API query."""
+    sql: [DjangoDebugSQL]
+  }
+
+  """Represents a single database query made to a Django managed DB."""
+  type DjangoDebugSQL {
+    """The type of database being used (e.g. postrgesql, mysql, sqlite)."""
+    vendor: String!
+
+    """The Django database alias (e.g. 'default')."""
+    alias: String!
+
+    """The actual SQL sent to this database."""
+    sql: String
+
+    """Duration of this database query in seconds."""
+    duration: Float!
+
+    """The raw SQL of this query, without params."""
+    rawSql: String!
+
+    """JSON encoded database query parameters."""
+    params: String!
+
+    """Start time of this database query."""
+    startTime: Float!
+
+    """Stop time of this database query."""
+    stopTime: Float!
+
+    """Whether this database query took more than 10 seconds."""
+    isSlow: Boolean!
+
+    """Whether this database query was a SELECT."""
+    isSelect: Boolean!
+
+    """Postgres transaction ID if available."""
+    transId: String
+
+    """Postgres transaction status if available."""
+    transStatus: String
+
+    """Postgres isolation level if available."""
+    isoLevel: String
+
+    """Postgres connection encoding if available."""
+    encoding: String
+  }
+
+  type Mutation {
     saveWorkflow(input: SaveWorkflowInput!): SaveWorkflowPayload
     addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
     removeFlow(input: RemoveFlowInput!): RemoveFlowPayload
@@ -1417,6 +4807,8 @@
     createWorkItem(input: CreateWorkItemInput!): CreateWorkItemPayload
     saveForm(input: SaveFormInput!): SaveFormPayload
     copyForm(input: CopyFormInput!): CopyFormPayload
+
+    """Add question at the end of form."""
     addFormQuestion(input: AddFormQuestionInput!): AddFormQuestionPayload
     removeFormQuestion(input: RemoveFormQuestionInput!): RemoveFormQuestionPayload
     reorderFormQuestions(input: ReorderFormQuestionsInput!): ReorderFormQuestionsPayload
@@ -1457,11 +4849,11 @@
     removeDefaultAnswer(input: RemoveDefaultAnswerInput!): RemoveDefaultAnswerPayload
     removeDocument(input: RemoveDocumentInput!): RemoveDocumentPayload
   }
-  
+
   interface Node {
     id: ID!
   }
-  
+
   type Option implements Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1476,18 +4868,18 @@
     source: Option
     id: ID!
   }
-  
+
   type OptionConnection {
     pageInfo: PageInfo!
     edges: [OptionEdge]!
     totalCount: Int
   }
-  
+
   type OptionEdge {
     node: Option
     cursor: String!
   }
-  
+
   enum OptionOrdering {
     LABEL_ASC
     LABEL_DESC
@@ -1508,14 +4900,14 @@
     META_FOOBAR_ASC
     META_FOOBAR_DESC
   }
-  
+
   type PageInfo {
     hasNextPage: Boolean!
     hasPreviousPage: Boolean!
     startCursor: String
     endCursor: String
   }
-  
+
   type Query {
     documentAsOf(id: ID!, asOf: DateTime!): HistoricalDocument
     allAnalyticsTables(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], slug: String, name: String, filter: [AnalyticsTableFilterSetType], order: [AnalyticsTableOrderSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): AnalyticsTableConnection
@@ -1536,7 +4928,7 @@
     node(id: ID!): Node
     _debug: DjangoDebug
   }
-  
+
   interface Question {
     id: ID!
     createdAt: DateTime!
@@ -1555,18 +4947,18 @@
     forms(before: String, after: String, first: Int, last: Int, slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, metaValue: [JSONValueFilterType], search: String, orderBy: [FormOrdering], slugs: [String]): FormConnection
     source: Question
   }
-  
+
   type QuestionConnection {
     pageInfo: PageInfo!
     edges: [QuestionEdge]!
     totalCount: Int
   }
-  
+
   type QuestionEdge {
     node: Question
     cursor: String!
   }
-  
+
   input QuestionFilterSetType {
     orderBy: [QuestionOrdering]
     slug: String
@@ -1589,15 +4981,15 @@
     slugs: [String]
     invert: Boolean
   }
-  
+
   scalar QuestionJexl
-  
+
   input QuestionOrderSetType {
     meta: String
     attribute: SortableQuestionAttributes
     direction: AscDesc
   }
-  
+
   enum QuestionOrdering {
     LABEL_ASC
     LABEL_DESC
@@ -1618,122 +5010,784 @@
     META_FOOBAR_ASC
     META_FOOBAR_DESC
   }
-  
+
   input RedoWorkItemInput {
     id: ID!
     context: JSONString
     clientMutationId: String
   }
-  
+
   type RedoWorkItemPayload {
     workItem: WorkItem
     clientMutationId: String
   }
-  
+
   input RemoveAnalyticsFieldInput {
     id: ID!
     clientMutationId: String
   }
-  
+
   type RemoveAnalyticsFieldPayload {
     analyticsField: AnalyticsField
     clientMutationId: String
   }
-  
+
   input RemoveAnalyticsTableInput {
     slug: ID!
     clientMutationId: String
   }
-  
+
   type RemoveAnalyticsTablePayload {
     analyticsTable: AnalyticsTable
     clientMutationId: String
   }
-  
+
   input RemoveAnswerInput {
     answer: ID!
     clientMutationId: String
   }
-  
+
   type RemoveAnswerPayload {
     answer: Answer
     clientMutationId: String
   }
-  
+
   input RemoveDefaultAnswerInput {
     question: ID!
     clientMutationId: String
   }
-  
+
   type RemoveDefaultAnswerPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input RemoveDocumentInput {
     document: ID!
     clientMutationId: String
   }
-  
+
   type RemoveDocumentPayload {
     document: Document
     clientMutationId: String
   }
-  
+
   input RemoveFlowInput {
     flow: ID!
+  type SaveWorkflowPayload {
+    workflow: Workflow
     clientMutationId: String
   }
-  
+
+  input SaveWorkflowInput {
+    slug: String!
+    name: String!
+    description: String
+    meta: JSONString
+
+    """Starting task(s) of the workflow."""
+    startTasks: [ID]!
+
+    """Allow workflow to be started with any form"""
+    allowAllForms: Boolean
+
+    """List of forms which are allowed to start workflow with"""
+    allowForms: [ID]
+    isArchived: Boolean
+    isPublished: Boolean
+    clientMutationId: String
+  }
+
+  """
+  Allows use of a JSON String for input / output from the GraphQL schema.
+
+  Use of this type is *not recommended* as you lose the benefits of having a defined, static
+  schema (one of the key benefits of GraphQL).
+  """
+  scalar JSONString
+
+  type AddWorkflowFlowPayload {
+    workflow: Workflow
+    clientMutationId: String
+  }
+
+  input AddWorkflowFlowInput {
+    workflow: ID!
+    tasks: [ID]!
+    next: FlowJexl!
+    clientMutationId: String
+  }
+
   type RemoveFlowPayload {
     flow: Flow
     clientMutationId: String
   }
-  
+
+  input RemoveFlowInput {
+    flow: ID!
+    clientMutationId: String
+  }
+
+  type SaveSimpleTaskPayload {
+    task: Task
+    clientMutationId: String
+  }
+
+  input SaveSimpleTaskInput {
+    slug: String!
+    name: String!
+    description: String
+    meta: JSONString
+
+    """
+    Group jexl returning what group(s) derived work items will be addressed to.
+    """
+    addressGroups: GroupJexl
+
+    """
+    Group jexl returning what group(s) derived work items will be assigned to for controlling.
+    """
+    controlGroups: GroupJexl
+    isArchived: Boolean
+
+    """Time in seconds task may take to be processed."""
+    leadTime: Int
+
+    """
+    Allows creating multiple work items for this task using the `CreateWorkItem` mutation. If true, one work item will be created for each entry in `address_groups`.
+    """
+    isMultipleInstance: Boolean
+    clientMutationId: String
+  }
+
+  type SaveCompleteWorkflowFormTaskPayload {
+    task: Task
+    clientMutationId: String
+  }
+
+  input SaveCompleteWorkflowFormTaskInput {
+    slug: String!
+    name: String!
+    description: String
+    meta: JSONString
+
+    """
+    Group jexl returning what group(s) derived work items will be addressed to.
+    """
+    addressGroups: GroupJexl
+
+    """
+    Group jexl returning what group(s) derived work items will be assigned to for controlling.
+    """
+    controlGroups: GroupJexl
+    isArchived: Boolean
+
+    """Time in seconds task may take to be processed."""
+    leadTime: Int
+
+    """
+    Allows creating multiple work items for this task using the `CreateWorkItem` mutation. If true, one work item will be created for each entry in `address_groups`.
+    """
+    isMultipleInstance: Boolean
+    clientMutationId: String
+  }
+
+  type SaveCompleteTaskFormTaskPayload {
+    task: Task
+    clientMutationId: String
+  }
+
+  input SaveCompleteTaskFormTaskInput {
+    slug: String!
+    name: String!
+    description: String
+    meta: JSONString
+
+    """
+    Group jexl returning what group(s) derived work items will be addressed to.
+    """
+    addressGroups: GroupJexl
+
+    """
+    Group jexl returning what group(s) derived work items will be assigned to for controlling.
+    """
+    controlGroups: GroupJexl
+    isArchived: Boolean
+
+    """Time in seconds task may take to be processed."""
+    leadTime: Int
+
+    """
+    Allows creating multiple work items for this task using the `CreateWorkItem` mutation. If true, one work item will be created for each entry in `address_groups`.
+    """
+    isMultipleInstance: Boolean
+    form: ID!
+    clientMutationId: String
+  }
+
+  type StartCasePayload {
+    case: Case
+    clientMutationId: String
+  }
+
+  input StartCaseInput {
+    workflow: ID!
+    meta: JSONString
+    parentWorkItem: ID
+    form: ID
+
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+
+  type SaveCasePayload {
+    case: Case
+    clientMutationId: String
+  }
+
+  input SaveCaseInput {
+    id: String
+    workflow: ID!
+    meta: JSONString
+    parentWorkItem: ID
+    form: ID
+
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+
+  type CancelCasePayload {
+    case: Case
+    clientMutationId: String
+  }
+
+  input CancelCaseInput {
+    id: ID!
+
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+
+  type SuspendCasePayload {
+    case: Case
+    clientMutationId: String
+  }
+
+  input SuspendCaseInput {
+    id: ID!
+
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+
+  type ResumeCasePayload {
+    case: Case
+    clientMutationId: String
+  }
+
+  input ResumeCaseInput {
+    id: ID!
+
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+
+  type CompleteWorkItemPayload {
+    workItem: WorkItem
+    clientMutationId: String
+  }
+
+  input CompleteWorkItemInput {
+    id: ID!
+
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+
+  type SkipWorkItemPayload {
+    workItem: WorkItem
+    clientMutationId: String
+  }
+
+  input SkipWorkItemInput {
+    id: ID!
+
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+
+  type CancelWorkItemPayload {
+    workItem: WorkItem
+    clientMutationId: String
+  }
+
+  input CancelWorkItemInput {
+    id: ID!
+
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+
+  type SuspendWorkItemPayload {
+    workItem: WorkItem
+    clientMutationId: String
+  }
+
+  input SuspendWorkItemInput {
+    id: ID!
+
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+
+  type ResumeWorkItemPayload {
+    workItem: WorkItem
+    clientMutationId: String
+  }
+
+  input ResumeWorkItemInput {
+    id: ID!
+
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+
+  type SaveWorkItemPayload {
+    workItem: WorkItem
+    clientMutationId: String
+  }
+
+  input SaveWorkItemInput {
+    workItem: ID!
+
+    """Will be set from Task, if not provided."""
+    name: String
+
+    """Will be set from Task, if not provided."""
+    description: String
+
+    """Users responsible to undertake given work item."""
+    assignedUsers: [String]
+    deadline: DateTime
+    meta: JSONString
+
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+
+  type CreateWorkItemPayload {
+    workItem: WorkItem
+    clientMutationId: String
+  }
+
+  input CreateWorkItemInput {
+    case: ID!
+    multipleInstanceTask: ID!
+
+    """Will be set from Task, if not provided."""
+    name: String
+
+    """Will be set from Task, if not provided."""
+    description: String
+
+    """Users responsible to undertake given work item."""
+    assignedUsers: [String]
+    addressedGroups: [String]
+    controllingGroups: [String]
+    deadline: DateTime
+    meta: JSONString
+
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+
+  type SaveFormPayload {
+    form: Form
+    clientMutationId: String
+  }
+
+  input SaveFormInput {
+    slug: String!
+    name: String!
+    description: String
+    meta: JSONString
+    isArchived: Boolean
+    isPublished: Boolean
+    clientMutationId: String
+  }
+
+  type CopyFormPayload {
+    form: Form
+    clientMutationId: String
+  }
+
+  input CopyFormInput {
+    slug: String!
+    name: String!
+    description: String
+    source: ID!
+    isPublished: Boolean
+    clientMutationId: String
+  }
+
+  """Add question at the end of form."""
+  type AddFormQuestionPayload {
+    form: Form
+    clientMutationId: String
+  }
+
+  input AddFormQuestionInput {
   input RemoveFormQuestionInput {
     form: ID!
     question: ID!
     clientMutationId: String
   }
-  
+
   type RemoveFormQuestionPayload {
     form: Form
     clientMutationId: String
   }
-  
+
   input ReorderFormQuestionsInput {
     form: ID!
     questions: [ID]!
+  input RemoveFormQuestionInput {
+    form: ID!
+    question: ID!
     clientMutationId: String
   }
-  
+
   type ReorderFormQuestionsPayload {
     form: Form
     clientMutationId: String
   }
-  
+
   input ResumeCaseInput {
     id: ID!
     context: JSONString
     clientMutationId: String
   }
-  
+
   type ResumeCasePayload {
     case: Case
     clientMutationId: String
   }
-  
+
   input ResumeWorkItemInput {
     id: ID!
     context: JSONString
     clientMutationId: String
   }
-  
+
   type ResumeWorkItemPayload {
     workItem: WorkItem
+  input ReorderFormQuestionsInput {
+    form: ID!
+    questions: [ID]!
     clientMutationId: String
   }
-  
+
+  type SaveOptionPayload {
+    option: Option
+    clientMutationId: String
+  }
+
+  input SaveOptionInput {
+    slug: String!
+    label: String!
+    isArchived: Boolean
+    meta: JSONString
+    clientMutationId: String
+  }
+
+  type CopyOptionPayload {
+    option: Option
+    clientMutationId: String
+  }
+
+  input CopyOptionInput {
+    slug: String!
+    label: String!
+    source: ID!
+    clientMutationId: String
+  }
+
+  type CopyQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input CopyQuestionInput {
+    slug: String!
+    label: String!
+    source: ID!
+    clientMutationId: String
+  }
+
+  type SaveTextQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveTextQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    minLength: Int
+    maxLength: Int
+    placeholder: String
+    formatValidators: [String]
+    clientMutationId: String
+  }
+
+  type SaveTextareaQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveTextareaQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    minLength: Int
+    maxLength: Int
+    placeholder: String
+    formatValidators: [String]
+    clientMutationId: String
+  }
+
+  type SaveDateQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveDateQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    clientMutationId: String
+  }
+
+  type SaveChoiceQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveChoiceQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    options: [ID]!
+    clientMutationId: String
+  }
+
+  type SaveMultipleChoiceQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveMultipleChoiceQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    options: [ID]!
+    clientMutationId: String
+  }
+
+  type SaveDynamicChoiceQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveDynamicChoiceQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    dataSource: String!
+    clientMutationId: String
+  }
+
+  type SaveDynamicMultipleChoiceQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveDynamicMultipleChoiceQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    dataSource: String!
+    clientMutationId: String
+  }
+
+  type SaveFloatQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveFloatQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    minValue: Float
+    maxValue: Float
+    placeholder: String
+    clientMutationId: String
+  }
+
+  type SaveIntegerQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveIntegerQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    minValue: Int
+    maxValue: Int
+    placeholder: String
+    clientMutationId: String
+  }
+
+  type SaveTableQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveTableQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+
+    """Form that represents rows of a TableQuestion"""
+    rowForm: ID!
+    clientMutationId: String
+  }
+
+  type SaveFormQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveFormQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    subForm: ID!
+    clientMutationId: String
+  }
+
+  type SaveFileQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveFileQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    clientMutationId: String
+  }
+
+  type SaveStaticQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveStaticQuestionInput {
+    label: String!
+    slug: String!
+    infoText: String
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    staticContent: String
+    clientMutationId: String
+  }
+
+  type SaveCalculatedFloatQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input SaveCalculatedFloatQuestionInput {
+    slug: String!
+    label: String!
+    infoText: String
+    isRequired: QuestionJexl
+    isHidden: QuestionJexl
+    meta: JSONString
+    isArchived: Boolean
+    calcExpression: QuestionJexl
+    clientMutationId: String
+  }
+
+  type SaveActionButtonQuestionPayload {
+    question: Question
+    clientMutationId: String
+  }
+
   input SaveActionButtonQuestionInput {
     label: String!
     slug: String!
@@ -1746,12 +5800,12 @@
     validateOnEnter: Boolean!
     clientMutationId: String
   }
-  
+
   type SaveActionButtonQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveAnalyticsFieldInput {
     id: ID
     alias: String!
@@ -1765,12 +5819,12 @@
     modifiedByGroup: String
     clientMutationId: String
   }
-  
+
   type SaveAnalyticsFieldPayload {
     analyticsField: AnalyticsField
     clientMutationId: String
   }
-  
+
   input SaveAnalyticsTableInput {
     slug: String!
     name: String!
@@ -1783,12 +5837,12 @@
     modifiedByGroup: String
     clientMutationId: String
   }
-  
+
   type SaveAnalyticsTablePayload {
     analyticsTable: AnalyticsTable
     clientMutationId: String
   }
-  
+
   input SaveCalculatedFloatQuestionInput {
     slug: String!
     label: String!
@@ -1801,12 +5855,12 @@
     hintText: String
     clientMutationId: String
   }
-  
+
   type SaveCalculatedFloatQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveCaseInput {
     id: String
     workflow: ID!
@@ -1816,12 +5870,12 @@
     context: JSONString
     clientMutationId: String
   }
-  
+
   type SaveCasePayload {
     case: Case
     clientMutationId: String
   }
-  
+
   input SaveChoiceQuestionInput {
     slug: String!
     label: String!
@@ -1834,12 +5888,12 @@
     hintText: String
     clientMutationId: String
   }
-  
+
   type SaveChoiceQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveCompleteTaskFormTaskInput {
     slug: String!
     name: String!
@@ -1853,12 +5907,12 @@
     form: ID!
     clientMutationId: String
   }
-  
+
   type SaveCompleteTaskFormTaskPayload {
     task: Task
     clientMutationId: String
   }
-  
+
   input SaveCompleteWorkflowFormTaskInput {
     slug: String!
     name: String!
@@ -1871,12 +5925,12 @@
     isMultipleInstance: Boolean
     clientMutationId: String
   }
-  
+
   type SaveCompleteWorkflowFormTaskPayload {
     task: Task
     clientMutationId: String
   }
-  
+
   input SaveDateQuestionInput {
     slug: String!
     label: String!
@@ -1888,161 +5942,47 @@
     hintText: String
     clientMutationId: String
   }
-  
+
   type SaveDateQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveDefaultDateAnswerInput {
     question: ID!
     meta: JSONString
     value: Date
     clientMutationId: String
   }
-  
+
   type SaveDefaultDateAnswerPayload {
-    answer: Answer
+  type CopyDocumentPayload {
+    document: Document
     clientMutationId: String
   }
-  
-  input SaveDefaultFloatAnswerInput {
-    question: ID!
-    meta: JSONString
-    value: Float
+
+  input CopyDocumentInput {
+    source: ID!
     clientMutationId: String
   }
-  
-  type SaveDefaultFloatAnswerPayload {
-    answer: Answer
+
+  type SaveDocumentPayload {
+    document: Document
     clientMutationId: String
   }
-  
-  input SaveDefaultIntegerAnswerInput {
-    question: ID!
-    meta: JSONString
-    value: Int
-    clientMutationId: String
-  }
-  
-  type SaveDefaultIntegerAnswerPayload {
-    answer: Answer
-    clientMutationId: String
-  }
-  
-  input SaveDefaultListAnswerInput {
-    question: ID!
-    meta: JSONString
-    value: [String]
-    clientMutationId: String
-  }
-  
-  type SaveDefaultListAnswerPayload {
-    answer: Answer
-    clientMutationId: String
-  }
-  
-  input SaveDefaultStringAnswerInput {
-    question: ID!
-    meta: JSONString
-    value: String
-    clientMutationId: String
-  }
-  
-  type SaveDefaultStringAnswerPayload {
-    answer: Answer
-    clientMutationId: String
-  }
-  
-  input SaveDefaultTableAnswerInput {
-    question: ID!
-    meta: JSONString
-    value: [ID]
-    clientMutationId: String
-  }
-  
-  type SaveDefaultTableAnswerPayload {
-    answer: Answer
-    clientMutationId: String
-  }
-  
-  input SaveDocumentDateAnswerInput {
-    question: ID!
-    document: ID!
-    meta: JSONString
-    value: Date
-    clientMutationId: String
-  }
-  
-  type SaveDocumentDateAnswerPayload {
-    answer: Answer
-    clientMutationId: String
-  }
-  
-  input SaveDocumentFileAnswerInput {
-    question: ID!
-    document: ID!
-    meta: JSONString
-    value: String
-    clientMutationId: String
-  }
-  
-  type SaveDocumentFileAnswerPayload {
-    answer: Answer
-    clientMutationId: String
-  }
-  
-  input SaveDocumentFloatAnswerInput {
-    question: ID!
-    document: ID!
-    meta: JSONString
-    value: Float
-    clientMutationId: String
-  }
-  
-  type SaveDocumentFloatAnswerPayload {
-    answer: Answer
-    clientMutationId: String
-  }
-  
+
   input SaveDocumentInput {
     id: String
     form: ID!
     meta: JSONString
     clientMutationId: String
   }
-  
-  input SaveDocumentIntegerAnswerInput {
-    question: ID!
-    document: ID!
-    meta: JSONString
-    value: Int
-    clientMutationId: String
-  }
-  
-  type SaveDocumentIntegerAnswerPayload {
+
+  type SaveDocumentStringAnswerPayload {
     answer: Answer
     clientMutationId: String
   }
-  
-  input SaveDocumentListAnswerInput {
-    question: ID!
-    document: ID!
-    meta: JSONString
-    value: [String]
-    clientMutationId: String
-  }
-  
-  type SaveDocumentListAnswerPayload {
-    answer: Answer
-    clientMutationId: String
-  }
-  
-  type SaveDocumentPayload {
-    document: Document
-    clientMutationId: String
-  }
-  
+
   input SaveDocumentStringAnswerInput {
     question: ID!
     document: ID!
@@ -2050,25 +5990,299 @@
     value: String
     clientMutationId: String
   }
-  
-  type SaveDocumentStringAnswerPayload {
+
+  type SaveDocumentIntegerAnswerPayload {
+  input SaveDefaultFloatAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: Float
+    clientMutationId: String
+  }
+
+  type SaveDefaultFloatAnswerPayload {
     answer: Answer
     clientMutationId: String
   }
-  
-  input SaveDocumentTableAnswerInput {
+
+  input SaveDocumentIntegerAnswerInput {
     question: ID!
     document: ID!
+  input SaveDefaultIntegerAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: Int
+    clientMutationId: String
+  }
+
+  type SaveDocumentFloatAnswerPayload {
+  type SaveDefaultIntegerAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDefaultListAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: [String]
+    clientMutationId: String
+  }
+
+  type SaveDefaultListAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDefaultStringAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: String
+    clientMutationId: String
+  }
+
+  type SaveDefaultStringAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDefaultTableAnswerInput {
+    question: ID!
     meta: JSONString
     value: [ID]
     clientMutationId: String
   }
-  
+
+  type SaveDefaultTableAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDocumentDateAnswerInput {
+    question: ID!
+    document: ID!
+    meta: JSONString
+    value: Date
+    clientMutationId: String
+  }
+
+  type SaveDocumentDateAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDocumentFileAnswerInput {
+    question: ID!
+    document: ID!
+    meta: JSONString
+    value: String
+    clientMutationId: String
+  }
+
+  type SaveDocumentFileAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDocumentFloatAnswerInput {
+    question: ID!
+    document: ID!
+    meta: JSONString
+    value: Float
+    clientMutationId: String
+  }
+
+  type SaveDocumentDateAnswerPayload {
+  type SaveDocumentFloatAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDocumentDateAnswerInput {
+    question: ID!
+    document: ID!
+    meta: JSONString
+    value: Date
+    clientMutationId: String
+  }
+
+  type SaveDocumentListAnswerPayload {
+  input SaveDocumentInput {
+    id: String
+    form: ID!
+    meta: JSONString
+    clientMutationId: String
+  }
+
+  input SaveDocumentIntegerAnswerInput {
+    question: ID!
+    document: ID!
+    meta: JSONString
+    value: Int
+    clientMutationId: String
+  }
+
+  type SaveDocumentIntegerAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDocumentListAnswerInput {
+    question: ID!
+    document: ID!
+    meta: JSONString
+    value: [String]
+    clientMutationId: String
+  }
+
+  type SaveDocumentListAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  type SaveDocumentPayload {
+    document: Document
+    clientMutationId: String
+  }
+
+  input SaveDocumentStringAnswerInput {
+    question: ID!
+    document: ID!
+    meta: JSONString
+    value: String
+    clientMutationId: String
+  }
+
+  type SaveDocumentStringAnswerPayload {
   type SaveDocumentTableAnswerPayload {
     answer: Answer
     clientMutationId: String
   }
-  
+
+  input SaveDocumentTableAnswerInput {
+    question: ID!
+    document: ID!
+    meta: JSONString
+
+    """List of document IDs representing the rows in the table."""
+    value: [ID]
+    clientMutationId: String
+  }
+
+  type SaveDocumentFileAnswerPayload {
+  type SaveDocumentTableAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDocumentFileAnswerInput {
+    question: ID!
+    document: ID!
+    meta: JSONString
+    value: String
+    clientMutationId: String
+  }
+
+  type SaveDefaultStringAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDefaultStringAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: String
+    clientMutationId: String
+  }
+
+  type SaveDefaultIntegerAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDefaultIntegerAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: Int
+    clientMutationId: String
+  }
+
+  type SaveDefaultFloatAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDefaultFloatAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: Float
+    clientMutationId: String
+  }
+
+  type SaveDefaultDateAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDefaultDateAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: Date
+    clientMutationId: String
+  }
+
+  type SaveDefaultListAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDefaultListAnswerInput {
+    question: ID!
+    meta: JSONString
+    value: [String]
+    clientMutationId: String
+  }
+
+  type SaveDefaultTableAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input SaveDefaultTableAnswerInput {
+    question: ID!
+    meta: JSONString
+
+    """List of document IDs representing the rows in the table."""
+    value: [ID]
+    clientMutationId: String
+  }
+
+  type RemoveAnswerPayload {
+    answer: Answer
+    clientMutationId: String
+  }
+
+  input RemoveAnswerInput {
+    answer: ID!
+    clientMutationId: String
+  }
+
+  type RemoveDefaultAnswerPayload {
+    question: Question
+    clientMutationId: String
+  }
+
+  input RemoveDefaultAnswerInput {
+    question: ID!
+    clientMutationId: String
+  }
+
+  type RemoveDocumentPayload {
+    document: Document
+    clientMutationId: String
+  }
+
+  input RemoveDocumentInput {
+    document: ID!
+    clientMutationId: String
   input SaveDynamicChoiceQuestionInput {
     slug: String!
     label: String!
@@ -2081,12 +6295,12 @@
     hintText: String
     clientMutationId: String
   }
-  
+
   type SaveDynamicChoiceQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveDynamicMultipleChoiceQuestionInput {
     slug: String!
     label: String!
@@ -2099,12 +6313,12 @@
     hintText: String
     clientMutationId: String
   }
-  
+
   type SaveDynamicMultipleChoiceQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveFileQuestionInput {
     slug: String!
     label: String!
@@ -2116,12 +6330,12 @@
     hintText: String
     clientMutationId: String
   }
-  
+
   type SaveFileQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveFloatQuestionInput {
     slug: String!
     label: String!
@@ -2136,12 +6350,12 @@
     hintText: String
     clientMutationId: String
   }
-  
+
   type SaveFloatQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveFormInput {
     slug: String!
     name: String!
@@ -2151,12 +6365,12 @@
     isPublished: Boolean
     clientMutationId: String
   }
-  
+
   type SaveFormPayload {
     form: Form
     clientMutationId: String
   }
-  
+
   input SaveFormQuestionInput {
     slug: String!
     label: String!
@@ -2168,12 +6382,12 @@
     subForm: ID!
     clientMutationId: String
   }
-  
+
   type SaveFormQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveIntegerQuestionInput {
     slug: String!
     label: String!
@@ -2188,12 +6402,12 @@
     hintText: String
     clientMutationId: String
   }
-  
+
   type SaveIntegerQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveMultipleChoiceQuestionInput {
     slug: String!
     label: String!
@@ -2206,12 +6420,12 @@
     hintText: String
     clientMutationId: String
   }
-  
+
   type SaveMultipleChoiceQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveOptionInput {
     slug: String!
     label: String!
@@ -2219,12 +6433,12 @@
     meta: JSONString
     clientMutationId: String
   }
-  
+
   type SaveOptionPayload {
     option: Option
     clientMutationId: String
   }
-  
+
   input SaveSimpleTaskInput {
     slug: String!
     name: String!
@@ -2237,12 +6451,12 @@
     isMultipleInstance: Boolean
     clientMutationId: String
   }
-  
+
   type SaveSimpleTaskPayload {
     task: Task
     clientMutationId: String
   }
-  
+
   input SaveStaticQuestionInput {
     label: String!
     slug: String!
@@ -2253,12 +6467,12 @@
     staticContent: String
     clientMutationId: String
   }
-  
+
   type SaveStaticQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveTableQuestionInput {
     slug: String!
     label: String!
@@ -2271,12 +6485,12 @@
     hintText: String
     clientMutationId: String
   }
-  
+
   type SaveTableQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveTextQuestionInput {
     slug: String!
     label: String!
@@ -2292,12 +6506,12 @@
     formatValidators: [String]
     clientMutationId: String
   }
-  
+
   type SaveTextQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveTextareaQuestionInput {
     slug: String!
     label: String!
@@ -2313,12 +6527,12 @@
     formatValidators: [String]
     clientMutationId: String
   }
-  
+
   type SaveTextareaQuestionPayload {
     question: Question
     clientMutationId: String
   }
-  
+
   input SaveWorkItemInput {
     workItem: ID!
     name: String
@@ -2329,12 +6543,12 @@
     context: JSONString
     clientMutationId: String
   }
-  
+
   type SaveWorkItemPayload {
     workItem: WorkItem
     clientMutationId: String
   }
-  
+
   input SaveWorkflowInput {
     slug: String!
     name: String!
@@ -2347,40 +6561,40 @@
     isPublished: Boolean
     clientMutationId: String
   }
-  
+
   type SaveWorkflowPayload {
     workflow: Workflow
     clientMutationId: String
   }
-  
+
   input SearchAnswersFilterType {
     questions: [ID]
     value: GenericScalar!
     lookup: SearchLookupMode
   }
-  
+
   enum SearchLookupMode {
     STARTSWITH
     CONTAINS
     TEXT
   }
-  
+
   type SelectedOption {
     label: String!
     slug: String!
   }
-  
+
   type SelectedOptionConnection {
     pageInfo: PageInfo!
     edges: [SelectedOptionEdge]!
     totalCount: Int
   }
-  
+
   type SelectedOptionEdge {
     node: SelectedOption
     cursor: String!
   }
-  
+
   type SimpleTask implements Task, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -2400,18 +6614,18 @@
     isMultipleInstance: Boolean!
     id: ID!
   }
-  
+
   input SkipWorkItemInput {
     id: ID!
     context: JSONString
     clientMutationId: String
   }
-  
+
   type SkipWorkItemPayload {
     workItem: WorkItem
     clientMutationId: String
   }
-  
+
   enum SortableAnalyticsTableAttributes {
     CREATED_AT
     MODIFIED_AT
@@ -2422,7 +6636,7 @@
     SLUG
     NAME
   }
-  
+
   enum SortableAnswerAttributes {
     CREATED_AT
     MODIFIED_AT
@@ -2436,7 +6650,7 @@
     DATE
     FILE
   }
-  
+
   enum SortableCaseAttributes {
     ALLOW_ALL_FORMS
     CREATED_BY_GROUP
@@ -2448,7 +6662,7 @@
     STATUS
     SLUG
   }
-  
+
   enum SortableDocumentAttributes {
     CREATED_AT
     MODIFIED_AT
@@ -2459,7 +6673,7 @@
     FORM
     SOURCE
   }
-  
+
   enum SortableFormAttributes {
     CREATED_AT
     MODIFIED_AT
@@ -2473,7 +6687,7 @@
     IS_PUBLISHED
     IS_ARCHIVED
   }
-  
+
   enum SortableQuestionAttributes {
     CREATED_AT
     MODIFIED_AT
@@ -2492,7 +6706,7 @@
     HINT_TEXT
     CALC_EXPRESSION
   }
-  
+
   enum SortableTaskAttributes {
     ALLOW_ALL_FORMS
     LEAD_TIME
@@ -2505,7 +6719,7 @@
     NAME
     SLUG
   }
-  
+
   enum SortableWorkItemAttributes {
     ALLOW_ALL_FORMS
     CREATED_BY_GROUP
@@ -2521,7 +6735,7 @@
     STATUS
     SLUG
   }
-  
+
   enum SortableWorkflowAttributes {
     ALLOW_ALL_FORMS
     CREATED_BY_GROUP
@@ -2532,7 +6746,7 @@
     NAME
     SLUG
   }
-  
+
   input StartCaseInput {
     workflow: ID!
     meta: JSONString
@@ -2541,12 +6755,12 @@
     context: JSONString
     clientMutationId: String
   }
-  
+
   type StartCasePayload {
     case: Case
     clientMutationId: String
   }
-  
+
   type StaticQuestion implements Question, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -2567,7 +6781,7 @@
     dataSource: String
     id: ID!
   }
-  
+
   enum Status {
     READY
     COMPLETED
@@ -2576,7 +6790,7 @@
     SUSPENDED
     REDO
   }
-  
+
   type StringAnswer implements Answer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -2590,29 +6804,29 @@
     meta: GenericScalar!
     selectedOption: SelectedOption
   }
-  
+
   input SuspendCaseInput {
     id: ID!
     context: JSONString
     clientMutationId: String
   }
-  
+
   type SuspendCasePayload {
     case: Case
     clientMutationId: String
   }
-  
+
   input SuspendWorkItemInput {
     id: ID!
     context: JSONString
     clientMutationId: String
   }
-  
+
   type SuspendWorkItemPayload {
     workItem: WorkItem
     clientMutationId: String
   }
-  
+
   type TableAnswer implements Answer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -2626,7 +6840,7 @@
     meta: GenericScalar!
     document: Document
   }
-  
+
   type TableQuestion implements Question, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -2648,7 +6862,7 @@
     rowForm: Form
     id: ID!
   }
-  
+
   interface Task {
     id: ID!
     createdAt: DateTime!
@@ -2664,18 +6878,18 @@
     meta: GenericScalar!
     isMultipleInstance: Boolean!
   }
-  
+
   type TaskConnection {
     pageInfo: PageInfo!
     edges: [TaskEdge]!
     totalCount: Int
   }
-  
+
   type TaskEdge {
     node: Task
     cursor: String!
   }
-  
+
   input TaskFilterSetType {
     slug: String
     name: String
@@ -2694,13 +6908,13 @@
     orderBy: [TaskOrdering]
     invert: Boolean
   }
-  
+
   input TaskOrderSetType {
     meta: String
     attribute: SortableTaskAttributes
     direction: AscDesc
   }
-  
+
   enum TaskOrdering {
     NAME_ASC
     NAME_DESC
@@ -2725,19 +6939,19 @@
     META_FOOBAR_ASC
     META_FOOBAR_DESC
   }
-  
+
   enum TaskType {
     SIMPLE
     COMPLETE_WORKFLOW_FORM
     COMPLETE_TASK_FORM
   }
-  
+
   enum TaskTypeArgument {
     SIMPLE
     COMPLETE_WORKFLOW_FORM
     COMPLETE_TASK_FORM
   }
-  
+
   type TextQuestion implements Question, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -2762,7 +6976,7 @@
     minLength: Int
     maxLength: Int
   }
-  
+
   type TextareaQuestion implements Question, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -2787,26 +7001,26 @@
     minLength: Int
     maxLength: Int
   }
-  
+
   enum Type {
     SIMPLE
     COMPLETE_WORKFLOW_FORM
     COMPLETE_TASK_FORM
   }
-  
+
   scalar UUID
-  
+
   type ValidationEntry {
     slug: String!
     errorMsg: String!
   }
-  
+
   type ValidationResult {
     id: ID
     isValid: Boolean
     errors: [ValidationEntry]
   }
-  
+
   type WorkItem implements Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -2833,18 +7047,18 @@
     previousWorkItem: WorkItem
     succeedingWorkItems(before: String, after: String, first: Int, last: Int): WorkItemConnection!
   }
-  
+
   type WorkItemConnection {
     pageInfo: PageInfo!
     edges: [WorkItemEdge]!
     totalCount: Int
   }
-  
+
   type WorkItemEdge {
     node: WorkItem
     cursor: String!
   }
-  
+
   input WorkItemFilterSetType {
     status: Status
     name: String
@@ -2876,7 +7090,7 @@
     rootCaseMetaValue: [JSONValueFilterType]
     invert: Boolean
   }
-  
+
   input WorkItemOrderSetType {
     meta: String
     caseMeta: String
@@ -2885,7 +7099,7 @@
     caseDocumentAnswer: String
     direction: AscDesc
   }
-  
+
   enum WorkItemOrdering {
     STATUS_ASC
     STATUS_DESC
@@ -2908,7 +7122,7 @@
     META_FOOBAR_ASC
     META_FOOBAR_DESC
   }
-  
+
   enum WorkItemStatus {
     READY
     COMPLETED
@@ -2917,7 +7131,7 @@
     SUSPENDED
     REDO
   }
-  
+
   enum WorkItemStatusArgument {
     READY
     COMPLETED
@@ -2926,7 +7140,7 @@
     SUSPENDED
     REDO
   }
-  
+
   type Workflow implements Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -2947,18 +7161,18 @@
     tasks: [Task]!
     flows(before: String, after: String, first: Int, last: Int, task: ID, filter: [FlowFilterSetType], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime): FlowConnection
   }
-  
+
   type WorkflowConnection {
     pageInfo: PageInfo!
     edges: [WorkflowEdge]!
     totalCount: Int
   }
-  
+
   type WorkflowEdge {
     node: Workflow
     cursor: String!
   }
-  
+
   input WorkflowFilterSetType {
     slug: String
     name: String
@@ -2977,13 +7191,13 @@
     orderBy: [WorkflowOrdering]
     invert: Boolean
   }
-  
+
   input WorkflowOrderSetType {
     meta: String
     attribute: SortableWorkflowAttributes
     direction: AscDesc
   }
-  
+
   enum WorkflowOrdering {
     NAME_ASC
     NAME_DESC
@@ -3006,10 +7220,10 @@
     META_FOOBAR_ASC
     META_FOOBAR_DESC
   }
-  
+
   enum starting_object {
     CASES
   }
-  
+
   '
 ---

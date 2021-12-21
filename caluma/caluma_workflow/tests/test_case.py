@@ -27,10 +27,10 @@ def test_query_all_cases(db, snapshot, case, result_count, flow, schema_executor
         }
     """
     result = schema_executor(query)
+    assert not result.errors
 
     assert len(result.data["allCases"]["edges"]) == result_count
 
-    assert not result.errors
     snapshot.assert_match(result.data)
 
 
@@ -198,7 +198,7 @@ def test_cancel_case(db, snapshot, case, work_item, schema_executor, success):
         }
     """
 
-    inp = {"input": {"id": case.pk}}
+    inp = {"input": {"id": str(case.pk)}}
     result = schema_executor(query, variable_values=inp)
 
     assert not bool(result.errors) == success
@@ -273,7 +273,7 @@ def test_root_case_filter(schema_executor, db, workflow_factory, case_factory):
           }
         }
     """
-    variables = {"case": case.pk}
+    variables = {"case": str(case.pk)}
     result = schema_executor(query, variable_values=variables)
 
     assert not result.errors
@@ -683,7 +683,7 @@ def test_cancel_suspend_resume_case(
             }}
         """
 
-        result = schema_executor(query, variable_values={"id": case.pk})
+        result = schema_executor(query, variable_values={"id": str(case.pk)})
 
         if error:
             assert error in str(result.errors[0])

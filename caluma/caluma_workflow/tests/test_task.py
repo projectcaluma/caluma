@@ -23,7 +23,7 @@ def test_query_all_tasks(db, snapshot, task, schema_executor):
         }
     """
 
-    result = schema_executor(query, variable_values={"name": task.name})
+    result = schema_executor(query, variable_values={"name": str(task.name)})
 
     assert not result.errors
     snapshot.assert_match(result.data)

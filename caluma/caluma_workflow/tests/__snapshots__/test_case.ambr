@@ -1,3 +1,51 @@
+# name: test_cancel_case[running-True-completed-None]
+  <class 'dict'> {
+    'cancelCase': <class 'dict'> {
+      'case': <class 'dict'> {
+        'document': <class 'dict'> {
+          'form': <class 'dict'> {
+            'slug': 'suggest-adult-allow',
+          },
+        },
+        'status': 'CANCELED',
+        'workItems': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'status': 'COMPLETED',
+              },
+            },
+          ],
+        },
+      },
+      'clientMutationId': None,
+    },
+  }
+---
+# name: test_cancel_case[running-True-ready-None]
+  <class 'dict'> {
+    'cancelCase': <class 'dict'> {
+      'case': <class 'dict'> {
+        'document': <class 'dict'> {
+          'form': <class 'dict'> {
+            'slug': 'suggest-adult-allow',
+          },
+        },
+        'status': 'CANCELED',
+        'workItems': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'status': 'CANCELED',
+              },
+            },
+          ],
+        },
+      },
+      'clientMutationId': None,
+    },
+  }
+---
 # name: test_order_by_question_answer_value[date-True-False]
   <class 'dict'> {
     'allCases': <class 'dict'> {
@@ -574,6 +622,20 @@
       'edges': <class 'list'> [
       ],
       'totalCount': 0,
+    },
+  }
+---
+# name: test_query_all_cases[running-1]
+  <class 'dict'> {
+    'allCases': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            'status': 'RUNNING',
+          },
+        },
+      ],
+      'totalCount': 1,
     },
   }
 ---
