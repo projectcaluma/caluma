@@ -16,7 +16,7 @@ from .. import models
                     id
             }}}}
             """,
-            "",
+            None,
             "query",
             "foo",
             "allCases",
@@ -31,7 +31,7 @@ from .. import models
                     id
             }}}}
             """,
-            "",
+            None,
             "query",
             None,
             "allCases",
@@ -44,7 +44,7 @@ from .. import models
                 bar
             }}
             """,
-            "",
+            None,
             "query",
             None,
             "foo",
@@ -70,7 +70,7 @@ from .. import models
             """
             {
             }""",
-            "",
+            None,
             "",
             None,
             None,

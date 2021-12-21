@@ -593,10 +593,9 @@ class DjangoFilterConnectionField(
             for k, v in args.items():
                 if k in filtering_args:
                     if k == "order_by" and v is not None:
-                        if isinstance(v, list):
-                            v = [to_snake_case(e) for e in v]
-                        else:
-                            v = to_snake_case(v)
+                        # in Caluma, order_by is always a list
+                        assert isinstance(v, list)
+                        v = [to_snake_case(e) for e in v]
                     kwargs[k] = v
             return kwargs
 
@@ -607,7 +606,7 @@ class DjangoFilterConnectionField(
         )
         if filterset.form.is_valid():
             return filterset.qs
-        raise ValidationError(filterset.form.errors.as_json())
+        raise ValidationError(filterset.form.errors.as_json())  # pragma: no cover
 
 
 class DjangoFilterSetConnectionField(DjangoFilterConnectionField):
@@ -706,6 +705,16 @@ def convert_choice_field_to_enum(field):
     return converted
 
 
+class _ExtractNestedListFilterMixin:
+    def filter(self, qs, value):
+        if isinstance(value, list) and len(value) and isinstance(value[0], list):
+            # TODO: this seems to be a workaround - we shouldn't
+            # get a double-nested list here. However the schema
+            # seems to show it as such...
+            value = [val for sublist in value for val in sublist]
+        return super().filter(qs, value)
+
+
 def generate_list_filter_class(inner_type):
     """
     Return a Filter class that will resolve into a List(`inner_type`) graphene type.
@@ -719,7 +728,10 @@ def generate_list_filter_class(inner_type):
     form_field = type(f"List{inner_type.__name__}FormField", (forms.Field,), {})
     filter_class = type(
         f"{inner_type.__name__}ListFilter",
-        (Filter,),
+        (
+            _ExtractNestedListFilterMixin,
+            Filter,
+        ),
         {
             "field_class": form_field,
             "__doc__": (
@@ -730,9 +742,11 @@ def generate_list_filter_class(inner_type):
             ),
         },
     )
-    convert_form_field.register(form_field)(
-        lambda x: graphene.List(inner_type, required=x.required)
-    )
+
+    def do_convert_type(x):
+        return graphene.List(inner_type, required=x.required)
+
+    convert_form_field.register(form_field)(do_convert_type)
 
     return filter_class
 
