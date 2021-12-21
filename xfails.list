@@ -1,8 +1,4 @@
 [
-    "caluma.caluma_logging.tests.test_logging_middleware.test_access_log[\\n            mutation SaveTextQuestion($input: SaveTextQuestionInput!) {\\n              saveTextQuestion(input: $input) {\\n                question {\\n                  id\\n                  }\\n                }\\n            }\\n            -variables3-mutation-SaveTextQuestion-saveTextQuestion-200]",
-    "caluma.caluma_logging.tests.test_logging_middleware.test_access_log[\\n            query foo {\\n              allCases {\\n                edges {\\n                  node {\\n                    id\\n            }}}}\\n            --query-foo-allCases-200]",
-    "caluma.caluma_logging.tests.test_logging_middleware.test_access_log[\\n            query {\\n              allCases {\\n                edges {\\n                  node {\\n                    id\\n            }}}}\\n            --query-None-allCases-200]",
-    "caluma.caluma_logging.tests.test_logging_middleware.test_access_log[\\n            query {\\n              foo {\\n                bar\\n            }}\\n            --query-None-foo-400]",
     "caluma.caluma_workflow.tests.test_case.test_cancel_case[running-True-completed-None]",
     "caluma.caluma_workflow.tests.test_case.test_cancel_case[running-True-ready-None]",
     "caluma.caluma_workflow.tests.test_case.test_cancel_suspend_resume_case[cancel-completed-completed-None-None-Only running or suspended cases can be canceled.-False-None]",
