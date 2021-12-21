@@ -430,7 +430,10 @@ class SearchAnswersFilter(Filter):
         registry = get_global_registry()
         converted = registry.get_converted_field(field)
         if converted:
-            return converted
+            # TODO: can this be removed, as it's never the case
+            # anymore with graphene 3.0?
+            # Doesn't seem to have ill effects...
+            return converted  # pragma: no cover
 
         converted = List(SearchAnswersFilterType)
         registry.register_converted_field(field, converted)
