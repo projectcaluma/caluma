@@ -94,7 +94,7 @@ def test_document_as_of(
     """
 
     input = {
-        "document": document.pk,
+        "document": str(document.pk),
         "value": "first admin - revision 1",
         "question": q1.question.slug,
     }
@@ -139,7 +139,7 @@ def test_document_as_of(
         }
     """
 
-    variables = {"id": document.pk, "asOf": timestamp1}
+    variables = {"id": str(document.pk), "asOf": timestamp1}
 
     result = admin_schema_executor(historical_query, variable_values=variables)
     assert not result.errors
@@ -185,7 +185,7 @@ def test_historical_file_answer(
         """
 
     input = {
-        "document": document.pk,
+        "document": str(document.pk),
         "value": "my_file - rev 1",
         "question": q1.question.slug,
     }
@@ -235,7 +235,7 @@ def test_historical_file_answer(
             }
         """
 
-    variables = {"id": document.pk, "asOf": timestamp1}
+    variables = {"id": str(document.pk), "asOf": timestamp1}
     result = schema_executor(historical_query, variable_values=variables)
     assert not result.errors
     assert (
@@ -368,7 +368,11 @@ def test_historical_table_answer(
         }
     """
 
-    variables = {"id": main_document.pk, "asOf1": timestamp_init, "asOf2": timestamp_2}
+    variables = {
+        "id": str(main_document.pk),
+        "asOf1": timestamp_init,
+        "asOf2": timestamp_2,
+    }
     result = schema_executor(historical_query, variable_values=variables)
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -474,7 +478,7 @@ def test_history_answer_type(
     """
 
     # old date resolves to the string value
-    variables = {"id": document.pk, "asOf": old_date}
+    variables = {"id": str(document.pk), "asOf": old_date}
     result = admin_schema_executor(historical_query, variable_values=variables)
 
     assert not result.errors
@@ -492,7 +496,7 @@ def test_history_answer_type(
     )
 
     # current date resolves to integer value
-    variables = {"id": document.pk, "asOf": timezone.now()}
+    variables = {"id": str(document.pk), "asOf": timezone.now()}
     result = admin_schema_executor(historical_query, variable_values=variables)
 
     assert not result.errors

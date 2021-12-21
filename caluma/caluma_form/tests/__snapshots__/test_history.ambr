@@ -1,0 +1,138 @@
+# name: test_document_as_of
+  <class 'dict'> {
+    'documentAsOf': <class 'dict'> {
+      'documentId': '890ca108-d93d-4725-9066-7d0bddad8230',
+      'historicalAnswers': <class 'dict'> {
+        'edges': <class 'list'> [
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              '__typename': 'HistoricalStringAnswer',
+              'historyUserId': 'admin',
+              'value': 'first admin - revision 1',
+            },
+          },
+        ],
+      },
+      'meta': <class 'dict'> {
+      },
+    },
+  }
+---
+# name: test_document_as_of.1
+  <class 'dict'> {
+    'documentAsOf': <class 'dict'> {
+      'documentId': '890ca108-d93d-4725-9066-7d0bddad8230',
+      'historicalAnswers': <class 'dict'> {
+        'edges': <class 'list'> [
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              '__typename': 'HistoricalStringAnswer',
+              'historyUserId': 'AnonymousUser',
+              'value': 'first anon - revision 3',
+            },
+          },
+        ],
+      },
+      'meta': <class 'dict'> {
+      },
+    },
+  }
+---
+# name: test_document_as_of.2
+  <class 'dict'> {
+    'documentAsOf': <class 'dict'> {
+      'documentId': '890ca108-d93d-4725-9066-7d0bddad8230',
+      'historicalAnswers': <class 'dict'> {
+        'edges': <class 'list'> [
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              '__typename': 'HistoricalStringAnswer',
+              'historyUserId': 'AnonymousUser',
+              'value': 'second anon - revision 4',
+            },
+          },
+        ],
+      },
+      'meta': <class 'dict'> {
+      },
+    },
+  }
+---
+# name: test_historical_table_answer
+  <class 'dict'> {
+    'd1': <class 'dict'> {
+      'historicalAnswers': <class 'dict'> {
+        'edges': <class 'list'> [
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              '__typename': 'HistoricalTableAnswer',
+              'value': <class 'list'> [
+                <class 'dict'> {
+                  'historicalAnswers': <class 'dict'> {
+                    'edges': <class 'list'> [
+                      <class 'dict'> {
+                        'node': <class 'dict'> {
+                          'historyType': '+',
+                          'value': 'first row value',
+                        },
+                      },
+                    ],
+                  },
+                },
+                <class 'dict'> {
+                  'historicalAnswers': <class 'dict'> {
+                    'edges': <class 'list'> [
+                      <class 'dict'> {
+                        'node': <class 'dict'> {
+                          'historyType': '+',
+                          'value': 'second row value',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+    'd2': <class 'dict'> {
+      'historicalAnswers': <class 'dict'> {
+        'edges': <class 'list'> [
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              '__typename': 'HistoricalTableAnswer',
+              'value': <class 'list'> [
+                <class 'dict'> {
+                  'historicalAnswers': <class 'dict'> {
+                    'edges': <class 'list'> [
+                      <class 'dict'> {
+                        'node': <class 'dict'> {
+                          'historyType': '+',
+                          'value': 'first row value',
+                        },
+                      },
+                    ],
+                  },
+                },
+                <class 'dict'> {
+                  'historicalAnswers': <class 'dict'> {
+                    'edges': <class 'list'> [
+                      <class 'dict'> {
+                        'node': <class 'dict'> {
+                          'historyType': '-',
+                          'value': 'second row value',
+                        },
+                      },
+                    ],
+                  },
+                },
+              ],
+            },
+          },
+        ],
+      },
+    },
+  }
+---

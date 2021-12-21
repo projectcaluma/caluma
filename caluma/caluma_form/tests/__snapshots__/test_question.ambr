@@ -89,6 +89,126 @@
     },
   }
 ---
+# name: test_query_all_questions[dynamic_choice-question__configuration10-MyDataSource-question__format_validators10]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'DynamicChoiceQuestion',
+            'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+            'infoText': '',
+            'label': 'Bonnie Moreno',
+            'meta': <class 'dict'> {
+            },
+            'options': <class 'dict'> {
+              'edges': <class 'list'> [
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': '1',
+                    'slug': '1',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': '5.5',
+                    'slug': '5.5',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'sdkj',
+                    'slug': 'sdkj',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'info',
+                    'slug': 'value',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'something',
+                    'slug': 'something',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'english description',
+                    'slug': 'translated_value',
+                  },
+                },
+              ],
+            },
+            'slug': 'environmental-ten',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[dynamic_multiple_choice-question__configuration11-MyDataSource-question__format_validators11]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'DynamicMultipleChoiceQuestion',
+            'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
+            'infoText': '',
+            'label': 'Bonnie Moreno',
+            'meta': <class 'dict'> {
+            },
+            'options': <class 'dict'> {
+              'edges': <class 'list'> [
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': '1',
+                    'slug': '1',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': '5.5',
+                    'slug': '5.5',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'sdkj',
+                    'slug': 'sdkj',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'info',
+                    'slug': 'value',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'something',
+                    'slug': 'something',
+                  },
+                },
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'label': 'english description',
+                    'slug': 'translated_value',
+                  },
+                },
+              ],
+            },
+            'slug': 'environmental-ten',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
 # name: test_query_all_questions[file-question__configuration9-None-question__format_validators9]
   <class 'dict'> {
     'allQuestions': <class 'dict'> {
@@ -255,6 +375,68 @@
     },
   }
 ---
+# name: test_query_all_questions[text-question__configuration4-None-question__format_validators4]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'TextQuestion',
+            'formatValidators': <class 'dict'> {
+              'edges': <class 'list'> [
+                <class 'dict'> {
+                  'node': <class 'dict'> {
+                    'errorMsg': 'Please enter a valid Email address.',
+                    'name': 'E-mail',
+                    'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
+                    'slug': 'email',
+                  },
+                },
+              ],
+            },
+            'id': 'VGV4dFF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+            'infoText': '',
+            'label': 'Bonnie Moreno',
+            'maxLength': None,
+            'meta': <class 'dict'> {
+            },
+            'minLength': 10,
+            'placeholder': '',
+            'slug': 'environmental-ten',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
+# name: test_query_all_questions[textarea-question__configuration5-None-question__format_validators5]
+  <class 'dict'> {
+    'allQuestions': <class 'dict'> {
+      'edges': <class 'list'> [
+        <class 'dict'> {
+          'node': <class 'dict'> {
+            '__typename': 'TextareaQuestion',
+            'formatValidators': <class 'dict'> {
+              'edges': <class 'list'> [
+              ],
+            },
+            'id': 'VGV4dGFyZWFRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
+            'infoText': '',
+            'label': 'Bonnie Moreno',
+            'maxLength': 10,
+            'meta': <class 'dict'> {
+            },
+            'minLength': None,
+            'placeholder': '',
+            'slug': 'environmental-ten',
+          },
+        },
+      ],
+      'totalCount': 1,
+    },
+  }
+---
 # name: test_save_action_button_question[action_button]
   <class 'dict'> {
     'saveActionButtonQuestion': <class 'dict'> {
@@ -318,6 +500,336 @@
               'node': <class 'dict'> {
                 'label': 'Susan Wilson',
                 'slug': 'eight-traditional',
+              },
+            },
+          ],
+        },
+        'slug': 'environmental-ten',
+      },
+    },
+  }
+---
+# name: test_save_dynamic_choice_question[dynamic_choice-False]
+  <class 'dict'> {
+    'saveDynamicChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DynamicChoiceQuestion',
+        'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+        'label': 'Bonnie Moreno',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '1',
+                'slug': '1',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '5.5',
+                'slug': '5.5',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'sdkj',
+                'slug': 'sdkj',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'info',
+                'slug': 'value',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'something',
+                'slug': 'something',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'english description',
+                'slug': 'translated_value',
+              },
+            },
+          ],
+        },
+        'slug': 'environmental-ten',
+      },
+    },
+  }
+---
+# name: test_save_dynamic_choice_question[dynamic_choice-True]
+  <class 'dict'> {
+    'saveDynamicChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DynamicChoiceQuestion',
+        'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+        'label': 'Bonnie Moreno',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '1',
+                'slug': '1',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '5.5',
+                'slug': '5.5',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'sdkj',
+                'slug': 'sdkj',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'info',
+                'slug': 'value',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'something',
+                'slug': 'something',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'english description',
+                'slug': 'translated_value',
+              },
+            },
+          ],
+        },
+        'slug': 'environmental-ten',
+      },
+    },
+  }
+---
+# name: test_save_dynamic_choice_question[dynamic_multiple_choice-False]
+  <class 'dict'> {
+    'saveDynamicChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DynamicChoiceQuestion',
+        'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+        'label': 'Bonnie Moreno',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '1',
+                'slug': '1',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '5.5',
+                'slug': '5.5',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'sdkj',
+                'slug': 'sdkj',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'info',
+                'slug': 'value',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'something',
+                'slug': 'something',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'english description',
+                'slug': 'translated_value',
+              },
+            },
+          ],
+        },
+        'slug': 'environmental-ten',
+      },
+    },
+  }
+---
+# name: test_save_dynamic_choice_question[dynamic_multiple_choice-True]
+  <class 'dict'> {
+    'saveDynamicChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DynamicChoiceQuestion',
+        'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+        'label': 'Bonnie Moreno',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '1',
+                'slug': '1',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '5.5',
+                'slug': '5.5',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'sdkj',
+                'slug': 'sdkj',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'info',
+                'slug': 'value',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'something',
+                'slug': 'something',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'english description',
+                'slug': 'translated_value',
+              },
+            },
+          ],
+        },
+        'slug': 'environmental-ten',
+      },
+    },
+  }
+---
+# name: test_save_dynamic_multiple_choice_question[dynamic_multiple_choice-False]
+  <class 'dict'> {
+    'saveDynamicMultipleChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DynamicMultipleChoiceQuestion',
+        'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
+        'label': 'Bonnie Moreno',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '1',
+                'slug': '1',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '5.5',
+                'slug': '5.5',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'sdkj',
+                'slug': 'sdkj',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'info',
+                'slug': 'value',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'something',
+                'slug': 'something',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'english description',
+                'slug': 'translated_value',
+              },
+            },
+          ],
+        },
+        'slug': 'environmental-ten',
+      },
+    },
+  }
+---
+# name: test_save_dynamic_multiple_choice_question[dynamic_multiple_choice-True]
+  <class 'dict'> {
+    'saveDynamicMultipleChoiceQuestion': <class 'dict'> {
+      'clientMutationId': 'testid',
+      'question': <class 'dict'> {
+        '__typename': 'DynamicMultipleChoiceQuestion',
+        'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
+        'label': 'Bonnie Moreno',
+        'meta': <class 'dict'> {
+        },
+        'options': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '1',
+                'slug': '1',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': '5.5',
+                'slug': '5.5',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'sdkj',
+                'slug': 'sdkj',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'info',
+                'slug': 'value',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'something',
+                'slug': 'something',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'label': 'english description',
+                'slug': 'translated_value',
               },
             },
           ],
