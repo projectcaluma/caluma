@@ -32,7 +32,7 @@ def test_events(db, work_item_factory, schema_executor):
         }
     """
 
-    inp = {"input": {"id": work_item.pk}}
+    inp = {"input": {"id": str(work_item.pk)}}
     result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
@@ -63,7 +63,7 @@ def test_skip_event(db, work_item_factory, schema_executor):
         }
     """
 
-    inp = {"input": {"id": work_item.pk}}
+    inp = {"input": {"id": str(work_item.pk)}}
     result = schema_executor(query, variable_values=inp)
 
     assert not result.errors

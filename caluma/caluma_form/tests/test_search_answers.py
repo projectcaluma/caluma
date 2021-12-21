@@ -221,6 +221,6 @@ def test_search_invalid_question_type(schema_executor, db, question_factory):
         variable_values={"search": [{"questions": [question.slug], "value": "blah"}]},
     )
 
-    assert [str(err) for err in result.errors] == [
-        ("['Questions of type form cannot be used in searchAnswers']")
-    ]
+    expected_error_msg = "Questions of type form cannot be used in searchAnswers"
+
+    assert any(expected_error_msg in str(err) for err in result.errors)

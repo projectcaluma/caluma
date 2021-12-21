@@ -43,15 +43,15 @@ class AccessLogVisitor(visitor.Visitor):
 
         super().__init__()
 
-    def enter_OperationDefinition(self, node, *args):
+    def enter_operation_definition(self, node, *args):
         # either "query" or "mutation"
-        self.values["operation"] = node.operation
+        self.values["operation"] = node.operation.value
         try:
             self.values["operation_name"] = node.name.value
         except AttributeError:
             pass
 
-    def enter_SelectionSet(self, node, *args):
+    def enter_selection_set(self, node, *args):
         # grab name of the query, eg. "allCases", which is the first "selection"
         # thus skip any further selections
         if self.values.get("selection"):
