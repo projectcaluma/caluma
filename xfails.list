@@ -1,8 +1,4 @@
 [
-    "caluma.caluma_form.tests.test_history.test_document_as_of",
-    "caluma.caluma_form.tests.test_history.test_historical_file_answer",
-    "caluma.caluma_form.tests.test_history.test_historical_table_answer",
-    "caluma.caluma_form.tests.test_history.test_history_answer_type",
     "caluma.caluma_form.tests.test_question.test_query_all_questions[dynamic_choice-question__configuration10-MyDataSource-question__format_validators10]",
     "caluma.caluma_form.tests.test_question.test_query_all_questions[dynamic_multiple_choice-question__configuration11-MyDataSource-question__format_validators11]",
     "caluma.caluma_form.tests.test_question.test_query_all_questions[text-question__configuration4-None-question__format_validators4]",
