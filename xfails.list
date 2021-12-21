@@ -1,5 +1,4 @@
 [
-    "caluma.caluma_form.tests.test_search_answers.test_search_invalid_question_type",
     "caluma.caluma_logging.tests.test_logging_middleware.test_access_log[\\n            mutation SaveTextQuestion($input: SaveTextQuestionInput!) {\\n              saveTextQuestion(input: $input) {\\n                question {\\n                  id\\n                  }\\n                }\\n            }\\n            -variables3-mutation-SaveTextQuestion-saveTextQuestion-200]",
     "caluma.caluma_logging.tests.test_logging_middleware.test_access_log[\\n            query foo {\\n              allCases {\\n                edges {\\n                  node {\\n                    id\\n            }}}}\\n            --query-foo-allCases-200]",
     "caluma.caluma_logging.tests.test_logging_middleware.test_access_log[\\n            query {\\n              allCases {\\n                edges {\\n                  node {\\n                    id\\n            }}}}\\n            --query-None-allCases-200]",
