@@ -54,6 +54,25 @@ serializer_converter.get_graphene_type_from_serializer_field.register(
 )
 
 
+CaseStatus = graphene.Enum(
+    "CaseStatus",
+    [(key.upper(), key) for key, _ in models.Case.STATUS_CHOICE_TUPLE],
+)
+
+WorkItemStatus = graphene.Enum(
+    "WorkItemStatus",
+    [(key.upper(), key) for key, _ in models.WorkItem.STATUS_CHOICE_TUPLE],
+)
+
+
+serializer_converter.get_graphene_type_from_serializer_field.register(
+    serializers.CaseStatusField, lambda field: CaseStatus
+)
+serializer_converter.get_graphene_type_from_serializer_field.register(
+    serializers.WorkItemStatusField, lambda field: WorkItemStatus
+)
+
+
 class Task(Node, graphene.Interface):
     id = graphene.ID(required=True)
     created_at = graphene.DateTime(required=True)
@@ -96,7 +115,7 @@ class TaskQuerysetMixin(object):
 class SimpleTask(TaskQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Task
-        exclude = ("task_flows", "work_items", "form")
+        exclude = ("task_flows", "work_items", "form", "type")
         use_connection = False
         interfaces = (Task, relay.Node)
 
@@ -104,7 +123,7 @@ class SimpleTask(TaskQuerysetMixin, DjangoObjectType):
 class CompleteWorkflowFormTask(TaskQuerysetMixin, DjangoObjectType):
     class Meta:
         model = models.Task
-        exclude = ("task_flows", "work_items", "form")
+        exclude = ("task_flows", "work_items", "form", "type")
         use_connection = False
         interfaces = (Task, relay.Node)
 
@@ -114,7 +133,7 @@ class CompleteTaskFormTask(TaskQuerysetMixin, DjangoObjectType):
 
     class Meta:
         model = models.Task
-        exclude = ("task_flows", "work_items")
+        exclude = ("task_flows", "work_items", "type")
         use_connection = False
         interfaces = (Task, relay.Node)
 
@@ -168,6 +187,7 @@ class Workflow(DjangoObjectType):
 class WorkItem(DjangoObjectType):
     task = graphene.Field(Task, required=True)
     meta = generic.GenericScalar()
+    status = WorkItemStatus(required=True)
 
     class Meta:
         model = models.WorkItem
@@ -189,6 +209,7 @@ class Case(DjangoObjectType):
         ),
     )
     meta = generic.GenericScalar()
+    status = CaseStatus(required=True)
 
     def resolve_family_work_items(self, info, **args):
         return models.WorkItem.objects.filter(case__family=self.family)

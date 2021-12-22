@@ -278,51 +278,6 @@
     id: ID!
   }
   
-  """An enumeration."""
-  enum CalumaWorkflowCaseStatusChoices {
-    """Case is running and work items need to be completed."""
-    RUNNING
-  
-    """Case is done."""
-    COMPLETED
-  
-    """Case is canceled."""
-    CANCELED
-  
-    """Case is suspended."""
-    SUSPENDED
-  }
-  
-  """An enumeration."""
-  enum CalumaWorkflowTaskTypeChoices {
-    """Task which can simply be marked as completed."""
-    SIMPLE
-  
-    """Task to complete a defined workflow form."""
-    COMPLETE_WORKFLOW_FORM
-  
-    """Task to complete a defined task form."""
-    COMPLETE_TASK_FORM
-  }
-  
-  """An enumeration."""
-  enum CalumaWorkflowWorkItemStatusChoices {
-    """Work item is ready to be processed."""
-    READY
-  
-    """Work item is done."""
-    COMPLETED
-  
-    """Work item is canceled."""
-    CANCELED
-  
-    """Work item is skipped."""
-    SKIPPED
-  
-    """Work item is suspended."""
-    SUSPENDED
-  }
-  
   input CancelCaseInput {
     id: ID!
   
@@ -365,7 +320,7 @@
     closedByUser: String
     closedByGroup: String
     workflow: Workflow!
-    status: CalumaWorkflowCaseStatusChoices!
+    status: CaseStatus!
     meta: GenericScalar
     document: Document
     workItems(
@@ -569,6 +524,14 @@
   }
   
   """An enumeration."""
+  enum CaseStatus {
+    RUNNING
+    COMPLETED
+    CANCELED
+    SUSPENDED
+  }
+  
+  """An enumeration."""
   enum CaseStatusArgument {
     """Case is running and work items need to be completed."""
     RUNNING
@@ -676,7 +639,6 @@
     slug: String!
     name: String!
     description: String
-    type: CalumaWorkflowTaskTypeChoices!
     meta: GenericScalar!
     addressGroups: GroupJexl
     controlGroups: GroupJexl
@@ -714,7 +676,6 @@
     slug: String!
     name: String!
     description: String
-    type: CalumaWorkflowTaskTypeChoices!
     meta: GenericScalar!
     addressGroups: GroupJexl
     controlGroups: GroupJexl
@@ -3634,7 +3595,6 @@
     slug: String!
     name: String!
     description: String
-    type: CalumaWorkflowTaskTypeChoices!
     meta: GenericScalar!
     addressGroups: GroupJexl
     controlGroups: GroupJexl
@@ -4292,7 +4252,7 @@
     closedByGroup: String
     deadline: DateTime
     task: Task!
-    status: CalumaWorkflowWorkItemStatusChoices!
+    status: WorkItemStatus!
     meta: GenericScalar
   
     """
@@ -4437,6 +4397,15 @@
   
     """Meta foobar (descending)"""
     META_FOOBAR_DESC
+  }
+  
+  """An enumeration."""
+  enum WorkItemStatus {
+    READY
+    COMPLETED
+    CANCELED
+    SKIPPED
+    SUSPENDED
   }
   
   """An enumeration."""
