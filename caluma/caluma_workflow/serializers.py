@@ -36,6 +36,16 @@ class GroupJexlField(serializers.JexlField):
         super().__init__(GroupJexl(), **kwargs)
 
 
+class CaseStatusField(serializers.CalumaChoiceField):
+    def __init__(self, **kwargs):
+        super().__init__([s for s, _ in models.Case.STATUS_CHOICE_TUPLE], **kwargs)
+
+
+class WorkItemStatusField(serializers.CalumaChoiceField):
+    def __init__(self, **kwargs):
+        super().__init__([s for s, _ in models.WorkItem.STATUS_CHOICE_TUPLE], **kwargs)
+
+
 class SaveWorkflowSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Workflow
