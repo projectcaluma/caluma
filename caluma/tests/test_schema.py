@@ -94,9 +94,27 @@ def test_schema_introspect_direct(snapshot, mocker):
     )
 
     try:
+        _sort_schema_typemap()
         snapshot.assert_match(str(schema))
     finally:
         graphql.language.block_string.print_block_string.__code__ = old_code
+
+
+def _sort_schema_typemap():
+    """Make the schema's typemap sorted.
+
+    This is required for our schema snapshot test,
+    which we want to be as comparable as possible, so
+    changes can be detected.
+    In graphene before 3.0, this was implicitly the case,
+    but 3.0 changed this, so we're monkeypatching
+    a sorted version here.
+
+    This has no functional impact except on the schema
+    dump in the snapshots.
+    """
+    type_map = schema.graphql_schema.type_map
+    schema.graphql_schema.type_map = {k: type_map[k] for k in sorted(type_map.keys())}
 
 
 @pytest.mark.xfail(strict=True)
@@ -107,4 +125,5 @@ def test_schema_introspect_direct_unpatched(snapshot):
     # Once this start XFAILing, remove the above patchy version and
     # remove the xfail flag here
 
+    _sort_schema_typemap()
     snapshot.assert_match(str(schema))
