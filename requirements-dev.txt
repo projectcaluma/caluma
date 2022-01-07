@@ -3,7 +3,7 @@
 
 black==21.10b0
 factory-boy==3.2.1
-faker==9.8.3
+faker==11.3.0
 flake8==4.0.1
 flake8-bugbear==21.9.2
 flake8-debugger==4.0.0
