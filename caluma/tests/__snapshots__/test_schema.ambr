@@ -162,6 +162,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
@@ -300,6 +301,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     defaultAnswer: StringAnswer
@@ -488,6 +490,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     defaultAnswer: DateAnswer
@@ -619,6 +622,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
@@ -640,6 +644,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
@@ -682,6 +687,7 @@
   interface DynamicQuestion {
     options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
     dataSource: String!
+    hintText: String
   }
   
   type File implements Node {
@@ -726,6 +732,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     forms(before: String, after: String, first: Int, last: Int, metaValue: [JSONValueFilterType], orderBy: [FormOrdering], slug: String, name: String, description: String, isPublished: Boolean, isArchived: Boolean, questions: [String], createdByUser: String, createdByGroup: String, modifiedByUser: String, modifiedByGroup: String, createdBefore: DateTime, createdAfter: DateTime, metaHasKey: String, search: String, slugs: [String]): FormConnection
@@ -759,6 +766,7 @@
     isArchived: Boolean!
     placeholder: String
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     defaultAnswer: FloatAnswer
@@ -1151,6 +1159,7 @@
     isArchived: Boolean!
     placeholder: String
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     defaultAnswer: IntegerAnswer
@@ -1207,6 +1216,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     defaultAnswer: ListAnswer
@@ -1547,6 +1557,7 @@
     meta: JSONString
     isArchived: Boolean
     calcExpression: QuestionJexl
+    hintText: String
     clientMutationId: String
   }
   
@@ -1579,6 +1590,7 @@
     meta: JSONString
     isArchived: Boolean
     options: [ID]!
+    hintText: String
     clientMutationId: String
   }
   
@@ -1632,6 +1644,7 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
+    hintText: String
     clientMutationId: String
   }
   
@@ -1825,6 +1838,7 @@
     meta: JSONString
     isArchived: Boolean
     dataSource: String!
+    hintText: String
     clientMutationId: String
   }
   
@@ -1842,6 +1856,7 @@
     meta: JSONString
     isArchived: Boolean
     dataSource: String!
+    hintText: String
     clientMutationId: String
   }
   
@@ -1858,6 +1873,7 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
+    hintText: String
     clientMutationId: String
   }
   
@@ -1877,6 +1893,7 @@
     minValue: Float
     maxValue: Float
     placeholder: String
+    hintText: String
     clientMutationId: String
   }
   
@@ -1928,6 +1945,7 @@
     minValue: Int
     maxValue: Int
     placeholder: String
+    hintText: String
     clientMutationId: String
   }
   
@@ -1945,6 +1963,7 @@
     meta: JSONString
     isArchived: Boolean
     options: [ID]!
+    hintText: String
     clientMutationId: String
   }
   
@@ -2009,6 +2028,7 @@
     meta: JSONString
     isArchived: Boolean
     rowForm: ID!
+    hintText: String
     clientMutationId: String
   }
   
@@ -2028,6 +2048,7 @@
     minLength: Int
     maxLength: Int
     placeholder: String
+    hintText: String
     formatValidators: [String]
     clientMutationId: String
   }
@@ -2048,6 +2069,7 @@
     minLength: Int
     maxLength: Int
     placeholder: String
+    hintText: String
     formatValidators: [String]
     clientMutationId: String
   }
@@ -2216,6 +2238,7 @@
     IS_ARCHIVED
     PLACEHOLDER
     INFO_TEXT
+    HINT_TEXT
     CALC_EXPRESSION
   }
   
@@ -2365,6 +2388,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     defaultAnswer: TableAnswer
@@ -2476,6 +2500,7 @@
     isArchived: Boolean!
     placeholder: String
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
@@ -2500,6 +2525,7 @@
     isArchived: Boolean!
     placeholder: String
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection

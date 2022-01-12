@@ -56,6 +56,7 @@ This model contains the questions.
 - `is_archived`
 - `placeholder`
 - `info_text`
+- `hint_text`
 - `static_content`
 - `configuration`
 - `meta`
