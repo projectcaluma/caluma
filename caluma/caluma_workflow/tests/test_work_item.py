@@ -1439,3 +1439,124 @@ def test_work_item_group_jexl(
     new_work_item = models.WorkItem.objects.filter(task=task).first()
 
     assert new_work_item.controlling_groups == expected_groups
+
+
+@pytest.fixture
+def redo_test_setup(
+    task_factory,
+    workflow,
+    flow_factory,
+    task_flow_factory,
+    admin_user,
+):
+    tasks = task_factory.create_batch(5, type=models.Task.TYPE_SIMPLE)
+
+    workflow.start_tasks.add(tasks[0])
+
+    flow = flow_factory(next=f"['{tasks[1].slug}', '{tasks[2].slug}']|tasks")
+    task_flow_factory(task=tasks[0], workflow=workflow, flow=flow)
+
+    flow = flow_factory(next=f"['{tasks[3].slug}', '{tasks[4].slug}']|tasks")
+    task_flow_factory(task=tasks[2], workflow=workflow, flow=flow)
+    task_flow = task_flow_factory(
+        task=tasks[3], workflow=workflow, flow=None, redoable=f"'{tasks[0].slug}'|task"
+    )
+
+    case = api.start_case(workflow, user=admin_user)
+
+    for _ in range(2):
+        for work_item in case.work_items.filter(status=models.WorkItem.STATUS_READY):
+            api.complete_work_item(work_item, user=admin_user)
+
+    work_item_to_be_redone = case.work_items.get(task=tasks[0])
+
+    return task_flow, case, tasks, work_item_to_be_redone
+
+
+@pytest.mark.parametrize("use_graphql", [False, True])
+def test_redo_work_item(
+    db,
+    redo_test_setup,
+    schema_executor,
+    admin_user,
+    use_graphql,
+):
+    task_flow, case, tasks, work_item_to_be_redone = redo_test_setup
+
+    if use_graphql:
+        query = """
+            mutation RedoWorkItem($input: RedoWorkItemInput!) {
+              redoWorkItem(input: $input) {
+                workItem {
+                  status
+                }
+                clientMutationId
+              }
+            }
+        """
+
+        inp = {"input": {"id": work_item_to_be_redone.pk}}
+        result = schema_executor(query, variable_values=inp)
+
+        assert not result.errors
+        assert result.data["redoWorkItem"]["workItem"]["status"] == to_const(
+            models.WorkItem.STATUS_READY
+        )
+    else:
+        api.redo_work_item(work_item=work_item_to_be_redone, user=admin_user)
+
+    assert case.work_items.get(task=tasks[0]).status == models.WorkItem.STATUS_READY
+    assert case.work_items.get(task=tasks[1]).status == models.WorkItem.STATUS_REDO
+    assert case.work_items.get(task=tasks[2]).status == models.WorkItem.STATUS_REDO
+    assert case.work_items.get(task=tasks[3]).status == models.WorkItem.STATUS_REDO
+    assert case.work_items.get(task=tasks[4]).status == models.WorkItem.STATUS_REDO
+
+
+@pytest.mark.parametrize("use_graphql", [False, True])
+def test_redo_work_item_not_redoable(
+    db,
+    redo_test_setup,
+    schema_executor,
+    admin_user,
+    use_graphql,
+):
+    task_flow, case, tasks, work_item_to_be_redone = redo_test_setup
+    task_flow.redoable = None
+    task_flow.save()
+
+    if use_graphql:
+        query = """
+            mutation RedoWorkItem($input: RedoWorkItemInput!) {
+              redoWorkItem(input: $input) {
+                workItem {
+                  status
+                }
+                clientMutationId
+              }
+            }
+        """
+
+        inp = {"input": {"id": work_item_to_be_redone.pk}}
+        result = schema_executor(query, variable_values=inp)
+
+        assert result.errors
+    else:
+        with pytest.raises(ValidationError) as e:
+            api.redo_work_item(work_item=work_item_to_be_redone, user=admin_user)
+
+        assert e.value.message == "Workflow doesn't allow to redo this work item."
+
+
+def test_redo_work_item_not_ready(
+    db,
+    redo_test_setup,
+    admin_user,
+):
+    task_flow, case, tasks, work_item_to_be_redone = redo_test_setup
+    work_item_to_be_redone.status = models.WorkItem.STATUS_READY
+    work_item_to_be_redone.save()
+
+    with pytest.raises(ValidationError) as e:
+        api.redo_work_item(work_item=work_item_to_be_redone, user=admin_user)
+
+    assert e.value.message == "Ready work items can't be redone."

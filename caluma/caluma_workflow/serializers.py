@@ -58,6 +58,7 @@ class AddWorkflowFlowSerializer(serializers.ModelSerializer):
         queryset=models.Task.objects, many=True
     )
     next = FlowJexlField(required=True)
+    redoable = FlowJexlField(required=False, write_only=True)
 
     def validate_next(self, value):
         jexl = FlowJexl()
@@ -69,10 +70,14 @@ class AddWorkflowFlowSerializer(serializers.ModelSerializer):
             )
         return value
 
+    def validate_redoable(self, value):
+        return self.validate_next(value)
+
     @transaction.atomic
     def update(self, instance, validated_data):
         user = self.context["request"].user
         tasks = validated_data["tasks"]
+        redoable = validated_data.get("redoable")
         models.Flow.objects.filter(
             task_flows__workflow=instance, task_flows__task__in=tasks
         ).delete()
@@ -83,12 +88,14 @@ class AddWorkflowFlowSerializer(serializers.ModelSerializer):
         )
 
         for task in tasks:
-            models.TaskFlow.objects.create(task=task, workflow=instance, flow=flow)
+            models.TaskFlow.objects.create(
+                task=task, workflow=instance, flow=flow, redoable=redoable
+            )
 
         return instance
 
     class Meta:
-        fields = ["workflow", "tasks", "next"]
+        fields = ["workflow", "tasks", "next", "redoable"]
         model = models.Workflow
 
 
@@ -582,6 +589,38 @@ class ResumeWorkItemSerializer(ContextModelSerializer):
 
         work_item = super().update(work_item, validated_data)
         work_item = domain_logic.ResumeWorkItemLogic.post_resume(
+            work_item, user, self.context_data
+        )
+
+        return work_item
+
+    class Meta:
+        model = models.WorkItem
+        fields = ["id", "context"]
+
+
+class WorkItemRedoTaskSerializer(ContextModelSerializer):
+    id = serializers.GlobalIDField()
+
+    def validate(self, data):
+        try:
+            domain_logic.RedoWorkItemLogic.validate_for_redo(self.instance)
+        except ValidationError as e:
+            raise exceptions.ValidationError(str(e))
+
+        return super().validate(data)
+
+    @transaction.atomic
+    def update(self, work_item, validated_data):
+        user = self.context["request"].user
+
+        validated_data = domain_logic.RedoWorkItemLogic.pre_redo(
+            work_item, validated_data, user, self.context_data
+        )
+
+        domain_logic.RedoWorkItemLogic.set_succeeding_work_item_status_redo(work_item)
+        work_item = super().update(work_item, validated_data)
+        work_item = domain_logic.RedoWorkItemLogic.post_redo(
             work_item, user, self.context_data
         )
 

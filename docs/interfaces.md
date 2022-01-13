@@ -328,3 +328,4 @@ in your application that installs Caluma as a django app:
 - `caluma_workflow.api.cancel_work_item` To cancel a work item
 - `caluma_workflow.api.suspend_work_item` To suspend a work item
 - `caluma_workflow.api.resume_work_item` To resume a work item
+- `caluma_workflow.api.redo_work_item` To redo a work item

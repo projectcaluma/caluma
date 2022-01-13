@@ -63,6 +63,7 @@ class TaskFlowFactory(DjangoModelFactory):
     workflow = SubFactory(WorkflowFactory)
     task = SubFactory(TaskFactory)
     flow = SubFactory(FlowFactory)
+    redoable = None
 
     class Meta:
         model = models.TaskFlow

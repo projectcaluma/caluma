@@ -100,7 +100,14 @@ class TaskFlow(UUIDModel):
         Workflow, on_delete=models.CASCADE, related_name="task_flows"
     )
     task = models.ForeignKey(Task, related_name="task_flows", on_delete=models.CASCADE)
-    flow = models.ForeignKey(Flow, related_name="task_flows", on_delete=models.CASCADE)
+    flow = models.ForeignKey(
+        Flow, related_name="task_flows", on_delete=models.CASCADE, null=True, blank=True
+    )
+    redoable = models.TextField(
+        blank=True,
+        null=True,
+        help_text="jexl returning what tasks can be redone from this taskflow.",
+    )
 
     class Meta:
         unique_together = ("workflow", "task")
@@ -169,6 +176,7 @@ class WorkItem(UUIDModel):
     STATUS_CANCELED = "canceled"
     STATUS_SKIPPED = "skipped"
     STATUS_SUSPENDED = "suspended"
+    STATUS_REDO = "redo"
 
     STATUS_CHOICE_TUPLE = (
         (STATUS_READY, "Work item is ready to be processed."),
@@ -176,6 +184,7 @@ class WorkItem(UUIDModel):
         (STATUS_CANCELED, "Work item is canceled."),
         (STATUS_SKIPPED, "Work item is skipped."),
         (STATUS_SUSPENDED, "Work item is suspended."),
+        (STATUS_REDO, "Work item has been marked for redo."),
     )
 
     name = LocalizedField(
@@ -252,6 +261,33 @@ class WorkItem(UUIDModel):
         blank=True,
         null=True,
     )
+
+    def get_redoable(self):
+        """
+        Get redoable tasks for this WorkItem.
+
+        For this we evaluate the `redoable`-field of the WorkItem-tasks TaskFlow.
+
+        :return: QuerySet
+        """
+        task_flow = self.task.task_flows.filter(workflow=self.case.workflow).first()
+
+        if not task_flow:
+            return Task.objects.none()
+
+        jexl = self.task.task_flows.get(workflow=self.case.workflow).redoable
+
+        if not jexl:
+            return Task.objects.none()
+
+        from .jexl import FlowJexl
+
+        slugs = FlowJexl(case=self.case, prev_work_item=self).evaluate(jexl)
+
+        if not isinstance(slugs, list):
+            slugs = [slugs]
+
+        return Task.objects.filter(pk__in=slugs)
 
     class Meta:
         indexes = [

@@ -310,6 +310,12 @@ class ResumeWorkItem(Mutation):
         model_operations = ["update"]
 
 
+class RedoWorkItem(Mutation):
+    class Meta:
+        serializer_class = serializers.WorkItemRedoTaskSerializer
+        model_operations = ["update"]
+
+
 class SaveWorkItem(Mutation):
     class Meta:
         serializer_class = serializers.SaveWorkItemSerializer
@@ -345,6 +351,7 @@ class Mutation(object):
     cancel_work_item = CancelWorkItem().Field()
     suspend_work_item = SuspendWorkItem().Field()
     resume_work_item = ResumeWorkItem().Field()
+    redo_work_item = RedoWorkItem().Field()
     save_work_item = SaveWorkItem().Field()
     create_work_item = CreateWorkItem().Field()
 
