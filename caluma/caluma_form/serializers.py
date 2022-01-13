@@ -215,6 +215,7 @@ class SaveTextQuestionSerializer(SaveQuestionSerializer):
             "min_length",
             "max_length",
             "placeholder",
+            "hint_text",
             "format_validators",
         ]
 
@@ -233,6 +234,7 @@ class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
             "min_length",
             "max_length",
             "placeholder",
+            "hint_text",
             "format_validators",
         ]
 
@@ -243,7 +245,7 @@ class SaveDateQuestionSerializer(SaveQuestionSerializer):
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields
+        fields = SaveQuestionSerializer.Meta.fields + ["hint_text"]
 
 
 class SaveQuestionOptionsMixin(object):
@@ -292,7 +294,7 @@ class SaveMultipleChoiceQuestionSerializer(
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["options"]
+        fields = SaveQuestionSerializer.Meta.fields + ["options", "hint_text"]
 
 
 class SaveChoiceQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSerializer):
@@ -305,7 +307,7 @@ class SaveChoiceQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSeriali
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["options"]
+        fields = SaveQuestionSerializer.Meta.fields + ["options", "hint_text"]
 
 
 class SaveDynamicChoiceQuestionSerializer(SaveQuestionSerializer):
@@ -316,7 +318,7 @@ class SaveDynamicChoiceQuestionSerializer(SaveQuestionSerializer):
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["data_source"]
+        fields = SaveQuestionSerializer.Meta.fields + ["data_source", "hint_text"]
 
 
 class SaveDynamicMultipleChoiceQuestionSerializer(SaveQuestionSerializer):
@@ -327,7 +329,7 @@ class SaveDynamicMultipleChoiceQuestionSerializer(SaveQuestionSerializer):
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["data_source"]
+        fields = SaveQuestionSerializer.Meta.fields + ["data_source", "hint_text"]
 
 
 class SaveFloatQuestionSerializer(SaveQuestionSerializer):
@@ -357,6 +359,7 @@ class SaveFloatQuestionSerializer(SaveQuestionSerializer):
             "min_value",
             "max_value",
             "placeholder",
+            "hint_text",
         ]
 
 
@@ -387,6 +390,7 @@ class SaveIntegerQuestionSerializer(SaveQuestionSerializer):
             "min_value",
             "max_value",
             "placeholder",
+            "hint_text",
         ]
 
 
@@ -402,7 +406,7 @@ class SaveTableQuestionSerializer(SaveQuestionSerializer):
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["row_form"]
+        fields = SaveQuestionSerializer.Meta.fields + ["row_form", "hint_text"]
 
 
 class SaveFormQuestionSerializer(SaveQuestionSerializer):
@@ -424,7 +428,7 @@ class SaveFileQuestionSerializer(SaveQuestionSerializer):
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields
+        fields = SaveQuestionSerializer.Meta.fields + ["hint_text"]
 
 
 class SaveStaticQuestionSerializer(SaveQuestionSerializer):
@@ -456,6 +460,7 @@ class SaveCalculatedFloatQuestionSerializer(SaveQuestionSerializer):
     class Meta(SaveQuestionSerializer.Meta):
         fields = SaveQuestionSerializer.Meta.fields + [
             "calc_expression",
+            "hint_text",
         ]
 
 
