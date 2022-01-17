@@ -78,6 +78,23 @@ def create_work_items(tasks, case, user, prev_work_item=None, context: dict = No
             prev_work_item if prev_work_item else None,
             context,
         )
+
+        method = models.WorkItem.objects.get_or_create
+        kwargs = {
+            "addressed_groups": None,
+            "controlling_groups": controlling_groups,
+            "task_id": task.pk,
+            "case": case,
+            "defaults": {
+                "deadline": None,
+                "document": None,
+                "status": models.WorkItem.STATUS_READY,
+                "created_by_user": user.username,
+                "created_by_group": user.group,
+                "previous_work_item": prev_work_item if prev_work_item else None,
+            },
+        }
+
         if task.is_multiple_instance:
             # for multiple instance tasks, create one work item per adressed group
             work_item_groups = [[group] for group in addressed_groups]
@@ -85,24 +102,28 @@ def create_work_items(tasks, case, user, prev_work_item=None, context: dict = No
             # make sure that at least one work item is always created, even if addressed_groups is empty
             if not work_item_groups:
                 work_item_groups = [[]]
+
+            method = models.WorkItem.objects.create
+            kwargs.update(kwargs.pop("defaults"))
         else:
             # for regular tasks, multiple groups can be adressed to one work item
             work_item_groups = [addressed_groups]
 
         for groups in work_item_groups:
-            work_items.append(
-                models.WorkItem.objects.create(
-                    addressed_groups=groups,
-                    controlling_groups=controlling_groups,
-                    task_id=task.pk,
-                    deadline=task.calculate_deadline(),
-                    document=Document.objects.create_document_for_task(task, user),
-                    case=case,
-                    status=models.WorkItem.STATUS_READY,
-                    created_by_user=user.username,
-                    created_by_group=user.group,
-                    previous_work_item=prev_work_item if prev_work_item else None,
-                )
-            )
+            kwargs["addressed_groups"] = groups
 
+            deadline = task.calculate_deadline()
+            document = Document.objects.create_document_for_task(task, user)
+
+            if task.is_multiple_instance:
+                kwargs["deadline"] = deadline
+                kwargs["document"] = document
+                work_items.append(method(**kwargs))
+            else:
+                kwargs["defaults"]["deadline"] = deadline
+                kwargs["defaults"]["document"] = document
+
+                work_item, created = method(**kwargs)
+                if created:
+                    work_items.append(work_item)
     return work_items
