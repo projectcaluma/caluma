@@ -7,7 +7,7 @@ from caluma.caluma_core.events import send_event
 module = sys.modules[__name__]
 
 MODEL_ACTIONS = {
-    "work_item": ["create", "complete", "cancel", "skip", "suspend", "resume"],
+    "work_item": ["create", "complete", "cancel", "skip", "suspend", "resume", "redo"],
     "case": ["create", "complete", "cancel", "suspend", "resume"],
 }
 

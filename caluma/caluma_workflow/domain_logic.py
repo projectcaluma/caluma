@@ -528,3 +528,69 @@ class ResumeWorkItemLogic:
         )
 
         return work_item
+
+
+class RedoWorkItemLogic:
+    @classmethod
+    def validate_for_redo(cls, work_item):
+        """
+        Validate if we can redo (jump back to) the given work item.
+
+        Every taskflow has a potential JEXL list of other tasks that can be redone from
+        that task's workitem (redoable).
+        We allow redoing a work item if at least one ready work item allows "our" task
+        to be re-done.
+        """
+        if work_item.status == models.WorkItem.STATUS_READY:
+            raise ValidationError("Ready work items can't be redone.")
+
+        for wi in cls._find_ready_in_work_item_tree(
+            work_item, allowed_states=[models.WorkItem.STATUS_READY]
+        ):
+            if work_item.task in wi.get_redoable():
+                return
+
+        raise ValidationError("Workflow doesn't allow to redo this work item.")
+
+    @classmethod
+    def set_succeeding_work_item_status_redo(cls, work_item):
+        for wi in cls._find_ready_in_work_item_tree(work_item):
+            wi.status = models.WorkItem.STATUS_REDO
+            wi.save()
+
+    @classmethod
+    def _find_ready_in_work_item_tree(cls, work_item, allowed_states=None):
+        allowed_states = allowed_states if allowed_states else []
+        succeeding = work_item.succeeding_work_items.all()
+        if not succeeding:
+            return
+        for wi in succeeding:
+            if allowed_states == [] or wi.status in allowed_states:
+                yield wi
+            yield from cls._find_ready_in_work_item_tree(wi, allowed_states)
+
+    @staticmethod
+    def pre_redo(work_item, validated_data, user, context=None):
+        send_event_with_deprecations(
+            "pre_redo_work_item",
+            sender="pre_redo_work_item",
+            work_item=work_item,
+            user=user,
+            context=context,
+        )
+
+        validated_data["status"] = models.WorkItem.STATUS_READY
+
+        return validated_data
+
+    @staticmethod
+    def post_redo(work_item, user, context=None):
+        send_event_with_deprecations(
+            "post_redo_work_item",
+            sender="post_redo_work_item",
+            work_item=work_item,
+            user=user,
+            context=context,
+        )
+
+        return work_item

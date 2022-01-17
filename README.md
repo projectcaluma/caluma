@@ -64,6 +64,7 @@ For further information on our license choice, you can read up on the [correspon
   how to start with your first contribution.
 - [Caluma Guide](docs/guide.md) - How to get up and running with Caluma
 - [Workflow Concepts](docs/workflow-concepts.md) - How to use caluma workflows
+- [Workflow Advice](docs/workflow-advice.md) - Advice about certain aspects of dealing with workflows
 - [Historical Records](docs/historical-records.md) - Undo and audit trail
   functionality
 - [GraphQL](docs/graphql.md) - Further information on how to use the GraphQL

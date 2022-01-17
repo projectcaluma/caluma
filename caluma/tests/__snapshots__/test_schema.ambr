@@ -42,6 +42,7 @@
     workflow: ID!
     tasks: [ID]!
     next: FlowJexl!
+    redoable: FlowJexl
     clientMutationId: String
   }
   
@@ -1243,6 +1244,7 @@
     cancelWorkItem(input: CancelWorkItemInput!): CancelWorkItemPayload
     suspendWorkItem(input: SuspendWorkItemInput!): SuspendWorkItemPayload
     resumeWorkItem(input: ResumeWorkItemInput!): ResumeWorkItemPayload
+    redoWorkItem(input: RedoWorkItemInput!): RedoWorkItemPayload
     saveWorkItem(input: SaveWorkItemInput!): SaveWorkItemPayload
     createWorkItem(input: CreateWorkItemInput!): CreateWorkItemPayload
     saveForm(input: SaveFormInput!): SaveFormPayload
@@ -1444,6 +1446,17 @@
     META_TEST_KEY_DESC
     META_FOOBAR_ASC
     META_FOOBAR_DESC
+  }
+  
+  input RedoWorkItemInput {
+    id: ID!
+    context: JSONString
+    clientMutationId: String
+  }
+  
+  type RedoWorkItemPayload {
+    workItem: WorkItem
+    clientMutationId: String
   }
   
   input RemoveAnswerInput {
@@ -2323,6 +2336,7 @@
     CANCELED
     SKIPPED
     SUSPENDED
+    REDO
   }
   
   type StringAnswer implements Answer, Node {
@@ -2663,6 +2677,7 @@
     CANCELED
     SKIPPED
     SUSPENDED
+    REDO
   }
   
   enum WorkItemStatusArgument {
@@ -2671,6 +2686,7 @@
     CANCELED
     SKIPPED
     SUSPENDED
+    REDO
   }
   
   type Workflow implements Node {

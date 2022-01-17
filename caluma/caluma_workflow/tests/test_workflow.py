@@ -101,13 +101,14 @@ def test_save_workflow(
 
 
 @pytest.mark.parametrize(
-    "task__slug,next,success",
+    "task__slug,next,redoable,success",
     [
-        ("task-slug", '"task-slug"|task', True),
-        ("task-slug", '"not-a-task-slug"|task', False),
-        ("task-slug", '["not-a-task-slug"]|tasks', False),
-        ("task-slug", '"not-a-task-slug"|invalid', False),
-        ("task-slug", '""', False),
+        ("task-slug", '"task-slug"|task', None, True),
+        ("task-slug", '"task-slug"|task', '"task-slug"|task', True),
+        ("task-slug", '"not-a-task-slug"|task', None, False),
+        ("task-slug", '["not-a-task-slug"]|tasks', None, False),
+        ("task-slug", '"not-a-task-slug"|invalid', None, False),
+        ("task-slug", '""', None, False),
     ],
 )
 def test_add_workflow_flow(
@@ -118,6 +119,7 @@ def test_add_workflow_flow(
     sorted_snapshot,
     success,
     next,
+    redoable,
     admin_schema_executor,
 ):
     workflow_start_tasks_factory.create_batch(2, workflow=workflow)
@@ -147,19 +149,24 @@ def test_add_workflow_flow(
         }
     """
 
+    variable_values = {
+        "input": {
+            "workflow": to_global_id(type(workflow).__name__, workflow.pk),
+            "tasks": [to_global_id(type(task).__name__, task.pk)],
+            "next": next,
+        }
+    }
+    if redoable:
+        variable_values["input"]["redoable"] = redoable
+
     result = admin_schema_executor(
         query,
-        variable_values={
-            "input": {
-                "workflow": to_global_id(type(workflow).__name__, workflow.pk),
-                "tasks": [to_global_id(type(task).__name__, task.pk)],
-                "next": next,
-            }
-        },
+        variable_values=variable_values,
     )
     assert not bool(result.errors) == success
     if success:
         assert result.data == sorted_snapshot("tasks", lambda el: el["slug"])
+        assert models.TaskFlow.objects.first().redoable == redoable
 
 
 def test_remove_flow(db, workflow, task_flow, flow, schema_executor):
