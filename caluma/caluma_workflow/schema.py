@@ -168,6 +168,9 @@ class Workflow(DjangoObjectType):
 class WorkItem(DjangoObjectType):
     task = graphene.Field(Task, required=True)
     meta = generic.GenericScalar()
+    assigned_users = graphene.List(graphene.String, required=True)
+    controlling_groups = graphene.List(graphene.String, required=True)
+    addressed_groups = graphene.List(graphene.String, required=True)
 
     class Meta:
         model = models.WorkItem

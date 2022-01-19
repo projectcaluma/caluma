@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 import uuid
 
-import django.contrib.postgres.fields.jsonb
 import django.db.models.deletion
 import localized_fields.fields.field
 from django.db import migrations, models
@@ -54,7 +53,7 @@ class Migration(migrations.Migration):
                         max_length=50,
                     ),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default={})),
+                ("meta", models.JSONField(default={})),
                 (
                     "document",
                     models.ForeignKey(
@@ -124,7 +123,7 @@ class Migration(migrations.Migration):
                         max_length=50,
                     ),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default={})),
+                ("meta", models.JSONField(default={})),
                 ("is_archived", models.BooleanField(default=False)),
             ],
             options={"abstract": False},
@@ -190,7 +189,7 @@ class Migration(migrations.Migration):
                         blank=True, null=True, required=[]
                     ),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default={})),
+                ("meta", models.JSONField(default={})),
                 ("is_published", models.BooleanField(default=False)),
                 ("is_archived", models.BooleanField(default=False)),
                 (
@@ -248,7 +247,7 @@ class Migration(migrations.Migration):
                         max_length=50,
                     ),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default={})),
+                ("meta", models.JSONField(default={})),
                 (
                     "case",
                     models.ForeignKey(

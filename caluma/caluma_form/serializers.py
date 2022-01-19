@@ -521,6 +521,7 @@ class DocumentSerializer(serializers.ModelSerializer):
             "form",
             "meta",
         ]
+        extra_kwargs = {"id": {"read_only": False, "required": False}}
 
 
 class SaveAnswerSerializer(serializers.ModelSerializer):

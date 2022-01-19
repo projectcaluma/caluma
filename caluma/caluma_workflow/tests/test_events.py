@@ -71,6 +71,13 @@ def test_skip_event(db, work_item_factory, schema_executor):
     assert work_item.meta == {"been-there": "done that"}
 
 
+@pytest.fixture
+def unregister_receivers():
+    post_skip_work_item.receivers = []
+    yield
+    post_skip_work_item.receivers = []
+
+
 @pytest.mark.parametrize(
     "event,raise_exception",
     [
@@ -80,7 +87,7 @@ def test_skip_event(db, work_item_factory, schema_executor):
     ],
 )
 def test_event_raise_exceptions(
-    db, admin_user, work_item_factory, event, raise_exception
+    db, admin_user, work_item_factory, event, raise_exception, unregister_receivers
 ):
     work_item = work_item_factory(status=WorkItem.STATUS_READY, child_case=None)
 
