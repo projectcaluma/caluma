@@ -275,7 +275,7 @@ class WorkItem(UUIDModel):
         if not task_flow:
             return Task.objects.none()
 
-        jexl = self.task.task_flows.get(workflow=self.case.workflow).redoable
+        jexl = task_flow.redoable
 
         if not jexl:
             return Task.objects.none()
