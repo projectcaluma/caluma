@@ -227,6 +227,7 @@ class SaveCaseSerializer(CaseSerializer):
 
     class Meta(CaseSerializer.Meta):
         fields = ["id", "workflow", "meta", "parent_work_item", "form", "context"]
+        extra_kwargs = {"id": {"read_only": False, "required": False}}
 
 
 class CancelCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):

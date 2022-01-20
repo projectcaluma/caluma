@@ -11,7 +11,7 @@ updates:
   ignore:
   - dependency-name: django
     versions:
-    - ">=3"
+    - ">=3.3"
   commit-message:
     prefix: chore
     include: scope

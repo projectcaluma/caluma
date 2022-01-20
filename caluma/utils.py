@@ -72,7 +72,8 @@ def fix_foreign_key_types(apps, connection):
                 # check if the DB agrees
                 fk_dbtype = col_type_from_db(field, connection)
                 target_dbtype = col_type_from_db(field.target_field, connection)
-                if fk_dbtype != target_dbtype:
+                if fk_dbtype != target_dbtype:  # pragma: no cover
+                    # seems to be fixed upstream
                     cursor = connection.cursor()
                     type_, length = target_dbtype
                     new_type = f"{type_}({length})"

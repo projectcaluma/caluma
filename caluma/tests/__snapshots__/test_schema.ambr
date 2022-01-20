@@ -966,6 +966,24 @@
     cursor: String!
   }
   
+  enum HistoricalAnswerHistoryQuestionType {
+    MULTIPLE_CHOICE
+    INTEGER
+    FLOAT
+    DATE
+    CHOICE
+    TEXTAREA
+    TEXT
+    TABLE
+    FORM
+    FILE
+    DYNAMIC_CHOICE
+    DYNAMIC_MULTIPLE_CHOICE
+    STATIC
+    CALCULATED_FLOAT
+    ACTION_BUTTON
+  }
+  
   type HistoricalDateAnswer implements HistoricalAnswer, Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -973,20 +991,21 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: HistoricalAnswerHistoryQuestionType!
     id: ID!
     value: Date
     meta: GenericScalar!
-    date: Date
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
     historyDate: DateTime!
     historyChangeReason: String
     historyType: String
+    date: Date
   }
   
   type HistoricalDocument implements Node {
+    historyUserId: String
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -995,7 +1014,6 @@
     modifiedByGroup: String
     id: ID!
     meta: GenericScalar
-    historyUserId: String
     form: Form
     source: Document
     historyDate: DateTime!
@@ -1022,10 +1040,10 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: HistoricalAnswerHistoryQuestionType!
     id: ID!
     value(asOf: DateTime!): HistoricalFile
     meta: GenericScalar!
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
@@ -1042,10 +1060,10 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: HistoricalAnswerHistoryQuestionType!
     id: ID!
     value: Float
     meta: GenericScalar!
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
@@ -1061,10 +1079,10 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: HistoricalAnswerHistoryQuestionType!
     id: ID!
     value: Int
     meta: GenericScalar!
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
@@ -1080,10 +1098,10 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: HistoricalAnswerHistoryQuestionType!
     id: ID!
     value: [String]
     meta: GenericScalar!
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
@@ -1100,10 +1118,10 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: HistoricalAnswerHistoryQuestionType!
     id: ID!
     value: String
     meta: GenericScalar!
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
@@ -1120,10 +1138,10 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: HistoricalAnswerHistoryQuestionType!
     id: ID!
     value(asOf: DateTime!): [HistoricalDocument]
     meta: GenericScalar!
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
@@ -1756,7 +1774,6 @@
     document: ID!
     meta: JSONString
     value: String
-    valueId: ID
     clientMutationId: String
   }
   

@@ -3,13 +3,12 @@ from functools import reduce
 import graphene
 from django import forms
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
 from django.contrib.postgres.fields.hstore import KeyTransform
-from django.contrib.postgres.fields.jsonb import KeyTextTransform
 from django.contrib.postgres.search import SearchVector
 from django.db import models
 from django.db.models.constants import LOOKUP_SEP
 from django.db.models.expressions import OrderBy, RawSQL
+from django.db.models.fields.json import KeyTextTransform
 from django.db.models.functions import Cast
 from django.utils import translation
 from django_filters.constants import EMPTY_VALUES
@@ -328,7 +327,7 @@ class SearchFilter(Filter):
         if isinstance(model_field, LocalizedField):
             lang = translation.get_language()
             return KeyTransform(lang, field_lookup)
-        elif isinstance(model_field, JSONField):
+        elif isinstance(model_field, models.JSONField):
             return Cast(field_lookup, models.TextField())
 
         return field_lookup
@@ -480,7 +479,10 @@ class JSONValueFilter(Filter):
             # https://code.djangoproject.com/ticket/26511
             if isinstance(expr["value"], str):
                 qs = qs.annotate(
-                    field_val=KeyTextTransform(expr["key"], self.field_name)
+                    field_val=Cast(
+                        KeyTextTransform(expr["key"], self.field_name),
+                        models.CharField(),
+                    ),
                 )
                 lookup = {f"field_val__{lookup_expr}": expr["value"]}
             else:

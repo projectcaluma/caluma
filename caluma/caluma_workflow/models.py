@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models
 from django.db.models.signals import post_init, pre_save
@@ -26,7 +26,7 @@ class Task(SlugModel):
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
     type = ChoicesCharField(choices=TYPE_CHOICES_TUPLE, max_length=50)
-    meta = JSONField(default=dict)
+    meta = models.JSONField(default=dict)
     address_groups = models.TextField(
         blank=True,
         null=True,
@@ -67,7 +67,7 @@ class Task(SlugModel):
 class Workflow(SlugModel):
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
-    meta = JSONField(default=dict)
+    meta = models.JSONField(default=dict)
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
     start_tasks = models.ManyToManyField(
@@ -146,7 +146,7 @@ class Case(UUIDModel):
         Workflow, related_name="cases", on_delete=models.DO_NOTHING
     )
     status = ChoicesCharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
-    meta = JSONField(default=dict)
+    meta = models.JSONField(default=dict)
     document = models.OneToOneField(
         "caluma_form.Document",
         on_delete=models.PROTECT,
@@ -213,7 +213,7 @@ class WorkItem(UUIDModel):
         Task, on_delete=models.DO_NOTHING, related_name="work_items"
     )
     status = ChoicesCharField(choices=STATUS_CHOICE_TUPLE, max_length=50, db_index=True)
-    meta = JSONField(default=dict)
+    meta = models.JSONField(default=dict)
 
     addressed_groups = ArrayField(
         models.CharField(max_length=150),
@@ -275,7 +275,7 @@ class WorkItem(UUIDModel):
         if not task_flow:
             return Task.objects.none()
 
-        jexl = self.task.task_flows.get(workflow=self.case.workflow).redoable
+        jexl = task_flow.redoable
 
         if not jexl:
             return Task.objects.none()

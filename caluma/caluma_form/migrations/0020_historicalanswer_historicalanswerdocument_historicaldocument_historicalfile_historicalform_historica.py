@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 import uuid
 
 import django.contrib.postgres.fields
-import django.contrib.postgres.fields.jsonb
 import django.db.models.deletion
 import localized_fields.fields.field
 import localized_fields.fields.text_field
@@ -40,11 +39,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "value",
-                    django.contrib.postgres.fields.jsonb.JSONField(
-                        blank=True, null=True
-                    ),
+                    models.JSONField(blank=True, null=True),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 ("date", models.DateField(blank=True, null=True)),
                 (
                     "history_id",
@@ -205,7 +202,7 @@ class Migration(migrations.Migration):
                         db_index=True, help_text="Family id which document belongs too."
                     ),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 (
                     "history_id",
                     models.UUIDField(
@@ -314,7 +311,7 @@ class Migration(migrations.Migration):
                         blank=True, null=True, required=[]
                     ),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 ("is_published", models.BooleanField(default=False)),
                 ("is_archived", models.BooleanField(default=False)),
                 (
@@ -447,7 +444,7 @@ class Migration(migrations.Migration):
                 ("history_user_id", models.CharField(max_length=150, null=True)),
                 ("slug", models.SlugField()),
                 ("label", localized_fields.fields.field.LocalizedField(required=[])),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 (
                     "history_id",
                     models.UUIDField(
@@ -548,9 +545,9 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "configuration",
-                    django.contrib.postgres.fields.jsonb.JSONField(default=dict),
+                    models.JSONField(default=dict),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 (
                     "data_source",
                     models.CharField(blank=True, max_length=255, null=True),
