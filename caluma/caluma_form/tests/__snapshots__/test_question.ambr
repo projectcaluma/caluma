@@ -450,7 +450,7 @@
   }
 ---
 # name: test_save_action_button_question[action_button]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveActionButtonQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -468,7 +468,7 @@
   }
 ---
 # name: test_save_choice_question[choice-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -495,7 +495,7 @@
   }
 ---
 # name: test_save_choice_question[choice-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -524,7 +524,7 @@
   }
 ---
 # name: test_save_dynamic_choice_question[dynamic_choice-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDynamicChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -580,7 +580,7 @@
   }
 ---
 # name: test_save_dynamic_choice_question[dynamic_choice-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDynamicChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -636,7 +636,7 @@
   }
 ---
 # name: test_save_dynamic_choice_question[dynamic_multiple_choice-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDynamicChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -692,7 +692,7 @@
   }
 ---
 # name: test_save_dynamic_choice_question[dynamic_multiple_choice-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDynamicChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -748,7 +748,7 @@
   }
 ---
 # name: test_save_dynamic_multiple_choice_question[dynamic_multiple_choice-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDynamicMultipleChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -804,7 +804,7 @@
   }
 ---
 # name: test_save_dynamic_multiple_choice_question[dynamic_multiple_choice-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDynamicMultipleChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -860,7 +860,7 @@
   }
 ---
 # name: test_save_float_question[float-question__configuration0-0.3-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveFloatQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -881,7 +881,7 @@
   }
 ---
 # name: test_save_form_question[form]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveFormQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -899,7 +899,7 @@
   }
 ---
 # name: test_save_integer_question[integer-question__configuration0-23-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveIntegerQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -920,7 +920,7 @@
   }
 ---
 # name: test_save_multiple_choice_question[multiple_choice]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveMultipleChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -958,7 +958,7 @@
   }
 ---
 # name: test_save_question[true-True-SaveCalculatedFloatQuestion]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCalculatedFloatQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -973,7 +973,7 @@
   }
 ---
 # name: test_save_question[true-True-SaveDateQuestion]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDateQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -988,7 +988,7 @@
   }
 ---
 # name: test_save_question[true-True-SaveFileQuestion]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveFileQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -1003,7 +1003,7 @@
   }
 ---
 # name: test_save_question[true-True-SaveFloatQuestion]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveFloatQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -1018,7 +1018,7 @@
   }
 ---
 # name: test_save_question[true-True-SaveIntegerQuestion]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveIntegerQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -1033,7 +1033,7 @@
   }
 ---
 # name: test_save_question[true-True-SaveTextQuestion]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveTextQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -1048,7 +1048,7 @@
   }
 ---
 # name: test_save_question[true-True-SaveTextareaQuestion]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveTextareaQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -1063,7 +1063,7 @@
   }
 ---
 # name: test_save_static_question[static]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveStaticQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -1082,7 +1082,7 @@
   }
 ---
 # name: test_save_table_question[table]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveTableQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
