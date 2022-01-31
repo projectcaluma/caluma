@@ -4346,9 +4346,17 @@
     task: Task!
     status: WorkItemStatus!
     meta: GenericScalar
-    addressedGroups: [String]!
-    controllingGroups: [String]!
-    assignedUsers: [String]!
+  
+    """
+    Offer work item to be processed by a group of users, such are not committed to process it though.
+    """
+    addressedGroups: [String!]!
+  
+    """List of groups this work item is assigned to for controlling."""
+    controllingGroups: [String!]!
+  
+    """Users responsible to undertake given work item."""
+    assignedUsers: [String!]!
     case: Case!
   
     """Defines case of a sub-workflow"""
