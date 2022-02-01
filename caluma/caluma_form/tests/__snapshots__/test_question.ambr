@@ -221,6 +221,7 @@
         <class 'dict'> {
           'node': <class 'dict'> {
             '__typename': 'DynamicChoiceQuestion',
+            'hintText': '',
             'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -281,6 +282,7 @@
         <class 'dict'> {
           'node': <class 'dict'> {
             '__typename': 'DynamicMultipleChoiceQuestion',
+            'hintText': '',
             'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -588,6 +590,7 @@
                 },
               ],
             },
+            'hintText': '',
             'id': 'VGV4dFF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -615,6 +618,7 @@
               'edges': <class 'list'> [
               ],
             },
+            'hintText': '',
             'id': 'VGV4dGFyZWFRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
             'infoText': '',
             'label': 'Bonnie Moreno',
