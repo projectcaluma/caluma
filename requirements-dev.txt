@@ -29,4 +29,3 @@ python-semantic-release==7.23.0
 requests-mock==1.9.3
 reuse==0.14.0
 syrupy==1.7.0
-
