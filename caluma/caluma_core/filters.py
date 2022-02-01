@@ -554,7 +554,7 @@ class DjangoFilterConnectionField(
 
     @classmethod
     def _clean_args_for_queryset_resolver(cls, args):
-        # Graphend parses incoming data into Enums too early, thus our filters
+        # Graphene parses incoming data into Enums too early, thus our filters
         # will receive enum objects that cannot be parsed
         #
         # TODO: check if this is still required after the below
