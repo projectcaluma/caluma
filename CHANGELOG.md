@@ -1,4 +1,14 @@
-# v7.14.0
+# v7.15.0 (25 January 2022)
+
+### Feature
+* **workflow:** Implement WorkItem redo pattern ([#1656](https://github.com/projectcaluma/caluma/issues/1656)) ([`d01e284`](https://github.com/projectcaluma/caluma/commit/d01e28405e8d1419a6e357149b543c39ea8025f6))
+* **form:** Enable hint messages on questions ([#1655](https://github.com/projectcaluma/caluma/issues/1655)) ([`7adf401`](https://github.com/projectcaluma/caluma/commit/7adf4014c220bdf582c3b7fcbaf98f421ef40092))
+
+### Fix
+* **settings:** Use int for MINIO_PRESIGNED_TTL_MINUTES ([#1632](https://github.com/projectcaluma/caluma/issues/1632)) ([`cc9f89f`](https://github.com/projectcaluma/caluma/commit/cc9f89f7d356038851f1fa3f9ec343d60e5ee256))
+
+
+# v7.14.0 (1 December 2021)
 
 ### Feature
 * **config:** Validate permission decorators ([#1615](https://github.com/projectcaluma/caluma/issues/1615)) ([`a63a6d3`](https://github.com/projectcaluma/caluma/commit/a63a6d34e075fd086647cdfbd36b5eb8cbf83850))
@@ -18,7 +28,7 @@
 * **guide:** Update guide to use ember-caluma v9 addons ([`4d3c9fc`](https://github.com/projectcaluma/caluma/commit/4d3c9fcd0b4d78cefa58c73bb4383daf318c03be))
 
 
-# v7.13.0
+# v7.13.0 (27 August 2021)
 
 ### Feature
 * **config:** Introduce configurable user factory ([`8a49aaf`](https://github.com/projectcaluma/caluma/commit/8a49aaf7f911d4df50a354915530bfcd034ec91b))

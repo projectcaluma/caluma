@@ -49,3 +49,9 @@ Files:
     CHANGELOG.md
 Copyright: 2019 Adfinis SyGroup AG <info@adfinis-sygroup.ch>
 License: GFDL-1.3-or-later
+
+# Code of conduct
+Files:
+    CODE_OF_CONDUCT.md
+Copyright:  Coraline Ada Ehmke <https://where.coraline.codes/>
+License: CC-BY-4.0

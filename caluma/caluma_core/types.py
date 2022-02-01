@@ -8,6 +8,7 @@ from graphene.relay.connection import ConnectionField
 from graphene_django import types
 from graphene_django.fields import DjangoConnectionField
 from graphene_django.utils import maybe_queryset
+from graphql_relay.connection.arrayconnection import get_offset_with_default
 
 from .pagination import connection_from_list, connection_from_list_slice
 
@@ -83,8 +84,17 @@ class DjangoConnectionField(DjangoConnectionField):
                 _len = iterable.count()
         else:  # pragma: no cover
             _len = len(iterable)
+
+        # If after is higher than list_length, connection_from_list_slice
+        # would try to do a negative slicing which makes django throw an
+        # AssertionError
+        after = min(get_offset_with_default(args.get("after"), -1) + 1, _len)
+
+        if max_limit is not None and "first" not in args:
+            args["first"] = max_limit
+
         connection = connection_from_list_slice(
-            iterable,
+            iterable[after:],
             args,
             slice_start=0,
             list_length=_len,

@@ -69,6 +69,8 @@ in case the event sends additional arguments in the future.
 | `post_suspend_work_item`  | `SuspendWorkItem`                                                 | `work_item`, `user`, `context`                   |
 | `pre_resume_work_item`    | `ResumeWorkItem`                                                  | `work_item`, `user`, `context`                   |
 | `post_resume_work_item`   | `ResumeWorkItem`                                                  | `work_item`, `user`, `context`                   |
+| `pre_redo_work_item`      | `RedoWorkItem`                                                    | `work_item`, `user`, `context`                   |
+| `post_redo_work_item`     | `RedoWorkItem`                                                    | `work_item`, `user`, `context`                   |
 | `pre_create_case`         | `SaveCase`, `StartCase`                                           | `case`, `user`, `context`, `validated_data`      |
 | `post_create_case`        | `SaveCase`, `StartCase`                                           | `case`, `user`, `context`                        |
 | `pre_complete_case`       | `CompleteWorkItem`                                                | `case`, `user`, `context`                        |

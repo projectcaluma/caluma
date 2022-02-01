@@ -187,6 +187,9 @@ class Workflow(DjangoObjectType):
 class WorkItem(DjangoObjectType):
     task = graphene.Field(Task, required=True)
     meta = generic.GenericScalar()
+    assigned_users = graphene.List(graphene.String, required=True)
+    controlling_groups = graphene.List(graphene.String, required=True)
+    addressed_groups = graphene.List(graphene.String, required=True)
     status = WorkItemStatus(required=True)
 
     class Meta:
@@ -334,6 +337,12 @@ class ResumeWorkItem(Mutation):
         model_operations = ["update"]
 
 
+class RedoWorkItem(Mutation):
+    class Meta:
+        serializer_class = serializers.WorkItemRedoTaskSerializer
+        model_operations = ["update"]
+
+
 class SaveWorkItem(Mutation):
     class Meta:
         serializer_class = serializers.SaveWorkItemSerializer
@@ -369,6 +378,7 @@ class Mutation(object):
     cancel_work_item = CancelWorkItem().Field()
     suspend_work_item = SuspendWorkItem().Field()
     resume_work_item = ResumeWorkItem().Field()
+    redo_work_item = RedoWorkItem().Field()
     save_work_item = SaveWorkItem().Field()
     create_work_item = CreateWorkItem().Field()
 

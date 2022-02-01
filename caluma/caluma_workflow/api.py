@@ -233,3 +233,30 @@ def resume_work_item(
     domain_logic.ResumeWorkItemLogic.post_resume(work_item, user, context)
 
     return work_item
+
+
+def redo_work_item(
+    work_item: models.WorkItem, user: BaseUser, context: Optional[dict] = None
+) -> models.WorkItem:
+    """
+    Redo a work item.
+
+    >>> redo_work_item(
+    ...     work_item=models.WorkItem.objects.first(),
+    ...     user=AnonymousUser()
+    ... )
+    <WorkItem: WorkItem object (some-uuid)>
+    """
+    domain_logic.RedoWorkItemLogic.validate_for_redo(work_item)
+
+    validated_data = domain_logic.RedoWorkItemLogic.pre_redo(
+        work_item, {}, user, context
+    )
+
+    domain_logic.RedoWorkItemLogic.set_succeeding_work_item_status_redo(work_item)
+
+    update_model(work_item, validated_data)
+
+    domain_logic.RedoWorkItemLogic.post_redo(work_item, user, context)
+
+    return work_item

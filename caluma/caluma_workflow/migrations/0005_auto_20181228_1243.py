@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 import django.contrib.postgres.fields
-import django.contrib.postgres.fields.jsonb
 import django.contrib.postgres.indexes
 import django.db.models.deletion
 from django.db import migrations, models
@@ -49,7 +48,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="case",
             name="meta",
-            field=django.contrib.postgres.fields.jsonb.JSONField(default=dict),
+            field=models.JSONField(default=dict),
         ),
         migrations.AlterField(
             model_name="flow",
@@ -68,7 +67,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="task",
             name="meta",
-            field=django.contrib.postgres.fields.jsonb.JSONField(default=dict),
+            field=models.JSONField(default=dict),
         ),
         migrations.AlterField(
             model_name="taskflow",
@@ -87,7 +86,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="workflow",
             name="meta",
-            field=django.contrib.postgres.fields.jsonb.JSONField(default=dict),
+            field=models.JSONField(default=dict),
         ),
         migrations.AlterField(
             model_name="workitem",
@@ -111,7 +110,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="workitem",
             name="meta",
-            field=django.contrib.postgres.fields.jsonb.JSONField(default=dict),
+            field=models.JSONField(default=dict),
         ),
         migrations.AddIndex(
             model_name="workitem",

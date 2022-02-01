@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 import uuid
 
-import django.contrib.postgres.fields.jsonb
 import django.db.models.deletion
 from django.db import migrations, models
 
@@ -72,7 +71,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="answer",
             name="value",
-            field=django.contrib.postgres.fields.jsonb.JSONField(blank=True, null=True),
+            field=models.JSONField(blank=True, null=True),
         ),
         migrations.AlterField(
             model_name="question",

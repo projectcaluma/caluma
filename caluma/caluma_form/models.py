@@ -1,7 +1,7 @@
 import uuid
 from functools import wraps
 
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
 from django.db.models import Q
@@ -17,7 +17,7 @@ from .storage_clients import client
 class Form(core_models.SlugModel):
     name = LocalizedField(blank=False, null=False, required=False)
     description = LocalizedField(blank=True, null=True, required=False)
-    meta = JSONField(default=dict)
+    meta = models.JSONField(default=dict)
     is_published = models.BooleanField(default=False)
     is_archived = models.BooleanField(default=False)
     questions = models.ManyToManyField(
@@ -83,7 +83,7 @@ class Question(core_models.SlugModel):
         TYPE_CALCULATED_FLOAT,
         TYPE_ACTION_BUTTON,
     )
-    TYPE_CHOICES_TUPLE = ((type_choice, type_choice) for type_choice in TYPE_CHOICES)
+    TYPE_CHOICES_TUPLE = [(type_choice, type_choice) for type_choice in TYPE_CHOICES]
 
     ACTION_COMPLETE = "complete"
     ACTION_SKIP = "skip"
@@ -108,9 +108,10 @@ class Question(core_models.SlugModel):
     is_archived = models.BooleanField(default=False)
     placeholder = LocalizedField(blank=True, null=True, required=False)
     info_text = LocalizedField(blank=True, null=True, required=False)
+    hint_text = LocalizedField(blank=True, null=True, required=False)
     static_content = LocalizedTextField(blank=True, null=True, required=False)
-    configuration = JSONField(default=dict)
-    meta = JSONField(default=dict)
+    configuration = models.JSONField(default=dict)
+    meta = models.JSONField(default=dict)
     data_source = models.CharField(max_length=255, blank=True, null=True)
     options = models.ManyToManyField(
         "Option", through="QuestionOption", related_name="questions"
@@ -243,7 +244,7 @@ class QuestionOption(core_models.NaturalKeyModel):
 class Option(core_models.SlugModel):
     label = LocalizedField(blank=False, null=False, required=False)
     is_archived = models.BooleanField(default=False)
-    meta = JSONField(default=dict)
+    meta = models.JSONField(default=dict)
     source = models.ForeignKey(
         "self",
         blank=True,
@@ -289,7 +290,7 @@ class Document(core_models.UUIDModel):
         related_name="copies",
         on_delete=models.SET_NULL,
     )
-    meta = JSONField(default=dict)
+    meta = models.JSONField(default=dict)
 
     def set_family(self, root_doc):
         """Set the family to the given root_doc.
@@ -393,8 +394,8 @@ class Answer(core_models.BaseModel):
     question = models.ForeignKey(
         "caluma_form.Question", on_delete=models.DO_NOTHING, related_name="answers"
     )
-    value = JSONField(null=True, blank=True)
-    meta = JSONField(default=dict)
+    value = models.JSONField(null=True, blank=True)
+    meta = models.JSONField(default=dict)
     document = models.ForeignKey(
         Document,
         on_delete=models.CASCADE,

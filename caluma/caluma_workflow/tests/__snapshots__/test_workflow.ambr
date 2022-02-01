@@ -1,4 +1,41 @@
-# name: test_add_workflow_flow[task-slug-"task-slug"|task-True]
+# name: test_add_workflow_flow[task-slug-"task-slug"|task-"task-slug"|task-True]
+  <class 'dict'> {
+    'addWorkflowFlow': <class 'dict'> {
+      'clientMutationId': None,
+      'workflow': <class 'dict'> {
+        'flows': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'createdByGroup': 'admin',
+                'createdByUser': 'admin',
+                'next': '"task-slug"|task',
+                'tasks': <class 'list'> [
+                  <class 'dict'> {
+                    'slug': 'task-slug',
+                  },
+                ],
+              },
+            },
+          ],
+          'totalCount': 1,
+        },
+        'tasks': <class 'list'> [
+          <class 'dict'> {
+            'slug': 'more-form-level',
+          },
+          <class 'dict'> {
+            'slug': 'song-light',
+          },
+          <class 'dict'> {
+            'slug': 'task-slug',
+          },
+        ],
+      },
+    },
+  }
+---
+# name: test_add_workflow_flow[task-slug-"task-slug"|task-None-True]
   <class 'dict'> {
     'addWorkflowFlow': <class 'dict'> {
       'clientMutationId': None,

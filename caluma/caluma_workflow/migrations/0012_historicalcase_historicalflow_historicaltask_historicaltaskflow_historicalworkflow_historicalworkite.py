@@ -5,7 +5,6 @@ from __future__ import unicode_literals
 import uuid
 
 import django.contrib.postgres.fields
-import django.contrib.postgres.fields.jsonb
 import django.db.models.deletion
 import localized_fields.fields.field
 import simple_history.models
@@ -74,7 +73,7 @@ class Migration(migrations.Migration):
                         max_length=50,
                     ),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 (
                     "history_id",
                     models.UUIDField(
@@ -211,7 +210,7 @@ class Migration(migrations.Migration):
                         max_length=50,
                     ),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 (
                     "address_groups",
                     models.TextField(
@@ -376,7 +375,7 @@ class Migration(migrations.Migration):
                         blank=True, null=True, required=[]
                     ),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 ("is_published", models.BooleanField(default=False)),
                 ("is_archived", models.BooleanField(default=False)),
                 (
@@ -461,7 +460,7 @@ class Migration(migrations.Migration):
                         max_length=50,
                     ),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 (
                     "addressed_groups",
                     django.contrib.postgres.fields.ArrayField(

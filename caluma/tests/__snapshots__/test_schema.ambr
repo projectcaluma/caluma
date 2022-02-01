@@ -73,6 +73,7 @@
     workflow: ID!
     tasks: [ID]!
     next: FlowJexl!
+    redoable: FlowJexl
     clientMutationId: String
   }
   
@@ -238,6 +239,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     forms(
@@ -276,6 +278,54 @@
   
     """The ID of the object"""
     id: ID!
+  }
+  
+  """An enumeration."""
+  enum CalumaFormHistoricalAnswerHistoryQuestionTypeChoices {
+    """multiple_choice"""
+    MULTIPLE_CHOICE
+  
+    """integer"""
+    INTEGER
+  
+    """float"""
+    FLOAT
+  
+    """date"""
+    DATE
+  
+    """choice"""
+    CHOICE
+  
+    """textarea"""
+    TEXTAREA
+  
+    """text"""
+    TEXT
+  
+    """table"""
+    TABLE
+  
+    """form"""
+    FORM
+  
+    """file"""
+    FILE
+  
+    """dynamic_choice"""
+    DYNAMIC_CHOICE
+  
+    """dynamic_multiple_choice"""
+    DYNAMIC_MULTIPLE_CHOICE
+  
+    """static"""
+    STATIC
+  
+    """calculated_float"""
+    CALCULATED_FLOAT
+  
+    """action_button"""
+    ACTION_BUTTON
   }
   
   input CancelCaseInput {
@@ -561,6 +611,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     defaultAnswer: StringAnswer
@@ -848,6 +899,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     defaultAnswer: DateAnswer
@@ -1132,6 +1184,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     forms(
@@ -1188,6 +1241,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     forms(
@@ -1272,6 +1326,7 @@
   interface DynamicQuestion {
     options(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
     dataSource: String!
+    hintText: String
   }
   
   type File implements Node {
@@ -1322,6 +1377,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     forms(
@@ -1392,6 +1448,7 @@
     isArchived: Boolean!
     placeholder: String
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     defaultAnswer: FloatAnswer
@@ -1801,22 +1858,23 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: CalumaFormHistoricalAnswerHistoryQuestionTypeChoices!
   
     """The ID of the object"""
     id: ID!
     value: Date
     meta: GenericScalar!
-    date: Date
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
     historyDate: DateTime!
     historyChangeReason: String
     historyType: String
+    date: Date
   }
   
   type HistoricalDocument implements Node {
+    historyUserId: String
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -1827,7 +1885,6 @@
     """The ID of the object"""
     id: ID!
     meta: GenericScalar
-    historyUserId: String
     form: Form
   
     """Reference this document has been copied from"""
@@ -1857,12 +1914,12 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: CalumaFormHistoricalAnswerHistoryQuestionTypeChoices!
   
     """The ID of the object"""
     id: ID!
     value(asOf: DateTime!): HistoricalFile
     meta: GenericScalar!
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
@@ -1879,12 +1936,12 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: CalumaFormHistoricalAnswerHistoryQuestionTypeChoices!
   
     """The ID of the object"""
     id: ID!
     value: Float
     meta: GenericScalar!
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
@@ -1900,12 +1957,12 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: CalumaFormHistoricalAnswerHistoryQuestionTypeChoices!
   
     """The ID of the object"""
     id: ID!
     value: Int
     meta: GenericScalar!
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
@@ -1921,12 +1978,12 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: CalumaFormHistoricalAnswerHistoryQuestionTypeChoices!
   
     """The ID of the object"""
     id: ID!
     value: [String]
     meta: GenericScalar!
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
@@ -1943,12 +2000,12 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: CalumaFormHistoricalAnswerHistoryQuestionTypeChoices!
   
     """The ID of the object"""
     id: ID!
     value: String
     meta: GenericScalar!
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
@@ -1965,12 +2022,12 @@
     createdByGroup: String
     modifiedByUser: String
     modifiedByGroup: String
+    historyQuestionType: CalumaFormHistoricalAnswerHistoryQuestionTypeChoices!
   
     """The ID of the object"""
     id: ID!
     value(asOf: DateTime!): [HistoricalDocument]
     meta: GenericScalar!
-    historyQuestionType: String!
     historyUserId: String
     question: Question!
     historyId: UUID!
@@ -2011,6 +2068,7 @@
     isArchived: Boolean!
     placeholder: String
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     defaultAnswer: IntegerAnswer
@@ -2110,6 +2168,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     defaultAnswer: ListAnswer
@@ -2196,6 +2255,7 @@
     cancelWorkItem(input: CancelWorkItemInput!): CancelWorkItemPayload
     suspendWorkItem(input: SuspendWorkItemInput!): SuspendWorkItemPayload
     resumeWorkItem(input: ResumeWorkItemInput!): ResumeWorkItemPayload
+    redoWorkItem(input: RedoWorkItemInput!): RedoWorkItemPayload
     saveWorkItem(input: SaveWorkItemInput!): SaveWorkItemPayload
     createWorkItem(input: CreateWorkItemInput!): CreateWorkItemPayload
     saveForm(input: SaveFormInput!): SaveFormPayload
@@ -2827,6 +2887,19 @@
     META_FOOBAR_DESC
   }
   
+  input RedoWorkItemInput {
+    id: ID!
+  
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+  
+  type RedoWorkItemPayload {
+    workItem: WorkItem
+    clientMutationId: String
+  }
+  
   input RemoveAnswerInput {
     answer: ID!
     clientMutationId: String
@@ -2942,6 +3015,7 @@
     meta: JSONString
     isArchived: Boolean
     calcExpression: QuestionJexl
+    hintText: String
     clientMutationId: String
   }
   
@@ -2976,6 +3050,7 @@
     meta: JSONString
     isArchived: Boolean
     options: [ID]!
+    hintText: String
     clientMutationId: String
   }
   
@@ -3057,6 +3132,7 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
+    hintText: String
     clientMutationId: String
   }
   
@@ -3253,6 +3329,7 @@
     meta: JSONString
     isArchived: Boolean
     dataSource: String!
+    hintText: String
     clientMutationId: String
   }
   
@@ -3270,6 +3347,7 @@
     meta: JSONString
     isArchived: Boolean
     dataSource: String!
+    hintText: String
     clientMutationId: String
   }
   
@@ -3286,6 +3364,7 @@
     isHidden: QuestionJexl
     meta: JSONString
     isArchived: Boolean
+    hintText: String
     clientMutationId: String
   }
   
@@ -3305,6 +3384,7 @@
     minValue: Float
     maxValue: Float
     placeholder: String
+    hintText: String
     clientMutationId: String
   }
   
@@ -3356,6 +3436,7 @@
     minValue: Int
     maxValue: Int
     placeholder: String
+    hintText: String
     clientMutationId: String
   }
   
@@ -3373,6 +3454,7 @@
     meta: JSONString
     isArchived: Boolean
     options: [ID]!
+    hintText: String
     clientMutationId: String
   }
   
@@ -3453,6 +3535,7 @@
   
     """Form that represents rows of a TableQuestion"""
     rowForm: ID!
+    hintText: String
     clientMutationId: String
   }
   
@@ -3472,6 +3555,7 @@
     minLength: Int
     maxLength: Int
     placeholder: String
+    hintText: String
     formatValidators: [String]
     clientMutationId: String
   }
@@ -3492,6 +3576,7 @@
     minLength: Int
     maxLength: Int
     placeholder: String
+    hintText: String
     formatValidators: [String]
     clientMutationId: String
   }
@@ -3687,6 +3772,7 @@
     IS_ARCHIVED
     PLACEHOLDER
     INFO_TEXT
+    HINT_TEXT
     CALC_EXPRESSION
   }
   
@@ -3820,6 +3906,9 @@
   
     """Work item is suspended."""
     SUSPENDED
+  
+    """Work item has been marked for redo."""
+    REDO
   }
   
   type StringAnswer implements Answer & Node {
@@ -3895,6 +3984,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     defaultAnswer: TableAnswer
@@ -4098,6 +4188,7 @@
     isArchived: Boolean!
     placeholder: String
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     formatValidators(before: String = null, after: String = null, first: Int = null, last: Int = null): FormatValidatorConnection
@@ -4157,6 +4248,7 @@
     isArchived: Boolean!
     placeholder: String
     infoText: String
+    hintText: String
     meta: GenericScalar!
     source: Question
     formatValidators(before: String = null, after: String = null, first: Int = null, last: Int = null): FormatValidatorConnection
@@ -4254,17 +4346,9 @@
     task: Task!
     status: WorkItemStatus!
     meta: GenericScalar
-  
-    """
-    Offer work item to be processed by a group of users, such are not committed to process it though.
-    """
-    addressedGroups: [String!]!
-  
-    """List of groups this work item is assigned to for controlling."""
-    controllingGroups: [String!]!
-  
-    """Users responsible to undertake given work item."""
-    assignedUsers: [String!]!
+    addressedGroups: [String]!
+    controllingGroups: [String]!
+    assignedUsers: [String]!
     case: Case!
   
     """Defines case of a sub-workflow"""
@@ -4406,6 +4490,7 @@
     CANCELED
     SKIPPED
     SUSPENDED
+    REDO
   }
   
   """An enumeration."""
@@ -4424,6 +4509,9 @@
   
     """Work item is suspended."""
     SUSPENDED
+  
+    """Work item has been marked for redo."""
+    REDO
   }
   
   type Workflow implements Node {

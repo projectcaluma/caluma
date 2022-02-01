@@ -26,6 +26,7 @@
           'node': <class 'dict'> {
             '__typename': 'CalculatedFloatQuestion',
             'calcExpression': '-1.0',
+            'hintText': '',
             'id': 'Q2FsY3VsYXRlZEZsb2F0UXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -46,6 +47,7 @@
         <class 'dict'> {
           'node': <class 'dict'> {
             '__typename': 'ChoiceQuestion',
+            'hintText': '',
             'id': 'Q2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -76,6 +78,7 @@
         <class 'dict'> {
           'node': <class 'dict'> {
             '__typename': 'DateQuestion',
+            'hintText': '',
             'id': 'RGF0ZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -96,6 +99,7 @@
         <class 'dict'> {
           'node': <class 'dict'> {
             '__typename': 'DynamicChoiceQuestion',
+            'hintText': '',
             'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -156,6 +160,7 @@
         <class 'dict'> {
           'node': <class 'dict'> {
             '__typename': 'DynamicMultipleChoiceQuestion',
+            'hintText': '',
             'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -216,6 +221,7 @@
         <class 'dict'> {
           'node': <class 'dict'> {
             '__typename': 'FileQuestion',
+            'hintText': '',
             'id': 'RmlsZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -238,6 +244,7 @@
             '__typename': 'FloatQuestion',
             'floatMaxValue': 1.0,
             'floatMinValue': 0.0,
+            'hintText': '',
             'id': 'RmxvYXRRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -261,6 +268,7 @@
             '__typename': 'FloatQuestion',
             'floatMaxValue': None,
             'floatMinValue': None,
+            'hintText': '',
             'id': 'RmxvYXRRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -305,6 +313,7 @@
         <class 'dict'> {
           'node': <class 'dict'> {
             '__typename': 'IntegerQuestion',
+            'hintText': '',
             'id': 'SW50ZWdlclF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
             'infoText': '',
             'integerMaxValue': 10,
@@ -328,6 +337,7 @@
         <class 'dict'> {
           'node': <class 'dict'> {
             '__typename': 'MultipleChoiceQuestion',
+            'hintText': '',
             'id': 'TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -394,6 +404,7 @@
                 },
               ],
             },
+            'hintText': '',
             'id': 'VGV4dFF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -421,6 +432,7 @@
               'edges': <class 'list'> [
               ],
             },
+            'hintText': '',
             'id': 'VGV4dGFyZWFRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
             'infoText': '',
             'label': 'Bonnie Moreno',
@@ -462,6 +474,7 @@
       'question': <class 'dict'> {
         '__typename': 'ChoiceQuestion',
         'defaultAnswer': None,
+        'hintText': '',
         'id': 'Q2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
         'label': 'Bonnie Moreno',
         'meta': <class 'dict'> {
@@ -490,6 +503,7 @@
         'defaultAnswer': <class 'dict'> {
           'value': 'eight-traditional',
         },
+        'hintText': 'test',
         'id': 'Q2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
         'label': 'Bonnie Moreno',
         'meta': <class 'dict'> {
@@ -515,6 +529,7 @@
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
         '__typename': 'DynamicChoiceQuestion',
+        'hintText': 'test',
         'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
         'meta': <class 'dict'> {
@@ -570,6 +585,7 @@
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
         '__typename': 'DynamicChoiceQuestion',
+        'hintText': 'test',
         'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
         'meta': <class 'dict'> {
@@ -625,6 +641,7 @@
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
         '__typename': 'DynamicChoiceQuestion',
+        'hintText': 'test',
         'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
         'meta': <class 'dict'> {
@@ -680,6 +697,7 @@
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
         '__typename': 'DynamicChoiceQuestion',
+        'hintText': 'test',
         'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
         'meta': <class 'dict'> {
@@ -735,6 +753,7 @@
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
         '__typename': 'DynamicMultipleChoiceQuestion',
+        'hintText': 'test',
         'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
         'label': 'Bonnie Moreno',
         'meta': <class 'dict'> {
@@ -790,6 +809,7 @@
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
         '__typename': 'DynamicMultipleChoiceQuestion',
+        'hintText': 'test',
         'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
         'label': 'Bonnie Moreno',
         'meta': <class 'dict'> {
@@ -848,6 +868,7 @@
         'defaultAnswer': <class 'dict'> {
           'value': 0.3,
         },
+        'hintText': 'test',
         'id': 'RmxvYXRRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
         'label': 'Bonnie Moreno',
         'maxValue': 10.0,
@@ -886,6 +907,7 @@
         'defaultAnswer': <class 'dict'> {
           'value': 23,
         },
+        'hintText': 'test',
         'id': 'SW50ZWdlclF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
         'maxValue': 10,
@@ -909,6 +931,7 @@
             'court-ask',
           ],
         },
+        'hintText': 'test',
         'id': 'TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
         'label': 'Bonnie Moreno',
         'meta': <class 'dict'> {
@@ -1064,6 +1087,7 @@
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
         '__typename': 'TableQuestion',
+        'hintText': 'test',
         'id': 'VGFibGVRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
         'label': 'Bonnie Moreno',
         'meta': <class 'dict'> {

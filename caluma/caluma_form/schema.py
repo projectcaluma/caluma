@@ -187,6 +187,7 @@ class TextQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     min_length = graphene.Int()
     max_length = graphene.Int()
     placeholder = graphene.String()
+    hint_text = graphene.String()
     format_validators = ConnectionField(FormatValidatorConnection)
     default_answer = graphene.Field("caluma.caluma_form.schema.StringAnswer")
 
@@ -216,6 +217,7 @@ class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     min_length = graphene.Int()
     max_length = graphene.Int()
     placeholder = graphene.String()
+    hint_text = graphene.String()
     format_validators = ConnectionField(FormatValidatorConnection)
     default_answer = graphene.Field("caluma.caluma_form.schema.StringAnswer")
 
@@ -242,6 +244,7 @@ class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class DateQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    hint_text = graphene.String()
     default_answer = graphene.Field("caluma.caluma_form.schema.DateAnswer")
 
     class Meta:
@@ -269,6 +272,7 @@ class ChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
+    hint_text = graphene.String()
     default_answer = graphene.Field("caluma.caluma_form.schema.StringAnswer")
 
     class Meta:
@@ -295,6 +299,7 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     options = DjangoFilterConnectionField(
         Option, filterset_class=filters.OptionFilterSet
     )
+    hint_text = graphene.String()
     default_answer = graphene.Field("caluma.caluma_form.schema.ListAnswer")
 
     class Meta:
@@ -319,12 +324,15 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 class DynamicQuestion(graphene.Interface):
     options = ConnectionField(DataSourceDataConnection)
     data_source = graphene.String(required=True)
+    hint_text = graphene.String()
 
     def resolve_options(self, info, *args, **kwargs):
         return get_data_source_data(info.context.user, self.data_source)
 
 
 class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    hint_text = graphene.String()
+
     class Meta:
         model = models.Question
         exclude = (
@@ -346,6 +354,8 @@ class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class DynamicMultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    hint_text = graphene.String()
+
     class Meta:
         model = models.Question
         exclude = (
@@ -381,6 +391,7 @@ class IntegerQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     max_value = graphene.Int()
     min_value = graphene.Int()
     placeholder = graphene.String()
+    hint_text = graphene.String()
     default_answer = graphene.Field("caluma.caluma_form.schema.IntegerAnswer")
 
     class Meta:
@@ -407,6 +418,7 @@ class FloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     min_value = graphene.Float()
     max_value = graphene.Float()
     placeholder = graphene.String()
+    hint_text = graphene.String()
     default_answer = graphene.Field("caluma.caluma_form.schema.FloatAnswer")
 
     class Meta:
@@ -430,6 +442,7 @@ class FloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class TableQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    hint_text = graphene.String()
     default_answer = graphene.Field("caluma.caluma_form.schema.TableAnswer")
 
     class Meta:
@@ -463,6 +476,7 @@ class FormQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "answers",
             "row_form",
             "placeholder",
+            "hint_text",
             "static_content",
             "format_validators",
             "dynamicoption_set",
@@ -475,6 +489,8 @@ class FormQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class FileQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    hint_text = graphene.String()
+
     class Meta:
         model = models.Question
         exclude = (
@@ -514,6 +530,7 @@ class StaticQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "row_form",
             "sub_form",
             "placeholder",
+            "hint_text",
             "format_validators",
             "dynamicoption_set",
             "default_answer",
@@ -525,6 +542,8 @@ class StaticQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class CalculatedFloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+    hint_text = graphene.String()
+
     class Meta:
         model = models.Question
         exclude = (
@@ -562,6 +581,7 @@ class ActionButtonQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
             "row_form",
             "sub_form",
             "placeholder",
+            "hint_text",
             "static_content",
             "format_validators",
             "dynamicoption_set",

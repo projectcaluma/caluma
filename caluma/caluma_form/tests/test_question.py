@@ -57,6 +57,7 @@ def test_query_all_questions(
                   minLength
                   maxLength
                   placeholder
+                  hintText
                   formatValidators {
                     edges {
                       node {
@@ -72,6 +73,7 @@ def test_query_all_questions(
                   minLength
                   maxLength
                   placeholder
+                  hintText
                   formatValidators {
                     edges {
                       node {
@@ -83,17 +85,23 @@ def test_query_all_questions(
                     }
                   }
                 }
+                ... on DateQuestion {
+                  hintText
+                }
                 ... on FloatQuestion {
                   floatMinValue: minValue
                   floatMaxValue: maxValue
                   placeholder
+                  hintText
                 }
                 ... on IntegerQuestion {
                   integerMinValue: minValue
                   integerMaxValue: maxValue
                   placeholder
+                  hintText
                 }
                 ... on MultipleChoiceQuestion {
+                  hintText
                   options {
                     totalCount
                     edges {
@@ -104,6 +112,7 @@ def test_query_all_questions(
                   }
                 }
                 ... on ChoiceQuestion {
+                  hintText
                   options {
                     totalCount
                     edges {
@@ -114,6 +123,7 @@ def test_query_all_questions(
                   }
                 }
                 ... on DynamicMultipleChoiceQuestion {
+                  hintText
                   options {
                     edges {
                       node {
@@ -124,6 +134,7 @@ def test_query_all_questions(
                   }
                 }
                 ... on DynamicChoiceQuestion {
+                  hintText
                   options {
                     edges {
                       node {
@@ -142,7 +153,11 @@ def test_query_all_questions(
                   staticContent
                 }
                 ... on CalculatedFloatQuestion {
+                  hintText
                   calcExpression
+                }
+                ... on FileQuestion {
+                  hintText
                 }
               }
             }
@@ -280,6 +295,7 @@ def test_save_text_question(db, question, schema_executor, answer, success):
               __typename
               ... on TextQuestion {
                 maxLength
+                hintText
                 formatValidators {
                   edges {
                     node {
@@ -301,6 +317,7 @@ def test_save_text_question(db, question, schema_executor, answer, success):
     """
 
     question.default_answer = answer
+    question.hint_text = "test"
     question.save()
 
     inp = {
@@ -323,6 +340,7 @@ def test_save_text_question(db, question, schema_executor, answer, success):
             result.data["saveTextQuestion"]["question"]["defaultAnswer"]["value"]
             == "foo"
         )
+        assert result.data["saveTextQuestion"]["question"]["hintText"] == "test"
 
 
 @pytest.mark.parametrize(
@@ -341,6 +359,7 @@ def test_save_textarea_question(db, question, answer, schema_executor):
               __typename
               ... on TextareaQuestion {
                 maxLength
+                hintText
                 defaultAnswer {
                   value
                 }
@@ -352,6 +371,7 @@ def test_save_textarea_question(db, question, answer, schema_executor):
     """
 
     question.default_answer = answer
+    question.hint_text = "test"
     question.save()
 
     inp = {
@@ -366,6 +386,7 @@ def test_save_textarea_question(db, question, answer, schema_executor):
         result.data["saveTextareaQuestion"]["question"]["defaultAnswer"]["value"]
         == "foo"
     )
+    assert result.data["saveTextareaQuestion"]["question"]["hintText"] == "test"
 
 
 @pytest.mark.parametrize(
@@ -388,6 +409,7 @@ def test_save_float_question(db, snapshot, question, schema_executor, answer, su
               ... on FloatQuestion {
                 minValue
                 maxValue
+                hintText
                 defaultAnswer {
                   value
                 }
@@ -399,6 +421,7 @@ def test_save_float_question(db, snapshot, question, schema_executor, answer, su
     """
 
     question.default_answer = answer
+    question.hint_text = "test"
     question.save()
 
     inp = {
@@ -414,6 +437,7 @@ def test_save_float_question(db, snapshot, question, schema_executor, answer, su
             result.data["saveFloatQuestion"]["question"]["defaultAnswer"]["value"]
             == 0.3
         )
+        assert result.data["saveFloatQuestion"]["question"]["hintText"] == "test"
 
 
 @pytest.mark.parametrize(
@@ -438,6 +462,7 @@ def test_save_integer_question(
               ... on IntegerQuestion {
                 minValue
                 maxValue
+                hintText
                 defaultAnswer {
                   value
                 }
@@ -449,6 +474,7 @@ def test_save_integer_question(
     """
 
     question.default_answer = answer
+    question.hint_text = "test"
     question.save()
 
     inp = {
@@ -464,6 +490,7 @@ def test_save_integer_question(
             result.data["saveIntegerQuestion"]["question"]["defaultAnswer"]["value"]
             == 23
         )
+        assert result.data["saveIntegerQuestion"]["question"]["hintText"] == "test"
 
 
 @pytest.mark.parametrize("question__type", [models.Question.TYPE_MULTIPLE_CHOICE])
@@ -475,6 +502,7 @@ def test_save_multiple_choice_question(
     option_ids = question.options.order_by("-slug").values_list("slug", flat=True)
 
     question.default_answer = answer_factory(value=list(option_ids), question=question)
+    question.hint_text = "test"
     question.save()
 
     query = """
@@ -495,6 +523,7 @@ def test_save_multiple_choice_question(
                     }
                   }
                 }
+                hintText
                 defaultAnswer {
                   value
                 }
@@ -545,6 +574,7 @@ def test_save_choice_question(
                     }
                   }
                 }
+                hintText
                 defaultAnswer {
                   value
                 }
@@ -559,6 +589,7 @@ def test_save_choice_question(
         question.default_answer = answer_factory(
             value=question_option.option.slug, question=question
         )
+        question.hint_text = "test"
         question.save()
 
     inp = {
@@ -591,6 +622,7 @@ def test_save_dynamic_choice_question(
               meta
               __typename
               ... on DynamicChoiceQuestion {
+                hintText
                 options {
                   edges {
                     node {
@@ -605,6 +637,9 @@ def test_save_dynamic_choice_question(
           }
         }
     """
+
+    question.hint_text = "test"
+    question.save()
 
     inp = {
         "input": extract_serializer_input_fields(
@@ -641,6 +676,7 @@ def test_save_dynamic_multiple_choice_question(
               meta
               __typename
               ... on DynamicMultipleChoiceQuestion {
+                hintText
                 options {
                   edges {
                     node {
@@ -655,6 +691,9 @@ def test_save_dynamic_multiple_choice_question(
           }
         }
     """
+
+    question.hint_text = "test"
+    question.save()
 
     inp = {
         "input": extract_serializer_input_fields(
@@ -683,12 +722,15 @@ def test_save_table_question(db, snapshot, question, schema_executor):
                 rowForm {
                   slug
                 }
+                hintText
               }
             }
             clientMutationId
           }
         }
     """
+    question.hint_text = "test"
+    question.save()
 
     inp = {
         "input": extract_serializer_input_fields(
@@ -877,6 +919,7 @@ def test_calculated_question(
              __typename
              ... on CalculatedFloatQuestion {
                calcExpression
+               hintText
              }
             }
           }
@@ -888,11 +931,13 @@ def test_calculated_question(
             "slug": "calc-question",
             "label": "Calculated Float Question",
             "calcExpression": calc_expression,
+            "hintText": "test",
         }
     }
     result = schema_executor(query, variable_values=inp)
 
     assert not result.errors
+    assert result.data["saveCalculatedFloatQuestion"]["question"]["hintText"] == "test"
 
     question.refresh_from_db()
     assert set(question.calc_dependents) == set(["calc-question", "not_in_form"])
