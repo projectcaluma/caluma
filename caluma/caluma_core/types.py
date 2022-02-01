@@ -89,8 +89,7 @@ class DjangoConnectionField(DjangoConnectionField):
         # would try to do a negative slicing which makes django throw an
         # AssertionError
         after = min(get_offset_with_default(args.get("after"), -1) + 1, _len)
-
-        if max_limit is not None and "first" not in args:
+        if max_limit is not None and "first" not in args:  # pragma: no cover
             args["first"] = max_limit
 
         connection = connection_from_list_slice(
