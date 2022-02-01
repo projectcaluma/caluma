@@ -75,31 +75,6 @@ def _print_block_string(
     return '"""' + result.replace('"""', '\\"""') + '"""'
 
 
-def test_schema_introspect_direct(snapshot, mocker):
-    import graphql.language.block_string
-
-    # FIXME: UGLY WORKAROUND
-    # This patches the print_block_string function within graphql core,
-    # as it's currently having problems with lazy-translated objects
-    # (output of ugettext_lazy(), for example).
-    # Once this is fixed, we can remove the patched version above and
-    # use our own.
-    #
-    # This is only relevant to the tests - GraphQL frontends query
-    # the schema via GraphQL, which isn't subject to the bug above
-
-    old_code = graphql.language.block_string.print_block_string.__code__
-    graphql.language.block_string.print_block_string.__code__ = (
-        _print_block_string.__code__
-    )
-
-    try:
-        _sort_schema_typemap()
-        snapshot.assert_match(str(schema))
-    finally:
-        graphql.language.block_string.print_block_string.__code__ = old_code
-
-
 def _sort_schema_typemap():
     """Make the schema's typemap sorted.
 
@@ -117,8 +92,7 @@ def _sort_schema_typemap():
     schema.graphql_schema.type_map = {k: type_map[k] for k in sorted(type_map.keys())}
 
 
-@pytest.mark.xfail(strict=True)
-def test_schema_introspect_direct_unpatched(snapshot):
+def test_schema_introspect_direct(snapshot):
     # This is the old test for checking the schema.
     # It is currently expected to fail, as graphql has a bug preventing
     # it from working.

@@ -1538,7 +1538,7 @@ def test_redo_work_item_not_redoable(
             }
         """
 
-        inp = {"input": {"id": work_item_to_be_redone.pk}}
+        inp = {"input": {"id": str(work_item_to_be_redone.pk)}}
         result = schema_executor(query, variable_values=inp)
 
         assert result.errors
