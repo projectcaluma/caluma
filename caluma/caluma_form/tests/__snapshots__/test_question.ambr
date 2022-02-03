@@ -396,8 +396,8 @@
               'edges': <class 'list'> [
                 <class 'dict'> {
                   'node': <class 'dict'> {
-                    'errorMsg': 'Please enter a valid Email address.',
-                    'name': 'E-mail',
+                    'errorMsg': 'Please enter a valid e-mail address',
+                    'name': 'E-mail address',
                     'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
                     'slug': 'email',
                   },

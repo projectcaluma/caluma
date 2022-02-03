@@ -39,23 +39,23 @@ class BaseFormatValidator:
 
 class EMailFormatValidator(BaseFormatValidator):
     slug = "email"
-    name = {"en": "E-mail", "de": "E-Mail", "fr": "Courriel"}
+    name = {"en": "E-mail address", "de": "E-Mail Adresse", "fr": "Adresse e-mail"}
     regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
     error_msg = {
-        "en": "Please enter a valid Email address.",
-        "de": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
-        "fr": "Veuillez entrer une addresse e-mail valide.",
+        "en": "Please enter a valid e-mail address",
+        "de": "Bitte geben Sie eine gültige E-Mail Adresse ein",
+        "fr": "Veuillez entrer une addresse e-mail valide",
     }
 
 
 class PhoneNumberFormatValidator(BaseFormatValidator):
     slug = "phone-number"
-    name = {"en": "Phone number", "de": "Telefonnummer", "fr": "numéro de téléphone"}
+    name = {"en": "Phone number", "de": "Telefonnummer", "fr": "Numéro de téléphone"}
     regex = r"^[\s\/\.\(\)-]*(?:\+|0|00)(?:[\s\/\.\(\)-]*\d[\s\/\.\(\)-]*){6,20}$"
     error_msg = {
-        "en": "Please enter a valid phone number.",
-        "de": "Bitte geben Sie eine gültige Telefonnummer ein.",
-        "fr": "Veuillez entrer un numéro de téléphone valide.",
+        "en": "Please enter a valid phone number",
+        "de": "Bitte geben Sie eine gültige Telefonnummer ein",
+        "fr": "Veuillez entrer un numéro de téléphone valide",
     }
 
 
