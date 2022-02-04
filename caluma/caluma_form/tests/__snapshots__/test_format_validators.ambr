@@ -52,15 +52,15 @@
         },
         <class 'dict'> {
           'node': <class 'dict'> {
-            'errorMsg': 'Please enter a valid Email address.',
-            'name': 'E-mail',
+            'errorMsg': 'Please enter a valid e-mail address',
+            'name': 'E-mail address',
             'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
             'slug': 'email',
           },
         },
         <class 'dict'> {
           'node': <class 'dict'> {
-            'errorMsg': 'Please enter a valid phone number.',
+            'errorMsg': 'Please enter a valid phone number',
             'name': 'Phone number',
             'regex': '^[\\s\\/\\.\\(\\)-]*(?:\\+|0|00)(?:[\\s\\/\\.\\(\\)-]*\\d[\\s\\/\\.\\(\\)-]*){6,20}$',
             'slug': 'phone-number',
@@ -89,15 +89,15 @@
         },
         <class 'dict'> {
           'node': <class 'dict'> {
-            'errorMsg': 'Bitte geben Sie eine gültige E-Mail-Adresse ein.',
-            'name': 'E-Mail',
+            'errorMsg': 'Bitte geben Sie eine gültige E-Mail Adresse ein',
+            'name': 'E-Mail Adresse',
             'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
             'slug': 'email',
           },
         },
         <class 'dict'> {
           'node': <class 'dict'> {
-            'errorMsg': 'Bitte geben Sie eine gültige Telefonnummer ein.',
+            'errorMsg': 'Bitte geben Sie eine gültige Telefonnummer ein',
             'name': 'Telefonnummer',
             'regex': '^[\\s\\/\\.\\(\\)-]*(?:\\+|0|00)(?:[\\s\\/\\.\\(\\)-]*\\d[\\s\\/\\.\\(\\)-]*){6,20}$',
             'slug': 'phone-number',
@@ -126,16 +126,16 @@
         },
         <class 'dict'> {
           'node': <class 'dict'> {
-            'errorMsg': 'Veuillez entrer une addresse e-mail valide.',
-            'name': 'Courriel',
+            'errorMsg': 'Veuillez entrer une addresse e-mail valide',
+            'name': 'Adresse e-mail',
             'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
             'slug': 'email',
           },
         },
         <class 'dict'> {
           'node': <class 'dict'> {
-            'errorMsg': 'Veuillez entrer un numéro de téléphone valide.',
-            'name': 'numéro de téléphone',
+            'errorMsg': 'Veuillez entrer un numéro de téléphone valide',
+            'name': 'Numéro de téléphone',
             'regex': '^[\\s\\/\\.\\(\\)-]*(?:\\+|0|00)(?:[\\s\\/\\.\\(\\)-]*\\d[\\s\\/\\.\\(\\)-]*){6,20}$',
             'slug': 'phone-number',
           },
@@ -163,15 +163,15 @@
         },
         <class 'dict'> {
           'node': <class 'dict'> {
-            'errorMsg': 'Please enter a valid Email address.',
-            'name': 'E-mail',
+            'errorMsg': 'Please enter a valid e-mail address',
+            'name': 'E-mail address',
             'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
             'slug': 'email',
           },
         },
         <class 'dict'> {
           'node': <class 'dict'> {
-            'errorMsg': 'Please enter a valid phone number.',
+            'errorMsg': 'Please enter a valid phone number',
             'name': 'Phone number',
             'regex': '^[\\s\\/\\.\\(\\)-]*(?:\\+|0|00)(?:[\\s\\/\\.\\(\\)-]*\\d[\\s\\/\\.\\(\\)-]*){6,20}$',
             'slug': 'phone-number',
