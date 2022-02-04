@@ -20,17 +20,14 @@ def test_extract_transforms(expression, expected_transforms):
     jexl.add_transform("transform1", lambda x: x)
     jexl.add_transform("transform2", lambda x: x)
 
-    assert (
-        set(
-            jexl.analyze(
-                expression,
-                functools.partial(
-                    ExtractTransformSubjectAnalyzer, transforms=["transform1"]
-                ),
-            )
+    assert set(
+        jexl.analyze(
+            expression,
+            functools.partial(
+                ExtractTransformSubjectAnalyzer, transforms=["transform1"]
+            ),
         )
-        == set(expected_transforms)
-    )
+    ) == set(expected_transforms)
 
 
 @pytest.mark.parametrize(
