@@ -13,6 +13,7 @@ from minio import Minio
 from minio.datatypes import Object as MinioStatObject
 from pytest_factoryboy import register
 
+from .caluma_analytics import factories as analytics_factories
 from .caluma_core.faker import MultilangProvider
 from .caluma_core.models import HistoricalRecords
 from .caluma_form import factories as form_factories
@@ -33,6 +34,7 @@ def register_module(module):
 register_module(form_factories)
 register_module(logging_factories)
 register_module(workflow_factories)
+register_module(analytics_factories)
 
 
 @pytest.fixture(scope="function", autouse=True)
@@ -230,6 +232,10 @@ def form_and_document(
     Optionally add a table question (and a row in the document),
     and a subform for added complexity.
 
+    You can call the factory multiple times, in which case the
+    created forms will be the same, but new document structures
+    will be returned each time.
+
     The slugs are named as follows:
 
     * form: top_form
@@ -242,39 +248,59 @@ def form_and_document(
                * question: sub_question
     """
 
+    def fallback_factory(factory, **kwargs):
+        existing = factory._meta.model.objects.filter(**kwargs).first()
+        if existing:
+            return existing
+        return factory(**kwargs)
+
     def factory(use_table=False, use_subform=False):
-        form = form_factory(slug="top_form", meta={"is-top-form": True, "level": 0})
+        form = fallback_factory(
+            form_factory, slug="top_form", meta={"is-top-form": True, "level": 0}
+        )
         document = document_factory(form=form)
 
         questions = {}
         answers = {}
 
-        questions["top_question"] = question_factory(
+        questions["top_question"] = fallback_factory(
+            question_factory,
             slug="top_question",
             type="text",
             is_required="true",
             is_hidden="false",
         )
 
-        form_question_factory(form=form, question=questions["top_question"])
+        fallback_factory(
+            form_question_factory, form=form, question=questions["top_question"]
+        )
         answers["top_question"] = answer_factory(
             document=document, question=questions["top_question"]
         )
 
         if use_table:
-            row_form = form_factory(slug="row_form")
-            questions["table"] = question_factory(
+            row_form = fallback_factory(form_factory, slug="row_form")
+            questions["table"] = fallback_factory(
+                question_factory,
                 type="table",
                 slug="table",
                 row_form=row_form,
                 is_required="true",
                 is_hidden="false",
             )
-            form_question_factory(form=form, question=questions["table"])
-            questions["column"] = question_factory(
-                type="float", slug="column", is_required="true", is_hidden="false"
+            fallback_factory(
+                form_question_factory, form=form, question=questions["table"]
             )
-            form_question_factory(form=row_form, question=questions["column"])
+            questions["column"] = fallback_factory(
+                question_factory,
+                type="float",
+                slug="column",
+                is_required="true",
+                is_hidden="false",
+            )
+            fallback_factory(
+                form_question_factory, form=row_form, question=questions["column"]
+            )
 
             answers["table"] = answer_factory(
                 document=document, question=questions["table"]
@@ -287,24 +313,30 @@ def form_and_document(
             answers["table"].documents.add(row_doc)
 
         if use_subform:
-            sub_form = form_factory(
-                slug="sub_form", meta={"is-top-form": False, "level": 1}
+            sub_form = fallback_factory(
+                form_factory, slug="sub_form", meta={"is-top-form": False, "level": 1}
             )
-            questions["form"] = question_factory(
+            questions["form"] = fallback_factory(
+                question_factory,
                 type="form",
                 slug="form",
                 sub_form=sub_form,
                 is_required="true",
                 is_hidden="false",
             )
-            form_question_factory(form=form, question=questions["form"])
-            questions["sub_question"] = question_factory(
+            fallback_factory(
+                form_question_factory, form=form, question=questions["form"]
+            )
+            questions["sub_question"] = fallback_factory(
+                question_factory,
                 slug="sub_question",
                 type="text",
                 is_required="true",
                 is_hidden="false",
             )
-            form_question_factory(form=sub_form, question=questions["sub_question"])
+            fallback_factory(
+                form_question_factory, form=sub_form, question=questions["sub_question"]
+            )
 
             answers["sub_question"] = answer_factory(
                 document=document, question=questions["sub_question"]

@@ -19,6 +19,7 @@ def extract_global_id(id):
             **vars(schema.workflow_schema),
             **vars(schema.form_schema),
             **vars(schema.form_historical_schema),
+            **vars(schema.analytics_schema),
         }
         all_types = [
             typename

@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "caluma.caluma_core.apps.DefaultConfig",
     "caluma.caluma_user.apps.DefaultConfig",
     "caluma.caluma_form.apps.DefaultConfig",
+    "caluma.caluma_analytics.apps.DefaultConfig",
     "caluma.caluma_workflow.apps.DefaultConfig",
     "caluma.caluma_data_source.apps.DefaultConfig",
     "caluma.caluma_logging.apps.DefaultConfig",

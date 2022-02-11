@@ -1,0 +1,79 @@
+# name: test_run_analytics_direct
+  <class 'list'> [
+    <class 'dict'> {
+      'created_at': datetime.datetime(2021, 10, 10, 0, 0, tzinfo=<UTC>),
+      'foo': 'bar',
+      'from_the_doc': 'Victoria Pena',
+      'quarter': 4.0,
+      'statuuuuuus': 'running',
+    },
+    <class 'dict'> {
+      'created_at': datetime.datetime(2021, 10, 10, 0, 0, tzinfo=<UTC>),
+      'foo': 'bar',
+      'from_the_doc': 'Victoria Pena',
+      'quarter': 4.0,
+      'statuuuuuus': 'running',
+    },
+    <class 'dict'> {
+      'created_at': datetime.datetime(2021, 10, 10, 0, 0, tzinfo=<UTC>),
+      'foo': 'bar',
+      'from_the_doc': 'Victoria Pena',
+      'quarter': 4.0,
+      'statuuuuuus': 'running',
+    },
+  ]
+---
+# name: test_run_analytics_gql[case__meta0-False]
+  <class 'dict'> {
+    'analyticsTable': <class 'dict'> {
+      'resultData': <class 'dict'> {
+        'records': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'edges': <class 'list'> [
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'alias': 'statuuuuuus',
+                      'value': 'running',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'alias': 'foo',
+                      'value': 'bar',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'alias': 'created_at',
+                      'value': '2021-10-10 00:00:00+00:00',
+                    },
+                  },
+                  <class 'dict'> {
+                    'node': <class 'dict'> {
+                      'alias': 'quarter',
+                      'value': '4.0',
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      },
+    },
+  }
+---
+# name: test_run_analytics_gql[case__meta0-True]
+  <class 'dict'> {
+    'analyticsTable': <class 'dict'> {
+      'resultData': <class 'dict'> {
+        'records': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+    },
+  }
+---
