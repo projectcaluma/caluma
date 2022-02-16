@@ -452,16 +452,18 @@ class Answer(core_models.BaseModel):
             ans_doc.delete()
 
     def copy(self, document_family=None, to_document=None, user=None):
-        new_answer = type(self).objects.create(
+        new_answer, _ = type(self).objects.update_or_create(
             question=self.question,
-            value=self.value,
-            meta=dict(self.meta),
-            date=self.date,
             document=to_document,
-            created_by_user=user.username if user else None,
-            created_by_group=user.group if user else None,
-            modified_by_user=user.username if user else None,
-            modified_by_group=user.group if user else None,
+            defaults={
+                "value": self.value,
+                "meta": dict(self.meta),
+                "date": self.date,
+                "created_by_user": user.username if user else None,
+                "created_by_group": user.group if user else None,
+                "modified_by_user": user.username if user else None,
+                "modified_by_group": user.group if user else None,
+            },
         )
 
         if self.question.type == Question.TYPE_FILE:
