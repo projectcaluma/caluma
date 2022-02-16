@@ -1,3 +1,9 @@
+# v7.14.1
+
+### Fix
+* **form:** Update or create answers when copying to a new document ([`9f436af`](https://github.com/projectcaluma/caluma/commit/9f436afe58aea07d39241034ac247e57f9d6103c))
+
+
 # v7.14.0
 
 ### Feature
