@@ -710,7 +710,7 @@
   }
 ---
 # name: test_save_dynamic_choice_question[dynamic_choice-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDynamicChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -766,7 +766,7 @@
   }
 ---
 # name: test_save_dynamic_choice_question[dynamic_choice-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDynamicChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -822,7 +822,7 @@
   }
 ---
 # name: test_save_dynamic_choice_question[dynamic_multiple_choice-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDynamicChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -878,7 +878,7 @@
   }
 ---
 # name: test_save_dynamic_choice_question[dynamic_multiple_choice-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDynamicChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -934,7 +934,7 @@
   }
 ---
 # name: test_save_dynamic_multiple_choice_question[dynamic_multiple_choice-False]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDynamicMultipleChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {
@@ -990,7 +990,7 @@
   }
 ---
 # name: test_save_dynamic_multiple_choice_question[dynamic_multiple_choice-True]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveDynamicMultipleChoiceQuestion': <class 'dict'> {
       'clientMutationId': 'testid',
       'question': <class 'dict'> {

@@ -128,7 +128,7 @@
     },
   }
 ---
-# name: test_query_all_workflows
+# name: test_save_workflow
   <class 'dict'> {
     'saveWorkflow': <class 'dict'> {
       'clientMutationId': 'testid',
