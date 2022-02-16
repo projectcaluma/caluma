@@ -521,7 +521,6 @@ class BaseStartingObject:
         Call `BaseStartingObject.get_object('cases', info)`
         to get a CaseStartingObject, for example.
         """
-
         subclasses_by_name = {sub.identifier: sub for sub in cls.__subclasses__()}
         return subclasses_by_name[identifier](
             info, disable_visibilities=disable_visibilities

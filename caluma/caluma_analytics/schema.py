@@ -83,10 +83,10 @@ class AnalyticsTable(DjangoObjectType):
     result_data = graphene.Field(AnalyticsOutput)
 
     @staticmethod
-    def resolve_available_fields(obj, info, prefix=None, depth=0):
+    def resolve_available_fields(obj, info, prefix=None, depth=None, **kwargs):
         start = obj.get_starting_object(info)
 
-        depth = depth if depth > 0 else 1
+        depth = depth or 1
         prefix = prefix.split(".") if prefix else []
 
         return [

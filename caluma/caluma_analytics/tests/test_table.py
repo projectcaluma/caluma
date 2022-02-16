@@ -70,7 +70,7 @@ QUERY_AVAILABLE_FIELDS = """
 
 def test_create_table(db, snapshot, schema_executor):
     result = schema_executor(MUTATION_SAVE_TABLE, variable_values={})
-
+    breakpoint()
     assert not result.errors
     assert models.AnalyticsTable.objects.filter(pk="test-table").exists()
 
