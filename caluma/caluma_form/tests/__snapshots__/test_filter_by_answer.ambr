@@ -243,6 +243,55 @@
     },
   }
 ---
+# name: test_query_all_questions[calculated_float-11.5-matching-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'IN',
+            'question': 'calculated_float',
+            'value': <class 'list'> [
+              11.5,
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
 # name: test_query_all_questions[calculated_float-11.5-matching-ISNULL]
   <class 'dict'> {
     'request': <class 'dict'> {
@@ -698,6 +747,48 @@
     },
   }
 ---
+# name: test_query_all_questions[calculated_float-11.5-nomatch-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'IN',
+            'question': 'calculated_float',
+            'value': <class 'list'> [
+              11.5,
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
 # name: test_query_all_questions[calculated_float-11.5-nomatch-ISNULL]
   <class 'dict'> {
     'request': <class 'dict'> {
@@ -1140,6 +1231,44 @@
     },
   }
 ---
+# name: test_query_all_questions[choice-a-matching-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'lookup': 'IN',
+            'question': 'choice',
+            'value': <class 'list'> [
+              'a',
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': "[GraphQLError('Invalid lookup for question slug=choice (CHOICE): IN', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
+    },
+  }
+---
 # name: test_query_all_questions[choice-a-matching-ISNULL]
   <class 'dict'> {
     'request': <class 'dict'> {
@@ -1554,6 +1683,44 @@
         },
       },
       'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[choice-a-nomatch-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'lookup': 'IN',
+            'question': 'choice',
+            'value': <class 'list'> [
+              'a',
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': "[GraphQLError('Invalid lookup for question slug=choice (CHOICE): IN', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -1984,6 +2151,55 @@
         'allDocuments': None,
       },
       'errors': "[GraphQLError('Invalid lookup for question slug=date (DATE): INTERSECTS', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
+    },
+  }
+---
+# name: test_query_all_questions[date-2018-05-09-matching-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'IN',
+            'question': 'date',
+            'value': <class 'list'> [
+              '2018-05-09',
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
+      },
+      'errors': 'None',
     },
   }
 ---
@@ -2442,6 +2658,48 @@
     },
   }
 ---
+# name: test_query_all_questions[date-2018-05-09-nomatch-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'IN',
+            'question': 'date',
+            'value': <class 'list'> [
+              '2018-05-09',
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
 # name: test_query_all_questions[date-2018-05-09-nomatch-ISNULL]
   <class 'dict'> {
     'request': <class 'dict'> {
@@ -2860,6 +3118,45 @@
     },
   }
 ---
+# name: test_query_all_questions[datetime-2018-05-09T14:54:51.728786-matching-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'FAMILY',
+            'lookup': 'IN',
+            'question': 'datetime',
+            'value': <class 'list'> [
+              '2018-05-09T14:54:51.728786',
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
+    },
+  }
+---
 # name: test_query_all_questions[datetime-2018-05-09T14:54:51.728786-matching-ISNULL]
   <class 'dict'> {
     'request': <class 'dict'> {
@@ -3254,6 +3551,45 @@
             'lookup': 'INTERSECTS',
             'question': 'datetime',
             'value': '2018-05-09T14:54:51.728786',
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': "[GraphQLError('Question matching query does not exist.', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
+    },
+  }
+---
+# name: test_query_all_questions[datetime-2018-05-09T14:54:51.728786-nomatch-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'FAMILY',
+            'lookup': 'IN',
+            'question': 'datetime',
+            'value': <class 'list'> [
+              '2018-05-09T14:54:51.728786',
+            ],
           },
         ],
       },
@@ -3692,6 +4028,55 @@
         'allDocuments': None,
       },
       'errors': "[GraphQLError('Invalid lookup for question slug=float (FLOAT): INTERSECTS', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
+    },
+  }
+---
+# name: test_query_all_questions[float-11.5-matching-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'FAMILY',
+            'lookup': 'IN',
+            'question': 'float',
+            'value': <class 'list'> [
+              11.5,
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
+      },
+      'errors': 'None',
     },
   }
 ---
@@ -4150,6 +4535,48 @@
     },
   }
 ---
+# name: test_query_all_questions[float-11.5-nomatch-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'FAMILY',
+            'lookup': 'IN',
+            'question': 'float',
+            'value': <class 'list'> [
+              11.5,
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
 # name: test_query_all_questions[float-11.5-nomatch-ISNULL]
   <class 'dict'> {
     'request': <class 'dict'> {
@@ -4588,6 +5015,55 @@
         'allDocuments': None,
       },
       'errors': "[GraphQLError('Invalid lookup for question slug=integer (INTEGER): INTERSECTS', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
+    },
+  }
+---
+# name: test_query_all_questions[integer-10-matching-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'IN',
+            'question': 'integer',
+            'value': <class 'list'> [
+              10,
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
+      },
+      'errors': 'None',
     },
   }
 ---
@@ -5043,6 +5519,48 @@
         'allDocuments': None,
       },
       'errors': "[GraphQLError('Invalid lookup for question slug=integer (INTEGER): INTERSECTS', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
+    },
+  }
+---
+# name: test_query_all_questions[integer-10-nomatch-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'IN',
+            'question': 'integer',
+            'value': <class 'list'> [
+              10,
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
     },
   }
 ---
@@ -5506,6 +6024,47 @@
     },
   }
 ---
+# name: test_query_all_questions[multiple_choice-search_value0-matching-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'lookup': 'IN',
+            'question': 'multiple_choice',
+            'value': <class 'list'> [
+              <class 'list'> [
+                'a',
+                'b',
+              ],
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': "[GraphQLError('Invalid lookup for question slug=multiple_choice (MULTIPLE_CHOICE): IN', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
+    },
+  }
+---
 # name: test_query_all_questions[multiple_choice-search_value0-matching-ISNULL]
   <class 'dict'> {
     'request': <class 'dict'> {
@@ -5953,6 +6512,47 @@
         },
       },
       'errors': 'None',
+    },
+  }
+---
+# name: test_query_all_questions[multiple_choice-search_value0-nomatch-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'lookup': 'IN',
+            'question': 'multiple_choice',
+            'value': <class 'list'> [
+              <class 'list'> [
+                'a',
+                'b',
+              ],
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': None,
+      },
+      'errors': "[GraphQLError('Invalid lookup for question slug=multiple_choice (MULTIPLE_CHOICE): IN', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -6408,6 +7008,55 @@
     },
   }
 ---
+# name: test_query_all_questions[text-foo-matching-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'IN',
+            'question': 'text',
+            'value': <class 'list'> [
+              'foo',
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
 # name: test_query_all_questions[text-foo-matching-ISNULL]
   <class 'dict'> {
     'request': <class 'dict'> {
@@ -6836,6 +7485,48 @@
         'allDocuments': None,
       },
       'errors': "[GraphQLError('Invalid lookup for question slug=text (TEXT): INTERSECTS', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
+    },
+  }
+---
+# name: test_query_all_questions[text-foo-nomatch-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'DIRECT',
+            'lookup': 'IN',
+            'question': 'text',
+            'value': <class 'list'> [
+              'foo',
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
     },
   }
 ---
@@ -7284,6 +7975,55 @@
     },
   }
 ---
+# name: test_query_all_questions[textarea-foo-matching-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'FAMILY',
+            'lookup': 'IN',
+            'question': 'textarea',
+            'value': <class 'list'> [
+              'foo',
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
+      },
+      'errors': 'None',
+    },
+  }
+---
 # name: test_query_all_questions[textarea-foo-matching-ISNULL]
   <class 'dict'> {
     'request': <class 'dict'> {
@@ -7712,6 +8452,48 @@
         'allDocuments': None,
       },
       'errors': "[GraphQLError('Invalid lookup for question slug=textarea (TEXTAREA): INTERSECTS', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
+    },
+  }
+---
+# name: test_query_all_questions[textarea-foo-nomatch-IN]
+  <class 'dict'> {
+    'request': <class 'dict'> {
+      'query': '
+        
+                query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+                  allDocuments(hasAnswer: $hasAnswer) {
+                    edges {
+                      node {
+                        form {
+                          slug
+                        }
+                      }
+                    }
+                  }
+                }
+            
+      ',
+      'variables': <class 'dict'> {
+        'hasAnswer': <class 'list'> [
+          <class 'dict'> {
+            'hierarchy': 'FAMILY',
+            'lookup': 'IN',
+            'question': 'textarea',
+            'value': <class 'list'> [
+              'foo',
+            ],
+          },
+        ],
+      },
+    },
+    'response': <class 'dict'> {
+      'data': <class 'dict'> {
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
+      },
+      'errors': 'None',
     },
   }
 ---

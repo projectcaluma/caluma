@@ -298,6 +298,7 @@
     ICONTAINS
     INTERSECTS
     ISNULL
+    IN
     GTE
     GT
     LTE

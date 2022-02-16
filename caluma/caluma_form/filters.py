@@ -131,6 +131,7 @@ class AnswerLookupMode(Enum):
     ICONTAINS = "icontains"
     INTERSECTS = "intersects"
     ISNULL = "isnull"
+    IN = "in"
 
     GTE = "gte"
     GT = "gt"
@@ -174,6 +175,7 @@ class HasAnswerFilter(Filter):
             AnswerLookupMode.CONTAINS,
             AnswerLookupMode.ICONTAINS,
             AnswerLookupMode.ISNULL,
+            AnswerLookupMode.IN,
         ],
         "integer": [
             AnswerLookupMode.EXACT,
@@ -182,6 +184,7 @@ class HasAnswerFilter(Filter):
             AnswerLookupMode.GT,
             AnswerLookupMode.GTE,
             AnswerLookupMode.ISNULL,
+            AnswerLookupMode.IN,
         ],
         "multiple_choice": [
             AnswerLookupMode.EXACT,
