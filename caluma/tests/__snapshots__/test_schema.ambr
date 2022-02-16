@@ -82,6 +82,161 @@
     clientMutationId: String
   }
   
+  """A cell represents one value in the analytics output."""
+  type AnalyticsCell {
+    alias: String
+    value: String
+  }
+  
+  type AnalyticsField implements Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+  
+    """The ID of the object"""
+    id: ID!
+    alias: String!
+    meta: GenericScalar
+    dataSource: String!
+    table: AnalyticsTable!
+    filters: [String]
+  }
+  
+  type AnalyticsFieldConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+  
+    """Contains the nodes in this connection."""
+    edges: [AnalyticsFieldEdge]!
+    totalCount: Int
+  }
+  
+  """A Relay edge containing a `AnalyticsField` and its cursor."""
+  type AnalyticsFieldEdge {
+    """The item at the end of the edge"""
+    node: AnalyticsField
+  
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+  
+  input AnalyticsFieldFilterSetType {
+    alias: String
+    table: ID
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    createdBefore: DateTime
+    createdAfter: DateTime
+    metaHasKey: String
+    metaValue: [JSONValueFilterType]
+    search: String
+    slugs: [String]
+    invert: Boolean
+  }
+  
+  type AnalyticsOutput {
+    records(before: String = null, after: String = null, first: Int = null, last: Int = null): AnalyticsTableContentConnection
+  }
+  
+  type AnalyticsRowConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+  
+    """Contains the nodes in this connection."""
+    edges: [AnalyticsRowEdge]!
+  }
+  
+  """A Relay edge containing a `AnalyticsRow` and its cursor."""
+  type AnalyticsRowEdge {
+    """The item at the end of the edge"""
+    node: AnalyticsCell
+  
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+  
+  type AnalyticsTable implements Node {
+    createdAt: DateTime!
+    modifiedAt: DateTime!
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    slug: String!
+    meta: JSONString!
+    disableVisibilities: Boolean!
+    name: String!
+    startingObject: CalumaAnalyticsAnalyticsTableStartingObjectChoices!
+    fields(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): AnalyticsFieldConnection!
+  
+    """The ID of the object"""
+    id: ID!
+    availableFields(prefix: String = null, depth: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): AvailableFieldConnection
+    resultData: AnalyticsOutput
+  }
+  
+  type AnalyticsTableConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+  
+    """Contains the nodes in this connection."""
+    edges: [AnalyticsTableEdge]!
+    totalCount: Int
+  }
+  
+  type AnalyticsTableContentConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+  
+    """Contains the nodes in this connection."""
+    edges: [AnalyticsTableContentEdge]!
+  }
+  
+  """A Relay edge containing a `AnalyticsTableContent` and its cursor."""
+  type AnalyticsTableContentEdge {
+    """The item at the end of the edge"""
+    node: AnalyticsRowConnection
+  
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+  
+  """A Relay edge containing a `AnalyticsTable` and its cursor."""
+  type AnalyticsTableEdge {
+    """The item at the end of the edge"""
+    node: AnalyticsTable
+  
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+  
+  input AnalyticsTableFilterSetType {
+    slug: String
+    name: String
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    createdBefore: DateTime
+    createdAfter: DateTime
+    metaHasKey: String
+    metaValue: [JSONValueFilterType]
+    search: String
+    slugs: [String]
+    invert: Boolean
+  }
+  
+  input AnalyticsTableOrderSetType {
+    meta: String
+    attribute: SortableAnalyticsTableAttributes
+    direction: AscDesc
+  }
+  
   interface Answer {
     id: ID
     createdAt: DateTime!
@@ -211,6 +366,46 @@
     DESC
   }
   
+  """
+  Available fields show users what can be selected in an analysis.
+  
+  The main identifier is the source path, but for display purposes,
+  a label (field at current position) and a full_label (including
+  parent fields' labels) is available.
+  
+  Frontends should query sub-fields (via prefix/depth) if is_leaf is
+  False. Some fields can be non-leafs as well as values, such as
+  dates: Dates can be extracted "as is", or we can extract a
+  date part (such as year, quarter, ...) from it.
+  """
+  type AvailableField implements Node {
+    """The ID of the object"""
+    id: ID!
+    label: String
+    fullLabel: String
+    sourcePath: String
+    isLeaf: Boolean
+    isValue: Boolean
+  }
+  
+  type AvailableFieldConnection {
+    """Pagination data for this connection."""
+    pageInfo: PageInfo!
+  
+    """Contains the nodes in this connection."""
+    edges: [AvailableFieldEdge]!
+    totalCount: Int
+  }
+  
+  """A Relay edge containing a `AvailableField` and its cursor."""
+  type AvailableFieldEdge {
+    """The item at the end of the edge"""
+    node: AvailableField
+  
+    """A cursor for use in pagination"""
+    cursor: String!
+  }
+  
   """An enumeration."""
   enum ButtonAction {
     COMPLETE
@@ -281,6 +476,12 @@
   }
   
   """An enumeration."""
+  enum CalumaAnalyticsAnalyticsTableStartingObjectChoices {
+    """Cases"""
+    CASES
+  }
+  
+  """An enumeration."""
   enum CalumaFormHistoricalAnswerHistoryQuestionTypeChoices {
     """multiple_choice"""
     MULTIPLE_CHOICE
@@ -326,6 +527,18 @@
   
     """action_button"""
     ACTION_BUTTON
+  }
+  
+  """An enumeration."""
+  enum CalumaWorkflowTaskTypeChoices {
+    """Task which can simply be marked as completed."""
+    SIMPLE
+  
+    """Task to complete a defined workflow form."""
+    COMPLETE_WORKFLOW_FORM
+  
+    """Task to complete a defined task form."""
+    COMPLETE_TASK_FORM
   }
   
   input CancelCaseInput {
@@ -2239,6 +2452,10 @@
   }
   
   type Mutation {
+    saveAnalyticsTable(input: SaveAnalyticsTableInput!): SaveAnalyticsTablePayload
+    removeAnalyticsTable(input: RemoveAnalyticsTableInput!): RemoveAnalyticsTablePayload
+    saveAnalyticsField(input: SaveAnalyticsFieldInput!): SaveAnalyticsFieldPayload
+    removeAnalyticsField(input: RemoveAnalyticsFieldInput!): RemoveAnalyticsFieldPayload
     saveWorkflow(input: SaveWorkflowInput!): SaveWorkflowPayload
     addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
     removeFlow(input: RemoveFlowInput!): RemoveFlowPayload
@@ -2422,6 +2639,60 @@
   
   type Query {
     documentAsOf(id: ID!, asOf: DateTime!): HistoricalDocument
+    allAnalyticsTables(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+      slug: String = null
+      name: String = null
+      filter: [AnalyticsTableFilterSetType] = null
+      order: [AnalyticsTableOrderSetType] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+  
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+  
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      search: String = null
+      slugs: [String] = null
+    ): AnalyticsTableConnection
+    analyticsTable(slug: String!): AnalyticsTable
+    allAnalyticsFields(
+      offset: Int = null
+      before: String = null
+      after: String = null
+      first: Int = null
+      last: Int = null
+      metaValue: [JSONValueFilterType] = null
+      alias: String = null
+      table: ID = null
+      filter: [AnalyticsFieldFilterSetType] = null
+      createdByUser: String = null
+      createdByGroup: String = null
+      modifiedByUser: String = null
+      modifiedByGroup: String = null
+  
+      """Only return entries created after the given DateTime (Exclusive)"""
+      createdBefore: DateTime = null
+  
+      """
+      Only return entries created at or before the given DateTime (Inclusive)
+      """
+      createdAfter: DateTime = null
+      metaHasKey: String = null
+      search: String = null
+      slugs: [String] = null
+    ): AnalyticsFieldConnection
     allDataSources(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceConnection
     dataSource(name: String!, before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
     allWorkflows(
@@ -2900,6 +3171,26 @@
     clientMutationId: String
   }
   
+  input RemoveAnalyticsFieldInput {
+    id: ID!
+    clientMutationId: String
+  }
+  
+  type RemoveAnalyticsFieldPayload {
+    analyticsField: AnalyticsField
+    clientMutationId: String
+  }
+  
+  input RemoveAnalyticsTableInput {
+    slug: ID!
+    clientMutationId: String
+  }
+  
+  type RemoveAnalyticsTablePayload {
+    analyticsTable: AnalyticsTable
+    clientMutationId: String
+  }
+  
   input RemoveAnswerInput {
     answer: ID!
     clientMutationId: String
@@ -3003,6 +3294,43 @@
   
   type SaveActionButtonQuestionPayload {
     question: Question
+    clientMutationId: String
+  }
+  
+  input SaveAnalyticsFieldInput {
+    id: ID
+    alias: String!
+    table: ID!
+    dataSource: String!
+    filters: [String]
+    meta: JSONString
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    clientMutationId: String
+  }
+  
+  type SaveAnalyticsFieldPayload {
+    analyticsField: AnalyticsField
+    clientMutationId: String
+  }
+  
+  input SaveAnalyticsTableInput {
+    slug: String!
+    name: String!
+    startingObject: starting_object!
+    disableVisibilities: Boolean
+    meta: JSONString
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    clientMutationId: String
+  }
+  
+  type SaveAnalyticsTablePayload {
+    analyticsTable: AnalyticsTable
     clientMutationId: String
   }
   
@@ -3680,6 +4008,7 @@
     slug: String!
     name: String!
     description: String
+    type: CalumaWorkflowTaskTypeChoices!
     meta: GenericScalar!
     addressGroups: GroupJexl
     controlGroups: GroupJexl
@@ -3704,6 +4033,17 @@
   type SkipWorkItemPayload {
     workItem: WorkItem
     clientMutationId: String
+  }
+  
+  enum SortableAnalyticsTableAttributes {
+    CREATED_AT
+    MODIFIED_AT
+    CREATED_BY_USER
+    CREATED_BY_GROUP
+    MODIFIED_BY_USER
+    MODIFIED_BY_GROUP
+    SLUG
+    NAME
   }
   
   enum SortableAnswerAttributes {
@@ -4669,6 +5009,12 @@
   
     """Meta foobar (descending)"""
     META_FOOBAR_DESC
+  }
+  
+  """An enumeration."""
+  enum starting_object {
+    """Cases"""
+    CASES
   }
   
   '
