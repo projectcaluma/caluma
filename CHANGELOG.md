@@ -8,6 +8,12 @@
 * **settings:** Use int for MINIO_PRESIGNED_TTL_MINUTES ([#1632](https://github.com/projectcaluma/caluma/issues/1632)) ([`cc9f89f`](https://github.com/projectcaluma/caluma/commit/cc9f89f7d356038851f1fa3f9ec343d60e5ee256))
 
 
+# v7.14.1 (16. February 2022)
+
+### Fix
+* **form:** Update or create answers when copying to a new document ([`9f436af`](https://github.com/projectcaluma/caluma/commit/9f436afe58aea07d39241034ac247e57f9d6103c))
+
+
 # v7.14.0 (1 December 2021)
 
 ### Feature
