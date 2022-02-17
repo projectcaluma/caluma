@@ -59,10 +59,11 @@ def test_cmdline_output(
     out = out.replace(str(case2.pk), "case2pk")
     out = out.replace(str(case3.pk), "case3pk")
 
+    # This test explicitly disregards ordering
     if output_mode == ["--json"]:
-        data = json.loads(out)
+        data = sorted(json.loads(out), key=lambda x: x["blablub"])
     else:
-        data = out
+        data = sorted(out.splitlines())
 
     snapshot.assert_match({"data": data, "stderr": err})
 

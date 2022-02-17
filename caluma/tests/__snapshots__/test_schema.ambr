@@ -3307,7 +3307,7 @@
   input SaveAnalyticsTableInput {
     slug: String!
     name: String!
-    startingObject: starting_object!
+    startingObject: StartingObject!
     disableVisibilities: Boolean
     meta: JSONString
     createdByUser: String
@@ -4159,6 +4159,11 @@
     clientMutationId: String
   }
   
+  """An enumeration."""
+  enum StartingObject {
+    CASES
+  }
+  
   type StaticQuestion implements Question & Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -4996,12 +5001,6 @@
   
     """Meta foobar (descending)"""
     META_FOOBAR_DESC
-  }
-  
-  """An enumeration."""
-  enum starting_object {
-    """Cases"""
-    CASES
   }
   
   '
