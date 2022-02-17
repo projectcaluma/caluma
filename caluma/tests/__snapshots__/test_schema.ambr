@@ -366,7 +366,6 @@
     DESC
   }
   
-<<<<<<< HEAD
   """
   Available fields show users what can be selected in an analysis.
   
@@ -407,8 +406,6 @@
     cursor: String!
   }
   
-=======
->>>>>>> graphene_django_v3
   """An enumeration."""
   enum ButtonAction {
     COMPLETE
@@ -479,15 +476,12 @@
   }
   
   """An enumeration."""
-<<<<<<< HEAD
   enum CalumaAnalyticsAnalyticsTableStartingObjectChoices {
     """Cases"""
     CASES
   }
   
   """An enumeration."""
-=======
->>>>>>> graphene_django_v3
   enum CalumaFormHistoricalAnswerHistoryQuestionTypeChoices {
     """multiple_choice"""
     MULTIPLE_CHOICE
@@ -2633,7 +2627,6 @@
   
   type Query {
     documentAsOf(id: ID!, asOf: DateTime!): HistoricalDocument
-<<<<<<< HEAD
     allAnalyticsTables(
       offset: Int = null
       before: String = null
@@ -2688,8 +2681,6 @@
       search: String = null
       slugs: [String] = null
     ): AnalyticsFieldConnection
-=======
->>>>>>> graphene_django_v3
     allDataSources(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceConnection
     dataSource(name: String!, before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
     allWorkflows(
