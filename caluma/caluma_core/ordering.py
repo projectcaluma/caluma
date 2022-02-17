@@ -45,12 +45,14 @@ class MetaFieldOrdering(CalumaOrdering):
     def get_ordering_value(
         self, qs: QuerySet, value: Any
     ) -> Tuple[QuerySet, OrderingFieldType]:
+        value = (hasattr(value, "value") and value.value) or value  # noqa: B009
 
         return qs, CombinedExpression(F(self.field_name), "->", Value(value))
 
 
 class AttributeOrderingMixin(CalumaOrdering):
     def get_ordering_value(self, qs, value):
+        value = (hasattr(value, "value") and value.value) or value  # noqa: B009
         if value not in self._fields:  # pragma: no cover
             # this is normally covered by graphene enforcing its schema,
             # but we still need to handle it

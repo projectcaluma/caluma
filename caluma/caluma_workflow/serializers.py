@@ -36,6 +36,20 @@ class GroupJexlField(serializers.JexlField):
         super().__init__(GroupJexl(), **kwargs)
 
 
+class CaseStatusField(serializers.CalumaChoiceField):
+    # Required for the type system, case status is
+    # never part of an input
+    def __init__(self, **kwargs):  # pragma: no cover
+        super().__init__([s for s, _ in models.Case.STATUS_CHOICE_TUPLE], **kwargs)
+
+
+class WorkItemStatusField(serializers.CalumaChoiceField):
+    # Required for the type system, workitem status is
+    # never part of an input
+    def __init__(self, **kwargs):  # pragma: no cover
+        super().__init__([s for s, _ in models.WorkItem.STATUS_CHOICE_TUPLE], **kwargs)
+
+
 class SaveWorkflowSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.Workflow

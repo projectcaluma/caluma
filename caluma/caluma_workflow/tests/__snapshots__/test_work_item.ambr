@@ -1,5 +1,5 @@
 # name: test_complete_multiple_instance_task_form_work_item_next[integer-1]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {
@@ -39,7 +39,7 @@
   }
 ---
 # name: test_complete_work_item_last[ready-running-None-None-simple-None]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {
@@ -54,7 +54,7 @@
   }
 ---
 # name: test_complete_work_item_last[ready-running-completed-None0-simple-None]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {
@@ -69,7 +69,7 @@
   }
 ---
 # name: test_complete_work_item_last[ready-running-completed-None1-simple-None]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {
@@ -84,7 +84,7 @@
   }
 ---
 # name: test_complete_work_item_with_next[["some-group"]|groups-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {
@@ -124,7 +124,7 @@
   }
 ---
 # name: test_complete_work_item_with_next[[]-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {
@@ -162,7 +162,7 @@
   }
 ---
 # name: test_complete_work_item_with_next[[]-True-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {
@@ -200,7 +200,7 @@
   }
 ---
 # name: test_complete_work_item_with_next[[info.case.created_by_group, info.work_item.created_by_group]-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {
@@ -242,7 +242,7 @@
   }
 ---
 # name: test_complete_work_item_with_next[[info.case.created_by_group, info.work_item.created_by_group]-True-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {
@@ -295,7 +295,7 @@
   }
 ---
 # name: test_complete_work_item_with_next[[info.case.created_by_group, info.work_item.created_by_group]|groups-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {
@@ -337,7 +337,7 @@
   }
 ---
 # name: test_complete_work_item_with_next[info.case.created_by_group-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {
@@ -377,7 +377,7 @@
   }
 ---
 # name: test_complete_work_item_with_next[info.prev_work_item.controlling_groups-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {
@@ -419,7 +419,7 @@
   }
 ---
 # name: test_complete_work_item_with_next[info.work_item.created_by_group-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'completeWorkItem': <class 'dict'> {
       'clientMutationId': None,
       'workItem': <class 'dict'> {

@@ -1,5 +1,5 @@
 # name: test_cancel_case[running-True-completed-None]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'cancelCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -23,7 +23,7 @@
   }
 ---
 # name: test_cancel_case[running-True-ready-None]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'cancelCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -640,7 +640,7 @@
   }
 ---
 # name: test_save_case[saveCase-False-None-100]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -672,7 +672,7 @@
   }
 ---
 # name: test_save_case[saveCase-False-None-None]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -704,7 +704,7 @@
   }
 ---
 # name: test_save_case[saveCase-False-["group-name"]|groups-100]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -737,7 +737,7 @@
   }
 ---
 # name: test_save_case[saveCase-False-["group-name"]|groups-None]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -770,7 +770,7 @@
   }
 ---
 # name: test_save_case[saveCase-True-None-100]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -804,7 +804,7 @@
   }
 ---
 # name: test_save_case[saveCase-True-None-None]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -838,7 +838,7 @@
   }
 ---
 # name: test_save_case[saveCase-True-["group-name"]|groups-100]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -872,7 +872,7 @@
   }
 ---
 # name: test_save_case[saveCase-True-["group-name"]|groups-None]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -906,7 +906,7 @@
   }
 ---
 # name: test_save_case[startCase-False-None-100]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'startCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -938,7 +938,7 @@
   }
 ---
 # name: test_save_case[startCase-False-None-None]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'startCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -970,7 +970,7 @@
   }
 ---
 # name: test_save_case[startCase-False-["group-name"]|groups-100]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'startCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {
@@ -1003,7 +1003,7 @@
   }
 ---
 # name: test_save_case[startCase-False-["group-name"]|groups-None]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'startCase': <class 'dict'> {
       'case': <class 'dict'> {
         'document': <class 'dict'> {

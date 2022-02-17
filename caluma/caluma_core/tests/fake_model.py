@@ -8,7 +8,7 @@ from django.db.migrations.executor import MigrationExecutor
 def define_fake_model(fields=None, model_base=models.Model, options=None):
     fields = fields if fields else {}
     options = options if options else {}
-    name = str(uuid.uuid4()).replace("-", "")[:8]
+    name = f"x{str(uuid.uuid4()).replace('-', '')[:8]}"
 
     meta_options = {"app_label": "caluma_core"}
     meta_options.update(options)

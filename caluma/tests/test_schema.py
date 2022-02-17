@@ -35,5 +35,23 @@ def test_schema_node(db, snapshot, request, node_type):
     assert result.data["node"]["id"] == global_id
 
 
-def test_schema_introspect(snapshot):
+def _sort_schema_typemap():
+    """Make the schema's typemap sorted.
+
+    This is required for our schema snapshot test,
+    which we want to be as comparable as possible, so
+    changes can be detected.
+    In graphene before 3.0, this was implicitly the case,
+    but 3.0 changed this, so we're monkeypatching
+    a sorted version here.
+
+    This has no functional impact except on the schema
+    dump in the snapshots.
+    """
+    type_map = schema.graphql_schema.type_map
+    schema.graphql_schema.type_map = {k: type_map[k] for k in sorted(type_map.keys())}
+
+
+def test_schema_introspect_direct(snapshot):
+    _sort_schema_typemap()
     snapshot.assert_match(str(schema))

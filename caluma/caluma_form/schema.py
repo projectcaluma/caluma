@@ -191,7 +191,7 @@ class TextQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     format_validators = ConnectionField(FormatValidatorConnection)
     default_answer = graphene.Field("caluma.caluma_form.schema.StringAnswer")
 
-    def resolve_format_validators(self, info):
+    def resolve_format_validators(self, info, *args, **kwargs):
         return get_format_validators(include=self.format_validators)
 
     class Meta:
@@ -221,7 +221,7 @@ class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     format_validators = ConnectionField(FormatValidatorConnection)
     default_answer = graphene.Field("caluma.caluma_form.schema.StringAnswer")
 
-    def resolve_format_validators(self, info):
+    def resolve_format_validators(self, info, *args, **kwargs):
         return get_format_validators(include=self.format_validators)
 
     class Meta:
@@ -326,7 +326,7 @@ class DynamicQuestion(graphene.Interface):
     data_source = graphene.String(required=True)
     hint_text = graphene.String()
 
-    def resolve_options(self, info, *args):
+    def resolve_options(self, info, *args, **kwargs):
         return get_data_source_data(info.context.user, self.data_source)
 
 
@@ -915,6 +915,9 @@ class FileAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
 
 class SaveDocument(Mutation):
+    class Input:
+        id = graphene.String()
+
     class Meta:
         serializer_class = serializers.DocumentSerializer
         model_operations = ["create", "update"]
@@ -1162,10 +1165,10 @@ class Query:
         DocumentValidityConnection, id=graphene.ID(required=True)
     )
 
-    def resolve_all_format_validators(self, info):
+    def resolve_all_format_validators(self, info, **kwargs):
         return get_format_validators()
 
-    def resolve_document_validity(self, info, id):
+    def resolve_document_validity(self, info, id, **kwargs):
         return validate_document(info, id)
 
 

@@ -1,38 +1,35 @@
 # name: test_cmdline_output[output_mode0-False-expect_output1]
   <class 'dict'> {
-    'data': '
-      case_id                                blablub          
-      ------------------------------------   ---------------  
-      case1pk   Shelly Watson    
-      case2pk   Ruben Ibarra     
-      case3pk   Katelyn Mcgrath  
-  
-    ',
+    'data': <class 'list'> [
+      '------------------------------------   ---------------  ',
+      'case1pk   Shelly Watson    ',
+      'case2pk   Ruben Ibarra     ',
+      'case3pk   Katelyn Mcgrath  ',
+      'case_id                                blablub          ',
+    ],
     'stderr': '',
   }
 ---
 # name: test_cmdline_output[output_mode0-True-expect_output0]
   <class 'dict'> {
-    'data': '
-      case_id                                blablub        
-      ------------------------------------   -------------  
-      case1pk   Shelly Watson  
-      case2pk   Ruben Ibarra   
-  
-    ',
+    'data': <class 'list'> [
+      '------------------------------------   -------------  ',
+      'case1pk   Shelly Watson  ',
+      'case2pk   Ruben Ibarra   ',
+      'case_id                                blablub        ',
+    ],
     'stderr': '',
   }
 ---
 # name: test_cmdline_output[output_mode1-False-expect_output1]
   <class 'dict'> {
-    'data': '
-      case_id                                blablub          
-      ------------------------------------   ---------------  
-      case1pk   Shelly Watson    
-      case2pk   Ruben Ibarra     
-      case3pk   Katelyn Mcgrath  
-  
-    ',
+    'data': <class 'list'> [
+      '------------------------------------   ---------------  ',
+      'case1pk   Shelly Watson    ',
+      'case2pk   Ruben Ibarra     ',
+      'case3pk   Katelyn Mcgrath  ',
+      'case_id                                blablub          ',
+    ],
     'stderr': '
       -- SQL: 
       WITH
@@ -115,13 +112,12 @@
 ---
 # name: test_cmdline_output[output_mode1-True-expect_output0]
   <class 'dict'> {
-    'data': '
-      case_id                                blablub        
-      ------------------------------------   -------------  
-      case1pk   Shelly Watson  
-      case2pk   Ruben Ibarra   
-  
-    ',
+    'data': <class 'list'> [
+      '------------------------------------   -------------  ',
+      'case1pk   Shelly Watson  ',
+      'case2pk   Ruben Ibarra   ',
+      'case_id                                blablub        ',
+    ],
     'stderr': '
       -- SQL: 
       WITH
@@ -207,7 +203,8 @@
 ---
 # name: test_cmdline_output[output_mode2-False-expect_output1]
   <class 'dict'> {
-    'data': '',
+    'data': <class 'list'> [
+    ],
     'stderr': '
       -- SQL: 
       WITH
@@ -290,7 +287,8 @@
 ---
 # name: test_cmdline_output[output_mode2-True-expect_output0]
   <class 'dict'> {
-    'data': '',
+    'data': <class 'list'> [
+    ],
     'stderr': '
       -- SQL: 
       WITH
@@ -378,16 +376,16 @@
   <class 'dict'> {
     'data': <class 'list'> [
       <class 'dict'> {
-        'blablub': 'Shelly Watson',
-        'case_id': 'case1pk',
+        'blablub': 'Katelyn Mcgrath',
+        'case_id': 'case3pk',
       },
       <class 'dict'> {
         'blablub': 'Ruben Ibarra',
         'case_id': 'case2pk',
       },
       <class 'dict'> {
-        'blablub': 'Katelyn Mcgrath',
-        'case_id': 'case3pk',
+        'blablub': 'Shelly Watson',
+        'case_id': 'case1pk',
       },
     ],
     'stderr': '',
@@ -397,12 +395,12 @@
   <class 'dict'> {
     'data': <class 'list'> [
       <class 'dict'> {
-        'blablub': 'Shelly Watson',
-        'case_id': 'case1pk',
-      },
-      <class 'dict'> {
         'blablub': 'Ruben Ibarra',
         'case_id': 'case2pk',
+      },
+      <class 'dict'> {
+        'blablub': 'Shelly Watson',
+        'case_id': 'case1pk',
       },
     ],
     'stderr': '',

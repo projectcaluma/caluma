@@ -56,7 +56,7 @@
   }
 ---
 # name: test_remove_form_question
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'removeFormQuestion': <class 'dict'> {
       'clientMutationId': None,
       'form': <class 'dict'> {
@@ -69,7 +69,7 @@
   }
 ---
 # name: test_save_form[-de]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveForm': <class 'dict'> {
       'clientMutationId': 'testid',
       'form': <class 'dict'> {
@@ -83,7 +83,7 @@
   }
 ---
 # name: test_save_form[-en]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveForm': <class 'dict'> {
       'clientMutationId': 'testid',
       'form': <class 'dict'> {
@@ -97,7 +97,7 @@
   }
 ---
 # name: test_save_form[some description text-de]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveForm': <class 'dict'> {
       'clientMutationId': 'testid',
       'form': <class 'dict'> {
@@ -111,7 +111,7 @@
   }
 ---
 # name: test_save_form[some description text-en]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveForm': <class 'dict'> {
       'clientMutationId': 'testid',
       'form': <class 'dict'> {

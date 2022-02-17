@@ -209,6 +209,7 @@ class HasAnswerFilter(Filter):
 
     def apply_expr(self, qs, expr):
         lookup = expr.get("lookup", self.lookup_expr)
+        lookup_expr = (hasattr(lookup, "value") and lookup.value) or lookup
 
         question_slug = expr["question"]
         match_value = expr.get("value")
@@ -243,7 +244,7 @@ class HasAnswerFilter(Filter):
         else:
             answers = answers.filter(
                 **{
-                    f"{answer_value}__{lookup}": match_value,
+                    f"{answer_value}__{lookup_expr}": match_value,
                     "question__slug": question_slug,
                 }
             )
@@ -268,6 +269,7 @@ class HasAnswerFilter(Filter):
             )
 
         if lookup not in valid_lookups:
+            lookup = (hasattr(lookup, "value") and lookup.value) or lookup
             raise exceptions.ValidationError(
                 f"Invalid lookup for question slug={question.slug} ({question.type.upper()}): {lookup.upper()}"
             )
@@ -428,7 +430,10 @@ class SearchAnswersFilter(Filter):
         registry = get_global_registry()
         converted = registry.get_converted_field(field)
         if converted:
-            return converted
+            # TODO: can this be removed, as it's never the case
+            # anymore with graphene 3.0?
+            # Doesn't seem to have ill effects...
+            return converted  # pragma: no cover
 
         converted = List(SearchAnswersFilterType)
         registry.register_converted_field(field, converted)

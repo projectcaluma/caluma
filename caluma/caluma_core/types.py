@@ -66,19 +66,22 @@ class DjangoConnectionField(DjangoConnectionField):
     This can be removed, when (or better if)
     https://github.com/graphql-python/graphql-relay-py/issues/12
     is resolved.
+
+    TODO: properly implement max_limit, see
+    https://github.com/graphql-python/graphene-django/blob/b552dcac24364d3ef824f865ba419c74605942b2/graphene_django/fields.py#L133
     """
 
     @classmethod
-    def resolve_connection(cls, connection, args, iterable, max_limit):
+    def resolve_connection(cls, connection, args, iterable, max_limit=None):
         iterable = maybe_queryset(iterable)
         if isinstance(iterable, QuerySet):
             # only query count on database when pagination is needed
             # resolve_connection may be removed again once following issue is fixed:
             # https://github.com/graphql-python/graphene-django/issues/177
-            if "before" in args or "after" in args or "first" in args or "last" in args:
-                _len = iterable.count()
-            else:
+            if all(args.get(x) is None for x in ["before", "after", "first", "last"]):
                 _len = len(iterable)
+            else:
+                _len = iterable.count()
         else:  # pragma: no cover
             _len = len(iterable)
 
@@ -86,8 +89,7 @@ class DjangoConnectionField(DjangoConnectionField):
         # would try to do a negative slicing which makes django throw an
         # AssertionError
         after = min(get_offset_with_default(args.get("after"), -1) + 1, _len)
-
-        if max_limit is not None and "first" not in args:
+        if max_limit is not None and "first" not in args:  # pragma: no cover
             args["first"] = max_limit
 
         connection = connection_from_list_slice(

@@ -22,7 +22,7 @@
   }
 ---
 # name: test_save_comlete_task_form_task
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCompleteTaskFormTask': <class 'dict'> {
       'clientMutationId': 'testid',
       'task': <class 'dict'> {
@@ -36,7 +36,7 @@
   }
 ---
 # name: test_save_task[SaveCompleteWorkflowFormTask]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveCompleteWorkflowFormTask': <class 'dict'> {
       'clientMutationId': 'testid',
       'task': <class 'dict'> {
@@ -50,7 +50,7 @@
   }
 ---
 # name: test_save_task[SaveSimpleTask]
-  <class 'OrderedDict'> {
+  <class 'dict'> {
     'saveSimpleTask': <class 'dict'> {
       'clientMutationId': 'testid',
       'task': <class 'dict'> {

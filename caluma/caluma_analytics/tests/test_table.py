@@ -309,4 +309,4 @@ def test_full_field_list(
     else:
         start = CaseStartingObject(info, disable_visibilities=False)
         fields = start.get_fields(depth=100)
-        snapshot.assert_match(fields)
+        snapshot.assert_match(sorted(fields.keys()))

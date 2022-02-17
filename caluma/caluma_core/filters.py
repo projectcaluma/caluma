@@ -1,4 +1,5 @@
-from functools import reduce
+import enum
+from functools import reduce, singledispatch
 
 import graphene
 from django import forms
@@ -11,6 +12,7 @@ from django.db.models.expressions import OrderBy, RawSQL
 from django.db.models.fields.json import KeyTextTransform
 from django.db.models.functions import Cast
 from django.utils import translation
+from django_filters.conf import settings as filters_settings
 from django_filters.constants import EMPTY_VALUES
 from django_filters.fields import ChoiceField
 from django_filters.rest_framework import (
@@ -24,13 +26,14 @@ from django_filters.rest_framework import (
 from graphene import Enum, InputObjectType, List
 from graphene.types import generic
 from graphene.types.utils import get_type
-from graphene.utils.str_converters import to_camel_case
+from graphene.utils.str_converters import to_camel_case, to_snake_case
 from graphene_django import filter
 from graphene_django.converter import convert_choice_name
 from graphene_django.filter.filterset import GrapheneFilterSetMixin
 from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
 from localized_fields.fields import LocalizedField
+from rest_framework.exceptions import ValidationError
 
 from .forms import (
     GlobalIDFormField,
@@ -464,6 +467,11 @@ class JSONValueFilterField(CompositeFieldClass):
 class JSONValueFilter(Filter):
     field_class = JSONValueFilterField
 
+    def __init__(self, *args, lookup_expr=None, **kwargs):
+        if lookup_expr is None:
+            lookup_expr = JSONLookupMode.get(filters_settings.DEFAULT_LOOKUP_EXPR)
+        super().__init__(*args, lookup_expr=lookup_expr, **kwargs)
+
     def filter(self, qs, value):
         if value in EMPTY_VALUES:
             return qs
@@ -472,7 +480,9 @@ class JSONValueFilter(Filter):
             if expr in EMPTY_VALUES:  # pragma: no cover
                 continue
 
-            lookup_expr = expr.get("lookup", self.lookup_expr)
+            lookup = expr.get("lookup") or self.lookup_expr
+            lookup_expr = (hasattr(lookup, "value") and lookup.value) or lookup
+
             # "contains" behaves differently on JSONFields as it does on TextFields.
             # That's why we annotate the queryset with the value.
             # Some discussion about it can be found here:
@@ -516,6 +526,87 @@ class DjangoFilterConnectionField(
     @property
     def filterset_class(self):
         return self._provided_filterset_class
+
+    @classmethod
+    def connection_resolver(
+        cls,
+        resolver,
+        connection,
+        default_manager,
+        queryset_resolver,
+        max_limit,
+        enforce_first_or_last,
+        root,
+        info,
+        **args,
+    ):
+        return super().connection_resolver(
+            resolver=resolver,
+            connection=connection,
+            default_manager=default_manager,
+            queryset_resolver=queryset_resolver,
+            max_limit=max_limit,
+            enforce_first_or_last=enforce_first_or_last,
+            root=root,
+            info=info,
+            **cls._clean_args_for_queryset_resolver(args),
+        )
+
+    @classmethod
+    def _clean_args_for_queryset_resolver(cls, args):
+        # Graphene parses incoming data into Enums too early, thus our filters
+        # will receive enum objects that cannot be parsed
+        #
+        # TODO: check if this is still required after the below
+        # resolve_queryset() is completely implemented (we assumed it's
+        # the Enums, but it was actually the list in order_by. We'll keep
+        # it here until we KNOW we can remove it again..)
+        @singledispatch
+        def clean(data):
+            return data
+
+        @clean.register(enum.Enum)
+        def _(data):
+            return data.value
+
+        @clean.register(list)
+        def _(data):
+            return [clean(e) for e in data]
+
+        @clean.register(dict)
+        def _(data):
+            return {k: clean(v) for k, v in data.items()}
+
+        return clean(args)
+
+    @classmethod
+    def resolve_queryset(
+        cls, connection, iterable, info, args, filtering_args, filterset_class
+    ):
+        # Overload the parent class' resolve_queryset() because (for now)
+        # it is unable to deal with multiple order_by values. It's more or less
+        # a literal copy of DjangoFilterConnectionField.resolve_queryset() except
+        # for a "better" filter_kwargs() that doesn't fail on lists in the order_by
+        # parameter.
+        def filter_kwargs():
+            kwargs = {}
+            for k, v in args.items():
+                if k in filtering_args:
+                    if k == "order_by" and v is not None:
+                        # in Caluma, order_by is always a list
+                        assert isinstance(v, list)
+                        v = [to_snake_case(e) for e in v]
+                    kwargs[k] = v
+            return kwargs
+
+        qs = connection._meta.node.get_queryset(iterable, info)
+
+        filterset = filterset_class(
+            data=filter_kwargs(), queryset=qs, request=info.context
+        )
+        if filterset.form.is_valid():
+            return filterset.qs
+        raise ValidationError(filterset.form.errors.as_json())  # pragma: no cover
 
 
 class DjangoFilterSetConnectionField(DjangoFilterConnectionField):
@@ -614,6 +705,16 @@ def convert_choice_field_to_enum(field):
     return converted
 
 
+class _ExtractNestedListFilterMixin:
+    def filter(self, qs, value):
+        if isinstance(value, list) and len(value) and isinstance(value[0], list):
+            # TODO: this seems to be a workaround - we shouldn't
+            # get a double-nested list here. However the schema
+            # seems to show it as such...
+            value = [val for sublist in value for val in sublist]
+        return super().filter(qs, value)
+
+
 def generate_list_filter_class(inner_type):
     """
     Return a Filter class that will resolve into a List(`inner_type`) graphene type.
@@ -627,7 +728,10 @@ def generate_list_filter_class(inner_type):
     form_field = type(f"List{inner_type.__name__}FormField", (forms.Field,), {})
     filter_class = type(
         f"{inner_type.__name__}ListFilter",
-        (Filter,),
+        (
+            _ExtractNestedListFilterMixin,
+            Filter,
+        ),
         {
             "field_class": form_field,
             "__doc__": (
@@ -638,9 +742,11 @@ def generate_list_filter_class(inner_type):
             ),
         },
     )
-    convert_form_field.register(form_field)(
-        lambda x: graphene.List(inner_type, required=x.required)
-    )
+
+    def do_convert_type(x):
+        return graphene.List(inner_type, required=x.required)
+
+    convert_form_field.register(form_field)(do_convert_type)
 
     return filter_class
 

@@ -5,7 +5,14 @@ from ..caluma_core import serializers
 from . import models
 
 
+class StartingObjectField(serializers.CalumaChoiceField):
+    def __init__(self, **kwargs):
+        super().__init__(models.AnalyticsTable.STARTING_OBJECT_CHOICES, **kwargs)
+
+
 class SaveAnalyticsTableSerializer(serializers.ModelSerializer):
+    starting_object = StartingObjectField(required=True)
+
     class Meta:
         model = models.AnalyticsTable
         fields = [

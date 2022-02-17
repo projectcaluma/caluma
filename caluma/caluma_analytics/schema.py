@@ -1,6 +1,7 @@
 import graphene
 from graphene import ConnectionField, String, relay
 from graphene.types import ObjectType, generic
+from graphene_django.rest_framework import serializer_converter
 
 from ..caluma_core.filters import (
     CollectionFilterSetFactory,
@@ -74,6 +75,16 @@ class AnalyticsOutput(ObjectType):
         return rows
 
 
+StartingObject = graphene.Enum(
+    "StartingObject",
+    [(key.upper(), key) for key, _ in models.AnalyticsTable.STARTING_OBJECT_CHOICES],
+)
+
+serializer_converter.get_graphene_type_from_serializer_field.register(
+    serializers.StartingObjectField, lambda field: StartingObject
+)
+
+
 class AnalyticsTable(DjangoObjectType):
     available_fields = ConnectionField(
         AvailableFieldConnection,
@@ -83,10 +94,10 @@ class AnalyticsTable(DjangoObjectType):
     result_data = graphene.Field(AnalyticsOutput)
 
     @staticmethod
-    def resolve_available_fields(obj, info, prefix=None, depth=0):
+    def resolve_available_fields(obj, info, prefix=None, depth=None, **kwargs):
         start = obj.get_starting_object(info)
 
-        depth = depth if depth > 0 else 1
+        depth = depth if depth and depth > 0 else 1
         prefix = prefix.split(".") if prefix else []
 
         return [
@@ -117,7 +128,6 @@ class AnalyticsField(DjangoObjectType):
 
     class Meta:
         model = models.AnalyticsField
-        # exclude = ("cases", "task_flows")
         interfaces = (relay.Node,)
         connection_class = CountableConnectionBase
 

@@ -5,6 +5,8 @@ Source: https://github.com/projectcaluma/caluma
 
 # Files below the threshold of originality (metadata, config and project-information)
 Files:
+    deps/
+    xfails.list
     .dockerignore
     .editorconfig
     .github/dependabot.yml
