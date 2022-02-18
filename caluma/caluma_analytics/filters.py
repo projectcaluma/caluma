@@ -18,7 +18,15 @@ class AnalyticsTableFilterSet(MetaFilterSet):
 
 
 class AnalyticsFieldFilterSet(MetaFilterSet):
-    search = SearchFilter(fields=("alias", "data_source"))
+    search = SearchFilter(
+        fields=(
+            "alias",
+            "data_source",
+            "function",
+            "table__name",
+            "source_field__alias",
+        )
+    )
     slugs = SlugMultipleChoiceFilter(field_name="slug")
 
     class Meta:

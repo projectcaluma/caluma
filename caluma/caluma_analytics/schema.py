@@ -1,4 +1,5 @@
 import graphene
+from django.db.models.query_utils import DeferredAttribute
 from graphene import ConnectionField, String, relay
 from graphene.types import ObjectType, generic
 from graphene_django.rest_framework import serializer_converter
@@ -9,7 +10,7 @@ from ..caluma_core.filters import (
 )
 from ..caluma_core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..caluma_core.types import CountableConnectionBase, DjangoObjectType
-from . import filters, models, serializers, simple_table
+from . import filters, models, pivot_table, serializers, simple_table
 
 
 class AvailableField(ObjectType):
@@ -75,13 +76,44 @@ class AnalyticsOutput(ObjectType):
         return rows
 
 
-StartingObject = graphene.Enum(
+def enum_type_from_field(name, field, description=None, register_to_field=None):
+    if isinstance(field, DeferredAttribute):
+        field = field.field  # pragma: no cover
+
+    the_type = graphene.Enum(
+        name, [(key.upper(), key) for key, _ in field.choices], description=description
+    )
+
+    if register_to_field:
+        serializer_converter.get_graphene_type_from_serializer_field.register(
+            register_to_field, lambda field: the_type
+        )
+
+    return the_type
+
+
+StartingObject = enum_type_from_field(
     "StartingObject",
-    [(key.upper(), key) for key, _ in models.AnalyticsTable.STARTING_OBJECT_CHOICES],
+    models.AnalyticsTable.starting_object,
+    register_to_field=serializers.StartingObjectField,
+)
+
+
+AggregateFunction = enum_type_from_field(
+    "AggregateFunction",
+    models.AnalyticsField.function,
+    description="Aggregate function for pivot table",
+    register_to_field=serializers.AggregateFunctionField,
+)
+
+
+TableType = graphene.Enum(
+    "TableType",
+    [(key.upper(), key) for key, _ in models.AnalyticsTable.TABLE_TYPE_CHOICES],
 )
 
 serializer_converter.get_graphene_type_from_serializer_field.register(
-    serializers.StartingObjectField, lambda field: StartingObject
+    serializers.TableTypeField, lambda field: TableType
 )
 
 
@@ -92,6 +124,8 @@ class AnalyticsTable(DjangoObjectType):
         depth=graphene.Int(required=False),
     )
     result_data = graphene.Field(AnalyticsOutput)
+    starting_object = StartingObject(required=False)
+    table_type = TableType(required=False)
 
     @staticmethod
     def resolve_available_fields(obj, info, prefix=None, depth=None, **kwargs):
@@ -115,19 +149,43 @@ class AnalyticsTable(DjangoObjectType):
             key=lambda field: field["id"],
         )
 
+    result_data = graphene.Field(AnalyticsOutput)
+
     @staticmethod
     def resolve_result_data(obj, info):
-        return simple_table.SimpleTable(obj)
+        if obj.table_type == obj.TYPE_PIVOT:
+            return pivot_table.PivotTable(obj)
+        elif obj.table_type == obj.TYPE_EXTRACTION:
+            return simple_table.SimpleTable(obj)
 
     class Meta:
         model = models.AnalyticsTable
         interfaces = (relay.Node,)
         connection_class = CountableConnectionBase
+        fields = [
+            "slug",
+            "meta",
+            "created_by_group",
+            "created_by_user",
+            "modified_by_group",
+            "modified_by_user",
+            "created_at",
+            "modified_at",
+            "disable_visibilities",
+            "available_fields",
+            "result_data",
+            "fields",
+            "name",
+            "base_table",
+            "table_type",
+            "starting_object",
+        ]
 
 
 class AnalyticsField(DjangoObjectType):
     meta = generic.GenericScalar()
     filters = graphene.List(String, required=False)
+    function = AggregateFunction(required=False)
 
     @classmethod
     def get_queryset(cls, queryset, info):

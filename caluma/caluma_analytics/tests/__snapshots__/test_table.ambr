@@ -157,6 +157,14 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6bmFtZQ==',
+              'isLeaf': True,
+              'label': 'name',
+              'sourcePath': 'name',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6c3RhdHVz',
               'isLeaf': True,
               'label': 'status',
@@ -594,6 +602,14 @@
               'isLeaf': True,
               'label': "Key 'test-key'",
               'sourcePath': 'meta.test-key',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6bmFtZQ==',
+              'isLeaf': True,
+              'label': 'name',
+              'sourcePath': 'name',
             },
           },
           <class 'dict'> {

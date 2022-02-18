@@ -3,7 +3,12 @@ import json
 import pytest
 from django.core.management import call_command
 
+from .. import models
 
+
+@pytest.mark.parametrize(
+    "analytics_table__table_type", [models.AnalyticsTable.TYPE_EXTRACTION]
+)
 @pytest.mark.parametrize(
     "enable_filter, expect_output", [(True, [0, 1]), (False, [0, 1, 2])]
 )

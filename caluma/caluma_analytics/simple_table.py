@@ -681,8 +681,9 @@ class SimpleTable:
         context = {}
 
     def __init__(self, table, info=_AnonymousInfo):
-        self.info = info
+        assert table.table_type == table.TYPE_EXTRACTION
 
+        self.info = info
         self.table = table
         self.last_query = None
         self.last_query_params = None
@@ -693,7 +694,7 @@ class SimpleTable:
             disable_visibilities=self.table.disable_visibilities,
         )
 
-        self.base_query = self.starting_object.get_query()
+        self.base_query = sql.Query(from_=self.starting_object.get_query())
 
     @cached_property
     def _fields(self):
@@ -719,6 +720,16 @@ class SimpleTable:
     def get_sql_and_params(self):
         """Return a list of records as specified in the given table config."""
 
+        base_query = self.get_query_object()
+
+        sql_query, params, _ = sql.QueryRender(base_query).as_sql(alias=None)
+
+        self.last_query = sql_query
+        self.last_query_params = params
+        return sql_query, params
+
+    def get_query_object(self):
+
         fields = self._fields
 
         step_queries = {}
@@ -740,11 +751,7 @@ class SimpleTable:
                     query = step.annotate(query)
                     step_queries[cache_path] = query
 
-        sql_query, params, _ = sql.QueryRender(base_query).as_sql(alias=None)
-
-        self.last_query = sql_query
-        self.last_query_params = params
-        return sql_query, params
+        return base_query
 
     def get_records(self):
 

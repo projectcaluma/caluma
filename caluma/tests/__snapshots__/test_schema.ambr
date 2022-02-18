@@ -82,6 +82,15 @@
     clientMutationId: String
   }
   
+  """Aggregate function for pivot table"""
+  enum AggregateFunction {
+    GROUP
+    SUM
+    AVG
+    MAX
+    MIN
+  }
+  
   """A cell represents one value in the analytics output."""
   type AnalyticsCell {
     alias: String
@@ -103,6 +112,7 @@
     dataSource: String!
     table: AnalyticsTable!
     filters: [String]
+    function: AggregateFunction
   }
   
   type AnalyticsFieldConnection {
@@ -169,9 +179,11 @@
     modifiedByGroup: String
     slug: String!
     meta: JSONString!
+    tableType: TableType
+    baseTable: AnalyticsTable
     disableVisibilities: Boolean!
     name: String!
-    startingObject: CalumaAnalyticsAnalyticsTableStartingObjectChoices!
+    startingObject: StartingObject
     fields(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): AnalyticsFieldConnection!
   
     """The ID of the object"""
@@ -474,12 +486,6 @@
   
     """The ID of the object"""
     id: ID!
-  }
-  
-  """An enumeration."""
-  enum CalumaAnalyticsAnalyticsTableStartingObjectChoices {
-    """Cases"""
-    CASES
   }
   
   """An enumeration."""
@@ -3295,6 +3301,7 @@
     dataSource: String!
     filters: [String]
     meta: JSONString
+    function: AggregateFunction
     createdByUser: String
     createdByGroup: String
     modifiedByUser: String
@@ -3310,7 +3317,8 @@
   input SaveAnalyticsTableInput {
     slug: String!
     name: String!
-    startingObject: StartingObject!
+    startingObject: StartingObject
+    tableType: TableType!
     disableVisibilities: Boolean
     meta: JSONString
     createdByUser: String
@@ -4377,6 +4385,12 @@
   
     """The ID of the object"""
     id: ID!
+  }
+  
+  """An enumeration."""
+  enum TableType {
+    TYPE_EXTRACTION
+    TYPE_PIVOT
   }
   
   interface Task {

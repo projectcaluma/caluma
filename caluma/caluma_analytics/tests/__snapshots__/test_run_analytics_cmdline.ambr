@@ -1,4 +1,4 @@
-# name: test_cmdline_output[output_mode0-False-expect_output1]
+# name: test_cmdline_output[output_mode0-False-expect_output1-type_extraction]
   <class 'dict'> {
     'data': <class 'list'> [
       '------------------------------------   --------------  ',
@@ -10,7 +10,7 @@
     'stderr': '',
   }
 ---
-# name: test_cmdline_output[output_mode0-True-expect_output0]
+# name: test_cmdline_output[output_mode0-True-expect_output0-type_extraction]
   <class 'dict'> {
     'data': <class 'list'> [
       '------------------------------------   --------------  ',
@@ -21,7 +21,7 @@
     'stderr': '',
   }
 ---
-# name: test_cmdline_output[output_mode1-False-expect_output1]
+# name: test_cmdline_output[output_mode1-False-expect_output1-type_extraction]
   <class 'dict'> {
     'data': <class 'list'> [
       '------------------------------------   --------------  ',
@@ -98,19 +98,22 @@
                   WHERE "question_id" = 'top_question' 
                   ORDER BY document_id
       
+      
           ) AS answer_b4215_caea5 ON (document_2a07e.id = "answer_b4215_caea5".document_id)
           WHERE form_id = 'top_form'
           ORDER BY id
       
+      
       ) AS document_2a07e_27f15 ON (case_ac50e.document_id = "document_2a07e_27f15".id)
       
-      ) AS analytics_76b97
+      
+      ) AS analytics_fc0d3
       -- PARAMS: 
   
     ',
   }
 ---
-# name: test_cmdline_output[output_mode1-True-expect_output0]
+# name: test_cmdline_output[output_mode1-True-expect_output0-type_extraction]
   <class 'dict'> {
     'data': <class 'list'> [
       '------------------------------------   --------------  ',
@@ -186,13 +189,16 @@
                   WHERE "question_id" = 'top_question' 
                   ORDER BY document_id
       
+      
           ) AS answer_b4215_caea5 ON (document_2a07e.id = "answer_b4215_caea5".document_id)
           WHERE form_id = 'top_form'
           ORDER BY id
       
+      
       ) AS document_2a07e_27f15 ON (case_ac50e.document_id = "document_2a07e_27f15".id)
       
-      ) AS analytics_76b97
+      
+      ) AS analytics_fc0d3
       WHERE analytics_result_blablub IN (%(flt_analytics_result_blablub_8201d)s, %(flt_analytics_result_blablub_8e5e6)s)
       -- PARAMS: 
       --     flt_analytics_result_blablub_8201d: Shelly Watson
@@ -201,7 +207,7 @@
     ',
   }
 ---
-# name: test_cmdline_output[output_mode2-False-expect_output1]
+# name: test_cmdline_output[output_mode2-False-expect_output1-type_extraction]
   <class 'dict'> {
     'data': <class 'list'> [
     ],
@@ -273,19 +279,22 @@
                   WHERE "question_id" = 'top_question' 
                   ORDER BY document_id
       
+      
           ) AS answer_b4215_caea5 ON (document_2a07e.id = "answer_b4215_caea5".document_id)
           WHERE form_id = 'top_form'
           ORDER BY id
       
+      
       ) AS document_2a07e_27f15 ON (case_ac50e.document_id = "document_2a07e_27f15".id)
       
-      ) AS analytics_76b97
+      
+      ) AS analytics_fc0d3
       -- PARAMS: 
   
     ',
   }
 ---
-# name: test_cmdline_output[output_mode2-True-expect_output0]
+# name: test_cmdline_output[output_mode2-True-expect_output0-type_extraction]
   <class 'dict'> {
     'data': <class 'list'> [
     ],
@@ -357,13 +366,16 @@
                   WHERE "question_id" = 'top_question' 
                   ORDER BY document_id
       
+      
           ) AS answer_b4215_caea5 ON (document_2a07e.id = "answer_b4215_caea5".document_id)
           WHERE form_id = 'top_form'
           ORDER BY id
       
+      
       ) AS document_2a07e_27f15 ON (case_ac50e.document_id = "document_2a07e_27f15".id)
       
-      ) AS analytics_76b97
+      
+      ) AS analytics_fc0d3
       WHERE analytics_result_blablub IN (%(flt_analytics_result_blablub_8201d)s, %(flt_analytics_result_blablub_8e5e6)s)
       -- PARAMS: 
       --     flt_analytics_result_blablub_8201d: Shelly Watson
@@ -372,7 +384,7 @@
     ',
   }
 ---
-# name: test_cmdline_output[output_mode3-False-expect_output1]
+# name: test_cmdline_output[output_mode3-False-expect_output1-type_extraction]
   <class 'dict'> {
     'data': <class 'list'> [
       <class 'dict'> {
@@ -391,7 +403,7 @@
     'stderr': '',
   }
 ---
-# name: test_cmdline_output[output_mode3-True-expect_output0]
+# name: test_cmdline_output[output_mode3-True-expect_output0-type_extraction]
   <class 'dict'> {
     'data': <class 'list'> [
       <class 'dict'> {

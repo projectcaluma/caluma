@@ -28,12 +28,8 @@ MUTATION_SAVE_FIELD = """
 """
 
 MUTATION_SAVE_TABLE = """
-    mutation create {
-      saveAnalyticsTable(input: {
-        slug: "test-table",
-        name: "Test table thingy",
-        startingObject: CASES
-      }) {
+    mutation create ($table_input: SaveAnalyticsTableInput!) {
+      saveAnalyticsTable(input: $table_input) {
         analyticsTable {
           name
           availableFields(depth: 1) {
@@ -69,7 +65,17 @@ QUERY_AVAILABLE_FIELDS = """
 
 
 def test_create_table(db, snapshot, schema_executor):
-    result = schema_executor(MUTATION_SAVE_TABLE, variable_values={})
+    result = schema_executor(
+        MUTATION_SAVE_TABLE,
+        variable_values={
+            "table_input": {
+                "slug": "test-table",
+                "name": "Test table thingy",
+                "startingObject": "CASES",
+                "tableType": "TYPE_EXTRACTION",
+            }
+        },
+    )
 
     assert not result.errors
     assert models.AnalyticsTable.objects.filter(pk="test-table").exists()

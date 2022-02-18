@@ -1,0 +1,16 @@
+# name: test_run_analytics_direct
+  <class 'list'> [
+    <class 'dict'> {
+      'last_created': datetime.datetime(2022, 2, 4, 0, 0, tzinfo=datetime.timezone.utc),
+      'status': 'completed',
+    },
+    <class 'dict'> {
+      'last_created': datetime.datetime(2022, 2, 3, 0, 0, tzinfo=datetime.timezone.utc),
+      'status': 'running',
+    },
+    <class 'dict'> {
+      'last_created': datetime.datetime(2022, 2, 5, 0, 0, tzinfo=datetime.timezone.utc),
+      'status': 'suspended',
+    },
+  ]
+---
