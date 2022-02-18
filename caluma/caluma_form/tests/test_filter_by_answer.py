@@ -140,6 +140,9 @@ def test_query_all_questions(
         }
     """
 
+    if search_lookup == "IN":
+        search_value = [search_value]
+
     variables = {"hasAnswer": [{"question": search_slug, "value": search_value}]}
     if search_lookup is not None:
         variables["hasAnswer"][0]["lookup"] = search_lookup
@@ -158,16 +161,53 @@ def test_query_all_questions(
 
 
 @pytest.mark.parametrize(
+    "question__type,values,search,expect_count",
+    [
+        (models.Question.TYPE_TEXT, ["foo", "bar", "baz"], ["foo", "foobar"], 1),
+        (models.Question.TYPE_TEXT, ["foo", "bar", "baz"], ["foo", "baz"], 2),
+        (models.Question.TYPE_TEXT, ["foo", "bar", "baz"], [], 0),
+        (models.Question.TYPE_INTEGER, [1, 10, 100], [1, 100], 2),
+        (models.Question.TYPE_CHOICE, ["foo", "bar"], ["bar", "bazz"], 1),
+        (models.Question.TYPE_CHOICE, ["foo", "bar"], ["bazz"], 0),
+        (models.Question.TYPE_DYNAMIC_CHOICE, ["foo", "bar"], ["bar", "bazz"], 1),
+        (models.Question.TYPE_DYNAMIC_CHOICE, ["foo", "bar"], ["bazz"], 0),
+    ],
+)
+def test_has_answer_in(
+    schema_executor, db, question, answer_factory, values, search, expect_count
+):
+
+    for value in values:
+        answer_factory(question=question, value=value)
+
+    query = """
+        query asdf ($hasAnswer: [HasAnswerFilterType]!) {
+          allDocuments(filter: [{hasAnswer: $hasAnswer}]) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+    """
+    variables = {
+        "hasAnswer": [{"question": question.slug, "value": search, "lookup": "IN"}]
+    }
+
+    result = schema_executor(query, variable_values=variables)
+    assert not result.errors
+
+    assert len(result.data["allDocuments"]["edges"]) == expect_count
+
+
+@pytest.mark.parametrize(
     "question__type,value,search,expect_find",
     [
         (models.Question.TYPE_MULTIPLE_CHOICE, ["a", "b"], ["a"], True),
         (models.Question.TYPE_MULTIPLE_CHOICE, ["a", "b"], ["c"], False),
-        (models.Question.TYPE_CHOICE, "foo", ["foo", "bar"], True),
-        (models.Question.TYPE_CHOICE, "foo", ["bar", "baz"], False),
         (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["a", "b"], ["a"], True),
         (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["a", "b"], ["c"], False),
-        (models.Question.TYPE_DYNAMIC_CHOICE, "foo", ["foo", "bar"], True),
-        (models.Question.TYPE_DYNAMIC_CHOICE, "foo", ["bar", "baz"], False),
     ],
 )
 def test_has_answer_intersect(

@@ -131,6 +131,7 @@ class AnswerLookupMode(Enum):
     ICONTAINS = "icontains"
     INTERSECTS = "intersects"
     ISNULL = "isnull"
+    IN = "in"
 
     GTE = "gte"
     GT = "gt"
@@ -174,6 +175,7 @@ class HasAnswerFilter(Filter):
             AnswerLookupMode.CONTAINS,
             AnswerLookupMode.ICONTAINS,
             AnswerLookupMode.ISNULL,
+            AnswerLookupMode.IN,
         ],
         "integer": [
             AnswerLookupMode.EXACT,
@@ -181,6 +183,12 @@ class HasAnswerFilter(Filter):
             AnswerLookupMode.LTE,
             AnswerLookupMode.GT,
             AnswerLookupMode.GTE,
+            AnswerLookupMode.ISNULL,
+            AnswerLookupMode.IN,
+        ],
+        "choice": [
+            AnswerLookupMode.EXACT,
+            AnswerLookupMode.IN,
             AnswerLookupMode.ISNULL,
         ],
         "multiple_choice": [
@@ -192,8 +200,7 @@ class HasAnswerFilter(Filter):
     }
     VALID_LOOKUPS["date"] = VALID_LOOKUPS["integer"]
     VALID_LOOKUPS["float"] = VALID_LOOKUPS["integer"]
-    VALID_LOOKUPS["choice"] = VALID_LOOKUPS["multiple_choice"]
-    VALID_LOOKUPS["dynamic_choice"] = VALID_LOOKUPS["multiple_choice"]
+    VALID_LOOKUPS["dynamic_choice"] = VALID_LOOKUPS["choice"]
     VALID_LOOKUPS["dynamic_multiple_choice"] = VALID_LOOKUPS["multiple_choice"]
     VALID_LOOKUPS["textarea"] = VALID_LOOKUPS["text"]
     VALID_LOOKUPS["datetime"] = VALID_LOOKUPS["integer"]
