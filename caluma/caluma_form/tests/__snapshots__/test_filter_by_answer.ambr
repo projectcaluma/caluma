@@ -1015,19 +1015,9 @@
     },
     'response': <class 'dict'> {
       'data': <class 'dict'> {
-        'allDocuments': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'form': <class 'dict'> {
-                  'slug': 'subform',
-                },
-              },
-            },
-          ],
-        },
+        'allDocuments': None,
       },
-      'errors': 'None',
+      'errors': "[GraphQLError('Invalid lookup for question slug=choice (CHOICE): CONTAINS', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -1215,19 +1205,9 @@
     },
     'response': <class 'dict'> {
       'data': <class 'dict'> {
-        'allDocuments': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'form': <class 'dict'> {
-                  'slug': 'subform',
-                },
-              },
-            },
-          ],
-        },
+        'allDocuments': None,
       },
-      'errors': 'None',
+      'errors': "[GraphQLError('Invalid lookup for question slug=choice (CHOICE): INTERSECTS', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -1263,9 +1243,19 @@
     },
     'response': <class 'dict'> {
       'data': <class 'dict'> {
-        'allDocuments': None,
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'form': <class 'dict'> {
+                  'slug': 'subform',
+                },
+              },
+            },
+          ],
+        },
       },
-      'errors': "[GraphQLError('Invalid lookup for question slug=choice (CHOICE): IN', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
+      'errors': 'None',
     },
   }
 ---
@@ -1491,12 +1481,9 @@
     },
     'response': <class 'dict'> {
       'data': <class 'dict'> {
-        'allDocuments': <class 'dict'> {
-          'edges': <class 'list'> [
-          ],
-        },
+        'allDocuments': None,
       },
-      'errors': 'None',
+      'errors': "[GraphQLError('Invalid lookup for question slug=choice (CHOICE): CONTAINS', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -1677,12 +1664,9 @@
     },
     'response': <class 'dict'> {
       'data': <class 'dict'> {
-        'allDocuments': <class 'dict'> {
-          'edges': <class 'list'> [
-          ],
-        },
+        'allDocuments': None,
       },
-      'errors': 'None',
+      'errors': "[GraphQLError('Invalid lookup for question slug=choice (CHOICE): INTERSECTS', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
     },
   }
 ---
@@ -1718,9 +1702,12 @@
     },
     'response': <class 'dict'> {
       'data': <class 'dict'> {
-        'allDocuments': None,
+        'allDocuments': <class 'dict'> {
+          'edges': <class 'list'> [
+          ],
+        },
       },
-      'errors': "[GraphQLError('Invalid lookup for question slug=choice (CHOICE): IN', locations=[SourceLocation(line=3, column=11)], path=['allDocuments'])]",
+      'errors': 'None',
     },
   }
 ---

@@ -167,6 +167,10 @@ def test_query_all_questions(
         (models.Question.TYPE_TEXT, ["foo", "bar", "baz"], ["foo", "baz"], 2),
         (models.Question.TYPE_TEXT, ["foo", "bar", "baz"], [], 0),
         (models.Question.TYPE_INTEGER, [1, 10, 100], [1, 100], 2),
+        (models.Question.TYPE_CHOICE, ["foo", "bar"], ["bar", "bazz"], 1),
+        (models.Question.TYPE_CHOICE, ["foo", "bar"], ["bazz"], 0),
+        (models.Question.TYPE_DYNAMIC_CHOICE, ["foo", "bar"], ["bar", "bazz"], 1),
+        (models.Question.TYPE_DYNAMIC_CHOICE, ["foo", "bar"], ["bazz"], 0),
     ],
 )
 def test_has_answer_in(
@@ -202,12 +206,8 @@ def test_has_answer_in(
     [
         (models.Question.TYPE_MULTIPLE_CHOICE, ["a", "b"], ["a"], True),
         (models.Question.TYPE_MULTIPLE_CHOICE, ["a", "b"], ["c"], False),
-        (models.Question.TYPE_CHOICE, "foo", ["foo", "bar"], True),
-        (models.Question.TYPE_CHOICE, "foo", ["bar", "baz"], False),
         (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["a", "b"], ["a"], True),
         (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["a", "b"], ["c"], False),
-        (models.Question.TYPE_DYNAMIC_CHOICE, "foo", ["foo", "bar"], True),
-        (models.Question.TYPE_DYNAMIC_CHOICE, "foo", ["bar", "baz"], False),
     ],
 )
 def test_has_answer_intersect(
