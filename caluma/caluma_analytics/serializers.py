@@ -10,6 +10,11 @@ class StartingObjectField(serializers.CalumaChoiceField):
         super().__init__(models.AnalyticsTable.STARTING_OBJECT_CHOICES, **kwargs)
 
 
+class AggregateFunctionField(serializers.CalumaChoiceField):
+    def __init__(self, **kwargs):
+        super().__init__(models.AnalyticsField.FUNCTION_CHOICES, **kwargs)
+
+
 class SaveAnalyticsTableSerializer(serializers.ModelSerializer):
     starting_object = StartingObjectField(required=True)
 
@@ -46,18 +51,20 @@ class RemoveAnalyticsTableSerializer(serializers.ModelSerializer):
 
 class SaveAnalyticsFieldSerializer(serializers.ModelSerializer):
     id = serializers.GlobalIDField(required=False)
+    function = AggregateFunctionField(required=True)
 
     def validate(self, data):
         validated_data = super().validate(data)
-        self._validate_uniqueness(validated_data)
-        self._validate_field_exists(validated_data)
+
+        self._validate_extraction_field(validated_data)
+
         return validated_data
 
-    def _validate_field_exists(self, data):
+    def _validate_extraction_field(self, data):
         start = data["table"].get_starting_object(self.context["info"])
         data_source = data["data_source"]
         try:
-            start.get_field(data_source.split("."))
+            field = start.get_field(data_source.split("."))
         except KeyError:
             raise exceptions.ValidationError(
                 {
@@ -66,23 +73,19 @@ class SaveAnalyticsFieldSerializer(serializers.ModelSerializer):
                     ]
                 }
             )
-
-    def _validate_uniqueness(self, data):
-        existing_fields = data["table"].fields.all()
-        if self.instance:
-            existing_fields = existing_fields.exclude(pk=self.instance.pk)
-
-        if existing_fields.filter(alias=data["alias"]).exists():
-            raise exceptions.ValidationError(
-                {"alias": ["Cannot use the same alias twice within the same table"]}
-            )
-        if existing_fields.filter(data_source=data["data_source"]).exists():
+        if not field.is_value():
             raise exceptions.ValidationError(
                 {
                     "dataSource": [
-                        "Cannot use the same data source twice within the same table"
+                        f"Specified data source '{data_source}' is "
+                        "not a value field. Select a subfield."
                     ]
                 }
+            )
+        function = data["function"].upper()
+        if function not in field.supported_functions():
+            raise exceptions.ValidationError(
+                {"function": [f"Function '{function}' is not supported on this field"]}
             )
 
     class Meta:
@@ -95,7 +98,9 @@ class SaveAnalyticsFieldSerializer(serializers.ModelSerializer):
             "created_at",
             "modified_at",
             "filters",
+            "show_output",
             "meta",
+            "function",
             "created_by_user",
             "created_by_group",
             "modified_by_user",

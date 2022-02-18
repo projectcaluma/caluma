@@ -2,6 +2,7 @@ import math
 
 import pytest
 
+from caluma.caluma_analytics.pivot_table import PivotTable
 from caluma.caluma_analytics.simple_table import SimpleTable
 
 
@@ -18,7 +19,7 @@ def test_run_analytics_direct(db, snapshot, example_analytics, analytics_cases):
 
     result = table.get_records()
 
-    assert len(result) == 3
+    assert len(result) == 5
 
     snapshot.assert_match(result)
 
@@ -94,3 +95,43 @@ def test_sql_repeatability(
 
     assert sql1 == sql2
     assert params1 == params2
+
+
+@pytest.mark.parametrize(
+    "alias",
+    [
+        "hello-world",
+        "with spaces",
+        "UpperCase",
+        "with punctuation.",
+        "with punctuation?",
+        "with punctuation!",
+    ],
+)
+@pytest.mark.parametrize(
+    "table",
+    [
+        "example_analytics",
+        "example_pivot_table",
+    ],
+)
+@pytest.mark.freeze_time("2021-10-10")
+def test_unusual_aliases(db, table, analytics_cases, alias, request):
+
+    table_obj = request.getfixturevalue(table)
+
+    some_field = table_obj.fields.get(alias="quarter")
+    some_field.alias = alias
+    some_field.function = "sum"
+    some_field.save()
+
+    table = (
+        SimpleTable(table_obj) if table_obj.is_extraction() else PivotTable(table_obj)
+    )
+
+    result = table.get_records()
+
+    # We just check that the anlysis run went successful
+    # and that the alias is represented in the columns
+    assert result
+    assert alias in result[0]
