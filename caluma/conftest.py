@@ -374,3 +374,28 @@ def sorted_snapshot(snapshot):
         return snapshot(matcher=_sorted(*args))
 
     return custom_snapshot
+
+
+@pytest.fixture
+def at_date(freezer):
+    """Run a given piece of code at a certain date.
+
+    Uses freezegun, but allows you to override the frozen date.
+    The frozen date will be used to execute the given callable,
+    but will be reverted to the previously-frozen time afterwards.
+
+    >>> @pytest.mark.freeze_time('2022-02-22')
+    >>> def test_foo(at_date):
+            assert datetime.now() == datetime(2022,2,22)
+            assert at_date('2022-01-01', lambda: datetime.now()) == datetime(2022,1,1)
+            assert datetime.now() == datetime(2022,2,22)
+    """
+
+    def run_at_date(date, func):
+        old_now = datetime.datetime.now()
+        freezer.move_to(date)
+        res = func()
+        freezer.move_to(old_now)
+        return res
+
+    return run_at_date
