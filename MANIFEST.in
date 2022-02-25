@@ -2,7 +2,6 @@ include .reuse/dep5
 include CHANGELOG.md
 include LICENSE
 include requirements*.txt
-recursive-include docs *
 recursive-include LICENSES *
 global-exclude *.py[co]
 global-exclude __pycache__

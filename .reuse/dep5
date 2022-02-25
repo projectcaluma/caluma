@@ -43,9 +43,9 @@ License: GPL-3.0-or-later
 
 # Documentation of caluma
 Files:
-    docs/*
     README.md
     CONTRIBUTING.md
+    MAINTAINING.md
     CHANGELOG.md
     caluma/caluma_analytics/README.md
 Copyright: 2019 Adfinis SyGroup AG <info@adfinis-sygroup.ch>
