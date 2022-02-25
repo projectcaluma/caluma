@@ -8,8 +8,8 @@
 
 Caluma is a collaborative form editing and workflow service.
 
-- Website: [https://caluma.io](caluma.io)
-- Documentation: [https://caluma.gitbook.io/](caluma.gitbook.io)
+- Website: [caluma.io](https://caluma.io)
+- Documentation: [caluma.gitbook.io](https://caluma.gitbook.io)
 
 ## Getting started
 
