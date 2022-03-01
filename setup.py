@@ -76,7 +76,7 @@ setup(
         "djangorestframework<4",
         "django_simple_history<4",
         "graphene-django<=3.0.0b7",
-        "graphql-relay>3,<3.1.1",
+        "graphql-relay>3,<3.1.6",
         "idna<4",
         "minio >= 7, < 8",
         "psycopg2-binary >= 2.9",

@@ -10,7 +10,7 @@ django-watchman==1.2.0
 djangorestframework==3.13.1
 django_simple_history==3.0.0
 graphene-django==3.0.0b7
-graphql-relay>3,<3.1.1  # >= 3.1 has breaking changes
+graphql-relay>3,<3.1.6  # >= 3.1 has breaking changes
 idna==3.3
 minio==7.1.3
 psycopg2-binary==2.9.3
