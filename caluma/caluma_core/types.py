@@ -8,9 +8,9 @@ from graphene.relay.connection import ConnectionField
 from graphene_django import types
 from graphene_django.fields import DjangoConnectionField
 from graphene_django.utils import maybe_queryset
-from graphql_relay.connection.arrayconnection import get_offset_with_default
+from graphql_relay import get_offset_with_default
 
-from .pagination import connection_from_list, connection_from_list_slice
+from .pagination import connection_from_array, connection_from_array_slice
 
 
 class Node(object):
@@ -85,22 +85,22 @@ class DjangoConnectionField(DjangoConnectionField):
         else:  # pragma: no cover
             _len = len(iterable)
 
-        # If after is higher than list_length, connection_from_list_slice
+        # If after is higher than list_length, connection_from_array_slice
         # would try to do a negative slicing which makes django throw an
         # AssertionError
         after = min(get_offset_with_default(args.get("after"), -1) + 1, _len)
         if max_limit is not None and "first" not in args:  # pragma: no cover
             args["first"] = max_limit
 
-        connection = connection_from_list_slice(
+        connection = connection_from_array_slice(
             iterable[after:],
             args,
             slice_start=0,
-            list_length=_len,
-            list_slice_length=_len,
+            array_length=_len,
+            array_slice_length=_len,
             connection_type=connection,
             edge_type=connection.Edge,
-            pageinfo_type=PageInfo,
+            page_info_type=PageInfo,
         )
         connection.iterable = iterable
         connection.length = _len
@@ -127,12 +127,12 @@ class ConnectionField(ConnectionField):
             "Resolved value from the connection field have to be iterable or instance of {0}. "
             'Received "{1}"'
         ).format(connection_type, resolved)
-        connection = connection_from_list(
+        connection = connection_from_array(
             resolved,
             args,
             connection_type=connection_type,
             edge_type=connection_type.Edge,
-            pageinfo_type=PageInfo,
+            page_info_type=PageInfo,
         )
         connection.iterable = resolved
         return connection

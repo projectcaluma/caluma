@@ -224,9 +224,7 @@ def test_remove_field(db, schema_executor, analytics_field):
     query = """
         mutation remove($input: RemoveAnalyticsFieldInput!) {
           removeAnalyticsField(input: $input) {
-            analyticsField {
-              id
-            }
+            clientMutationId
           }
         }
     """
@@ -250,9 +248,7 @@ def test_remove_table(db, schema_executor, analytics_table):
     query = """
         mutation remove($input: RemoveAnalyticsTableInput!) {
           removeAnalyticsTable(input: $input) {
-            analyticsTable {
-              id
-            }
+            clientMutationId
           }
         }
     """

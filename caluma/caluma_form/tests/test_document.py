@@ -1160,9 +1160,6 @@ def test_remove_document_without_case(db, document, answer, schema_executor):
     query = """
         mutation RemoveDocument($input: RemoveDocumentInput!) {
           removeDocument(input: $input) {
-            document {
-              id
-            }
             clientMutationId
           }
         }
@@ -1183,9 +1180,6 @@ def test_remove_document_with_case(db, document, answer, case, schema_executor):
     query = """
         mutation RemoveDocument($input: RemoveDocumentInput!) {
           removeDocument(input: $input) {
-            document {
-              id
-            }
             clientMutationId
           }
         }
@@ -1226,9 +1220,6 @@ def test_remove_document_without_case_table(
     query = """
         mutation RemoveDocument($input: RemoveDocumentInput!) {
           removeDocument(input: $input) {
-            document {
-              id
-            }
             clientMutationId
           }
         }

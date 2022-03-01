@@ -20,11 +20,6 @@ def test_remove_answer(db, snapshot, question, answer, schema_executor):
     query = """
         mutation RemoveAnswer($input: RemoveAnswerInput!) {
           removeAnswer(input: $input) {
-            answer {
-              id
-              meta
-              __typename
-            }
             clientMutationId
           }
         }

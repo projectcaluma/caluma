@@ -1,12 +1,6 @@
 # name: test_remove_answer[integer-23]
   <class 'dict'> {
     'removeAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
-        '__typename': 'IntegerAnswer',
-        'id': 'SW50ZWdlckFuc3dlcjpOb25l',
-        'meta': <class 'dict'> {
-        },
-      },
       'clientMutationId': None,
     },
   }
