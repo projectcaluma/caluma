@@ -3,7 +3,6 @@
 import uuid
 
 import django.contrib.postgres.fields
-import django.contrib.postgres.fields.jsonb
 import django.db.models.deletion
 import localized_fields.fields.field
 import simple_history.models
@@ -50,7 +49,7 @@ class Migration(migrations.Migration):
                     "slug",
                     models.SlugField(max_length=127, primary_key=True, serialize=False),
                 ),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 ("disable_visibilities", models.BooleanField(default=False)),
                 ("name", localized_fields.fields.field.LocalizedField(required=[])),
                 (
@@ -99,7 +98,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("slug", models.SlugField(max_length=127)),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 ("disable_visibilities", models.BooleanField(default=False)),
                 ("name", localized_fields.fields.field.LocalizedField(required=[])),
                 (
@@ -173,7 +172,7 @@ class Migration(migrations.Migration):
                     models.UUIDField(db_index=True, default=uuid.uuid4, editable=False),
                 ),
                 ("alias", models.CharField(max_length=100)),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 ("data_source", models.TextField()),
                 (
                     "filters",
@@ -261,7 +260,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("alias", models.CharField(max_length=100)),
-                ("meta", django.contrib.postgres.fields.jsonb.JSONField(default=dict)),
+                ("meta", models.JSONField(default=dict)),
                 ("data_source", models.TextField()),
                 (
                     "filters",
