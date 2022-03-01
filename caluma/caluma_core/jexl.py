@@ -117,7 +117,7 @@ class JEXL(pyjexl.JEXL):
         )
 
     def _round_compat(self, num, ndigits=0):
-        power = 10 ** ndigits
+        power = 10**ndigits
         return float(math.floor((num * power) + 0.5) / power)
 
     def parse(self, expression):

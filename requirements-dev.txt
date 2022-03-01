@@ -1,7 +1,7 @@
 # When adding new dependencies here, also add them to the renovate.json to
 # enable auto-merge
 
-black==21.12b0
+black==22.1.0
 factory-boy==3.2.1
 faker==11.3.0
 flake8==4.0.1
