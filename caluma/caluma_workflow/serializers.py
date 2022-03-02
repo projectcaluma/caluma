@@ -336,6 +336,7 @@ class ResumeCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
 
         return case
 
+
 class ReopenCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
     id = serializers.GlobalIDField()
 
@@ -345,12 +346,13 @@ class ReopenCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
 
     def validate(self, data):
         try:
-            domain_logic.ReopenCaseLogic.validate_for_reopen(self.instance, data['work_items'])
+            domain_logic.ReopenCaseLogic.validate_for_reopen(
+                self.instance, data["work_items"]
+            )
         except ValidationError as e:
             raise exceptions.ValidationError(str(e))
 
         return super().validate(data)
-
 
     @transaction.atomic
     def update(self, case, validated_data):
@@ -366,6 +368,7 @@ class ReopenCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
         domain_logic.ReopenCaseLogic.post_reopen(case, user, self.context_data)
 
         return case
+
 
 class CompleteWorkItemSerializer(ContextModelSerializer):
     id = serializers.GlobalIDField()
@@ -659,15 +662,14 @@ class WorkItemRedoTaskSerializer(ContextModelSerializer):
     def update(self, work_item, validated_data):
         user = self.context["request"].user
 
-        # import pdb; pdb.set_trace();
-
         validated_data = domain_logic.RedoWorkItemLogic.pre_redo(
             work_item, validated_data, user, self.context_data
         )
 
-        # domain_logic.RedoWorkItemLogic.reopen_case_if_required(work_item)
         domain_logic.RedoWorkItemLogic.set_succeeding_work_item_status_redo(work_item)
+
         work_item = super().update(work_item, validated_data)
+
         work_item = domain_logic.RedoWorkItemLogic.post_redo(
             work_item, user, self.context_data
         )

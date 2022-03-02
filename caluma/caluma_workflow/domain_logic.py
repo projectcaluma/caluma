@@ -358,6 +358,7 @@ class SuspendCaseLogic:
 
         return case
 
+
 class ReopenCaseLogic:
     """
     Shared domain logic for reopening cases.
@@ -371,16 +372,23 @@ class ReopenCaseLogic:
 
     @staticmethod
     def validate_for_reopen(case, work_items):
-        if case.status not in [models.Case.STATUS_COMPLETED, models.Case.STATUS_CANCELED]:
+        if case.status not in [
+            models.Case.STATUS_COMPLETED,
+            models.Case.STATUS_CANCELED,
+        ]:
             raise ValidationError("Only completed and canceled cases can be reopened.")
-        
+
         for work_item in work_items:
             if work_item.succeeding_work_items.count() != 0:
-                raise ValidationError("Only work items at the end of a branch can be reopened.")
-            
+                raise ValidationError(
+                    "Only work items at the end of a branch can be reopened."
+                )
+
             if work_item not in case.work_items.all():
-                raise ValidationError("Only work items belonging to the case specified can be reopend.")
-    
+                raise ValidationError(
+                    "Only work items belonging to the case specified can be reopend."
+                )
+
     @staticmethod
     def pre_reopen(case, work_items, validated_data, user, context=None):
         send_event_with_deprecations(
@@ -393,9 +401,9 @@ class ReopenCaseLogic:
         )
 
         validated_data["status"] = models.Case.STATUS_RUNNING
-       
+
         return validated_data
-    
+
     @staticmethod
     def post_reopen(case, work_items, user, context=None):
         send_event_with_deprecations(
@@ -408,6 +416,7 @@ class ReopenCaseLogic:
         )
 
         return case
+
 
 class ResumeCaseLogic:
     """
@@ -595,7 +604,7 @@ class RedoWorkItemLogic:
             raise ValidationError("Ready work items can't be redone.")
 
         for wi in cls._find_ready_in_work_item_tree(
-            work_item, allowed_states=[models.WorkItem.STATUS_READY, models.WorkItem.STATUS_COMPLETED]
+            work_item, allowed_states=[models.WorkItem.STATUS_READY]
         ):
             if work_item.task in wi.get_redoable():
                 return
@@ -607,13 +616,6 @@ class RedoWorkItemLogic:
         for wi in cls._find_ready_in_work_item_tree(work_item):
             wi.status = models.WorkItem.STATUS_REDO
             wi.save()
-    
-    @classmethod
-    def reopen_case_if_required(cls, work_item):
-        if work_item.case.status != models.Case.STATUS_RUNNING:
-            work_item.case.status = models.Case.STATUS_RUNNING
-            work_item.case.save()
-    
 
     @classmethod
     def _find_ready_in_work_item_tree(cls, work_item, allowed_states=None):

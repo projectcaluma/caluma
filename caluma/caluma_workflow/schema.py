@@ -306,17 +306,21 @@ class ResumeCase(Mutation):
         serializer_class = serializers.ResumeCaseSerializer
         model_operations = ["update"]
 
+
 class ReopenCase(Mutation):
     class Input:
         id = graphene.String()
         work_items = graphene.List(
-            graphene.ID, required=True, description="List of work item ids to be readied when the case is reopened"
+            graphene.ID,
+            required=True,
+            description="List of work item ids to be readied when the case is reopened",
         )
-    
+
     class Meta:
         serializer_class = serializers.ReopenCaseSerializer
-        fields: ["id", "work_items"] # ? this does nothing? work_item_ids is not available in the validate_data function
+        fields: ["id"]
         model_operations = ["update"]
+
 
 class CompleteWorkItem(Mutation):
     class Meta:

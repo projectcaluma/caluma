@@ -209,8 +209,12 @@ def resume_case(
 
     return case
 
+
 def reopen_case(
-    case: models.Case, work_items: [models.WorkItem], user: BaseUser, context: Optional[dict] = None
+    case: models.Case,
+    work_items: [models.WorkItem],
+    user: BaseUser,
+    context: Optional[dict] = None,
 ) -> models.Case:
     """
     Reopen a case (just like `ReopenCase`).
@@ -221,10 +225,12 @@ def reopen_case(
     ... )
     <Case: Case object (some-uuid)>
     """
-    
+
     domain_logic.ReopenCaseLogic.validate_for_reopen(case, work_items)
 
-    validated_data = domain_logic.ReopenCaseLogic.pre_reopen(case, work_items, {}, user, context)
+    validated_data = domain_logic.ReopenCaseLogic.pre_reopen(
+        case, work_items, {}, user, context
+    )
 
     update_model(case, validated_data)
 
@@ -234,6 +240,7 @@ def reopen_case(
     domain_logic.ReopenCaseLogic.post_reopen(case, work_items, user, context)
 
     return case
+
 
 def resume_work_item(
     work_item: models.WorkItem, user: BaseUser, context: Optional[dict] = None
