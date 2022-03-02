@@ -324,6 +324,7 @@ in your application that installs Caluma as a django app:
 - `caluma_workflow.api.cancel_case` To cancel a case
 - `caluma_workflow.api.suspend_case` To suspend a case
 - `caluma_workflow.api.resume_case` To resume a case
+- `caluma_workflow.api.reopen_case` To reopen a case
 - `caluma_workflow.api.complete_work_item` To complete a work item
 - `caluma_workflow.api.skip_work_item` To skip a work item
 - `caluma_workflow.api.cancel_work_item` To cancel a work item

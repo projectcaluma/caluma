@@ -8,7 +8,7 @@ module = sys.modules[__name__]
 
 MODEL_ACTIONS = {
     "work_item": ["create", "complete", "cancel", "skip", "suspend", "resume", "redo"],
-    "case": ["create", "complete", "cancel", "suspend", "resume"],
+    "case": ["create", "complete", "cancel", "suspend", "resume", "reopen"],
 }
 
 # create "pre|post"_"create|complete|..."_"work_item|case" events in all given combinations
@@ -37,6 +37,7 @@ completed_case = Signal(providing_args=["case", "user", "context"])
 created_case = Signal(providing_args=["case", "user", "context"])
 suspended_case = Signal(providing_args=["case", "user", "context"])
 resumed_case = Signal(providing_args=["case", "user", "context"])
+reopened_case = Signal(providing_args=["case", "user", "context"])
 
 # ... also in favor of the american notation
 canceled_work_item = Signal(providing_args=["work_item", "user", "context"])
@@ -56,6 +57,7 @@ DEPRECATIONS = {
     "post_create_case": ["created_case"],
     "post_suspend_case": ["suspended_case"],
     "post_resume_case": ["resumed_case"],
+    "post_reopen_case": ["reopened_case"],
 }
 
 for new, deprecations in DEPRECATIONS.items():

@@ -2,6 +2,7 @@ import json
 
 import pytest
 from django.core.exceptions import ValidationError
+from graphene_django.utils.str_converters import to_const
 from graphql_relay import to_global_id
 
 from ...caluma_core.relay import extract_global_id
@@ -704,3 +705,110 @@ def test_cancel_suspend_resume_case(
 
         assert case.status == expected_case_status
         assert work_item.status == expected_work_item_status
+
+def reopen_case_setup(
+    case_status,
+    work_item_status,
+    case_factory,
+    work_item_factory
+):
+    case = case_factory(status=case_status)
+    work_item = work_item_factory(case=case, status=work_item_status)
+
+    return case, work_item
+
+@pytest.mark.parametrize("use_graphql", [False, True])
+def test_allow_completed_cases_to_be_reopened(
+    db,
+    admin_user,
+    case_factory,
+    work_item_factory,
+    schema_executor,
+    use_graphql
+):
+    completed_case, completed_work_item = reopen_case_setup(models.Case.STATUS_COMPLETED, models.WorkItem.STATUS_COMPLETED, case_factory, work_item_factory)
+
+    if use_graphql:
+        query = """
+            mutation ReopenCase($input: ReopenCaseInput!) {
+                reopenCase(input: $input) {
+                    case {
+                        status
+                        workItems {
+                            edges {
+                                node {
+                                    status
+                                }
+                            }
+                        }
+                    }
+                    clientMutationId
+                }
+            }
+        """
+
+        inp = {
+            "input": {
+                "id": str(completed_case.pk),
+                "workItems": [str(completed_work_item.pk)]
+            }
+        }
+
+        result = schema_executor(query, variable_values=inp)
+        # breakpoint()
+        assert not result.errors
+        assert result.data["reopenCase"]["case"]["status"] == to_const(models.Case.STATUS_RUNNING)
+        assert result.data["reopenCase"]["case"]["workItems"]["edges"][0]["node"]["status"] == to_const(models.WorkItem.STATUS_READY)
+    else:
+        api.reopen_case(completed_case, [completed_work_item], admin_user)
+    
+        completed_case.refresh_from_db()
+
+        assert completed_case.status == models.Case.STATUS_RUNNING
+        assert completed_work_item.status == models.WorkItem.STATUS_READY
+
+
+def test_reject_suspended_cases_during_reopen(
+    db,
+    admin_user,
+    case_factory,
+    work_item_factory,
+):
+    suspended_case, work_item = reopen_case_setup(models.Case.STATUS_SUSPENDED, models.WorkItem.STATUS_COMPLETED, case_factory, work_item_factory)
+
+    with pytest.raises(ValidationError) as e:
+        api.reopen_case(suspended_case, [work_item], admin_user)
+        
+        assert e.value.message == "Only completed and canceled cases can be reopened."
+        assert completed_case.status == models.Case.STATUS_SUSPENDED
+
+
+def test_require_at_least_1_work_item_during_case_reopening(
+    db,
+    admin_user,
+    schema_executor,
+    case_factory,
+    work_item_factory
+):
+    completed_case, completed_work_item = reopen_case_setup(models.Case.STATUS_COMPLETED, models.WorkItem.STATUS_COMPLETED, case_factory, work_item_factory)
+    
+    query = """
+        mutation ReopenCase($input: ReopenCaseInput!) {
+            reopenCase(input: $input) {
+                case {
+                    status
+                }
+                clientMutationId
+            }
+        }
+    """
+
+    inp = {
+        "input": {
+            "caseId": str(completed_case.pk),
+            "workItemIds": []
+        }
+    }
+
+    result = schema_executor(query, variable_values=inp)
+    assert result.errors
