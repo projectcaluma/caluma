@@ -1,6 +1,6 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
 Upstream-Name: caluma
-Upstream-Contact: Adfinis SyGroup AG <info@adfinis-sygroup.ch>
+Upstream-Contact: Adfinis AG <info@adfinis.com>
 Source: https://github.com/projectcaluma/caluma
 
 # Files below the threshold of originality (metadata, config and project-information)
@@ -9,6 +9,7 @@ Files:
     xfails.list
     .dockerignore
     .editorconfig
+    .env
     .github/dependabot.yml
     .github/workflows/ghcr.yml
     .github/workflows/pypi.yml
@@ -31,24 +32,24 @@ Files:
     setup.py
     uwsgi.ini
     caluma/caluma_form/fixtures/form-fixture.json
-Copyright: 2019 Adfinis SyGroup AG <info@adfinis-sygroup.ch>
+Copyright: 2019 Adfinis AG <info@adfinis.com>
 License: CC0-1.0
 
 # Source code of caluma
 Files:
     caluma/*.py
     caluma/*.ambr
-Copyright: 2019 Adfinis SyGroup AG <info@adfinis-sygroup.ch>
+Copyright: 2019 Adfinis AG <info@adfinis.com>
 License: GPL-3.0-or-later
 
 # Documentation of caluma
 Files:
-    docs/*
     README.md
     CONTRIBUTING.md
+    MAINTAINING.md
     CHANGELOG.md
     caluma/caluma_analytics/README.md
-Copyright: 2019 Adfinis SyGroup AG <info@adfinis-sygroup.ch>
+Copyright: 2019 Adfinis AG <info@adfinis.com>
 License: GFDL-1.3-or-later
 
 # Code of conduct

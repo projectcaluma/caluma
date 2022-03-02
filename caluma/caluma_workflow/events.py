@@ -15,35 +15,27 @@ MODEL_ACTIONS = {
 for obj, actions in MODEL_ACTIONS.items():
     for action in actions:
         for prefix in ["pre", "post"]:
-            providing_args = [obj, "user", "context"]
 
-            if prefix == "pre" and action == "create":
-                providing_args += ["validated_data"]
-
-            setattr(
-                module,
-                f"{prefix}_{action}_{obj}",
-                Signal(providing_args=providing_args),
-            )
+            setattr(module, f"{prefix}_{action}_{obj}", Signal())
 
 # TODO: remove in the next major release since those are events are deprecated...
 # ... in favor of "post_" events
-created_work_item = Signal(providing_args=["work_item", "user", "context"])
-completed_work_item = Signal(providing_args=["work_item", "user", "context"])
-skipped_work_item = Signal(providing_args=["work_item", "user", "context"])
-suspended_work_item = Signal(providing_args=["work_item", "user", "context"])
-resumed_work_item = Signal(providing_args=["work_item", "user", "context"])
-completed_case = Signal(providing_args=["case", "user", "context"])
-created_case = Signal(providing_args=["case", "user", "context"])
-suspended_case = Signal(providing_args=["case", "user", "context"])
-resumed_case = Signal(providing_args=["case", "user", "context"])
-reopened_case = Signal(providing_args=["case", "user", "context"])
+created_work_item = Signal()
+completed_work_item = Signal()
+skipped_work_item = Signal()
+suspended_work_item = Signal()
+resumed_work_item = Signal()
+completed_case = Signal()
+created_case = Signal()
+suspended_case = Signal()
+resumed_case = Signal()
+reopened_case = Signal()
 
 # ... also in favor of the american notation
-canceled_work_item = Signal(providing_args=["work_item", "user", "context"])
-cancelled_work_item = Signal(providing_args=["work_item", "user", "context"])
-canceled_case = Signal(providing_args=["case", "user", "context"])
-cancelled_case = Signal(providing_args=["case", "user", "context"])
+canceled_work_item = Signal()
+cancelled_work_item = Signal()
+canceled_case = Signal()
+cancelled_case = Signal()
 
 DEPRECATIONS = {
     "post_create_work_item": ["created_work_item"],

@@ -1,9 +1,9 @@
 # When adding new dependencies here, also add them to the renovate.json to
 # enable auto-merge
 
-black==21.12b0
+black==22.1.0
 factory-boy==3.2.1
-faker==11.3.0
+faker==13.3.0
 flake8==4.0.1
 flake8-bugbear==22.1.11
 flake8-debugger==4.0.0
@@ -22,11 +22,11 @@ pytest-django==4.5.2
 pytest-env==0.6.2
 pytest-factoryboy==2.1.0
 pytest-freezegun==0.4.2
-pytest-mock==3.6.1
+pytest-mock==3.7.0
 pytest-randomly==3.11.0
-python-semantic-release==7.23.0
+python-semantic-release==7.25.2
 pytest-xdist==2.5.0
 pytest-xfaillist==0.1.1
 requests-mock==1.9.3
 reuse==0.14.0
-syrupy==1.7.0
+syrupy==1.7.4

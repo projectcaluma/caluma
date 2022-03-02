@@ -1,4 +1,4 @@
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.db.models.constraints import UniqueConstraint
 from localized_fields.fields import LocalizedField
@@ -11,7 +11,7 @@ from .simple_table import BaseStartingObject
 class AnalyticsTable(SlugModel):
     STARTING_OBJECT_CHOICES = BaseStartingObject.as_choices()
 
-    meta = JSONField(default=dict)
+    meta = models.JSONField(default=dict)
 
     disable_visibilities = models.BooleanField(default=False)
     name = LocalizedField(blank=False, null=False, required=False)
@@ -23,7 +23,7 @@ class AnalyticsTable(SlugModel):
 
 class AnalyticsField(UUIDModel):
     alias = models.CharField(max_length=100)
-    meta = JSONField(default=dict)
+    meta = models.JSONField(default=dict)
 
     data_source = models.TextField()
     table = models.ForeignKey(
