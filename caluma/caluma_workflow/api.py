@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from caluma.caluma_form.models import Form
 from caluma.caluma_user.models import BaseUser
@@ -206,6 +206,34 @@ def resume_case(
     update_model(case, validated_data)
 
     domain_logic.ResumeCaseLogic.post_resume(case, user, context)
+
+    return case
+
+
+def reopen_case(
+    case: models.Case,
+    work_items: List[models.WorkItem],
+    user: BaseUser,
+    context: Optional[dict] = None,
+) -> models.Case:
+    """
+    Reopen a case (just like `ReopenCase`).
+
+    >>> reopen_case(
+    ...     case=models.Case.first(),
+    ...     work_items=[...]
+    ...     user=AnonymousUser()
+    ... )
+    <Case: Case object (some-uuid)>
+    """
+
+    domain_logic.ReopenCaseLogic.validate_for_reopen(case, work_items)
+
+    domain_logic.ReopenCaseLogic.pre_reopen(case, work_items, user, context)
+
+    domain_logic.ReopenCaseLogic.do_reopen(case, work_items)
+
+    domain_logic.ReopenCaseLogic.post_reopen(case, work_items, user, context)
 
     return case
 
