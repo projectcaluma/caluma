@@ -1,8 +1,9 @@
-FROM python:3.8
+FROM python:3.8-slim
 
 WORKDIR /app
 
-RUN wget -q https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -P /usr/local/bin \
+RUN apt-get update && apt-get install -y --no-install-recommends wget build-essential \
+&& wget -q https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -P /usr/local/bin \
 && chmod +x /usr/local/bin/wait-for-it.sh \
 && mkdir -p /app \
 && useradd -u 901 -r caluma --create-home \
