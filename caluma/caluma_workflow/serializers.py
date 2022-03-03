@@ -339,18 +339,16 @@ class ResumeCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
 
 class ReopenCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
     id = serializers.GlobalIDField()
+    work_items = ListField(child=serializers.GlobalIDField(), required=True)
 
     class Meta:
         model = models.Case
         fields = ["id", "work_items", "context"]
 
     def validate(self, data):
-        try:
-            domain_logic.ReopenCaseLogic.validate_for_reopen(
-                self.instance, data["work_items"]
-            )
-        except ValidationError as e:
-            raise exceptions.ValidationError(str(e))
+        domain_logic.ReopenCaseLogic.validate_for_reopen(
+            self.instance, data["work_items"]
+        )
 
         return super().validate(data)
 
@@ -358,14 +356,11 @@ class ReopenCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
     def update(self, case, validated_data):
         user = self.context["request"].user
 
-        for work_item in validated_data["work_items"]:
-            work_item.status = models.WorkItem.STATUS_READY
-            work_item.save()
+        domain_logic.ReopenCaseLogic.pre_reopen(case, validated_data["work_items"], user, self.context)
 
-        case.status = models.Case.STATUS_RUNNING
-        case.save()
+        domain_logic.ReopenCaseLogic.do_reopen(case, validated_data["work_items"])
 
-        domain_logic.ReopenCaseLogic.post_reopen(case, user, self.context_data)
+        domain_logic.ReopenCaseLogic.post_reopen(case, validated_data["work_items"], user, self.context)
 
         return case
 

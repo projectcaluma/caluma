@@ -374,23 +374,26 @@ class ReopenCaseLogic:
     def validate_for_reopen(case, work_items):
         if case.status not in [
             models.Case.STATUS_COMPLETED,
-            models.Case.STATUS_CANCELED,
+            models.Case.STATUS_CANCELED
         ]:
             raise ValidationError("Only completed and canceled cases can be reopened.")
 
+        if case.parent_work_item:
+            raise ValidationError("Child cases can not be reopened.") # ????
+
         for work_item in work_items:
-            if work_item.succeeding_work_items.count() != 0:
+            if work_item.succeeding_work_items.exists():
                 raise ValidationError(
                     "Only work items at the end of a branch can be reopened."
                 )
 
-            if work_item not in case.work_items.all():
+            if work_item.case != case:
                 raise ValidationError(
                     "Only work items belonging to the case specified can be reopend."
                 )
 
     @staticmethod
-    def pre_reopen(case, work_items, validated_data, user, context=None):
+    def pre_reopen(case, work_items, user, context=None):
         send_event_with_deprecations(
             "pre_reopen_case",
             sender="pre_reopen_case",
@@ -399,10 +402,6 @@ class ReopenCaseLogic:
             work_items=work_items,
             context=context,
         )
-
-        validated_data["status"] = models.Case.STATUS_RUNNING
-
-        return validated_data
 
     @staticmethod
     def post_reopen(case, work_items, user, context=None):
@@ -415,7 +414,14 @@ class ReopenCaseLogic:
             context=context,
         )
 
-        return case
+    @staticmethod
+    def do_reopen(case, work_items):
+        case.status = models.Case.STATUS_RUNNING
+        case.save()    
+
+        for work_item in work_items:
+            work_item.status = models.WorkItem.STATUS_READY
+            work_item.save()
 
 
 class ResumeCaseLogic:

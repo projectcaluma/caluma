@@ -309,16 +309,16 @@ class ResumeCase(Mutation):
 
 class ReopenCase(Mutation):
     class Input:
-        id = graphene.String()
+        id = graphene.ID()
         work_items = graphene.List(
-            graphene.ID,
+            graphene.ID, # ! check if that needs to be instantiated
             required=True,
             description="List of work item ids to be readied when the case is reopened",
         )
 
     class Meta:
         serializer_class = serializers.ReopenCaseSerializer
-        fields: ["id"]
+        fields: ["id", "work_items"]
         model_operations = ["update"]
 
 

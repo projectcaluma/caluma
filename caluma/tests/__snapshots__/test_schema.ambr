@@ -2456,6 +2456,7 @@
     cancelCase(input: CancelCaseInput!): CancelCasePayload
     suspendCase(input: SuspendCaseInput!): SuspendCasePayload
     resumeCase(input: ResumeCaseInput!): ResumeCasePayload
+    reopenCase(input: ReopenCaseInput!): ReopenCasePayload
     completeWorkItem(input: CompleteWorkItemInput!): CompleteWorkItemPayload
     skipWorkItem(input: SkipWorkItemInput!): SkipWorkItemPayload
     cancelWorkItem(input: CancelWorkItemInput!): CancelWorkItemPayload
@@ -3228,6 +3229,20 @@
   
   type RemoveFormQuestionPayload {
     form: Form
+    clientMutationId: String
+  }
+  
+  input ReopenCaseInput {
+    id: ID!
+    workItems: [ID]!
+  
+    """Provide extra context for dynamic jexl transforms and events"""
+    context: JSONString
+    clientMutationId: String
+  }
+  
+  type ReopenCasePayload {
+    case: Case
     clientMutationId: String
   }
   
