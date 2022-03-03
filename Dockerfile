@@ -19,9 +19,11 @@ ENV APP_HOME=/app
 ENV DJANGO_SETTINGS_MODULE caluma.settings.django
 ENV UWSGI_INI /app/uwsgi.ini
 
-ARG REQUIREMENTS=requirements.txt
-COPY requirements.txt requirements-dev.txt requirements-all.txt $APP_HOME/
-RUN pip install --no-cache-dir --upgrade -r $REQUIREMENTS --disable-pip-version-check
+RUN pip install -U poetry
+
+ARG INSTALL_DEV_DEPENDENCIES=false
+COPY pyproject.toml poetry.lock $APP_HOME/
+RUN if [ "$INSTALL_DEV_DEPENDENCIES" = "true" ]; then poetry install; else poetry install --no-dev; fi
 
 USER caluma
 
@@ -29,4 +31,4 @@ COPY . $APP_HOME
 
 EXPOSE 8000
 
-CMD /bin/sh -c "wait-for-it.sh $DATABASE_HOST:${DATABASE_PORT:-5432} -- ./manage.py migrate && uwsgi"
+CMD /bin/sh -c "wait-for-it.sh $DATABASE_HOST:${DATABASE_PORT:-5432} -- poetry run python manage.py migrate && uwsgi"

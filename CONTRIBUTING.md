@@ -36,15 +36,13 @@ etc.
 
 ```bash
 # linting
-flake8
+poetry run flake8
 # format code
-black .
+poetry run black .
 # running tests
-pytest
+poetry run pytest
 # create migrations
-./manage.py makemigrations
-# install debugger or other temporary dependencies
-pip install --user pdbpp
+poetry run python manage.py makemigrations
 ```
 
 Writing of code can still happen outside the docker container of course.
@@ -55,14 +53,14 @@ a database per xdist-worker.
 To disable xdist completely run:
 
 ```bash
-pytest -n 0
+poetry run pytest -n 0
 ```
 
 This is especially important when you're updating snapshot tests, because this will fail with
 multiple workers:
 
 ```bash
-pytest --snapshot-update -n 0
+poetry run pytest --snapshot-update -n 0
 ```
 
 ### Install new requirements
@@ -81,41 +79,10 @@ Pre commit hooks is an additional option instead of executing checks in your edi
 First create a virtualenv with the tool of your choice before running below commands:
 
 ```bash
-pip install pre-commit
-pip install -r requirements-all.txt -U
-pre-commit install --hook=pre-commit
-pre-commit install --hook=commit-msg
+poetry install
+poetry run pre-commit install --hook=pre-commit
+poetry run pre-commit install --hook=commit-msg
 ```
 
 This will activate commit hooks to validate your code as well as your commit
 messages.
-
-### Using pipenv
-
-Docker is the way to run and test caluma, but you can install the requirements
-for your IDE/editor using pipenv:
-
-```bash
-pipenv install --python 3.8 -r requirements.txt
-pipenv install -d -r requirements-dev.txt
-```
-
-You can also run tests without the caluma-container:
-
-```bash
-echo UID=$(id -u) > .env
-echo ENV=dev >> .env
-docker-compose up -d db
-pipenv install --python 3.8 -r requirements.txt
-pipenv install -d -r requirements-dev.txt
-pipenv shell
-pytest
-```
-
-or you can use the setup.py command:
-
-```bash
-python3 setup.py pipenv
-```
-
-You can add any configuration supported by the caluma-container to the .env file.

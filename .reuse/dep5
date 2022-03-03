@@ -5,32 +5,27 @@ Source: https://github.com/projectcaluma/caluma
 
 # Files below the threshold of originality (metadata, config and project-information)
 Files:
-    deps/
     .dockerignore
     .editorconfig
     .env
+    .flake8
     .github/dependabot.yml
     .github/workflows/ghcr.yml
     .github/workflows/pypi.yml
     .github/workflows/tests.yml
     .gitignore
-    .pre-commit-config.yaml
-    .flake8
     .gitlint
-    Dockerfile
+    .pre-commit-config.yaml
+    caluma/caluma_form/fixtures/form-fixture.json
     commit-msg
-    commitlint.config.js
     docker-compose.override.yml
     docker-compose.yml
+    Dockerfile
     manage.py
     MANIFEST.in
-    requirements-all.txt
-    requirements-dev.txt
-    requirements.txt
-    setup.cfg
-    setup.py
+    poetry.lock
+    pyproject.toml
     uwsgi.ini
-    caluma/caluma_form/fixtures/form-fixture.json
 Copyright: 2019 Adfinis AG <info@adfinis.com>
 License: CC0-1.0
 

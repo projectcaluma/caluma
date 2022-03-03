@@ -1,0 +1,134 @@
+[tool.poetry]
+name = "caluma"
+version = "7.15.0"
+description = "Caluma Service providing GraphQL API"
+homepage = "https://caluma.io"
+repository = "https://github.com/projectcaluma/caluma"
+documentation = "https://caluma.gitbook.io/"
+authors = ["Caluma <info@caluma.io>"]
+license = "GPL-3.0-or-later"
+readme = "README.md"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 or later (GPLv3+)",
+    "Programming Language :: Python :: 3.8",
+]
+include = ["CHANGELOG.md"]
+exclude = [
+    "caluma/conftest.py",
+    "caluma/**/conftest.py",
+    "caluma/**/tests",
+]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+dateparser = "^1.1.0"
+Django = "^3.2.12"
+django-cors-headers = "^3.11.0"
+django-environ = "^0.8.1"
+django-extensions = "^3.1.5"
+django-filter = "^21.1"
+django-localized-fields = "^6.6"
+django-postgres-extra = "^2.0.4"
+django-watchman = "^1.2.0"
+djangorestframework = "^3.13.1"
+django-simple-history = "^3.0.0"
+graphene-django = "^3.0.0b7"
+graphql-relay = "^3.1.5"
+idna = "^3.3"
+minio = "^7.1.4"
+psycopg2-binary = "^2.9.3"
+pyjexl = "^0.3.0"
+python-memcached = "^1.59"
+requests = "^2.27.1"
+urllib3 = "^1.26.8"
+uWSGI = "^2.0.20"
+
+[tool.poetry.dev-dependencies]
+black = "^22.1.0"
+factory-boy = "^3.2.1"
+Faker = "^13.3.0"
+flake8 = "^4.0.1"
+flake8-bugbear = "^22.1.11"
+flake8-debugger = "^4.0.0"
+flake8-docstrings = "^1.6.0"
+flake8-isort = "^4.1.1"
+flake8-string-format = "^0.3.0"
+flake8-tuple = "^0.4.1"
+gitlint = "^0.17.0"
+isort = "^5.10.1"
+pdbpp = "^0.10.3"
+pre-commit = "^2.17.0"
+pydocstyle = "^6.1.1"
+pytest = "^7.0.1"
+pytest-cov = "^3.0.0"
+pytest-django = "^4.5.2"
+pytest-env = "^0.6.2"
+pytest-factoryboy = "^2.1.0"
+pytest-freezegun = "^0.4.2"
+pytest-mock = "^3.7.0"
+pytest-randomly = "^3.11.0"
+python-semantic-release = "^7.25.2"
+pytest-xdist = "^2.5.0"
+requests-mock = "^1.9.3"
+reuse = "^0.14.0"
+syrupy = "^1.7.4"
+
+[tool.isort]
+skip = [
+  "migrations",
+  "snapshots",
+]
+known_first_party = ["caluma"]
+known_third_party = ["dateparser"]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+combine_as_imports = true
+line_length = 88
+
+[tool.pytest.ini_options]
+addopts = "-n auto --reuse-db --randomly-seed=1521188766 --randomly-dont-reorganize"
+DJANGO_SETTINGS_MODULE = "caluma.settings.django"
+env = [
+    "META_FIELDS=test-key,foobar",
+    "OIDC_USERINFO_ENDPOINT=mock://caluma.io/openid/userinfo",
+    "OIDC_INTROSPECT_ENDPOINT=mock://caluma.io/openid/introspect",
+    "OIDC_BEARER_TOKEN_REVALIDATION_TIME=60",
+    "LANGUAGES=en,de,fr",
+    "ENABLE_HISTORICAL_API=true",
+    "ENABLE_ACCESS_LOG=true",
+    "ENABLE_HEALTHZ_ENDPOINT=true",
+]
+filterwarnings = [
+    # switch this back to error::DeprecationWarning when we upgraded graphene-django
+    "ignore::DeprecationWarning",
+    "error::PendingDeprecationWarning",
+    "ignore:'psqlextra' defines default_app_config:django.utils.deprecation.RemovedInDjango41Warning",
+]
+
+[tool.coverage.run]
+source = ["."]
+
+[tool.coverage.report]
+fail_under = 100
+exclude_lines = [
+    "pragma: no cover",
+    "pragma: todo cover",
+    "def __str__",
+    "def __unicode__",
+    "def __repr__",
+]
+omit = [
+    "*/migrations/*",
+    "*/apps.py",
+    "manage.py",
+    "caluma/settings_*.py",
+    "caluma/wsgi.py",
+]
+show_missing = true
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
