@@ -1,13 +1,21 @@
-from graphql_relay.connection.arrayconnection import (
+from graphql_relay import (
+    Connection,
+    Edge,
+    PageInfo,
     get_offset_with_default,
     offset_to_cursor,
 )
-from graphql_relay.connection.connectiontypes import Connection, Edge, PageInfo
 
 
-def connection_from_list(data, args=None, **kwargs):
+def connection_from_array(
+    data,
+    args=None,
+    connection_type=Connection,
+    edge_type=Edge,
+    page_info_type=PageInfo,
+):
     """
-    Replace graphql_relay.connection.arrayconnection.connection_from_list.
+    Replace graphql_relay.connection_from_array.
 
     This can be removed, when (or better if)
     https://github.com/graphql-python/graphql-relay-py/issues/12
@@ -17,24 +25,29 @@ def connection_from_list(data, args=None, **kwargs):
     a connection object for use in GraphQL. It uses array offsets as pagination,
     so pagination will only work if the array is static.
     """
-    _len = len(data)
-    return connection_from_list_slice(
-        data, args, slice_start=0, list_length=_len, list_slice_length=_len, **kwargs
+    return connection_from_array_slice(
+        data,
+        args,
+        slice_start=0,
+        array_length=len(data),
+        connection_type=connection_type,
+        edge_type=edge_type,
+        page_info_type=page_info_type,
     )
 
 
-def connection_from_list_slice(
-    list_slice,
+def connection_from_array_slice(
+    array_slice,
     args=None,
-    connection_type=None,
-    edge_type=None,
-    pageinfo_type=None,
     slice_start=0,
-    list_length=0,
-    list_slice_length=None,
+    array_length=None,
+    array_slice_length=None,
+    connection_type=Connection,
+    edge_type=Edge,
+    page_info_type=PageInfo,
 ):
     """
-    Replace graphql_relay.connection.arrayconnection.connection_from_list_slice.
+    Replace graphql_relay.connection_from_array_slice.
 
     This can be removed, when (or better if)
     https://github.com/graphql-python/graphql-relay-py/issues/12
@@ -47,32 +60,27 @@ def connection_from_list_slice(
     to materialize the entire array, and instead wish pass in a slice of the
     total result large enough to cover the range specified in `args`.
     """
-    connection_type = connection_type or Connection
-    edge_type = edge_type or Edge
-    pageinfo_type = pageinfo_type or PageInfo
-
     args = args or {}
-
     before = args.get("before")
     after = args.get("after")
     first = args.get("first")
     last = args.get("last")
-    if list_slice_length is None:  # pragma: no cover
-        list_slice_length = len(list_slice)
-    slice_end = slice_start + list_slice_length
-    before_offset = get_offset_with_default(before, list_length)
+    if array_slice_length is None:  # pragma: no cover
+        array_slice_length = len(array_slice)
+    slice_end = slice_start + array_slice_length
+    before_offset = get_offset_with_default(before, array_length)
     after_offset = get_offset_with_default(after, -1)
 
     start_offset = max(slice_start - 1, after_offset, -1) + 1
-    end_offset = min(slice_end, before_offset, list_length)
+    end_offset = min(slice_end, before_offset, array_length)
     if isinstance(first, int):
         end_offset = min(end_offset, start_offset + first)
     if isinstance(last, int):
         start_offset = max(start_offset, end_offset - last)
 
     # If supplied slice is too large, trim it down before mapping over it.
-    _slice = list_slice[
-        max(start_offset - slice_start, 0) : list_slice_length
+    _slice = array_slice[
+        max(start_offset - slice_start, 0) : array_slice_length
         - (slice_end - end_offset)
     ]
     edges = [
@@ -85,10 +93,10 @@ def connection_from_list_slice(
 
     return connection_type(
         edges=edges,
-        page_info=pageinfo_type(
+        page_info=page_info_type(
             start_cursor=first_edge_cursor,
             end_cursor=last_edge_cursor,
             has_previous_page=start_offset > 0,
-            has_next_page=end_offset < list_length,
+            has_next_page=end_offset < array_length,
         ),
     )

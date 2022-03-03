@@ -29,15 +29,17 @@ def extract_global_id(id):
 
         _valid_types.update(all_types)
 
-    try:
-        gql_type, result = from_global_id(id)
+    gql_type, result = from_global_id(id)
 
-        # some valid ids could decode to a string that from_global_id()
-        # assumes is a global id, so we need to verify that it is indeed
-        # the case.
-        if gql_type and gql_type not in _valid_types:
-            return id
-    except ValueError:
-        result = id
+    # from_global_id() now returns an empty string if the passed id could not be
+    # decoded from base64 which is the case for raw ids
+    if result == "":
+        return id
+
+    # some valid ids could decode to a string that from_global_id()
+    # assumes is a global id, so we need to verify that it is indeed
+    # the case.
+    if gql_type and gql_type not in _valid_types:
+        return id
 
     return result
