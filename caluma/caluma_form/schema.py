@@ -832,7 +832,7 @@ class StringAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     def resolve_selected_option(self, info, **args):
         selected_options = self.selected_options
-        return selected_options.first() if selected_options else None
+        return selected_options[0] if selected_options else None
 
     class Meta:
         model = models.Answer

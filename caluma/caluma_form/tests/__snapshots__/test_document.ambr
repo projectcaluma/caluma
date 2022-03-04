@@ -790,14 +790,14 @@
         'edges': <class 'list'> [
           <class 'dict'> {
             'node': <class 'dict'> {
-              'label': 'Felicia Adams',
-              'slug': 'anothervalue',
+              'label': 'William Sloan',
+              'slug': 'somevalue',
             },
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'label': 'William Sloan',
-              'slug': 'somevalue',
+              'label': 'Felicia Adams',
+              'slug': 'anothervalue',
             },
           },
         ],
