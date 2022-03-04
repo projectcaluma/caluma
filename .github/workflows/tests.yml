@@ -89,7 +89,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:9.6-alpine
+        image: postgres:14-alpine
         env:
           POSTGRES_USER: caluma
           POSTGRES_PASSWORD: caluma
