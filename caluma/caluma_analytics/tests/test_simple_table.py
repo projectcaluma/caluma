@@ -95,9 +95,7 @@ def test_run_analytics_gql(
             for edge in records[0]["node"]["edges"]
         }
 
-        assert first_row["quarter"] == str(
-            float(math.ceil(case.created_at.month / 3.0))
-        )
+        assert first_row["quarter"] == str(int(math.ceil(case.created_at.month / 3)))
         assert first_row["foo"] == "bar"
 
     snapshot.assert_match(result.data)

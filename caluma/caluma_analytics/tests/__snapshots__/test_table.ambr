@@ -125,14 +125,6 @@
         'edges': <class 'list'> [
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YQ==',
-              'isLeaf': False,
-              'label': 'Meta',
-              'sourcePath': 'meta',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6Y2xvc2VkX2F0',
               'isLeaf': False,
               'label': 'closed_at',
@@ -149,18 +141,26 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6c3RhdHVz',
-              'isLeaf': True,
-              'label': 'status',
-              'sourcePath': 'status',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6aWQ=',
               'isLeaf': True,
               'label': 'id',
               'sourcePath': 'id',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YQ==',
+              'isLeaf': False,
+              'label': 'Meta',
+              'sourcePath': 'meta',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6c3RhdHVz',
+              'isLeaf': True,
+              'label': 'status',
+              'sourcePath': 'status',
             },
           },
         ],
@@ -175,18 +175,18 @@
         'edges': <class 'list'> [
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC55ZWFy',
-              'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'created_at.year',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5tb250aA==',
               'isLeaf': True,
               'label': 'month',
               'sourcePath': 'created_at.month',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5xdWFydGVy',
+              'isLeaf': True,
+              'label': 'quarter',
+              'sourcePath': 'created_at.quarter',
             },
           },
           <class 'dict'> {
@@ -199,10 +199,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5xdWFydGVy',
+              'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC55ZWFy',
               'isLeaf': True,
-              'label': 'quarter',
-              'sourcePath': 'created_at.quarter',
+              'label': 'year',
+              'sourcePath': 'created_at.year',
             },
           },
         ],
@@ -217,18 +217,18 @@
         'edges': <class 'list'> [
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC55ZWFy',
-              'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'created_at.year',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5tb250aA==',
               'isLeaf': True,
               'label': 'month',
               'sourcePath': 'created_at.month',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5xdWFydGVy',
+              'isLeaf': True,
+              'label': 'quarter',
+              'sourcePath': 'created_at.quarter',
             },
           },
           <class 'dict'> {
@@ -241,10 +241,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5xdWFydGVy',
+              'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC55ZWFy',
               'isLeaf': True,
-              'label': 'quarter',
-              'sourcePath': 'created_at.quarter',
+              'label': 'year',
+              'sourcePath': 'created_at.year',
             },
           },
         ],
@@ -269,18 +269,18 @@
         'edges': <class 'list'> [
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YS50ZXN0LWtleQ==',
-              'isLeaf': True,
-              'label': "Key 'test-key'",
-              'sourcePath': 'meta.test-key',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YS5mb29iYXI=',
               'isLeaf': True,
               'label': "Key 'foobar'",
               'sourcePath': 'meta.foobar',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YS50ZXN0LWtleQ==',
+              'isLeaf': True,
+              'label': "Key 'test-key'",
+              'sourcePath': 'meta.test-key',
             },
           },
         ],
@@ -294,13 +294,6 @@
       'analyticsTable': <class 'dict'> {
         'availableFields': <class 'dict'> {
           'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'isLeaf': False,
-                'label': 'Meta',
-                'sourcePath': 'meta',
-              },
-            },
             <class 'dict'> {
               'node': <class 'dict'> {
                 'isLeaf': False,
@@ -318,15 +311,22 @@
             <class 'dict'> {
               'node': <class 'dict'> {
                 'isLeaf': True,
-                'label': 'status',
-                'sourcePath': 'status',
+                'label': 'id',
+                'sourcePath': 'id',
+              },
+            },
+            <class 'dict'> {
+              'node': <class 'dict'> {
+                'isLeaf': False,
+                'label': 'Meta',
+                'sourcePath': 'meta',
               },
             },
             <class 'dict'> {
               'node': <class 'dict'> {
                 'isLeaf': True,
-                'label': 'id',
-                'sourcePath': 'id',
+                'label': 'status',
+                'sourcePath': 'status',
               },
             },
           ],
@@ -454,42 +454,10 @@
         'edges': <class 'list'> [
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YQ==',
-              'isLeaf': False,
-              'label': 'Meta',
-              'sourcePath': 'meta',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YS50ZXN0LWtleQ==',
-              'isLeaf': True,
-              'label': "Key 'test-key'",
-              'sourcePath': 'meta.test-key',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YS5mb29iYXI=',
-              'isLeaf': True,
-              'label': "Key 'foobar'",
-              'sourcePath': 'meta.foobar',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6Y2xvc2VkX2F0',
               'isLeaf': False,
               'label': 'closed_at',
               'sourcePath': 'closed_at',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6Y2xvc2VkX2F0LnllYXI=',
-              'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'closed_at.year',
             },
           },
           <class 'dict'> {
@@ -502,6 +470,14 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6Y2xvc2VkX2F0LnF1YXJ0ZXI=',
+              'isLeaf': True,
+              'label': 'quarter',
+              'sourcePath': 'closed_at.quarter',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6Y2xvc2VkX2F0LndlZWtkYXk=',
               'isLeaf': True,
               'label': 'weekday',
@@ -510,10 +486,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6Y2xvc2VkX2F0LnF1YXJ0ZXI=',
+              'id': 'QXZhaWxhYmxlRmllbGQ6Y2xvc2VkX2F0LnllYXI=',
               'isLeaf': True,
-              'label': 'quarter',
-              'sourcePath': 'closed_at.quarter',
+              'label': 'year',
+              'sourcePath': 'closed_at.year',
             },
           },
           <class 'dict'> {
@@ -526,26 +502,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC55ZWFy',
-              'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'created_at.year',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5tb250aA==',
               'isLeaf': True,
               'label': 'month',
               'sourcePath': 'created_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC53ZWVrZGF5',
-              'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'created_at.weekday',
             },
           },
           <class 'dict'> {
@@ -558,18 +518,18 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6c3RhdHVz',
+              'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC53ZWVrZGF5',
               'isLeaf': True,
-              'label': 'status',
-              'sourcePath': 'status',
+              'label': 'weekday',
+              'sourcePath': 'created_at.weekday',
             },
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6aWQ=',
+              'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC55ZWFy',
               'isLeaf': True,
-              'label': 'id',
-              'sourcePath': 'id',
+              'label': 'year',
+              'sourcePath': 'created_at.year',
             },
           },
           <class 'dict'> {
@@ -606,6 +566,46 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6aWQ=',
+              'isLeaf': True,
+              'label': 'id',
+              'sourcePath': 'id',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YQ==',
+              'isLeaf': False,
+              'label': 'Meta',
+              'sourcePath': 'meta',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YS5mb29iYXI=',
+              'isLeaf': True,
+              'label': "Key 'foobar'",
+              'sourcePath': 'meta.foobar',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YS50ZXN0LWtleQ==',
+              'isLeaf': True,
+              'label': "Key 'test-key'",
+              'sourcePath': 'meta.test-key',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6c3RhdHVz',
+              'isLeaf': True,
+              'label': 'status',
+              'sourcePath': 'status',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3Rd',
               'isLeaf': False,
               'label': 'Workitem: first created with task baby-room-note',
@@ -614,26 +614,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLm1ldGE=',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNsb3NlZF9hdA==',
               'isLeaf': False,
-              'label': 'Meta',
-              'sourcePath': 'workitem[baby-room-note,first].meta',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLm1ldGEudGVzdC1rZXk=',
-              'isLeaf': True,
-              'label': "Key 'test-key'",
-              'sourcePath': 'workitem[baby-room-note,first].meta.test-key',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLm1ldGEuZm9vYmFy',
-              'isLeaf': True,
-              'label': "Key 'foobar'",
-              'sourcePath': 'workitem[baby-room-note,first].meta.foobar',
+              'label': 'closed_at',
+              'sourcePath': 'workitem[baby-room-note,first].closed_at',
             },
           },
           <class 'dict'> {
@@ -646,10 +630,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNsb3NlZF9hdC55ZWFy',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNsb3NlZF9hdC5tb250aA==',
               'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'workitem[baby-room-note,first].closed_at.year',
+              'label': 'month',
+              'sourcePath': 'workitem[baby-room-note,first].closed_at.month',
             },
           },
           <class 'dict'> {
@@ -662,10 +646,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNsb3NlZF9hdC53ZWVrZGF5',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNsb3NlZF9hdC5xdWFydGVy',
               'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'workitem[baby-room-note,first].closed_at.weekday',
+              'label': 'quarter',
+              'sourcePath': 'workitem[baby-room-note,first].closed_at.quarter',
             },
           },
           <class 'dict'> {
@@ -678,10 +662,18 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNsb3NlZF9hdA==',
-              'isLeaf': False,
-              'label': 'closed_at',
-              'sourcePath': 'workitem[baby-room-note,first].closed_at',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNsb3NlZF9hdC53ZWVrZGF5',
+              'isLeaf': True,
+              'label': 'weekday',
+              'sourcePath': 'workitem[baby-room-note,first].closed_at.weekday',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNsb3NlZF9hdC53ZWVrZGF5',
+              'isLeaf': True,
+              'label': 'weekday',
+              'sourcePath': 'workitem[baby-room-note,first].closed_at.weekday',
             },
           },
           <class 'dict'> {
@@ -694,26 +686,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNsb3NlZF9hdC5tb250aA==',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNsb3NlZF9hdC55ZWFy',
               'isLeaf': True,
-              'label': 'month',
-              'sourcePath': 'workitem[baby-room-note,first].closed_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNsb3NlZF9hdC53ZWVrZGF5',
-              'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'workitem[baby-room-note,first].closed_at.weekday',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNsb3NlZF9hdC5xdWFydGVy',
-              'isLeaf': True,
-              'label': 'quarter',
-              'sourcePath': 'workitem[baby-room-note,first].closed_at.quarter',
+              'label': 'year',
+              'sourcePath': 'workitem[baby-room-note,first].closed_at.year',
             },
           },
           <class 'dict'> {
@@ -726,26 +702,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNyZWF0ZWRfYXQueWVhcg==',
-              'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'workitem[baby-room-note,first].created_at.year',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNyZWF0ZWRfYXQubW9udGg=',
               'isLeaf': True,
               'label': 'month',
               'sourcePath': 'workitem[baby-room-note,first].created_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNyZWF0ZWRfYXQud2Vla2RheQ==',
-              'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'workitem[baby-room-note,first].created_at.weekday',
             },
           },
           <class 'dict'> {
@@ -758,18 +718,18 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLnN0YXR1cw==',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNyZWF0ZWRfYXQud2Vla2RheQ==',
               'isLeaf': True,
-              'label': 'status',
-              'sourcePath': 'workitem[baby-room-note,first].status',
+              'label': 'weekday',
+              'sourcePath': 'workitem[baby-room-note,first].created_at.weekday',
             },
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLm5hbWU=',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLmNyZWF0ZWRfYXQueWVhcg==',
               'isLeaf': True,
-              'label': 'name',
-              'sourcePath': 'workitem[baby-room-note,first].name',
+              'label': 'year',
+              'sourcePath': 'workitem[baby-room-note,first].created_at.year',
             },
           },
           <class 'dict'> {
@@ -782,178 +742,42 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0=',
-              'isLeaf': False,
-              'label': 'Workitem: last created with task baby-room-note',
-              'sourcePath': 'workitem[baby-room-note,last]',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0ubWV0YQ==',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLm1ldGE=',
               'isLeaf': False,
               'label': 'Meta',
-              'sourcePath': 'workitem[baby-room-note,last].meta',
+              'sourcePath': 'workitem[baby-room-note,first].meta',
             },
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0ubWV0YS50ZXN0LWtleQ==',
-              'isLeaf': True,
-              'label': "Key 'test-key'",
-              'sourcePath': 'workitem[baby-room-note,last].meta.test-key',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0ubWV0YS5mb29iYXI=',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLm1ldGEuZm9vYmFy',
               'isLeaf': True,
               'label': "Key 'foobar'",
-              'sourcePath': 'workitem[baby-room-note,last].meta.foobar',
+              'sourcePath': 'workitem[baby-room-note,first].meta.foobar',
             },
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0',
-              'isLeaf': False,
-              'label': 'closed_at',
-              'sourcePath': 'workitem[baby-room-note,last].closed_at',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0LnllYXI=',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLm1ldGEudGVzdC1rZXk=',
               'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'workitem[baby-room-note,last].closed_at.year',
+              'label': "Key 'test-key'",
+              'sourcePath': 'workitem[baby-room-note,first].meta.test-key',
             },
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0Lm1vbnRo',
-              'isLeaf': True,
-              'label': 'month',
-              'sourcePath': 'workitem[baby-room-note,last].closed_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0LndlZWtkYXk=',
-              'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'workitem[baby-room-note,last].closed_at.weekday',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0LnF1YXJ0ZXI=',
-              'isLeaf': True,
-              'label': 'quarter',
-              'sourcePath': 'workitem[baby-room-note,last].closed_at.quarter',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0',
-              'isLeaf': False,
-              'label': 'closed_at',
-              'sourcePath': 'workitem[baby-room-note,last].closed_at',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0LnllYXI=',
-              'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'workitem[baby-room-note,last].closed_at.year',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0Lm1vbnRo',
-              'isLeaf': True,
-              'label': 'month',
-              'sourcePath': 'workitem[baby-room-note,last].closed_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0LndlZWtkYXk=',
-              'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'workitem[baby-room-note,last].closed_at.weekday',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0LnF1YXJ0ZXI=',
-              'isLeaf': True,
-              'label': 'quarter',
-              'sourcePath': 'workitem[baby-room-note,last].closed_at.quarter',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY3JlYXRlZF9hdA==',
-              'isLeaf': False,
-              'label': 'created_at',
-              'sourcePath': 'workitem[baby-room-note,last].created_at',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY3JlYXRlZF9hdC55ZWFy',
-              'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'workitem[baby-room-note,last].created_at.year',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY3JlYXRlZF9hdC5tb250aA==',
-              'isLeaf': True,
-              'label': 'month',
-              'sourcePath': 'workitem[baby-room-note,last].created_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY3JlYXRlZF9hdC53ZWVrZGF5',
-              'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'workitem[baby-room-note,last].created_at.weekday',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY3JlYXRlZF9hdC5xdWFydGVy',
-              'isLeaf': True,
-              'label': 'quarter',
-              'sourcePath': 'workitem[baby-room-note,last].created_at.quarter',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uc3RhdHVz',
-              'isLeaf': True,
-              'label': 'status',
-              'sourcePath': 'workitem[baby-room-note,last].status',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0ubmFtZQ==',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLm5hbWU=',
               'isLeaf': True,
               'label': 'name',
-              'sourcePath': 'workitem[baby-room-note,last].name',
+              'sourcePath': 'workitem[baby-room-note,first].name',
             },
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uZG9jdW1lbnRbc29tZW9uZS1tb3RoZXJd',
-              'isLeaf': False,
-              'label': 'document[someone-mother]',
-              'sourcePath': 'workitem[baby-room-note,last].document[someone-mother]',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RdLnN0YXR1cw==',
+              'isLeaf': True,
+              'label': 'status',
+              'sourcePath': 'workitem[baby-room-note,first].status',
             },
           },
           <class 'dict'> {
@@ -966,26 +790,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLm1ldGE=',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNsb3NlZF9hdA==',
               'isLeaf': False,
-              'label': 'Meta',
-              'sourcePath': 'workitem[baby-room-note,firstclosed].meta',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLm1ldGEudGVzdC1rZXk=',
-              'isLeaf': True,
-              'label': "Key 'test-key'",
-              'sourcePath': 'workitem[baby-room-note,firstclosed].meta.test-key',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLm1ldGEuZm9vYmFy',
-              'isLeaf': True,
-              'label': "Key 'foobar'",
-              'sourcePath': 'workitem[baby-room-note,firstclosed].meta.foobar',
+              'label': 'closed_at',
+              'sourcePath': 'workitem[baby-room-note,firstclosed].closed_at',
             },
           },
           <class 'dict'> {
@@ -998,10 +806,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNsb3NlZF9hdC55ZWFy',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNsb3NlZF9hdC5tb250aA==',
               'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'workitem[baby-room-note,firstclosed].closed_at.year',
+              'label': 'month',
+              'sourcePath': 'workitem[baby-room-note,firstclosed].closed_at.month',
             },
           },
           <class 'dict'> {
@@ -1014,10 +822,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNsb3NlZF9hdC53ZWVrZGF5',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNsb3NlZF9hdC5xdWFydGVy',
               'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'workitem[baby-room-note,firstclosed].closed_at.weekday',
+              'label': 'quarter',
+              'sourcePath': 'workitem[baby-room-note,firstclosed].closed_at.quarter',
             },
           },
           <class 'dict'> {
@@ -1030,10 +838,18 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNsb3NlZF9hdA==',
-              'isLeaf': False,
-              'label': 'closed_at',
-              'sourcePath': 'workitem[baby-room-note,firstclosed].closed_at',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNsb3NlZF9hdC53ZWVrZGF5',
+              'isLeaf': True,
+              'label': 'weekday',
+              'sourcePath': 'workitem[baby-room-note,firstclosed].closed_at.weekday',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNsb3NlZF9hdC53ZWVrZGF5',
+              'isLeaf': True,
+              'label': 'weekday',
+              'sourcePath': 'workitem[baby-room-note,firstclosed].closed_at.weekday',
             },
           },
           <class 'dict'> {
@@ -1046,26 +862,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNsb3NlZF9hdC5tb250aA==',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNsb3NlZF9hdC55ZWFy',
               'isLeaf': True,
-              'label': 'month',
-              'sourcePath': 'workitem[baby-room-note,firstclosed].closed_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNsb3NlZF9hdC53ZWVrZGF5',
-              'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'workitem[baby-room-note,firstclosed].closed_at.weekday',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNsb3NlZF9hdC5xdWFydGVy',
-              'isLeaf': True,
-              'label': 'quarter',
-              'sourcePath': 'workitem[baby-room-note,firstclosed].closed_at.quarter',
+              'label': 'year',
+              'sourcePath': 'workitem[baby-room-note,firstclosed].closed_at.year',
             },
           },
           <class 'dict'> {
@@ -1078,26 +878,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNyZWF0ZWRfYXQueWVhcg==',
-              'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'workitem[baby-room-note,firstclosed].created_at.year',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNyZWF0ZWRfYXQubW9udGg=',
               'isLeaf': True,
               'label': 'month',
               'sourcePath': 'workitem[baby-room-note,firstclosed].created_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNyZWF0ZWRfYXQud2Vla2RheQ==',
-              'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'workitem[baby-room-note,firstclosed].created_at.weekday',
             },
           },
           <class 'dict'> {
@@ -1110,18 +894,18 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLnN0YXR1cw==',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNyZWF0ZWRfYXQud2Vla2RheQ==',
               'isLeaf': True,
-              'label': 'status',
-              'sourcePath': 'workitem[baby-room-note,firstclosed].status',
+              'label': 'weekday',
+              'sourcePath': 'workitem[baby-room-note,firstclosed].created_at.weekday',
             },
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLm5hbWU=',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLmNyZWF0ZWRfYXQueWVhcg==',
               'isLeaf': True,
-              'label': 'name',
-              'sourcePath': 'workitem[baby-room-note,firstclosed].name',
+              'label': 'year',
+              'sourcePath': 'workitem[baby-room-note,firstclosed].created_at.year',
             },
           },
           <class 'dict'> {
@@ -1134,6 +918,222 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLm1ldGE=',
+              'isLeaf': False,
+              'label': 'Meta',
+              'sourcePath': 'workitem[baby-room-note,firstclosed].meta',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLm1ldGEuZm9vYmFy',
+              'isLeaf': True,
+              'label': "Key 'foobar'",
+              'sourcePath': 'workitem[baby-room-note,firstclosed].meta.foobar',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLm1ldGEudGVzdC1rZXk=',
+              'isLeaf': True,
+              'label': "Key 'test-key'",
+              'sourcePath': 'workitem[baby-room-note,firstclosed].meta.test-key',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLm5hbWU=',
+              'isLeaf': True,
+              'label': 'name',
+              'sourcePath': 'workitem[baby-room-note,firstclosed].name',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsZmlyc3RjbG9zZWRdLnN0YXR1cw==',
+              'isLeaf': True,
+              'label': 'status',
+              'sourcePath': 'workitem[baby-room-note,firstclosed].status',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0=',
+              'isLeaf': False,
+              'label': 'Workitem: last created with task baby-room-note',
+              'sourcePath': 'workitem[baby-room-note,last]',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0',
+              'isLeaf': False,
+              'label': 'closed_at',
+              'sourcePath': 'workitem[baby-room-note,last].closed_at',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0',
+              'isLeaf': False,
+              'label': 'closed_at',
+              'sourcePath': 'workitem[baby-room-note,last].closed_at',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0Lm1vbnRo',
+              'isLeaf': True,
+              'label': 'month',
+              'sourcePath': 'workitem[baby-room-note,last].closed_at.month',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0Lm1vbnRo',
+              'isLeaf': True,
+              'label': 'month',
+              'sourcePath': 'workitem[baby-room-note,last].closed_at.month',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0LnF1YXJ0ZXI=',
+              'isLeaf': True,
+              'label': 'quarter',
+              'sourcePath': 'workitem[baby-room-note,last].closed_at.quarter',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0LnF1YXJ0ZXI=',
+              'isLeaf': True,
+              'label': 'quarter',
+              'sourcePath': 'workitem[baby-room-note,last].closed_at.quarter',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0LndlZWtkYXk=',
+              'isLeaf': True,
+              'label': 'weekday',
+              'sourcePath': 'workitem[baby-room-note,last].closed_at.weekday',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0LndlZWtkYXk=',
+              'isLeaf': True,
+              'label': 'weekday',
+              'sourcePath': 'workitem[baby-room-note,last].closed_at.weekday',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0LnllYXI=',
+              'isLeaf': True,
+              'label': 'year',
+              'sourcePath': 'workitem[baby-room-note,last].closed_at.year',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY2xvc2VkX2F0LnllYXI=',
+              'isLeaf': True,
+              'label': 'year',
+              'sourcePath': 'workitem[baby-room-note,last].closed_at.year',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY3JlYXRlZF9hdA==',
+              'isLeaf': False,
+              'label': 'created_at',
+              'sourcePath': 'workitem[baby-room-note,last].created_at',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY3JlYXRlZF9hdC5tb250aA==',
+              'isLeaf': True,
+              'label': 'month',
+              'sourcePath': 'workitem[baby-room-note,last].created_at.month',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY3JlYXRlZF9hdC5xdWFydGVy',
+              'isLeaf': True,
+              'label': 'quarter',
+              'sourcePath': 'workitem[baby-room-note,last].created_at.quarter',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY3JlYXRlZF9hdC53ZWVrZGF5',
+              'isLeaf': True,
+              'label': 'weekday',
+              'sourcePath': 'workitem[baby-room-note,last].created_at.weekday',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uY3JlYXRlZF9hdC55ZWFy',
+              'isLeaf': True,
+              'label': 'year',
+              'sourcePath': 'workitem[baby-room-note,last].created_at.year',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uZG9jdW1lbnRbc29tZW9uZS1tb3RoZXJd',
+              'isLeaf': False,
+              'label': 'document[someone-mother]',
+              'sourcePath': 'workitem[baby-room-note,last].document[someone-mother]',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0ubWV0YQ==',
+              'isLeaf': False,
+              'label': 'Meta',
+              'sourcePath': 'workitem[baby-room-note,last].meta',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0ubWV0YS5mb29iYXI=',
+              'isLeaf': True,
+              'label': "Key 'foobar'",
+              'sourcePath': 'workitem[baby-room-note,last].meta.foobar',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0ubWV0YS50ZXN0LWtleQ==',
+              'isLeaf': True,
+              'label': "Key 'test-key'",
+              'sourcePath': 'workitem[baby-room-note,last].meta.test-key',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0ubmFtZQ==',
+              'isLeaf': True,
+              'label': 'name',
+              'sourcePath': 'workitem[baby-room-note,last].name',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdF0uc3RhdHVz',
+              'isLeaf': True,
+              'label': 'status',
+              'sourcePath': 'workitem[baby-room-note,last].status',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0=',
               'isLeaf': False,
               'label': 'Workitem: first closed with task baby-room-note',
@@ -1142,26 +1142,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0ubWV0YQ==',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY2xvc2VkX2F0',
               'isLeaf': False,
-              'label': 'Meta',
-              'sourcePath': 'workitem[baby-room-note,lastclosed].meta',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0ubWV0YS50ZXN0LWtleQ==',
-              'isLeaf': True,
-              'label': "Key 'test-key'",
-              'sourcePath': 'workitem[baby-room-note,lastclosed].meta.test-key',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0ubWV0YS5mb29iYXI=',
-              'isLeaf': True,
-              'label': "Key 'foobar'",
-              'sourcePath': 'workitem[baby-room-note,lastclosed].meta.foobar',
+              'label': 'closed_at',
+              'sourcePath': 'workitem[baby-room-note,lastclosed].closed_at',
             },
           },
           <class 'dict'> {
@@ -1174,10 +1158,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY2xvc2VkX2F0LnllYXI=',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY2xvc2VkX2F0Lm1vbnRo',
               'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'workitem[baby-room-note,lastclosed].closed_at.year',
+              'label': 'month',
+              'sourcePath': 'workitem[baby-room-note,lastclosed].closed_at.month',
             },
           },
           <class 'dict'> {
@@ -1190,10 +1174,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY2xvc2VkX2F0LndlZWtkYXk=',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY2xvc2VkX2F0LnF1YXJ0ZXI=',
               'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'workitem[baby-room-note,lastclosed].closed_at.weekday',
+              'label': 'quarter',
+              'sourcePath': 'workitem[baby-room-note,lastclosed].closed_at.quarter',
             },
           },
           <class 'dict'> {
@@ -1206,10 +1190,18 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY2xvc2VkX2F0',
-              'isLeaf': False,
-              'label': 'closed_at',
-              'sourcePath': 'workitem[baby-room-note,lastclosed].closed_at',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY2xvc2VkX2F0LndlZWtkYXk=',
+              'isLeaf': True,
+              'label': 'weekday',
+              'sourcePath': 'workitem[baby-room-note,lastclosed].closed_at.weekday',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY2xvc2VkX2F0LndlZWtkYXk=',
+              'isLeaf': True,
+              'label': 'weekday',
+              'sourcePath': 'workitem[baby-room-note,lastclosed].closed_at.weekday',
             },
           },
           <class 'dict'> {
@@ -1222,26 +1214,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY2xvc2VkX2F0Lm1vbnRo',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY2xvc2VkX2F0LnllYXI=',
               'isLeaf': True,
-              'label': 'month',
-              'sourcePath': 'workitem[baby-room-note,lastclosed].closed_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY2xvc2VkX2F0LndlZWtkYXk=',
-              'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'workitem[baby-room-note,lastclosed].closed_at.weekday',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY2xvc2VkX2F0LnF1YXJ0ZXI=',
-              'isLeaf': True,
-              'label': 'quarter',
-              'sourcePath': 'workitem[baby-room-note,lastclosed].closed_at.quarter',
+              'label': 'year',
+              'sourcePath': 'workitem[baby-room-note,lastclosed].closed_at.year',
             },
           },
           <class 'dict'> {
@@ -1254,26 +1230,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY3JlYXRlZF9hdC55ZWFy',
-              'isLeaf': True,
-              'label': 'year',
-              'sourcePath': 'workitem[baby-room-note,lastclosed].created_at.year',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
               'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY3JlYXRlZF9hdC5tb250aA==',
               'isLeaf': True,
               'label': 'month',
               'sourcePath': 'workitem[baby-room-note,lastclosed].created_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY3JlYXRlZF9hdC53ZWVrZGF5',
-              'isLeaf': True,
-              'label': 'weekday',
-              'sourcePath': 'workitem[baby-room-note,lastclosed].created_at.weekday',
             },
           },
           <class 'dict'> {
@@ -1286,10 +1246,50 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uc3RhdHVz',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY3JlYXRlZF9hdC53ZWVrZGF5',
               'isLeaf': True,
-              'label': 'status',
-              'sourcePath': 'workitem[baby-room-note,lastclosed].status',
+              'label': 'weekday',
+              'sourcePath': 'workitem[baby-room-note,lastclosed].created_at.weekday',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uY3JlYXRlZF9hdC55ZWFy',
+              'isLeaf': True,
+              'label': 'year',
+              'sourcePath': 'workitem[baby-room-note,lastclosed].created_at.year',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uZG9jdW1lbnRbc29tZW9uZS1tb3RoZXJd',
+              'isLeaf': False,
+              'label': 'document[someone-mother]',
+              'sourcePath': 'workitem[baby-room-note,lastclosed].document[someone-mother]',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0ubWV0YQ==',
+              'isLeaf': False,
+              'label': 'Meta',
+              'sourcePath': 'workitem[baby-room-note,lastclosed].meta',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0ubWV0YS5mb29iYXI=',
+              'isLeaf': True,
+              'label': "Key 'foobar'",
+              'sourcePath': 'workitem[baby-room-note,lastclosed].meta.foobar',
+            },
+          },
+          <class 'dict'> {
+            'node': <class 'dict'> {
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0ubWV0YS50ZXN0LWtleQ==',
+              'isLeaf': True,
+              'label': "Key 'test-key'",
+              'sourcePath': 'workitem[baby-room-note,lastclosed].meta.test-key',
             },
           },
           <class 'dict'> {
@@ -1302,10 +1302,10 @@
           },
           <class 'dict'> {
             'node': <class 'dict'> {
-              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uZG9jdW1lbnRbc29tZW9uZS1tb3RoZXJd',
-              'isLeaf': False,
-              'label': 'document[someone-mother]',
-              'sourcePath': 'workitem[baby-room-note,lastclosed].document[someone-mother]',
+              'id': 'QXZhaWxhYmxlRmllbGQ6d29ya2l0ZW1bYmFieS1yb29tLW5vdGUsbGFzdGNsb3NlZF0uc3RhdHVz',
+              'isLeaf': True,
+              'label': 'status',
+              'sourcePath': 'workitem[baby-room-note,lastclosed].status',
             },
           },
         ],

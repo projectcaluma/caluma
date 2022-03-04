@@ -512,7 +512,13 @@ class Answer(core_models.BaseModel):
             return None
 
         model, filters = map[self.question.type]
-        return model.objects.filter(**filters)
+        queryset = model.objects.filter(**filters)
+
+        def index_from_value(obj):
+            return self.value.index(obj.slug)
+
+        # Keep the same order as the value
+        return sorted(queryset, key=index_from_value)
 
     def __repr__(self):
         return f"Answer(document={self.document!r}, question={self.question!r}, value={self.value!r})"

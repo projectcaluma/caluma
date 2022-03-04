@@ -100,17 +100,20 @@ class AnalyticsTable(DjangoObjectType):
         depth = depth if depth and depth > 0 else 1
         prefix = prefix.split(".") if prefix else []
 
-        return [
-            {
-                "id": ".".join(field.source_path()),
-                "label": field.label,
-                "full_label": field.full_label(),
-                "source_path": ".".join(field.source_path()),
-                "is_leaf": field.is_leaf(),
-                "is_value": field.is_value(),
-            }
-            for path, field in start.get_fields(prefix, depth).items()
-        ]
+        return sorted(
+            [
+                {
+                    "id": ".".join(field.source_path()),
+                    "label": field.label,
+                    "full_label": field.full_label(),
+                    "source_path": ".".join(field.source_path()),
+                    "is_leaf": field.is_leaf(),
+                    "is_value": field.is_value(),
+                }
+                for path, field in start.get_fields(prefix, depth).items()
+            ],
+            key=lambda field: field["id"],
+        )
 
     @staticmethod
     def resolve_result_data(obj, info):
@@ -125,6 +128,10 @@ class AnalyticsTable(DjangoObjectType):
 class AnalyticsField(DjangoObjectType):
     meta = generic.GenericScalar()
     filters = graphene.List(String, required=False)
+
+    @classmethod
+    def get_queryset(cls, queryset, info):
+        return super().get_queryset(queryset, info).order_by("-created_at")
 
     class Meta:
         model = models.AnalyticsField

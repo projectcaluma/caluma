@@ -89,7 +89,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:9.6-alpine
+        image: postgres:14-alpine
         env:
           POSTGRES_USER: caluma
           POSTGRES_PASSWORD: caluma
@@ -133,58 +133,37 @@ jobs:
       - name: Run tests
         run: poetry run pytest --no-cov-on-fail --cov --create-db -vv
 
-  compatibility-tests:
-    name: Compatibility tests
+  compatibility-tests-postgres-10:
+    name: "Compatibility tests"
+    uses: ./.github/workflows/compatibility-tests.yml
     needs: [lint]
-    runs-on: ubuntu-latest
+    with:
+      postgres: "10"
 
-    env:
-      ENV: dev
+  compatibility-tests-postgres-11:
+    name: "Compatibility tests"
+    uses: ./.github/workflows/compatibility-tests.yml
+    needs: [lint]
+    with:
+      postgres: "11"
 
-    strategy:
-      matrix:
-        python_version:
-          - "3.8"
-          - "3.9"
-          - "3.10"
+  compatibility-tests-postgres-12:
+    name: "Compatibility tests"
+    uses: ./.github/workflows/compatibility-tests.yml
+    needs: [lint]
+    with:
+      postgres: "12"
 
-    services:
-      postgres:
-        image: postgres:9.6-alpine
-        env:
-          POSTGRES_USER: caluma
-          POSTGRES_PASSWORD: caluma
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
+  compatibility-tests-postgres-13:
+    name: "Compatibility tests"
+    uses: ./.github/workflows/compatibility-tests.yml
+    needs: [lint]
+    with:
+      postgres: "13"
 
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Setup python
-        uses: actions/setup-python@v1
-        with:
-          python-version: ${{ matrix.python_version }}
-
-      - uses: actions/cache@v2
-        with:
-          path: .venv
-          key: poetry-${{ hashFiles('poetry.lock') }}
-          restore-keys: |
-            poetry-
-
-      - name: Set UID
-        run: echo "UID=$(id --user)" > .env
-
-      - name: Install dependencies
-        run: |
-          pip install -U poetry
-          poetry config virtualenvs.in-project true
-          poetry install
-
-      - name: Run tests
-        run: poetry run pytest --no-cov-on-fail --cov --create-db -vv
+  compatibility-tests-postgres-14:
+    name: "Compatibility tests"
+    uses: ./.github/workflows/compatibility-tests.yml
+    needs: [lint]
+    with:
+      postgres: "14"

@@ -10,6 +10,7 @@ Files:
     .env
     .flake8
     .github/dependabot.yml
+    .github/workflows/compatibility-tests.yml
     .github/workflows/ghcr.yml
     .github/workflows/pypi.yml
     .github/workflows/tests.yml
