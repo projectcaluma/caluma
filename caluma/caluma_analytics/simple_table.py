@@ -492,6 +492,15 @@ class DateExtractorField(AttributeField):
             filter_values=self.filters,
         )
 
+    def parse_value(self, value):
+        """Convert extracted date part to integer.
+
+        This is necessary because not all supported postgres versions return the
+        same datatype which leads to inconsistency. E.g versions < 12 returns a
+        float while later versions return a decimal.
+        """
+        return int(value)
+
 
 class BaseStartingObject:
     """Base class for starting objects.

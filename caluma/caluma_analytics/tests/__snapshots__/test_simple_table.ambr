@@ -4,21 +4,21 @@
       'created_at': datetime.datetime(2021, 10, 10, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Victoria Pena',
-      'quarter': 4.0,
+      'quarter': 4,
       'statuuuuuus': 'running',
     },
     <class 'dict'> {
       'created_at': datetime.datetime(2021, 10, 10, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Victoria Pena',
-      'quarter': 4.0,
+      'quarter': 4,
       'statuuuuuus': 'running',
     },
     <class 'dict'> {
       'created_at': datetime.datetime(2021, 10, 10, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Victoria Pena',
-      'quarter': 4.0,
+      'quarter': 4,
       'statuuuuuus': 'running',
     },
   ]
@@ -53,7 +53,7 @@
                   <class 'dict'> {
                     'node': <class 'dict'> {
                       'alias': 'quarter',
-                      'value': '4.0',
+                      'value': '4',
                     },
                   },
                 ],
