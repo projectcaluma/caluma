@@ -10,7 +10,7 @@ services:
     build:
       context: .
       args:
-        REQUIREMENTS: requirements-all.txt
+        INSTALL_DEV_DEPENDENCIES: "true"
     user: "${UID:?Set UID env variable to your user id}"
     volumes:
       - ./:/app
@@ -18,7 +18,7 @@ services:
       [
         "/bin/sh",
         "-c",
-        "wait-for-it.sh db:${DATABASE_PORT:-5432} -- ./manage.py migrate && ./manage.py runserver 0.0.0.0:8000",
+        "wait-for-it.sh db:${DATABASE_PORT:-5432} -- poetry run python manage.py migrate && poetry run python manage.py runserver 0.0.0.0:8000",
       ]
     # example for profiling
     # command: ./manage.py runprofileserver --use-cprofile 0.0.0.0:8000 --nothreading --prof-path /app

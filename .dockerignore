@@ -7,6 +7,7 @@ Dockerfile
 .dockerignore
 .env
 .git
+.github
 *.pyc
 __pycache__
 *.pyd
@@ -15,5 +16,5 @@ __pycache__
 .Python
 .python-version
 README.md
-renovate.json
 *.swp
+.venv
