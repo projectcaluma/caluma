@@ -117,10 +117,7 @@ def test_db_model_read_error(
 
     # assert exception type
     *_, err = capsys.readouterr()
-    assert (
-        "django.db.utils.ProgrammingError: permission denied for relation caluma_logging_accesslog"
-        in err
-    )
+    assert "django.db.utils.ProgrammingError: permission denied" in err
 
 
 def test_db_model_write_error(
@@ -150,10 +147,7 @@ def test_db_model_write_error(
 
     # assert exception type
     *_, err = capsys.readouterr()
-    assert (
-        "django.db.utils.ProgrammingError: permission denied for relation caluma_logging_accesslog"
-        in err
-    )
+    assert "django.db.utils.ProgrammingError: permission denied" in err
 
 
 def test_minio_connection_working(
