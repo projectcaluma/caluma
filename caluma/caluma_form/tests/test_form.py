@@ -132,9 +132,13 @@ def test_copy_form(db, form, form_question_factory, schema_executor):
     assert new_form.name == "Test Form"
     assert new_form.meta == form.meta
     assert new_form.source == form
-    assert list(
-        models.FormQuestion.objects.filter(form=new_form).values("question")
-    ) == list(models.FormQuestion.objects.filter(form=form).values("question"))
+    assert set(
+        models.FormQuestion.objects.filter(form=new_form).values_list(
+            "question", flat=True
+        )
+    ) == set(
+        models.FormQuestion.objects.filter(form=form).values_list("question", flat=True)
+    )
 
 
 @pytest.mark.parametrize("form__meta", [{"meta": "set"}])
@@ -147,9 +151,13 @@ def test_copy_form_api(db, form, form_question_factory, schema_executor):
     assert new_form.name == "Test Form"
     assert new_form.meta == form.meta
     assert new_form.source == form
-    assert list(
-        models.FormQuestion.objects.filter(form=new_form).values("question")
-    ) == list(models.FormQuestion.objects.filter(form=form).values("question"))
+    assert set(
+        models.FormQuestion.objects.filter(form=new_form).values_list(
+            "question", flat=True
+        )
+    ) == set(
+        models.FormQuestion.objects.filter(form=form).values_list("question", flat=True)
+    )
 
 
 def test_add_form_question(db, form, question, form_question_factory, schema_executor):
