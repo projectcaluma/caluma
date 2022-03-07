@@ -90,6 +90,18 @@ def create_work_items(tasks, case, user, prev_work_item=None, context: dict = No
             work_item_groups = [addressed_groups]
 
         for groups in work_item_groups:
+            if (
+                not task.is_multiple_instance
+                and models.WorkItem.objects.filter(
+                    addressed_groups=groups,
+                    controlling_groups=controlling_groups,
+                    task_id=task.pk,
+                    case=case,
+                ).exists()
+            ):
+                # work item already exists, do not create a new one
+                continue
+
             work_items.append(
                 models.WorkItem.objects.create(
                     addressed_groups=groups,
