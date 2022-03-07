@@ -138,6 +138,14 @@ class SaveTaskSerializer(serializers.ModelSerializer):
         help_text=models.Task._meta.get_field("control_groups").help_text,
     )
 
+    def validate(self, data):
+        if data.get("continue_async") and not data.get("is_multiple_instance"):
+            raise ValidationError(
+                "Only multiple instance tasks can continue asynchronously"
+            )
+
+        return data
+
     class Meta:
         model = models.Task
         fields = [
@@ -150,6 +158,7 @@ class SaveTaskSerializer(serializers.ModelSerializer):
             "is_archived",
             "lead_time",
             "is_multiple_instance",
+            "continue_async",
         ]
 
 

@@ -18,6 +18,7 @@ class TaskFactory(DjangoModelFactory):
     form = SubFactory(FormFactory)
     lead_time = None
     is_multiple_instance = False
+    continue_async = False
 
     class Meta:
         model = models.Task

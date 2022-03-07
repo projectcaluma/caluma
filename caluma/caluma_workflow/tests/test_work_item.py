@@ -1630,3 +1630,87 @@ def test_redo_work_item_not_ready(
         api.redo_work_item(work_item=work_item_to_be_redone, user=admin_user)
 
     assert e.value.message == "Ready work items can't be redone."
+
+
+@pytest.mark.parametrize(
+    "next_task_is_multiple_instance,expected_next_count_1,expected_next_count_2",
+    [(False, 1, 1), (True, 1, 2)],
+)
+def test_complete_multiple_instance_continue_async(
+    db,
+    case,
+    schema_executor,
+    task_factory,
+    task_flow_factory,
+    work_item_factory,
+    next_task_is_multiple_instance,
+    expected_next_count_1,
+    expected_next_count_2,
+):
+    multiple_instance_task = task_factory(
+        type=models.Task.TYPE_SIMPLE,
+        form=None,
+        address_groups="['some-group']|groups",
+        is_multiple_instance=True,
+        continue_async=True,
+    )
+    next_task = task_factory(
+        type=models.Task.TYPE_SIMPLE,
+        form=None,
+        address_groups="['some-group']|groups",
+        is_multiple_instance=next_task_is_multiple_instance,
+    )
+
+    task_flow = task_flow_factory(task=multiple_instance_task, workflow=case.workflow)
+    task_flow.flow.next = f"'{next_task.slug}'|task"
+    task_flow.flow.save()
+
+    work_item_1 = work_item_factory(
+        task=multiple_instance_task, child_case=None, case=case
+    )
+    work_item_2 = work_item_factory(
+        task=multiple_instance_task, child_case=None, case=case
+    )
+
+    query = """
+        mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
+          completeWorkItem(input: $input) {
+            workItem {
+              status
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    # complete work item 1
+    result = schema_executor(
+        query, variable_values={"input": {"id": str(work_item_1.pk)}}
+    )
+
+    assert not bool(result.errors)
+    assert result.data["completeWorkItem"]["workItem"]["status"] == to_const(
+        models.WorkItem.STATUS_COMPLETED
+    )
+    assert (
+        case.work_items.filter(
+            task=next_task, status=models.WorkItem.STATUS_READY
+        ).count()
+        == expected_next_count_1
+    )
+
+    # complete work item 2
+    result = schema_executor(
+        query, variable_values={"input": {"id": str(work_item_2.pk)}}
+    )
+
+    assert not bool(result.errors)
+    assert result.data["completeWorkItem"]["workItem"]["status"] == to_const(
+        models.WorkItem.STATUS_COMPLETED
+    )
+    assert (
+        case.work_items.filter(
+            task=next_task, status=models.WorkItem.STATUS_READY
+        ).count()
+        == expected_next_count_2
+    )

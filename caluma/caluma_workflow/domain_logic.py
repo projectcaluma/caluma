@@ -98,8 +98,9 @@ class StartCaseLogic:
 class CompleteWorkItemLogic:
     @staticmethod
     def _can_continue(work_item, task):
-        # If a "multiple instance" task has running siblings, the task is not completed
-        if task.is_multiple_instance:
+        # If a multiple instance work item has running siblings the workflow can
+        # only continue if the task is allowed to continue asynchronously
+        if task.is_multiple_instance and not task.continue_async:
             return not work_item.case.work_items.filter(
                 task=task, status=models.WorkItem.STATUS_READY
             ).exists()
