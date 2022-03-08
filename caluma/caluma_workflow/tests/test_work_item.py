@@ -584,6 +584,74 @@ def test_complete_work_item_with_next_multiple_instance_task(
 
 @pytest.mark.parametrize(
     "work_item__status,work_item__child_case,task__type",
+    [(models.WorkItem.STATUS_READY, None, models.Task.TYPE_SIMPLE)],
+)
+@pytest.mark.parametrize(
+    "is_multiple_instance,expected_work_item_count",
+    [(False, 1), (True, 2)],
+)
+def test_complete_work_item_with_next_already_exist(
+    db,
+    case,
+    work_item,
+    task,
+    is_multiple_instance,
+    expected_work_item_count,
+    task_factory,
+    task_flow_factory,
+    work_item_factory,
+    workflow,
+    schema_executor,
+):
+    task_next = task_factory(
+        type=models.Task.TYPE_SIMPLE,
+        form=None,
+        is_multiple_instance=is_multiple_instance,
+    )
+    task_flow = task_flow_factory(task=task, workflow=workflow)
+    task_flow.flow.next = f"'{task_next.slug}'|task"
+    task_flow.flow.save()
+
+    work_item_factory(task=task_next, status=models.WorkItem.STATUS_READY, case=case)
+
+    assert case.work_items.filter(status=models.WorkItem.STATUS_READY).count() == 2
+
+    query = """
+        mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
+          completeWorkItem(input: $input) {
+            workItem {
+              status
+              case {
+                status
+                workItems {
+                  totalCount
+                  edges {
+                    node {
+                      status
+                    }
+                  }
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    inp = {"input": {"id": str(work_item.pk)}}
+    result = schema_executor(query, variable_values=inp)
+
+    assert not result.errors
+
+    assert (
+        case.work_items.filter(status=models.WorkItem.STATUS_READY).count()
+        == expected_work_item_count
+    )
+    assert case.work_items.filter(status=models.WorkItem.STATUS_COMPLETED).count() == 1
+
+
+@pytest.mark.parametrize(
+    "work_item__status,work_item__child_case,task__type",
     [(models.WorkItem.STATUS_COMPLETED, None, models.Task.TYPE_SIMPLE)],
 )
 def test_complete_work_item_with_merge(
