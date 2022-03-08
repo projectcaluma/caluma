@@ -327,7 +327,7 @@ class WorkItemField(BaseField):
     def query_field(self):
         return sql.JoinField(
             self.identifier,
-            table=self.visibility_source.workitems(),
+            table=self.visibility_source.work_items(),
             outer_ref=("id", "case_id"),
             filters=[f"task_id = '{self.task_slug}'"],
             order_by=self._order_by(),
@@ -416,7 +416,6 @@ class FormDocumentField(BaseField):
                 table=self.visibility_source.documents(),
                 outer_ref=("document_id", "id"),
                 filters=[f"form_id = '{self.form_slug}'"],
-                # TODO HMM this is wrong, join field should always have a parent
                 parent=self.parent.query_field() if self.parent else None,
             )
         # else - we just return the field from our "virtual" parent
@@ -481,6 +480,20 @@ class FormDocumentField(BaseField):
                 subform_level=self.subform_level + 1,
                 visibility_source=self.visibility_source,
             )
+
+
+class DirectDocumentField(FormDocumentField):
+    """Field that directly represents a document on top level.
+
+    This is used only for the "Documents" starting object, as here,
+    the main table is already the "document".
+    """
+
+    def query_field(self):
+        return sql.NOOPField(
+            self.identifier,
+            parent=self.parent.query_field() if self.parent else None,
+        )
 
 
 class FormAnswerField(AttributeField):
@@ -738,6 +751,113 @@ class CaseStartingObject(BaseStartingObject):
         }
 
         return {**direct_fields, **form_fields, **workitem_fields}
+
+
+class WorkItemsStartingObject(BaseStartingObject):
+    identifier = "work_items"
+    label = "Work Items"
+
+    def get_query(self):
+        return self.visibility_source.work_items()
+
+    def root_fields(self):
+        direct_fields = {
+            "meta": MetaField(
+                parent=None,
+                identifier="meta",
+                label="Meta",
+                visibility_source=self.visibility_source,
+            ),
+            "task_id": AttributeField(
+                parent=None,
+                identifier="task_id",
+                is_date=False,
+                visibility_source=self.visibility_source,
+            ),
+            "closed_at": AttributeField(
+                parent=None,
+                identifier="closed_at",
+                is_date=True,
+                visibility_source=self.visibility_source,
+            ),
+            "created_at": AttributeField(
+                parent=None,
+                identifier="created_at",
+                is_date=True,
+                visibility_source=self.visibility_source,
+            ),
+            "status": AttributeField(
+                parent=None,
+                identifier="status",
+                visibility_source=self.visibility_source,
+            ),
+            "id": AttributeField(
+                parent=None,
+                identifier="id",
+                visibility_source=self.visibility_source,
+            ),
+        }
+
+        workitem_forms = form_models.Form.objects.filter(
+            documents__work_item__isnull=False
+        ).distinct()
+
+        form_fields = {
+            f"document[{form.slug}]": FormDocumentField(
+                identifier=f"document[{form.slug}]",
+                parent=None,
+                visibility_source=self.visibility_source,
+            )
+            for form in workitem_forms
+        }
+
+        return {**direct_fields, **form_fields}
+
+
+class DocumentsStartingObject(BaseStartingObject):
+    identifier = "documents"
+    label = "documents"
+
+    def get_query(self):
+        return self.visibility_source.documents()
+
+    def root_fields(self):
+        direct_fields = {
+            "id": AttributeField(
+                parent=None,
+                identifier="id",
+                visibility_source=self.visibility_source,
+            ),
+            "meta": MetaField(
+                parent=None,
+                identifier="meta",
+                label="Meta",
+                visibility_source=self.visibility_source,
+            ),
+            "form_id": AttributeField(
+                parent=None,
+                identifier="form_id",
+                is_date=False,
+                visibility_source=self.visibility_source,
+            ),
+            "created_at": AttributeField(
+                parent=None,
+                identifier="created_at",
+                is_date=True,
+                visibility_source=self.visibility_source,
+            ),
+        }
+
+        form_fields = {
+            f"answers[{form.slug}]": DirectDocumentField(
+                identifier=f"answers[{form.slug}]",
+                parent=None,
+                visibility_source=self.visibility_source,
+            )
+            for form in form_models.Form.objects.all()
+        }
+
+        return {**direct_fields, **form_fields}
 
 
 class SimpleTable:

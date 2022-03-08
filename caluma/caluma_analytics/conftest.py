@@ -7,6 +7,9 @@ from . import models
 
 @pytest.fixture
 def example_analytics(analytics_table, form_and_document, settings):
+    analytics_table.starting_object = "cases"
+    analytics_table.save()
+
     settings.META_FIELDS = ["foo"]
 
     analytics_table.fields.create(
@@ -38,7 +41,7 @@ def example_analytics(analytics_table, form_and_document, settings):
 
 
 @pytest.fixture
-def analytics_cases(form_and_document, case_factory, at_date):
+def analytics_cases(form_and_document, case_factory, set_date, work_item_factory):
     """Create a number of cases with documents to be used in testing.
 
     There are multiple cases with differing statuses and differing
@@ -47,7 +50,6 @@ def analytics_cases(form_and_document, case_factory, at_date):
         * 1x COMPLETED, created_at 2022-02-04
         * 1x SUSPENDED, created_at 2022-02-05
     """
-    _f, document, _q, _a = form_and_document(use_subform=True)
     statuses = [
         # multiple cases with same status to test aggregates
         workflow_models.Case.STATUS_RUNNING,  # created_at 2022-02-01
@@ -59,16 +61,19 @@ def analytics_cases(form_and_document, case_factory, at_date):
 
     # create each case with another modified_at date
 
-    return [
-        # use at_date to create the cases at the correct date.
-        at_date(
-            f"2022-02-{day:02}",
-            lambda: case_factory(
+    def _makecase(date, **kwargs):
+        with set_date(date):
+            _f, document, _q, _a = form_and_document(use_subform=True)
+            case = case_factory(
                 meta={"foo": "bar"},
-                status=status,
-                document=document.copy(),
-            ),
-        )
+                document=document,
+                **kwargs,
+            )
+            work_item_factory(document=document.copy(), case=case)
+        return case
+
+    return [
+        _makecase(f"2022-02-{day:02}", status=status)
         for day, status in enumerate(statuses, start=1)
     ]
 

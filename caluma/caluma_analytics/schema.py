@@ -138,7 +138,7 @@ class AnalyticsTable(DjangoObjectType):
 
     @staticmethod
     def resolve_result_data(obj, info):
-        return obj.get_analytics()
+        return obj.get_analytics(info)
 
     class Meta:
         model = models.AnalyticsTable

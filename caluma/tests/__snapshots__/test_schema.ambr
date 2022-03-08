@@ -4191,6 +4191,8 @@
   """An enumeration."""
   enum StartingObject {
     CASES
+    WORK_ITEMS
+    DOCUMENTS
   }
   
   type StaticQuestion implements Question & Node {

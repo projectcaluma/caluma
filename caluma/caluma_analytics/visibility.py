@@ -30,6 +30,6 @@ class CalumaVisibilitySource:
         self.is_disabled = is_disabled
 
     cases = qs_method_factory(workflow_schema.Case)
-    workitems = qs_method_factory(workflow_schema.WorkItem)
+    work_items = qs_method_factory(workflow_schema.WorkItem)
     documents = qs_method_factory(form_schema.Document)
     answers = qs_method_factory(form_schema.Answer, form_models.Answer)

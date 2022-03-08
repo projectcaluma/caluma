@@ -12,6 +12,7 @@ def _table_output_to_rows(output):
 
 
 @pytest.mark.freeze_time("2021-10-10")
+@pytest.mark.parametrize("analytics_table__starting_object", ["cases"])
 def test_run_analytics_direct(db, snapshot, example_pivot_table, analytics_cases):
     """Test basic analytics run on simple table.
 
@@ -29,6 +30,7 @@ def test_run_analytics_direct(db, snapshot, example_pivot_table, analytics_cases
     snapshot.assert_match(sorted(result, key=lambda r: r["status"]))
 
 
+@pytest.mark.parametrize("analytics_table__starting_object", ["cases"])
 @pytest.mark.freeze_time("2021-10-10")
 @pytest.mark.parametrize("delete_case", [True, False])
 @pytest.mark.parametrize("case__meta", [{"foo": "bar"}])
@@ -90,7 +92,7 @@ def test_run_analytics_gql(
         created_by_status = {row["status"]: row["last_created"] for row in data}
 
         assert created_by_status == {
-            "running": "2022-02-03 00:00:00+00:00",
+            "running": "2022-02-05 00:00:00+00:00",
             "completed": "2022-02-04 00:00:00+00:00",
             "suspended": "2022-02-05 00:00:00+00:00",
         }

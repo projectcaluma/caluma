@@ -26,11 +26,11 @@ class AnalyticsTable(SlugModel):
     def get_starting_object(self, info):
         return simple_table.BaseStartingObject.get_object(self.starting_object, info)
 
-    def get_analytics(self):
+    def get_analytics(self, info):
         return (
-            simple_table.SimpleTable(self)
+            simple_table.SimpleTable(self, info)
             if self.is_extraction()
-            else pivot_table.PivotTable(self)
+            else pivot_table.PivotTable(self, info)
         )
 
     def __repr__(self):
