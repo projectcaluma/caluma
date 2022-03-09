@@ -199,7 +199,7 @@ class AnswerValidator:
 
         # empty values are allowed
         # required check will be done in DocumentValidator
-        if not value:
+        if value in EMPTY_VALUES:
             return
 
         validate_func = getattr(self, f"_validate_question_{question.type}")
