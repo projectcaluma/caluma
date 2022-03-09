@@ -199,17 +199,19 @@ class AnswerValidator:
 
         # empty values are allowed
         # required check will be done in DocumentValidator
-        if value:
-            validate_func = getattr(self, f"_validate_question_{question.type}")
-            validate_func(
-                question,
-                value,
-                document=document,
-                user=user,
-                validation_context=validation_context,
-                instance=instance,
-                origin=origin,
-            )
+        if not value:
+            return
+
+        validate_func = getattr(self, f"_validate_question_{question.type}")
+        validate_func(
+            question,
+            value,
+            document=document,
+            user=user,
+            validation_context=validation_context,
+            instance=instance,
+            origin=origin,
+        )
 
         format_validators = get_format_validators(dic=True)
         for validator_slug in question.format_validators:
