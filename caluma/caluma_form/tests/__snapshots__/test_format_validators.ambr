@@ -1,4 +1,24 @@
-# name: test_base_format_validators[question__format_validators1-test@example.com-True-text]
+# name: test_base_format_validators[question__format_validators1--True-text]
+  <class 'OrderedDict'> {
+    'saveDocumentStringAnswer': <class 'dict'> {
+      'answer': <class 'dict'> {
+        'stringValue': '',
+      },
+      'clientMutationId': 'testid',
+    },
+  }
+---
+# name: test_base_format_validators[question__format_validators1--True-textarea]
+  <class 'OrderedDict'> {
+    'saveDocumentStringAnswer': <class 'dict'> {
+      'answer': <class 'dict'> {
+        'stringValue': '',
+      },
+      'clientMutationId': 'testid',
+    },
+  }
+---
+# name: test_base_format_validators[question__format_validators2-test@example.com-True-text]
   <class 'OrderedDict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
@@ -8,7 +28,7 @@
     },
   }
 ---
-# name: test_base_format_validators[question__format_validators1-test@example.com-True-textarea]
+# name: test_base_format_validators[question__format_validators2-test@example.com-True-textarea]
   <class 'OrderedDict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
@@ -18,7 +38,7 @@
     },
   }
 ---
-# name: test_base_format_validators[question__format_validators3-+411234567890-True-text]
+# name: test_base_format_validators[question__format_validators4-+411234567890-True-text]
   <class 'OrderedDict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
@@ -28,7 +48,7 @@
     },
   }
 ---
-# name: test_base_format_validators[question__format_validators3-+411234567890-True-textarea]
+# name: test_base_format_validators[question__format_validators4-+411234567890-True-textarea]
   <class 'OrderedDict'> {
     'saveDocumentStringAnswer': <class 'dict'> {
       'answer': <class 'dict'> {
