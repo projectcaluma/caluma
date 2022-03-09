@@ -761,3 +761,19 @@ def test_validate_form_in_table(
         # Should not raise, as the "form" referenced by the
         # question's jexl is the rowform, which is wrong
         DocumentValidator().validate(document, admin_user)
+
+
+def test_validate_integer_0(
+    db, form_question, answer_factory, document_factory, admin_user
+):
+    form_question.question.min_value = 1
+    form_question.question.is_required = "true"
+    form_question.question.type = Question.TYPE_INTEGER
+    form_question.question.save()
+
+    document = document_factory(form=form_question.form)
+    answer_factory(document=document, value=0, question=form_question.question)
+
+    with pytest.raises(ValidationError) as excinfo:
+        DocumentValidator().validate(document, admin_user)
+    assert excinfo.match("Invalid value 0")
