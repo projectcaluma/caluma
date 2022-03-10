@@ -1,3 +1,10 @@
+# v7.14.2
+
+### Fix
+* **validation:** Only skip validation for none or empty strings ([`b030904`](https://github.com/projectcaluma/caluma/commit/b030904bcbd663398af7a1db07a3174074bb9324))
+* **format-validators:** Don't run format validation on empty values ([`dcea2b5`](https://github.com/projectcaluma/caluma/commit/dcea2b5cbade42ce7509b9a538dec96dd49810e2))
+
+
 # v7.14.1
 
 ### Fix
