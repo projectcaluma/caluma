@@ -47,3 +47,26 @@ def test_has_next_previous(
     assert not result.errors
     assert result.data["allDocuments"]["pageInfo"]["hasNextPage"] == has_next
     assert result.data["allDocuments"]["pageInfo"]["hasPreviousPage"] == has_previous
+
+
+def test_no_default_limit(db, schema_executor, question_factory):
+    question_factory.create_batch(120)
+
+    query = """
+        query {
+          allQuestions {
+            totalCount
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+    """
+
+    result = schema_executor(query)
+
+    assert not result.errors
+    assert result.data["allQuestions"]["totalCount"] == 120
+    assert len(result.data["allQuestions"]["edges"]) == 120

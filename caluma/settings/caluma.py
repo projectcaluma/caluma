@@ -46,7 +46,11 @@ MINIO_DISABLE_CERT_CHECKS = env.bool("MINIO_DISABLE_CERT_CHECKS", default=False)
 
 # GraphQL
 
-GRAPHENE = {"SCHEMA": "caluma.schema.schema", "MIDDLEWARE": []}
+GRAPHENE = {
+    "SCHEMA": "caluma.schema.schema",
+    "MIDDLEWARE": [],
+    "RELAY_CONNECTION_MAX_LIMIT": None,
+}
 
 # OpenID connect
 
