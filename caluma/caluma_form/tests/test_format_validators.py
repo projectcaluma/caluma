@@ -63,6 +63,7 @@ def test_fetch_format_validators(snapshot, schema_executor, settings):
     "question__format_validators,answer__value,success",
     [
         (["email"], "some text", False),
+        (["email"], "", True),
         (["email"], "test@example.com", True),
         (["phone-number"], "some text", False),
         (["phone-number"], "+411234567890", True),
