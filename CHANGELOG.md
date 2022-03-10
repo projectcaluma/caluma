@@ -8,6 +8,13 @@
 * **settings:** Use int for MINIO_PRESIGNED_TTL_MINUTES ([#1632](https://github.com/projectcaluma/caluma/issues/1632)) ([`cc9f89f`](https://github.com/projectcaluma/caluma/commit/cc9f89f7d356038851f1fa3f9ec343d60e5ee256))
 
 
+# v7.14.2 (10. March 2022)
+
+### Fix
+* **validation:** Only skip validation for none or empty strings ([`b030904`](https://github.com/projectcaluma/caluma/commit/b030904bcbd663398af7a1db07a3174074bb9324))
+* **format-validators:** Don't run format validation on empty values ([`dcea2b5`](https://github.com/projectcaluma/caluma/commit/dcea2b5cbade42ce7509b9a538dec96dd49810e2))
+
+
 # v7.14.1 (16. February 2022)
 
 ### Fix
