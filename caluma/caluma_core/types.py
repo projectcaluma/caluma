@@ -8,7 +8,7 @@ from graphene.relay.connection import ConnectionField
 from graphene_django import types
 from graphene_django.fields import DjangoConnectionField
 from graphene_django.utils import maybe_queryset
-from graphql_relay import get_offset_with_default
+from graphql_relay import cursor_to_offset, get_offset_with_default, offset_to_cursor
 
 from .pagination import connection_from_array, connection_from_array_slice
 
@@ -67,43 +67,67 @@ class DjangoConnectionField(DjangoConnectionField):
     https://github.com/graphql-python/graphql-relay-py/issues/12
     is resolved.
 
-    TODO: properly implement max_limit, see
-    https://github.com/graphql-python/graphene-django/blob/b552dcac24364d3ef824f865ba419c74605942b2/graphene_django/fields.py#L133
+    WARNING: This is a one to one copy of the method in graphene django with the
+    difference that we use our customized connection_from_array_slice function
+    and that we only count on the database if pagination is actually used:
+    https://github.com/graphql-python/graphene-django/blob/775644b5369bdc5fbb45d3535ae391a069ebf9d4/graphene_django/fields.py#L136
     """
 
     @classmethod
     def resolve_connection(cls, connection, args, iterable, max_limit=None):
+        # Remove the offset parameter and convert it to an after cursor.
+        offset = args.pop("offset", None)
+        after = args.get("after")
+        if offset:
+            if after:
+                offset += cursor_to_offset(after) + 1
+            # input offset starts at 1 while the graphene offset starts at 0
+            args["after"] = offset_to_cursor(offset - 1)
+
         iterable = maybe_queryset(iterable)
+
         if isinstance(iterable, QuerySet):
             # only query count on database when pagination is needed
             # resolve_connection may be removed again once following issue is fixed:
             # https://github.com/graphql-python/graphene-django/issues/177
-            if all(args.get(x) is None for x in ["before", "after", "first", "last"]):
-                _len = len(iterable)
+            if all(
+                args.get(pagination_arg) is None
+                for pagination_arg in ["before", "after", "first", "last"]
+            ):
+                list_length = len(iterable)
             else:
-                _len = iterable.count()
+                list_length = iterable.count()
         else:  # pragma: no cover
-            _len = len(iterable)
+            list_length = len(iterable)
+        list_slice_length = (
+            min(max_limit, list_length) if max_limit is not None else list_length
+        )
 
         # If after is higher than list_length, connection_from_array_slice
         # would try to do a negative slicing which makes django throw an
         # AssertionError
-        after = min(get_offset_with_default(args.get("after"), -1) + 1, _len)
-        if max_limit is not None and "first" not in args:  # pragma: no cover
-            args["first"] = max_limit
+        after = min(get_offset_with_default(args.get("after"), -1) + 1, list_length)
+
+        # This is commented out because we disable this functionality in our
+        # settings explicitly.
+        # if max_limit is not None and args.get("first", None) is None:
+        #     if args.get("last", None) is not None:
+        #         after = list_length - args["last"]
+        #     else:
+        #         args["first"] = max_limit
 
         connection = connection_from_array_slice(
             iterable[after:],
             args,
-            slice_start=0,
-            array_length=_len,
-            array_slice_length=_len,
+            slice_start=after,
+            array_length=list_length,
+            array_slice_length=list_slice_length,
             connection_type=connection,
             edge_type=connection.Edge,
             page_info_type=PageInfo,
         )
         connection.iterable = iterable
-        connection.length = _len
+        connection.length = list_length
         return connection
 
 
@@ -114,19 +138,21 @@ class ConnectionField(ConnectionField):
     This can be removed, when (or better if)
     https://github.com/graphql-python/graphql-relay-py/issues/12
     is resolved.
+
+    WARNING: This is a one to one copy of the method in graphene with the
+    difference that we use our customized connection_from_array function:
+    https://github.com/graphql-python/graphene/blob/61f0d8a8e09086fc74ad51d9ec80004674bd91f1/graphene/relay/connection.py#L146
     """
 
     @classmethod
     def resolve_connection(cls, connection_type, args, resolved):
-        if not resolved:
-            resolved = []
         if isinstance(resolved, connection_type):  # pragma: no cover
             return resolved
 
         assert isinstance(resolved, Iterable), (
-            "Resolved value from the connection field have to be iterable or instance of {0}. "
-            'Received "{1}"'
-        ).format(connection_type, resolved)
+            f"Resolved value from the connection field has to be an iterable or instance of {connection_type}. "
+            f'Received "{resolved}"'
+        )
         connection = connection_from_array(
             resolved,
             args,
