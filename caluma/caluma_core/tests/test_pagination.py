@@ -1,4 +1,5 @@
 import pytest
+from graphql_relay import offset_to_cursor
 
 
 @pytest.mark.parametrize(
@@ -47,3 +48,40 @@ def test_has_next_previous(
     assert not result.errors
     assert result.data["allDocuments"]["pageInfo"]["hasNextPage"] == has_next
     assert result.data["allDocuments"]["pageInfo"]["hasPreviousPage"] == has_previous
+
+
+@pytest.mark.parametrize(
+    "after,expected_count",
+    [
+        (
+            offset_to_cursor(4),  # graphene offset starts at 0
+            5,
+        ),
+        (None, 10),
+    ],
+)
+def test_offset_pagination(
+    db, schema_executor, question_factory, after, expected_count
+):
+    question_factory.create_batch(20)
+
+    query = """
+        query($after: String, $offset: Int!) {
+          allQuestions(after: $after, offset: $offset) {
+            totalCount
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+    """
+
+    result = schema_executor(
+        query,
+        variable_values={"after": after, "offset": 10},  # input offset starts at 1
+    )
+
+    assert not result.errors
+    assert len(result.data["allQuestions"]["edges"]) == expected_count

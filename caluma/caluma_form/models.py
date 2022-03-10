@@ -508,8 +508,11 @@ class Answer(core_models.BaseModel):
             ),
         }
 
-        if not self.value or self.question.type not in map:
+        if self.question.type not in map:
             return None
+
+        if not self.value:
+            return []
 
         model, filters = map[self.question.type]
         queryset = model.objects.filter(**filters)
