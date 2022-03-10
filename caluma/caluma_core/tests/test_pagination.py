@@ -85,3 +85,26 @@ def test_offset_pagination(
 
     assert not result.errors
     assert len(result.data["allQuestions"]["edges"]) == expected_count
+
+
+def test_no_default_limit(db, schema_executor, question_factory):
+    question_factory.create_batch(120)
+
+    query = """
+        query {
+          allQuestions {
+            totalCount
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+    """
+
+    result = schema_executor(query)
+
+    assert not result.errors
+    assert result.data["allQuestions"]["totalCount"] == 120
+    assert len(result.data["allQuestions"]["edges"]) == 120
