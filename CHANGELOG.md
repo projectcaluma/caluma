@@ -1,3 +1,5 @@
+<!--next-version-placeholder-->
+
 # v7.15.1 (15 March 2022)
 
 ### Fix
