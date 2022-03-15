@@ -1,3 +1,9 @@
+# v7.15.1 (15 March 2022)
+
+### Fix
+* **graphene:** Avoid default connection limit ([`23969ee`](https://github.com/projectcaluma/caluma/commit/23969ee56291fd59ccdc6d418e30c726fa3aadce))
+
+
 # v7.15.0 (25 January 2022)
 
 ### Feature
