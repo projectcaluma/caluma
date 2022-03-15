@@ -465,7 +465,7 @@ doc = ["sphinx", "sphinx-rtd-theme", "sphinxcontrib-spelling"]
 
 [[package]]
 name = "faker"
-version = "13.3.1"
+version = "13.3.2"
 description = "Faker is a Python package that generates fake data for you."
 category = "dev"
 optional = false
@@ -1735,7 +1735,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "7c6ba6fd2c88b88e2213f67decd407775ed43c91862642bcd2f045e8f277d03e"
+content-hash = "e49696b30a057129bd83dd949cb028c14ccd341243f09311be67333115cdaa23"
 
 [metadata.files]
 aniso8601 = [
@@ -2033,8 +2033,8 @@ factory-boy = [
     {file = "factory_boy-3.2.1.tar.gz", hash = "sha256:a98d277b0c047c75eb6e4ab8508a7f81fb03d2cb21986f627913546ef7a2a55e"},
 ]
 faker = [
-    {file = "Faker-13.3.1-py3-none-any.whl", hash = "sha256:c88c8b5ee9376a242deca8fe829f9a3215ffa43c31da6f66d9594531fb344453"},
-    {file = "Faker-13.3.1.tar.gz", hash = "sha256:fa060e331ffffb57cfa4c07f95d54911e339984ed72596ba6a9e7b6fa569d799"},
+    {file = "Faker-13.3.2-py3-none-any.whl", hash = "sha256:66db859b6abe376d02e805ad81eb8dcfce38f0945f17ee7cdf74ed349985ea52"},
+    {file = "Faker-13.3.2.tar.gz", hash = "sha256:fe969607836ce7100e38b88dcb598aacb733d895e6e9401894dd603e35623000"},
 ]
 fancycompleter = [
     {file = "fancycompleter-0.9.1-py3-none-any.whl", hash = "sha256:dd076bca7d9d524cc7f25ec8f35ef95388ffef9ef46def4d3d25e9b044ad7080"},
