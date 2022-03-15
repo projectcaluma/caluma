@@ -54,6 +54,10 @@ class Task(SlugModel):
         default=False,
         help_text="Allows creating multiple work items for this task using the `CreateWorkItem` mutation. If true, one work item will be created for each entry in `address_groups`.",
     )
+    continue_async = models.BooleanField(
+        default=False,
+        help_text="Whether to continue the flow if the multiple instance work item has ready siblings",
+    )
 
     def calculate_deadline(self):
         if self.lead_time is not None:

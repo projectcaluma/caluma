@@ -900,6 +900,7 @@
     """Time in seconds task may take to be processed."""
     leadTime: Int
     isMultipleInstance: Boolean!
+    continueAsync: Boolean
     form: Form!
   
     """The ID of the object"""
@@ -937,6 +938,7 @@
     """Time in seconds task may take to be processed."""
     leadTime: Int
     isMultipleInstance: Boolean!
+    continueAsync: Boolean
   
     """The ID of the object"""
     id: ID!
@@ -3400,6 +3402,11 @@
     Allows creating multiple work items for this task using the `CreateWorkItem` mutation. If true, one work item will be created for each entry in `address_groups`.
     """
     isMultipleInstance: Boolean
+  
+    """
+    Whether to continue the flow if the multiple instance work item has ready siblings
+    """
+    continueAsync: Boolean
     form: ID!
     clientMutationId: String
   }
@@ -3433,6 +3440,11 @@
     Allows creating multiple work items for this task using the `CreateWorkItem` mutation. If true, one work item will be created for each entry in `address_groups`.
     """
     isMultipleInstance: Boolean
+  
+    """
+    Whether to continue the flow if the multiple instance work item has ready siblings
+    """
+    continueAsync: Boolean
     clientMutationId: String
   }
   
@@ -3817,6 +3829,11 @@
     Allows creating multiple work items for this task using the `CreateWorkItem` mutation. If true, one work item will be created for each entry in `address_groups`.
     """
     isMultipleInstance: Boolean
+  
+    """
+    Whether to continue the flow if the multiple instance work item has ready siblings
+    """
+    continueAsync: Boolean
     clientMutationId: String
   }
   
@@ -4005,6 +4022,7 @@
     """Time in seconds task may take to be processed."""
     leadTime: Int
     isMultipleInstance: Boolean!
+    continueAsync: Boolean
   
     """The ID of the object"""
     id: ID!
@@ -4375,6 +4393,7 @@
     controlGroups: GroupJexl
     meta: GenericScalar!
     isMultipleInstance: Boolean!
+    continueAsync: Boolean
   }
   
   type TaskConnection {

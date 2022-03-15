@@ -87,6 +87,7 @@ class Task(Node, graphene.Interface):
     control_groups = GroupJexl()
     meta = generic.GenericScalar(required=True)
     is_multiple_instance = graphene.Boolean(required=True)
+    continue_async = graphene.Boolean()
 
     @classmethod
     def resolve_type(cls, instance, info):

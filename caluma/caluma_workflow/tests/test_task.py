@@ -77,3 +77,51 @@ def test_save_comlete_task_form_task(db, snapshot, task, schema_executor):
     result = schema_executor(query, variable_values=inp)
     assert not result.errors
     snapshot.assert_match(result.data)
+
+
+@pytest.mark.parametrize(
+    "is_multiple_instance,continue_async,error",
+    [
+        (True, True, None),
+        (True, False, None),
+        (False, False, None),
+        (False, True, "Only multiple instance tasks can continue asynchronously"),
+    ],
+)
+def test_save_multiple_instance_task(
+    db,
+    snapshot,
+    task,
+    schema_executor,
+    is_multiple_instance,
+    continue_async,
+    error,
+):
+    query = """
+        mutation SaveCompleteTaskFormTask($input: SaveSimpleTaskInput!) {
+          saveSimpleTask(input: $input) {
+            task {
+              continueAsync
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    result = schema_executor(
+        query,
+        variable_values={
+            "input": {
+                "slug": "test",
+                "name": "Test",
+                "isMultipleInstance": is_multiple_instance,
+                "continueAsync": continue_async,
+            }
+        },
+    )
+
+    if error:
+        assert error in str(result.errors[0])
+    else:
+        assert not result.errors
+        assert result.data["saveSimpleTask"]["task"]["continueAsync"] == continue_async
