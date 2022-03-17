@@ -1,5 +1,8 @@
 <!--next-version-placeholder-->
 
+## v8.0.0-beta.0 (2022-03-17)
+
+
 # v7.15.1 (15 March 2022)
 
 ### Fix
