@@ -3,14 +3,56 @@ from collections.abc import Iterable
 import graphene
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models.query import QuerySet
+from django.db.models.query_utils import DeferredAttribute
 from graphene.relay import PageInfo
 from graphene.relay.connection import ConnectionField
 from graphene_django import types
 from graphene_django.fields import DjangoConnectionField
+from graphene_django.rest_framework import serializer_converter
 from graphene_django.utils import maybe_queryset
 from graphql_relay import cursor_to_offset, get_offset_with_default, offset_to_cursor
 
 from .pagination import connection_from_array, connection_from_array_slice
+
+
+def enum_type_from_field(
+    name, field=None, choices=None, description=None, serializer_field=None
+):
+    """Create enum type for a given django model field.
+
+    The model field must be of the right type (CharField) and
+    have it's choices configured properly for this to work.
+
+    Alternatively, you may pass a `choices` list of singular
+    values (not CharField choices tuples!) as choices to use.
+
+    Usually, you will want to pass the `serializer_field` parameter
+    as well to register the type, so it will be correctly used in
+    the appropriate places.
+
+    Examples:
+    >>> Field = enum_type_from_field("Field", field=MyModel.some_choice_field)
+    Field
+
+    >>> Field2 = enum_type_from_field("Field2", choices=["foo", "bar"])
+    Field2
+
+    """
+    if field and isinstance(field, DeferredAttribute):
+        field = field.field  # pragma: no cover
+        choices = [(key.upper(), key) for key, _ in field.choices]
+    else:
+        # Force choices to be always uppercase
+        choices = [(key.upper(), key) for key in choices]
+
+    the_type = graphene.Enum(name, choices, description=description)
+
+    if serializer_field:
+        serializer_converter.get_graphene_type_from_serializer_field.register(
+            serializer_field, lambda field: the_type
+        )
+
+    return the_type
 
 
 class Node(object):
