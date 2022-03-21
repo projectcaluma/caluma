@@ -1,3 +1,9 @@
+# v7.14.3
+
+### Fix
+* **document:** Remove duplicate filtering on answer ([`c92f3ed`](https://github.com/projectcaluma/caluma/commit/c92f3ede09d782478d4c7aff487bde42c56f999c))
+
+
 # v7.14.2
 
 ### Fix
