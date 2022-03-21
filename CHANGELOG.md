@@ -1,6 +1,35 @@
 <!--next-version-placeholder-->
 
-## v8.0.0-beta.0 (2022-03-17)
+# v8.0.0-beta.0 (17 March 2022)
+
+### Feature
+* **workflow:** Allow multiple instance work items to continue async ([`510ce48`](https://github.com/projectcaluma/caluma/commit/510ce48002efaf5d62d39069419dc5759fd44258))
+* **workflow:** Only create work item if they don't exist yet ([`7e32891`](https://github.com/projectcaluma/caluma/commit/7e32891f120811d3f8fcda4d07ce049a499c0928))
+* **analytics:** Introduce analytics table ([#1572](https://github.com/projectcaluma/caluma/issues/1572)) ([`94db1d3`](https://github.com/projectcaluma/caluma/commit/94db1d33d00134e451333e4c184f99b7d3434aac))
+* **workflow:** Implement WorkItem redo pattern ([#1656](https://github.com/projectcaluma/caluma/issues/1656)) ([`d01e284`](https://github.com/projectcaluma/caluma/commit/d01e28405e8d1419a6e357149b543c39ea8025f6))
+
+### Fix
+* **graphene:** Avoid default connection limit ([`edaf287`](https://github.com/projectcaluma/caluma/commit/edaf287ca3a57626e1e33de1aa9eab637c8b5f22))
+* **validation:** Only skip validation for none or empty strings ([`9603db4`](https://github.com/projectcaluma/caluma/commit/9603db4594da651f7118702422a0311277191ae8))
+* **format-validators:** Don't run format validation on empty values ([`ce2f5ca`](https://github.com/projectcaluma/caluma/commit/ce2f5ca79d57b350affd975b5a9fbb6064ca1bb5))
+* **analytic:** Add default ordering for fields and available fields ([`513de29`](https://github.com/projectcaluma/caluma/commit/513de291a107e58961394c796f6a9579f4cd1698))
+* **analytics:** Parse date parts to integer for consistency ([`28c3387`](https://github.com/projectcaluma/caluma/commit/28c3387071fae14f1c5a6e2d3154b256b6c8e342))
+* **options:** Keep order of selected options the same as the value ([`d57cd12`](https://github.com/projectcaluma/caluma/commit/d57cd12bbb48eeae3828f9c44af3e16168cbfd25))
+* **deps:** Fix deprecation warning for collections module ([`4476805`](https://github.com/projectcaluma/caluma/commit/4476805fa3fefb3a9e432eeffbd94c987d7bfeed))
+* Restrict valid filters for choice questions ([#1680](https://github.com/projectcaluma/caluma/issues/1680)) ([`549d24d`](https://github.com/projectcaluma/caluma/commit/549d24d0281b9df29da69257f83d36d719884269))
+* **form:** Update or create answers when copying to a new document ([`ca0d17e`](https://github.com/projectcaluma/caluma/commit/ca0d17e3c26b30a3fa055b0c40d00b909bc798dd))
+
+### Breaking
+* If you run Caluma as a Python module and still run 3.7, this will break ([`94db1d3`](https://github.com/projectcaluma/caluma/commit/94db1d33d00134e451333e4c184f99b7d3434aac))
+
+### Documentation
+* Fix links in README.md ([`43afdf5`](https://github.com/projectcaluma/caluma/commit/43afdf55eabab8bcbc6054aa1e03757fbf92890a))
+
+
+# v7.15.2 (20 March 2022)
+
+### Fix
+* **document:** Remove duplicate filtering on answer ([`c92f3ed`](https://github.com/projectcaluma/caluma/commit/c92f3ede09d782478d4c7aff487bde42c56f999c))
 
 
 # v7.15.1 (15 March 2022)
@@ -17,6 +46,12 @@
 
 ### Fix
 * **settings:** Use int for MINIO_PRESIGNED_TTL_MINUTES ([#1632](https://github.com/projectcaluma/caluma/issues/1632)) ([`cc9f89f`](https://github.com/projectcaluma/caluma/commit/cc9f89f7d356038851f1fa3f9ec343d60e5ee256))
+
+
+# v7.14.3 (20 March 2022)
+
+### Fix
+* **document:** Remove duplicate filtering on answer ([`c92f3ed`](https://github.com/projectcaluma/caluma/commit/c92f3ede09d782478d4c7aff487bde42c56f999c))
 
 
 # v7.14.2 (10. March 2022)
