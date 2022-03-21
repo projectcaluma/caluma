@@ -1,3 +1,9 @@
+# v7.15.2 (21 March 2022)
+
+### Fix
+* **document:** Remove duplicate filtering on answer ([`c92f3ed`](https://github.com/projectcaluma/caluma/commit/c92f3ede09d782478d4c7aff487bde42c56f999c))
+
+
 # v7.15.1 (15 March 2022)
 
 ### Fix
