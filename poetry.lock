@@ -10,21 +10,6 @@ python-versions = "*"
 dev = ["black", "coverage", "isort", "pre-commit", "pyenchant", "pylint"]
 
 [[package]]
-name = "ansimarkup"
-version = "1.5.0"
-description = "Produce colored terminal text with an xml-like markup"
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-colorama = "*"
-
-[package.extras]
-devel = ["bumpversion (>=0.5.2)", "check-manifest (>=0.35)", "readme-renderer (>=16.0)", "flake8", "pep8-naming"]
-tests = ["tox (>=2.6.0)", "pytest (>=3.0.3)", "pytest-cov (>=2.3.1)"]
-
-[[package]]
 name = "arrow"
 version = "1.2.1"
 description = "Better dates & times for Python"
@@ -205,7 +190,7 @@ click = "*"
 name = "colorama"
 version = "0.4.4"
 description = "Cross-platform colored terminal text."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
@@ -371,20 +356,20 @@ test = ["tox (==3.14.3)", "pytest (==5.3.2)", "pytest-django (==3.7.0)", "pytest
 
 [[package]]
 name = "django-postgres-extra"
-version = "2.0.4"
+version = "2.0.5"
 description = "Bringing all of PostgreSQL's awesomeness to Django."
 category = "main"
 optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-ansimarkup = ">=1.4.0,<=2.0.0"
-Django = ">=2.0"
+Django = ">=2.0,<5.0"
 python-dateutil = ">=2.8.0,<=3.0.0"
 
 [package.extras]
 analysis = ["black (==21.10b0)", "flake8 (==4.0.1)", "autoflake (==1.4)", "autopep8 (==1.6.0)", "isort (==5.10.0)", "docformatter (==1.4)"]
 docs = ["Sphinx (==2.2.0)", "sphinx-rtd-theme (==0.4.3)", "docutils (<0.18)"]
+publish = ["build (==0.7.0)", "twine (==3.7.1)"]
 test = ["psycopg2 (>=2.8.4,<3.0.0)", "dj-database-url (==0.5.0)", "pytest (==6.2.5)", "pytest-benchmark (==3.4.1)", "pytest-django (==4.4.0)", "pytest-cov (==3.0.0)", "tox (==3.24.4)", "freezegun (==1.1.0)", "coveralls (==3.3.0)", "snapshottest (==0.6.0)"]
 
 [[package]]
@@ -1742,10 +1727,6 @@ aniso8601 = [
     {file = "aniso8601-9.0.1-py2.py3-none-any.whl", hash = "sha256:1d2b7ef82963909e93c4f24ce48d4de9e66009a21bf1c1e1c85bdd0812fe412f"},
     {file = "aniso8601-9.0.1.tar.gz", hash = "sha256:72e3117667eedf66951bb2d93f4296a56b94b078a8a95905a052611fb3f1b973"},
 ]
-ansimarkup = [
-    {file = "ansimarkup-1.5.0-py2.py3-none-any.whl", hash = "sha256:3146ca74af5f69e48a9c3d41b31085c0d6378f803edeb364856d37c11a684acf"},
-    {file = "ansimarkup-1.5.0.tar.gz", hash = "sha256:96c65d75bbed07d3dcbda8dbede8c2252c984f90d0ca07434b88a6bbf345fad3"},
-]
 arrow = [
     {file = "arrow-1.2.1-py3-none-any.whl", hash = "sha256:6b2914ef3997d1fd7b37a71ce9dd61a6e329d09e1c7b44f4d3099ca4a5c0933e"},
     {file = "arrow-1.2.1.tar.gz", hash = "sha256:c2dde3c382d9f7e6922ce636bf0b318a7a853df40ecb383b29192e6c5cc82840"},
@@ -2002,8 +1983,8 @@ django-localized-fields = [
     {file = "django_localized_fields-6.6-py3-none-any.whl", hash = "sha256:f17a39725bf29ef098ade66edfaa4eaab9dfd648747d5c8873c8587f140eb016"},
 ]
 django-postgres-extra = [
-    {file = "django-postgres-extra-2.0.4.tar.gz", hash = "sha256:95030211916fcc782b514ca73bede24aefa0ab73a80b2a7e0b59d6f168db3708"},
-    {file = "django_postgres_extra-2.0.4-py3-none-any.whl", hash = "sha256:5c5d35e1edc0d6aa5374a72f92b0d4858ca35f9772c540e3fa8280c086a8c7f7"},
+    {file = "django-postgres-extra-2.0.5.tar.gz", hash = "sha256:e73d2672aa8268be4cb9d37f84ac16671a2524e72577865b8e4e8168c3906722"},
+    {file = "django_postgres_extra-2.0.5-py3-none-any.whl", hash = "sha256:275e3c741ca73024215244aa3f57c03aed8def45a0c906fc746f7d7381793345"},
 ]
 django-simple-history = [
     {file = "django-simple-history-3.0.0.tar.gz", hash = "sha256:66fe76c560054be393c52b1799661e104fbe372918d37d151e5d41c676158118"},
