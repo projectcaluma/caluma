@@ -63,6 +63,26 @@ def test_query_all_forms(
     snapshot.assert_match(result.data)
 
 
+def test_optional_filter(db, form_factory, question, schema_executor):
+    form_factory(name="3rd", description="Second result")
+    form_factory(name="2nd", description="Second result")
+
+    query = """
+        query Form($slug: String) {
+          allForms(filter: [{ slug: $slug }]) {
+            totalCount
+          }
+        }
+    """
+
+    result = schema_executor(
+        query,
+    )
+
+    assert not result.errors
+    assert result.data["allForms"]["totalCount"] == 2
+
+
 @pytest.mark.parametrize("language_code", ("en", "de"))
 @pytest.mark.parametrize("form__description", ("some description text", ""))
 def test_save_form(db, snapshot, form, settings, schema_executor, language_code):
