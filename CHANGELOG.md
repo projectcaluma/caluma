@@ -1,5 +1,12 @@
 <!--next-version-placeholder-->
 
+# v8.0.0-beta.1 (23 March 2022)
+
+### Fix
+* **workflow:** fix creating work items when completed ones exist ([`b2cc0a8`](https://github.com/projectcaluma/caluma/commit/b2cc0a866888595be3010e71ca0a3d543fc6eb51))
+* **document:** Remove duplicate filtering on answer ([`c92f3ed`](https://github.com/projectcaluma/caluma/commit/c92f3ede09d782478d4c7aff487bde42c56f999c))
+
+
 # v8.0.0-beta.0 (17 March 2022)
 
 ### Feature
