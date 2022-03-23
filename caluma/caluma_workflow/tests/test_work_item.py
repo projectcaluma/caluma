@@ -587,8 +587,18 @@ def test_complete_work_item_with_next_multiple_instance_task(
     [(models.WorkItem.STATUS_READY, None, models.Task.TYPE_SIMPLE)],
 )
 @pytest.mark.parametrize(
-    "is_multiple_instance,expected_work_item_count",
-    [(False, 1), (True, 2)],
+    "next_work_item_status,is_multiple_instance,expected_next_work_item_count",
+    [
+        # Shouldn't create a new one because there is a ready or suspended work item of that task
+        (models.WorkItem.STATUS_READY, False, 1),
+        (models.WorkItem.STATUS_SUSPENDED, False, 1),
+        # Should create a new one because it's multiple instance
+        (models.WorkItem.STATUS_READY, True, 2),
+        # Should create a new one because there is no ready or suspended work item of that task
+        (models.WorkItem.STATUS_COMPLETED, False, 2),
+        (models.WorkItem.STATUS_SKIPPED, False, 2),
+        (models.WorkItem.STATUS_CANCELED, False, 2),
+    ],
 )
 def test_complete_work_item_with_next_already_exist(
     db,
@@ -596,7 +606,8 @@ def test_complete_work_item_with_next_already_exist(
     work_item,
     task,
     is_multiple_instance,
-    expected_work_item_count,
+    next_work_item_status,
+    expected_next_work_item_count,
     task_factory,
     task_flow_factory,
     work_item_factory,
@@ -612,9 +623,7 @@ def test_complete_work_item_with_next_already_exist(
     task_flow.flow.next = f"'{task_next.slug}'|task"
     task_flow.flow.save()
 
-    work_item_factory(task=task_next, status=models.WorkItem.STATUS_READY, case=case)
-
-    assert case.work_items.filter(status=models.WorkItem.STATUS_READY).count() == 2
+    work_item_factory(task=task_next, status=next_work_item_status, case=case)
 
     query = """
         mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
@@ -644,10 +653,9 @@ def test_complete_work_item_with_next_already_exist(
     assert not result.errors
 
     assert (
-        case.work_items.filter(status=models.WorkItem.STATUS_READY).count()
-        == expected_work_item_count
+        case.work_items.filter(task_id=task_next.pk).count()
+        == expected_next_work_item_count
     )
-    assert case.work_items.filter(status=models.WorkItem.STATUS_COMPLETED).count() == 1
 
 
 @pytest.mark.parametrize(

@@ -97,6 +97,10 @@ def create_work_items(tasks, case, user, prev_work_item=None, context: dict = No
                     controlling_groups=controlling_groups,
                     task_id=task.pk,
                     case=case,
+                    status__in=[
+                        models.WorkItem.STATUS_READY,
+                        models.WorkItem.STATUS_SUSPENDED,
+                    ],
                 ).exists()
             ):
                 # work item already exists, do not create a new one
