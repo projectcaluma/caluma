@@ -108,3 +108,33 @@ def test_no_default_limit(db, schema_executor, question_factory):
     assert not result.errors
     assert result.data["allQuestions"]["totalCount"] == 120
     assert len(result.data["allQuestions"]["edges"]) == 120
+
+
+def test_pagination_cursor(db, schema_executor, question_factory):
+    question_factory.create_batch(47)
+
+    query = """
+        query($after: String) {
+          allQuestions(first: 30, after: $after) {
+            pageInfo {
+              endCursor
+            }
+            edges {
+              cursor
+              node {
+                id
+              }
+            }
+          }
+        }
+    """
+
+    cursor = None
+    result = schema_executor(query, variable_values={"after": cursor})
+
+    assert not result.errors
+    assert len(result.data["allQuestions"]["edges"]) == 30
+    cursor = result.data["allQuestions"]["pageInfo"]["endCursor"]
+
+    result2 = schema_executor(query, variable_values={"after": cursor})
+    assert len(result2.data["allQuestions"]["edges"]) == 17
