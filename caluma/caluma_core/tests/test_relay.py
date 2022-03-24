@@ -8,7 +8,7 @@ from ..relay import extract_global_id
 @pytest.mark.parametrize(
     "id,expected",
     [
-        ("slug", "slug"),
+        ("city", "city"),
         ("V29ya2Zsb3c6bGlzdGVuZWludHJhZw==", "listeneintrag"),
         ("b106", "b106"),
         (b64encode(b"NonExistantModel:foobar"),) * 2,

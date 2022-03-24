@@ -31,15 +31,10 @@ def extract_global_id(id):
 
     gql_type, result = from_global_id(id)
 
-    # from_global_id() now returns an empty string if the passed id could not be
-    # decoded from base64 which is the case for raw ids
-    if result == "":
-        return id
+    # `from_global_id` might return all kinds of valid strings that we can't
+    # interpret as global id which is why we only return the result if it's not
+    # empty and the type is in our known types
+    if result and gql_type in _valid_types:
+        return result
 
-    # some valid ids could decode to a string that from_global_id()
-    # assumes is a global id, so we need to verify that it is indeed
-    # the case.
-    if gql_type and gql_type not in _valid_types:
-        return id
-
-    return result
+    return id
