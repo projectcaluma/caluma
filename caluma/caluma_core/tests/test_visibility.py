@@ -15,6 +15,7 @@ def test_custom_visibility_override_filter_queryset_for_custom_node(db, history_
     class CustomNode(DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     class CustomVisibility(BaseVisibility):
         @filter_queryset_for(CustomNode)
@@ -34,6 +35,7 @@ def test_custom_visibility_override_filter_queryset_with_duplicates(db, history_
     class CustomNode(DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     class CustomVisibility(BaseVisibility):
         @filter_queryset_for(CustomNode)
@@ -61,6 +63,7 @@ def test_custom_node_filter_queryset_improperly_configured(db, history_mock):
 
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     with pytest.raises(ImproperlyConfigured):
         CustomNode.get_queryset(None, None)
@@ -77,6 +80,7 @@ def test_custom_visibility_override_specificity(db, history_mock):
     class CustomNode(DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     class CustomVisibility(BaseVisibility):
         @filter_queryset_for(Node)
@@ -106,6 +110,7 @@ def test_union_visibility(db, history_mock):
     class CustomNode(DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     class Name1Visibility(BaseVisibility):
         @filter_queryset_for(CustomNode)
@@ -144,6 +149,7 @@ def test_union_visibility_none(db, history_mock):
     class CustomNode(DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     class CustomVisibility(BaseVisibility):
         @filter_queryset_for(CustomNode)
@@ -179,6 +185,7 @@ def test_union_visibility_return_managers(db, history_mock):
     class CustomNode(DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     class Name1Visibility(BaseVisibility):
         @filter_queryset_for(Node)
@@ -220,10 +227,12 @@ def test_custom_visibility_chained_decorators(db, history_mock):
     class CustomNode1(DjangoObjectType):
         class Meta:
             model = FakeModel1
+            fields = "__all__"
 
     class CustomNode2(DjangoObjectType):
         class Meta:
             model = FakeModel2
+            fields = "__all__"
 
     class CustomVisibility(BaseVisibility):
         @filter_queryset_for(Node)

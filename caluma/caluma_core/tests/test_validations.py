@@ -96,6 +96,7 @@ def test_custom_validation_override_created_by_group(db, admin_info, history_moc
     class CustomNode(types.DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     class MyMutation(mutation.Mutation):
         class Meta:

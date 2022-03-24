@@ -40,6 +40,7 @@ def test_invalid_mutation_update_mutate_and_get_payload(db, info):
     class FakeModelObjectType(types.DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
         @classmethod
         def get_queryset(cls, queryset, info):
@@ -106,6 +107,7 @@ def test_mutation_mutate_and_get_payload_without_object_permission(db, info):
     class FakeModelObjectType(types.DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     class MySerializer(serializers.ModelSerializer):
         class Meta:
@@ -160,6 +162,7 @@ def test_mutation_mutate_and_get_payload_validation_classes_improperly_configure
     class CustomNode(types.DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     class MyMutation(mutation.Mutation):
         class Meta:
@@ -191,6 +194,7 @@ def test_mutation_mutate_and_get_payload_validation_classes_custom_validation(
     class CustomNode(types.DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     class MyMutation(mutation.Mutation):
         class Meta:
@@ -209,6 +213,7 @@ def test_user_defined_primary_key_get_serializer_kwargs_not_allowed(
     class FakeModelObjectType(types.DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
         @classmethod
         def get_queryset(cls, queryset, info):
@@ -239,6 +244,7 @@ def test_user_defined_primary_key_get_serializer_kwargs_update_not_allowed(
     class FakeModelObjectType(types.DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     class MySerializer(serializers.ModelSerializer):
         class Meta:
@@ -263,6 +269,7 @@ def test_user_defined_primary_key_get_serializer_kwargs_create_not_allowed(db, i
     class FakeModelObjectType(types.DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     class MySerializer(serializers.ModelSerializer):
         class Meta:
