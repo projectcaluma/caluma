@@ -71,6 +71,7 @@ class AnalyticsTableContent(graphene.Connection):
 
 class AnalyticsOutput(ObjectType):
     records = ConnectionField(AnalyticsTableContent)
+    summary = graphene.Field(AnalyticsRow)
 
     @staticmethod
     def resolve_records(table, info, *args, **kwargs):
@@ -84,6 +85,16 @@ class AnalyticsOutput(ObjectType):
             for row in table.get_records()
         ]
         return rows
+
+    @staticmethod
+    def resolve_summary(table, info, *args, **kwargs):
+        summary_row = table.get_summary()
+        return AnalyticsRow(
+            edges=[
+                {"node": {"alias": alias, "value": val}}
+                for alias, val in summary_row.items()
+            ]
+        )
 
 
 StartingObject = enum_type_from_field(

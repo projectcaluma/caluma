@@ -153,6 +153,7 @@
   
   type AnalyticsOutput {
     records(before: String = null, after: String = null, first: Int = null, last: Int = null): AnalyticsTableContentConnection
+    summary: AnalyticsRowConnection
   }
   
   type AnalyticsRowConnection {
