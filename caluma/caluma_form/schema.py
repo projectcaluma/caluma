@@ -385,6 +385,7 @@ class DynamicOption(DjangoObjectType):
         model = models.DynamicOption
         interfaces = (relay.Node,)
         connection_class = CountableConnectionBase
+        fields = "__all__"
 
 
 class IntegerQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
@@ -899,6 +900,7 @@ class File(FormDjangoObjectType):
     class Meta:
         model = models.File
         interfaces = (relay.Node,)
+        fields = "__all__"
 
 
 class FileAnswer(AnswerQuerysetMixin, FormDjangoObjectType):

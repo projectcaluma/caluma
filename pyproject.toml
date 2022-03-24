@@ -102,10 +102,11 @@ env = [
     "ENABLE_HEALTHZ_ENDPOINT=true",
 ]
 filterwarnings = [
-    # switch this back to error::DeprecationWarning when we upgraded graphene-django
-    "ignore::DeprecationWarning",
+    "error::DeprecationWarning",
     "error::PendingDeprecationWarning",
-    "ignore:'psqlextra' defines default_app_config:django.utils.deprecation.RemovedInDjango41Warning",
+    "ignore:The 'arrayconnection' module is deprecated:DeprecationWarning", # deprecation in graphene
+    "ignore:distutils Version classes are deprecated:DeprecationWarning", # deprecation in pytest-freezegun
+    "ignore::requests.packages.urllib3.exceptions.InsecureRequestWarning", # MinIO tests do "insecure" requests - that's ok
 ]
 
 [tool.coverage.run]

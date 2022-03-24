@@ -123,6 +123,7 @@ class AnalyticsTable(DjangoObjectType):
         model = models.AnalyticsTable
         interfaces = (relay.Node,)
         connection_class = CountableConnectionBase
+        fields = "__all__"
 
 
 class AnalyticsField(DjangoObjectType):
@@ -137,6 +138,7 @@ class AnalyticsField(DjangoObjectType):
         model = models.AnalyticsField
         interfaces = (relay.Node,)
         connection_class = CountableConnectionBase
+        fields = "__all__"
 
 
 class SaveAnalyticsTable(UserDefinedPrimaryKeyMixin, Mutation):

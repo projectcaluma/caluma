@@ -14,6 +14,7 @@ def test_authenticated_visibility(db, info_fixture, size, request, history_mock)
     class CustomNode(DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     FakeModel.objects.create()
 
@@ -31,6 +32,7 @@ def test_created_by_group_visibility(
     class CustomNode(DjangoObjectType):
         class Meta:
             model = FakeModel
+            fields = "__all__"
 
     FakeModel.objects.create(created_by_group="group")
 

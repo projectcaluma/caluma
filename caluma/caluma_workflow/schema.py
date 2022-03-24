@@ -150,6 +150,7 @@ class Flow(DjangoObjectType):
         model = models.Flow
         interfaces = (relay.Node,)
         connection_class = CountableConnectionBase
+        fields = "__all__"
 
 
 class Workflow(DjangoObjectType):
@@ -197,6 +198,7 @@ class WorkItem(DjangoObjectType):
         model = models.WorkItem
         interfaces = (relay.Node,)
         connection_class = CountableConnectionBase
+        fields = "__all__"
 
 
 class Case(DjangoObjectType):

@@ -7,7 +7,7 @@ from django.conf import settings
 from django.core.cache import cache
 from django.core.exceptions import ImproperlyConfigured
 from django.http.response import HttpResponse
-from django.utils.encoding import force_bytes, smart_text
+from django.utils.encoding import force_bytes, smart_str
 from django.utils.module_loading import import_string
 from graphene_django.views import GraphQLView, HttpError
 from rest_framework.authentication import get_authorization_header
@@ -27,7 +27,7 @@ class AuthenticationGraphQLView(GraphQLView):
         if not auth:
             return None
 
-        if smart_text(auth[0].lower()) != header_prefix.lower():
+        if smart_str(auth[0].lower()) != header_prefix.lower():
             raise HttpError(HttpResponseUnauthorized("No Bearer Authorization header"))
 
         if len(auth) == 1:
@@ -46,7 +46,7 @@ class AuthenticationGraphQLView(GraphQLView):
         response = requests.get(
             settings.OIDC_USERINFO_ENDPOINT,
             verify=settings.OIDC_VERIFY_SSL,
-            headers={"Authorization": f"Bearer {smart_text(token)}"},
+            headers={"Authorization": f"Bearer {smart_str(token)}"},
         )
         response.raise_for_status()
         return response.json()
