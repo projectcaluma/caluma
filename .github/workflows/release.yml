@@ -3,9 +3,12 @@ name: Release
 on:
   workflow_dispatch:
     inputs:
-      prerelease:
+      beta:
         type: boolean
-        description: Prerelease
+        description: Beta
+      dry-run:
+        type: boolean
+        description: Dry run
 
 concurrency:
   group: release
@@ -44,7 +47,7 @@ jobs:
         run: |
           git config user.name github-actions
           git config user.email github-actions@github.com
-          poetry run semantic-release publish -v DEBUG ${{ github.event.inputs.prerelease == 'true' && '--prerelease' || '' }}
+          poetry run semantic-release publish -v DEBUG ${{ github.event.inputs.beta == 'true' && '--prerelease' || '' }} ${{ github.event.inputs.dry-run == 'true' && '--noop' || '' }}
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
           REPOSITORY_USERNAME: __token__
