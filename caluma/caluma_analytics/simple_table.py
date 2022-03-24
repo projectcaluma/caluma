@@ -3,6 +3,7 @@ from __future__ import annotations  # self-referencing annotations
 import re
 from copy import deepcopy
 from datetime import datetime
+from decimal import Decimal
 from functools import cached_property, partial
 from typing import List, Optional
 
@@ -14,7 +15,7 @@ from psycopg2.extras import DictCursor
 from caluma.caluma_form import models as form_models
 from caluma.caluma_workflow import models as workflow_models
 
-from . import sql
+from . import models, sql
 
 
 class BaseField:
@@ -48,6 +49,7 @@ class BaseField:
         # Optimisation - SQL generation may be skipped in some
         # cases if field not required
         self.required = False
+        self.show_output = True
 
     def path_args(self):
         """Extract arguments from the field's path."""
@@ -86,9 +88,24 @@ class BaseField:
     def parse_value(self, value):
         """Parse value from DB into python value.
 
-        Only needs to be overloaded when required.
-        Used in GraphQL context only
+        Ensure date / time types are using the correct timezone,
+        and numeric types are int or float.
         """
+        if isinstance(value, Decimal):
+            # Postgres sometimes returns Decimal types that
+            # need to be converted for "proper" representation
+            # in the output. Depends on PostgreSQL version
+            # whether this is triggered or not
+            return float(value)  # pragma: no cover
+
+        if isinstance(value, datetime):
+            # psycopg2 returns "generic" tz info dates that sometimes
+            # are weird when comparing to the ones Django expects
+            # (Note they're still correct, just not labeled in a
+            # useful way)
+            current_tz = timezone.get_current_timezone()
+            return current_tz.normalize(value)
+
         return value
 
     def query_field(self):
@@ -108,6 +125,24 @@ class BaseField:
         raise NotImplementedError(
             f"Method 'is_leaf' is missing in {type(self)}"
         )  # pragma: no cover
+
+    def supported_functions(self):
+        """Return list of supported aggregate functions.
+
+        In all cases, at least VALUE should be returned. Depending on
+        data type of the field, additional functions can be supported.
+        """
+        raise NotImplementedError(
+            f"Method 'supported_functions' is missing in {type(self)}"
+        )  # pragma: no cover
+
+    def _all_supported_functions(self):
+        """Return a list of all functions that Analytics supports.
+
+        call this in supported_functions() implementations if there
+        is no restriction on supported functions in the field.
+        """
+        return [func.upper() for func, _ in models.AnalyticsField.FUNCTION_CHOICES]
 
 
 class MetaField(BaseField):
@@ -133,9 +168,15 @@ class MetaField(BaseField):
         # We cannot descend further down, there are no children
         return bool(self.meta_name)
 
+    def supported_functions(self):
+        # meta is kind of special - we don't know what type of data people
+        # put into those fields, so we support all functions despite some
+        # of them might not work
+        return self._all_supported_functions()
+
     def is_value(self):
         # "plain" meta cannot be used as a value
-        return not self.is_leaf()
+        return self.is_leaf()
 
     @cached_property
     def available_children(self):
@@ -194,6 +235,13 @@ class AttributeField(BaseField):
     def is_value(self):
         return True
 
+    def supported_functions(self):
+        return [
+            models.AnalyticsField.FUNCTION_VALUE.upper(),
+            models.AnalyticsField.FUNCTION_MAX.upper(),
+            models.AnalyticsField.FUNCTION_MIN.upper(),
+        ]
+
     def query_field(self):
         if self.is_date and not self.required:
             return sql.NOOPField(
@@ -225,19 +273,6 @@ class AttributeField(BaseField):
                 "quarter": extractor_field(identifier="quarter"),
             }
         return {}
-
-    def parse_value(self, value):
-        if not self.is_date:
-            return value
-
-        if isinstance(value, datetime):
-            # psycopg2 returns "generic" tz info dates that sometimes
-            # are weird when comparing to the ones Django expects
-            # (Note they're still correct, just not labeled in an
-            # useful way)
-            current_tz = timezone.get_current_timezone()
-            return current_tz.normalize(value)
-        return value
 
 
 class WorkItemField(BaseField):
@@ -285,6 +320,9 @@ class WorkItemField(BaseField):
 
     def is_value(self):
         return False
+
+    def supported_functions(self):
+        return []
 
     def query_field(self):
         return sql.JoinField(
@@ -390,6 +428,9 @@ class FormDocumentField(BaseField):
     def is_value(self):
         return False
 
+    def supported_functions(self):
+        return []
+
     @cached_property
     def available_children(self):
         form = form_models.Form.objects.get(pk=self.form_slug)
@@ -450,6 +491,33 @@ class FormAnswerField(AttributeField):
         self.subform_level = subform_level
         self.attr_name = attr_name
 
+    def supported_functions(self):
+        question = form_models.Question.objects.get(pk=self.identifier)
+        base_functions = [
+            models.AnalyticsField.FUNCTION_VALUE.upper(),
+            models.AnalyticsField.FUNCTION_COUNT.upper(),
+        ]
+        text_functions = [
+            models.AnalyticsField.FUNCTION_MAX.upper(),
+            models.AnalyticsField.FUNCTION_MIN.upper(),
+        ]
+        numeric_functions = [
+            models.AnalyticsField.FUNCTION_MAX.upper(),
+            models.AnalyticsField.FUNCTION_MIN.upper(),
+            models.AnalyticsField.FUNCTION_AVERAGE.upper(),
+            models.AnalyticsField.FUNCTION_SUM.upper(),
+        ]
+        function_support = {
+            form_models.Question.TYPE_CHOICE: text_functions,
+            form_models.Question.TYPE_TEXT: text_functions,
+            form_models.Question.TYPE_TEXTAREA: text_functions,
+            form_models.Question.TYPE_DATE: text_functions,
+            form_models.Question.TYPE_INTEGER: numeric_functions,
+            form_models.Question.TYPE_FLOAT: numeric_functions,
+        }
+
+        return base_functions + function_support[question.type]
+
     def query_field(self):
         # Only for top-level form do we need a Join field.
         # The "sub-forms"' answers are all on the same document,
@@ -483,6 +551,9 @@ class DateExtractorField(AttributeField):
             **kwargs,
         )
         self.date_field = date_field
+
+    def supported_functions(self):
+        return self._all_supported_functions()
 
     def query_field(self):
         return sql.DateExprField(
@@ -682,7 +753,6 @@ class SimpleTable:
 
     def __init__(self, table, info=_AnonymousInfo):
         self.info = info
-
         self.table = table
         self.last_query = None
         self.last_query_params = None
@@ -693,7 +763,7 @@ class SimpleTable:
             disable_visibilities=self.table.disable_visibilities,
         )
 
-        self.base_query = self.starting_object.get_query()
+        self.base_query = sql.Query(from_=self.starting_object.get_query())
 
     @cached_property
     def _fields(self):
@@ -708,6 +778,7 @@ class SimpleTable:
                 field_spec.data_source.split(".")
             )
             fields[field_spec.alias].alias = field_spec.alias
+            fields[field_spec.alias].show_output = field_spec.show_output
 
             # Filters must always be on the outermost (base) query,
             # as we're using LEFT JOINs to get at related data.
@@ -718,6 +789,16 @@ class SimpleTable:
 
     def get_sql_and_params(self):
         """Return a list of records as specified in the given table config."""
+
+        base_query = self.get_query_object()
+
+        sql_query, params, _ = sql.QueryRender(base_query).as_sql(alias=None)
+
+        self.last_query = sql_query
+        self.last_query_params = params
+        return sql_query, params
+
+    def get_query_object(self):
 
         fields = self._fields
 
@@ -740,11 +821,7 @@ class SimpleTable:
                     query = step.annotate(query)
                     step_queries[cache_path] = query
 
-        sql_query, params, _ = sql.QueryRender(base_query).as_sql(alias=None)
-
-        self.last_query = sql_query
-        self.last_query_params = params
-        return sql_query, params
+        return base_query
 
     def get_records(self):
 
@@ -760,6 +837,7 @@ class SimpleTable:
                         row[f"analytics_result_{field.alias}"]
                     )
                     for field in self._fields.values()
+                    if field.show_output
                 }
                 for row in data
             ]

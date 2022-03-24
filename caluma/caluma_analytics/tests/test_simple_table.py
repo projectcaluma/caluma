@@ -2,27 +2,8 @@ import math
 
 import pytest
 
+from caluma.caluma_analytics.pivot_table import PivotTable
 from caluma.caluma_analytics.simple_table import SimpleTable
-
-
-@pytest.fixture
-def example_analytics(analytics_table, form_and_document, settings):
-    settings.META_FIELDS = ["foo"]
-    analytics_table.fields.create(data_source="created_at", alias="created_at")
-    analytics_table.fields.create(data_source="created_at.quarter", alias="quarter")
-    analytics_table.fields.create(data_source="meta.foo", alias="foo")
-    analytics_table.fields.create(data_source="status", alias="statuuuuuus")
-    analytics_table.fields.create(
-        data_source="document[top_form].top_question", alias="from_the_doc"
-    )
-    return analytics_table
-
-
-@pytest.fixture
-def analytics_cases(form_and_document, case_factory):
-    _f, document, _q, _a = form_and_document(use_subform=True)
-    for _ in range(3):
-        case_factory(meta={"foo": "bar"}, document=document.copy())
 
 
 @pytest.mark.freeze_time("2021-10-10")
@@ -38,7 +19,7 @@ def test_run_analytics_direct(db, snapshot, example_analytics, analytics_cases):
 
     result = table.get_records()
 
-    assert len(result) == 3
+    assert len(result) == 5
 
     snapshot.assert_match(result)
 
@@ -114,3 +95,43 @@ def test_sql_repeatability(
 
     assert sql1 == sql2
     assert params1 == params2
+
+
+@pytest.mark.parametrize(
+    "alias",
+    [
+        "hello-world",
+        "with spaces",
+        "UpperCase",
+        "with punctuation.",
+        "with punctuation?",
+        "with punctuation!",
+    ],
+)
+@pytest.mark.parametrize(
+    "table",
+    [
+        "example_analytics",
+        "example_pivot_table",
+    ],
+)
+@pytest.mark.freeze_time("2021-10-10")
+def test_unusual_aliases(db, table, analytics_cases, alias, request):
+
+    table_obj = request.getfixturevalue(table)
+
+    some_field = table_obj.fields.get(alias="quarter")
+    some_field.alias = alias
+    some_field.function = "sum"
+    some_field.save()
+
+    table = (
+        SimpleTable(table_obj) if table_obj.is_extraction() else PivotTable(table_obj)
+    )
+
+    result = table.get_records()
+
+    # We just check that the anlysis run went successful
+    # and that the alias is represented in the columns
+    assert result
+    assert alias in result[0]

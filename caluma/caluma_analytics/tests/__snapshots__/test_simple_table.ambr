@@ -1,25 +1,39 @@
 # name: test_run_analytics_direct
   <class 'list'> [
     <class 'dict'> {
-      'created_at': datetime.datetime(2021, 10, 10, 0, 0, tzinfo=<UTC>),
+      'created_at': datetime.datetime(2022, 2, 1, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Victoria Pena',
-      'quarter': 4,
+      'quarter': 1,
       'statuuuuuus': 'running',
     },
     <class 'dict'> {
-      'created_at': datetime.datetime(2021, 10, 10, 0, 0, tzinfo=<UTC>),
+      'created_at': datetime.datetime(2022, 2, 2, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Victoria Pena',
-      'quarter': 4,
+      'quarter': 1,
       'statuuuuuus': 'running',
     },
     <class 'dict'> {
-      'created_at': datetime.datetime(2021, 10, 10, 0, 0, tzinfo=<UTC>),
+      'created_at': datetime.datetime(2022, 2, 3, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Victoria Pena',
-      'quarter': 4,
+      'quarter': 1,
       'statuuuuuus': 'running',
+    },
+    <class 'dict'> {
+      'created_at': datetime.datetime(2022, 2, 4, 0, 0, tzinfo=<UTC>),
+      'foo': 'bar',
+      'from_the_doc': 'Victoria Pena',
+      'quarter': 1,
+      'statuuuuuus': 'completed',
+    },
+    <class 'dict'> {
+      'created_at': datetime.datetime(2022, 2, 5, 0, 0, tzinfo=<UTC>),
+      'foo': 'bar',
+      'from_the_doc': 'Victoria Pena',
+      'quarter': 1,
+      'statuuuuuus': 'suspended',
     },
   ]
 ---

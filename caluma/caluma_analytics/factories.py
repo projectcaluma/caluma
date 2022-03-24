@@ -24,5 +24,10 @@ class AnalyticsFieldFactory(DjangoModelFactory):
     data_source = Faker("slug")
     table = SubFactory(AnalyticsTableFactory)
 
+    function = Faker(
+        "word",
+        ext_word_list=[i for i, _ in models.AnalyticsField.FUNCTION_CHOICES],
+    )
+
     class Meta:
         model = models.AnalyticsField

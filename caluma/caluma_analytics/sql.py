@@ -42,11 +42,13 @@ class Query:
     order_by: List[str] = field(default_factory=list)
     limit: Optional[int] = field(default=None)
     params: Dict[str, str] = field(default_factory=dict)
+    group_by: List[str] = field(default_factory=list)
     with_queries: Dict[str, str] = field(
         default_factory=dict
     )  # with_queries are CTEs, used for referencing visibility-filtered tables
 
     is_plain_cte: bool = field(default=False)
+    select_direct_only: bool = field(default=False)
 
     def makeparam(self, value, name_hint=None):
         """Return a parameter name for the given value.
@@ -85,7 +87,9 @@ class Query:
         this query.
         """
         if isinstance(self.from_, str):
-            return self.from_
+            # Only happens if the base table is directly referenced,
+            # instead of a subquery (from visibility/django QS).
+            return self.from_  # pragma: no cover
         return self.from_.outer_alias()
 
     def add_field_filter(self, alias, filter_values):
@@ -294,6 +298,7 @@ class QueryRender:
                     from_list,
                     self._where_list(),
                     self._order_by(),
+                    self._group_by(),
                     self._limits(),
                 ]
             )
@@ -303,7 +308,7 @@ class QueryRender:
             # This is theoretically only required if we have expressions on the
             # outermost table, but for convenience, we do it always.
             inner_sql = "\n".join(
-                [selects, from_list, self._order_by(), self._limits()]
+                [selects, from_list, self._order_by(), self._group_by(), self._limits()]
             )
             inner_name = _make_name(inner_sql, "analytics")
             sql = f"SELECT * FROM ({inner_sql}) AS {inner_name}\n{self._where_list()}"
@@ -347,6 +352,12 @@ class QueryRender:
             return f"ORDER BY {order_sql}"
         return ""
 
+    def _group_by(self):
+        if self.query.group_by:
+            group_sql = ",\n       ".join(self.query.group_by)
+            return f"GROUP BY {group_sql}"
+        return ""
+
     def _limits(self):
         # TODO: Do we still need this? We're doing the same thing now
         # using (DISTINCT ON)
@@ -370,18 +381,26 @@ class QueryRender:
         ]
         if self.query.outer_ref:
             _, inner = self.query.outer_ref
-            fields.append(inner)
+            fields.append(f'"{inner}"')
 
         # The subquery fields are already aliased, so no need
         # to re-alias them
         def _collect(q):
             for _, alias in q.select:
-                yield alias
+                yield f'"{alias}"'
             for sub_q, _ in q.joins:
                 yield from _collect(sub_q)
 
-        for join, _ in self.query.joins:
-            fields.extend(_collect(join))
+        # Normally, we take all the "selects" from the inner queries and
+        # pass them further on. However in aggregate queries, this is not
+        # desired, as any unused field will lead to an SQL error (fields
+        # MUST be used in aggregates or group by, which may not be desired).
+        # Thus we allow the query to specify "select direct only", which means
+        # we do not pass on any selected fields from inner queries / joins
+        # as we usually would.
+        if not self.query.select_direct_only:
+            for join, _ in self.query.joins:
+                fields.extend(_collect(join))
 
         return ",\n       ".join(fields)
 
@@ -395,7 +414,9 @@ class QueryRender:
         if isinstance(from_spec, str):
             # by defintion, only "our own" table can be passed as string.
             # subqueries MUST be query objects
-            return (from_spec, {}, self.query.outer_alias())
+            # Only happens if the base table is directly referenced,
+            # instead of a subquery (from visibility/django QS).
+            return (from_spec, {}, self.query.outer_alias())  # pragma: no cover
 
         render = QueryRender(from_spec, indent=self._indent + 4, is_subquery=True)
 
@@ -424,4 +445,4 @@ class QueryRender:
                 (f"LEFT JOIN (\n{subquery}\n)", alias, f"ON ({cond})" if cond else "")
             )
 
-        return "\n".join([f"{tbl} AS {alias} {cond}" for tbl, alias, cond in sources])
+        return "\n".join([f'{tbl} AS "{alias}" {cond}' for tbl, alias, cond in sources])

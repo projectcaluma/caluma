@@ -16,6 +16,7 @@ from ..caluma_core.types import (
     CountableConnectionBase,
     DjangoObjectType,
     Node,
+    enum_type_from_field,
 )
 from ..caluma_data_source.data_source_handlers import get_data_source_data
 from ..caluma_data_source.schema import DataSourceDataConnection
@@ -87,22 +88,16 @@ serializer_converter.get_graphene_type_from_serializer_field.register(
 )
 
 
-ButtonAction = graphene.Enum(
+ButtonAction = enum_type_from_field(
     "ButtonAction",
-    [(key.upper(), key) for key in models.Question.ACTION_CHOICES],
+    choices=models.Question.ACTION_CHOICES,
+    serializer_field=serializers.ButtonActionField,
 )
-ButtonColor = graphene.Enum(
+
+ButtonColor = enum_type_from_field(
     "ButtonColor",
-    [(key.upper(), key) for key in models.Question.COLOR_CHOICES],
-)
-
-
-serializer_converter.get_graphene_type_from_serializer_field.register(
-    serializers.ButtonActionField, lambda field: ButtonAction
-)
-
-serializer_converter.get_graphene_type_from_serializer_field.register(
-    serializers.ButtonColorField, lambda field: ButtonColor
+    choices=models.Question.COLOR_CHOICES,
+    serializer_field=serializers.ButtonColorField,
 )
 
 

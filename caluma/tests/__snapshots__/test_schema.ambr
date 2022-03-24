@@ -82,6 +82,16 @@
     clientMutationId: String
   }
   
+  """Aggregate function for pivot table"""
+  enum AggregateFunction {
+    VALUE
+    SUM
+    COUNT
+    AVG
+    MAX
+    MIN
+  }
+  
   """A cell represents one value in the analytics output."""
   type AnalyticsCell {
     alias: String
@@ -103,6 +113,8 @@
     dataSource: String!
     table: AnalyticsTable!
     filters: [String]
+    function: AggregateFunction
+    showOutput: Boolean!
   }
   
   type AnalyticsFieldConnection {
@@ -171,7 +183,7 @@
     meta: JSONString!
     disableVisibilities: Boolean!
     name: String!
-    startingObject: CalumaAnalyticsAnalyticsTableStartingObjectChoices!
+    startingObject: StartingObject
     fields(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): AnalyticsFieldConnection!
   
     """The ID of the object"""
@@ -387,6 +399,7 @@
     sourcePath: String
     isLeaf: Boolean
     isValue: Boolean
+    supportedFunctions: [AggregateFunction]
   }
   
   type AvailableFieldConnection {
@@ -474,12 +487,6 @@
   
     """The ID of the object"""
     id: ID!
-  }
-  
-  """An enumeration."""
-  enum CalumaAnalyticsAnalyticsTableStartingObjectChoices {
-    """Cases"""
-    CASES
   }
   
   """An enumeration."""
@@ -3294,7 +3301,9 @@
     table: ID!
     dataSource: String!
     filters: [String]
+    showOutput: Boolean
     meta: JSONString
+    function: AggregateFunction!
     createdByUser: String
     createdByGroup: String
     modifiedByUser: String

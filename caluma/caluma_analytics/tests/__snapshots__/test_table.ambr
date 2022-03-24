@@ -108,12 +108,12 @@
     },
   }
 ---
-# name: test_add_field_validations[meta.foobar-existing-Cannot use the same alias twice within the same table-alias]
+# name: test_add_field_validations[meta.foobar-existing-duplicate key value violates unique constraint "unique_alias"-alias]
   <class 'dict'> {
     'saveAnalyticsField': None,
   }
 ---
-# name: test_add_field_validations[meta.foobar-foobar-Cannot use the same data source twice within the same table-dataSource]
+# name: test_add_field_validations[meta.foobar-foobar-duplicate key value violates unique constraint "unique_data_source"-dataSource]
   <class 'dict'> {
     'saveAnalyticsField': None,
   }

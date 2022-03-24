@@ -36,11 +36,13 @@ def test_cmdline_output(
 
     analytics_table.fields.create(
         alias="case_id",
+        function="value",
         data_source="id",
     )
     analytics_table.fields.create(
         alias="blablub",
         data_source="document[top_form].top_question",
+        function="value",
         filters=[
             answers_dict1["top_question"].value,
             answers_dict2["top_question"].value,

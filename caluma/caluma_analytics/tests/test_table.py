@@ -28,12 +28,8 @@ MUTATION_SAVE_FIELD = """
 """
 
 MUTATION_SAVE_TABLE = """
-    mutation create {
-      saveAnalyticsTable(input: {
-        slug: "test-table",
-        name: "Test table thingy",
-        startingObject: CASES
-      }) {
+    mutation create ($table_input: SaveAnalyticsTableInput!) {
+      saveAnalyticsTable(input: $table_input) {
         analyticsTable {
           name
           availableFields(depth: 1) {
@@ -69,7 +65,16 @@ QUERY_AVAILABLE_FIELDS = """
 
 
 def test_create_table(db, snapshot, schema_executor):
-    result = schema_executor(MUTATION_SAVE_TABLE, variable_values={})
+    result = schema_executor(
+        MUTATION_SAVE_TABLE,
+        variable_values={
+            "table_input": {
+                "slug": "test-table",
+                "name": "Test table thingy",
+                "startingObject": "CASES",
+            }
+        },
+    )
 
     assert not result.errors
     assert models.AnalyticsTable.objects.filter(pk="test-table").exists()
@@ -127,6 +132,7 @@ def test_add_field(
             "alias": "some_alias",
             "table": analytics_table.slug,
             "dataSource": field_path,
+            "function": "VALUE",
         }
     }
 
@@ -134,6 +140,54 @@ def test_add_field(
 
     assert bool(result.errors) == expect_error
     snapshot.assert_match(result.data)
+
+
+def test_validate_intermediate_field(
+    db,
+    snapshot,
+    settings,
+    schema_executor,
+    analytics_table,
+):
+    settings.META_FIELDS = ["foobar", "baz"]
+    input = {
+        "input": {
+            "alias": "some_alias",
+            "table": analytics_table.slug,
+            "dataSource": "meta",
+            "function": "VALUE",
+        }
+    }
+
+    result = schema_executor(MUTATION_SAVE_FIELD, variable_values=input)
+
+    assert result.errors
+    assert (
+        "Specified data source 'meta' is not a value field" in result.errors[0].args[0]
+    )
+
+
+def test_validate_function(
+    db,
+    snapshot,
+    settings,
+    schema_executor,
+    analytics_table,
+):
+    settings.META_FIELDS = ["foobar", "baz"]
+    input = {
+        "input": {
+            "alias": "some_alias",
+            "table": analytics_table.slug,
+            "dataSource": "created_at",
+            "function": "AVG",
+        }
+    }
+
+    result = schema_executor(MUTATION_SAVE_FIELD, variable_values=input)
+
+    assert result.errors
+    assert "Function 'AVG' is not supported on this field" in result.errors[0].args[0]
 
 
 @pytest.mark.parametrize(
@@ -144,13 +198,13 @@ def test_add_field(
         (
             "meta.foobar",
             "foobar",
-            "Cannot use the same data source twice within the same table",
+            'duplicate key value violates unique constraint "unique_data_source"',
             "dataSource",
         ),
         (
             "meta.foobar",
             "existing",
-            "Cannot use the same alias twice within the same table",
+            'duplicate key value violates unique constraint "unique_alias"',
             "alias",
         ),
         (
@@ -181,6 +235,7 @@ def test_add_field_validations(
             "alias": field_alias,
             "table": analytics_table.slug,
             "dataSource": field_path,
+            "function": "VALUE",
         }
     }
 
@@ -188,8 +243,7 @@ def test_add_field_validations(
 
     assert bool(result.errors) == bool(expect_error)
     if expect_error:
-        err = str(result.errors[0].original_error.args[0][error_key][0])
-        assert err == expect_error
+        assert expect_error in result.errors[0].args[0]
 
     snapshot.assert_match(result.data)
 
@@ -211,6 +265,7 @@ def test_update_field(
             "table": analytics_table.slug,
             "dataSource": field.data_source,
             "id": str(field.pk),
+            "function": "VALUE",
         }
     }
 

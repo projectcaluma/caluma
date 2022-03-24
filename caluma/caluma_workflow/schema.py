@@ -12,7 +12,12 @@ from ..caluma_core.filters import (
     DjangoFilterSetConnectionField,
 )
 from ..caluma_core.mutation import Mutation, UserDefinedPrimaryKeyMixin
-from ..caluma_core.types import CountableConnectionBase, DjangoObjectType, Node
+from ..caluma_core.types import (
+    CountableConnectionBase,
+    DjangoObjectType,
+    Node,
+    enum_type_from_field,
+)
 from . import filters, jexl, models, serializers
 
 
@@ -54,22 +59,14 @@ serializer_converter.get_graphene_type_from_serializer_field.register(
 )
 
 
-CaseStatus = graphene.Enum(
-    "CaseStatus",
-    [(key.upper(), key) for key, _ in models.Case.STATUS_CHOICE_TUPLE],
+CaseStatus = enum_type_from_field(
+    "CaseStatus", models.Case.status, serializer_field=serializers.CaseStatusField
 )
 
-WorkItemStatus = graphene.Enum(
+WorkItemStatus = enum_type_from_field(
     "WorkItemStatus",
-    [(key.upper(), key) for key, _ in models.WorkItem.STATUS_CHOICE_TUPLE],
-)
-
-
-serializer_converter.get_graphene_type_from_serializer_field.register(
-    serializers.CaseStatusField, lambda field: CaseStatus
-)
-serializer_converter.get_graphene_type_from_serializer_field.register(
-    serializers.WorkItemStatusField, lambda field: WorkItemStatus
+    models.WorkItem.status,
+    serializer_field=serializers.WorkItemStatusField,
 )
 
 
