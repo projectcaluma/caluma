@@ -1,9 +1,14 @@
 <!--next-version-placeholder-->
 
+# v8.0.0-beta.2 (24 March 2022)
+
+### Fix
+* **relay:** Make extraction of global ids more defensive ([`392b4f7`](https://github.com/projectcaluma/caluma/commit/392b4f7ce920c0bb308f9d465c24b6d1cba97acb))
+
 # v8.0.0-beta.1 (23 March 2022)
 
 ### Fix
-* **workflow:** fix creating work items when completed ones exist ([`b2cc0a8`](https://github.com/projectcaluma/caluma/commit/b2cc0a866888595be3010e71ca0a3d543fc6eb51))
+* **workflow:** Fix creating work items when completed ones exist ([`b2cc0a8`](https://github.com/projectcaluma/caluma/commit/b2cc0a866888595be3010e71ca0a3d543fc6eb51))
 * **document:** Remove duplicate filtering on answer ([`c92f3ed`](https://github.com/projectcaluma/caluma/commit/c92f3ede09d782478d4c7aff487bde42c56f999c))
 
 
