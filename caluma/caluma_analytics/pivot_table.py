@@ -5,7 +5,7 @@ from functools import cached_property
 from django.db import connection
 from psycopg2.extras import DictCursor
 
-from . import simple_table, sql
+from . import models, simple_table, sql
 
 FUNCTION_PARAMETER_CAST = {
     "sum": "::float",
@@ -24,17 +24,22 @@ class PivotTable:
 
         context = {}
 
-    def __init__(self, table, info=_AnonymousInfo):
+    def __init__(self, table, info=_AnonymousInfo, is_summary=False):
         self.info = info
 
         self.table = table
         self.last_query = None
         self.last_query_params = None
-        self.base_table = simple_table.SimpleTable(self.table)
+        self.base_table = simple_table.SimpleTable(self.table, is_summary=is_summary)
+        self.is_summary = is_summary
 
     @cached_property
     def _fields(self):
-        return list(self.table.fields.all())
+        fields = self.table.fields.all()
+        if self.is_summary:
+            fields = fields.exclude(function=models.AnalyticsField.FUNCTION_VALUE)
+
+        return list(fields)
 
     def get_sql_and_params(self):
         """Return a list of records as specified in the given table config."""
@@ -96,6 +101,11 @@ class PivotTable:
                 }
                 for row in data
             ]
+
+    def get_summary(self):
+        summary_self = PivotTable(self.table, self.info, is_summary=True)
+        summary = summary_self.get_records()
+        return summary[0]
 
     def _sql_alias(self, user_alias):  # pragma: no cover
         return f"analytics_pivot_{user_alias}"

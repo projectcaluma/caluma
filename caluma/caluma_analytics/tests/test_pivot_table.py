@@ -62,6 +62,14 @@ def test_run_analytics_gql(
                     }
                   }
                 }
+                summary {
+                  edges {
+                    node {
+                      alias
+                      value
+                    }
+                  }
+                }
              }
           }
        }
@@ -85,4 +93,12 @@ def test_run_analytics_gql(
             "running": "2022-02-03 00:00:00+00:00",
             "completed": "2022-02-04 00:00:00+00:00",
             "suspended": "2022-02-05 00:00:00+00:00",
+        }
+
+        summary = result.data["analyticsTable"]["resultData"]["summary"]["edges"]
+
+        summary_dict = {col["node"]["alias"]: col["node"]["value"] for col in summary}
+        assert summary_dict == {
+            "last_created": "2022-02-05 00:00:00+00:00",
+            "quarter": "4",
         }

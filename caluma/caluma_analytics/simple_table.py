@@ -751,11 +751,12 @@ class SimpleTable:
 
         context = {}
 
-    def __init__(self, table, info=_AnonymousInfo):
+    def __init__(self, table, info=_AnonymousInfo, is_summary=False):
         self.info = info
         self.table = table
         self.last_query = None
         self.last_query_params = None
+        self.is_summary = is_summary
 
         self.starting_object = BaseStartingObject.get_object(
             self.table.starting_object,
@@ -767,10 +768,15 @@ class SimpleTable:
 
     @cached_property
     def _fields(self):
+        field_spec_qs = self.table.fields.all()
+        if self.is_summary:
+            field_spec_qs = field_spec_qs.exclude(
+                function=models.AnalyticsField.FUNCTION_VALUE
+            )
         # sort fields to join by length. This way, parent fields
         # will be already joined when their children get added, so
         # they will have the right alias.
-        table_fields = sorted(self.table.fields.all(), key=lambda f: len(f.data_source))
+        table_fields = sorted(field_spec_qs, key=lambda f: len(f.data_source))
 
         fields = {}
         for field_spec in table_fields:
@@ -841,6 +847,11 @@ class SimpleTable:
                 }
                 for row in data
             ]
+
+    def get_summary(self):
+        # simple tables can't do summary, but we must implement
+        # it as both table types share the same GQL interface
+        return {}  # pragma: no cover
 
     def _sql_alias(self, user_alias):
         return f"analytics_result_{user_alias}"
