@@ -80,6 +80,8 @@ class FilterCollectionFilter(Filter):
 
         filter_coll = self.filterset_class()
         for flt in value:
+            if not flt:
+                continue
             invert = flt.pop("invert", False)
             flt_key = list(flt.keys())[0]
             flt_val = flt[flt_key]
