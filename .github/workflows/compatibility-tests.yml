@@ -40,7 +40,7 @@ jobs:
         with:
           python-version: ${{ matrix.python}}
 
-      - uses: actions/cache@v2
+      - uses: actions/cache@v3
         with:
           path: .venv
           key: poetry-${{ hashFiles('poetry.lock') }}
