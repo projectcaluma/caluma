@@ -46,7 +46,7 @@ urllib3 = "^1.26.8"
 uWSGI = "^2.0.20"
 
 [tool.poetry.dev-dependencies]
-black = "^22.1.0"
+black = "^22.3.0"
 factory-boy = "^3.2.1"
 Faker = "^13.3.3"
 flake8 = "^4.0.1"
