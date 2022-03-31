@@ -5,11 +5,11 @@ from localized_fields.fields import LocalizedField
 
 from caluma.caluma_core.models import SlugModel, UUIDModel
 
-from .simple_table import BaseStartingObject
+from . import pivot_table, simple_table
 
 
 class AnalyticsTable(SlugModel):
-    STARTING_OBJECT_CHOICES = BaseStartingObject.as_choices()
+    STARTING_OBJECT_CHOICES = simple_table.BaseStartingObject.as_choices()
 
     meta = models.JSONField(default=dict)
 
@@ -24,7 +24,14 @@ class AnalyticsTable(SlugModel):
         return not self.fields.exclude(function=AnalyticsField.FUNCTION_VALUE).exists()
 
     def get_starting_object(self, info):
-        return BaseStartingObject.get_object(self.starting_object, info)
+        return simple_table.BaseStartingObject.get_object(self.starting_object, info)
+
+    def get_analytics(self):
+        return (
+            simple_table.SimpleTable(self)
+            if self.is_extraction()
+            else pivot_table.PivotTable(self)
+        )
 
     def __repr__(self):
         return f"AnalyticsTable<{self.slug}>"
