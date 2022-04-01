@@ -1,14 +1,24 @@
 import minio.error
 import pytest
+import requests
 import urllib3
 
 from .. import storage_clients
+
+
+def is_badssl_down():
+    """Return True if badssl.com is not reachable or down."""
+    try:
+        requests.get("https://badssl.com")
+    except:  # noqa
+        return True  # pragma: no cover
 
 
 @pytest.mark.parametrize(
     "disable_cert_checks, debug",
     [(False, False), (False, True), (True, False), (True, True)],
 )
+@pytest.mark.xfail(is_badssl_down(), reason="Badssl.com unreachable")
 def test_minio_disable_cert_checks(db, settings, disable_cert_checks, debug):
     settings.MINIO_DISABLE_CERT_CHECKS = disable_cert_checks
     settings.DEBUG = debug
