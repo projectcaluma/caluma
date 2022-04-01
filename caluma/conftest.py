@@ -404,25 +404,3 @@ def set_date(freezer):
         freezer.move_to(old_now)
 
     return make_context
-
-
-@pytest.fixture
-def at_date(set_date):
-    """Run a given piece of code (callback) at a certain date.
-
-    Uses freezegun, but allows you to override the frozen date.
-    The frozen date will be used to execute the given callable,
-    but will be reverted to the previously-frozen time afterwards.
-
-    >>> @pytest.mark.freeze_time('2022-02-22')
-    >>> def test_foo(at_date):
-            assert datetime.now() == datetime(2022,2,22)
-            assert at_date('2022-01-01', lambda: datetime.now()) == datetime(2022,1,1)
-            assert datetime.now() == datetime(2022,2,22)
-    """
-
-    def run_at_date(date, func):
-        with set_date(date):
-            return func()
-
-    return run_at_date
