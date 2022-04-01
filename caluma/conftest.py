@@ -1,3 +1,4 @@
+import contextlib
 import datetime
 import functools
 import inspect
@@ -377,8 +378,37 @@ def sorted_snapshot(snapshot):
 
 
 @pytest.fixture
-def at_date(freezer):
-    """Run a given piece of code at a certain date.
+def set_date(freezer):
+    """Run a block of code at a certain date (context manager).
+
+    Uses freezegun, but allows you to override the frozen date.
+
+    Provides a context manager, where everything within the "with"
+    block is run at the given date:
+
+    >>> @pytest.mark.freeze_time('2022-02-22')
+    >>> def test_foo(set_date):
+            assert datetime.now() == datetime(2022,2,22)
+
+            with set_date('2022-01-01'):
+                assert datetime.now() == datetime(2022,1,1)
+
+            assert datetime.now() == datetime(2022,2,22)
+    """
+
+    @contextlib.contextmanager
+    def make_context(date):
+        old_now = datetime.datetime.now()
+        freezer.move_to(date)
+        yield
+        freezer.move_to(old_now)
+
+    return make_context
+
+
+@pytest.fixture
+def at_date(set_date):
+    """Run a given piece of code (callback) at a certain date.
 
     Uses freezegun, but allows you to override the frozen date.
     The frozen date will be used to execute the given callable,
@@ -392,10 +422,7 @@ def at_date(freezer):
     """
 
     def run_at_date(date, func):
-        old_now = datetime.datetime.now()
-        freezer.move_to(date)
-        res = func()
-        freezer.move_to(old_now)
-        return res
+        with set_date(date):
+            return func()
 
     return run_at_date
