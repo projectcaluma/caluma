@@ -75,6 +75,8 @@ DATABASES = {
     }
 }
 
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
+
 # Cache
 # https://docs.djangoproject.com/en/1.11/ref/settings/#caches
 
