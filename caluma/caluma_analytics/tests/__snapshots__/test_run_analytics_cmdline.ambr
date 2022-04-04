@@ -1,4 +1,4 @@
-# name: test_cmdline_output[output_mode0-False-expect_output1]
+# name: test_cmdline_output[output_mode0-False-expect_output1-cases]
   <class 'dict'> {
     'data': <class 'list'> [
       '------------------------------------   --------------  ',
@@ -10,7 +10,7 @@
     'stderr': '',
   }
 ---
-# name: test_cmdline_output[output_mode0-True-expect_output0]
+# name: test_cmdline_output[output_mode0-True-expect_output0-cases]
   <class 'dict'> {
     'data': <class 'list'> [
       '------------------------------------   --------------  ',
@@ -21,7 +21,7 @@
     'stderr': '',
   }
 ---
-# name: test_cmdline_output[output_mode1-False-expect_output1]
+# name: test_cmdline_output[output_mode1-False-expect_output1-cases]
   <class 'dict'> {
     'data': <class 'list'> [
       '------------------------------------   --------------  ',
@@ -113,7 +113,7 @@
     ',
   }
 ---
-# name: test_cmdline_output[output_mode1-True-expect_output0]
+# name: test_cmdline_output[output_mode1-True-expect_output0-cases]
   <class 'dict'> {
     'data': <class 'list'> [
       '------------------------------------   --------------  ',
@@ -207,7 +207,7 @@
     ',
   }
 ---
-# name: test_cmdline_output[output_mode2-False-expect_output1]
+# name: test_cmdline_output[output_mode2-False-expect_output1-cases]
   <class 'dict'> {
     'data': <class 'list'> [
     ],
@@ -294,7 +294,7 @@
     ',
   }
 ---
-# name: test_cmdline_output[output_mode2-True-expect_output0]
+# name: test_cmdline_output[output_mode2-True-expect_output0-cases]
   <class 'dict'> {
     'data': <class 'list'> [
     ],
@@ -384,7 +384,7 @@
     ',
   }
 ---
-# name: test_cmdline_output[output_mode3-False-expect_output1]
+# name: test_cmdline_output[output_mode3-False-expect_output1-cases]
   <class 'dict'> {
     'data': <class 'list'> [
       <class 'dict'> {
@@ -403,7 +403,7 @@
     'stderr': '',
   }
 ---
-# name: test_cmdline_output[output_mode3-True-expect_output0]
+# name: test_cmdline_output[output_mode3-True-expect_output0-cases]
   <class 'dict'> {
     'data': <class 'list'> [
       <class 'dict'> {

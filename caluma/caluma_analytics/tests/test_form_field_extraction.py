@@ -78,6 +78,7 @@ def test_get_fields(
     )
 
 
+@pytest.mark.parametrize("analytics_table__starting_object", ["cases"])
 def test_extract_form_field_values(
     db,
     settings,
@@ -122,6 +123,7 @@ def test_extract_form_field_values(
     ]
 
 
+@pytest.mark.parametrize("analytics_table__starting_object", ["cases"])
 def test_workitem_data(
     db,
     settings,
@@ -197,6 +199,7 @@ def test_workitem_data(
     ]
 
 
+@pytest.mark.parametrize("analytics_table__starting_object", ["cases"])
 @pytest.mark.parametrize(
     "enable_filter, expect_output", [(True, [0, 1]), (False, [0, 1, 2])]
 )

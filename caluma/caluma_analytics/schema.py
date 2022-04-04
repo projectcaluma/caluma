@@ -12,7 +12,7 @@ from ..caluma_core.types import (
     DjangoObjectType,
     enum_type_from_field,
 )
-from . import filters, models, pivot_table, serializers, simple_table
+from . import filters, models, serializers
 
 AggregateFunction = enum_type_from_field(
     "AggregateFunction",
@@ -138,11 +138,7 @@ class AnalyticsTable(DjangoObjectType):
 
     @staticmethod
     def resolve_result_data(obj, info):
-        return (
-            simple_table.SimpleTable(obj)
-            if obj.is_extraction()
-            else pivot_table.PivotTable(obj)
-        )
+        return obj.get_analytics(info)
 
     class Meta:
         model = models.AnalyticsTable

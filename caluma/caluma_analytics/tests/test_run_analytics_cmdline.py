@@ -4,6 +4,7 @@ import pytest
 from django.core.management import call_command
 
 
+@pytest.mark.parametrize("analytics_table__starting_object", ["cases"])
 @pytest.mark.parametrize(
     "enable_filter, expect_output", [(True, [0, 1]), (False, [0, 1, 2])]
 )

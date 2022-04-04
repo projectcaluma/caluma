@@ -6,6 +6,7 @@ from caluma.caluma_analytics.pivot_table import PivotTable
 from caluma.caluma_analytics.simple_table import SimpleTable
 
 
+@pytest.mark.parametrize("analytics_table__starting_object", ["cases"])
 @pytest.mark.freeze_time("2021-10-10")
 def test_run_analytics_direct(db, snapshot, example_analytics, analytics_cases):
     """Test basic analytics run on simple table.
@@ -19,11 +20,12 @@ def test_run_analytics_direct(db, snapshot, example_analytics, analytics_cases):
 
     result = table.get_records()
 
-    assert len(result) == 5
+    assert len(result) == 10
 
     snapshot.assert_match(result)
 
 
+@pytest.mark.parametrize("analytics_table__starting_object", ["cases"])
 @pytest.mark.freeze_time("2021-10-10")
 @pytest.mark.parametrize("delete_case", [True, False])
 @pytest.mark.parametrize("case__meta", [{"foo": "bar"}])

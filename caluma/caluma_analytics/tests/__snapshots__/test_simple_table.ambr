@@ -1,43 +1,78 @@
-# name: test_run_analytics_direct
+# name: test_run_analytics_direct[cases]
   <class 'list'> [
     <class 'dict'> {
       'created_at': datetime.datetime(2022, 2, 1, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
-      'from_the_doc': 'Victoria Pena',
+      'from_the_doc': 'Annette Bradley',
+      'quarter': 1,
+      'statuuuuuus': 'running',
+    },
+    <class 'dict'> {
+      'created_at': datetime.datetime(2022, 2, 1, 0, 0, tzinfo=<UTC>),
+      'foo': None,
+      'from_the_doc': None,
       'quarter': 1,
       'statuuuuuus': 'running',
     },
     <class 'dict'> {
       'created_at': datetime.datetime(2022, 2, 2, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
-      'from_the_doc': 'Victoria Pena',
+      'from_the_doc': 'Brendan Anthony',
+      'quarter': 1,
+      'statuuuuuus': 'running',
+    },
+    <class 'dict'> {
+      'created_at': datetime.datetime(2022, 2, 2, 0, 0, tzinfo=<UTC>),
+      'foo': None,
+      'from_the_doc': None,
       'quarter': 1,
       'statuuuuuus': 'running',
     },
     <class 'dict'> {
       'created_at': datetime.datetime(2022, 2, 3, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
-      'from_the_doc': 'Victoria Pena',
+      'from_the_doc': 'Susan Valenzuela',
+      'quarter': 1,
+      'statuuuuuus': 'running',
+    },
+    <class 'dict'> {
+      'created_at': datetime.datetime(2022, 2, 3, 0, 0, tzinfo=<UTC>),
+      'foo': None,
+      'from_the_doc': None,
       'quarter': 1,
       'statuuuuuus': 'running',
     },
     <class 'dict'> {
       'created_at': datetime.datetime(2022, 2, 4, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
-      'from_the_doc': 'Victoria Pena',
+      'from_the_doc': 'Sherri Macias',
       'quarter': 1,
       'statuuuuuus': 'completed',
     },
     <class 'dict'> {
+      'created_at': datetime.datetime(2022, 2, 4, 0, 0, tzinfo=<UTC>),
+      'foo': None,
+      'from_the_doc': None,
+      'quarter': 1,
+      'statuuuuuus': 'running',
+    },
+    <class 'dict'> {
       'created_at': datetime.datetime(2022, 2, 5, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
-      'from_the_doc': 'Victoria Pena',
+      'from_the_doc': 'Nicholas Clarke',
       'quarter': 1,
       'statuuuuuus': 'suspended',
     },
+    <class 'dict'> {
+      'created_at': datetime.datetime(2022, 2, 5, 0, 0, tzinfo=<UTC>),
+      'foo': None,
+      'from_the_doc': None,
+      'quarter': 1,
+      'statuuuuuus': 'running',
+    },
   ]
 ---
-# name: test_run_analytics_gql[case__meta0-False]
+# name: test_run_analytics_gql[case__meta0-False-cases]
   <class 'dict'> {
     'analyticsTable': <class 'dict'> {
       'resultData': <class 'dict'> {
@@ -79,7 +114,7 @@
     },
   }
 ---
-# name: test_run_analytics_gql[case__meta0-True]
+# name: test_run_analytics_gql[case__meta0-True-cases]
   <class 'dict'> {
     'analyticsTable': <class 'dict'> {
       'resultData': <class 'dict'> {
