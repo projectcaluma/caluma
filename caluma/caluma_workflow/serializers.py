@@ -346,6 +346,36 @@ class ResumeCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
         return case
 
 
+class ReopenCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
+    id = serializers.GlobalIDField()
+    work_items = ListField(child=serializers.GlobalIDField(), required=True)
+
+    class Meta:
+        model = models.Case
+        fields = ["id", "work_items", "context"]
+
+    def validate(self, data):
+        domain_logic.ReopenCaseLogic.validate_for_reopen(
+            self.instance, self.instance.work_items.filter(pk__in=data["work_items"])
+        )
+
+        return super().validate(data)
+
+    @transaction.atomic
+    def update(self, case, validated_data):
+        user = self.context["request"].user
+
+        work_items = case.work_items.filter(pk__in=validated_data["work_items"])
+
+        domain_logic.ReopenCaseLogic.pre_reopen(case, work_items, user, self.context)
+
+        domain_logic.ReopenCaseLogic.do_reopen(case, work_items)
+
+        domain_logic.ReopenCaseLogic.post_reopen(case, work_items, user, self.context)
+
+        return case
+
+
 class CompleteWorkItemSerializer(ContextModelSerializer):
     id = serializers.GlobalIDField()
 
@@ -643,7 +673,9 @@ class WorkItemRedoTaskSerializer(ContextModelSerializer):
         )
 
         domain_logic.RedoWorkItemLogic.set_succeeding_work_item_status_redo(work_item)
+
         work_item = super().update(work_item, validated_data)
+
         work_item = domain_logic.RedoWorkItemLogic.post_redo(
             work_item, user, self.context_data
         )

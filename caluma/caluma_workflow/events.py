@@ -8,7 +8,7 @@ module = sys.modules[__name__]
 
 MODEL_ACTIONS = {
     "work_item": ["create", "complete", "cancel", "skip", "suspend", "resume", "redo"],
-    "case": ["create", "complete", "cancel", "suspend", "resume"],
+    "case": ["create", "complete", "cancel", "suspend", "resume", "reopen"],
 }
 
 # create "pre|post"_"create|complete|..."_"work_item|case" events in all given combinations
