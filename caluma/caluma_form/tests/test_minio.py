@@ -6,12 +6,12 @@ import urllib3
 from .. import storage_clients
 
 
-def is_badssl_down():
+def is_badssl_down():  # pragma: no cover
     """Return True if badssl.com is not reachable or down."""
     try:
         requests.get("https://badssl.com")
     except:  # noqa
-        return True  # pragma: no cover
+        return True
 
 
 @pytest.mark.parametrize(
