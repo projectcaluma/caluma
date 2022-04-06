@@ -1,5 +1,20 @@
 <!--next-version-placeholder-->
 
+# v8.0.0-beta.3 (6 April 2022)
+
+### Feature
+* **analytics:** Support for additional starting objects ([`4f24b5b`](https://github.com/projectcaluma/caluma/commit/4f24b5be997e194e0547129e9a5e2d43553b53f5))
+* **test:** Fixture for running a block of code at a given faked time ([`8e3ab7a`](https://github.com/projectcaluma/caluma/commit/8e3ab7a1ba389871c92143e7ca1494fdc18d2163))
+* Reopen case and ready work items ([`ed7ff26`](https://github.com/projectcaluma/caluma/commit/ed7ff267c08b5ed0e3258a1e527b492eb4e2fe93))
+* **analytics:** Summary row ([`4e7bd5c`](https://github.com/projectcaluma/caluma/commit/4e7bd5c391159fccab38f77d949c66251401457f))
+* **analytics:** Pivot table implementation ([`ccc6bab`](https://github.com/projectcaluma/caluma/commit/ccc6bab44a87d7b766f531694f4805ef5828b77c))
+* **test:** Add at_date fixture ([`649f657`](https://github.com/projectcaluma/caluma/commit/649f65735faf5b9e2adb7d5020dab744fd58cf3d))
+
+### Fix
+* **docker:** Fix standalone docker image command ([`93f2158`](https://github.com/projectcaluma/caluma/commit/93f215873cc82dbecc34aa4e21d477d77aa6b025))
+* **filter:** Do not crash on empty query param in filter ([`c9bb93c`](https://github.com/projectcaluma/caluma/commit/c9bb93c5204eba263f6bd96eb4d4b96a4faff6d2))
+* **graphene:** Write a failing test for the getRootForms query ([`d2dd1af`](https://github.com/projectcaluma/caluma/commit/d2dd1af6261ce85265f046fc54a1db59b739a358))
+
 # v8.0.0-beta.2 (24 March 2022)
 
 ### Fix
