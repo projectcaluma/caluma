@@ -435,12 +435,12 @@ class FilterSet(GrapheneFilterSetMixin, FilterSet):
     created_before = DateTimeFilter(
         field_name="created_at",
         lookup_expr="lt",
-        label="Only return entries created after the given DateTime (Exclusive)",
+        label="Only return entries created before the given DateTime (exclusive)",
     )
     created_after = DateTimeFilter(
         field_name="created_at",
         lookup_expr="gte",
-        label="Only return entries created at or before the given DateTime (Inclusive)",
+        label="Only return entries created at or after the given DateTime (inclusive)",
     )
 
 

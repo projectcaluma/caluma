@@ -34,12 +34,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -469,12 +467,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -611,12 +607,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       id: ID = null
@@ -661,12 +655,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       id: ID = null
@@ -842,12 +834,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -872,12 +862,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       search: String = null
@@ -1132,12 +1120,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -1247,12 +1233,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       questions: [ID] = null
@@ -1416,12 +1400,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -1473,12 +1455,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -1609,12 +1589,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -1681,12 +1659,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -1791,12 +1767,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       excludeForms: [ID] = null
@@ -1952,12 +1926,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -2301,12 +2273,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -2401,12 +2371,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -2434,12 +2402,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       search: String = null
@@ -2655,12 +2621,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       search: String = null
@@ -2682,12 +2646,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       search: String = null
@@ -2717,12 +2679,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       search: String = null
@@ -2749,12 +2709,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       search: String = null
@@ -2777,12 +2735,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       id: ID = null
@@ -2835,12 +2791,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       id: ID = null
@@ -2871,12 +2825,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       search: String = null
@@ -2906,12 +2858,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       excludeForms: [ID] = null
@@ -2939,12 +2889,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       rootDocument: ID = null
@@ -2966,12 +2914,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
     ): DynamicOptionConnection
     documentValidity(id: ID!, before: String = null, after: String = null, first: Int = null, last: Int = null): DocumentValidityConnection
@@ -3016,12 +2962,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -4246,12 +4190,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -4383,12 +4325,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -4589,12 +4529,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -4649,12 +4587,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
       metaValue: [JSONValueFilterType] = null
@@ -4932,12 +4868,10 @@
       modifiedByUser: String = null
       modifiedByGroup: String = null
   
-      """Only return entries created after the given DateTime (Exclusive)"""
+      """Only return entries created before the given DateTime (exclusive)"""
       createdBefore: DateTime = null
   
-      """
-      Only return entries created at or before the given DateTime (Inclusive)
-      """
+      """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
     ): FlowConnection
   }
