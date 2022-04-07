@@ -318,7 +318,6 @@ class ReopenCase(Mutation):
 
     class Meta:
         serializer_class = serializers.ReopenCaseSerializer
-        fields: ["id"]
         model_operations = ["update"]
 
 
