@@ -1,5 +1,12 @@
 <!--next-version-placeholder-->
 
+# v8.0.0-beta.4 (13 April 2022)
+
+### Fix
+* **deps:** Bump django from 3.2.12 to 3.2.13 ([`76b9e0a`](https://github.com/projectcaluma/caluma/commit/76b9e0aae601cb5de1f58b2671461b62fe0aeea4))
+* **docs:** Fix incorrect documentation of createdAfter and createdBefore filters ([`a8ba2bb`](https://github.com/projectcaluma/caluma/commit/a8ba2bb672939d9ad1676e7a7f19a29e66b8cb2d))
+
+
 # v8.0.0-beta.3 (6 April 2022)
 
 ### Feature
@@ -14,6 +21,7 @@
 * **docker:** Fix standalone docker image command ([`93f2158`](https://github.com/projectcaluma/caluma/commit/93f215873cc82dbecc34aa4e21d477d77aa6b025))
 * **filter:** Do not crash on empty query param in filter ([`c9bb93c`](https://github.com/projectcaluma/caluma/commit/c9bb93c5204eba263f6bd96eb4d4b96a4faff6d2))
 * **graphene:** Write a failing test for the getRootForms query ([`d2dd1af`](https://github.com/projectcaluma/caluma/commit/d2dd1af6261ce85265f046fc54a1db59b739a358))
+
 
 # v8.0.0-beta.2 (24 March 2022)
 
