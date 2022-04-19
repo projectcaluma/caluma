@@ -1,5 +1,11 @@
 <!--next-version-placeholder-->
 
+# v8.0.0-beta.5 (19 April 2022)
+
+### Fix
+* **deps:** Lock graphql-core to 3.1.x to avoid import error ([`04f35c8`](https://github.com/projectcaluma/caluma/commit/04f35c8d26a78a2c8f8a5ab943e3326677929516))
+
+
 # v8.0.0-beta.4 (13 April 2022)
 
 ### Fix
