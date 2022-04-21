@@ -209,7 +209,7 @@ class HasAnswerFilter(Filter):
     VALID_LOOKUPS["calculated_float"] = VALID_LOOKUPS["float"]
 
     def filter(self, qs, value):
-        if value in EMPTY_VALUES:
+        if value in EMPTY_VALUES:  # pragma: no cover
             return qs
 
         for expr in value:
@@ -286,15 +286,10 @@ class HasAnswerFilter(Filter):
     @staticmethod
     @convert_form_field.register(HasAnswerFilterField)
     def convert_meta_value_field(field):
-        registry = get_global_registry()
-        converted = registry.get_converted_field(field)
-        if converted:
-            return converted
-
         # the converted type must be list-of-filter, as we need to apply
         # multiple conditions
         converted = List(HasAnswerFilterType)
-        registry.register_converted_field(field, converted)
+        get_global_registry().register_converted_field(field, converted)
         return converted
 
 
@@ -336,7 +331,7 @@ class SearchAnswersFilter(Filter):
         super().__init__(*args, **kwargs)
 
     def filter(self, qs, value):
-        if value in EMPTY_VALUES:
+        if value in EMPTY_VALUES:  # pragma: no cover
             return qs
 
         assert isinstance(value, list)
@@ -487,7 +482,10 @@ class VisibleAnswerFilter(Filter):
     field_class = BooleanField
 
     def filter(self, qs, value):
-        if not value or not qs.exists():
+        if value in EMPTY_VALUES or not qs.exists():  # pragma: no cover
+            # This prevents initializing the whole document structure with JEXL
+            # computations if there is no value or no queryset to avoid useless
+            # expensive computations
             return qs
 
         # assuming qs can only ever be in the context of a single document

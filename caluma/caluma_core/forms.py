@@ -23,7 +23,7 @@ class GlobalIDMultipleChoiceField(forms.GlobalIDMultipleChoiceField):
     or plain primary key.
     """
 
-    def valid_value(self, value):
+    def valid_value(self, value):  # pragma: no cover
         return True
 
 
