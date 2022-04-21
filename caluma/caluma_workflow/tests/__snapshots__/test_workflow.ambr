@@ -1,154 +1,154 @@
 # name: test_add_workflow_flow[task-slug-"task-slug"|task-"task-slug"|task-True]
-  <class 'dict'> {
-    'addWorkflowFlow': <class 'dict'> {
+  dict({
+    'addWorkflowFlow': dict({
       'clientMutationId': None,
-      'workflow': <class 'dict'> {
-        'flows': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+      'workflow': dict({
+        'flows': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'createdByGroup': 'admin',
                 'createdByUser': 'admin',
                 'next': '"task-slug"|task',
-                'tasks': <class 'list'> [
-                  <class 'dict'> {
+                'tasks': list([
+                  dict({
                     'slug': 'task-slug',
-                  },
-                ],
-              },
-            },
-          ],
+                  }),
+                ]),
+              }),
+            }),
+          ]),
           'totalCount': 1,
-        },
-        'tasks': <class 'list'> [
-          <class 'dict'> {
+        }),
+        'tasks': list([
+          dict({
             'slug': 'season-fish-share',
-          },
-          <class 'dict'> {
+          }),
+          dict({
             'slug': 'song-light',
-          },
-          <class 'dict'> {
+          }),
+          dict({
             'slug': 'task-slug',
-          },
-        ],
-      },
-    },
-  }
----
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---
 # name: test_add_workflow_flow[task-slug-"task-slug"|task-None-True]
-  <class 'dict'> {
-    'addWorkflowFlow': <class 'dict'> {
+  dict({
+    'addWorkflowFlow': dict({
       'clientMutationId': None,
-      'workflow': <class 'dict'> {
-        'flows': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+      'workflow': dict({
+        'flows': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'createdByGroup': 'admin',
                 'createdByUser': 'admin',
                 'next': '"task-slug"|task',
-                'tasks': <class 'list'> [
-                  <class 'dict'> {
+                'tasks': list([
+                  dict({
                     'slug': 'task-slug',
-                  },
-                ],
-              },
-            },
-          ],
+                  }),
+                ]),
+              }),
+            }),
+          ]),
           'totalCount': 1,
-        },
-        'tasks': <class 'list'> [
-          <class 'dict'> {
+        }),
+        'tasks': list([
+          dict({
             'slug': 'season-fish-share',
-          },
-          <class 'dict'> {
+          }),
+          dict({
             'slug': 'song-light',
-          },
-          <class 'dict'> {
+          }),
+          dict({
             'slug': 'task-slug',
-          },
-        ],
-      },
-    },
-  }
----
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---
 # name: test_query_all_workflows
-  <class 'dict'> {
-    'allWorkflows': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allWorkflows': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             'allowAllForms': False,
-            'allowForms': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+            'allowForms': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
-              ],
-            },
-            'description': '
+                  }),
+                }),
+              ]),
+            }),
+            'description': '''
               Station story first. Team suggest traditional boy above. Argue move appear catch toward help wind.
               Kid avoid player relationship to range whose. Draw free property consider.
-            ',
-            'flows': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+            ''',
+            'flows': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     'next': 'life-just-live',
-                    'tasks': <class 'list'> [
-                      <class 'dict'> {
+                    'tasks': list([
+                      dict({
                         'slug': 'team-start-worker',
-                      },
-                    ],
-                  },
-                },
-              ],
+                      }),
+                    ]),
+                  }),
+                }),
+              ]),
               'totalCount': 1,
-            },
-            'meta': <class 'dict'> {
-            },
+            }),
+            'meta': dict({
+            }),
             'name': 'Bonnie Moreno',
             'slug': 'environmental-ten',
-            'startTasks': <class 'list'> [
-              <class 'dict'> {
+            'startTasks': list([
+              dict({
                 'slug': 'team-start-worker',
-              },
-            ],
-            'tasks': <class 'list'> [
-              <class 'dict'> {
+              }),
+            ]),
+            'tasks': list([
+              dict({
                 'slug': 'team-start-worker',
-              },
-            ],
-          },
-        },
-      ],
+              }),
+            ]),
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_workflow
-  <class 'dict'> {
-    'saveWorkflow': <class 'dict'> {
+  dict({
+    'saveWorkflow': dict({
       'clientMutationId': 'testid',
-      'workflow': <class 'dict'> {
+      'workflow': dict({
         'allowAllForms': False,
-        'allowForms': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+        'allowForms': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'slug': 'suggest-adult-allow',
-              },
-            },
-          ],
+              }),
+            }),
+          ]),
           'totalCount': 1,
-        },
-        'meta': <class 'dict'> {
-        },
+        }),
+        'meta': dict({
+        }),
         'name': 'Bonnie Moreno',
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---

@@ -1,128 +1,128 @@
 # name: test_run_analytics_direct[cases]
-  <class 'list'> [
-    <class 'dict'> {
+  list([
+    dict({
       'created_at': datetime.datetime(2022, 2, 1, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Annette Bradley',
       'quarter': 1,
       'statuuuuuus': 'running',
-    },
-    <class 'dict'> {
+    }),
+    dict({
       'created_at': datetime.datetime(2022, 2, 1, 0, 0, tzinfo=<UTC>),
       'foo': None,
       'from_the_doc': None,
       'quarter': 1,
       'statuuuuuus': 'running',
-    },
-    <class 'dict'> {
+    }),
+    dict({
       'created_at': datetime.datetime(2022, 2, 2, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Brendan Anthony',
       'quarter': 1,
       'statuuuuuus': 'running',
-    },
-    <class 'dict'> {
+    }),
+    dict({
       'created_at': datetime.datetime(2022, 2, 2, 0, 0, tzinfo=<UTC>),
       'foo': None,
       'from_the_doc': None,
       'quarter': 1,
       'statuuuuuus': 'running',
-    },
-    <class 'dict'> {
+    }),
+    dict({
       'created_at': datetime.datetime(2022, 2, 3, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Susan Valenzuela',
       'quarter': 1,
       'statuuuuuus': 'running',
-    },
-    <class 'dict'> {
+    }),
+    dict({
       'created_at': datetime.datetime(2022, 2, 3, 0, 0, tzinfo=<UTC>),
       'foo': None,
       'from_the_doc': None,
       'quarter': 1,
       'statuuuuuus': 'running',
-    },
-    <class 'dict'> {
+    }),
+    dict({
       'created_at': datetime.datetime(2022, 2, 4, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Sherri Macias',
       'quarter': 1,
       'statuuuuuus': 'completed',
-    },
-    <class 'dict'> {
+    }),
+    dict({
       'created_at': datetime.datetime(2022, 2, 4, 0, 0, tzinfo=<UTC>),
       'foo': None,
       'from_the_doc': None,
       'quarter': 1,
       'statuuuuuus': 'running',
-    },
-    <class 'dict'> {
+    }),
+    dict({
       'created_at': datetime.datetime(2022, 2, 5, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Nicholas Clarke',
       'quarter': 1,
       'statuuuuuus': 'suspended',
-    },
-    <class 'dict'> {
+    }),
+    dict({
       'created_at': datetime.datetime(2022, 2, 5, 0, 0, tzinfo=<UTC>),
       'foo': None,
       'from_the_doc': None,
       'quarter': 1,
       'statuuuuuus': 'running',
-    },
-  ]
----
+    }),
+  ])
+# ---
 # name: test_run_analytics_gql[case__meta0-False-cases]
-  <class 'dict'> {
-    'analyticsTable': <class 'dict'> {
-      'resultData': <class 'dict'> {
-        'records': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+  dict({
+    'analyticsTable': dict({
+      'resultData': dict({
+        'records': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'alias': 'statuuuuuus',
                       'value': 'running',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'alias': 'foo',
                       'value': 'bar',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'alias': 'created_at',
                       'value': '2021-10-10 00:00:00+00:00',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'alias': 'quarter',
                       'value': '4',
-                    },
-                  },
-                ],
-              },
-            },
-          ],
-        },
-      },
-    },
-  }
----
+                    }),
+                  }),
+                ]),
+              }),
+            }),
+          ]),
+        }),
+      }),
+    }),
+  })
+# ---
 # name: test_run_analytics_gql[case__meta0-True-cases]
-  <class 'dict'> {
-    'analyticsTable': <class 'dict'> {
-      'resultData': <class 'dict'> {
-        'records': <class 'dict'> {
-          'edges': <class 'list'> [
-          ],
-        },
-      },
-    },
-  }
----
+  dict({
+    'analyticsTable': dict({
+      'resultData': dict({
+        'records': dict({
+          'edges': list([
+          ]),
+        }),
+      }),
+    }),
+  })
+# ---

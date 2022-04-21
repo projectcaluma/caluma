@@ -1,460 +1,460 @@
 # name: test_complete_multiple_instance_task_form_work_item_next[integer-1]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'status': 'RUNNING',
-          'workItems': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
+          'workItems': dict({
+            'edges': list([
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
                     'group-name',
-                  ],
+                  ]),
                   'status': 'READY',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
+                }),
+              }),
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
                   'status': 'COMPLETED',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
+                }),
+              }),
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
                   'status': 'COMPLETED',
-                },
-              },
-            ],
+                }),
+              }),
+            ]),
             'totalCount': 3,
-          },
-        },
+          }),
+        }),
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_complete_work_item_last[ready-running-None-None-simple-None]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'closedByUser': 'admin',
           'status': 'COMPLETED',
-        },
+        }),
         'closedByUser': 'admin',
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_complete_work_item_last[ready-running-completed-None0-simple-None]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'closedByUser': 'admin',
           'status': 'COMPLETED',
-        },
+        }),
         'closedByUser': 'admin',
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_complete_work_item_last[ready-running-completed-None1-simple-None]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'closedByUser': 'admin',
           'status': 'COMPLETED',
-        },
+        }),
         'closedByUser': 'admin',
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_complete_work_item_with_next[["some-group"]|groups-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'status': 'RUNNING',
-          'workItems': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
+          'workItems': dict({
+            'edges': list([
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
+                  'controllingGroups': list([
                     'controlling-group1',
                     'controlling-group2',
-                  ],
+                  ]),
                   'status': 'COMPLETED',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
+                }),
+              }),
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
                     'some-group',
-                  ],
-                  'controllingGroups': <class 'list'> [
+                  ]),
+                  'controllingGroups': list([
                     'some-group',
-                  ],
+                  ]),
                   'status': 'READY',
-                },
-              },
-            ],
+                }),
+              }),
+            ]),
             'totalCount': 2,
-          },
-        },
+          }),
+        }),
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_complete_work_item_with_next[[]-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'status': 'RUNNING',
-          'workItems': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
+          'workItems': dict({
+            'edges': list([
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
+                  'controllingGroups': list([
                     'controlling-group1',
                     'controlling-group2',
-                  ],
+                  ]),
                   'status': 'COMPLETED',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
-                  ],
+                }),
+              }),
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
+                  'controllingGroups': list([
+                  ]),
                   'status': 'READY',
-                },
-              },
-            ],
+                }),
+              }),
+            ]),
             'totalCount': 2,
-          },
-        },
+          }),
+        }),
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_complete_work_item_with_next[[]-True-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'status': 'RUNNING',
-          'workItems': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
+          'workItems': dict({
+            'edges': list([
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
+                  'controllingGroups': list([
                     'controlling-group1',
                     'controlling-group2',
-                  ],
+                  ]),
                   'status': 'COMPLETED',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
-                  ],
+                }),
+              }),
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
+                  'controllingGroups': list([
+                  ]),
                   'status': 'READY',
-                },
-              },
-            ],
+                }),
+              }),
+            ]),
             'totalCount': 2,
-          },
-        },
+          }),
+        }),
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_complete_work_item_with_next[[info.case.created_by_group, info.work_item.created_by_group]-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'status': 'RUNNING',
-          'workItems': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
+          'workItems': dict({
+            'edges': list([
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
+                  'controllingGroups': list([
                     'controlling-group1',
                     'controlling-group2',
-                  ],
+                  ]),
                   'status': 'COMPLETED',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
+                }),
+              }),
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
                     'case-creating-group',
                     'fake-user-group',
-                  ],
-                  'controllingGroups': <class 'list'> [
+                  ]),
+                  'controllingGroups': list([
                     'case-creating-group',
                     'fake-user-group',
-                  ],
+                  ]),
                   'status': 'READY',
-                },
-              },
-            ],
+                }),
+              }),
+            ]),
             'totalCount': 2,
-          },
-        },
+          }),
+        }),
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_complete_work_item_with_next[[info.case.created_by_group, info.work_item.created_by_group]-True-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'status': 'RUNNING',
-          'workItems': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
+          'workItems': dict({
+            'edges': list([
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
+                  'controllingGroups': list([
                     'controlling-group1',
                     'controlling-group2',
-                  ],
+                  ]),
                   'status': 'COMPLETED',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
+                }),
+              }),
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
                     'case-creating-group',
-                  ],
-                  'controllingGroups': <class 'list'> [
+                  ]),
+                  'controllingGroups': list([
                     'case-creating-group',
                     'fake-user-group',
-                  ],
+                  ]),
                   'status': 'READY',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
+                }),
+              }),
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
                     'fake-user-group',
-                  ],
-                  'controllingGroups': <class 'list'> [
+                  ]),
+                  'controllingGroups': list([
                     'case-creating-group',
                     'fake-user-group',
-                  ],
+                  ]),
                   'status': 'READY',
-                },
-              },
-            ],
+                }),
+              }),
+            ]),
             'totalCount': 3,
-          },
-        },
+          }),
+        }),
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_complete_work_item_with_next[[info.case.created_by_group, info.work_item.created_by_group]|groups-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'status': 'RUNNING',
-          'workItems': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
+          'workItems': dict({
+            'edges': list([
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
+                  'controllingGroups': list([
                     'controlling-group1',
                     'controlling-group2',
-                  ],
+                  ]),
                   'status': 'COMPLETED',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
+                }),
+              }),
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
                     'case-creating-group',
                     'fake-user-group',
-                  ],
-                  'controllingGroups': <class 'list'> [
+                  ]),
+                  'controllingGroups': list([
                     'case-creating-group',
                     'fake-user-group',
-                  ],
+                  ]),
                   'status': 'READY',
-                },
-              },
-            ],
+                }),
+              }),
+            ]),
             'totalCount': 2,
-          },
-        },
+          }),
+        }),
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_complete_work_item_with_next[info.case.created_by_group-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'status': 'RUNNING',
-          'workItems': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
+          'workItems': dict({
+            'edges': list([
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
+                  'controllingGroups': list([
                     'controlling-group1',
                     'controlling-group2',
-                  ],
+                  ]),
                   'status': 'COMPLETED',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
+                }),
+              }),
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
                     'case-creating-group',
-                  ],
-                  'controllingGroups': <class 'list'> [
+                  ]),
+                  'controllingGroups': list([
                     'case-creating-group',
-                  ],
+                  ]),
                   'status': 'READY',
-                },
-              },
-            ],
+                }),
+              }),
+            ]),
             'totalCount': 2,
-          },
-        },
+          }),
+        }),
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_complete_work_item_with_next[info.prev_work_item.controlling_groups-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'status': 'RUNNING',
-          'workItems': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
+          'workItems': dict({
+            'edges': list([
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
+                  'controllingGroups': list([
                     'controlling-group1',
                     'controlling-group2',
-                  ],
+                  ]),
                   'status': 'COMPLETED',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
+                }),
+              }),
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
                     'controlling-group1',
                     'controlling-group2',
-                  ],
-                  'controllingGroups': <class 'list'> [
+                  ]),
+                  'controllingGroups': list([
                     'controlling-group1',
                     'controlling-group2',
-                  ],
+                  ]),
                   'status': 'READY',
-                },
-              },
-            ],
+                }),
+              }),
+            ]),
             'totalCount': 2,
-          },
-        },
+          }),
+        }),
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_complete_work_item_with_next[info.work_item.created_by_group-False-ready-None-simple-work_item__controlling_groups0-work-item-creating-group-case-creating-group]
-  <class 'dict'> {
-    'completeWorkItem': <class 'dict'> {
+  dict({
+    'completeWorkItem': dict({
       'clientMutationId': None,
-      'workItem': <class 'dict'> {
-        'case': <class 'dict'> {
+      'workItem': dict({
+        'case': dict({
           'status': 'RUNNING',
-          'workItems': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
-                  ],
-                  'controllingGroups': <class 'list'> [
+          'workItems': dict({
+            'edges': list([
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
+                  ]),
+                  'controllingGroups': list([
                     'controlling-group1',
                     'controlling-group2',
-                  ],
+                  ]),
                   'status': 'COMPLETED',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
-                  'addressedGroups': <class 'list'> [
+                }),
+              }),
+              dict({
+                'node': dict({
+                  'addressedGroups': list([
                     'fake-user-group',
-                  ],
-                  'controllingGroups': <class 'list'> [
+                  ]),
+                  'controllingGroups': list([
                     'fake-user-group',
-                  ],
+                  ]),
                   'status': 'READY',
-                },
-              },
-            ],
+                }),
+              }),
+            ]),
             'totalCount': 2,
-          },
-        },
+          }),
+        }),
         'status': 'COMPLETED',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
