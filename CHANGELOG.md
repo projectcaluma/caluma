@@ -1,5 +1,3 @@
-<!--next-version-placeholder-->
-
 # v8.0.0-beta.5 (19 April 2022)
 
 ### Fix
