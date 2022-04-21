@@ -1,10 +1,10 @@
 from django.core.exceptions import ValidationError
 from django.utils import timezone
 
+from caluma.caluma_core.events import send_event
 from caluma.caluma_form.domain_logic import SaveDocumentLogic
 
-from . import api, models, utils, validators
-from .events import send_event_with_deprecations
+from . import api, events, models, utils, validators
 
 
 class StartCaseLogic:
@@ -36,8 +36,8 @@ class StartCaseLogic:
 
     @staticmethod
     def pre_start(validated_data, user, context=None):
-        send_event_with_deprecations(
-            "pre_create_case",
+        send_event(
+            events.pre_create_case,
             sender="pre_create_case",
             case=None,
             validated_data=validated_data,
@@ -75,8 +75,8 @@ class StartCaseLogic:
 
         work_items = utils.create_work_items(tasks, case, user, None, context)
 
-        send_event_with_deprecations(
-            "post_create_case",
+        send_event(
+            events.post_create_case,
             sender="case_post_create",
             case=case,
             user=user,
@@ -84,8 +84,8 @@ class StartCaseLogic:
         )
 
         for work_item in work_items:  # pragma: no cover
-            send_event_with_deprecations(
-                "post_create_work_item",
+            send_event(
+                events.post_create_work_item,
                 sender="case_post_create",
                 work_item=work_item,
                 user=user,
@@ -129,10 +129,10 @@ class CompleteWorkItemLogic:
         validated_data,
         user,
         context=None,
-        event="pre_complete_work_item",
+        event=events.pre_complete_work_item,
         sender="pre_complete_work_item",
     ):
-        send_event_with_deprecations(
+        send_event(
             event, sender=sender, work_item=work_item, user=user, context=context
         )
 
@@ -148,12 +148,12 @@ class CompleteWorkItemLogic:
         work_item,
         user,
         context=None,
-        event="post_complete_work_item",
+        event=events.post_complete_work_item,
         sender="post_complete_work_item",
     ):
         case = work_item.case
 
-        send_event_with_deprecations(
+        send_event(
             event, sender=sender, work_item=work_item, user=user, context=context
         )
 
@@ -185,8 +185,8 @@ class CompleteWorkItemLogic:
                 )
 
                 for created_work_item in created_work_items:  # pragma: no cover
-                    send_event_with_deprecations(
-                        "post_create_work_item",
+                    send_event(
+                        events.post_create_work_item,
                         sender=sender,
                         work_item=created_work_item,
                         user=user,
@@ -206,8 +206,8 @@ class CompleteWorkItemLogic:
             case.closed_by_group = user.group
             case.save()
 
-            send_event_with_deprecations(
-                "post_complete_case",
+            send_event(
+                events.post_complete_case,
                 sender=sender,
                 case=case,
                 user=user,
@@ -233,7 +233,7 @@ class SkipWorkItemLogic:
             validated_data,
             user,
             context,
-            event="pre_skip_work_item",
+            event=events.pre_skip_work_item,
             sender="pre_skip_work_item",
         )
 
@@ -253,7 +253,7 @@ class SkipWorkItemLogic:
             work_item,
             user,
             context,
-            event="post_skip_work_item",
+            event=events.post_skip_work_item,
             sender="post_skip_work_item",
         )
 
@@ -281,8 +281,8 @@ class CancelCaseLogic:
 
     @staticmethod
     def pre_cancel(case, validated_data, user, context=None):
-        send_event_with_deprecations(
-            "pre_cancel_case",
+        send_event(
+            events.pre_cancel_case,
             sender="pre_cancel_case",
             case=case,
             user=user,
@@ -303,8 +303,8 @@ class CancelCaseLogic:
 
     @staticmethod
     def post_cancel(case, user, context=None):
-        send_event_with_deprecations(
-            "post_cancel_case",
+        send_event(
+            events.post_cancel_case,
             sender="post_cancel_case",
             case=case,
             user=user,
@@ -332,8 +332,8 @@ class SuspendCaseLogic:
 
     @staticmethod
     def pre_suspend(case, validated_data, user, context=None):
-        send_event_with_deprecations(
-            "pre_suspend_case",
+        send_event(
+            events.pre_suspend_case,
             sender="pre_suspend_case",
             case=case,
             user=user,
@@ -349,8 +349,8 @@ class SuspendCaseLogic:
 
     @staticmethod
     def post_suspend(case, user, context=None):
-        send_event_with_deprecations(
-            "post_suspend_case",
+        send_event(
+            events.post_suspend_case,
             sender="post_suspend_case",
             case=case,
             user=user,
@@ -395,8 +395,8 @@ class ReopenCaseLogic:
 
     @staticmethod
     def pre_reopen(case, work_items, user, context=None):
-        send_event_with_deprecations(
-            "pre_reopen_case",
+        send_event(
+            events.pre_reopen_case,
             sender="pre_reopen_case",
             case=case,
             user=user,
@@ -406,8 +406,8 @@ class ReopenCaseLogic:
 
     @staticmethod
     def post_reopen(case, work_items, user, context=None):
-        send_event_with_deprecations(
-            "post_reopen_case",
+        send_event(
+            events.post_reopen_case,
             sender="post_reopen_case",
             case=case,
             user=user,
@@ -443,8 +443,8 @@ class ResumeCaseLogic:
 
     @staticmethod
     def pre_resume(case, validated_data, user, context=None):
-        send_event_with_deprecations(
-            "pre_resume_case",
+        send_event(
+            events.pre_resume_case,
             sender="pre_resume_case",
             case=case,
             user=user,
@@ -462,8 +462,8 @@ class ResumeCaseLogic:
 
     @staticmethod
     def post_resume(case, user, context=None):
-        send_event_with_deprecations(
-            "post_resume_case",
+        send_event(
+            events.post_resume_case,
             sender="post_resume_case",
             case=case,
             user=user,
@@ -484,8 +484,8 @@ class CancelWorkItemLogic:
 
     @staticmethod
     def pre_cancel(work_item, validated_data, user, context=None):
-        send_event_with_deprecations(
-            "pre_cancel_work_item",
+        send_event(
+            events.pre_cancel_work_item,
             sender="pre_cancel_work_item",
             work_item=work_item,
             user=user,
@@ -507,8 +507,8 @@ class CancelWorkItemLogic:
 
     @staticmethod
     def post_cancel(work_item, user, context=None):
-        send_event_with_deprecations(
-            "post_cancel_work_item",
+        send_event(
+            events.post_cancel_work_item,
             sender="post_cancel_work_item",
             work_item=work_item,
             user=user,
@@ -526,8 +526,8 @@ class SuspendWorkItemLogic:
 
     @staticmethod
     def pre_suspend(work_item, validated_data, user, context=None):
-        send_event_with_deprecations(
-            "pre_suspend_work_item",
+        send_event(
+            events.pre_suspend_work_item,
             sender="pre_suspend_work_item",
             work_item=work_item,
             user=user,
@@ -546,8 +546,8 @@ class SuspendWorkItemLogic:
 
     @staticmethod
     def post_suspend(work_item, user, context=None):
-        send_event_with_deprecations(
-            "post_suspend_work_item",
+        send_event(
+            events.post_suspend_work_item,
             sender="post_suspend_work_item",
             work_item=work_item,
             user=user,
@@ -565,8 +565,8 @@ class ResumeWorkItemLogic:
 
     @staticmethod
     def pre_resume(work_item, validated_data, user, context=None):
-        send_event_with_deprecations(
-            "pre_resume_work_item",
+        send_event(
+            events.pre_resume_work_item,
             sender="pre_resume_work_item",
             work_item=work_item,
             user=user,
@@ -585,8 +585,8 @@ class ResumeWorkItemLogic:
 
     @staticmethod
     def post_resume(work_item, user, context=None):
-        send_event_with_deprecations(
-            "post_resume_work_item",
+        send_event(
+            events.post_resume_work_item,
             sender="post_resume_work_item",
             work_item=work_item,
             user=user,
@@ -637,8 +637,8 @@ class RedoWorkItemLogic:
 
     @staticmethod
     def pre_redo(work_item, validated_data, user, context=None):
-        send_event_with_deprecations(
-            "pre_redo_work_item",
+        send_event(
+            events.pre_redo_work_item,
             sender="pre_redo_work_item",
             work_item=work_item,
             user=user,
@@ -651,8 +651,8 @@ class RedoWorkItemLogic:
 
     @staticmethod
     def post_redo(work_item, user, context=None):
-        send_event_with_deprecations(
-            "post_redo_work_item",
+        send_event(
+            events.post_redo_work_item,
             sender="post_redo_work_item",
             work_item=work_item,
             user=user,
