@@ -1,126 +1,126 @@
 # name: test_query_all_forms[First result-1st-float]
-  <class 'dict'> {
-    'allForms': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allForms': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             'description': 'First result',
             'id': 'Rm9ybTplbnZpcm9ubWVudGFsLXRlbg==',
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'name': '1st',
-            'questions': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+            'questions': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     'id': 'RmxvYXRRdWVzdGlvbjpyZWR1Y2UtYWdhaW5zdA==',
                     'label': 'Derek Mendoza',
                     'slug': 'reduce-against',
-                  },
-                },
-              ],
-            },
+                  }),
+                }),
+              ]),
+            }),
             'slug': 'environmental-ten',
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
+          }),
+        }),
+        dict({
+          'node': dict({
             'description': 'Second result',
             'id': 'Rm9ybTpsb3NzLWxlYXJu',
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'name': '2nd',
-            'questions': <class 'dict'> {
-              'edges': <class 'list'> [
-              ],
-            },
+            'questions': dict({
+              'edges': list([
+              ]),
+            }),
             'slug': 'loss-learn',
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
+          }),
+        }),
+        dict({
+          'node': dict({
             'description': 'Second result',
             'id': 'Rm9ybTpzb25nLWxpZ2h0',
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'name': '3rd',
-            'questions': <class 'dict'> {
-              'edges': <class 'list'> [
-              ],
-            },
+            'questions': dict({
+              'edges': list([
+              ]),
+            }),
             'slug': 'song-light',
-          },
-        },
-      ],
-    },
-  }
----
+          }),
+        }),
+      ]),
+    }),
+  })
+# ---
 # name: test_remove_form_question
-  <class 'dict'> {
-    'removeFormQuestion': <class 'dict'> {
+  dict({
+    'removeFormQuestion': dict({
       'clientMutationId': None,
-      'form': <class 'dict'> {
-        'questions': <class 'dict'> {
-          'edges': <class 'list'> [
-          ],
-        },
-      },
-    },
-  }
----
+      'form': dict({
+        'questions': dict({
+          'edges': list([
+          ]),
+        }),
+      }),
+    }),
+  })
+# ---
 # name: test_save_form[-de]
-  <class 'dict'> {
-    'saveForm': <class 'dict'> {
+  dict({
+    'saveForm': dict({
       'clientMutationId': 'testid',
-      'form': <class 'dict'> {
+      'form': dict({
         'id': 'Rm9ybTplbnZpcm9ubWVudGFsLXRlbg==',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'name': 'Bonnie Moreno',
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_form[-en]
-  <class 'dict'> {
-    'saveForm': <class 'dict'> {
+  dict({
+    'saveForm': dict({
       'clientMutationId': 'testid',
-      'form': <class 'dict'> {
+      'form': dict({
         'id': 'Rm9ybTplbnZpcm9ubWVudGFsLXRlbg==',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'name': 'Bonnie Moreno',
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_form[some description text-de]
-  <class 'dict'> {
-    'saveForm': <class 'dict'> {
+  dict({
+    'saveForm': dict({
       'clientMutationId': 'testid',
-      'form': <class 'dict'> {
+      'form': dict({
         'id': 'Rm9ybTplbnZpcm9ubWVudGFsLXRlbg==',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'name': 'Bonnie Moreno',
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_form[some description text-en]
-  <class 'dict'> {
-    'saveForm': <class 'dict'> {
+  dict({
+    'saveForm': dict({
       'clientMutationId': 'testid',
-      'form': <class 'dict'> {
+      'form': dict({
         'id': 'Rm9ybTplbnZpcm9ubWVudGFsLXRlbg==',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'name': 'Bonnie Moreno',
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---

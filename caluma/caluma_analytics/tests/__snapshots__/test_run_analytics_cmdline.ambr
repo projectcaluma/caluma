@@ -1,36 +1,36 @@
 # name: test_cmdline_output[output_mode0-False-expect_output1-cases]
-  <class 'dict'> {
-    'data': <class 'list'> [
+  dict({
+    'data': list([
       '------------------------------------   --------------  ',
       'case1pk   Shelly Watson   ',
       'case2pk   Daniel Stewart  ',
       'case3pk   Annette Mason   ',
       'case_id                                blablub         ',
-    ],
+    ]),
     'stderr': '',
-  }
----
+  })
+# ---
 # name: test_cmdline_output[output_mode0-True-expect_output0-cases]
-  <class 'dict'> {
-    'data': <class 'list'> [
+  dict({
+    'data': list([
       '------------------------------------   --------------  ',
       'case1pk   Shelly Watson   ',
       'case2pk   Daniel Stewart  ',
       'case_id                                blablub         ',
-    ],
+    ]),
     'stderr': '',
-  }
----
+  })
+# ---
 # name: test_cmdline_output[output_mode1-False-expect_output1-cases]
-  <class 'dict'> {
-    'data': <class 'list'> [
+  dict({
+    'data': list([
       '------------------------------------   --------------  ',
       'case1pk   Shelly Watson   ',
       'case2pk   Daniel Stewart  ',
       'case3pk   Annette Mason   ',
       'case_id                                blablub         ',
-    ],
-    'stderr': '
+    ]),
+    'stderr': '''
       -- SQL: 
       WITH
           case_ac50e AS (SELECT "caluma_workflow_case"."created_at",  
@@ -110,18 +110,18 @@
       ) AS analytics_247d1
       -- PARAMS: 
   
-    ',
-  }
----
+    ''',
+  })
+# ---
 # name: test_cmdline_output[output_mode1-True-expect_output0-cases]
-  <class 'dict'> {
-    'data': <class 'list'> [
+  dict({
+    'data': list([
       '------------------------------------   --------------  ',
       'case1pk   Shelly Watson   ',
       'case2pk   Daniel Stewart  ',
       'case_id                                blablub         ',
-    ],
-    'stderr': '
+    ]),
+    'stderr': '''
       -- SQL: 
       WITH
           case_ac50e AS (SELECT "caluma_workflow_case"."created_at",  
@@ -204,14 +204,14 @@
       --     flt_analytics_result_blablub_8201d: Shelly Watson
       --     flt_analytics_result_blablub_8e5e6: Daniel Stewart
   
-    ',
-  }
----
+    ''',
+  })
+# ---
 # name: test_cmdline_output[output_mode2-False-expect_output1-cases]
-  <class 'dict'> {
-    'data': <class 'list'> [
-    ],
-    'stderr': '
+  dict({
+    'data': list([
+    ]),
+    'stderr': '''
       -- SQL: 
       WITH
           case_ac50e AS (SELECT "caluma_workflow_case"."created_at",  
@@ -291,14 +291,14 @@
       ) AS analytics_247d1
       -- PARAMS: 
   
-    ',
-  }
----
+    ''',
+  })
+# ---
 # name: test_cmdline_output[output_mode2-True-expect_output0-cases]
-  <class 'dict'> {
-    'data': <class 'list'> [
-    ],
-    'stderr': '
+  dict({
+    'data': list([
+    ]),
+    'stderr': '''
       -- SQL: 
       WITH
           case_ac50e AS (SELECT "caluma_workflow_case"."created_at",  
@@ -381,48 +381,48 @@
       --     flt_analytics_result_blablub_8201d: Shelly Watson
       --     flt_analytics_result_blablub_8e5e6: Daniel Stewart
   
-    ',
-  }
----
+    ''',
+  })
+# ---
 # name: test_cmdline_output[output_mode3-False-expect_output1-cases]
-  <class 'dict'> {
-    'data': <class 'list'> [
-      <class 'dict'> {
+  dict({
+    'data': list([
+      dict({
         'blablub': 'Annette Mason',
         'case_id': 'case3pk',
-      },
-      <class 'dict'> {
+      }),
+      dict({
         'blablub': 'Daniel Stewart',
         'case_id': 'case2pk',
-      },
-      <class 'dict'> {
+      }),
+      dict({
         'blablub': 'Shelly Watson',
         'case_id': 'case1pk',
-      },
-    ],
+      }),
+    ]),
     'stderr': '',
-  }
----
+  })
+# ---
 # name: test_cmdline_output[output_mode3-True-expect_output0-cases]
-  <class 'dict'> {
-    'data': <class 'list'> [
-      <class 'dict'> {
+  dict({
+    'data': list([
+      dict({
         'blablub': 'Daniel Stewart',
         'case_id': 'case2pk',
-      },
-      <class 'dict'> {
+      }),
+      dict({
         'blablub': 'Shelly Watson',
         'case_id': 'case1pk',
-      },
-    ],
+      }),
+    ]),
     'stderr': '',
-  }
----
+  })
+# ---
 # name: test_list_tables
-  '
+  '''
   No analytics table specified. The following tables are available:
     ID:                  NAME:
     environmental-ten    Bonnie Moreno
   
-  '
----
+  '''
+# ---

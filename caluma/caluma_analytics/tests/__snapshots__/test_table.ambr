@@ -1,351 +1,351 @@
 # name: test_add_field[created_at.quarter-False]
-  <class 'dict'> {
-    'saveAnalyticsField': <class 'dict'> {
-      'analyticsField': <class 'dict'> {
-        'table': <class 'dict'> {
-          'fields': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
+  dict({
+    'saveAnalyticsField': dict({
+      'analyticsField': dict({
+        'table': dict({
+          'fields': dict({
+            'edges': list([
+              dict({
+                'node': dict({
                   'alias': 'some_alias',
                   'dataSource': 'created_at.quarter',
-                },
-              },
-            ],
-          },
+                }),
+              }),
+            ]),
+          }),
           'name': 'Bonnie Moreno',
-        },
-      },
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_add_field[invalid_field-True]
-  <class 'dict'> {
+  dict({
     'saveAnalyticsField': None,
-  }
----
+  })
+# ---
 # name: test_add_field[meta.foobar-False]
-  <class 'dict'> {
-    'saveAnalyticsField': <class 'dict'> {
-      'analyticsField': <class 'dict'> {
-        'table': <class 'dict'> {
-          'fields': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
+  dict({
+    'saveAnalyticsField': dict({
+      'analyticsField': dict({
+        'table': dict({
+          'fields': dict({
+            'edges': list([
+              dict({
+                'node': dict({
                   'alias': 'some_alias',
                   'dataSource': 'meta.foobar',
-                },
-              },
-            ],
-          },
+                }),
+              }),
+            ]),
+          }),
           'name': 'Bonnie Moreno',
-        },
-      },
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_add_field_validations[created_at.quarter-quarter-None-None]
-  <class 'dict'> {
-    'saveAnalyticsField': <class 'dict'> {
-      'analyticsField': <class 'dict'> {
-        'table': <class 'dict'> {
-          'fields': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
+  dict({
+    'saveAnalyticsField': dict({
+      'analyticsField': dict({
+        'table': dict({
+          'fields': dict({
+            'edges': list([
+              dict({
+                'node': dict({
                   'alias': 'quarter',
                   'dataSource': 'created_at.quarter',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
+                }),
+              }),
+              dict({
+                'node': dict({
                   'alias': 'existing',
                   'dataSource': 'meta.foobar',
-                },
-              },
-            ],
-          },
+                }),
+              }),
+            ]),
+          }),
           'name': 'Bonnie Moreno',
-        },
-      },
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_add_field_validations[invalid_field-foo-Specified data source 'invalid_field' is not available-dataSource]
-  <class 'dict'> {
+  dict({
     'saveAnalyticsField': None,
-  }
----
+  })
+# ---
 # name: test_add_field_validations[meta.baz-foobar-None-None]
-  <class 'dict'> {
-    'saveAnalyticsField': <class 'dict'> {
-      'analyticsField': <class 'dict'> {
-        'table': <class 'dict'> {
-          'fields': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
+  dict({
+    'saveAnalyticsField': dict({
+      'analyticsField': dict({
+        'table': dict({
+          'fields': dict({
+            'edges': list([
+              dict({
+                'node': dict({
                   'alias': 'foobar',
                   'dataSource': 'meta.baz',
-                },
-              },
-              <class 'dict'> {
-                'node': <class 'dict'> {
+                }),
+              }),
+              dict({
+                'node': dict({
                   'alias': 'existing',
                   'dataSource': 'meta.foobar',
-                },
-              },
-            ],
-          },
+                }),
+              }),
+            ]),
+          }),
           'name': 'Bonnie Moreno',
-        },
-      },
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_add_field_validations[meta.foobar-existing-duplicate key value violates unique constraint "unique_alias"-alias]
-  <class 'dict'> {
+  dict({
     'saveAnalyticsField': None,
-  }
----
+  })
+# ---
 # name: test_add_field_validations[meta.foobar-foobar-duplicate key value violates unique constraint "unique_data_source"-dataSource]
-  <class 'dict'> {
+  dict({
     'saveAnalyticsField': None,
-  }
----
+  })
+# ---
 # name: test_available_fields[None-None]
-  <class 'dict'> {
-    'analyticsTable': <class 'dict'> {
-      'availableFields': <class 'dict'> {
-        'edges': <class 'list'> [
-          <class 'dict'> {
-            'node': <class 'dict'> {
+  dict({
+    'analyticsTable': dict({
+      'availableFields': dict({
+        'edges': list([
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y2xvc2VkX2F0',
               'isLeaf': False,
               'label': 'closed_at',
               'sourcePath': 'closed_at',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdA==',
               'isLeaf': False,
               'label': 'created_at',
               'sourcePath': 'created_at',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6aWQ=',
               'isLeaf': True,
               'label': 'id',
               'sourcePath': 'id',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YQ==',
               'isLeaf': False,
               'label': 'Meta',
               'sourcePath': 'meta',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6c3RhdHVz',
               'isLeaf': True,
               'label': 'status',
               'sourcePath': 'status',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6dGFza19pZA==',
               'isLeaf': True,
               'label': 'task_id',
               'sourcePath': 'task_id',
-            },
-          },
-        ],
-      },
-    },
-  }
----
+            }),
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---
 # name: test_available_fields[created_at-1]
-  <class 'dict'> {
-    'analyticsTable': <class 'dict'> {
-      'availableFields': <class 'dict'> {
-        'edges': <class 'list'> [
-          <class 'dict'> {
-            'node': <class 'dict'> {
+  dict({
+    'analyticsTable': dict({
+      'availableFields': dict({
+        'edges': list([
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5tb250aA==',
               'isLeaf': True,
               'label': 'month',
               'sourcePath': 'created_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5xdWFydGVy',
               'isLeaf': True,
               'label': 'quarter',
               'sourcePath': 'created_at.quarter',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC53ZWVrZGF5',
               'isLeaf': True,
               'label': 'weekday',
               'sourcePath': 'created_at.weekday',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC55ZWFy',
               'isLeaf': True,
               'label': 'year',
               'sourcePath': 'created_at.year',
-            },
-          },
-        ],
-      },
-    },
-  }
----
+            }),
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---
 # name: test_available_fields[created_at-2]
-  <class 'dict'> {
-    'analyticsTable': <class 'dict'> {
-      'availableFields': <class 'dict'> {
-        'edges': <class 'list'> [
-          <class 'dict'> {
-            'node': <class 'dict'> {
+  dict({
+    'analyticsTable': dict({
+      'availableFields': dict({
+        'edges': list([
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5tb250aA==',
               'isLeaf': True,
               'label': 'month',
               'sourcePath': 'created_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5xdWFydGVy',
               'isLeaf': True,
               'label': 'quarter',
               'sourcePath': 'created_at.quarter',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC53ZWVrZGF5',
               'isLeaf': True,
               'label': 'weekday',
               'sourcePath': 'created_at.weekday',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC55ZWFy',
               'isLeaf': True,
               'label': 'year',
               'sourcePath': 'created_at.year',
-            },
-          },
-        ],
-      },
-    },
-  }
----
+            }),
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---
 # name: test_available_fields[created_at.year-1]
-  <class 'dict'> {
-    'analyticsTable': <class 'dict'> {
-      'availableFields': <class 'dict'> {
-        'edges': <class 'list'> [
-        ],
-      },
-    },
-  }
----
+  dict({
+    'analyticsTable': dict({
+      'availableFields': dict({
+        'edges': list([
+        ]),
+      }),
+    }),
+  })
+# ---
 # name: test_available_fields[meta-1]
-  <class 'dict'> {
-    'analyticsTable': <class 'dict'> {
-      'availableFields': <class 'dict'> {
-        'edges': <class 'list'> [
-          <class 'dict'> {
-            'node': <class 'dict'> {
+  dict({
+    'analyticsTable': dict({
+      'availableFields': dict({
+        'edges': list([
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YS5mb29iYXI=',
               'isLeaf': True,
               'label': "Key 'foobar'",
               'sourcePath': 'meta.foobar',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YS50ZXN0LWtleQ==',
               'isLeaf': True,
               'label': "Key 'test-key'",
               'sourcePath': 'meta.test-key',
-            },
-          },
-        ],
-      },
-    },
-  }
----
+            }),
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---
 # name: test_create_table
-  <class 'dict'> {
-    'saveAnalyticsTable': <class 'dict'> {
-      'analyticsTable': <class 'dict'> {
-        'availableFields': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+  dict({
+    'saveAnalyticsTable': dict({
+      'analyticsTable': dict({
+        'availableFields': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'isLeaf': False,
                 'label': 'closed_at',
                 'sourcePath': 'closed_at',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'isLeaf': False,
                 'label': 'created_at',
                 'sourcePath': 'created_at',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'isLeaf': True,
                 'label': 'id',
                 'sourcePath': 'id',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'isLeaf': False,
                 'label': 'Meta',
                 'sourcePath': 'meta',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'isLeaf': True,
                 'label': 'status',
                 'sourcePath': 'status',
-              },
-            },
-          ],
-        },
+              }),
+            }),
+          ]),
+        }),
         'name': 'Test table thingy',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_full_field_list[False]
-  <class 'list'> [
+  list([
     'closed_at',
     'closed_at.month',
     'closed_at.quarter',
@@ -453,197 +453,197 @@
     'workitem[baby-room-note,lastclosed].meta.test-key',
     'workitem[baby-room-note,lastclosed].name',
     'workitem[baby-room-note,lastclosed].status',
-  ]
----
+  ])
+# ---
 # name: test_full_field_list[True]
-  <class 'dict'> {
-    'analyticsTable': <class 'dict'> {
-      'availableFields': <class 'dict'> {
-        'edges': <class 'list'> [
-          <class 'dict'> {
-            'node': <class 'dict'> {
+  dict({
+    'analyticsTable': dict({
+      'availableFields': dict({
+        'edges': list([
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tyb3dfZm9ybV0=',
               'isLeaf': False,
               'label': 'answers[row_form]',
               'sourcePath': 'answers[row_form]',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tyb3dfZm9ybV0uY29sdW1u',
               'isLeaf': True,
               'label': 'column',
               'sourcePath': 'answers[row_form].column',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzb21lb25lLW1vdGhlcl0=',
               'isLeaf': False,
               'label': 'answers[someone-mother]',
               'sourcePath': 'answers[someone-mother]',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWJfZm9ybV0=',
               'isLeaf': False,
               'label': 'answers[sub_form]',
               'sourcePath': 'answers[sub_form]',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWJfZm9ybV0uc3ViX3F1ZXN0aW9u',
               'isLeaf': True,
               'label': 'sub_question',
               'sourcePath': 'answers[sub_form].sub_question',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWdnZXN0LWFkdWx0LWFsbG93XQ==',
               'isLeaf': False,
               'label': 'answers[suggest-adult-allow]',
               'sourcePath': 'answers[suggest-adult-allow]',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0=',
               'isLeaf': False,
               'label': 'answers[top_form]',
               'sourcePath': 'answers[top_form]',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybQ==',
               'isLeaf': False,
               'label': 'form',
               'sourcePath': 'answers[top_form].form',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5zdWJfcXVlc3Rpb24=',
               'isLeaf': True,
               'label': 'sub_question',
               'sourcePath': 'answers[top_form].form.sub_question',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0udG9wX3F1ZXN0aW9u',
               'isLeaf': True,
               'label': 'top_question',
               'sourcePath': 'answers[top_form].top_question',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdA==',
               'isLeaf': False,
               'label': 'created_at',
               'sourcePath': 'created_at',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5tb250aA==',
               'isLeaf': True,
               'label': 'month',
               'sourcePath': 'created_at.month',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC5xdWFydGVy',
               'isLeaf': True,
               'label': 'quarter',
               'sourcePath': 'created_at.quarter',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC53ZWVrZGF5',
               'isLeaf': True,
               'label': 'weekday',
               'sourcePath': 'created_at.weekday',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y3JlYXRlZF9hdC55ZWFy',
               'isLeaf': True,
               'label': 'year',
               'sourcePath': 'created_at.year',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Zm9ybV9pZA==',
               'isLeaf': True,
               'label': 'form_id',
               'sourcePath': 'form_id',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6aWQ=',
               'isLeaf': True,
               'label': 'id',
               'sourcePath': 'id',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YQ==',
               'isLeaf': False,
               'label': 'Meta',
               'sourcePath': 'meta',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YS5mb29iYXI=',
               'isLeaf': True,
               'label': "Key 'foobar'",
               'sourcePath': 'meta.foobar',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6bWV0YS50ZXN0LWtleQ==',
               'isLeaf': True,
               'label': "Key 'test-key'",
               'sourcePath': 'meta.test-key',
-            },
-          },
-        ],
-      },
-    },
-  }
----
+            }),
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---
 # name: test_update_field
-  <class 'dict'> {
-    'saveAnalyticsField': <class 'dict'> {
-      'analyticsField': <class 'dict'> {
-        'table': <class 'dict'> {
-          'fields': <class 'dict'> {
-            'edges': <class 'list'> [
-              <class 'dict'> {
-                'node': <class 'dict'> {
+  dict({
+    'saveAnalyticsField': dict({
+      'analyticsField': dict({
+        'table': dict({
+          'fields': dict({
+            'edges': list([
+              dict({
+                'node': dict({
                   'alias': 'existing_new_alias',
                   'dataSource': 'meta.foobar',
-                },
-              },
-            ],
-          },
+                }),
+              }),
+            ]),
+          }),
           'name': 'Bonnie Moreno',
-        },
-      },
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---

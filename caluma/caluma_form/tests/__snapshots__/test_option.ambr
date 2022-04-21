@@ -1,10 +1,10 @@
 # name: test_save_option
-  <class 'dict'> {
-    'saveOption': <class 'dict'> {
-      'option': <class 'dict'> {
+  dict({
+    'saveOption': dict({
+      'option': dict({
         'label': 'Bonnie Moreno',
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---

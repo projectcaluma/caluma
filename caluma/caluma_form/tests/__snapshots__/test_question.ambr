@@ -1,246 +1,246 @@
 # name: test_query_all_questions[action_button-question__configuration14-None-question__format_validators14]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'ActionButtonQuestion',
             'id': 'QWN0aW9uQnV0dG9uUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
             'infoText': '',
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[calculated_float-question__configuration13-None-question__format_validators13]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'CalculatedFloatQuestion',
             'calcExpression': '-1.0',
             'hintText': '',
             'id': 'Q2FsY3VsYXRlZEZsb2F0UXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
             'infoText': '',
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[choice-question__configuration6-None-question__format_validators6]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'ChoiceQuestion',
             'hintText': '',
             'id': 'Q2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
             'infoText': '',
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
-            'options': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+            'meta': dict({
+            }),
+            'options': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     'slug': 'measure-evening',
-                  },
-                },
-              ],
+                  }),
+                }),
+              ]),
               'totalCount': 1,
-            },
+            }),
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[date-question__configuration3-None-question__format_validators3]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'DateQuestion',
             'hintText': '',
             'id': 'RGF0ZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
             'infoText': '',
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[dynamic_choice-question__configuration10-MyDataSource-question__format_validators10]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'DynamicChoiceQuestion',
             'hintText': '',
             'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
             'infoText': '',
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
-            'options': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+            'meta': dict({
+            }),
+            'options': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     'label': '1',
                     'slug': '1',
-                  },
-                },
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+                  }),
+                }),
+                dict({
+                  'node': dict({
                     'label': '5.5',
                     'slug': '5.5',
-                  },
-                },
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+                  }),
+                }),
+                dict({
+                  'node': dict({
                     'label': 'sdkj',
                     'slug': 'sdkj',
-                  },
-                },
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+                  }),
+                }),
+                dict({
+                  'node': dict({
                     'label': 'info',
                     'slug': 'value',
-                  },
-                },
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+                  }),
+                }),
+                dict({
+                  'node': dict({
                     'label': 'something',
                     'slug': 'something',
-                  },
-                },
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+                  }),
+                }),
+                dict({
+                  'node': dict({
                     'label': 'english description',
                     'slug': 'translated_value',
-                  },
-                },
-              ],
-            },
+                  }),
+                }),
+              ]),
+            }),
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[dynamic_multiple_choice-question__configuration11-MyDataSource-question__format_validators11]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'DynamicMultipleChoiceQuestion',
             'hintText': '',
             'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
             'infoText': '',
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
-            'options': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+            'meta': dict({
+            }),
+            'options': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     'label': '1',
                     'slug': '1',
-                  },
-                },
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+                  }),
+                }),
+                dict({
+                  'node': dict({
                     'label': '5.5',
                     'slug': '5.5',
-                  },
-                },
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+                  }),
+                }),
+                dict({
+                  'node': dict({
                     'label': 'sdkj',
                     'slug': 'sdkj',
-                  },
-                },
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+                  }),
+                }),
+                dict({
+                  'node': dict({
                     'label': 'info',
                     'slug': 'value',
-                  },
-                },
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+                  }),
+                }),
+                dict({
+                  'node': dict({
                     'label': 'something',
                     'slug': 'something',
-                  },
-                },
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+                  }),
+                }),
+                dict({
+                  'node': dict({
                     'label': 'english description',
                     'slug': 'translated_value',
-                  },
-                },
-              ],
-            },
+                  }),
+                }),
+              ]),
+            }),
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[file-question__configuration9-None-question__format_validators9]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'FileQuestion',
             'hintText': '',
             'id': 'RmlsZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
             'infoText': '',
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[float-question__configuration1-None-question__format_validators1]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'FloatQuestion',
             'floatMaxValue': 1.0,
             'floatMinValue': 0.0,
@@ -248,23 +248,23 @@
             'id': 'RmxvYXRRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
             'infoText': '',
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'placeholder': '',
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[float-question__configuration2-None-question__format_validators2]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'FloatQuestion',
             'floatMaxValue': None,
             'floatMinValue': None,
@@ -272,46 +272,46 @@
             'id': 'RmxvYXRRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
             'infoText': '',
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'placeholder': '',
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[form-question__configuration8-None-question__format_validators8]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'FormQuestion',
             'id': 'Rm9ybVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
             'infoText': '',
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'slug': 'environmental-ten',
-            'subForm': <class 'dict'> {
+            'subForm': dict({
               'slug': 'eight-traditional',
-            },
-          },
-        },
-      ],
+            }),
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[integer-question__configuration0-None-question__format_validators0]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'IntegerQuestion',
             'hintText': '',
             'id': 'SW50ZWdlclF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
@@ -319,784 +319,784 @@
             'integerMaxValue': 10,
             'integerMinValue': 0,
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'placeholder': '',
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[multiple_choice-question__configuration7-None-question__format_validators7]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'MultipleChoiceQuestion',
             'hintText': '',
             'id': 'TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
             'infoText': '',
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
-            'options': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+            'meta': dict({
+            }),
+            'options': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     'slug': 'measure-evening',
-                  },
-                },
-              ],
+                  }),
+                }),
+              ]),
               'totalCount': 1,
-            },
+            }),
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[static-question__configuration12-None-question__format_validators12]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'StaticQuestion',
             'id': 'U3RhdGljUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
             'infoText': '',
             'label': 'Bonnie Moreno',
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'slug': 'environmental-ten',
-            'staticContent': '
+            'staticContent': '''
               Station story first. Team suggest traditional boy above. Argue move appear catch toward help wind.
               Kid avoid player relationship to range whose. Draw free property consider.
-            ',
-          },
-        },
-      ],
+            ''',
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[text-question__configuration4-None-question__format_validators4]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'TextQuestion',
-            'formatValidators': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+            'formatValidators': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     'errorMsg': 'Please enter a valid e-mail address',
                     'name': 'E-mail address',
                     'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
                     'slug': 'email',
-                  },
-                },
-              ],
-            },
+                  }),
+                }),
+              ]),
+            }),
             'hintText': '',
             'id': 'VGV4dFF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
             'infoText': '',
             'label': 'Bonnie Moreno',
             'maxLength': None,
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'minLength': 10,
             'placeholder': '',
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_questions[textarea-question__configuration5-None-question__format_validators5]
-  <class 'dict'> {
-    'allQuestions': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'TextareaQuestion',
-            'formatValidators': <class 'dict'> {
-              'edges': <class 'list'> [
-              ],
-            },
+            'formatValidators': dict({
+              'edges': list([
+              ]),
+            }),
             'hintText': '',
             'id': 'VGV4dGFyZWFRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
             'infoText': '',
             'label': 'Bonnie Moreno',
             'maxLength': 10,
-            'meta': <class 'dict'> {
-            },
+            'meta': dict({
+            }),
             'minLength': None,
             'placeholder': '',
             'slug': 'environmental-ten',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_action_button_question[action_button]
-  <class 'dict'> {
-    'saveActionButtonQuestion': <class 'dict'> {
+  dict({
+    'saveActionButtonQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'ActionButtonQuestion',
         'action': 'SKIP',
         'color': 'PRIMARY',
         'id': 'QWN0aW9uQnV0dG9uUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'slug': 'environmental-ten',
         'validateOnEnter': False,
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_choice_question[choice-False]
-  <class 'dict'> {
-    'saveChoiceQuestion': <class 'dict'> {
+  dict({
+    'saveChoiceQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'ChoiceQuestion',
         'defaultAnswer': None,
         'hintText': '',
         'id': 'Q2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
-        'options': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+        'meta': dict({
+        }),
+        'options': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'label': 'Susan Wilson',
                 'slug': 'eight-traditional',
-              },
-            },
-          ],
-        },
+              }),
+            }),
+          ]),
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_choice_question[choice-True]
-  <class 'dict'> {
-    'saveChoiceQuestion': <class 'dict'> {
+  dict({
+    'saveChoiceQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'ChoiceQuestion',
-        'defaultAnswer': <class 'dict'> {
+        'defaultAnswer': dict({
           'value': 'eight-traditional',
-        },
+        }),
         'hintText': 'test',
         'id': 'Q2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
-        'options': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+        'meta': dict({
+        }),
+        'options': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'label': 'Susan Wilson',
                 'slug': 'eight-traditional',
-              },
-            },
-          ],
-        },
+              }),
+            }),
+          ]),
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_dynamic_choice_question[dynamic_choice-False]
-  <class 'dict'> {
-    'saveDynamicChoiceQuestion': <class 'dict'> {
+  dict({
+    'saveDynamicChoiceQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'DynamicChoiceQuestion',
         'hintText': 'test',
         'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
-        'options': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+        'meta': dict({
+        }),
+        'options': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'label': '1',
                 'slug': '1',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': '5.5',
                 'slug': '5.5',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'sdkj',
                 'slug': 'sdkj',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'info',
                 'slug': 'value',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'something',
                 'slug': 'something',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'english description',
                 'slug': 'translated_value',
-              },
-            },
-          ],
-        },
+              }),
+            }),
+          ]),
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_dynamic_choice_question[dynamic_choice-True]
-  <class 'dict'> {
-    'saveDynamicChoiceQuestion': <class 'dict'> {
+  dict({
+    'saveDynamicChoiceQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'DynamicChoiceQuestion',
         'hintText': 'test',
         'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
-        'options': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+        'meta': dict({
+        }),
+        'options': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'label': '1',
                 'slug': '1',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': '5.5',
                 'slug': '5.5',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'sdkj',
                 'slug': 'sdkj',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'info',
                 'slug': 'value',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'something',
                 'slug': 'something',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'english description',
                 'slug': 'translated_value',
-              },
-            },
-          ],
-        },
+              }),
+            }),
+          ]),
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_dynamic_choice_question[dynamic_multiple_choice-False]
-  <class 'dict'> {
-    'saveDynamicChoiceQuestion': <class 'dict'> {
+  dict({
+    'saveDynamicChoiceQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'DynamicChoiceQuestion',
         'hintText': 'test',
         'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
-        'options': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+        'meta': dict({
+        }),
+        'options': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'label': '1',
                 'slug': '1',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': '5.5',
                 'slug': '5.5',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'sdkj',
                 'slug': 'sdkj',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'info',
                 'slug': 'value',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'something',
                 'slug': 'something',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'english description',
                 'slug': 'translated_value',
-              },
-            },
-          ],
-        },
+              }),
+            }),
+          ]),
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_dynamic_choice_question[dynamic_multiple_choice-True]
-  <class 'dict'> {
-    'saveDynamicChoiceQuestion': <class 'dict'> {
+  dict({
+    'saveDynamicChoiceQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'DynamicChoiceQuestion',
         'hintText': 'test',
         'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
-        'options': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+        'meta': dict({
+        }),
+        'options': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'label': '1',
                 'slug': '1',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': '5.5',
                 'slug': '5.5',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'sdkj',
                 'slug': 'sdkj',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'info',
                 'slug': 'value',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'something',
                 'slug': 'something',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'english description',
                 'slug': 'translated_value',
-              },
-            },
-          ],
-        },
+              }),
+            }),
+          ]),
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_dynamic_multiple_choice_question[dynamic_multiple_choice-False]
-  <class 'dict'> {
-    'saveDynamicMultipleChoiceQuestion': <class 'dict'> {
+  dict({
+    'saveDynamicMultipleChoiceQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'DynamicMultipleChoiceQuestion',
         'hintText': 'test',
         'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
-        'options': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+        'meta': dict({
+        }),
+        'options': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'label': '1',
                 'slug': '1',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': '5.5',
                 'slug': '5.5',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'sdkj',
                 'slug': 'sdkj',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'info',
                 'slug': 'value',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'something',
                 'slug': 'something',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'english description',
                 'slug': 'translated_value',
-              },
-            },
-          ],
-        },
+              }),
+            }),
+          ]),
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_dynamic_multiple_choice_question[dynamic_multiple_choice-True]
-  <class 'dict'> {
-    'saveDynamicMultipleChoiceQuestion': <class 'dict'> {
+  dict({
+    'saveDynamicMultipleChoiceQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'DynamicMultipleChoiceQuestion',
         'hintText': 'test',
         'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
-        'options': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+        'meta': dict({
+        }),
+        'options': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'label': '1',
                 'slug': '1',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': '5.5',
                 'slug': '5.5',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'sdkj',
                 'slug': 'sdkj',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'info',
                 'slug': 'value',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'something',
                 'slug': 'something',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'english description',
                 'slug': 'translated_value',
-              },
-            },
-          ],
-        },
+              }),
+            }),
+          ]),
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_float_question[float-question__configuration0-0.3-True]
-  <class 'dict'> {
-    'saveFloatQuestion': <class 'dict'> {
+  dict({
+    'saveFloatQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'FloatQuestion',
-        'defaultAnswer': <class 'dict'> {
+        'defaultAnswer': dict({
           'value': 0.3,
-        },
+        }),
         'hintText': 'test',
         'id': 'RmxvYXRRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
         'label': 'Bonnie Moreno',
         'maxValue': 10.0,
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'minValue': 0.0,
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_form_question[form]
-  <class 'dict'> {
-    'saveFormQuestion': <class 'dict'> {
+  dict({
+    'saveFormQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'FormQuestion',
         'id': 'Rm9ybVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'slug': 'environmental-ten',
-        'subForm': <class 'dict'> {
+        'subForm': dict({
           'slug': 'eight-traditional',
-        },
-      },
-    },
-  }
----
+        }),
+      }),
+    }),
+  })
+# ---
 # name: test_save_integer_question[integer-question__configuration0-23-True]
-  <class 'dict'> {
-    'saveIntegerQuestion': <class 'dict'> {
+  dict({
+    'saveIntegerQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'IntegerQuestion',
-        'defaultAnswer': <class 'dict'> {
+        'defaultAnswer': dict({
           'value': 23,
-        },
+        }),
         'hintText': 'test',
         'id': 'SW50ZWdlclF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
         'maxValue': 10,
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'minValue': 0,
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_multiple_choice_question[multiple_choice]
-  <class 'dict'> {
-    'saveMultipleChoiceQuestion': <class 'dict'> {
+  dict({
+    'saveMultipleChoiceQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'MultipleChoiceQuestion',
-        'defaultAnswer': <class 'dict'> {
-          'value': <class 'list'> [
+        'defaultAnswer': dict({
+          'value': list([
             'maybe-stock-capital',
             'court-ask',
-          ],
-        },
+          ]),
+        }),
         'hintText': 'test',
         'id': 'TXVsdGlwbGVDaG9pY2VRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
-        'options': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+        'meta': dict({
+        }),
+        'options': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'label': 'William Ramos',
                 'slug': 'maybe-stock-capital',
-              },
-            },
-            <class 'dict'> {
-              'node': <class 'dict'> {
+              }),
+            }),
+            dict({
+              'node': dict({
                 'label': 'Scott Powell',
                 'slug': 'court-ask',
-              },
-            },
-          ],
-        },
+              }),
+            }),
+          ]),
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_question[true-True-SaveCalculatedFloatQuestion]
-  <class 'dict'> {
-    'saveCalculatedFloatQuestion': <class 'dict'> {
+  dict({
+    'saveCalculatedFloatQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'CalculatedFloatQuestion',
         'id': 'Q2FsY3VsYXRlZEZsb2F0UXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_question[true-True-SaveDateQuestion]
-  <class 'dict'> {
-    'saveDateQuestion': <class 'dict'> {
+  dict({
+    'saveDateQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'DateQuestion',
         'id': 'RGF0ZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_question[true-True-SaveFileQuestion]
-  <class 'dict'> {
-    'saveFileQuestion': <class 'dict'> {
+  dict({
+    'saveFileQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'FileQuestion',
         'id': 'RmlsZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_question[true-True-SaveFloatQuestion]
-  <class 'dict'> {
-    'saveFloatQuestion': <class 'dict'> {
+  dict({
+    'saveFloatQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'FloatQuestion',
         'id': 'RmxvYXRRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_question[true-True-SaveIntegerQuestion]
-  <class 'dict'> {
-    'saveIntegerQuestion': <class 'dict'> {
+  dict({
+    'saveIntegerQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'IntegerQuestion',
         'id': 'SW50ZWdlclF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_question[true-True-SaveTextQuestion]
-  <class 'dict'> {
-    'saveTextQuestion': <class 'dict'> {
+  dict({
+    'saveTextQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'TextQuestion',
         'id': 'VGV4dFF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_question[true-True-SaveTextareaQuestion]
-  <class 'dict'> {
-    'saveTextareaQuestion': <class 'dict'> {
+  dict({
+    'saveTextareaQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'TextareaQuestion',
         'id': 'VGV4dGFyZWFRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_static_question[static]
-  <class 'dict'> {
-    'saveStaticQuestion': <class 'dict'> {
+  dict({
+    'saveStaticQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'StaticQuestion',
         'id': 'U3RhdGljUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'slug': 'environmental-ten',
-        'staticContent': '
+        'staticContent': '''
           Station story first. Team suggest traditional boy above. Argue move appear catch toward help wind.
           Kid avoid player relationship to range whose. Draw free property consider.
-        ',
-      },
-    },
-  }
----
+        ''',
+      }),
+    }),
+  })
+# ---
 # name: test_save_table_question[table]
-  <class 'dict'> {
-    'saveTableQuestion': <class 'dict'> {
+  dict({
+    'saveTableQuestion': dict({
       'clientMutationId': 'testid',
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'TableQuestion',
         'hintText': 'test',
         'id': 'VGFibGVRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
         'label': 'Bonnie Moreno',
-        'meta': <class 'dict'> {
-        },
-        'rowForm': <class 'dict'> {
+        'meta': dict({
+        }),
+        'rowForm': dict({
           'slug': 'eight-traditional',
-        },
+        }),
         'slug': 'environmental-ten',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---

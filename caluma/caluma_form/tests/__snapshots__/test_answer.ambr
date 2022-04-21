@@ -1,273 +1,273 @@
 # name: test_remove_answer[integer-23]
-  <class 'dict'> {
-    'removeAnswer': <class 'dict'> {
+  dict({
+    'removeAnswer': dict({
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_remove_default_answer[integer-23]
-  <class 'dict'> {
-    'removeDefaultAnswer': <class 'dict'> {
+  dict({
+    'removeDefaultAnswer': dict({
       'clientMutationId': None,
-      'question': <class 'dict'> {
+      'question': dict({
         '__typename': 'IntegerQuestion',
         'id': 'SW50ZWdlclF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
-        'meta': <class 'dict'> {
-        },
-      },
-    },
-  }
----
+        'meta': dict({
+        }),
+      }),
+    }),
+  })
+# ---
 # name: test_save_calculated_dependency_default_answer[float-0.1]
   Answer(document=None, question=Question(slug=environmental-ten, type=float), value=0.1)
----
+# ---
 # name: test_save_default_answer_graphql[choice-option-slug-None-SaveDefaultStringAnswer-True-option-slug-False]
-  <class 'dict'> {
-    'saveDefaultStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'option-slug',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[choice-option-slug-None-SaveDefaultStringAnswer-True-option-slug-True]
-  <class 'dict'> {
-    'saveDefaultStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'option-slug',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[date-None-2019-02-22-SaveDefaultDateAnswer-True-option-slug-False]
-  <class 'dict'> {
-    'saveDefaultDateAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultDateAnswer': dict({
+      'answer': dict({
         '__typename': 'DateAnswer',
         'dateValue': '2019-02-22',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[date-None-2019-02-22-SaveDefaultDateAnswer-True-option-slug-True]
-  <class 'dict'> {
-    'saveDefaultDateAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultDateAnswer': dict({
+      'answer': dict({
         '__typename': 'DateAnswer',
         'dateValue': '2019-02-22',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[float-2.1-None-SaveDefaultFloatAnswer-True-option-slug-False]
-  <class 'dict'> {
-    'saveDefaultFloatAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultFloatAnswer': dict({
+      'answer': dict({
         '__typename': 'FloatAnswer',
         'floatValue': 2.1,
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[float-2.1-None-SaveDefaultFloatAnswer-True-option-slug-True]
-  <class 'dict'> {
-    'saveDefaultFloatAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultFloatAnswer': dict({
+      'answer': dict({
         '__typename': 'FloatAnswer',
         'floatValue': 2.1,
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[integer-1-None-SaveDefaultIntegerAnswer-True-option-slug-False]
-  <class 'dict'> {
-    'saveDefaultIntegerAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultIntegerAnswer': dict({
+      'answer': dict({
         '__typename': 'IntegerAnswer',
         'integerValue': 1,
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[integer-1-None-SaveDefaultIntegerAnswer-True-option-slug-True]
-  <class 'dict'> {
-    'saveDefaultIntegerAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultIntegerAnswer': dict({
+      'answer': dict({
         '__typename': 'IntegerAnswer',
         'integerValue': 1,
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[multiple_choice-answer__value5-None-SaveDefaultListAnswer-True-option-slug-False]
-  <class 'dict'> {
-    'saveDefaultListAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultListAnswer': dict({
+      'answer': dict({
         '__typename': 'ListAnswer',
-        'listValue': <class 'list'> [
+        'listValue': list([
           'option-slug',
-        ],
-      },
+        ]),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[multiple_choice-answer__value5-None-SaveDefaultListAnswer-True-option-slug-True]
-  <class 'dict'> {
-    'saveDefaultListAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultListAnswer': dict({
+      'answer': dict({
         '__typename': 'ListAnswer',
-        'listValue': <class 'list'> [
+        'listValue': list([
           'option-slug',
-        ],
-      },
+        ]),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[table-None-None-SaveDefaultTableAnswer-True-option-slug-False]
-  <class 'dict'> {
-    'saveDefaultTableAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultTableAnswer': dict({
+      'answer': dict({
         '__typename': 'TableAnswer',
-        'table_value': <class 'list'> [
-          <class 'dict'> {
-            'form': <class 'dict'> {
+        'table_value': list([
+          dict({
+            'form': dict({
               'slug': 'eight-traditional',
-            },
-          },
-          <class 'dict'> {
-            'form': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'form': dict({
               'slug': 'eight-traditional',
-            },
-          },
-        ],
-      },
+            }),
+          }),
+        ]),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[table-None-None-SaveDefaultTableAnswer-True-option-slug-True]
-  <class 'dict'> {
-    'saveDefaultTableAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultTableAnswer': dict({
+      'answer': dict({
         '__typename': 'TableAnswer',
-        'table_value': <class 'list'> [
-          <class 'dict'> {
-            'form': <class 'dict'> {
+        'table_value': list([
+          dict({
+            'form': dict({
               'slug': 'eight-traditional',
-            },
-          },
-          <class 'dict'> {
-            'form': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'form': dict({
               'slug': 'eight-traditional',
-            },
-          },
-        ],
-      },
+            }),
+          }),
+        ]),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[text-Test-None-SaveDefaultStringAnswer-True-option-slug-False]
-  <class 'dict'> {
-    'saveDefaultStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'Test',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[text-Test-None-SaveDefaultStringAnswer-True-option-slug-True]
-  <class 'dict'> {
-    'saveDefaultStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'Test',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[textarea-Test-None-SaveDefaultStringAnswer-True-option-slug-False]
-  <class 'dict'> {
-    'saveDefaultStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'Test',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_graphql[textarea-Test-None-SaveDefaultStringAnswer-True-option-slug-True]
-  <class 'dict'> {
-    'saveDefaultStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDefaultStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'Test',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_default_answer_python_api[choice-option-slug-None-True-option-slug-False]
   Answer(document=None, question=Question(slug=environmental-ten, type=choice), value='option-slug')
----
+# ---
 # name: test_save_default_answer_python_api[choice-option-slug-None-True-option-slug-True]
   Answer(document=None, question=Question(slug=environmental-ten, type=choice), value='option-slug')
----
+# ---
 # name: test_save_default_answer_python_api[date-None-2019-02-22-True-option-slug-False]
   Answer(document=None, question=Question(slug=environmental-ten, type=date), value=None)
----
+# ---
 # name: test_save_default_answer_python_api[date-None-2019-02-22-True-option-slug-True]
   Answer(document=None, question=Question(slug=environmental-ten, type=date), value=None)
----
+# ---
 # name: test_save_default_answer_python_api[float-2.1-None-True-option-slug-False]
   Answer(document=None, question=Question(slug=environmental-ten, type=float), value=2.1)
----
+# ---
 # name: test_save_default_answer_python_api[float-2.1-None-True-option-slug-True]
   Answer(document=None, question=Question(slug=environmental-ten, type=float), value=2.1)
----
+# ---
 # name: test_save_default_answer_python_api[integer-1-None-True-option-slug-False]
   Answer(document=None, question=Question(slug=environmental-ten, type=integer), value=1)
----
+# ---
 # name: test_save_default_answer_python_api[integer-1-None-True-option-slug-True]
   Answer(document=None, question=Question(slug=environmental-ten, type=integer), value=1)
----
+# ---
 # name: test_save_default_answer_python_api[multiple_choice-answer__value5-None-True-option-slug-False]
   Answer(document=None, question=Question(slug=environmental-ten, type=multiple_choice), value=['option-slug'])
----
+# ---
 # name: test_save_default_answer_python_api[multiple_choice-answer__value5-None-True-option-slug-True]
   Answer(document=None, question=Question(slug=environmental-ten, type=multiple_choice), value=['option-slug'])
----
+# ---
 # name: test_save_default_answer_python_api[table-None-None-True-option-slug-False]
   Answer(document=None, question=Question(slug=environmental-ten, type=table), value=None)
----
+# ---
 # name: test_save_default_answer_python_api[table-None-None-True-option-slug-True]
   Answer(document=None, question=Question(slug=environmental-ten, type=table), value=None)
----
+# ---
 # name: test_save_default_answer_python_api[text-Test-None-True-option-slug-False]
   Answer(document=None, question=Question(slug=environmental-ten, type=text), value='Test')
----
+# ---
 # name: test_save_default_answer_python_api[text-Test-None-True-option-slug-True]
   Answer(document=None, question=Question(slug=environmental-ten, type=text), value='Test')
----
+# ---
 # name: test_save_default_answer_python_api[textarea-Test-None-True-option-slug-False]
   Answer(document=None, question=Question(slug=environmental-ten, type=textarea), value='Test')
----
+# ---
 # name: test_save_default_answer_python_api[textarea-Test-None-True-option-slug-True]
   Answer(document=None, question=Question(slug=environmental-ten, type=textarea), value='Test')
----
+# ---

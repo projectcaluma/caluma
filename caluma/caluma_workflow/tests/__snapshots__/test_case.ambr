@@ -1,1037 +1,1037 @@
 # name: test_cancel_case[running-True-completed-None]
-  <class 'dict'> {
-    'cancelCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'cancelCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
+          }),
+        }),
         'status': 'CANCELED',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'status': 'COMPLETED',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_cancel_case[running-True-ready-None]
-  <class 'dict'> {
-    'cancelCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'cancelCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
+          }),
+        }),
         'status': 'CANCELED',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
                 'status': 'CANCELED',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_order_by_question_answer_value[date-True-False]
-  <class 'dict'> {
-    'allCases': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+  dict({
+    'allCases': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'dateValue': '2019-05-31',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'dateValue': '2019-05-26',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'dateValue': '2019-05-29',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'dateValue': '2019-05-30',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'dateValue': '2019-05-27',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'dateValue': '2019-05-28',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-      ],
+              }),
+            }),
+          }),
+        }),
+      ]),
       'totalCount': 3,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_order_by_question_answer_value[date-True-True]
-  <class 'dict'> {
-    'allCases': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+  dict({
+    'allCases': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'dateValue': '2019-05-27',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'dateValue': '2019-05-28',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'dateValue': '2019-05-29',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'dateValue': '2019-05-30',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'dateValue': '2019-05-31',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'dateValue': '2019-05-26',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-      ],
+              }),
+            }),
+          }),
+        }),
+      ]),
       'totalCount': 3,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_order_by_question_answer_value[file-True-False]
-  <class 'dict'> {
-    'allCases': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
-                      'fileValue': <class 'dict'> {
+  dict({
+    'allCases': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
+                      'fileValue': dict({
                         'name': 'f',
-                      },
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
-                      'fileValue': <class 'dict'> {
+                      }),
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
+                      'fileValue': dict({
                         'name': 'a',
-                      },
-                    },
-                  },
-                ],
+                      }),
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
-                      'fileValue': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
+                      'fileValue': dict({
                         'name': 'd',
-                      },
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
-                      'fileValue': <class 'dict'> {
+                      }),
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
+                      'fileValue': dict({
                         'name': 'c',
-                      },
-                    },
-                  },
-                ],
+                      }),
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
-                      'fileValue': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
+                      'fileValue': dict({
                         'name': 'b',
-                      },
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
-                      'fileValue': <class 'dict'> {
+                      }),
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
+                      'fileValue': dict({
                         'name': 'e',
-                      },
-                    },
-                  },
-                ],
+                      }),
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-      ],
+              }),
+            }),
+          }),
+        }),
+      ]),
       'totalCount': 3,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_order_by_question_answer_value[file-True-True]
-  <class 'dict'> {
-    'allCases': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
-                      'fileValue': <class 'dict'> {
+  dict({
+    'allCases': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
+                      'fileValue': dict({
                         'name': 'b',
-                      },
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
-                      'fileValue': <class 'dict'> {
+                      }),
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
+                      'fileValue': dict({
                         'name': 'e',
-                      },
-                    },
-                  },
-                ],
+                      }),
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
-                      'fileValue': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
+                      'fileValue': dict({
                         'name': 'd',
-                      },
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
-                      'fileValue': <class 'dict'> {
+                      }),
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
+                      'fileValue': dict({
                         'name': 'c',
-                      },
-                    },
-                  },
-                ],
+                      }),
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
-                      'fileValue': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
+                      'fileValue': dict({
                         'name': 'f',
-                      },
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
-                      'fileValue': <class 'dict'> {
+                      }),
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
+                      'fileValue': dict({
                         'name': 'a',
-                      },
-                    },
-                  },
-                ],
+                      }),
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-      ],
+              }),
+            }),
+          }),
+        }),
+      ]),
       'totalCount': 3,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_order_by_question_answer_value[form-True-False]
-  <class 'dict'> {
-    'allCases': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+  dict({
+    'allCases': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'stringValue': 'f',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 1,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'stringValue': 'd',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 1,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'stringValue': 'b',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 1,
-              },
-            },
-          },
-        },
-      ],
+              }),
+            }),
+          }),
+        }),
+      ]),
       'totalCount': 3,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_order_by_question_answer_value[form-True-True]
-  <class 'dict'> {
-    'allCases': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+  dict({
+    'allCases': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'stringValue': 'b',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 1,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'stringValue': 'd',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 1,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'stringValue': 'f',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 1,
-              },
-            },
-          },
-        },
-      ],
+              }),
+            }),
+          }),
+        }),
+      ]),
       'totalCount': 3,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_order_by_question_answer_value[text-True-False]
-  <class 'dict'> {
-    'allCases': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+  dict({
+    'allCases': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'stringValue': 'c',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'stringValue': 'a2',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'stringValue': 'b',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'stringValue': 'c2',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'stringValue': 'a',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'stringValue': 'b2',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-      ],
+              }),
+            }),
+          }),
+        }),
+      ]),
       'totalCount': 3,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_order_by_question_answer_value[text-True-True]
-  <class 'dict'> {
-    'allCases': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+  dict({
+    'allCases': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'stringValue': 'a',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'stringValue': 'b2',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'stringValue': 'b',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'stringValue': 'c2',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'document': <class 'dict'> {
-              'answers': <class 'dict'> {
-                'edges': <class 'list'> [
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
                       'stringValue': 'c',
-                    },
-                  },
-                  <class 'dict'> {
-                    'node': <class 'dict'> {
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'stringValue': 'a2',
-                    },
-                  },
-                ],
+                    }),
+                  }),
+                ]),
                 'totalCount': 2,
-              },
-            },
-          },
-        },
-      ],
+              }),
+            }),
+          }),
+        }),
+      ]),
       'totalCount': 3,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_cases[completed-0]
-  <class 'dict'> {
-    'allCases': <class 'dict'> {
-      'edges': <class 'list'> [
-      ],
+  dict({
+    'allCases': dict({
+      'edges': list([
+      ]),
       'totalCount': 0,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_cases[running-1]
-  <class 'dict'> {
-    'allCases': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allCases': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             'status': 'RUNNING',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_case[saveCase-False-None-100]
-  <class 'dict'> {
-    'saveCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'saveCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
+          }),
+        }),
         'parentWorkItem': None,
         'status': 'RUNNING',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'addressedGroups': <class 'list'> [
-                ],
-                'document': <class 'dict'> {
-                  'form': <class 'dict'> {
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
+                ]),
+                'document': dict({
+                  'form': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
+                  }),
+                }),
                 'status': 'READY',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_case[saveCase-False-None-None]
-  <class 'dict'> {
-    'saveCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'saveCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
+          }),
+        }),
         'parentWorkItem': None,
         'status': 'RUNNING',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'addressedGroups': <class 'list'> [
-                ],
-                'document': <class 'dict'> {
-                  'form': <class 'dict'> {
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
+                ]),
+                'document': dict({
+                  'form': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
+                  }),
+                }),
                 'status': 'READY',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_case[saveCase-False-["group-name"]|groups-100]
-  <class 'dict'> {
-    'saveCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'saveCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
+          }),
+        }),
         'parentWorkItem': None,
         'status': 'RUNNING',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'addressedGroups': <class 'list'> [
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
                   'group-name',
-                ],
-                'document': <class 'dict'> {
-                  'form': <class 'dict'> {
+                ]),
+                'document': dict({
+                  'form': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
+                  }),
+                }),
                 'status': 'READY',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_case[saveCase-False-["group-name"]|groups-None]
-  <class 'dict'> {
-    'saveCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'saveCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
+          }),
+        }),
         'parentWorkItem': None,
         'status': 'RUNNING',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'addressedGroups': <class 'list'> [
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
                   'group-name',
-                ],
-                'document': <class 'dict'> {
-                  'form': <class 'dict'> {
+                ]),
+                'document': dict({
+                  'form': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
+                  }),
+                }),
                 'status': 'READY',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_case[saveCase-True-None-100]
-  <class 'dict'> {
-    'saveCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'saveCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
-        'parentWorkItem': <class 'dict'> {
+          }),
+        }),
+        'parentWorkItem': dict({
           'status': 'READY',
-        },
+        }),
         'status': 'RUNNING',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'addressedGroups': <class 'list'> [
-                ],
-                'document': <class 'dict'> {
-                  'form': <class 'dict'> {
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
+                ]),
+                'document': dict({
+                  'form': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
+                  }),
+                }),
                 'status': 'READY',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_case[saveCase-True-None-None]
-  <class 'dict'> {
-    'saveCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'saveCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
-        'parentWorkItem': <class 'dict'> {
+          }),
+        }),
+        'parentWorkItem': dict({
           'status': 'READY',
-        },
+        }),
         'status': 'RUNNING',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'addressedGroups': <class 'list'> [
-                ],
-                'document': <class 'dict'> {
-                  'form': <class 'dict'> {
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
+                ]),
+                'document': dict({
+                  'form': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
+                  }),
+                }),
                 'status': 'READY',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_case[saveCase-True-["group-name"]|groups-100]
-  <class 'dict'> {
-    'saveCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'saveCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
-        'parentWorkItem': <class 'dict'> {
+          }),
+        }),
+        'parentWorkItem': dict({
           'status': 'READY',
-        },
+        }),
         'status': 'RUNNING',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'addressedGroups': <class 'list'> [
-                ],
-                'document': <class 'dict'> {
-                  'form': <class 'dict'> {
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
+                ]),
+                'document': dict({
+                  'form': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
+                  }),
+                }),
                 'status': 'READY',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_case[saveCase-True-["group-name"]|groups-None]
-  <class 'dict'> {
-    'saveCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'saveCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
-        'parentWorkItem': <class 'dict'> {
+          }),
+        }),
+        'parentWorkItem': dict({
           'status': 'READY',
-        },
+        }),
         'status': 'RUNNING',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'addressedGroups': <class 'list'> [
-                ],
-                'document': <class 'dict'> {
-                  'form': <class 'dict'> {
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
+                ]),
+                'document': dict({
+                  'form': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
+                  }),
+                }),
                 'status': 'READY',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_case[startCase-False-None-100]
-  <class 'dict'> {
-    'startCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'startCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
+          }),
+        }),
         'parentWorkItem': None,
         'status': 'RUNNING',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'addressedGroups': <class 'list'> [
-                ],
-                'document': <class 'dict'> {
-                  'form': <class 'dict'> {
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
+                ]),
+                'document': dict({
+                  'form': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
+                  }),
+                }),
                 'status': 'READY',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_case[startCase-False-None-None]
-  <class 'dict'> {
-    'startCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'startCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
+          }),
+        }),
         'parentWorkItem': None,
         'status': 'RUNNING',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'addressedGroups': <class 'list'> [
-                ],
-                'document': <class 'dict'> {
-                  'form': <class 'dict'> {
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
+                ]),
+                'document': dict({
+                  'form': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
+                  }),
+                }),
                 'status': 'READY',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_case[startCase-False-["group-name"]|groups-100]
-  <class 'dict'> {
-    'startCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'startCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
+          }),
+        }),
         'parentWorkItem': None,
         'status': 'RUNNING',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'addressedGroups': <class 'list'> [
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
                   'group-name',
-                ],
-                'document': <class 'dict'> {
-                  'form': <class 'dict'> {
+                ]),
+                'document': dict({
+                  'form': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
+                  }),
+                }),
                 'status': 'READY',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_case[startCase-False-["group-name"]|groups-None]
-  <class 'dict'> {
-    'startCase': <class 'dict'> {
-      'case': <class 'dict'> {
-        'document': <class 'dict'> {
-          'form': <class 'dict'> {
+  dict({
+    'startCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
             'slug': 'suggest-adult-allow',
-          },
-        },
+          }),
+        }),
         'parentWorkItem': None,
         'status': 'RUNNING',
-        'workItems': <class 'dict'> {
-          'edges': <class 'list'> [
-            <class 'dict'> {
-              'node': <class 'dict'> {
-                'addressedGroups': <class 'list'> [
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
                   'group-name',
-                ],
-                'document': <class 'dict'> {
-                  'form': <class 'dict'> {
+                ]),
+                'document': dict({
+                  'form': dict({
                     'slug': 'suggest-adult-allow',
-                  },
-                },
+                  }),
+                }),
                 'status': 'READY',
-              },
-            },
-          ],
-        },
-      },
+              }),
+            }),
+          ]),
+        }),
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---

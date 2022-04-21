@@ -1,65 +1,65 @@
 # name: test_query_all_tasks[simple]
-  <class 'dict'> {
-    'allTasks': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
+  dict({
+    'allTasks': dict({
+      'edges': list([
+        dict({
+          'node': dict({
             '__typename': 'SimpleTask',
-            'description': '
+            'description': '''
               All response later state. Rock event recent public final.
               Hope star check record well.
               With Mr letter eye way society. Move enter them his half long.
-            ',
-            'meta': <class 'dict'> {
-            },
+            ''',
+            'meta': dict({
+            }),
             'name': 'Taylor Williams',
             'slug': 'suggest-adult-allow',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_comlete_task_form_task
-  <class 'dict'> {
-    'saveCompleteTaskFormTask': <class 'dict'> {
+  dict({
+    'saveCompleteTaskFormTask': dict({
       'clientMutationId': 'testid',
-      'task': <class 'dict'> {
+      'task': dict({
         '__typename': 'CompleteTaskFormTask',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'name': 'Taylor Williams',
         'slug': 'suggest-adult-allow',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_task[SaveCompleteWorkflowFormTask]
-  <class 'dict'> {
-    'saveCompleteWorkflowFormTask': <class 'dict'> {
+  dict({
+    'saveCompleteWorkflowFormTask': dict({
       'clientMutationId': 'testid',
-      'task': <class 'dict'> {
+      'task': dict({
         '__typename': 'CompleteWorkflowFormTask',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'name': 'Taylor Williams',
         'slug': 'suggest-adult-allow',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---
 # name: test_save_task[SaveSimpleTask]
-  <class 'dict'> {
-    'saveSimpleTask': <class 'dict'> {
+  dict({
+    'saveSimpleTask': dict({
       'clientMutationId': 'testid',
-      'task': <class 'dict'> {
+      'task': dict({
         '__typename': 'SimpleTask',
-        'meta': <class 'dict'> {
-        },
+        'meta': dict({
+        }),
         'name': 'Taylor Williams',
         'slug': 'suggest-adult-allow',
-      },
-    },
-  }
----
+      }),
+    }),
+  })
+# ---

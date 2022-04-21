@@ -1,91 +1,91 @@
 # name: test_query_all_documents[date-None-None-2019-02-22]
-  <class 'dict'> {
-    'allDocuments': <class 'dict'> {
-      'edges': <class 'list'> [
-      ],
+  dict({
+    'allDocuments': dict({
+      'edges': list([
+      ]),
       'totalCount': 0,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_documents[dynamic_choice-MyDataSource-5.5-None]
-  <class 'dict'> {
-    'allDocuments': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'answers': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+  dict({
+    'allDocuments': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'answers': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     '__typename': 'StringAnswer',
-                    'question': <class 'dict'> {
+                    'question': dict({
                       'label': 'Taylor Williams',
                       'slug': 'suggest-adult-allow',
-                    },
+                    }),
                     'string_value': '5.5',
-                  },
-                },
-              ],
+                  }),
+                }),
+              ]),
               'totalCount': 1,
-            },
+            }),
             'createdByUser': 'a18c653a-d278-47f1-8d6e-9ced73aeeea4',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_documents[dynamic_multiple_choice-MyDataSource-answer__value9-None]
-  <class 'dict'> {
-    'allDocuments': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'answers': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+  dict({
+    'allDocuments': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'answers': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     '__typename': 'ListAnswer',
-                    'list_value': <class 'list'> [
+                    'list_value': list([
                       '5.5',
-                    ],
-                    'question': <class 'dict'> {
+                    ]),
+                    'question': dict({
                       'label': 'Taylor Williams',
                       'slug': 'suggest-adult-allow',
-                    },
-                  },
-                },
-              ],
+                    }),
+                  }),
+                }),
+              ]),
               'totalCount': 1,
-            },
+            }),
             'createdByUser': 'a18c653a-d278-47f1-8d6e-9ced73aeeea4',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_documents[file-None-some-file.pdf-None]
-  <class 'dict'> {
-    'allDocuments': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'answers': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+  dict({
+    'allDocuments': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'answers': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     '__typename': 'FileAnswer',
-                    'fileValue': <class 'dict'> {
+                    'fileValue': dict({
                       'downloadUrl': 'http://minio/download-url/09c697fb-fd0a-4345-bb9c-99df350b0cdb_some-file.pdf',
-                      'metadata': <class 'dict'> {
+                      'metadata': dict({
                         'bucket_name': 'caluma-media',
                         'content_type': 'application/pdf',
                         'etag': '5d41402abc4b2a76b9719d911017c592',
                         'last_modified': '2021-03-05T15:24:33+00:00',
-                        'metadata': <class 'dict'> {
+                        'metadata': dict({
                           'Accept-Ranges': 'bytes',
                           'Content-Length': '5',
                           'Content-Security-Policy': 'block-all-mixed-content',
@@ -97,47 +97,47 @@
                           'Vary': 'Origin',
                           'X-Amz-Request-Id': '16697BAAD69D2214',
                           'X-Xss-Protection': '1; mode=block',
-                        },
+                        }),
                         'size': 8200,
-                      },
+                      }),
                       'name': 'some-file.pdf',
-                    },
-                    'question': <class 'dict'> {
+                    }),
+                    'question': dict({
                       'label': 'Taylor Williams',
                       'slug': 'suggest-adult-allow',
-                    },
-                  },
-                },
-              ],
+                    }),
+                  }),
+                }),
+              ]),
               'totalCount': 1,
-            },
+            }),
             'createdByUser': 'a18c653a-d278-47f1-8d6e-9ced73aeeea4',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_documents[file-None-some-other-file.pdf-None]
-  <class 'dict'> {
-    'allDocuments': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'answers': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+  dict({
+    'allDocuments': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'answers': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     '__typename': 'FileAnswer',
-                    'fileValue': <class 'dict'> {
+                    'fileValue': dict({
                       'downloadUrl': 'http://minio/download-url/09c697fb-fd0a-4345-bb9c-99df350b0cdb_some-other-file.pdf',
-                      'metadata': <class 'dict'> {
+                      'metadata': dict({
                         'bucket_name': 'caluma-media',
                         'content_type': 'application/pdf',
                         'etag': '5d41402abc4b2a76b9719d911017c592',
                         'last_modified': '2021-03-05T15:24:33+00:00',
-                        'metadata': <class 'dict'> {
+                        'metadata': dict({
                           'Accept-Ranges': 'bytes',
                           'Content-Length': '5',
                           'Content-Security-Policy': 'block-all-mixed-content',
@@ -149,705 +149,705 @@
                           'Vary': 'Origin',
                           'X-Amz-Request-Id': '16697BAAD69D2214',
                           'X-Xss-Protection': '1; mode=block',
-                        },
+                        }),
                         'size': 8200,
-                      },
+                      }),
                       'name': 'some-other-file.pdf',
-                    },
-                    'question': <class 'dict'> {
+                    }),
+                    'question': dict({
                       'label': 'Taylor Williams',
                       'slug': 'suggest-adult-allow',
-                    },
-                  },
-                },
-              ],
+                    }),
+                  }),
+                }),
+              ]),
               'totalCount': 1,
-            },
+            }),
             'createdByUser': 'a18c653a-d278-47f1-8d6e-9ced73aeeea4',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_documents[float-None-2.1-None]
-  <class 'dict'> {
-    'allDocuments': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'answers': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+  dict({
+    'allDocuments': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'answers': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     '__typename': 'FloatAnswer',
                     'float_value': 2.1,
-                    'question': <class 'dict'> {
+                    'question': dict({
                       'label': 'Taylor Williams',
                       'slug': 'suggest-adult-allow',
-                    },
-                  },
-                },
-              ],
+                    }),
+                  }),
+                }),
+              ]),
               'totalCount': 1,
-            },
+            }),
             'createdByUser': 'a18c653a-d278-47f1-8d6e-9ced73aeeea4',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_documents[integer-None-1-None]
-  <class 'dict'> {
-    'allDocuments': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'answers': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+  dict({
+    'allDocuments': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'answers': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     '__typename': 'IntegerAnswer',
                     'integer_value': 1,
-                    'question': <class 'dict'> {
+                    'question': dict({
                       'label': 'Taylor Williams',
                       'slug': 'suggest-adult-allow',
-                    },
-                  },
-                },
-              ],
+                    }),
+                  }),
+                }),
+              ]),
               'totalCount': 1,
-            },
+            }),
             'createdByUser': 'a18c653a-d278-47f1-8d6e-9ced73aeeea4',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_documents[multiple_choice-None-answer__value3-None]
-  <class 'dict'> {
-    'allDocuments': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'answers': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+  dict({
+    'allDocuments': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'answers': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     '__typename': 'ListAnswer',
-                    'list_value': <class 'list'> [
+                    'list_value': list([
                       'somevalue',
                       'anothervalue',
-                    ],
-                    'question': <class 'dict'> {
+                    ]),
+                    'question': dict({
                       'label': 'Taylor Williams',
                       'slug': 'suggest-adult-allow',
-                    },
-                  },
-                },
-              ],
+                    }),
+                  }),
+                }),
+              ]),
               'totalCount': 1,
-            },
+            }),
             'createdByUser': 'a18c653a-d278-47f1-8d6e-9ced73aeeea4',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_documents[table-None-None-None]
-  <class 'dict'> {
-    'allDocuments': <class 'dict'> {
-      'edges': <class 'list'> [
-      ],
+  dict({
+    'allDocuments': dict({
+      'edges': list([
+      ]),
       'totalCount': 0,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_query_all_documents[text-None-somevalue-None]
-  <class 'dict'> {
-    'allDocuments': <class 'dict'> {
-      'edges': <class 'list'> [
-        <class 'dict'> {
-          'node': <class 'dict'> {
-            'answers': <class 'dict'> {
-              'edges': <class 'list'> [
-                <class 'dict'> {
-                  'node': <class 'dict'> {
+  dict({
+    'allDocuments': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'answers': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
                     '__typename': 'StringAnswer',
-                    'question': <class 'dict'> {
+                    'question': dict({
                       'label': 'Taylor Williams',
                       'slug': 'suggest-adult-allow',
-                    },
+                    }),
                     'string_value': 'somevalue',
-                  },
-                },
-              ],
+                  }),
+                }),
+              ]),
               'totalCount': 1,
-            },
+            }),
             'createdByUser': 'a18c653a-d278-47f1-8d6e-9ced73aeeea4',
-          },
-        },
-      ],
+          }),
+        }),
+      ]),
       'totalCount': 1,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[choice-question__configuration17-None-question__format_validators17-option-slug-None-SaveDocumentStringAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'option-slug',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[choice-question__configuration17-None-question__format_validators17-option-slug-None-SaveDocumentStringAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=choice), value='option-slug')
----
+# ---
 # name: test_save_document_answer[choice-question__configuration17-None-question__format_validators17-option-slug-None-SaveDocumentStringAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'option-slug',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[choice-question__configuration17-None-question__format_validators17-option-slug-None-SaveDocumentStringAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=choice), value='option-slug')
----
+# ---
 # name: test_save_document_answer[date-question__configuration7-None-question__format_validators7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentDateAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentDateAnswer': dict({
+      'answer': dict({
         '__typename': 'DateAnswer',
         'dateValue': '2019-02-22',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[date-question__configuration7-None-question__format_validators7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=date), value=None)
----
+# ---
 # name: test_save_document_answer[date-question__configuration7-None-question__format_validators7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentDateAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentDateAnswer': dict({
+      'answer': dict({
         '__typename': 'DateAnswer',
         'dateValue': '2019-02-22',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[date-question__configuration7-None-question__format_validators7-None-2019-02-22-SaveDocumentDateAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=date), value=None)
----
+# ---
 # name: test_save_document_answer[dynamic_choice-question__configuration21-MyDataSource-question__format_validators21-5.5-None-SaveDocumentStringAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': '5.5',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[dynamic_choice-question__configuration21-MyDataSource-question__format_validators21-5.5-None-SaveDocumentStringAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=dynamic_choice), value='5.5')
----
+# ---
 # name: test_save_document_answer[dynamic_choice-question__configuration21-MyDataSource-question__format_validators21-5.5-None-SaveDocumentStringAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': '5.5',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[dynamic_choice-question__configuration21-MyDataSource-question__format_validators21-5.5-None-SaveDocumentStringAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=dynamic_choice), value='5.5')
----
+# ---
 # name: test_save_document_answer[dynamic_multiple_choice-question__configuration19-MyDataSource-question__format_validators19-answer__value19-None-SaveDocumentListAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentListAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentListAnswer': dict({
+      'answer': dict({
         '__typename': 'ListAnswer',
-        'listValue': <class 'list'> [
+        'listValue': list([
           '5.5',
           '1',
-        ],
-      },
+        ]),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[dynamic_multiple_choice-question__configuration19-MyDataSource-question__format_validators19-answer__value19-None-SaveDocumentListAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=dynamic_multiple_choice), value=['5.5', '1'])
----
+# ---
 # name: test_save_document_answer[dynamic_multiple_choice-question__configuration19-MyDataSource-question__format_validators19-answer__value19-None-SaveDocumentListAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentListAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentListAnswer': dict({
+      'answer': dict({
         '__typename': 'ListAnswer',
-        'listValue': <class 'list'> [
+        'listValue': list([
           '5.5',
           '1',
-        ],
-      },
+        ]),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[dynamic_multiple_choice-question__configuration19-MyDataSource-question__format_validators19-answer__value19-None-SaveDocumentListAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=dynamic_multiple_choice), value=['5.5', '1'])
----
+# ---
 # name: test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentFileAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentFileAnswer': dict({
+      'answer': dict({
         '__typename': 'FileAnswer',
-        'fileValue': <class 'dict'> {
+        'fileValue': dict({
           'name': 'not-exist.pdf',
           'uploadUrl': 'http://minio/upload-url',
-        },
-      },
+        }),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=file), value=None)
----
+# ---
 # name: test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentFileAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentFileAnswer': dict({
+      'answer': dict({
         '__typename': 'FileAnswer',
-        'fileValue': <class 'dict'> {
+        'fileValue': dict({
           'name': 'not-exist.pdf',
           'uploadUrl': 'http://minio/upload-url',
-        },
-      },
+        }),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=file), value=None)
----
+# ---
 # name: test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentFileAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentFileAnswer': dict({
+      'answer': dict({
         '__typename': 'FileAnswer',
-        'fileValue': <class 'dict'> {
+        'fileValue': dict({
           'name': 'some-file.pdf',
           'uploadUrl': 'http://minio/upload-url',
-        },
-      },
+        }),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=file), value=None)
----
+# ---
 # name: test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentFileAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentFileAnswer': dict({
+      'answer': dict({
         '__typename': 'FileAnswer',
-        'fileValue': <class 'dict'> {
+        'fileValue': dict({
           'name': 'some-file.pdf',
           'uploadUrl': 'http://minio/upload-url',
-        },
-      },
+        }),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=file), value=None)
----
+# ---
 # name: test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentFloatAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentFloatAnswer': dict({
+      'answer': dict({
         '__typename': 'FloatAnswer',
         'floatValue': 2.1,
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=float), value=2.1)
----
+# ---
 # name: test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentFloatAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentFloatAnswer': dict({
+      'answer': dict({
         '__typename': 'FloatAnswer',
         'floatValue': 2.1,
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=float), value=2.1)
----
+# ---
 # name: test_save_document_answer[integer-question__configuration0-None-question__format_validators0-1-None-SaveDocumentIntegerAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentIntegerAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentIntegerAnswer': dict({
+      'answer': dict({
         '__typename': 'IntegerAnswer',
         'integerValue': 1,
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[integer-question__configuration0-None-question__format_validators0-1-None-SaveDocumentIntegerAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=integer), value=1)
----
+# ---
 # name: test_save_document_answer[integer-question__configuration0-None-question__format_validators0-1-None-SaveDocumentIntegerAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentIntegerAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentIntegerAnswer': dict({
+      'answer': dict({
         '__typename': 'IntegerAnswer',
         'integerValue': 1,
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[integer-question__configuration0-None-question__format_validators0-1-None-SaveDocumentIntegerAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=integer), value=1)
----
+# ---
 # name: test_save_document_answer[multiple_choice-question__configuration15-None-question__format_validators15-answer__value15-None-SaveDocumentListAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentListAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentListAnswer': dict({
+      'answer': dict({
         '__typename': 'ListAnswer',
-        'listValue': <class 'list'> [
+        'listValue': list([
           'option-slug',
-        ],
-      },
+        ]),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[multiple_choice-question__configuration15-None-question__format_validators15-answer__value15-None-SaveDocumentListAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=multiple_choice), value=['option-slug'])
----
+# ---
 # name: test_save_document_answer[multiple_choice-question__configuration15-None-question__format_validators15-answer__value15-None-SaveDocumentListAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentListAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentListAnswer': dict({
+      'answer': dict({
         '__typename': 'ListAnswer',
-        'listValue': <class 'list'> [
+        'listValue': list([
           'option-slug',
-        ],
-      },
+        ]),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[multiple_choice-question__configuration15-None-question__format_validators15-answer__value15-None-SaveDocumentListAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=multiple_choice), value=['option-slug'])
----
+# ---
 # name: test_save_document_answer[table-question__configuration12-None-question__format_validators12-None-None-SaveDocumentTableAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentTableAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentTableAnswer': dict({
+      'answer': dict({
         '__typename': 'TableAnswer',
-        'table_value': <class 'list'> [
-          <class 'dict'> {
-            'form': <class 'dict'> {
+        'table_value': list([
+          dict({
+            'form': dict({
               'slug': 'eight-traditional',
-            },
-          },
-          <class 'dict'> {
-            'form': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'form': dict({
               'slug': 'eight-traditional',
-            },
-          },
-        ],
-      },
+            }),
+          }),
+        ]),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[table-question__configuration12-None-question__format_validators12-None-None-SaveDocumentTableAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=measure-evening)), question=Question(slug=environmental-ten, type=table), value=None)
----
+# ---
 # name: test_save_document_answer[table-question__configuration12-None-question__format_validators12-None-None-SaveDocumentTableAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentTableAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentTableAnswer': dict({
+      'answer': dict({
         '__typename': 'TableAnswer',
-        'table_value': <class 'list'> [
-          <class 'dict'> {
-            'form': <class 'dict'> {
+        'table_value': list([
+          dict({
+            'form': dict({
               'slug': 'eight-traditional',
-            },
-          },
-          <class 'dict'> {
-            'form': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'form': dict({
               'slug': 'eight-traditional',
-            },
-          },
-        ],
-      },
+            }),
+          }),
+        ]),
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[table-question__configuration12-None-question__format_validators12-None-None-SaveDocumentTableAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=measure-evening)), question=Question(slug=environmental-ten, type=table), value=None)
----
+# ---
 # name: test_save_document_answer[text-question__configuration24-None-question__format_validators24-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'test@example.com',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[text-question__configuration24-None-question__format_validators24-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=text), value='test@example.com')
----
+# ---
 # name: test_save_document_answer[text-question__configuration24-None-question__format_validators24-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'test@example.com',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[text-question__configuration24-None-question__format_validators24-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=text), value='test@example.com')
----
+# ---
 # name: test_save_document_answer[text-question__configuration4-None-question__format_validators4-Test-None-SaveDocumentStringAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'Test',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[text-question__configuration4-None-question__format_validators4-Test-None-SaveDocumentStringAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=text), value='Test')
----
+# ---
 # name: test_save_document_answer[text-question__configuration4-None-question__format_validators4-Test-None-SaveDocumentStringAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'Test',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[text-question__configuration4-None-question__format_validators4-Test-None-SaveDocumentStringAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=text), value='Test')
----
+# ---
 # name: test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'Test',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=textarea), value='Test')
----
+# ---
 # name: test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'Test',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[textarea-question__configuration13-None-question__format_validators13-Test-None-SaveDocumentStringAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=textarea), value='Test')
----
+# ---
 # name: test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-False-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'test@example.com',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-False-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=textarea), value='test@example.com')
----
+# ---
 # name: test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': 'test@example.com',
-      },
+      }),
       'clientMutationId': 'testid',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer[textarea-question__configuration26-None-question__format_validators26-test@example.com-None-SaveDocumentStringAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=textarea), value='test@example.com')
----
+# ---
 # name: test_save_document_answer_empty[text-false-old value that needs to be deleted-False]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': None,
-      },
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_save_document_answer_empty[text-false-old value that needs to be deleted-True]
-  <class 'dict'> {
-    'saveDocumentStringAnswer': <class 'dict'> {
-      'answer': <class 'dict'> {
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
         '__typename': 'StringAnswer',
         'stringValue': None,
-      },
+      }),
       'clientMutationId': None,
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_selected_options[choice-somevalue-somevalue]
-  <class 'dict'> {
-    'node': <class 'dict'> {
-      'selectedOption': <class 'dict'> {
+  dict({
+    'node': dict({
+      'selectedOption': dict({
         'label': 'Calvin Graham',
         'slug': 'somevalue',
-      },
+      }),
       'string_value': 'somevalue',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_selected_options[dynamic_choice-somevalue-somevalue]
-  <class 'dict'> {
-    'node': <class 'dict'> {
-      'selectedOption': <class 'dict'> {
+  dict({
+    'node': dict({
+      'selectedOption': dict({
         'label': 'William Sloan',
         'slug': 'somevalue',
-      },
+      }),
       'string_value': 'somevalue',
-    },
-  }
----
+    }),
+  })
+# ---
 # name: test_selected_options[dynamic_multiple_choice-answer__value4-expected_values4]
-  <class 'dict'> {
-    'node': <class 'dict'> {
-      'list_value': <class 'list'> [
+  dict({
+    'node': dict({
+      'list_value': list([
         'somevalue',
         'anothervalue',
-      ],
-      'selectedOptions': <class 'dict'> {
-        'edges': <class 'list'> [
-          <class 'dict'> {
-            'node': <class 'dict'> {
+      ]),
+      'selectedOptions': dict({
+        'edges': list([
+          dict({
+            'node': dict({
               'label': 'William Sloan',
               'slug': 'somevalue',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'label': 'Felicia Adams',
               'slug': 'anothervalue',
-            },
-          },
-        ],
-      },
-    },
-  }
----
+            }),
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---
 # name: test_selected_options[multiple_choice-answer__value1-expected_values1]
-  <class 'dict'> {
-    'node': <class 'dict'> {
-      'list_value': <class 'list'> [
+  dict({
+    'node': dict({
+      'list_value': list([
         'somevalue',
         'anothervalue',
-      ],
-      'selectedOptions': <class 'dict'> {
-        'edges': <class 'list'> [
-          <class 'dict'> {
-            'node': <class 'dict'> {
+      ]),
+      'selectedOptions': dict({
+        'edges': list([
+          dict({
+            'node': dict({
               'label': 'Calvin Graham',
               'slug': 'somevalue',
-            },
-          },
-          <class 'dict'> {
-            'node': <class 'dict'> {
+            }),
+          }),
+          dict({
+            'node': dict({
               'label': 'Mary White',
               'slug': 'anothervalue',
-            },
-          },
-        ],
-      },
-    },
-  }
----
+            }),
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---
 # name: test_selected_options[multiple_choice-answer__value2-expected_values2]
-  <class 'dict'> {
-    'node': <class 'dict'> {
-      'list_value': <class 'list'> [
-      ],
-      'selectedOptions': <class 'dict'> {
-        'edges': <class 'list'> [
-        ],
-      },
-    },
-  }
----
+  dict({
+    'node': dict({
+      'list_value': list([
+      ]),
+      'selectedOptions': dict({
+        'edges': list([
+        ]),
+      }),
+    }),
+  })
+# ---
 # name: test_selected_options[text-somevalue-None]
-  <class 'dict'> {
-    'node': <class 'dict'> {
+  dict({
+    'node': dict({
       'selectedOption': None,
       'string_value': 'somevalue',
-    },
-  }
----
+    }),
+  })
+# ---
