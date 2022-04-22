@@ -858,7 +858,7 @@ python-versions = "*"
 
 [[package]]
 name = "minio"
-version = "7.1.6"
+version = "7.1.7"
 description = "MinIO Python SDK for Amazon S3 Compatible Cloud Storage"
 category = "main"
 optional = false
@@ -2183,8 +2183,8 @@ mccabe = [
     {file = "mccabe-0.6.1.tar.gz", hash = "sha256:dd8d182285a0fe56bace7f45b5e7d1a6ebcbf524e8f3bd87eb0f125271b8831f"},
 ]
 minio = [
-    {file = "minio-7.1.6-py3-none-any.whl", hash = "sha256:1ed6d4df7bbd505be984657ecce81ac6b196f434acf23315227aa892c98f9531"},
-    {file = "minio-7.1.6.tar.gz", hash = "sha256:54a5e6eefcc958c88c493cf116ba86e52341efab88686163594f2e9410385124"},
+    {file = "minio-7.1.7-py3-none-any.whl", hash = "sha256:b03497a94a79f782c5cc2450e505a25b3f0142118cf7a0cadb93219a0d5014d0"},
+    {file = "minio-7.1.7.tar.gz", hash = "sha256:191278a7f572080b9677891fa19801750a8de3a25b978de73551409413e64362"},
 ]
 mypy-extensions = [
     {file = "mypy_extensions-0.4.3-py2.py3-none-any.whl", hash = "sha256:090fedd75945a69ae91ce1303b5824f428daf5a028d2f6ab8a299250a846f15d"},
