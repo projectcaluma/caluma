@@ -120,6 +120,12 @@
     invert: Boolean
   }
   
+  input AnalyticsFieldOrderSetType {
+    meta: String
+    attribute: SortableAnalyticsFieldAttributes
+    direction: AscDesc
+  }
+  
   type AnalyticsOutput {
     records(before: String = null, after: String = null, first: Int = null, last: Int = null): AnalyticsTableContentConnection
     summary: AnalyticsRowConnection
@@ -1036,6 +1042,12 @@
     invert: Boolean
   }
   
+  input DynamicOptionOrderSetType {
+    meta: String
+    attribute: SortableDynamicOptionAttributes
+    direction: AscDesc
+  }
+  
   interface DynamicQuestion {
     options(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
     dataSource: String!
@@ -1198,6 +1210,12 @@
   """
   scalar FlowJexl
   
+  input FlowOrderSetType {
+    meta: String
+    attribute: SortableFlowAttributes
+    direction: AscDesc
+  }
+  
   type Form implements Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1211,34 +1229,7 @@
     meta: GenericScalar
     isPublished: Boolean!
     isArchived: Boolean!
-    questions(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      label: String = null
-      isRequired: String = null
-      isHidden: String = null
-      isArchived: Boolean = null
-      subForm: ID = null
-      rowForm: ID = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      excludeForms: [ID] = null
-      search: String = null
-      slugs: [String] = null
-    ): QuestionConnection
+    questions(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [QuestionFilterSetType] = null, order: [QuestionOrderSetType] = null): QuestionConnection
   
     """Reference this form has been copied from"""
     source: Form
@@ -1859,7 +1850,7 @@
     documentAsOf(id: ID!, asOf: DateTime!): HistoricalDocument
     allAnalyticsTables(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [AnalyticsTableFilterSetType] = null, order: [AnalyticsTableOrderSetType] = null): AnalyticsTableConnection
     analyticsTable(slug: String!): AnalyticsTable
-    allAnalyticsFields(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [AnalyticsFieldFilterSetType] = null): AnalyticsFieldConnection
+    allAnalyticsFields(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [AnalyticsFieldFilterSetType] = null, order: [AnalyticsFieldOrderSetType] = null): AnalyticsFieldConnection
     allDataSources(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceConnection
     dataSource(name: String!, before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
     allWorkflows(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [WorkflowFilterSetType] = null, order: [WorkflowOrderSetType] = null): WorkflowConnection
@@ -1870,7 +1861,7 @@
     allQuestions(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [QuestionFilterSetType] = null, order: [QuestionOrderSetType] = null): QuestionConnection
     allDocuments(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [DocumentFilterSetType] = null, order: [DocumentOrderSetType] = null): DocumentConnection
     allFormatValidators(before: String = null, after: String = null, first: Int = null, last: Int = null): FormatValidatorConnection
-    allUsedDynamicOptions(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [DynamicOptionFilterSetType] = null): DynamicOptionConnection
+    allUsedDynamicOptions(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [DynamicOptionFilterSetType] = null, order: [DynamicOptionOrderSetType] = null): DynamicOptionConnection
     documentValidity(id: ID!, before: String = null, after: String = null, first: Int = null, last: Int = null): DocumentValidityConnection
     node(
       """The ID of the object"""
@@ -2872,13 +2863,15 @@
     clientMutationId: String
   }
   
+  enum SortableAnalyticsFieldAttributes {
+    CREATED_AT
+    MODIFIED_AT
+    ALIAS
+  }
+  
   enum SortableAnalyticsTableAttributes {
     CREATED_AT
     MODIFIED_AT
-    CREATED_BY_USER
-    CREATED_BY_GROUP
-    MODIFIED_BY_USER
-    MODIFIED_BY_GROUP
     SLUG
     NAME
   }
@@ -2886,21 +2879,15 @@
   enum SortableAnswerAttributes {
     CREATED_AT
     MODIFIED_AT
-    CREATED_BY_USER
-    CREATED_BY_GROUP
-    MODIFIED_BY_USER
-    MODIFIED_BY_GROUP
     QUESTION
     VALUE
-    DOCUMENT
     DATE
-    FILE
   }
   
   enum SortableCaseAttributes {
+    CREATED_AT
+    MODIFIED_AT
     ALLOW_ALL_FORMS
-    CREATED_BY_GROUP
-    CREATED_BY_USER
     DESCRIPTION
     IS_ARCHIVED
     IS_PUBLISHED
@@ -2912,21 +2899,26 @@
   enum SortableDocumentAttributes {
     CREATED_AT
     MODIFIED_AT
-    CREATED_BY_USER
-    CREATED_BY_GROUP
-    MODIFIED_BY_USER
-    MODIFIED_BY_GROUP
     FORM
-    SOURCE
+  }
+  
+  enum SortableDynamicOptionAttributes {
+    CREATED_AT
+    MODIFIED_AT
+    SLUG
+    LABEL
+    QUESTION
+  }
+  
+  enum SortableFlowAttributes {
+    CREATED_AT
+    MODIFIED_AT
+    TASK
   }
   
   enum SortableFormAttributes {
     CREATED_AT
     MODIFIED_AT
-    CREATED_BY_USER
-    CREATED_BY_GROUP
-    MODIFIED_BY_USER
-    MODIFIED_BY_GROUP
     SLUG
     NAME
     DESCRIPTION
@@ -2937,10 +2929,6 @@
   enum SortableOptionAttributes {
     CREATED_AT
     MODIFIED_AT
-    CREATED_BY_USER
-    CREATED_BY_GROUP
-    MODIFIED_BY_USER
-    MODIFIED_BY_GROUP
     SLUG
     LABEL
     IS_ARCHIVED
@@ -2949,10 +2937,6 @@
   enum SortableQuestionAttributes {
     CREATED_AT
     MODIFIED_AT
-    CREATED_BY_USER
-    CREATED_BY_GROUP
-    MODIFIED_BY_USER
-    MODIFIED_BY_GROUP
     SLUG
     LABEL
     TYPE
@@ -2966,11 +2950,11 @@
   }
   
   enum SortableTaskAttributes {
+    CREATED_AT
+    MODIFIED_AT
     ALLOW_ALL_FORMS
     LEAD_TIME
     TYPE
-    CREATED_BY_GROUP
-    CREATED_BY_USER
     DESCRIPTION
     IS_ARCHIVED
     IS_PUBLISHED
@@ -2979,13 +2963,11 @@
   }
   
   enum SortableWorkItemAttributes {
-    ALLOW_ALL_FORMS
-    CREATED_BY_GROUP
-    CREATED_BY_USER
-    DESCRIPTION
     CREATED_AT
     MODIFIED_AT
     CLOSED_AT
+    ALLOW_ALL_FORMS
+    DESCRIPTION
     IS_ARCHIVED
     IS_PUBLISHED
     NAME
@@ -2995,9 +2977,9 @@
   }
   
   enum SortableWorkflowAttributes {
+    CREATED_AT
+    MODIFIED_AT
     ALLOW_ALL_FORMS
-    CREATED_BY_GROUP
-    CREATED_BY_USER
     DESCRIPTION
     IS_ARCHIVED
     IS_PUBLISHED
@@ -3442,7 +3424,7 @@
   
     """List of tasks referenced in workflow"""
     tasks: [Task]!
-    flows(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FlowFilterSetType] = null): FlowConnection
+    flows(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FlowFilterSetType] = null, order: [FlowOrderSetType] = null): FlowConnection
   }
   
   type WorkflowConnection {

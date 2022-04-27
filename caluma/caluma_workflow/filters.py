@@ -1,5 +1,5 @@
 import graphene
-from django_filters.rest_framework import BooleanFilter
+from django_filters.rest_framework import BooleanFilter, MultipleChoiceFilter
 
 from ..caluma_core.filters import (
     BaseFilterSet,
@@ -8,7 +8,6 @@ from ..caluma_core.filters import (
     JSONValueFilter,
     MetaFilterSet,
     SearchFilter,
-    SlugMultipleChoiceFilter,
     StringListFilter,
     generate_list_filter_class,
 )
@@ -49,9 +48,9 @@ class WorkflowOrderSet(BaseFilterSet):
     attribute = AttributeOrderingFactory(
         models.Workflow,
         fields=[
+            "created_at",
+            "modified_at",
             "allow_all_forms",
-            "created_by_group",
-            "created_by_user",
             "description",
             "is_archived",
             "is_published",
@@ -73,11 +72,23 @@ class FlowFilterSet(BaseFilterSet):
         fields = ("task",)
 
 
+class FlowOrderSet(BaseFilterSet):
+    meta = MetaFieldOrdering()
+    attribute = AttributeOrderingFactory(
+        models.Flow,
+        fields=["created_at", "modified_at", "task"],
+    )
+
+    class Meta:
+        model = models.Flow
+        fields = ("meta", "attribute")
+
+
 class CaseFilterSet(MetaFilterSet):
     id = GlobalIDFilter()
 
     document_form = CharFilter(field_name="document__form_id")
-    document_forms = SlugMultipleChoiceFilter(field_name="document__form_id")
+    document_forms = MultipleChoiceFilter(field_name="document__form_id")
     has_answer = HasAnswerFilter(document_id="document__pk")
     work_item_document_has_answer = HasAnswerFilter(
         document_id="work_items__document__pk"
@@ -96,9 +107,9 @@ class CaseOrderSet(BaseFilterSet):
     attribute = AttributeOrderingFactory(
         models.Case,
         fields=[
+            "created_at",
+            "modified_at",
             "allow_all_forms",
-            "created_by_group",
-            "created_by_user",
             "description",
             "is_archived",
             "is_published",
@@ -127,11 +138,11 @@ class TaskOrderSet(BaseFilterSet):
     attribute = AttributeOrderingFactory(
         models.Task,
         fields=[
+            "created_at",
+            "modified_at",
             "allow_all_forms",
             "lead_time",
             "type",
-            "created_by_group",
-            "created_by_user",
             "description",
             "is_archived",
             "is_published",
@@ -156,7 +167,7 @@ class WorkItemFilterSet(MetaFilterSet):
     case_meta_value = JSONValueFilter(field_name="case__meta")
     root_case_meta_value = JSONValueFilter(field_name="case__family__meta")
 
-    tasks = SlugMultipleChoiceFilter(field_name="task_id")
+    tasks = MultipleChoiceFilter(field_name="task_id")
 
     has_deadline = BooleanFilter(
         field_name="deadline", lookup_expr="isnull", exclude=True
@@ -186,13 +197,11 @@ class WorkItemOrderSet(BaseFilterSet):
     attribute = AttributeOrderingFactory(
         models.WorkItem,
         fields=[
-            "allow_all_forms",
-            "created_by_group",
-            "created_by_user",
-            "description",
             "created_at",
             "modified_at",
             "closed_at",
+            "allow_all_forms",
+            "description",
             "is_archived",
             "is_published",
             "name",

@@ -4,7 +4,7 @@ from graphene.types import ObjectType, generic
 
 from ..caluma_core.filters import (
     CollectionFilterSetFactory,
-    DjangoFilterSetConnectionField,
+    DjangoFilterConnectionField,
 )
 from ..caluma_core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..caluma_core.types import (
@@ -213,18 +213,21 @@ class Mutation:
 
 
 class Query:
-    all_analytics_tables = DjangoFilterSetConnectionField(
-        AnalyticsTable._meta.connection,
+    all_analytics_tables = DjangoFilterConnectionField(
+        AnalyticsTable,
         filterset_class=CollectionFilterSetFactory(
-            filters.AnalyticsTableFilterSet,
+            filterset_class=filters.AnalyticsTableFilterSet,
             orderset_class=filters.AnalyticsTableOrderSet,
         ),
     )
     analytics_table = graphene.Field(AnalyticsTable, slug=String(required=True))
 
-    all_analytics_fields = DjangoFilterSetConnectionField(
-        AnalyticsField._meta.connection,
-        filterset_class=CollectionFilterSetFactory(filters.AnalyticsFieldFilterSet),
+    all_analytics_fields = DjangoFilterConnectionField(
+        AnalyticsField,
+        filterset_class=CollectionFilterSetFactory(
+            filterset_class=filters.AnalyticsFieldFilterSet,
+            orderset_class=filters.AnalyticsFieldOrderSet,
+        ),
     )
 
     @staticmethod
