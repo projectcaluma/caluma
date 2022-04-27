@@ -29,7 +29,7 @@ def test_search(
 
     query = """
         query ($search: [SearchAnswersFilterType!]) {
-          allDocuments (searchAnswers: $search) {
+          allDocuments(filter: [{searchAnswers: $search}]) {
             edges {
               node {
                 id
@@ -117,7 +117,7 @@ def test_search_choice(
 
     query = """
         query ($search: [SearchAnswersFilterType!]) {
-          allDocuments (searchAnswers: $search) {
+          allDocuments(filter: [{searchAnswers: $search}]) {
             edges {
               node {
                 id
@@ -171,7 +171,7 @@ def test_search_multiple(
 
     query = """
         query ($search: [SearchAnswersFilterType!]) {
-          allDocuments (searchAnswers: $search) {
+          allDocuments(filter: [{searchAnswers: $search}]) {
             edges {
               node {
                 id
@@ -209,7 +209,7 @@ def test_search_invalid_question_type(schema_executor, db, question_factory):
     result = schema_executor(
         """
             query ($search: [SearchAnswersFilterType!]) {
-              allDocuments (searchAnswers: $search) {
+              allDocuments(filter: [{searchAnswers: $search}]) {
                 edges {
                   node {
                     id

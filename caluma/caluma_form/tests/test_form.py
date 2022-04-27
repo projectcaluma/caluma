@@ -27,8 +27,8 @@ def test_query_all_forms(
     form_question_factory(form=form)
 
     query = """
-        query AllFormsQuery($name: String, $question: String, $orderBy: [FormOrdering]) {
-          allForms(name: $name, orderBy: $orderBy) {
+        query AllFormsQuery($name: String, $question: String, $order: [FormOrderSetType]) {
+          allForms(filter: [{name: $name}], order: $order) {
             edges {
               node {
                 id
@@ -55,7 +55,10 @@ def test_query_all_forms(
         query,
         variable_values={
             "question": str(question.label),
-            "orderBy": ["NAME_ASC", "CREATED_AT_ASC"],
+            "order": [
+                {"attribute": "NAME", "direction": "ASC"},
+                {"attribute": "CREATED_AT", "direction": "ASC"},
+            ],
         },
     )
 
@@ -68,8 +71,8 @@ def test_optional_filter(db, form_factory, question, schema_executor):
     form_factory(name="2nd", description="Second result")
 
     query = """
-        query Form($slug: String) {
-          allForms(filter: [{ slug: $slug }]) {
+        query Form($slugs: [String]) {
+          allForms(filter: [{ slugs: $slugs }]) {
             totalCount
           }
         }

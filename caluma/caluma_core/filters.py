@@ -3,12 +3,11 @@ from functools import reduce, singledispatch
 
 import graphene
 from django import forms
-from django.conf import settings
 from django.contrib.postgres.fields.hstore import KeyTransform
 from django.contrib.postgres.search import SearchVector
 from django.db import models
 from django.db.models.constants import LOOKUP_SEP
-from django.db.models.expressions import OrderBy, RawSQL
+from django.db.models.expressions import OrderBy
 from django.db.models.fields.json import KeyTextTransform
 from django.db.models.functions import Cast
 from django.utils import translation
@@ -21,19 +20,17 @@ from django_filters.rest_framework import (
     Filter,
     FilterSet,
     MultipleChoiceFilter,
-    OrderingFilter,
 )
 from graphene import Enum, InputObjectType, List
 from graphene.types import generic
 from graphene.types.utils import get_type
-from graphene.utils.str_converters import to_camel_case, to_snake_case
+from graphene.utils.str_converters import to_camel_case
 from graphene_django import filter
 from graphene_django.converter import convert_choice_name
 from graphene_django.filter.filterset import GrapheneFilterSetMixin
 from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
 from localized_fields.fields import LocalizedField
-from rest_framework.exceptions import ValidationError
 
 from .forms import (
     GlobalIDFormField,
@@ -183,8 +180,7 @@ def FilterCollectionFactory(filterset_class, ordering):  # noqa:C901
         filter_fields = {
             name: _get_or_make_field(name, filt)
             for name, filt in _filter_coll.filters.items()
-            # exclude orderBy in our fields. We want only new-style order filters
-            if _should_include_filter(filt) and name != "orderBy"
+            if _should_include_filter(filt)
         }
 
         if ordering:
@@ -238,7 +234,7 @@ def CollectionFilterSetFactory(filterset_class, orderset_class=None):
 
     ret = CollectionFilterSetFactory._cache[cache_key] = type(
         f"{filterset_class.__name__}Collection",
-        (filterset_class, FilterSet),
+        (FilterSet,),
         {
             **coll_fields,
             "Meta": type(
@@ -246,7 +242,7 @@ def CollectionFilterSetFactory(filterset_class, orderset_class=None):
                 (filterset_class.Meta,),
                 {
                     "model": filterset_class.Meta.model,
-                    "fields": filterset_class.Meta.fields + tuple(coll_fields.keys()),
+                    "fields": tuple(coll_fields.keys()),
                 },
             ),
         },
@@ -350,83 +346,17 @@ class SearchFilter(Filter):
         return qs.filter(search=value)
 
 
-class OrderingField(ChoiceField):
-    """
-    Specific ordering field used as marker to convert to graphql type.
-
-    See `convert_ordering_field_to_enum`
-    """
-
-    def validate(self, value):
-        invalid = set(value or []) - {choice[0] for choice in self.choices}
-        return not bool(invalid)
-
-    def to_python(self, value):
-        return value
-
-
 class ListField(forms.Field):
     """List field as to allow actual lists in ordering vs csv string."""
 
     pass
 
 
-class OrderingFilter(OrderingFilter):
-    """Ordering filter adding default fields from models.BaseModel.
-
-    Label is required and is used for enum naming in GraphQL schema.
-
-    This filter additionally allows sorting by meta field values.
-    """
-
-    base_field_class = ListField
-    field_class = OrderingField
-
-    def __init__(self, label, *args, fields=tuple(), **kwargs):
-        fields = tuple(fields) + (
-            "created_at",
-            "modified_at",
-            "created_by_user",
-            "created_by_group",
-            "modified_by_user",
-            "modified_by_group",
-            *[f"meta_{f}" for f in settings.META_FIELDS],
-        )
-
-        super().__init__(
-            *args,
-            fields=fields,
-            label=label,
-            empty_label=None,
-            null_label=None,
-            **kwargs,
-        )
-
-    def get_ordering_value(self, param):
-        if not any(param.startswith(prefix) for prefix in ("meta_", "-meta_")):
-            return super().get_ordering_value(param)
-
-        descending = False
-        if param.startswith("-"):
-            descending = True
-            param = param[1:]
-
-        meta_field_key = param[5:]
-
-        # order_by works on json field keys only without dashes
-        # but we want to support dasherized keys as well as this is
-        # valid json, hence need to use raw sql
-        return OrderBy(
-            RawSQL(f'"{self.model._meta.db_table}"."meta"->%s', (meta_field_key,)),
-            descending=descending,
-        )
-
-
 class IntegerFilter(Filter):
     field_class = forms.IntegerField
 
 
-class FilterSet(GrapheneFilterSetMixin, FilterSet):
+class BaseFilterSet(GrapheneFilterSetMixin, FilterSet):
     created_by_user = CharFilter()
     created_by_group = CharFilter()
     modified_by_user = CharFilter()
@@ -507,17 +437,12 @@ class JSONValueFilter(Filter):
     @staticmethod
     @convert_form_field.register(JSONValueFilterField)
     def convert_meta_value_field(field):
-        registry = get_global_registry()
-        converted = registry.get_converted_field(field)
-        if converted:
-            return converted
-
         converted = List(JSONValueFilterType)
-        registry.register_converted_field(field, converted)
+        get_global_registry().register_converted_field(field, converted)
         return converted
 
 
-class MetaFilterSet(FilterSet):
+class MetaFilterSet(BaseFilterSet):
     meta_has_key = CharFilter(lookup_expr="has_key", field_name="meta")
     meta_value = JSONValueFilter(field_name="meta")
 
@@ -581,35 +506,6 @@ class DjangoFilterConnectionField(
 
         return clean(args)
 
-    @classmethod
-    def resolve_queryset(
-        cls, connection, iterable, info, args, filtering_args, filterset_class
-    ):
-        # Overload the parent class' resolve_queryset() because (for now)
-        # it is unable to deal with multiple order_by values. It's more or less
-        # a literal copy of DjangoFilterConnectionField.resolve_queryset() except
-        # for a "better" filter_kwargs() that doesn't fail on lists in the order_by
-        # parameter.
-        def filter_kwargs():
-            kwargs = {}
-            for k, v in args.items():
-                if k in filtering_args:
-                    if k == "order_by" and v is not None:
-                        # in Caluma, order_by is always a list
-                        assert isinstance(v, list)
-                        v = [to_snake_case(e) for e in v]
-                    kwargs[k] = v
-            return kwargs
-
-        qs = connection._meta.node.get_queryset(iterable, info)
-
-        filterset = filterset_class(
-            data=filter_kwargs(), queryset=qs, request=info.context
-        )
-        if filterset.form.is_valid():
-            return filterset.qs
-        raise ValidationError(filterset.form.errors.as_json())  # pragma: no cover
-
 
 class DjangoFilterSetConnectionField(DjangoFilterConnectionField):
     @property
@@ -621,52 +517,6 @@ class DjangoFilterSetConnectionField(DjangoFilterConnectionField):
         return get_type(self._type)
 
 
-@convert_form_field.register(OrderingField)
-def convert_ordering_field_to_enum(field):
-    """
-    Add support to convert ordering choices to Graphql enum.
-
-    Label is used as enum name.
-    """
-    registry = get_global_registry()
-    converted = registry.get_converted_field(field)
-
-    if converted:
-        return converted
-
-    if field.label in convert_ordering_field_to_enum._cache:
-        return convert_ordering_field_to_enum._cache[field.label]
-
-    def get_choices(choices):
-        for value, help_text in choices:
-            if value[0] != "-":
-                name = convert_choice_name(value) + "_ASC"
-            else:
-                name = convert_choice_name(value[1:]) + "_DESC"
-            description = help_text
-            yield name, value, description
-
-    name = to_camel_case(field.label)
-    choices = list(get_choices(field.choices))
-    named_choices = [(c[0], c[1]) for c in choices]
-    named_choices_descriptions = {c[0]: c[2] for c in choices}
-
-    class EnumWithDescriptionsType(object):
-        @property
-        def description(self):
-            return named_choices_descriptions[self.name]
-
-    enum = Enum(name, list(named_choices), type=EnumWithDescriptionsType)
-    converted = List(enum, description=field.help_text, required=field.required)
-
-    registry.register_converted_field(field, converted)
-    convert_ordering_field_to_enum._cache[field.label] = converted
-    return converted
-
-
-convert_ordering_field_to_enum._cache = {}
-
-
 @convert_form_field.register(forms.ChoiceField)
 @convert_form_field.register(ChoiceField)
 def convert_choice_field_to_enum(field):
@@ -675,13 +525,6 @@ def convert_choice_field_to_enum(field):
 
     Label is used as enum name.
     """
-
-    registry = get_global_registry()
-
-    # field label of enum needs to be unique so stored it likewise
-    converted = registry.get_converted_field(field.label)
-    if converted:
-        return converted
 
     def get_choices(choices):
         for value, help_text in choices:
@@ -703,18 +546,8 @@ def convert_choice_field_to_enum(field):
     enum = Enum(name, list(named_choices), type=EnumWithDescriptionsType)
     converted = enum(description=field.help_text, required=field.required)
 
-    registry.register_converted_field(field.label, converted)
+    get_global_registry().register_converted_field(field.label, converted)
     return converted
-
-
-class _ExtractNestedListFilterMixin:
-    def filter(self, qs, value):
-        if isinstance(value, list) and len(value) and isinstance(value[0], list):
-            # TODO: this seems to be a workaround - we shouldn't
-            # get a double-nested list here. However the schema
-            # seems to show it as such...
-            value = [val for sublist in value for val in sublist]
-        return super().filter(qs, value)
 
 
 def generate_list_filter_class(inner_type):
@@ -730,10 +563,7 @@ def generate_list_filter_class(inner_type):
     form_field = type(f"List{inner_type.__name__}FormField", (forms.Field,), {})
     filter_class = type(
         f"{inner_type.__name__}ListFilter",
-        (
-            _ExtractNestedListFilterMixin,
-            Filter,
-        ),
+        (Filter,),
         {
             "field_class": form_field,
             "__doc__": (

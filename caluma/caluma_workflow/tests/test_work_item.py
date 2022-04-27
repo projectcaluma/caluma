@@ -15,8 +15,8 @@ def test_query_all_work_items_filter_status(db, work_item_factory, schema_execut
     work_item_factory(status=models.WorkItem.STATUS_COMPLETED)
 
     query = """
-        query WorkItems($status: WorkItemStatusArgument!) {
-          allWorkItems(status: $status) {
+        query WorkItems($status: Status!) {
+          allWorkItems(filter: [{status: $status}]) {
             totalCount
             edges {
               node {
@@ -47,7 +47,7 @@ def test_query_all_work_items_filter_groups(
 
     query = """
         query WorkItems($groups: [String]!) {
-          allWorkItems(addressedGroups: $groups) {
+          allWorkItems(filter: [{addressedGroups: $groups}]) {
             edges {
               node {
                 addressedGroups
@@ -60,7 +60,7 @@ def test_query_all_work_items_filter_groups(
     if key == "controlling_groups":
         query = """
             query WorkItems($groups: [String]!) {
-              allWorkItems(controllingGroups: $groups) {
+              allWorkItems(filter: [{controllingGroups: $groups}]) {
                 edges {
                   node {
                     controllingGroups
@@ -352,7 +352,7 @@ def test_complete_multiple_instance_task_form_work_item_next(
               status
               case {
                 status
-                workItems(orderBy: STATUS_DESC) {
+                workItems(order: [{ attribute: STATUS, direction: DESC }]) {
                   totalCount
                   edges {
                     node {
@@ -445,7 +445,7 @@ def test_complete_work_item_with_next(
               status
               case {
                 status
-                workItems(orderBy: STATUS_DESC) {
+                workItems(order: [{attribute: STATUS, direction: DESC}]) {
                   totalCount
                   edges {
                     node {
@@ -919,7 +919,7 @@ def test_filter_document_has_answer(
     for filt, expected in query_expect:
         query = """
             query WorkItems($has_answer: [HasAnswerFilterType!]) {
-              allWorkItems(%(filt)s: $has_answer) {
+              allWorkItems(filter: [{%(filt)s: $has_answer}]) {
                 edges {
                   node {
                     id
@@ -980,7 +980,7 @@ def test_query_all_work_items_filter_case_meta_value(
 
     query = """
         query WorkItems($case_meta_value: [JSONValueFilterType!]) {
-          allWorkItems(caseMetaValue: $case_meta_value) {
+          allWorkItems(filter: [{caseMetaValue: $case_meta_value}]) {
             totalCount
             edges {
               node {
@@ -1021,7 +1021,7 @@ def test_query_all_work_items_filter_root_case_meta_value(
 
     query = """
         query WorkItems($root_case_meta_value: [JSONValueFilterType!]) {
-          allWorkItems(rootCaseMetaValue: $root_case_meta_value) {
+          allWorkItems(filter: [{rootCaseMetaValue: $root_case_meta_value}]) {
             totalCount
             edges {
               node {

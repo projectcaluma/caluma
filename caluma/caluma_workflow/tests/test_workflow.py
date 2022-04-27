@@ -18,7 +18,7 @@ def test_query_all_workflows(
 ):
     query = """
         query AllWorkflows($name: String!) {
-          allWorkflows(name: $name) {
+          allWorkflows(filter: [{name: $name}]) {
             totalCount
             edges {
               node {

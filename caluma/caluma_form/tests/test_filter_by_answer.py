@@ -128,7 +128,7 @@ def test_query_all_questions(
 
     query = """
         query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
+          allDocuments(filter: [{hasAnswer: $hasAnswer}]) {
             edges {
               node {
                 form {
@@ -225,7 +225,7 @@ def test_has_answer_intersect(
 
     query = """
         query asdf ($hasAnswer: [HasAnswerFilterType]!) {
-          allDocuments(hasAnswer: $hasAnswer) {
+          allDocuments(filter: [{hasAnswer: $hasAnswer}]) {
             edges {
               node {
                 id
@@ -257,7 +257,7 @@ def test_visible_in_context(
           allDocuments {
             edges {
               node {
-                answers(visibleInContext: $visible) {
+                answers(filter: [{visibleInContext: $visible}]) {
                   edges {
                     node {
                       id

@@ -4,7 +4,7 @@ def test_base_model_created_by_user_filter(db, work_item_factory, schema_executo
 
     query = """
             query WorkItems($createdByUser: String!) {
-              allWorkItems(createdByUser: $createdByUser) {
+              allWorkItems(filter: [{createdByUser: $createdByUser}]) {
                 edges {
                   node {
                     createdByUser
@@ -31,7 +31,7 @@ def test_base_model_created_by_group_filter(db, work_item_factory, schema_execut
 
     query = """
                 query WorkItems($createdByGroup: String!) {
-                  allWorkItems(createdByGroup: $createdByGroup) {
+                  allWorkItems(filter: [{createdByGroup: $createdByGroup}]) {
                     edges {
                       node {
                         createdByUser

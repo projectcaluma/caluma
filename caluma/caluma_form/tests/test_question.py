@@ -43,7 +43,7 @@ def test_query_all_questions(
 
     query = """
         query AllQuestionsQuery($search: String, $forms: [ID]) {
-          allQuestions(isArchived: false, search: $search, excludeForms: $forms) {
+          allQuestions(filter: [{isArchived: false}, {search: $search}, {excludeForms: $forms}]) {
             totalCount
             edges {
               node {

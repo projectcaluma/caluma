@@ -46,7 +46,7 @@ def test_query_all_documents(
 ):
     query = """
         query AllDocumentsQuery($search: String) {
-          allDocuments(search: $search) {
+          allDocuments(filter: [{search: $search}]) {
             totalCount
             edges {
               node {
@@ -152,7 +152,7 @@ def test_complex_document_query_performance(
 
     query = """
         query ($id: ID!) {
-          allDocuments(id: $id) {
+          allDocuments(filter: [{id: $id}]) {
             edges {
               node {
                 ...FormDocument
@@ -280,7 +280,7 @@ def test_query_all_documents_filter_answers_by_question(
           allDocuments {
             edges {
               node {
-                answers(question: $question) {
+                answers(filter: [{question: $question}]) {
                   edges {
                     node {
                       id
@@ -320,7 +320,7 @@ def test_query_all_documents_filter_answers_by_questions(
             edges {
               node {
                 id
-                answers(questions: $questions) {
+                answers(filter: [{questions: $questions}]) {
                   edges {
                     node {
                       id
@@ -1422,7 +1422,7 @@ def test_document_modified_content_properties(
 
     query = """
         query AllDocumentsQuery($id: ID) {
-          allDocuments(id: $id) {
+          allDocuments(filter: [{id: $id}]) {
             totalCount
             edges {
               node {

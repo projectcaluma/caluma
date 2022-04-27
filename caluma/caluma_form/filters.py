@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.forms import BooleanField
 from django.utils import translation
 from django_filters.constants import EMPTY_VALUES
-from django_filters.rest_framework import CharFilter, Filter, FilterSet
+from django_filters.rest_framework import Filter, FilterSet
 from graphene import Enum, InputObjectType, List
 from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
@@ -17,7 +17,6 @@ from ..caluma_core.filters import (
     GlobalIDFilter,
     GlobalIDMultipleChoiceFilter,
     MetaFilterSet,
-    OrderingFilter,
     SearchFilter,
     SlugMultipleChoiceFilter,
 )
@@ -29,16 +28,12 @@ from . import models, validators
 
 class FormFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
-    order_by = OrderingFilter(label="FormOrdering", fields=("name",))
     slugs = SlugMultipleChoiceFilter(field_name="slug")
-    slug = CharFilter()
-    slug.deprecation_reason = "Use the `slugs` (plural) filter instead, which allows filtering for multiple slugs"
     questions = SlugMultipleChoiceFilter(field_name="questions__slug")
 
     class Meta:
         model = models.Form
         fields = (
-            "slug",
             "name",
             "description",
             "is_published",
@@ -73,25 +68,32 @@ class FormOrderSet(FilterSet):
 
 class OptionFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "label"))
-    order_by = OrderingFilter(label="OptionOrdering", fields=("label",))
 
     class Meta:
         model = models.Option
         fields = ("slug", "label", "is_archived")
 
 
+class OptionOrderSet(FilterSet):
+    meta = MetaFieldOrdering()
+    attribute = AttributeOrderingFactory(
+        models.Option,
+        exclude_fields=["meta", "source"],
+    )
+
+    class Meta:
+        model = models.Question
+        fields = ("meta", "attribute")
+
+
 class QuestionFilterSet(MetaFilterSet):
     exclude_forms = GlobalIDMultipleChoiceFilter(field_name="forms", exclude=True)
     search = SearchFilter(fields=("slug", "label"))
-    order_by = OrderingFilter(label="QuestionOrdering", fields=("label",))
     slugs = SlugMultipleChoiceFilter(field_name="slug")
-    slug = CharFilter()
-    slug.deprecation_reason = "Use the `slugs` (plural) filter instead, which allows filtering for multiple slugs"
 
     class Meta:
         model = models.Question
         fields = (
-            "slug",
             "label",
             "is_required",
             "is_hidden",
@@ -207,7 +209,7 @@ class HasAnswerFilter(Filter):
     VALID_LOOKUPS["calculated_float"] = VALID_LOOKUPS["float"]
 
     def filter(self, qs, value):
-        if value in EMPTY_VALUES:
+        if value in EMPTY_VALUES:  # pragma: no cover
             return qs
 
         for expr in value:
@@ -284,15 +286,10 @@ class HasAnswerFilter(Filter):
     @staticmethod
     @convert_form_field.register(HasAnswerFilterField)
     def convert_meta_value_field(field):
-        registry = get_global_registry()
-        converted = registry.get_converted_field(field)
-        if converted:
-            return converted
-
         # the converted type must be list-of-filter, as we need to apply
         # multiple conditions
         converted = List(HasAnswerFilterType)
-        registry.register_converted_field(field, converted)
+        get_global_registry().register_converted_field(field, converted)
         return converted
 
 
@@ -334,7 +331,7 @@ class SearchAnswersFilter(Filter):
         super().__init__(*args, **kwargs)
 
     def filter(self, qs, value):
-        if value in EMPTY_VALUES:
+        if value in EMPTY_VALUES:  # pragma: no cover
             return qs
 
         assert isinstance(value, list)
@@ -458,7 +455,6 @@ class DocumentFilterSet(MetaFilterSet):
             "answers__file__name",
         )
     )
-    order_by = OrderingFilter(label="DocumentOrdering")
     root_document = GlobalIDFilter(field_name="family")
     forms = GlobalIDMultipleChoiceFilter(field_name="form")
 
@@ -486,7 +482,10 @@ class VisibleAnswerFilter(Filter):
     field_class = BooleanField
 
     def filter(self, qs, value):
-        if not value or not qs.exists():
+        if value in EMPTY_VALUES or not qs.exists():  # pragma: no cover
+            # This prevents initializing the whole document structure with JEXL
+            # computations if there is no value or no queryset to avoid useless
+            # expensive computations
             return qs
 
         # assuming qs can only ever be in the context of a single document
@@ -497,7 +496,6 @@ class VisibleAnswerFilter(Filter):
 
 class AnswerFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("value", "file__name"))
-    order_by = OrderingFilter(label="AnswerOrdering")
     questions = GlobalIDMultipleChoiceFilter(field_name="question")
 
     visible_in_context = VisibleAnswerFilter()

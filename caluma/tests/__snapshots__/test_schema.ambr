@@ -17,36 +17,7 @@
     infoText: String
     meta: GenericScalar!
     source: Question
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -289,9 +260,6 @@
     createdAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
-  
-    """"""
-    orderBy: [AnswerOrdering]
     questions: [ID]
     visibleInContext: Boolean
     invert: Boolean
@@ -320,57 +288,6 @@
     meta: String
     attribute: SortableAnswerAttributes
     direction: AscDesc
-  }
-  
-  """An enumeration."""
-  enum AnswerOrdering {
-    """Created at"""
-    CREATED_AT_ASC
-  
-    """Created at (descending)"""
-    CREATED_AT_DESC
-  
-    """Modified at"""
-    MODIFIED_AT_ASC
-  
-    """Modified at (descending)"""
-    MODIFIED_AT_DESC
-  
-    """Created by user"""
-    CREATED_BY_USER_ASC
-  
-    """Created by user (descending)"""
-    CREATED_BY_USER_DESC
-  
-    """Created by group"""
-    CREATED_BY_GROUP_ASC
-  
-    """Created by group (descending)"""
-    CREATED_BY_GROUP_DESC
-  
-    """Modified by user"""
-    MODIFIED_BY_USER_ASC
-  
-    """Modified by user (descending)"""
-    MODIFIED_BY_USER_DESC
-  
-    """Modified by group"""
-    MODIFIED_BY_GROUP_ASC
-  
-    """Modified by group (descending)"""
-    MODIFIED_BY_GROUP_DESC
-  
-    """Meta test-key"""
-    META_TEST_KEY_ASC
-  
-    """Meta test-key (descending)"""
-    META_TEST_KEY_DESC
-  
-    """Meta foobar"""
-    META_FOOBAR_ASC
-  
-    """Meta foobar (descending)"""
-    META_FOOBAR_DESC
   }
   
   enum AscDesc {
@@ -450,36 +367,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
     calcExpression: String
   
     """The ID of the object"""
@@ -579,93 +467,9 @@
     status: CaseStatus!
     meta: GenericScalar
     document: Document
-    workItems(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-      status: WorkItemStatusArgument = null
-      name: String = null
-      task: ID = null
-      tasks: [String] = null
-      case: ID = null
-      createdAt: DateTime = null
-      closedAt: DateTime = null
-      modifiedAt: DateTime = null
-      deadline: DateTime = null
-      hasDeadline: Boolean = null
-      caseFamily: ID = null
-  
-      """WorkItemOrdering"""
-      orderBy: [WorkItemOrdering] = null
-      filter: [WorkItemFilterSetType] = null
-      order: [WorkItemOrderSetType] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      id: ID = null
-      addressedGroups: [String] = null
-      controllingGroups: [String] = null
-      assignedUsers: [String] = null
-      documentHasAnswer: [HasAnswerFilterType] = null
-      caseDocumentHasAnswer: [HasAnswerFilterType] = null
-      caseMetaValue: [JSONValueFilterType] = null
-      rootCaseMetaValue: [JSONValueFilterType] = null
-    ): WorkItemConnection
+    workItems(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [WorkItemFilterSetType] = null, order: [WorkItemOrderSetType] = null): WorkItemConnection
     parentWorkItem: WorkItem
-    familyWorkItems(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-      status: WorkItemStatusArgument = null
-  
-      """WorkItemOrdering"""
-      orderBy: [WorkItemOrdering] = null
-      filter: [WorkItemFilterSetType] = null
-      order: [WorkItemOrderSetType] = null
-      documentHasAnswer: [HasAnswerFilterType] = null
-      caseDocumentHasAnswer: [HasAnswerFilterType] = null
-      caseMetaValue: [JSONValueFilterType] = null
-      rootCaseMetaValue: [JSONValueFilterType] = null
-      name: String = null
-      task: ID = null
-      tasks: [String] = null
-      case: ID = null
-      createdAt: DateTime = null
-      closedAt: DateTime = null
-      modifiedAt: DateTime = null
-      deadline: DateTime = null
-      hasDeadline: Boolean = null
-      caseFamily: ID = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      id: ID = null
-      addressedGroups: [String] = null
-      controllingGroups: [String] = null
-      assignedUsers: [String] = null
-    ): WorkItemConnection
+    familyWorkItems(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [WorkItemFilterSetType] = null, order: [WorkItemOrderSetType] = null): WorkItemConnection
   }
   
   type CaseConnection {
@@ -697,9 +501,6 @@
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     id: ID
-  
-    """"""
-    orderBy: [CaseOrdering]
     documentForm: String
     documentForms: [String]
     hasAnswer: [HasAnswerFilterType]
@@ -707,7 +508,6 @@
     rootCase: ID
     searchAnswers: [SearchAnswersFilterType]
     status: [CaseStatusArgument]
-    orderByQuestionAnswerValue: String
     invert: Boolean
   }
   
@@ -716,63 +516,6 @@
     attribute: SortableCaseAttributes
     documentAnswer: String
     direction: AscDesc
-  }
-  
-  """An enumeration."""
-  enum CaseOrdering {
-    """Status"""
-    STATUS_ASC
-  
-    """Status (descending)"""
-    STATUS_DESC
-  
-    """Created at"""
-    CREATED_AT_ASC
-  
-    """Created at (descending)"""
-    CREATED_AT_DESC
-  
-    """Modified at"""
-    MODIFIED_AT_ASC
-  
-    """Modified at (descending)"""
-    MODIFIED_AT_DESC
-  
-    """Created by user"""
-    CREATED_BY_USER_ASC
-  
-    """Created by user (descending)"""
-    CREATED_BY_USER_DESC
-  
-    """Created by group"""
-    CREATED_BY_GROUP_ASC
-  
-    """Created by group (descending)"""
-    CREATED_BY_GROUP_DESC
-  
-    """Modified by user"""
-    MODIFIED_BY_USER_ASC
-  
-    """Modified by user (descending)"""
-    MODIFIED_BY_USER_DESC
-  
-    """Modified by group"""
-    MODIFIED_BY_GROUP_ASC
-  
-    """Modified by group (descending)"""
-    MODIFIED_BY_GROUP_DESC
-  
-    """Meta test-key"""
-    META_TEST_KEY_ASC
-  
-    """Meta test-key (descending)"""
-    META_TEST_KEY_DESC
-  
-    """Meta foobar"""
-    META_FOOBAR_ASC
-  
-    """Meta foobar (descending)"""
-    META_FOOBAR_DESC
   }
   
   """An enumeration."""
@@ -817,62 +560,8 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: StringAnswer
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
-    options(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-      slug: String = null
-      label: String = null
-      isArchived: Boolean = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      search: String = null
-  
-      """OptionOrdering"""
-      orderBy: [OptionOrdering] = null
-    ): OptionConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    options(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [OptionFilterSetType] = null, order: [OptionOrderSetType] = null): OptionConnection
   
     """The ID of the object"""
     id: ID!
@@ -1103,36 +792,7 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: DateAnswer
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -1214,34 +874,7 @@
   
     """Reference this document has been copied from"""
     copies(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): DocumentConnection!
-    answers(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-      question: ID = null
-      search: String = null
-  
-      """AnswerOrdering"""
-      orderBy: [AnswerOrdering] = null
-      filter: [AnswerFilterSetType] = null
-      order: [AnswerOrderSetType] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      questions: [ID] = null
-      visibleInContext: Boolean = null
-    ): AnswerConnection
+    answers(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [AnswerFilterSetType] = null, order: [AnswerOrderSetType] = null): AnswerConnection
     case: Case
     workItem: WorkItem
     modifiedContentAt: DateTime
@@ -1280,9 +913,6 @@
     createdAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
-  
-    """"""
-    orderBy: [DocumentOrdering]
     rootDocument: ID
     hasAnswer: [HasAnswerFilterType]
     searchAnswers: [SearchAnswersFilterType]
@@ -1294,57 +924,6 @@
     answerValue: String
     attribute: SortableDocumentAttributes
     direction: AscDesc
-  }
-  
-  """An enumeration."""
-  enum DocumentOrdering {
-    """Created at"""
-    CREATED_AT_ASC
-  
-    """Created at (descending)"""
-    CREATED_AT_DESC
-  
-    """Modified at"""
-    MODIFIED_AT_ASC
-  
-    """Modified at (descending)"""
-    MODIFIED_AT_DESC
-  
-    """Created by user"""
-    CREATED_BY_USER_ASC
-  
-    """Created by user (descending)"""
-    CREATED_BY_USER_DESC
-  
-    """Created by group"""
-    CREATED_BY_GROUP_ASC
-  
-    """Created by group (descending)"""
-    CREATED_BY_GROUP_DESC
-  
-    """Modified by user"""
-    MODIFIED_BY_USER_ASC
-  
-    """Modified by user (descending)"""
-    MODIFIED_BY_USER_DESC
-  
-    """Modified by group"""
-    MODIFIED_BY_GROUP_ASC
-  
-    """Modified by group (descending)"""
-    MODIFIED_BY_GROUP_DESC
-  
-    """Meta test-key"""
-    META_TEST_KEY_ASC
-  
-    """Meta test-key (descending)"""
-    META_TEST_KEY_DESC
-  
-    """Meta foobar"""
-    META_FOOBAR_ASC
-  
-    """Meta foobar (descending)"""
-    META_FOOBAR_DESC
   }
   
   type DocumentValidityConnection {
@@ -1383,36 +962,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
     options(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
     dataSource: String!
   
@@ -1438,36 +988,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
     options(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
     dataSource: String!
   
@@ -1572,36 +1093,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -1642,36 +1134,7 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: FloatAnswer
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -1754,8 +1217,6 @@
       after: String = null
       first: Int = null
       last: Int = null
-      metaValue: [JSONValueFilterType] = null
-      slug: String = null
       label: String = null
       isRequired: String = null
       isHidden: String = null
@@ -1773,11 +1234,9 @@
       """Only return entries created at or after the given DateTime (inclusive)"""
       createdAfter: DateTime = null
       metaHasKey: String = null
+      metaValue: [JSONValueFilterType] = null
       excludeForms: [ID] = null
       search: String = null
-  
-      """QuestionOrdering"""
-      orderBy: [QuestionOrdering] = null
       slugs: [String] = null
     ): QuestionConnection
   
@@ -1808,9 +1267,6 @@
   }
   
   input FormFilterSetType {
-    """"""
-    orderBy: [FormOrdering]
-    slug: String
     name: String
     description: String
     isPublished: Boolean
@@ -1835,63 +1291,6 @@
     direction: AscDesc
   }
   
-  """An enumeration."""
-  enum FormOrdering {
-    """Name"""
-    NAME_ASC
-  
-    """Name (descending)"""
-    NAME_DESC
-  
-    """Created at"""
-    CREATED_AT_ASC
-  
-    """Created at (descending)"""
-    CREATED_AT_DESC
-  
-    """Modified at"""
-    MODIFIED_AT_ASC
-  
-    """Modified at (descending)"""
-    MODIFIED_AT_DESC
-  
-    """Created by user"""
-    CREATED_BY_USER_ASC
-  
-    """Created by user (descending)"""
-    CREATED_BY_USER_DESC
-  
-    """Created by group"""
-    CREATED_BY_GROUP_ASC
-  
-    """Created by group (descending)"""
-    CREATED_BY_GROUP_DESC
-  
-    """Modified by user"""
-    MODIFIED_BY_USER_ASC
-  
-    """Modified by user (descending)"""
-    MODIFIED_BY_USER_DESC
-  
-    """Modified by group"""
-    MODIFIED_BY_GROUP_ASC
-  
-    """Modified by group (descending)"""
-    MODIFIED_BY_GROUP_DESC
-  
-    """Meta test-key"""
-    META_TEST_KEY_ASC
-  
-    """Meta test-key (descending)"""
-    META_TEST_KEY_DESC
-  
-    """Meta foobar"""
-    META_FOOBAR_ASC
-  
-    """Meta foobar (descending)"""
-    META_FOOBAR_DESC
-  }
-  
   type FormQuestion implements Question & Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -1909,36 +1308,7 @@
     infoText: String
     meta: GenericScalar!
     source: Question
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
   
     """Form referenced in a FormQuestion"""
     subForm: Form
@@ -2256,36 +1626,7 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: IntegerAnswer
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -2354,62 +1695,8 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: ListAnswer
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
-    options(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-  
-      """OptionOrdering"""
-      orderBy: [OptionOrdering] = null
-      slug: String = null
-      label: String = null
-      isArchived: Boolean = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      search: String = null
-    ): OptionConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    options(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [OptionFilterSetType] = null, order: [OptionOrderSetType] = null): OptionConnection
     staticContent: String
   
     """The ID of the object"""
@@ -2529,61 +1816,26 @@
     cursor: String!
   }
   
-  """An enumeration."""
-  enum OptionOrdering {
-    """Label"""
-    LABEL_ASC
+  input OptionFilterSetType {
+    slug: String
+    label: String
+    isArchived: Boolean
+    createdByUser: String
+    createdByGroup: String
+    modifiedByUser: String
+    modifiedByGroup: String
+    createdBefore: DateTime
+    createdAfter: DateTime
+    metaHasKey: String
+    metaValue: [JSONValueFilterType]
+    search: String
+    invert: Boolean
+  }
   
-    """Label (descending)"""
-    LABEL_DESC
-  
-    """Created at"""
-    CREATED_AT_ASC
-  
-    """Created at (descending)"""
-    CREATED_AT_DESC
-  
-    """Modified at"""
-    MODIFIED_AT_ASC
-  
-    """Modified at (descending)"""
-    MODIFIED_AT_DESC
-  
-    """Created by user"""
-    CREATED_BY_USER_ASC
-  
-    """Created by user (descending)"""
-    CREATED_BY_USER_DESC
-  
-    """Created by group"""
-    CREATED_BY_GROUP_ASC
-  
-    """Created by group (descending)"""
-    CREATED_BY_GROUP_DESC
-  
-    """Modified by user"""
-    MODIFIED_BY_USER_ASC
-  
-    """Modified by user (descending)"""
-    MODIFIED_BY_USER_DESC
-  
-    """Modified by group"""
-    MODIFIED_BY_GROUP_ASC
-  
-    """Modified by group (descending)"""
-    MODIFIED_BY_GROUP_DESC
-  
-    """Meta test-key"""
-    META_TEST_KEY_ASC
-  
-    """Meta test-key (descending)"""
-    META_TEST_KEY_DESC
-  
-    """Meta foobar"""
-    META_FOOBAR_ASC
-  
-    """Meta foobar (descending)"""
-    META_FOOBAR_DESC
+  input OptionOrderSetType {
+    meta: String
+    attribute: SortableOptionAttributes
+    direction: AscDesc
   }
   
   """
@@ -2605,321 +1857,20 @@
   
   type Query {
     documentAsOf(id: ID!, asOf: DateTime!): HistoricalDocument
-    allAnalyticsTables(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-      slug: String = null
-      name: String = null
-      filter: [AnalyticsTableFilterSetType] = null
-      order: [AnalyticsTableOrderSetType] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      search: String = null
-      slugs: [String] = null
-    ): AnalyticsTableConnection
+    allAnalyticsTables(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [AnalyticsTableFilterSetType] = null, order: [AnalyticsTableOrderSetType] = null): AnalyticsTableConnection
     analyticsTable(slug: String!): AnalyticsTable
-    allAnalyticsFields(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-      alias: String = null
-      table: ID = null
-      filter: [AnalyticsFieldFilterSetType] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      search: String = null
-      slugs: [String] = null
-    ): AnalyticsFieldConnection
+    allAnalyticsFields(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [AnalyticsFieldFilterSetType] = null): AnalyticsFieldConnection
     allDataSources(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceConnection
     dataSource(name: String!, before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
-    allWorkflows(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-  
-      """WorkflowOrdering"""
-      orderBy: [WorkflowOrdering] = null
-      filter: [WorkflowFilterSetType] = null
-      order: [WorkflowOrderSetType] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      search: String = null
-    ): WorkflowConnection
-    allTasks(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      type: TaskTypeArgument = null
-      isArchived: Boolean = null
-  
-      """TaskOrdering"""
-      orderBy: [TaskOrdering] = null
-      filter: [TaskFilterSetType] = null
-      order: [TaskOrderSetType] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      search: String = null
-    ): TaskConnection
-    allCases(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-      workflow: ID = null
-  
-      """CaseOrdering"""
-      orderBy: [CaseOrdering] = null
-      filter: [CaseFilterSetType] = null
-      order: [CaseOrderSetType] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      id: ID = null
-      documentForm: String = null
-      documentForms: [String] = null
-      hasAnswer: [HasAnswerFilterType] = null
-      workItemDocumentHasAnswer: [HasAnswerFilterType] = null
-      rootCase: ID = null
-      searchAnswers: [SearchAnswersFilterType] = null
-      status: [[CaseStatusArgument]] = null
-  
-      """
-      Expects a question slug. If the slug is prefixed with a hyphen, the order will be reversed
-      
-      For file questions, the filename is used for sorting.
-      
-      Table questions are not supported at this time.
-      """
-      orderByQuestionAnswerValue: String = null
-    ): CaseConnection
-    allWorkItems(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-      status: WorkItemStatusArgument = null
-  
-      """WorkItemOrdering"""
-      orderBy: [WorkItemOrdering] = null
-      filter: [WorkItemFilterSetType] = null
-      order: [WorkItemOrderSetType] = null
-      documentHasAnswer: [HasAnswerFilterType] = null
-      caseDocumentHasAnswer: [HasAnswerFilterType] = null
-      caseMetaValue: [JSONValueFilterType] = null
-      rootCaseMetaValue: [JSONValueFilterType] = null
-      name: String = null
-      task: ID = null
-      tasks: [String] = null
-      case: ID = null
-      createdAt: DateTime = null
-      closedAt: DateTime = null
-      modifiedAt: DateTime = null
-      deadline: DateTime = null
-      hasDeadline: Boolean = null
-      caseFamily: ID = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      id: ID = null
-      addressedGroups: [String] = null
-      controllingGroups: [String] = null
-      assignedUsers: [String] = null
-    ): WorkItemConnection
-    allForms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      filter: [FormFilterSetType] = null
-      order: [FormOrderSetType] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      search: String = null
-      slugs: [String] = null
-    ): FormConnection
-    allQuestions(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-  
-      """QuestionOrdering"""
-      orderBy: [QuestionOrdering] = null
-      slug: String = null
-      label: String = null
-      isRequired: String = null
-      isHidden: String = null
-      isArchived: Boolean = null
-      subForm: ID = null
-      rowForm: ID = null
-      filter: [QuestionFilterSetType] = null
-      order: [QuestionOrderSetType] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      excludeForms: [ID] = null
-      search: String = null
-      slugs: [String] = null
-    ): QuestionConnection
-    allDocuments(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      metaValue: [JSONValueFilterType] = null
-      form: ID = null
-      forms: [ID] = null
-      search: String = null
-      id: ID = null
-  
-      """DocumentOrdering"""
-      orderBy: [DocumentOrdering] = null
-      filter: [DocumentFilterSetType] = null
-      order: [DocumentOrderSetType] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      rootDocument: ID = null
-      hasAnswer: [HasAnswerFilterType] = null
-      searchAnswers: [SearchAnswersFilterType] = null
-    ): DocumentConnection
+    allWorkflows(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [WorkflowFilterSetType] = null, order: [WorkflowOrderSetType] = null): WorkflowConnection
+    allTasks(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [TaskFilterSetType] = null, order: [TaskOrderSetType] = null): TaskConnection
+    allCases(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [CaseFilterSetType] = null, order: [CaseOrderSetType] = null): CaseConnection
+    allWorkItems(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [WorkItemFilterSetType] = null, order: [WorkItemOrderSetType] = null): WorkItemConnection
+    allForms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    allQuestions(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [QuestionFilterSetType] = null, order: [QuestionOrderSetType] = null): QuestionConnection
+    allDocuments(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [DocumentFilterSetType] = null, order: [DocumentOrderSetType] = null): DocumentConnection
     allFormatValidators(before: String = null, after: String = null, first: Int = null, last: Int = null): FormatValidatorConnection
-    allUsedDynamicOptions(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      question: ID = null
-      document: ID = null
-      filter: [DynamicOptionFilterSetType] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-    ): DynamicOptionConnection
+    allUsedDynamicOptions(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [DynamicOptionFilterSetType] = null): DynamicOptionConnection
     documentValidity(id: ID!, before: String = null, after: String = null, first: Int = null, last: Int = null): DocumentValidityConnection
     node(
       """The ID of the object"""
@@ -2945,36 +1896,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     meta: GenericScalar!
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
     source: Question
   }
   
@@ -2997,9 +1919,6 @@
   }
   
   input QuestionFilterSetType {
-    """"""
-    orderBy: [QuestionOrdering]
-    slug: String
     label: String
     isRequired: String
     isHidden: String
@@ -3043,63 +1962,6 @@
     meta: String
     attribute: SortableQuestionAttributes
     direction: AscDesc
-  }
-  
-  """An enumeration."""
-  enum QuestionOrdering {
-    """Label"""
-    LABEL_ASC
-  
-    """Label (descending)"""
-    LABEL_DESC
-  
-    """Created at"""
-    CREATED_AT_ASC
-  
-    """Created at (descending)"""
-    CREATED_AT_DESC
-  
-    """Modified at"""
-    MODIFIED_AT_ASC
-  
-    """Modified at (descending)"""
-    MODIFIED_AT_DESC
-  
-    """Created by user"""
-    CREATED_BY_USER_ASC
-  
-    """Created by user (descending)"""
-    CREATED_BY_USER_DESC
-  
-    """Created by group"""
-    CREATED_BY_GROUP_ASC
-  
-    """Created by group (descending)"""
-    CREATED_BY_GROUP_DESC
-  
-    """Modified by user"""
-    MODIFIED_BY_USER_ASC
-  
-    """Modified by user (descending)"""
-    MODIFIED_BY_USER_DESC
-  
-    """Modified by group"""
-    MODIFIED_BY_GROUP_ASC
-  
-    """Modified by group (descending)"""
-    MODIFIED_BY_GROUP_DESC
-  
-    """Meta test-key"""
-    META_TEST_KEY_ASC
-  
-    """Meta test-key (descending)"""
-    META_TEST_KEY_DESC
-  
-    """Meta foobar"""
-    META_FOOBAR_ASC
-  
-    """Meta foobar (descending)"""
-    META_FOOBAR_DESC
   }
   
   input RedoWorkItemInput {
@@ -4072,6 +2934,18 @@
     IS_ARCHIVED
   }
   
+  enum SortableOptionAttributes {
+    CREATED_AT
+    MODIFIED_AT
+    CREATED_BY_USER
+    CREATED_BY_GROUP
+    MODIFIED_BY_USER
+    MODIFIED_BY_GROUP
+    SLUG
+    LABEL
+    IS_ARCHIVED
+  }
+  
   enum SortableQuestionAttributes {
     CREATED_AT
     MODIFIED_AT
@@ -4173,36 +3047,7 @@
     infoText: String
     meta: GenericScalar!
     source: Question
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
     staticContent: String
     dataSource: String
   
@@ -4308,36 +3153,7 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: TableAnswer
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
   
     """Form that represents rows of a TableQuestion"""
     rowForm: Form
@@ -4398,9 +3214,6 @@
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     search: String
-  
-    """"""
-    orderBy: [TaskOrdering]
     invert: Boolean
   }
   
@@ -4408,87 +3221,6 @@
     meta: String
     attribute: SortableTaskAttributes
     direction: AscDesc
-  }
-  
-  """An enumeration."""
-  enum TaskOrdering {
-    """Name"""
-    NAME_ASC
-  
-    """Name (descending)"""
-    NAME_DESC
-  
-    """Description"""
-    DESCRIPTION_ASC
-  
-    """Description (descending)"""
-    DESCRIPTION_DESC
-  
-    """Type"""
-    TYPE_ASC
-  
-    """Type (descending)"""
-    TYPE_DESC
-  
-    """Created at"""
-    CREATED_AT_ASC
-  
-    """Created at (descending)"""
-    CREATED_AT_DESC
-  
-    """Modified at"""
-    MODIFIED_AT_ASC
-  
-    """Modified at (descending)"""
-    MODIFIED_AT_DESC
-  
-    """Created by user"""
-    CREATED_BY_USER_ASC
-  
-    """Created by user (descending)"""
-    CREATED_BY_USER_DESC
-  
-    """Created by group"""
-    CREATED_BY_GROUP_ASC
-  
-    """Created by group (descending)"""
-    CREATED_BY_GROUP_DESC
-  
-    """Modified by user"""
-    MODIFIED_BY_USER_ASC
-  
-    """Modified by user (descending)"""
-    MODIFIED_BY_USER_DESC
-  
-    """Modified by group"""
-    MODIFIED_BY_GROUP_ASC
-  
-    """Modified by group (descending)"""
-    MODIFIED_BY_GROUP_DESC
-  
-    """Meta test-key"""
-    META_TEST_KEY_ASC
-  
-    """Meta test-key (descending)"""
-    META_TEST_KEY_DESC
-  
-    """Meta foobar"""
-    META_FOOBAR_ASC
-  
-    """Meta foobar (descending)"""
-    META_FOOBAR_DESC
-  }
-  
-  """An enumeration."""
-  enum TaskTypeArgument {
-    """Task which can simply be marked as completed."""
-    SIMPLE
-  
-    """Task to complete a defined workflow form."""
-    COMPLETE_WORKFLOW_FORM
-  
-    """Task to complete a defined task form."""
-    COMPLETE_TASK_FORM
   }
   
   type TextQuestion implements Question & Node {
@@ -4512,36 +3244,7 @@
     source: Question
     formatValidators(before: String = null, after: String = null, first: Int = null, last: Int = null): FormatValidatorConnection
     defaultAnswer: StringAnswer
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -4570,36 +3273,7 @@
     source: Question
     formatValidators(before: String = null, after: String = null, first: Int = null, last: Int = null): FormatValidatorConnection
     defaultAnswer: StringAnswer
-    forms(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      slug: String = null
-      name: String = null
-      description: String = null
-      isPublished: Boolean = null
-      isArchived: Boolean = null
-      questions: [String] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-      metaHasKey: String = null
-      metaValue: [JSONValueFilterType] = null
-      search: String = null
-  
-      """FormOrdering"""
-      orderBy: [FormOrdering] = null
-      slugs: [String] = null
-    ): FormConnection
+    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -4713,9 +3387,6 @@
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     id: ID
-  
-    """"""
-    orderBy: [WorkItemOrdering]
     addressedGroups: [String]
     controllingGroups: [String]
     assignedUsers: [String]
@@ -4736,96 +3407,12 @@
   }
   
   """An enumeration."""
-  enum WorkItemOrdering {
-    """Status"""
-    STATUS_ASC
-  
-    """Status (descending)"""
-    STATUS_DESC
-  
-    """Deadline"""
-    DEADLINE_ASC
-  
-    """Deadline (descending)"""
-    DEADLINE_DESC
-  
-    """Created at"""
-    CREATED_AT_ASC
-  
-    """Created at (descending)"""
-    CREATED_AT_DESC
-  
-    """Modified at"""
-    MODIFIED_AT_ASC
-  
-    """Modified at (descending)"""
-    MODIFIED_AT_DESC
-  
-    """Created by user"""
-    CREATED_BY_USER_ASC
-  
-    """Created by user (descending)"""
-    CREATED_BY_USER_DESC
-  
-    """Created by group"""
-    CREATED_BY_GROUP_ASC
-  
-    """Created by group (descending)"""
-    CREATED_BY_GROUP_DESC
-  
-    """Modified by user"""
-    MODIFIED_BY_USER_ASC
-  
-    """Modified by user (descending)"""
-    MODIFIED_BY_USER_DESC
-  
-    """Modified by group"""
-    MODIFIED_BY_GROUP_ASC
-  
-    """Modified by group (descending)"""
-    MODIFIED_BY_GROUP_DESC
-  
-    """Meta test-key"""
-    META_TEST_KEY_ASC
-  
-    """Meta test-key (descending)"""
-    META_TEST_KEY_DESC
-  
-    """Meta foobar"""
-    META_FOOBAR_ASC
-  
-    """Meta foobar (descending)"""
-    META_FOOBAR_DESC
-  }
-  
-  """An enumeration."""
   enum WorkItemStatus {
     READY
     COMPLETED
     CANCELED
     SKIPPED
     SUSPENDED
-    REDO
-  }
-  
-  """An enumeration."""
-  enum WorkItemStatusArgument {
-    """Work item is ready to be processed."""
-    READY
-  
-    """Work item is done."""
-    COMPLETED
-  
-    """Work item is canceled."""
-    CANCELED
-  
-    """Work item is skipped."""
-    SKIPPED
-  
-    """Work item is suspended."""
-    SUSPENDED
-  
-    """Work item has been marked for redo."""
     REDO
   }
   
@@ -4855,25 +3442,7 @@
   
     """List of tasks referenced in workflow"""
     tasks: [Task]!
-    flows(
-      offset: Int = null
-      before: String = null
-      after: String = null
-      first: Int = null
-      last: Int = null
-      task: ID = null
-      filter: [FlowFilterSetType] = null
-      createdByUser: String = null
-      createdByGroup: String = null
-      modifiedByUser: String = null
-      modifiedByGroup: String = null
-  
-      """Only return entries created before the given DateTime (exclusive)"""
-      createdBefore: DateTime = null
-  
-      """Only return entries created at or after the given DateTime (inclusive)"""
-      createdAfter: DateTime = null
-    ): FlowConnection
+    flows(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FlowFilterSetType] = null): FlowConnection
   }
   
   type WorkflowConnection {
@@ -4909,9 +3478,6 @@
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     search: String
-  
-    """"""
-    orderBy: [WorkflowOrdering]
     invert: Boolean
   }
   
@@ -4919,69 +3485,6 @@
     meta: String
     attribute: SortableWorkflowAttributes
     direction: AscDesc
-  }
-  
-  """An enumeration."""
-  enum WorkflowOrdering {
-    """Name"""
-    NAME_ASC
-  
-    """Name (descending)"""
-    NAME_DESC
-  
-    """Description"""
-    DESCRIPTION_ASC
-  
-    """Description (descending)"""
-    DESCRIPTION_DESC
-  
-    """Created at"""
-    CREATED_AT_ASC
-  
-    """Created at (descending)"""
-    CREATED_AT_DESC
-  
-    """Modified at"""
-    MODIFIED_AT_ASC
-  
-    """Modified at (descending)"""
-    MODIFIED_AT_DESC
-  
-    """Created by user"""
-    CREATED_BY_USER_ASC
-  
-    """Created by user (descending)"""
-    CREATED_BY_USER_DESC
-  
-    """Created by group"""
-    CREATED_BY_GROUP_ASC
-  
-    """Created by group (descending)"""
-    CREATED_BY_GROUP_DESC
-  
-    """Modified by user"""
-    MODIFIED_BY_USER_ASC
-  
-    """Modified by user (descending)"""
-    MODIFIED_BY_USER_DESC
-  
-    """Modified by group"""
-    MODIFIED_BY_GROUP_ASC
-  
-    """Modified by group (descending)"""
-    MODIFIED_BY_GROUP_DESC
-  
-    """Meta test-key"""
-    META_TEST_KEY_ASC
-  
-    """Meta test-key (descending)"""
-    META_TEST_KEY_DESC
-  
-    """Meta foobar"""
-    META_FOOBAR_ASC
-  
-    """Meta foobar (descending)"""
-    META_FOOBAR_DESC
   }
   
   '''

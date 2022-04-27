@@ -120,7 +120,10 @@ class Question(Node, graphene.Interface):
     is_archived = graphene.Boolean(required=True)
     meta = generic.GenericScalar(required=True)
     forms = DjangoFilterConnectionField(
-        "caluma.caluma_form.schema.Form", filterset_class=filters.FormFilterSet
+        "caluma.caluma_form.schema.Form",
+        filterset_class=CollectionFilterSetFactory(
+            filters.FormFilterSet, orderset_class=filters.FormOrderSet
+        ),
     )
     source = graphene.Field("caluma.caluma_form.schema.Question")
 
@@ -265,7 +268,10 @@ class DateQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 class ChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     options = DjangoFilterConnectionField(
-        Option, filterset_class=filters.OptionFilterSet
+        Option,
+        filterset_class=CollectionFilterSetFactory(
+            filters.OptionFilterSet, orderset_class=filters.OptionOrderSet
+        ),
     )
     hint_text = graphene.String()
     default_answer = graphene.Field("caluma.caluma_form.schema.StringAnswer")
@@ -292,7 +298,10 @@ class ChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     options = DjangoFilterConnectionField(
-        Option, filterset_class=filters.OptionFilterSet
+        Option,
+        filterset_class=CollectionFilterSetFactory(
+            filters.OptionFilterSet, orderset_class=filters.OptionOrderSet
+        ),
     )
     hint_text = graphene.String()
     default_answer = graphene.Field("caluma.caluma_form.schema.ListAnswer")

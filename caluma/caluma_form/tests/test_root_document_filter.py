@@ -50,7 +50,7 @@ def test_root_document_filter(
     # fetch documents, see if subdocuments are included
     query = """
         query asdf ($root: ID!) {
-          allDocuments(rootDocument: $root) {
+          allDocuments(filter: [{rootDocument: $root}]) {
             edges {
               node {
                 id
