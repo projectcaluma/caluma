@@ -132,13 +132,7 @@ omit = [
 show_missing = true
 
 [tool.semantic_release]
-version_toml = "pyproject.toml:tool.poetry.version"
-branch = "main"
-upload_to_repository = true
-upload_to_release = true
-build_command = "poetry build"
-commit_subject = "chore(release): v{version}"
-commit_author = "github-actions <github-actions@github.com>"
+version_source = "tag"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

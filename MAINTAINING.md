@@ -2,11 +2,20 @@
 
 ## Make a new release
 
-We're using `python-semantic-release` to generate a changelog, update the
-version and publish it to Github and PyPi.
+We're using `python-semantic-release` to generate a changelog and suggest the next version.
 
-To release a new version simply head over to [Github
-Actions](https://github.com/projectcaluma/caluma/actions/workflows/release.yml)
-and trigger the workflow dispatch event on the branch `main`. Optionally you
-can check the "prerelease" checkbox when triggering the workflow to release a
-beta version.
+1. Checkout `main` branch, ensure you have all tags
+2. Figure out the next version
+3. Update code (CHANGELOG, version info)
+4. Pull Request with the version bump.
+5. Create tag and release on the merge commit with the changelog
+
+```bash
+# Ensure you're on the current `main` branch and have all release tags
+git checkout main
+git pull origin --tags
+# Figure out the next version
+poetry run semantic-release version --noop
+# Prepare changelog
+poetry run semantic-release changelog --noop --unreleased
+```
