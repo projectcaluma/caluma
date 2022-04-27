@@ -62,17 +62,11 @@ class AttributeOrderingMixin(CalumaOrdering):
         return qs, F(value)
 
 
-def AttributeOrderingFactory(model, fields=None, exclude_fields=None):
+def AttributeOrderingFactory(model, fields):
     """Build ordering field for a given model.
 
     Used to define an ordering field that is presented as an enum
     """
-    if not exclude_fields:
-        exclude_fields = []
-
-    if not fields:
-        fields = [f.name for f in model._meta.fields if f.name not in exclude_fields]
-
     field_enum = type(
         f"Sortable{model.__name__}Attributes",
         (Enum,),

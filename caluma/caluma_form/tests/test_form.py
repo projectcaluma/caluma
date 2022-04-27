@@ -36,7 +36,7 @@ def test_query_all_forms(
                 name
                 description
                 meta
-                questions(search: $question) {
+                questions(filter: [{ search: $question }]) {
                   edges {
                     node {
                       id

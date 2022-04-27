@@ -1,6 +1,4 @@
-from graphene import List, String
 from graphene_django import forms
-from graphene_django.forms.converter import convert_form_field
 
 
 class GlobalIDFormField(forms.GlobalIDFormField):
@@ -11,7 +9,7 @@ class GlobalIDFormField(forms.GlobalIDFormField):
     or plain primary key.
     """
 
-    def clean(self, value):
+    def clean(self, value):  # pragma: no cover
         return value
 
 
@@ -25,20 +23,3 @@ class GlobalIDMultipleChoiceField(forms.GlobalIDMultipleChoiceField):
 
     def valid_value(self, value):  # pragma: no cover
         return True
-
-
-class SlugMultipleChoiceField(GlobalIDMultipleChoiceField):
-    """
-    Slug multiple choice field which allows listing multiple slugs.
-
-    Disable cleaning as we don't know which slugs may be valid down
-    the line
-    """
-
-    def valid_value(self, value):  # pragma: no cover
-        return True
-
-
-@convert_form_field.register(SlugMultipleChoiceField)
-def slug_to_list(field):
-    return List(String, required=field.required)

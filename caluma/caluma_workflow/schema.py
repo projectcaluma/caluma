@@ -9,7 +9,7 @@ from graphene_django.rest_framework import serializer_converter
 from ..caluma_core.filters import (
     CollectionFilterSetFactory,
     DjangoFilterConnectionField,
-    DjangoFilterSetConnectionField,
+    DjangoFilterInterfaceConnectionField,
 )
 from ..caluma_core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..caluma_core.types import (
@@ -173,7 +173,11 @@ class Workflow(DjangoObjectType):
         return self.start_tasks.all()
 
     flows = DjangoFilterConnectionField(
-        Flow, filterset_class=CollectionFilterSetFactory(filters.FlowFilterSet)
+        Flow,
+        filterset_class=CollectionFilterSetFactory(
+            filterset_class=filters.FlowFilterSet,
+            orderset_class=filters.FlowOrderSet,
+        ),
     )
 
     class Meta:
@@ -202,13 +206,15 @@ class Case(DjangoObjectType):
     work_items = DjangoFilterConnectionField(
         WorkItem,
         filterset_class=CollectionFilterSetFactory(
-            filters.WorkItemFilterSet, orderset_class=filters.WorkItemOrderSet
+            filterset_class=filters.WorkItemFilterSet,
+            orderset_class=filters.WorkItemOrderSet,
         ),
     )
     family_work_items = DjangoFilterConnectionField(
         WorkItem,
         filterset_class=CollectionFilterSetFactory(
-            filters.WorkItemFilterSet, orderset_class=filters.WorkItemOrderSet
+            filterset_class=filters.WorkItemFilterSet,
+            orderset_class=filters.WorkItemOrderSet,
         ),
     )
     meta = generic.GenericScalar()
@@ -402,25 +408,29 @@ class Query(object):
     all_workflows = DjangoFilterConnectionField(
         Workflow,
         filterset_class=CollectionFilterSetFactory(
-            filters.WorkflowFilterSet, orderset_class=filters.WorkflowOrderSet
+            filterset_class=filters.WorkflowFilterSet,
+            orderset_class=filters.WorkflowOrderSet,
         ),
     )
-    all_tasks = DjangoFilterSetConnectionField(
+    all_tasks = DjangoFilterInterfaceConnectionField(
         TaskConnection,
         filterset_class=CollectionFilterSetFactory(
-            filters.TaskFilterSet, orderset_class=filters.TaskOrderSet
+            filterset_class=filters.TaskFilterSet,
+            orderset_class=filters.TaskOrderSet,
         ),
     )
     all_cases = DjangoFilterConnectionField(
         Case,
         filterset_class=CollectionFilterSetFactory(
-            filters.CaseFilterSet, orderset_class=filters.CaseOrderSet
+            filterset_class=filters.CaseFilterSet,
+            orderset_class=filters.CaseOrderSet,
         ),
     )
 
     all_work_items = DjangoFilterConnectionField(
         WorkItem,
         filterset_class=CollectionFilterSetFactory(
-            filters.WorkItemFilterSet, orderset_class=filters.WorkItemOrderSet
+            filterset_class=filters.WorkItemFilterSet,
+            orderset_class=filters.WorkItemOrderSet,
         ),
     )

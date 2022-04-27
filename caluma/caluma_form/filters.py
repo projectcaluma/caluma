@@ -7,7 +7,7 @@ from django.db.models import Q
 from django.forms import BooleanField
 from django.utils import translation
 from django_filters.constants import EMPTY_VALUES
-from django_filters.rest_framework import Filter, FilterSet
+from django_filters.rest_framework import Filter, FilterSet, MultipleChoiceFilter
 from graphene import Enum, InputObjectType, List
 from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
@@ -18,7 +18,6 @@ from ..caluma_core.filters import (
     GlobalIDMultipleChoiceFilter,
     MetaFilterSet,
     SearchFilter,
-    SlugMultipleChoiceFilter,
 )
 from ..caluma_core.ordering import AttributeOrderingFactory, MetaFieldOrdering
 from ..caluma_form.models import Answer, DynamicOption, Question
@@ -28,8 +27,8 @@ from . import models, validators
 
 class FormFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
-    slugs = SlugMultipleChoiceFilter(field_name="slug")
-    questions = SlugMultipleChoiceFilter(field_name="questions__slug")
+    slugs = MultipleChoiceFilter(field_name="slug")
+    questions = MultipleChoiceFilter(field_name="questions__slug")
 
     class Meta:
         model = models.Form
@@ -49,10 +48,6 @@ class FormOrderSet(FilterSet):
         fields=[
             "created_at",
             "modified_at",
-            "created_by_user",
-            "created_by_group",
-            "modified_by_user",
-            "modified_by_group",
             "slug",
             "name",
             "description",
@@ -78,7 +73,7 @@ class OptionOrderSet(FilterSet):
     meta = MetaFieldOrdering()
     attribute = AttributeOrderingFactory(
         models.Option,
-        exclude_fields=["meta", "source"],
+        fields=["created_at", "modified_at", "slug", "label", "is_archived"],
     )
 
     class Meta:
@@ -89,7 +84,7 @@ class OptionOrderSet(FilterSet):
 class QuestionFilterSet(MetaFilterSet):
     exclude_forms = GlobalIDMultipleChoiceFilter(field_name="forms", exclude=True)
     search = SearchFilter(fields=("slug", "label"))
-    slugs = SlugMultipleChoiceFilter(field_name="slug")
+    slugs = MultipleChoiceFilter(field_name="slug")
 
     class Meta:
         model = models.Question
@@ -107,17 +102,19 @@ class QuestionOrderSet(FilterSet):
     meta = MetaFieldOrdering()
     attribute = AttributeOrderingFactory(
         models.Question,
-        exclude_fields=[
-            "configuration",
-            "data_source",
-            "format_validators",
-            "meta",
-            "row_form",
-            "source",
-            "static_content",
-            "sub_form",
-            "default_answer",
-            "calc_dependents",
+        fields=[
+            "created_at",
+            "modified_at",
+            "slug",
+            "label",
+            "type",
+            "is_required",
+            "is_hidden",
+            "is_archived",
+            "placeholder",
+            "info_text",
+            "hint_text",
+            "calc_expression",
         ],
     )
 
@@ -470,12 +467,12 @@ class DocumentOrderSet(FilterSet):
     meta = MetaFieldOrdering()
     answer_value = AnswerValueOrdering()
     attribute = AttributeOrderingFactory(
-        models.Document, exclude_fields=["meta", "family", "id"]
+        models.Document, fields=["created_at", "modified_at", "form"]
     )
 
     class Meta:
         model = models.Document
-        fields = ("meta",)
+        fields = ("meta", "answer_value", "attribute")
 
 
 class VisibleAnswerFilter(Filter):
@@ -507,11 +504,20 @@ class AnswerFilterSet(MetaFilterSet):
 
 class AnswerOrderSet(FilterSet):
     meta = MetaFieldOrdering()
-    attribute = AttributeOrderingFactory(models.Answer, exclude_fields=["meta", "id"])
+    attribute = AttributeOrderingFactory(
+        models.Answer,
+        fields=[
+            "created_at",
+            "modified_at",
+            "question",
+            "value",
+            "date",
+        ],
+    )
 
     class Meta:
         model = models.Answer
-        fields = ("meta",)
+        fields = ("meta", "attribute")
 
 
 class DynamicOptionFilterSet(FilterSet):
@@ -521,3 +527,15 @@ class DynamicOptionFilterSet(FilterSet):
     class Meta:
         model = models.DynamicOption
         fields = ("question", "document")
+
+
+class DynamicOptionOrderSet(FilterSet):
+    meta = MetaFieldOrdering()
+    attribute = AttributeOrderingFactory(
+        models.DynamicOption,
+        fields=["created_at", "modified_at", "slug", "label", "question"],
+    )
+
+    class Meta:
+        model = models.DynamicOption
+        fields = ("meta", "attribute")

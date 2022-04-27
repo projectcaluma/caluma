@@ -32,11 +32,7 @@ from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
 from localized_fields.fields import LocalizedField
 
-from .forms import (
-    GlobalIDFormField,
-    GlobalIDMultipleChoiceField,
-    SlugMultipleChoiceField,
-)
+from .forms import GlobalIDFormField, GlobalIDMultipleChoiceField
 from .ordering import CalumaOrdering
 from .relay import extract_global_id
 from .types import DjangoConnectionField
@@ -272,16 +268,9 @@ class GlobalIDMultipleChoiceFilter(MultipleChoiceFilter):
         return super(GlobalIDMultipleChoiceFilter, self).filter(qs, gids)
 
 
-class SlugMultipleChoiceFilter(MultipleChoiceFilter):
-    field_class = SlugMultipleChoiceField
-
-    def filter(self, qs, value):
-        return super().filter(qs, value)
-
-
 class LocalizedFilter(Filter):
     def filter(self, qs, value):
-        if value in EMPTY_VALUES:
+        if value in EMPTY_VALUES:  # pragma: no cover
             return qs
 
         lang = translation.get_language()
@@ -334,7 +323,7 @@ class SearchFilter(Filter):
         return field_lookup
 
     def filter(self, qs, value):
-        if value in EMPTY_VALUES:
+        if value in EMPTY_VALUES:  # pragma: no cover
             return qs
 
         qs = qs.annotate(
@@ -405,7 +394,7 @@ class JSONValueFilter(Filter):
         super().__init__(*args, lookup_expr=lookup_expr, **kwargs)
 
     def filter(self, qs, value):
-        if value in EMPTY_VALUES:
+        if value in EMPTY_VALUES:  # pragma: no cover
             return qs
 
         for expr in value:
@@ -507,7 +496,9 @@ class DjangoFilterConnectionField(
         return clean(args)
 
 
-class DjangoFilterSetConnectionField(DjangoFilterConnectionField):
+class DjangoFilterInterfaceConnectionField(DjangoFilterConnectionField):
+    """Filter connection field for abstract interface types like Answer, Question and Task."""
+
     @property
     def model(self):
         return self.filterset_class._meta.model

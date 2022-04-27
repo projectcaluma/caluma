@@ -1,13 +1,13 @@
-from django_filters.rest_framework import FilterSet
+from django_filters.rest_framework import FilterSet, MultipleChoiceFilter
 
-from ..caluma_core.filters import MetaFilterSet, SearchFilter, SlugMultipleChoiceFilter
+from ..caluma_core.filters import MetaFilterSet, SearchFilter
 from ..caluma_core.ordering import AttributeOrderingFactory, MetaFieldOrdering
 from . import models
 
 
 class AnalyticsTableFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "name"))
-    slugs = SlugMultipleChoiceFilter(field_name="slug")
+    slugs = MultipleChoiceFilter(field_name="slug")
 
     class Meta:
         model = models.AnalyticsTable
@@ -27,7 +27,7 @@ class AnalyticsFieldFilterSet(MetaFilterSet):
             "source_field__alias",
         )
     )
-    slugs = SlugMultipleChoiceFilter(field_name="slug")
+    slugs = MultipleChoiceFilter(field_name="slug")
 
     class Meta:
         model = models.AnalyticsField
@@ -37,20 +37,23 @@ class AnalyticsFieldFilterSet(MetaFilterSet):
         )
 
 
+class AnalyticsFieldOrderSet(FilterSet):
+    meta = MetaFieldOrdering()
+    attribute = AttributeOrderingFactory(
+        models.AnalyticsField,
+        fields=["created_at", "modified_at", "alias"],
+    )
+
+    class Meta:
+        model = models.AnalyticsField
+        fields = ("meta", "attribute")
+
+
 class AnalyticsTableOrderSet(FilterSet):
     meta = MetaFieldOrdering()
     attribute = AttributeOrderingFactory(
         models.AnalyticsTable,
-        fields=[
-            "created_at",
-            "modified_at",
-            "created_by_user",
-            "created_by_group",
-            "modified_by_user",
-            "modified_by_group",
-            "slug",
-            "name",
-        ],
+        fields=["created_at", "modified_at", "slug", "name"],
     )
 
     class Meta:

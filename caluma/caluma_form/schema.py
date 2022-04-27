@@ -7,7 +7,7 @@ from graphene_django.rest_framework import serializer_converter
 from ..caluma_core.filters import (
     CollectionFilterSetFactory,
     DjangoFilterConnectionField,
-    DjangoFilterSetConnectionField,
+    DjangoFilterInterfaceConnectionField,
 )
 from ..caluma_core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..caluma_core.relay import extract_global_id
@@ -122,7 +122,7 @@ class Question(Node, graphene.Interface):
     forms = DjangoFilterConnectionField(
         "caluma.caluma_form.schema.Form",
         filterset_class=CollectionFilterSetFactory(
-            filters.FormFilterSet, orderset_class=filters.FormOrderSet
+            filterset_class=filters.FormFilterSet, orderset_class=filters.FormOrderSet
         ),
     )
     source = graphene.Field("caluma.caluma_form.schema.Question")
@@ -270,7 +270,8 @@ class ChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     options = DjangoFilterConnectionField(
         Option,
         filterset_class=CollectionFilterSetFactory(
-            filters.OptionFilterSet, orderset_class=filters.OptionOrderSet
+            filterset_class=filters.OptionFilterSet,
+            orderset_class=filters.OptionOrderSet,
         ),
     )
     hint_text = graphene.String()
@@ -300,7 +301,8 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     options = DjangoFilterConnectionField(
         Option,
         filterset_class=CollectionFilterSetFactory(
-            filters.OptionFilterSet, orderset_class=filters.OptionOrderSet
+            filterset_class=filters.OptionFilterSet,
+            orderset_class=filters.OptionOrderSet,
         ),
     )
     hint_text = graphene.String()
@@ -599,8 +601,12 @@ class ActionButtonQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class Form(FormDjangoObjectType):
-    questions = DjangoFilterSetConnectionField(
-        QuestionConnection, filterset_class=filters.QuestionFilterSet
+    questions = DjangoFilterInterfaceConnectionField(
+        QuestionConnection,
+        filterset_class=CollectionFilterSetFactory(
+            filterset_class=filters.QuestionFilterSet,
+            orderset_class=filters.QuestionOrderSet,
+        ),
     )
     meta = generic.GenericScalar()
 
@@ -863,10 +869,11 @@ class AnswerConnection(CountableConnectionBase):
 
 
 class Document(FormDjangoObjectType):
-    answers = DjangoFilterSetConnectionField(
+    answers = DjangoFilterInterfaceConnectionField(
         AnswerConnection,
         filterset_class=CollectionFilterSetFactory(
-            filters.AnswerFilterSet, orderset_class=filters.AnswerOrderSet
+            filterset_class=filters.AnswerFilterSet,
+            orderset_class=filters.AnswerOrderSet,
         ),
     )
     meta = generic.GenericScalar()
@@ -1146,25 +1153,31 @@ class Query:
     all_forms = DjangoFilterConnectionField(
         Form,
         filterset_class=CollectionFilterSetFactory(
-            filters.FormFilterSet, orderset_class=filters.FormOrderSet
+            filterset_class=filters.FormFilterSet,
+            orderset_class=filters.FormOrderSet,
         ),
     )
-    all_questions = DjangoFilterSetConnectionField(
+    all_questions = DjangoFilterInterfaceConnectionField(
         QuestionConnection,
         filterset_class=CollectionFilterSetFactory(
-            filters.QuestionFilterSet, orderset_class=filters.QuestionOrderSet
+            filterset_class=filters.QuestionFilterSet,
+            orderset_class=filters.QuestionOrderSet,
         ),
     )
     all_documents = DjangoFilterConnectionField(
         Document,
         filterset_class=CollectionFilterSetFactory(
-            filters.DocumentFilterSet, filters.DocumentOrderSet
+            filterset_class=filters.DocumentFilterSet,
+            orderset_class=filters.DocumentOrderSet,
         ),
     )
     all_format_validators = ConnectionField(FormatValidatorConnection)
     all_used_dynamic_options = DjangoFilterConnectionField(
         DynamicOption,
-        filterset_class=CollectionFilterSetFactory(filters.DynamicOptionFilterSet),
+        filterset_class=CollectionFilterSetFactory(
+            filterset_class=filters.DynamicOptionFilterSet,
+            orderset_class=filters.DynamicOptionOrderSet,
+        ),
     )
 
     document_validity = ConnectionField(
