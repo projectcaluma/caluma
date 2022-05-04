@@ -1,3 +1,103 @@
+# v8.0.0-beta.6 (28 April 2022)
+
+### Feature
+* **ordering:** Remove unused ordering attributes and add missing ([`9cbdd7d`](https://github.com/projectcaluma/caluma/commit/9cbdd7d050a79fb0125523932fc0398e6f9b115c))
+* **events:** Cleanup deprecated events ([`1bf5792`](https://github.com/projectcaluma/caluma/commit/1bf57920de8a96bef75a45078e7915c560b59bff))
+* **filters:** Clean up all the old filter syntax ([`ad008cd`](https://github.com/projectcaluma/caluma/commit/ad008cd8b1d612b176114b4e3f4e3c5924e644b2))
+
+### Breaking
+
+#### Remove unused ordering attributes and add missing ([`9cbdd7d`](https://github.com/projectcaluma/caluma/commit/9cbdd7d050a79fb0125523932fc0398e6f9b115c))
+
+This removes various orderings that do not make sense and were not used:
+
+- On all connections:
+  - `created_by_user`
+  - `created_by_group`
+  - `modified_by_user`
+  - `modified_by_group`
+- `Answer`
+  - `document`
+  - `file`
+- `Document`
+  - `source`
+
+The following ordering attributes were added because they make sense:
+
+- `Case`
+  - `created_at`
+  - `modified_at`
+- `Flow`
+  - `created_at`
+  - `modified_at`
+- `Task`
+  - `created_at`
+  - `modified_at`
+- `Workflow`
+  - `created_at`
+  - `modified_at`
+- `AnalyticsField`
+  - `created_at`
+  - `modified_at`
+  - `alias`
+- `DynamicOption`
+  - `created_at`
+  - `modified_at`
+  - `slug`
+  - `label`
+  - `question`
+- `Flow`
+  - `created_at`
+  - `modified_at`
+  - `task`
+
+#### Cleanup deprecated events ([`1bf5792`](https://github.com/projectcaluma/caluma/commit/1bf57920de8a96bef75a45078e7915c560b59bff))
+
+The following deprecated events were removed:
+
+- `created_work_item`
+- `completed_work_item`
+- `skipped_work_item`
+- `suspended_work_item`
+- `resumed_work_item`
+- `completed_case`
+- `created_case`
+- `suspended_case`
+- `resumed_case`
+- `canceled_work_item`
+- `cancelled_work_item`
+- `canceled_case`
+- `cancelled_case`
+
+#### Clean up all the old filter syntax ([`ad008cd`](https://github.com/projectcaluma/caluma/commit/ad008cd8b1d612b176114b4e3f4e3c5924e644b2))
+
+We have for a long time had two syntaxes for filtering, one of which was deprecated for over a year now and only kept for backwards compatibility. Finally, the old form has to go.
+
+Old:
+```graphql
+query foo {
+    allWorkItems(status: $status) {...}
+}
+```
+
+New:
+```graphql
+query foo {
+    allWorkItems(filter: [{status: $status}]) {...}
+}
+```
+
+The new syntax also allows reusing the same filter type twice to narrow down the result set even more. It also supports inverting the filters to implement explicit exclusion. It is now time to get rid of the old syntax.
+
+The following changes are breaking:
+
+- Removed deprecated `slug` filters in favor or `slugs` filters
+- Removed top level filters
+- Removed `orderByQuestionAnswerValue` filter in favor of `documentAnswer` in the top level orderset
+- Removed `orderBy` in filtersets in favor of top level `order` orderset
+- Removed ordering by static meta attributes (configured with `META_FIELDS` in favor of `meta` in the top level orderset
+
+
 # v8.0.0-beta.5 (19 April 2022)
 
 ### Fix
