@@ -25,6 +25,7 @@ def test_get_fields(
     snapshot.assert_match(field_info_dict)
 
 
+@pytest.mark.freeze_time("2022-04-01")
 @pytest.mark.parametrize(
     "analytics_table__starting_object, fields",
     [
