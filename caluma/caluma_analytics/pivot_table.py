@@ -30,7 +30,9 @@ class PivotTable:
         self.table = table
         self.last_query = None
         self.last_query_params = None
-        self.base_table = simple_table.SimpleTable(self.table, is_summary=is_summary)
+        self.base_table = simple_table.SimpleTable(
+            self.table, is_summary=is_summary, info=info
+        )
         self.is_summary = is_summary
 
     @cached_property
