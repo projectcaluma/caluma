@@ -145,7 +145,7 @@ class Query:
 
         # Django does positional parameters, we do named params. Convert them
         named_params = [self.makeparam(param) for param in params]
-        final_sql = wrapped_sql % named_params
+        final_sql = wrapped_sql % tuple(named_params)
 
         self.with_queries[name] = final_sql
 
@@ -276,13 +276,19 @@ class QueryRender:
         self.with_queries = {}
         self.is_subquery = is_subquery
 
+    def _collect_params(self, query):
+        params = query.params.copy()
+        if isinstance(query.from_, Query):
+            params.update(self._collect_params(query.from_))
+        return params
+
     def as_sql(self, alias):
         """Return a two-tuple: An SQL statement, and a dict of parameters.
 
         The parameters should then be passed on to the DB driver, which will
         interpret them accordingly.
         """
-        self.collected_params = self.query.params.copy()
+        self.collected_params = self._collect_params(self.query)
         self.with_queries = self.query.with_queries.copy()
 
         field_list = self._field_list()
