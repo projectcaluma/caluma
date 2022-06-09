@@ -2,6 +2,7 @@ import contextlib
 import datetime
 import functools
 import inspect
+import sys
 
 import pytest
 import urllib3
@@ -27,9 +28,14 @@ Faker.add_provider(MultilangProvider)
 
 
 def register_module(module):
+    # We need to pass the locals of this file to the register method to make
+    # sure they are injected on the conftest locals instead of the default
+    # locals which would be the locals of this function
+    conftest_locals = sys._getframe(1).f_locals
+
     for _, obj in inspect.getmembers(module):
         if isinstance(obj, FactoryMetaClass) and not obj._meta.abstract:
-            register(obj)
+            register(obj, _caller_locals=conftest_locals)
 
 
 register_module(form_factories)
