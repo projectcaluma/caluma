@@ -1,3 +1,10 @@
+# v8.0.0-beta.7 (9 June 2022)
+
+### Fix
+* **pivot_table:** Pass context to child query ([`34f59a2`](https://github.com/projectcaluma/caluma/commit/34f59a2aa6b0b9fc0fa1eed6fdf7c84e9e62c666))
+* **build:** Conftest should be in generated package ([`b82b6b3`](https://github.com/projectcaluma/caluma/commit/b82b6b3f15cca05dc98fb0b4c2e1adb6d5da3eb5))
+
+
 # v8.0.0-beta.6 (28 April 2022)
 
 ### Feature
