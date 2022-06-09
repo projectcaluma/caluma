@@ -450,7 +450,7 @@ doc = ["sphinx", "sphinx-rtd-theme", "sphinxcontrib-spelling"]
 
 [[package]]
 name = "faker"
-version = "13.12.0"
+version = "13.12.1"
 description = "Faker is a Python package that generates fake data for you."
 category = "dev"
 optional = false
@@ -498,7 +498,7 @@ pyflakes = ">=2.4.0,<2.5.0"
 
 [[package]]
 name = "flake8-bugbear"
-version = "22.3.23"
+version = "22.4.25"
 description = "A plugin for flake8 finding likely bugs and design problems in your program. Contains warnings that don't belong in pyflakes and pycodestyle."
 category = "dev"
 optional = false
@@ -513,16 +513,15 @@ dev = ["coverage", "hypothesis", "hypothesmith (>=0.2)", "pre-commit"]
 
 [[package]]
 name = "flake8-debugger"
-version = "4.0.0"
+version = "4.1.2"
 description = "ipdb/pdb statement checker plugin for flake8"
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
 flake8 = ">=3.0"
 pycodestyle = "*"
-six = "*"
 
 [[package]]
 name = "flake8-docstrings"
@@ -968,7 +967,7 @@ testing = ["pytest", "pytest-benchmark"]
 
 [[package]]
 name = "pre-commit"
-version = "2.18.1"
+version = "2.19.0"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
 category = "dev"
 optional = false
@@ -1099,7 +1098,7 @@ python-versions = "*"
 
 [[package]]
 name = "pytest"
-version = "7.1.1"
+version = "7.1.2"
 description = "pytest: simple powerful testing with Python"
 category = "dev"
 optional = false
@@ -1161,16 +1160,17 @@ pytest = ">=2.6.0"
 
 [[package]]
 name = "pytest-factoryboy"
-version = "2.1.0"
+version = "2.4.0"
 description = "Factory Boy support for pytest."
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
-factory-boy = ">=2.10.0"
+factory_boy = ">=2.10.0"
 inflection = "*"
-pytest = ">=4.6"
+pytest = ">=5.0.0"
+typing_extensions = "*"
 
 [[package]]
 name = "pytest-forked"
@@ -1212,7 +1212,7 @@ dev = ["pre-commit", "tox", "pytest-asyncio"]
 
 [[package]]
 name = "pytest-randomly"
-version = "3.11.0"
+version = "3.12.0"
 description = "Pytest plugin to randomly order tests and control random.seed."
 category = "dev"
 optional = false
@@ -1291,7 +1291,7 @@ six = ">=1.4.0"
 
 [[package]]
 name = "python-semantic-release"
-version = "7.28.1"
+version = "7.29.1"
 description = "Automatic Semantic Versioning for Python projects"
 category = "dev"
 optional = false
@@ -1311,7 +1311,7 @@ twine = ">=3,<4"
 
 [package.extras]
 dev = ["tox", "isort", "black"]
-docs = ["Sphinx (==1.3.6)"]
+docs = ["Sphinx (==1.3.6)", "Jinja2 (==3.0.3)"]
 mypy = ["mypy", "types-requests"]
 test = ["coverage (>=5,<6)", "pytest (>=5,<6)", "pytest-xdist (>=1,<2)", "pytest-mock (>=2,<3)", "responses (==0.13.3)", "mock (==1.3.0)"]
 
@@ -1422,7 +1422,7 @@ requests = ">=2.0.1,<3.0.0"
 
 [[package]]
 name = "reuse"
-version = "0.14.0"
+version = "1.0.0"
 description = "reuse is a tool for compliance with the REUSE recommendations."
 category = "dev"
 optional = false
@@ -1719,7 +1719,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "0835b665c7d847065509e63e4e380c738d617e13b12037897b5c61db72959a08"
+content-hash = "efc8f27a3cce6caf9451dec2e6c88faa67e92b5aedd093cd7eced8404ae30ab3"
 
 [metadata.files]
 aniso8601 = [
@@ -2013,8 +2013,8 @@ factory-boy = [
     {file = "factory_boy-3.2.1.tar.gz", hash = "sha256:a98d277b0c047c75eb6e4ab8508a7f81fb03d2cb21986f627913546ef7a2a55e"},
 ]
 faker = [
-    {file = "Faker-13.12.0-py3-none-any.whl", hash = "sha256:5cbb89fc6a16793b2bd98252c03a86098c7426beab0a20382709a815651b8804"},
-    {file = "Faker-13.12.0.tar.gz", hash = "sha256:1f6478011ac8a8273e0f9cd6da03d9ea6391c622db340eca015339512e9cde29"},
+    {file = "Faker-13.12.1-py3-none-any.whl", hash = "sha256:0122b75e7960cbb1e2bbbf10ef9b8c183377878e38466854953539c6d822e7c0"},
+    {file = "Faker-13.12.1.tar.gz", hash = "sha256:fb95f956bac59c90f54543919d5c5ef41625e12a0773e5aa08c9b9c62ba58fb3"},
 ]
 fancycompleter = [
     {file = "fancycompleter-0.9.1-py3-none-any.whl", hash = "sha256:dd076bca7d9d524cc7f25ec8f35ef95388ffef9ef46def4d3d25e9b044ad7080"},
@@ -2029,12 +2029,12 @@ flake8 = [
     {file = "flake8-4.0.1.tar.gz", hash = "sha256:806e034dda44114815e23c16ef92f95c91e4c71100ff52813adf7132a6ad870d"},
 ]
 flake8-bugbear = [
-    {file = "flake8-bugbear-22.3.23.tar.gz", hash = "sha256:e0dc2a36474490d5b1a2d57f9e4ef570abc09f07cbb712b29802e28a2367ff19"},
-    {file = "flake8_bugbear-22.3.23-py3-none-any.whl", hash = "sha256:ec5ec92195720cee1589315416b844ffa5e82f73a78e65329e8055322df1e939"},
+    {file = "flake8-bugbear-22.4.25.tar.gz", hash = "sha256:f7c080563fca75ee6b205d06b181ecba22b802babb96b0b084cc7743d6908a55"},
+    {file = "flake8_bugbear-22.4.25-py3-none-any.whl", hash = "sha256:ec374101cddf65bd7a96d393847d74e58d3b98669dbf9768344c39b6290e8bd6"},
 ]
 flake8-debugger = [
-    {file = "flake8-debugger-4.0.0.tar.gz", hash = "sha256:e43dc777f7db1481db473210101ec2df2bd39a45b149d7218a618e954177eda6"},
-    {file = "flake8_debugger-4.0.0-py3-none-any.whl", hash = "sha256:82e64faa72e18d1bdd0000407502ebb8ecffa7bc027c62b9d4110ce27c091032"},
+    {file = "flake8-debugger-4.1.2.tar.gz", hash = "sha256:52b002560941e36d9bf806fca2523dc7fb8560a295d5f1a6e15ac2ded7a73840"},
+    {file = "flake8_debugger-4.1.2-py3-none-any.whl", hash = "sha256:0a5e55aeddcc81da631ad9c8c366e7318998f83ff00985a49e6b3ecf61e571bf"},
 ]
 flake8-docstrings = [
     {file = "flake8-docstrings-1.6.0.tar.gz", hash = "sha256:9fe7c6a306064af8e62a055c2f61e9eb1da55f84bb39caef2b84ce53708ac34b"},
@@ -2222,8 +2222,8 @@ pluggy = [
     {file = "pluggy-1.0.0.tar.gz", hash = "sha256:4224373bacce55f955a878bf9cfa763c1e360858e330072059e10bad68531159"},
 ]
 pre-commit = [
-    {file = "pre_commit-2.18.1-py2.py3-none-any.whl", hash = "sha256:02226e69564ebca1a070bd1f046af866aa1c318dbc430027c50ab832ed2b73f2"},
-    {file = "pre_commit-2.18.1.tar.gz", hash = "sha256:5d445ee1fa8738d506881c5d84f83c62bb5be6b2838e32207433647e8e5ebe10"},
+    {file = "pre_commit-2.19.0-py2.py3-none-any.whl", hash = "sha256:10c62741aa5704faea2ad69cb550ca78082efe5697d6f04e5710c3c229afdd10"},
+    {file = "pre_commit-2.19.0.tar.gz", hash = "sha256:4233a1e38621c87d9dda9808c6606d7e7ba0e087cd56d3fe03202a01d2919615"},
 ]
 promise = [
     {file = "promise-2.3.tar.gz", hash = "sha256:dfd18337c523ba4b6a58801c164c1904a9d4d1b1747c7d5dbf45b693a49d93d0"},
@@ -2327,8 +2327,8 @@ pyrepl = [
     {file = "pyrepl-0.9.0.tar.gz", hash = "sha256:292570f34b5502e871bbb966d639474f2b57fbfcd3373c2d6a2f3d56e681a775"},
 ]
 pytest = [
-    {file = "pytest-7.1.1-py3-none-any.whl", hash = "sha256:92f723789a8fdd7180b6b06483874feca4c48a5c76968e03bb3e7f806a1869ea"},
-    {file = "pytest-7.1.1.tar.gz", hash = "sha256:841132caef6b1ad17a9afde46dc4f6cfa59a05f9555aae5151f73bdf2820ca63"},
+    {file = "pytest-7.1.2-py3-none-any.whl", hash = "sha256:13d0e3ccfc2b6e26be000cb6568c832ba67ba32e719443bfe725814d3c42433c"},
+    {file = "pytest-7.1.2.tar.gz", hash = "sha256:a06a0425453864a270bc45e71f783330a7428defb4230fb5e6a731fde06ecd45"},
 ]
 pytest-cov = [
     {file = "pytest-cov-3.0.0.tar.gz", hash = "sha256:e7f0f5b1617d2210a2cabc266dfe2f4c75a8d32fb89eafb7ad9d06f6d076d470"},
@@ -2342,8 +2342,8 @@ pytest-env = [
     {file = "pytest-env-0.6.2.tar.gz", hash = "sha256:7e94956aef7f2764f3c147d216ce066bf6c42948bb9e293169b1b1c880a580c2"},
 ]
 pytest-factoryboy = [
-    {file = "pytest-factoryboy-2.1.0.tar.gz", hash = "sha256:23bc562ab32cc39eddfbbbf70e618a1b30e834a4cfa451c4bedc36216f0a7b19"},
-    {file = "pytest_factoryboy-2.1.0-py3-none-any.whl", hash = "sha256:10c02d2736cb52c7af28065db9617e7f50634e95eaa07eeb9a007026aa3dc0a8"},
+    {file = "pytest-factoryboy-2.4.0.tar.gz", hash = "sha256:1bc04f928487b51263a5b7a7695078b9165fd2d5160d88ea5ce5a797469fe89e"},
+    {file = "pytest_factoryboy-2.4.0-py3-none-any.whl", hash = "sha256:afeeaa94d1f6027b1bc59112f55ec918fe1e43859f7765e1188eb36fc1c3b393"},
 ]
 pytest-forked = [
     {file = "pytest-forked-1.4.0.tar.gz", hash = "sha256:8b67587c8f98cbbadfdd804539ed5455b6ed03802203485dd2f53c1422d7440e"},
@@ -2358,8 +2358,8 @@ pytest-mock = [
     {file = "pytest_mock-3.7.0-py3-none-any.whl", hash = "sha256:6cff27cec936bf81dc5ee87f07132b807bcda51106b5ec4b90a04331cba76231"},
 ]
 pytest-randomly = [
-    {file = "pytest-randomly-3.11.0.tar.gz", hash = "sha256:9f013b8c1923130f3d0a286fde56e1fc52cfb3547b8eedf2765c460cee979c7f"},
-    {file = "pytest_randomly-3.11.0-py3-none-any.whl", hash = "sha256:a3c680d2b8150cf766311a80a1f92da64c3dd819045cda834fbf1b0ac4891610"},
+    {file = "pytest-randomly-3.12.0.tar.gz", hash = "sha256:d60c2db71ac319aee0fc6c4110a7597d611a8b94a5590918bfa8583f00caccb2"},
+    {file = "pytest_randomly-3.12.0-py3-none-any.whl", hash = "sha256:f4f2e803daf5d1ba036cc22bf4fe9dbbf99389ec56b00e5cba732fb5c1d07fdd"},
 ]
 pytest-xdist = [
     {file = "pytest-xdist-2.5.0.tar.gz", hash = "sha256:4580deca3ff04ddb2ac53eba39d76cb5dd5edeac050cb6fbc768b0dd712b4edf"},
@@ -2383,8 +2383,8 @@ python-memcached = [
     {file = "python_memcached-1.59-py2.py3-none-any.whl", hash = "sha256:4dac64916871bd3550263323fc2ce18e1e439080a2d5670c594cf3118d99b594"},
 ]
 python-semantic-release = [
-    {file = "python-semantic-release-7.28.1.tar.gz", hash = "sha256:d7f82b3d4c06b304d07689b8a1c7d0d448ff07c2ab81cd810c4f2f900f24c599"},
-    {file = "python_semantic_release-7.28.1-py3-none-any.whl", hash = "sha256:319c3e811d6e10bc3f0e967419eae0e5e9ba1e6745aa2fd94dd24e3995541ca2"},
+    {file = "python-semantic-release-7.29.1.tar.gz", hash = "sha256:9bf10e1f9593259d9c139fb3dd2f54b7c61e8abdce62e4aada5b50253dd60dec"},
+    {file = "python_semantic_release-7.29.1-py3-none-any.whl", hash = "sha256:459ed4c09b4aa9ea94b5ceb240211cb7967069d635b1dd9b97b44a9893ec73fb"},
 ]
 pytz = [
     {file = "pytz-2021.3-py2.py3-none-any.whl", hash = "sha256:3672058bc3453457b622aab7a1c3bfd5ab0bdae451512f6cf25f64ed37f5b87c"},
@@ -2526,8 +2526,8 @@ requests-toolbelt = [
     {file = "requests_toolbelt-0.9.1-py2.py3-none-any.whl", hash = "sha256:380606e1d10dc85c3bd47bf5a6095f815ec007be7a8b69c878507068df059e6f"},
 ]
 reuse = [
-    {file = "reuse-0.14.0-py3-none-any.whl", hash = "sha256:3062b1b23e0219a3d275a14fec74ac0dc64992c9fbefe6099103f174b945d43f"},
-    {file = "reuse-0.14.0.tar.gz", hash = "sha256:771dbf42cbae63c97557aafdc3472a698cf34d1e3e1eb3b08dc77881d2c604e1"},
+    {file = "reuse-1.0.0-py3-none-any.whl", hash = "sha256:e2605e796311c424465d741ea2a1e1ad03bbb90b921d74750119c331ca5af46e"},
+    {file = "reuse-1.0.0.tar.gz", hash = "sha256:db3022be2d87f69c8f508b928023de3026f454ce17d01e22f770f7147ac1e8d4"},
 ]
 rfc3986 = [
     {file = "rfc3986-2.0.0-py2.py3-none-any.whl", hash = "sha256:50b1502b60e289cb37883f3dfd34532b8873c7de9f49bb546641ce9cbd256ebd"},
