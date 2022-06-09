@@ -1525,7 +1525,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "syrupy"
-version = "2.0.0"
+version = "2.3.0"
 description = "PyTest Snapshot Test Utility"
 category = "dev"
 optional = false
@@ -1719,7 +1719,7 @@ testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "faec856cd143a52f334e09d2e6e7abcaf342e4de90188321379d4adc09d2266d"
+content-hash = "0835b665c7d847065509e63e4e380c738d617e13b12037897b5c61db72959a08"
 
 [metadata.files]
 aniso8601 = [
@@ -2566,8 +2566,8 @@ sqlparse = [
     {file = "sqlparse-0.4.2.tar.gz", hash = "sha256:0c00730c74263a94e5a9919ade150dfc3b19c574389985446148402998287dae"},
 ]
 syrupy = [
-    {file = "syrupy-2.0.0-py3-none-any.whl", hash = "sha256:3977c48581b0a61bf88bb9c326e160262a38d41871aab92414c857728b780854"},
-    {file = "syrupy-2.0.0.tar.gz", hash = "sha256:af97abb47530e780e8746a791059f092ecbfc9d51b907e71d47b5e2ca103c68a"},
+    {file = "syrupy-2.3.0-py3-none-any.whl", hash = "sha256:86ace229f9c36d0727515fa03809f498e845b011d4e4401a996302e00f7c8444"},
+    {file = "syrupy-2.3.0.tar.gz", hash = "sha256:9991ff68de89254ab11c8c0956069b0d3ce8ba3f15ea477e3d86b8d3856f7fa0"},
 ]
 testfixtures = [
     {file = "testfixtures-6.18.5-py2.py3-none-any.whl", hash = "sha256:7de200e24f50a4a5d6da7019fb1197aaf5abd475efb2ec2422fdcf2f2eb98c1d"},
