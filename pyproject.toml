@@ -16,8 +16,6 @@ classifiers = [
 ]
 include = ["CHANGELOG.md"]
 exclude = [
-    "caluma/conftest.py",
-    "caluma/**/conftest.py",
     "caluma/**/tests",
 ]
 
