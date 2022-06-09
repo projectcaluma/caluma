@@ -71,7 +71,7 @@ pytest-randomly = "^3.11.0"
 python-semantic-release = "^7.28.1"
 pytest-xdist = "^2.5.0"
 requests-mock = "^1.9.3"
-reuse = "^0.14.0"
+reuse = "^1.0.0"
 syrupy = "^2.3.0"
 
 [tool.isort]
