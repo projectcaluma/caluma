@@ -186,20 +186,20 @@ class SaveDocumentLogic:
         For adding the answers, it does one query per form and one query per
         row_document.
         """
-        answers = []
         for question in form.questions.filter(
             Q(default_answer__isnull=False) | Q(type=models.Question.TYPE_FORM)
         ).iterator():
             if question.type == models.Question.TYPE_FORM:
                 if question.sub_form is not None:
-                    document = SaveDocumentLogic._set_default_answers_for_form(
+                    SaveDocumentLogic._set_default_answers_for_form(
                         question.sub_form, document, user
                     )
                 continue
-            answers.append(
-                question.default_answer.copy(document_family=document.family, user=user)
+
+            question.default_answer.copy(
+                to_document=document, document_family=document.family, user=user
             )
-        document.answers.add(*answers)
+
         return document
 
     @staticmethod

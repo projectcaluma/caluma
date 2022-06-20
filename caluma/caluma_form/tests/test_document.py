@@ -385,7 +385,9 @@ def test_save_document(
     form_question = form_question_factory(
         question__type=Question.TYPE_TEXT, form=document.form
     )
-    default_answer = answer_factory(question=form_question.question, value="foo")
+    default_answer = answer_factory(
+        question=form_question.question, value="foo", document=None
+    )
     form_question.question.default_answer = default_answer
     form_question.question.save()
 
@@ -454,6 +456,10 @@ def test_save_document(
         assert doc.answers.count() == 0 if update else 2
         if not update:
             assert sorted([a.value for a in doc.answers.iterator()]) == ["bar", "foo"]
+
+    # Make sure the default answers document is still None
+    default_answer.refresh_from_db()
+    assert default_answer.document_id is None
 
 
 @pytest.mark.parametrize("use_python_api", [True, False])  # noqa:C901
