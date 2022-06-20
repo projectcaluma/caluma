@@ -14,6 +14,7 @@ from graphene import ResolveInfo
 from minio import Minio
 from minio.datatypes import Object as MinioStatObject
 from pytest_factoryboy import register
+from pytest_factoryboy.fixture import Box
 
 from .caluma_analytics import factories as analytics_factories
 from .caluma_core.faker import MultilangProvider
@@ -31,7 +32,7 @@ def register_module(module):
     # We need to pass the locals of this file to the register method to make
     # sure they are injected on the conftest locals instead of the default
     # locals which would be the locals of this function
-    conftest_locals = sys._getframe(1).f_locals
+    conftest_locals = Box(sys._getframe(1).f_locals)
 
     for _, obj in inspect.getmembers(module):
         if isinstance(obj, FactoryMetaClass) and not obj._meta.abstract:
