@@ -1,3 +1,9 @@
+# v8.0.0-beta.8 (20 June 2022)
+
+### Fix
+* **default answer:** Don't set document when copying default answers ([`7b5ce74`](https://github.com/projectcaluma/caluma/commit/7b5ce74a8a62a8b0415226eb784cc8aae811f9c3))
+
+
 # v8.0.0-beta.7 (9 June 2022)
 
 ### Fix
