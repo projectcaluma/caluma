@@ -1,7 +1,6 @@
 import inspect
 import logging
 from functools import wraps
-from warnings import warn
 
 logger = logging.getLogger(__name__)
 
@@ -17,11 +16,6 @@ class SignalHandlingError(RuntimeError):
 
 
 def on(event, raise_exception=False, *args, **kwargs):
-    deprecation_reason = getattr(event, "_deprecation_reason", None)
-
-    if deprecation_reason:  # pragma: no cover
-        warn(deprecation_reason, DeprecationWarning)
-
     def _decorator(func):
         func._raise_exception = raise_exception
 
