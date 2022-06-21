@@ -639,7 +639,7 @@
     }),
   })
 # ---
-# name: test_save_case[saveCase-False-None-100]
+# name: test_save_case[False-None-100]
   dict({
     'saveCase': dict({
       'case': dict({
@@ -671,7 +671,7 @@
     }),
   })
 # ---
-# name: test_save_case[saveCase-False-None-None]
+# name: test_save_case[False-None-None]
   dict({
     'saveCase': dict({
       'case': dict({
@@ -703,40 +703,7 @@
     }),
   })
 # ---
-# name: test_save_case[saveCase-False-["group-name"]|groups-100]
-  dict({
-    'saveCase': dict({
-      'case': dict({
-        'document': dict({
-          'form': dict({
-            'slug': 'suggest-adult-allow',
-          }),
-        }),
-        'parentWorkItem': None,
-        'status': 'RUNNING',
-        'workItems': dict({
-          'edges': list([
-            dict({
-              'node': dict({
-                'addressedGroups': list([
-                  'group-name',
-                ]),
-                'document': dict({
-                  'form': dict({
-                    'slug': 'suggest-adult-allow',
-                  }),
-                }),
-                'status': 'READY',
-              }),
-            }),
-          ]),
-        }),
-      }),
-      'clientMutationId': None,
-    }),
-  })
-# ---
-# name: test_save_case[saveCase-False-["group-name"]|groups-None]
+# name: test_save_case[False-["group-name"]|groups-100]
   dict({
     'saveCase': dict({
       'case': dict({
@@ -769,7 +736,40 @@
     }),
   })
 # ---
-# name: test_save_case[saveCase-True-None-100]
+# name: test_save_case[False-["group-name"]|groups-None]
+  dict({
+    'saveCase': dict({
+      'case': dict({
+        'document': dict({
+          'form': dict({
+            'slug': 'suggest-adult-allow',
+          }),
+        }),
+        'parentWorkItem': None,
+        'status': 'RUNNING',
+        'workItems': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'addressedGroups': list([
+                  'group-name',
+                ]),
+                'document': dict({
+                  'form': dict({
+                    'slug': 'suggest-adult-allow',
+                  }),
+                }),
+                'status': 'READY',
+              }),
+            }),
+          ]),
+        }),
+      }),
+      'clientMutationId': None,
+    }),
+  })
+# ---
+# name: test_save_case[True-None-100]
   dict({
     'saveCase': dict({
       'case': dict({
@@ -803,7 +803,7 @@
     }),
   })
 # ---
-# name: test_save_case[saveCase-True-None-None]
+# name: test_save_case[True-None-None]
   dict({
     'saveCase': dict({
       'case': dict({
@@ -837,7 +837,7 @@
     }),
   })
 # ---
-# name: test_save_case[saveCase-True-["group-name"]|groups-100]
+# name: test_save_case[True-["group-name"]|groups-100]
   dict({
     'saveCase': dict({
       'case': dict({
@@ -871,7 +871,7 @@
     }),
   })
 # ---
-# name: test_save_case[saveCase-True-["group-name"]|groups-None]
+# name: test_save_case[True-["group-name"]|groups-None]
   dict({
     'saveCase': dict({
       'case': dict({
@@ -889,136 +889,6 @@
             dict({
               'node': dict({
                 'addressedGroups': list([
-                ]),
-                'document': dict({
-                  'form': dict({
-                    'slug': 'suggest-adult-allow',
-                  }),
-                }),
-                'status': 'READY',
-              }),
-            }),
-          ]),
-        }),
-      }),
-      'clientMutationId': None,
-    }),
-  })
-# ---
-# name: test_save_case[startCase-False-None-100]
-  dict({
-    'startCase': dict({
-      'case': dict({
-        'document': dict({
-          'form': dict({
-            'slug': 'suggest-adult-allow',
-          }),
-        }),
-        'parentWorkItem': None,
-        'status': 'RUNNING',
-        'workItems': dict({
-          'edges': list([
-            dict({
-              'node': dict({
-                'addressedGroups': list([
-                ]),
-                'document': dict({
-                  'form': dict({
-                    'slug': 'suggest-adult-allow',
-                  }),
-                }),
-                'status': 'READY',
-              }),
-            }),
-          ]),
-        }),
-      }),
-      'clientMutationId': None,
-    }),
-  })
-# ---
-# name: test_save_case[startCase-False-None-None]
-  dict({
-    'startCase': dict({
-      'case': dict({
-        'document': dict({
-          'form': dict({
-            'slug': 'suggest-adult-allow',
-          }),
-        }),
-        'parentWorkItem': None,
-        'status': 'RUNNING',
-        'workItems': dict({
-          'edges': list([
-            dict({
-              'node': dict({
-                'addressedGroups': list([
-                ]),
-                'document': dict({
-                  'form': dict({
-                    'slug': 'suggest-adult-allow',
-                  }),
-                }),
-                'status': 'READY',
-              }),
-            }),
-          ]),
-        }),
-      }),
-      'clientMutationId': None,
-    }),
-  })
-# ---
-# name: test_save_case[startCase-False-["group-name"]|groups-100]
-  dict({
-    'startCase': dict({
-      'case': dict({
-        'document': dict({
-          'form': dict({
-            'slug': 'suggest-adult-allow',
-          }),
-        }),
-        'parentWorkItem': None,
-        'status': 'RUNNING',
-        'workItems': dict({
-          'edges': list([
-            dict({
-              'node': dict({
-                'addressedGroups': list([
-                  'group-name',
-                ]),
-                'document': dict({
-                  'form': dict({
-                    'slug': 'suggest-adult-allow',
-                  }),
-                }),
-                'status': 'READY',
-              }),
-            }),
-          ]),
-        }),
-      }),
-      'clientMutationId': None,
-    }),
-  })
-# ---
-# name: test_save_case[startCase-False-["group-name"]|groups-None]
-  dict({
-    'startCase': dict({
-      'case': dict({
-        'document': dict({
-          'form': dict({
-            'slug': 'suggest-adult-allow',
-          }),
-        }),
-        'parentWorkItem': None,
-        'status': 'RUNNING',
-        'workItems': dict({
-          'edges': list([
-            dict({
-              'node': dict({
-                'addressedGroups': list([
-                  'group-name',
                 ]),
                 'document': dict({
                   'form': dict({

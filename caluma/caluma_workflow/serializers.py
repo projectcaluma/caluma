@@ -193,7 +193,7 @@ class SaveCompleteTaskFormTaskSerializer(SaveTaskSerializer):
         fields = SaveTaskSerializer.Meta.fields + ["form"]
 
 
-class CaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
+class SaveCaseSerializer(ContextModelSerializer):
     workflow = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Workflow.objects.prefetch_related("start_tasks")
     )
@@ -226,34 +226,11 @@ class CaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
 
     class Meta:
         model = models.Case
-        fields = ["workflow", "meta", "parent_work_item", "form", "context"]
-
-
-class SaveCaseSerializer(CaseSerializer):
-    @transaction.atomic
-    def create(self, validated_data):
-        self.send_event(
-            events.pre_create_case, case=None, validated_data=validated_data
-        )
-        instance = super().create(validated_data)
-        self.send_event(events.post_create_case, case=instance)
-        return instance
-
-    @transaction.atomic
-    def update(self, instance, validated_data):
-        self.send_event(
-            events.pre_create_case, case=instance, validated_data=validated_data
-        )
-        instance = super().update(instance, validated_data)
-        self.send_event(events.post_create_case, case=instance)
-        return instance
-
-    class Meta(CaseSerializer.Meta):
         fields = ["id", "workflow", "meta", "parent_work_item", "form", "context"]
         extra_kwargs = {"id": {"read_only": False, "required": False}}
 
 
-class CancelCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
+class CancelCaseSerializer(ContextModelSerializer):
     id = serializers.GlobalIDField()
 
     class Meta:
@@ -284,7 +261,7 @@ class CancelCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
         return case
 
 
-class SuspendCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
+class SuspendCaseSerializer(ContextModelSerializer):
     id = serializers.GlobalIDField()
 
     class Meta:
@@ -315,7 +292,7 @@ class SuspendCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
         return case
 
 
-class ResumeCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
+class ResumeCaseSerializer(ContextModelSerializer):
     id = serializers.GlobalIDField()
 
     class Meta:
@@ -346,7 +323,7 @@ class ResumeCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
         return case
 
 
-class ReopenCaseSerializer(SendEventSerializerMixin, ContextModelSerializer):
+class ReopenCaseSerializer(ContextModelSerializer):
     id = serializers.GlobalIDField()
     work_items = ListField(child=serializers.GlobalIDField(), required=True)
 

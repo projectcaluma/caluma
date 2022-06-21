@@ -1705,7 +1705,6 @@
     saveSimpleTask(input: SaveSimpleTaskInput!): SaveSimpleTaskPayload
     saveCompleteWorkflowFormTask(input: SaveCompleteWorkflowFormTaskInput!): SaveCompleteWorkflowFormTaskPayload
     saveCompleteTaskFormTask(input: SaveCompleteTaskFormTaskInput!): SaveCompleteTaskFormTaskPayload
-    startCase(input: StartCaseInput!): StartCasePayload @deprecated(reason: "Use SaveCase mutation instead")
     saveCase(input: SaveCaseInput!): SaveCasePayload
     cancelCase(input: CancelCaseInput!): CancelCasePayload
     suspendCase(input: SuspendCaseInput!): SuspendCasePayload
@@ -2985,22 +2984,6 @@
     IS_PUBLISHED
     NAME
     SLUG
-  }
-  
-  input StartCaseInput {
-    workflow: ID!
-    meta: JSONString
-    parentWorkItem: ID
-    form: ID
-  
-    """Provide extra context for dynamic jexl transforms and events"""
-    context: JSONString
-    clientMutationId: String
-  }
-  
-  type StartCasePayload {
-    case: Case
-    clientMutationId: String
   }
   
   """An enumeration."""
