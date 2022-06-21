@@ -17,7 +17,7 @@
     infoText: String
     meta: GenericScalar!
     source: Question
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -127,7 +127,7 @@
   }
   
   type AnalyticsOutput {
-    records(before: String = null, after: String = null, first: Int = null, last: Int = null): AnalyticsTableContentConnection
+    records(before: String, after: String, first: Int, last: Int): AnalyticsTableContentConnection
     summary: AnalyticsRowConnection
   }
   
@@ -160,11 +160,11 @@
     disableVisibilities: Boolean!
     name: String!
     startingObject: StartingObject
-    fields(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): AnalyticsFieldConnection!
+    fields(offset: Int, before: String, after: String, first: Int, last: Int): AnalyticsFieldConnection!
   
     """The ID of the object"""
     id: ID!
-    availableFields(prefix: String = null, depth: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): AvailableFieldConnection
+    availableFields(prefix: String, depth: Int, before: String, after: String, first: Int, last: Int): AvailableFieldConnection
     resultData: AnalyticsOutput
   }
   
@@ -373,7 +373,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
     calcExpression: String
   
     """The ID of the object"""
@@ -473,9 +473,9 @@
     status: CaseStatus!
     meta: GenericScalar
     document: Document
-    workItems(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [WorkItemFilterSetType] = null, order: [WorkItemOrderSetType] = null): WorkItemConnection
+    workItems(offset: Int, before: String, after: String, first: Int, last: Int, filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType]): WorkItemConnection
     parentWorkItem: WorkItem
-    familyWorkItems(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [WorkItemFilterSetType] = null, order: [WorkItemOrderSetType] = null): WorkItemConnection
+    familyWorkItems(offset: Int, before: String, after: String, first: Int, last: Int, filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType]): WorkItemConnection
   }
   
   type CaseConnection {
@@ -566,8 +566,8 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: StringAnswer
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
-    options(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [OptionFilterSetType] = null, order: [OptionOrderSetType] = null): OptionConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
+    options(offset: Int, before: String, after: String, first: Int, last: Int, filter: [OptionFilterSetType], order: [OptionOrderSetType]): OptionConnection
   
     """The ID of the object"""
     id: ID!
@@ -798,7 +798,7 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: DateAnswer
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -879,8 +879,8 @@
     meta: GenericScalar
   
     """Reference this document has been copied from"""
-    copies(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): DocumentConnection!
-    answers(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [AnswerFilterSetType] = null, order: [AnswerOrderSetType] = null): AnswerConnection
+    copies(offset: Int, before: String, after: String, first: Int, last: Int): DocumentConnection!
+    answers(offset: Int, before: String, after: String, first: Int, last: Int, filter: [AnswerFilterSetType], order: [AnswerOrderSetType]): AnswerConnection
     case: Case
     workItem: WorkItem
     modifiedContentAt: DateTime
@@ -968,8 +968,8 @@
     hintText: String
     meta: GenericScalar!
     source: Question
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
-    options(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
+    options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
     dataSource: String!
   
     """The ID of the object"""
@@ -994,8 +994,8 @@
     hintText: String
     meta: GenericScalar!
     source: Question
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
-    options(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
+    options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
     dataSource: String!
   
     """The ID of the object"""
@@ -1049,7 +1049,7 @@
   }
   
   interface DynamicQuestion {
-    options(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
+    options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
     dataSource: String!
     hintText: String
   }
@@ -1105,7 +1105,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -1146,7 +1146,7 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: FloatAnswer
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -1229,11 +1229,11 @@
     meta: GenericScalar
     isPublished: Boolean!
     isArchived: Boolean!
-    questions(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [QuestionFilterSetType] = null, order: [QuestionOrderSetType] = null): QuestionConnection
+    questions(offset: Int, before: String, after: String, first: Int, last: Int, filter: [QuestionFilterSetType], order: [QuestionOrderSetType]): QuestionConnection
   
     """Reference this form has been copied from"""
     source: Form
-    documents(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): DocumentConnection!
+    documents(offset: Int, before: String, after: String, first: Int, last: Int): DocumentConnection!
   
     """The ID of the object"""
     id: ID!
@@ -1299,7 +1299,7 @@
     infoText: String
     meta: GenericScalar!
     source: Question
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
     """Form referenced in a FormQuestion"""
     subForm: Form
@@ -1436,7 +1436,7 @@
     source: Document
     historyDate: DateTime!
     historyType: String
-    historicalAnswers(asOf: DateTime!, before: String = null, after: String = null, first: Int = null, last: Int = null): HistoricalAnswerConnection
+    historicalAnswers(asOf: DateTime!, before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
     documentId: UUID
   }
   
@@ -1535,7 +1535,7 @@
     historyDate: DateTime!
     historyChangeReason: String
     historyType: String
-    selectedOptions(before: String = null, after: String = null, first: Int = null, last: Int = null): SelectedOptionConnection
+    selectedOptions(before: String, after: String, first: Int, last: Int): SelectedOptionConnection
   }
   
   type HistoricalStringAnswer implements HistoricalAnswer & Node {
@@ -1617,7 +1617,7 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: IntegerAnswer
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -1664,7 +1664,7 @@
     question: Question!
     value: [String]
     meta: GenericScalar!
-    selectedOptions(before: String = null, after: String = null, first: Int = null, last: Int = null): SelectedOptionConnection
+    selectedOptions(before: String, after: String, first: Int, last: Int): SelectedOptionConnection
   }
   
   type MultipleChoiceQuestion implements Question & Node {
@@ -1686,8 +1686,8 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: ListAnswer
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
-    options(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [OptionFilterSetType] = null, order: [OptionOrderSetType] = null): OptionConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
+    options(offset: Int, before: String, after: String, first: Int, last: Int, filter: [OptionFilterSetType], order: [OptionOrderSetType]): OptionConnection
     staticContent: String
   
     """The ID of the object"""
@@ -1848,21 +1848,21 @@
   
   type Query {
     documentAsOf(id: ID!, asOf: DateTime!): HistoricalDocument
-    allAnalyticsTables(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [AnalyticsTableFilterSetType] = null, order: [AnalyticsTableOrderSetType] = null): AnalyticsTableConnection
+    allAnalyticsTables(offset: Int, before: String, after: String, first: Int, last: Int, filter: [AnalyticsTableFilterSetType], order: [AnalyticsTableOrderSetType]): AnalyticsTableConnection
     analyticsTable(slug: String!): AnalyticsTable
-    allAnalyticsFields(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [AnalyticsFieldFilterSetType] = null, order: [AnalyticsFieldOrderSetType] = null): AnalyticsFieldConnection
-    allDataSources(before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceConnection
-    dataSource(name: String!, before: String = null, after: String = null, first: Int = null, last: Int = null): DataSourceDataConnection
-    allWorkflows(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [WorkflowFilterSetType] = null, order: [WorkflowOrderSetType] = null): WorkflowConnection
-    allTasks(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [TaskFilterSetType] = null, order: [TaskOrderSetType] = null): TaskConnection
-    allCases(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [CaseFilterSetType] = null, order: [CaseOrderSetType] = null): CaseConnection
-    allWorkItems(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [WorkItemFilterSetType] = null, order: [WorkItemOrderSetType] = null): WorkItemConnection
-    allForms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
-    allQuestions(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [QuestionFilterSetType] = null, order: [QuestionOrderSetType] = null): QuestionConnection
-    allDocuments(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [DocumentFilterSetType] = null, order: [DocumentOrderSetType] = null): DocumentConnection
-    allFormatValidators(before: String = null, after: String = null, first: Int = null, last: Int = null): FormatValidatorConnection
-    allUsedDynamicOptions(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [DynamicOptionFilterSetType] = null, order: [DynamicOptionOrderSetType] = null): DynamicOptionConnection
-    documentValidity(id: ID!, before: String = null, after: String = null, first: Int = null, last: Int = null): DocumentValidityConnection
+    allAnalyticsFields(offset: Int, before: String, after: String, first: Int, last: Int, filter: [AnalyticsFieldFilterSetType], order: [AnalyticsFieldOrderSetType]): AnalyticsFieldConnection
+    allDataSources(before: String, after: String, first: Int, last: Int): DataSourceConnection
+    dataSource(name: String!, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+    allWorkflows(offset: Int, before: String, after: String, first: Int, last: Int, filter: [WorkflowFilterSetType], order: [WorkflowOrderSetType]): WorkflowConnection
+    allTasks(offset: Int, before: String, after: String, first: Int, last: Int, filter: [TaskFilterSetType], order: [TaskOrderSetType]): TaskConnection
+    allCases(offset: Int, before: String, after: String, first: Int, last: Int, filter: [CaseFilterSetType], order: [CaseOrderSetType]): CaseConnection
+    allWorkItems(offset: Int, before: String, after: String, first: Int, last: Int, filter: [WorkItemFilterSetType], order: [WorkItemOrderSetType]): WorkItemConnection
+    allForms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
+    allQuestions(offset: Int, before: String, after: String, first: Int, last: Int, filter: [QuestionFilterSetType], order: [QuestionOrderSetType]): QuestionConnection
+    allDocuments(offset: Int, before: String, after: String, first: Int, last: Int, filter: [DocumentFilterSetType], order: [DocumentOrderSetType]): DocumentConnection
+    allFormatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
+    allUsedDynamicOptions(offset: Int, before: String, after: String, first: Int, last: Int, filter: [DynamicOptionFilterSetType], order: [DynamicOptionOrderSetType]): DynamicOptionConnection
+    documentValidity(id: ID!, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
     node(
       """The ID of the object"""
       id: ID!
@@ -1887,7 +1887,7 @@
     isHidden: QuestionJexl!
     isArchived: Boolean!
     meta: GenericScalar!
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
     source: Question
   }
   
@@ -3029,7 +3029,7 @@
     infoText: String
     meta: GenericScalar!
     source: Question
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
     staticContent: String
     dataSource: String
   
@@ -3135,7 +3135,7 @@
     meta: GenericScalar!
     source: Question
     defaultAnswer: TableAnswer
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
     """Form that represents rows of a TableQuestion"""
     rowForm: Form
@@ -3224,9 +3224,9 @@
     hintText: String
     meta: GenericScalar!
     source: Question
-    formatValidators(before: String = null, after: String = null, first: Int = null, last: Int = null): FormatValidatorConnection
+    formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     defaultAnswer: StringAnswer
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -3253,9 +3253,9 @@
     hintText: String
     meta: GenericScalar!
     source: Question
-    formatValidators(before: String = null, after: String = null, first: Int = null, last: Int = null): FormatValidatorConnection
+    formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     defaultAnswer: StringAnswer
-    forms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FormFilterSetType] = null, order: [FormOrderSetType] = null): FormConnection
+    forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
     """The ID of the object"""
     id: ID!
@@ -3326,7 +3326,7 @@
     childCase: Case
     document: Document
     previousWorkItem: WorkItem
-    succeedingWorkItems(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): WorkItemConnection!
+    succeedingWorkItems(offset: Int, before: String, after: String, first: Int, last: Int): WorkItemConnection!
   }
   
   type WorkItemConnection {
@@ -3417,14 +3417,14 @@
     allowAllForms: Boolean!
   
     """List of forms which are allowed to start workflow with"""
-    allowForms(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null): FormConnection!
+    allowForms(offset: Int, before: String, after: String, first: Int, last: Int): FormConnection!
   
     """The ID of the object"""
     id: ID!
   
     """List of tasks referenced in workflow"""
     tasks: [Task]!
-    flows(offset: Int = null, before: String = null, after: String = null, first: Int = null, last: Int = null, filter: [FlowFilterSetType] = null, order: [FlowOrderSetType] = null): FlowConnection
+    flows(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FlowFilterSetType], order: [FlowOrderSetType]): FlowConnection
   }
   
   type WorkflowConnection {

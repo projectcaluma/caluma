@@ -7,7 +7,6 @@ from ..caluma_core.relay import extract_global_id
 from ..caluma_core.types import ConnectionField, CountableConnectionBase
 from . import models
 from .schema import (
-    QUESTION_ANSWER_TYPES,
     Answer,
     DateAnswer,
     FileAnswer,
@@ -45,8 +44,7 @@ class HistoricalAnswer(Answer):
 
     @classmethod
     def resolve_type(cls, instance, info):
-        answer_type = QUESTION_ANSWER_TYPES[instance.history_question_type]
-        return f"Historical{answer_type.__name__}"
+        return HISTORICAL_ANSWER_TYPES[instance.history_question_type]
 
 
 class HistoricalAnswerConnection(CountableConnectionBase):
@@ -221,3 +219,19 @@ class Query:
 
     def resolve_document_as_of(self, info, id, as_of):
         return document_as_of(info, id, as_of)
+
+
+HISTORICAL_ANSWER_TYPES = {
+    models.Question.TYPE_MULTIPLE_CHOICE: HistoricalListAnswer,
+    models.Question.TYPE_INTEGER: HistoricalIntegerAnswer,
+    models.Question.TYPE_FLOAT: HistoricalFloatAnswer,
+    models.Question.TYPE_DATE: HistoricalDateAnswer,
+    models.Question.TYPE_CHOICE: HistoricalStringAnswer,
+    models.Question.TYPE_TEXTAREA: HistoricalStringAnswer,
+    models.Question.TYPE_TEXT: HistoricalStringAnswer,
+    models.Question.TYPE_TABLE: HistoricalTableAnswer,
+    models.Question.TYPE_FILE: HistoricalFileAnswer,
+    models.Question.TYPE_DYNAMIC_CHOICE: HistoricalStringAnswer,
+    models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: HistoricalListAnswer,
+    models.Question.TYPE_CALCULATED_FLOAT: HistoricalFloatAnswer,
+}
