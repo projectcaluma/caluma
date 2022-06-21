@@ -299,7 +299,7 @@ class SearchLookupMode(Enum):
 class SearchAnswersFilterType(InputObjectType):
     """Lookup type to search in answers."""
 
-    questions = List(graphene.ID)
+    questions = List(graphene.ID, required=True)
     value = graphene.types.generic.GenericScalar(required=True)
     lookup = SearchLookupMode(required=False)
 

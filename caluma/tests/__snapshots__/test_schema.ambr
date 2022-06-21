@@ -2792,7 +2792,7 @@
   
   """Lookup type to search in answers."""
   input SearchAnswersFilterType {
-    questions: [ID]
+    questions: [ID]!
     value: GenericScalar!
     lookup: SearchLookupMode
   }
