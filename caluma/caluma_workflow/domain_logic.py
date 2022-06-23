@@ -383,7 +383,9 @@ class ReopenCaseLogic:
             raise ValidationError("Child cases can not be reopened.")
 
         for work_item in work_items:
-            if work_item.succeeding_work_items.exists():
+            if work_item.succeeding_work_items.exclude(
+                status=models.WorkItem.STATUS_REDO
+            ).exists():
                 raise ValidationError(
                     "Only work items at the end of a branch can be reopened."
                 )
