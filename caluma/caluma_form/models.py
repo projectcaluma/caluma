@@ -469,6 +469,24 @@ class Answer(core_models.BaseModel):
             new_answer.file = self.file.copy()
             new_answer.save()
 
+        if self.question.type in [
+            Question.TYPE_DYNAMIC_CHOICE,
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+        ]:
+            for dynamic_option in DynamicOption.objects.filter(
+                document=self.document, question=self.question
+            ):
+                DynamicOption.objects.update_or_create(
+                    document=to_document,
+                    question=dynamic_option.question,
+                    slug=dynamic_option.slug,
+                    defaults={
+                        "label": dynamic_option.slug,
+                        "created_by_user": user.username if user else None,
+                        "created_by_group": user.group if user else None,
+                    },
+                )
+
         # TableAnswer: copy AnswerDocument too
         for answer_doc in AnswerDocument.objects.filter(answer=self):
             new_doc = answer_doc.document.copy(family=document_family, user=user)
