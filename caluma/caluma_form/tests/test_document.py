@@ -5,7 +5,7 @@ from graphql_relay import to_global_id
 from ...caluma_core.relay import extract_global_id
 from ...caluma_core.tests import extract_serializer_input_fields
 from ...caluma_core.visibilities import BaseVisibility, filter_queryset_for
-from ...caluma_form.models import Answer, Document, Question
+from ...caluma_form.models import Answer, Document, DynamicOption, Question
 from ...caluma_form.schema import Document as DocumentNodeType
 from .. import api, serializers
 
@@ -1249,6 +1249,7 @@ def test_copy_document(
     document_factory,
     answer_factory,
     answer_document_factory,
+    dynamic_option_factory,
     question_factory,
     form_factory,
     form_question_factory,
@@ -1274,6 +1275,12 @@ def test_copy_document(
     file_question = form_question_factory(
         form=main_form, question__type=Question.TYPE_FILE
     )
+    dynamic_choice_question = form_question_factory(
+        form=main_form, question__type=Question.TYPE_DYNAMIC_CHOICE
+    )
+    dynamic_multiple_choice_question = form_question_factory(
+        form=main_form, question__type=Question.TYPE_DYNAMIC_CHOICE
+    )
 
     # main_document
     #   - table_answer
@@ -1281,6 +1288,8 @@ def test_copy_document(
     #           - sub_question answer:"foo"
     #   - other_question answer:"something"
     #   - file_question answer: b"a file"
+    #   - dynamic_choice_question answer: "foo"
+    #   - dynamic_multiple_choice_question answer: ["bar", "baz"]
 
     main_document = document_factory(form=main_form)
     table_answer = answer_factory(
@@ -1297,6 +1306,21 @@ def test_copy_document(
     file_answer = answer_factory(
         question=file_question.question, document=main_document
     )
+    answer_factory(
+        question=dynamic_choice_question.question, document=main_document, value="foo"
+    )
+    answer_factory(
+        question=dynamic_multiple_choice_question.question,
+        document=main_document,
+        value=["bar", "baz"],
+    )
+
+    for question, value in [
+        (dynamic_choice_question.question, "foo"),
+        (dynamic_multiple_choice_question.question, "bar"),
+        (dynamic_multiple_choice_question.question, "baz"),
+    ]:
+        dynamic_option_factory(question=question, document=main_document, slug=value)
 
     query = """
         mutation CopyDocument($input: CopyDocumentInput!) {
@@ -1343,6 +1367,20 @@ def test_copy_document(
     minio_mock.copy_object.assert_called()
     assert new_file_answer.file.name == file_answer.file.name
     assert new_file_answer.file.object_name != file_answer.file.object_name
+
+    # dynamic options are copied
+    for question in [
+        dynamic_choice_question.question,
+        dynamic_multiple_choice_question.question,
+    ]:
+        assert (
+            DynamicOption.objects.filter(
+                question=question, document=new_document
+            ).count()
+            == DynamicOption.objects.filter(
+                question=question, document=main_document
+            ).count()
+        )
 
     # table docs and answers are moved
     new_table_answer = new_document.answers.get(question=table_question)

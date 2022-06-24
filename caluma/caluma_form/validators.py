@@ -113,7 +113,27 @@ class AnswerValidator:
             raise CustomValidationError(
                 f'Invalid value "{value}". Must be of type str.', slugs=[question.slug]
             )
+
         self._validate_dynamic_option(question, document, value, user)
+        self._remove_unused_dynamic_options(question, document, [value])
+
+    def _validate_question_dynamic_multiple_choice(
+        self, question, value, document, user, **kwargs
+    ):
+        if not isinstance(value, list):
+            raise CustomValidationError(
+                f'Invalid value: "{value}". Must be of type list', slugs=[question.slug]
+            )
+
+        for v in value:
+            if not isinstance(v, str):
+                raise CustomValidationError(
+                    f'Invalid value: "{v}". Must be of type string',
+                    slugs=[question.slug],
+                )
+            self._validate_dynamic_option(question, document, v, user)
+
+        self._remove_unused_dynamic_options(question, document, value)
 
     def _validate_dynamic_option(self, question, document, option, user):
         data_source = get_data_sources(dic=True)[question.data_source]
@@ -138,21 +158,10 @@ class AnswerValidator:
             },
         )
 
-    def _validate_question_dynamic_multiple_choice(
-        self, question, value, document, user, **kwargs
-    ):
-        if not isinstance(value, list):
-            raise CustomValidationError(
-                f'Invalid value: "{value}". Must be of type list', slugs=[question.slug]
-            )
-
-        for v in value:
-            if not isinstance(v, str):
-                raise CustomValidationError(
-                    f'Invalid value: "{v}". Must be of type string',
-                    slugs=[question.slug],
-                )
-            self._validate_dynamic_option(question, document, v, user)
+    def _remove_unused_dynamic_options(self, question, document, used_values):
+        DynamicOption.objects.filter(document=document, question=question).exclude(
+            slug__in=used_values
+        ).delete()
 
     def _validate_question_table(
         self, question, value, document, user, instance=None, origin=False, **kwargs

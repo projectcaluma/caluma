@@ -135,6 +135,9 @@ def test_validate_dynamic_option_exists(
 
     value = "foobar"
     document = document_factory(form=form_question.form)
+    old_dynamic_option = dynamic_option_factory(
+        document=document, question=question, slug="somevalue", label="Some Value"
+    )
     dynamic_option = dynamic_option_factory(
         document=document, question=question, slug=value, label="test"
     )
@@ -144,6 +147,9 @@ def test_validate_dynamic_option_exists(
     answer_factory(question=question, value=value, document=document)
 
     assert DocumentValidator().validate(dynamic_option.document, admin_user) is None
+
+    assert not DynamicOption.objects.filter(pk=old_dynamic_option.pk).exists()
+    assert DynamicOption.objects.filter(pk=dynamic_option.pk).exists()
 
 
 @pytest.mark.parametrize(
