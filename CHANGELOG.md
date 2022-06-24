@@ -1,3 +1,15 @@
+# v8.0.0-beta.9 (24 June 2022)
+
+### Fix
+* **document:** Copy dynamic options when copying documents ([`67910d9`](https://github.com/projectcaluma/caluma/commit/67910d96b98721be9953920ca23bddc33f4521ea))
+* ReopenCase should disregard WorkItems in status REDO ([`dded3a8`](https://github.com/projectcaluma/caluma/commit/dded3a8b1f54b4efcb4c654966dc2234d9909ddb))
+* **deps:** Update dependencies of dependencies ([`e3a5de3`](https://github.com/projectcaluma/caluma/commit/e3a5de38c3a9b1d1456e9fbee6f108913dc7b6df))
+* **form:** Set questions of searchAnswers as required ([`fb7ad5f`](https://github.com/projectcaluma/caluma/commit/fb7ad5feb120abeaf3ea45670fa5349c86eb8464))
+
+### Breaking
+* searchAnswers questions list is now required  ([`fb7ad5f`](https://github.com/projectcalum/caluma/commit/fb7ad5feb120abeaf3ea45670fa5349c86eb8464))
+
+
 # v8.0.0-beta.8 (20 June 2022)
 
 ### Fix
