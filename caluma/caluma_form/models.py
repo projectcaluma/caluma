@@ -481,7 +481,7 @@ class Answer(core_models.BaseModel):
                     question=dynamic_option.question,
                     slug=dynamic_option.slug,
                     defaults={
-                        "label": dynamic_option.slug,
+                        "label": dynamic_option.label,
                         "created_by_user": user.username if user else None,
                         "created_by_group": user.group if user else None,
                     },
