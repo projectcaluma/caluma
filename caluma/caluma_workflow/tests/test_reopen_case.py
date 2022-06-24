@@ -14,6 +14,14 @@ def reopen_case_setup(case_factory, work_item_factory):
         for work_item_status in work_item_statuses:
             work_items.append(work_item_factory(case=case, status=work_item_status))
 
+        work_items.append(
+            work_item_factory(
+                case=case,
+                previous_work_item=work_items[-1],
+                status=models.WorkItem.STATUS_REDO,
+            )
+        )
+
         return case, work_items
 
     return case_work_item_setup
@@ -73,9 +81,13 @@ def test_allow_completed_cases_to_be_reopened_through_graphql(
     assert result.data["reopenCase"]["case"]["status"] == to_const(
         models.Case.STATUS_RUNNING
     )
-    assert result.data["reopenCase"]["case"]["workItems"]["edges"][0]["node"][
-        "status"
-    ] == to_const(models.WorkItem.STATUS_READY)
+    assert len(result.data["reopenCase"]["case"]["workItems"]["edges"]) == 2
+    assert sorted(
+        [
+            v["node"]["status"]
+            for v in result.data["reopenCase"]["case"]["workItems"]["edges"]
+        ]
+    ) == [to_const(models.WorkItem.STATUS_READY), to_const(models.WorkItem.STATUS_REDO)]
 
 
 def test_reject_suspended_cases_during_reopen(db, admin_user, reopen_case_setup):
