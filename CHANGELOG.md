@@ -1,3 +1,9 @@
+# v8.0.0-beta.10 (24 June 2022)
+
+### Fix
+* **document:** Fix label of copied dynamic options ([`00383fc`](https://github.com/projectcaluma/caluma/commit/00383fcb8cbe06bfd53e26067be33ad1bcc975a7))
+
+
 # v8.0.0-beta.9 (24 June 2022)
 
 ### Fix
