@@ -2041,6 +2041,8 @@
   
   input ReopenCaseInput {
     id: ID!
+  
+    """List of work item ids to be readied when the case is reopened"""
     workItems: [ID]!
   
     """Provide extra context for dynamic jexl transforms and events"""
