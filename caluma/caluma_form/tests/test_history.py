@@ -172,13 +172,13 @@ def test_historical_file_answer(
     document = document_factory(form=f)
 
     q1 = form_question_factory(
-        question__type=models.Question.TYPE_FILE,
+        question__type=models.Question.TYPE_FILES,
         question__slug="test_question1",
         form=f,
     )
     save_answer_query = """
-            mutation saveAnswer($input: SaveDocumentFileAnswerInput!) {
-              saveDocumentFileAnswer(input: $input) {
+            mutation saveAnswer($input: SaveDocumentFilesAnswerInput!) {
+              saveDocumentFilesAnswer(input: $input) {
                 clientMutationId
               }
             }
@@ -186,7 +186,7 @@ def test_historical_file_answer(
 
     input = {
         "document": str(document.pk),
-        "value": "my_file - rev 1",
+        "value": [{"name": "my_file - rev 1"}],
         "question": q1.question.slug,
     }
 
@@ -194,17 +194,19 @@ def test_historical_file_answer(
     assert not result.errors
     hist_file_1 = models.File.history.first()
     timestamp1 = timezone.now()
+    file1 = document.answers.get(question=q1.question).files.get()
+    file_id = str(file1.pk)
 
-    input["value"] = "my_file - rev 2"
+    input["value"] = [{"name": "my_file - rev 2", "id": file_id}]
     result = schema_executor(save_answer_query, variable_values={"input": input})
     assert not result.errors
     hist_file_2 = models.File.history.first()
     timestamp2 = timezone.now()
 
-    input["value"] = "my_file - rev 3"
+    input["value"] = [{"name": "my_file - rev 3", "id": file_id}]
     result = schema_executor(save_answer_query, variable_values={"input": input})
     assert not result.errors
-    file3 = document.answers.get(question=q1.question).file
+    file3 = document.answers.get(question=q1.question).files.first()
 
     minio_mock.copy_object.assert_called()
     minio_mock.remove_object.assert_called()
@@ -215,7 +217,7 @@ def test_historical_file_answer(
                 historicalAnswers (asOf: $asOf) {
                   edges {
                     node {
-                      ...on HistoricalFileAnswer {
+                      ...on HistoricalFilesAnswer {
                         __typename
                         historyUserId
                         value (asOf: $asOf) {
@@ -240,8 +242,8 @@ def test_historical_file_answer(
     assert not result.errors
     assert (
         result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"]["value"][
-            "downloadUrl"
-        ]
+            0
+        ]["downloadUrl"]
         == f"http://minio/download-url/{hist_file_1.pk}_{hist_file_1.name}"
     )
 
@@ -250,8 +252,8 @@ def test_historical_file_answer(
     assert not result.errors
     assert (
         result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"]["value"][
-            "downloadUrl"
-        ]
+            0
+        ]["downloadUrl"]
         == f"http://minio/download-url/{hist_file_2.pk}_{hist_file_2.name}"
     )
 
@@ -262,8 +264,8 @@ def test_historical_file_answer(
     assert not result.errors
     assert (
         result.data["documentAsOf"]["historicalAnswers"]["edges"][0]["node"]["value"][
-            "downloadUrl"
-        ]
+            0
+        ]["downloadUrl"]
         == f"http://minio/download-url/{file3.pk}_{file3.name}"
     )
 

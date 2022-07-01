@@ -19,8 +19,8 @@ from .. import api, serializers
         (Question.TYPE_MULTIPLE_CHOICE, None, ["somevalue", "anothervalue"], None),
         (Question.TYPE_TABLE, None, None, None),
         (Question.TYPE_DATE, None, None, "2019-02-22"),
-        (Question.TYPE_FILE, None, "some-file.pdf", None),
-        (Question.TYPE_FILE, None, "some-other-file.pdf", None),
+        (Question.TYPE_FILES, None, [{"name": "some-file.pdf"}], None),
+        (Question.TYPE_FILES, None, [{"name": "some-other-file.pdf"}], None),
         (Question.TYPE_DYNAMIC_CHOICE, "MyDataSource", "5.5", None),
         (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, "MyDataSource", ["5.5"], None),
     ],
@@ -82,7 +82,7 @@ def test_query_all_documents(
                           }
                         }
                       }
-                      ... on FileAnswer {
+                      ... on FilesAnswer {
                         fileValue: value {
                           name
                           downloadUrl
@@ -98,19 +98,33 @@ def test_query_all_documents(
         }
     """
 
-    search = isinstance(answer.value, list) and " ".join(answer.value) or answer.value
+    def _value(val):
+        # Extract searchable value from given input if it exists
+        ret = {
+            list: lambda: _value(val[0]),
+            dict: lambda: _value(list(val.keys())[0]),
+        }
+        return ret.get(type(val), lambda: val)()
 
-    if question.type == Question.TYPE_FILE:
-        if answer.value == "some-other-file.pdf":
+    search = _value(answer.value)
+
+    if question.type == Question.TYPE_FILES:
+        if answer.value[0]["name"] == "some-other-file.pdf":
             settings.MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET = False
             minio_mock.bucket_exists.return_value = False
         # we need to set the pk here in order to match the snapshots
-        answer.file = file_factory(
-            name=answer.value, pk="09c697fb-fd0a-4345-bb9c-99df350b0cdb"
+        answer.files.set(
+            [
+                file_factory(
+                    name=answer.value,
+                    pk="09c697fb-fd0a-4345-bb9c-99df350b0cdb",
+                    answer=answer,
+                )
+            ]
         )
         answer.value = None
         answer.save()
-        search = answer.file.name
+        search = answer.files.get().name
 
     result = schema_executor(query, variable_values={"search": str(search)})
     assert not result.errors
@@ -138,10 +152,10 @@ def test_complex_document_query_performance(
     form_question_factory(question=multiple_choice_question, form=form)
     question_option_factory.create_batch(10, question=multiple_choice_question)
     answer_factory(question=multiple_choice_question)
-    file_question = question_factory(type=Question.TYPE_FILE)
+    file_question = question_factory(type=Question.TYPE_FILES)
     form_question_factory(question=file_question, form=form)
     answer_factory(
-        question=file_question, value=None, document=document, file=file_factory()
+        question=file_question, value=None, document=document, files=[file_factory()]
     )
 
     form_question = question_factory(type=Question.TYPE_FORM)
@@ -203,7 +217,7 @@ def test_complex_document_query_performance(
           ... on ListAnswer {
             listValue: value
           }
-          ... on FileAnswer {
+          ... on FilesAnswer {
             fileValue: value {
               name
               downloadUrl
@@ -539,25 +553,34 @@ def test_save_document(
             "SaveDocumentDateAnswer",
             True,
         ),
-        (Question.TYPE_FILE, {}, None, [], None, None, "SaveDocumentFileAnswer", False),
         (
-            Question.TYPE_FILE,
+            Question.TYPE_FILES,
             {},
             None,
             [],
-            "some-file.pdf",
             None,
-            "SaveDocumentFileAnswer",
+            None,
+            "SaveDocumentFilesAnswer",
+            False,
+        ),
+        (
+            Question.TYPE_FILES,
+            {},
+            None,
+            [],
+            [{"name": "some-file.pdf"}],
+            None,
+            "SaveDocumentFilesAnswer",
             True,
         ),
         (
-            Question.TYPE_FILE,
+            Question.TYPE_FILES,
             {},
             None,
             [],
-            "not-exist.pdf",
+            [{"name": "not-exist.pdf"}],
             None,
-            "SaveDocumentFileAnswer",
+            "SaveDocumentFilesAnswer",
             True,
         ),
         (
@@ -773,7 +796,7 @@ def test_save_document_answer(  # noqa:C901
                   }}
                 }}
               }}
-              ... on FileAnswer {{
+              ... on FilesAnswer {{
                 fileValue: value {{
                   name
                   uploadUrl
@@ -801,11 +824,16 @@ def test_save_document_answer(  # noqa:C901
 
         inp["input"]["value"] = [str(document.pk) for document in documents]
 
-    if question.type == Question.TYPE_FILE:
-        if answer.value == "some-file.pdf":
-            minio_mock.bucket_exists.return_value = False
-        answer.value = None
-        answer.save()
+    if question.type == Question.TYPE_FILES:
+        if answer.value:
+            file_name = answer.value[0]["name"]
+            if file_name == "some-file.pdf":
+                minio_mock.bucket_exists.return_value = False
+            answer.value = None
+            answer.files.all().delete()
+            inp["input"]["value"] = [{"name": file_name}]
+
+            answer.save()
 
     if question.type == Question.TYPE_DATE:
         inp["input"]["value"] = answer.date
@@ -1273,7 +1301,7 @@ def test_copy_document(
         question__slug="other_question",
     )
     file_question = form_question_factory(
-        form=main_form, question__type=Question.TYPE_FILE
+        form=main_form, question__type=Question.TYPE_FILES
     )
     dynamic_choice_question = form_question_factory(
         form=main_form, question__type=Question.TYPE_DYNAMIC_CHOICE
@@ -1365,8 +1393,11 @@ def test_copy_document(
     assert new_file_answer.value == file_answer.value
     # file is copied
     minio_mock.copy_object.assert_called()
-    assert new_file_answer.file.name == file_answer.file.name
-    assert new_file_answer.file.object_name != file_answer.file.object_name
+
+    old_file = file_answer.files.first()
+    new_file = new_file_answer.files.first()
+    assert new_file.name == old_file.name
+    assert new_file.object_name != old_file.object_name
 
     # dynamic options are copied
     for question in [

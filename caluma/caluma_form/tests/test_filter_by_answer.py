@@ -76,7 +76,7 @@ def test_query_all_questions(
         if qtype
         not in (
             # some question types are not searchable
-            models.Question.TYPE_FILE,
+            models.Question.TYPE_FILES,
             models.Question.TYPE_TABLE,
             models.Question.TYPE_FORM,
             models.Question.TYPE_DYNAMIC_CHOICE,

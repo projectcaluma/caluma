@@ -423,7 +423,7 @@ class SaveFormQuestionSerializer(SaveQuestionSerializer):
 
 class SaveFileQuestionSerializer(SaveQuestionSerializer):
     def validate(self, data):
-        data["type"] = models.Question.TYPE_FILE
+        data["type"] = models.Question.TYPE_FILES
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
@@ -593,14 +593,15 @@ class SaveDocumentTableAnswerSerializer(SaveAnswerSerializer):
         pass
 
 
-class SaveDocumentFileAnswerSerializer(SaveAnswerSerializer):
-    value = CharField(write_only=True, source="file", required=False)
-    value_id = PrimaryKeyRelatedField(read_only=True, source="file", required=False)
+class SaveDocumentFilesAnswerSerializer(SaveAnswerSerializer):
+    value = ListField(
+        source="files",
+        required=False,
+        help_text="List of files for this answer",
+    )
 
     class Meta(SaveAnswerSerializer.Meta):
-        fields = SaveAnswerSerializer.Meta.fields + [
-            "value_id",
-        ]
+        fields = SaveAnswerSerializer.Meta.fields
 
 
 class RemoveAnswerSerializer(serializers.ModelSerializer):

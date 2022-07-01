@@ -1,3 +1,4 @@
+import minio
 import pytest
 from rest_framework.exceptions import ValidationError
 
@@ -42,7 +43,7 @@ def test_validate_hidden_required_field(
 
 @pytest.mark.parametrize(
     "question__type,question__is_required",
-    [(Question.TYPE_FILE, "false"), (Question.TYPE_DATE, "false")],
+    [(Question.TYPE_FILES, "false"), (Question.TYPE_DATE, "false")],
 )
 def test_validate_special_fields(
     db, form_question, question, document_factory, answer_factory, admin_user
@@ -288,6 +289,7 @@ def test_validate_data_source(
             QuestionValidator().validate(data)
 
 
+@pytest.mark.parametrize("answer__files", [[]])
 @pytest.mark.parametrize(
     "question__type,answer__value,expected_value",
     [
@@ -298,11 +300,11 @@ def test_validate_data_source(
         (Question.TYPE_INTEGER, None, None),
         (Question.TYPE_FLOAT, None, None),
         (Question.TYPE_DATE, None, None),
-        (Question.TYPE_FILE, None, None),
+        (Question.TYPE_FILES, None, []),
         (Question.TYPE_TEXTAREA, None, None),
     ],
 )
-@pytest.mark.parametrize("answer__date,answer__file", [(None, None)])
+@pytest.mark.parametrize("answer__date", [None])
 def test_validate_empty_answers(
     db,
     form_question,
@@ -374,6 +376,7 @@ def test_validate_required_integer_0(
     DocumentValidator().validate(document, admin_user)
 
 
+@pytest.mark.parametrize("answer__files", [[]])
 @pytest.mark.parametrize(
     "question__type,answer__value",
     [
@@ -386,7 +389,7 @@ def test_validate_required_integer_0(
         (Question.TYPE_INTEGER, None),
         (Question.TYPE_FLOAT, None),
         (Question.TYPE_DATE, None),
-        (Question.TYPE_FILE, None),
+        (Question.TYPE_FILES, None),
         (Question.TYPE_TEXTAREA, None),
         (Question.TYPE_TABLE, None),
         (Question.TYPE_TABLE, []),
@@ -394,9 +397,7 @@ def test_validate_required_integer_0(
         (Question.TYPE_DYNAMIC_CHOICE, None),
     ],
 )
-@pytest.mark.parametrize(
-    "answer__date,answer__file,question__is_required", [(None, None, "true")]
-)
+@pytest.mark.parametrize("answer__date,question__is_required", [(None, "true")])
 def test_validate_required_empty_answers(
     db, admin_user, form_question, document, answer, question
 ):
@@ -541,28 +542,37 @@ def test_dependent_question_is_hidden(
             DocumentValidator().validate(document, admin_user)
 
 
-@pytest.mark.parametrize("question__type", ["file"])
+@pytest.mark.parametrize("question__type", ["files"])
 @pytest.mark.parametrize("question__is_required", ["true"])
 @pytest.mark.parametrize("question__is_hidden", ["false"])
-def test_required_file(db, question, form, document, answer, admin_user, form_question):
+def test_required_file(
+    db, question, form, document, answer, admin_user, form_question, minio_mock
+):
     # verify some assumptions
     assert document.form == form
     assert answer.document == document
     assert form in question.forms.all()
-    assert answer.file
+    assert answer.files.count()
 
+    minio_mock.stat_object.side_effect = minio.error.S3Error(
+        "NoSuchKey",
+        "object does not exist",
+        resource="bla",
+        request_id=134,
+        host_id="minio",
+        response="bla",
+    )
     # remove the file
-    the_file = answer.file
-    answer.file = None
-    answer.save()
+    the_file = answer.files.first()
+    answer.files.all().delete()
 
     # ensure validation fails with no `file` value
     with pytest.raises(ValidationError):
         DocumentValidator().validate(document, admin_user)
 
     # put the file back
-    answer.file = the_file
-    answer.save()
+    the_file.save()
+    answer.files.set([the_file])
 
     # then, validation must pass
     assert DocumentValidator().validate(document, admin_user) is None

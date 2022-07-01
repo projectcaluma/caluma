@@ -308,7 +308,7 @@ def test_answer_transform_on_hidden_question(info, form_and_document):
         (Question.TYPE_TEXTAREA, None),
         (Question.TYPE_TEXT, None),
         (Question.TYPE_TABLE, []),
-        (Question.TYPE_FILE, None),
+        (Question.TYPE_FILES, None),
         (Question.TYPE_DYNAMIC_CHOICE, None),
         (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, []),
         # Those should not appear in a JEXL answer transform
