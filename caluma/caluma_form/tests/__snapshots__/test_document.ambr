@@ -67,7 +67,7 @@
     }),
   })
 # ---
-# name: test_query_all_documents[file-None-some-file.pdf-None]
+# name: test_query_all_documents[files-None-answer__value6-None]
   dict({
     'allDocuments': dict({
       'edges': list([
@@ -77,31 +77,33 @@
               'edges': list([
                 dict({
                   'node': dict({
-                    '__typename': 'FileAnswer',
-                    'fileValue': dict({
-                      'downloadUrl': 'http://minio/download-url/09c697fb-fd0a-4345-bb9c-99df350b0cdb_some-file.pdf',
-                      'metadata': dict({
-                        'bucket_name': 'caluma-media',
-                        'content_type': 'application/pdf',
-                        'etag': '5d41402abc4b2a76b9719d911017c592',
-                        'last_modified': '2021-03-05T15:24:33+00:00',
+                    '__typename': 'FilesAnswer',
+                    'fileValue': list([
+                      dict({
+                        'downloadUrl': "http://minio/download-url/09c697fb-fd0a-4345-bb9c-99df350b0cdb_[{'name': 'some-file.pdf'}]",
                         'metadata': dict({
-                          'Accept-Ranges': 'bytes',
-                          'Content-Length': '5',
-                          'Content-Security-Policy': 'block-all-mixed-content',
-                          'Content-Type': 'binary/octet-stream',
-                          'Date': 'Fri, 05 Mar 2021 15:25:15 GMT',
-                          'ETag': '"5d41402abc4b2a76b9719d911017c592"',
-                          'Last-Modified': 'Fri, 05 Mar 2021 15:24:33 GMT',
-                          'Server': 'MinIO',
-                          'Vary': 'Origin',
-                          'X-Amz-Request-Id': '16697BAAD69D2214',
-                          'X-Xss-Protection': '1; mode=block',
+                          'bucket_name': 'caluma-media',
+                          'content_type': 'application/pdf',
+                          'etag': '5d41402abc4b2a76b9719d911017c592',
+                          'last_modified': '2021-03-05T15:24:33+00:00',
+                          'metadata': dict({
+                            'Accept-Ranges': 'bytes',
+                            'Content-Length': '5',
+                            'Content-Security-Policy': 'block-all-mixed-content',
+                            'Content-Type': 'binary/octet-stream',
+                            'Date': 'Fri, 05 Mar 2021 15:25:15 GMT',
+                            'ETag': '"5d41402abc4b2a76b9719d911017c592"',
+                            'Last-Modified': 'Fri, 05 Mar 2021 15:24:33 GMT',
+                            'Server': 'MinIO',
+                            'Vary': 'Origin',
+                            'X-Amz-Request-Id': '16697BAAD69D2214',
+                            'X-Xss-Protection': '1; mode=block',
+                          }),
+                          'size': 8200,
                         }),
-                        'size': 8200,
+                        'name': "[{'name': 'some-file.pdf'}]",
                       }),
-                      'name': 'some-file.pdf',
-                    }),
+                    ]),
                     'question': dict({
                       'label': 'Taylor Williams',
                       'slug': 'suggest-adult-allow',
@@ -119,7 +121,7 @@
     }),
   })
 # ---
-# name: test_query_all_documents[file-None-some-other-file.pdf-None]
+# name: test_query_all_documents[files-None-answer__value7-None]
   dict({
     'allDocuments': dict({
       'edges': list([
@@ -129,31 +131,33 @@
               'edges': list([
                 dict({
                   'node': dict({
-                    '__typename': 'FileAnswer',
-                    'fileValue': dict({
-                      'downloadUrl': 'http://minio/download-url/09c697fb-fd0a-4345-bb9c-99df350b0cdb_some-other-file.pdf',
-                      'metadata': dict({
-                        'bucket_name': 'caluma-media',
-                        'content_type': 'application/pdf',
-                        'etag': '5d41402abc4b2a76b9719d911017c592',
-                        'last_modified': '2021-03-05T15:24:33+00:00',
+                    '__typename': 'FilesAnswer',
+                    'fileValue': list([
+                      dict({
+                        'downloadUrl': "http://minio/download-url/09c697fb-fd0a-4345-bb9c-99df350b0cdb_[{'name': 'some-other-file.pdf'}]",
                         'metadata': dict({
-                          'Accept-Ranges': 'bytes',
-                          'Content-Length': '5',
-                          'Content-Security-Policy': 'block-all-mixed-content',
-                          'Content-Type': 'binary/octet-stream',
-                          'Date': 'Fri, 05 Mar 2021 15:25:15 GMT',
-                          'ETag': '"5d41402abc4b2a76b9719d911017c592"',
-                          'Last-Modified': 'Fri, 05 Mar 2021 15:24:33 GMT',
-                          'Server': 'MinIO',
-                          'Vary': 'Origin',
-                          'X-Amz-Request-Id': '16697BAAD69D2214',
-                          'X-Xss-Protection': '1; mode=block',
+                          'bucket_name': 'caluma-media',
+                          'content_type': 'application/pdf',
+                          'etag': '5d41402abc4b2a76b9719d911017c592',
+                          'last_modified': '2021-03-05T15:24:33+00:00',
+                          'metadata': dict({
+                            'Accept-Ranges': 'bytes',
+                            'Content-Length': '5',
+                            'Content-Security-Policy': 'block-all-mixed-content',
+                            'Content-Type': 'binary/octet-stream',
+                            'Date': 'Fri, 05 Mar 2021 15:25:15 GMT',
+                            'ETag': '"5d41402abc4b2a76b9719d911017c592"',
+                            'Last-Modified': 'Fri, 05 Mar 2021 15:24:33 GMT',
+                            'Server': 'MinIO',
+                            'Vary': 'Origin',
+                            'X-Amz-Request-Id': '16697BAAD69D2214',
+                            'X-Xss-Protection': '1; mode=block',
+                          }),
+                          'size': 8200,
                         }),
-                        'size': 8200,
+                        'name': "[{'name': 'some-other-file.pdf'}]",
                       }),
-                      'name': 'some-other-file.pdf',
-                    }),
+                    ]),
                     'question': dict({
                       'label': 'Taylor Williams',
                       'slug': 'suggest-adult-allow',
@@ -417,73 +421,81 @@
 # name: test_save_document_answer[dynamic_multiple_choice-question__configuration19-MyDataSource-question__format_validators19-answer__value19-None-SaveDocumentListAnswer-True-option-slug-True-True]
   Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=dynamic_multiple_choice), value=['5.5', '1'])
 # ---
-# name: test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-False-False]
+# name: test_save_document_answer[files-question__configuration10-None-question__format_validators10-answer__value10-None-SaveDocumentFilesAnswer-True-option-slug-False-False]
   dict({
-    'saveDocumentFileAnswer': dict({
+    'saveDocumentFilesAnswer': dict({
       'answer': dict({
-        '__typename': 'FileAnswer',
-        'fileValue': dict({
-          'name': 'not-exist.pdf',
-          'uploadUrl': 'http://minio/upload-url',
-        }),
+        '__typename': 'FilesAnswer',
+        'fileValue': list([
+          dict({
+            'name': 'not-exist.pdf',
+            'uploadUrl': 'http://minio/upload-url',
+          }),
+        ]),
       }),
       'clientMutationId': 'testid',
     }),
   })
 # ---
-# name: test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-False-True]
-  Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=file), value=None)
+# name: test_save_document_answer[files-question__configuration10-None-question__format_validators10-answer__value10-None-SaveDocumentFilesAnswer-True-option-slug-False-True]
+  Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=files), value=None)
 # ---
-# name: test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-True-False]
+# name: test_save_document_answer[files-question__configuration10-None-question__format_validators10-answer__value10-None-SaveDocumentFilesAnswer-True-option-slug-True-False]
   dict({
-    'saveDocumentFileAnswer': dict({
+    'saveDocumentFilesAnswer': dict({
       'answer': dict({
-        '__typename': 'FileAnswer',
-        'fileValue': dict({
-          'name': 'not-exist.pdf',
-          'uploadUrl': 'http://minio/upload-url',
-        }),
+        '__typename': 'FilesAnswer',
+        'fileValue': list([
+          dict({
+            'name': 'not-exist.pdf',
+            'uploadUrl': 'http://minio/upload-url',
+          }),
+        ]),
       }),
       'clientMutationId': 'testid',
     }),
   })
 # ---
-# name: test_save_document_answer[file-question__configuration10-None-question__format_validators10-not-exist.pdf-None-SaveDocumentFileAnswer-True-option-slug-True-True]
-  Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=file), value=None)
+# name: test_save_document_answer[files-question__configuration10-None-question__format_validators10-answer__value10-None-SaveDocumentFilesAnswer-True-option-slug-True-True]
+  Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=files), value=None)
 # ---
-# name: test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-False-False]
+# name: test_save_document_answer[files-question__configuration9-None-question__format_validators9-answer__value9-None-SaveDocumentFilesAnswer-True-option-slug-False-False]
   dict({
-    'saveDocumentFileAnswer': dict({
+    'saveDocumentFilesAnswer': dict({
       'answer': dict({
-        '__typename': 'FileAnswer',
-        'fileValue': dict({
-          'name': 'some-file.pdf',
-          'uploadUrl': 'http://minio/upload-url',
-        }),
+        '__typename': 'FilesAnswer',
+        'fileValue': list([
+          dict({
+            'name': 'some-file.pdf',
+            'uploadUrl': 'http://minio/upload-url',
+          }),
+        ]),
       }),
       'clientMutationId': 'testid',
     }),
   })
 # ---
-# name: test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-False-True]
-  Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=file), value=None)
+# name: test_save_document_answer[files-question__configuration9-None-question__format_validators9-answer__value9-None-SaveDocumentFilesAnswer-True-option-slug-False-True]
+  Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=files), value=None)
 # ---
-# name: test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-True-False]
+# name: test_save_document_answer[files-question__configuration9-None-question__format_validators9-answer__value9-None-SaveDocumentFilesAnswer-True-option-slug-True-False]
   dict({
-    'saveDocumentFileAnswer': dict({
+    'saveDocumentFilesAnswer': dict({
       'answer': dict({
-        '__typename': 'FileAnswer',
-        'fileValue': dict({
-          'name': 'some-file.pdf',
-          'uploadUrl': 'http://minio/upload-url',
-        }),
+        '__typename': 'FilesAnswer',
+        'fileValue': list([
+          dict({
+            'name': 'some-file.pdf',
+            'uploadUrl': 'http://minio/upload-url',
+          }),
+        ]),
       }),
       'clientMutationId': 'testid',
     }),
   })
 # ---
-# name: test_save_document_answer[file-question__configuration9-None-question__format_validators9-some-file.pdf-None-SaveDocumentFileAnswer-True-option-slug-True-True]
-  Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=file), value=None)
+# name: test_save_document_answer[files-question__configuration9-None-question__format_validators9-answer__value9-None-SaveDocumentFilesAnswer-True-option-slug-True-True]
+  Answer(document=Document(form=Form(slug=eight-traditional)), question=Question(slug=environmental-ten, type=files), value=None)
 # ---
 # name: test_save_document_answer[float-question__configuration2-None-question__format_validators2-2.1-None-SaveDocumentFloatAnswer-True-option-slug-False-False]
   dict({

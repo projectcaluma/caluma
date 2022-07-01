@@ -119,7 +119,7 @@ class Mutation(ClientIDMutation):
     permission_classes = None
 
     @classmethod
-    def __init_subclass_with_meta__(
+    def __init_subclass_with_meta__(  # noqa: C901
         cls,
         lookup_field=None,
         lookup_input_kwarg=None,
