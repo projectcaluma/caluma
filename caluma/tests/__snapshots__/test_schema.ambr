@@ -409,8 +409,8 @@
     """form"""
     FORM
   
-    """file"""
-    FILE
+    """files"""
+    FILES
   
     """dynamic_choice"""
     DYNAMIC_CHOICE
@@ -1065,13 +1065,13 @@
     """The ID of the object"""
     id: ID!
     name: String!
-    answer: FileAnswer
+    answer: FilesAnswer
     uploadUrl: String
     downloadUrl: String
     metadata: GenericScalar
   }
   
-  type FileAnswer implements Answer & Node {
+  type FilesAnswer implements Answer & Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -1082,12 +1082,11 @@
     """The ID of the object"""
     id: ID!
     question: Question!
-    value: File!
+    value: [File]!
     meta: GenericScalar!
-    file: File
   }
   
-  type FileQuestion implements Question & Node {
+  type FilesQuestion implements Question & Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -1446,13 +1445,13 @@
     name: String!
     downloadUrl: String
     metadata: GenericScalar
-    historicalAnswer: HistoricalFileAnswer
+    historicalAnswer: HistoricalFilesAnswer
     historyDate: DateTime!
     historyUserId: String
     historyType: String
   }
   
-  type HistoricalFileAnswer implements HistoricalAnswer & Node {
+  type HistoricalFilesAnswer implements HistoricalAnswer & Node {
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -1463,7 +1462,7 @@
   
     """The ID of the object"""
     id: ID!
-    value(asOf: DateTime!): HistoricalFile
+    value(asOf: DateTime!): [HistoricalFile]
     meta: GenericScalar!
     historyUserId: String
     question: Question!
@@ -1471,7 +1470,6 @@
     historyDate: DateTime!
     historyChangeReason: String
     historyType: String
-    file: File
   }
   
   type HistoricalFloatAnswer implements HistoricalAnswer & Node {
@@ -1740,7 +1738,7 @@
     saveIntegerQuestion(input: SaveIntegerQuestionInput!): SaveIntegerQuestionPayload
     saveTableQuestion(input: SaveTableQuestionInput!): SaveTableQuestionPayload
     saveFormQuestion(input: SaveFormQuestionInput!): SaveFormQuestionPayload
-    saveFileQuestion(input: SaveFileQuestionInput!): SaveFileQuestionPayload
+    saveFilesQuestion(input: SaveFilesQuestionInput!): SaveFilesQuestionPayload
     saveStaticQuestion(input: SaveStaticQuestionInput!): SaveStaticQuestionPayload
     saveCalculatedFloatQuestion(input: SaveCalculatedFloatQuestionInput!): SaveCalculatedFloatQuestionPayload
     saveActionButtonQuestion(input: SaveActionButtonQuestionInput!): SaveActionButtonQuestionPayload
@@ -1752,7 +1750,7 @@
     saveDocumentDateAnswer(input: SaveDocumentDateAnswerInput!): SaveDocumentDateAnswerPayload
     saveDocumentListAnswer(input: SaveDocumentListAnswerInput!): SaveDocumentListAnswerPayload
     saveDocumentTableAnswer(input: SaveDocumentTableAnswerInput!): SaveDocumentTableAnswerPayload
-    saveDocumentFileAnswer(input: SaveDocumentFileAnswerInput!): SaveDocumentFileAnswerPayload
+    saveDocumentFilesAnswer(input: SaveDocumentFilesAnswerInput!): SaveDocumentFilesAnswerPayload
     saveDefaultStringAnswer(input: SaveDefaultStringAnswerInput!): SaveDefaultStringAnswerPayload
     saveDefaultIntegerAnswer(input: SaveDefaultIntegerAnswerInput!): SaveDefaultIntegerAnswerPayload
     saveDefaultFloatAnswer(input: SaveDefaultFloatAnswerInput!): SaveDefaultFloatAnswerPayload
@@ -2379,15 +2377,15 @@
     clientMutationId: String
   }
   
-  input SaveDocumentFileAnswerInput {
+  input SaveDocumentFilesAnswerInput {
+    value: [SaveFile]
     question: ID!
     document: ID!
     meta: JSONString
-    value: String
     clientMutationId: String
   }
   
-  type SaveDocumentFileAnswerPayload {
+  type SaveDocumentFilesAnswerPayload {
     answer: Answer
     clientMutationId: String
   }
@@ -2507,7 +2505,12 @@
     clientMutationId: String
   }
   
-  input SaveFileQuestionInput {
+  input SaveFile {
+    id: String
+    name: String
+  }
+  
+  input SaveFilesQuestionInput {
     slug: String!
     label: String!
     infoText: String
@@ -2519,7 +2522,7 @@
     clientMutationId: String
   }
   
-  type SaveFileQuestionPayload {
+  type SaveFilesQuestionPayload {
     question: Question
     clientMutationId: String
   }

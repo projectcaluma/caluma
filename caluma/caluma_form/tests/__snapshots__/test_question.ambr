@@ -214,15 +214,15 @@
     }),
   })
 # ---
-# name: test_query_all_questions[file-question__configuration9-None-question__format_validators9]
+# name: test_query_all_questions[files-question__configuration9-None-question__format_validators9]
   dict({
     'allQuestions': dict({
       'edges': list([
         dict({
           'node': dict({
-            '__typename': 'FileQuestion',
+            '__typename': 'FilesQuestion',
             'hintText': '',
-            'id': 'RmlsZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+            'id': 'RmlsZXNRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
             'infoText': '',
             'label': 'Bonnie Moreno',
             'meta': dict({
@@ -987,13 +987,13 @@
     }),
   })
 # ---
-# name: test_save_question[true-True-SaveFileQuestion]
+# name: test_save_question[true-True-SaveFilesQuestion]
   dict({
-    'saveFileQuestion': dict({
+    'saveFilesQuestion': dict({
       'clientMutationId': 'testid',
       'question': dict({
-        '__typename': 'FileQuestion',
-        'id': 'RmlsZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+        '__typename': 'FilesQuestion',
+        'id': 'RmlsZXNRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
         'label': 'Bonnie Moreno',
         'meta': dict({
         }),
