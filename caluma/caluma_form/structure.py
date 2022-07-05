@@ -3,7 +3,7 @@ import weakref
 from functools import singledispatch
 from typing import List, Optional
 
-from .models import AnswerDocument, Question
+from .models import Question
 
 
 def object_local_memoise(method):
@@ -116,7 +116,12 @@ class RowField(Field):
         if not self.answer:
             return []  # pragma: no cover
 
-        rows = AnswerDocument.objects.filter(answer=self.answer).order_by("sort")
+        # We're sorting in python-space here to reuse the already-executed query
+        # for the answerdocument_set. Sorting in DB would re-issue the query
+        rows = sorted(
+            self.answer.answerdocument_set.all(),
+            key=lambda answer_document: answer_document.sort,
+        )
         return [
             FieldSet(
                 ans_doc.document,
