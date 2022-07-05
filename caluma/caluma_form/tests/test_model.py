@@ -4,6 +4,7 @@ from minio import Minio, S3Error
 from ...caluma_form.models import File, Question
 
 
+@pytest.mark.parametrize("have_history", [True, False])
 def test_delete_file_answer(
     db,
     question_factory,
@@ -13,17 +14,28 @@ def test_delete_file_answer(
     form,
     document,
     mocker,
+    have_history,
 ):
-    file_question = question_factory(type=Question.TYPE_FILE)
+    copy = mocker.patch.object(Minio, "copy_object")
+    remove = mocker.patch.object(Minio, "remove_object")
+
+    file_question = question_factory(type=Question.TYPE_FILES)
     form_question_factory(question=file_question, form=form)
-    answer = answer_factory(
-        question=file_question, value=None, document=document, file=file_factory()
-    )
-    mocker.patch.object(Minio, "copy_object")
-    mocker.patch.object(Minio, "remove_object")
+    answer = answer_factory(question=file_question, value=None, document=document)
+
+    if have_history:
+        file_ = answer.files.get()
+        file_.rename("new name")
+        file_.save()
+    assert answer.files.count()  # just checking preconditions
     answer.delete()
+
+    if have_history:
+        remove.assert_called()
+        copy.assert_called()
+
     with pytest.raises(File.DoesNotExist):
-        answer.file.refresh_from_db()
+        answer.files.get()
 
 
 def test_update_file(db, file_factory, mocker):
@@ -37,7 +49,7 @@ def test_update_file(db, file_factory, mocker):
 
 
 @pytest.mark.parametrize("should_raise", [False, True])
-def test_missing_file(db, file, mocker, should_raise):
+def test_missing_file(db, file, mocker, should_raise, answer_factory):
     mocker.patch.object(
         Minio,
         "copy_object",
@@ -51,8 +63,10 @@ def test_missing_file(db, file, mocker, should_raise):
         ),
     )
 
+    other_answer = answer_factory()
+
     if should_raise:
         with pytest.raises(S3Error):
-            file.copy()
+            file.copy(to_answer=other_answer)
     else:
-        file.copy()
+        file.copy(to_answer=other_answer)

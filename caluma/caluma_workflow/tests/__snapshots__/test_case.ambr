@@ -190,7 +190,7 @@
     }),
   })
 # ---
-# name: test_order_by_question_answer_value[file-True-False]
+# name: test_order_by_question_answer_value[files-True-False]
   dict({
     'allCases': dict({
       'edges': list([
@@ -201,41 +201,20 @@
                 'edges': list([
                   dict({
                     'node': dict({
-                      'fileValue': dict({
-                        'name': 'f',
-                      }),
+                      'fileValue': list([
+                        dict({
+                          'name': 'f',
+                        }),
+                      ]),
                     }),
                   }),
                   dict({
                     'node': dict({
-                      'fileValue': dict({
-                        'name': 'a',
-                      }),
-                    }),
-                  }),
-                ]),
-                'totalCount': 2,
-              }),
-            }),
-          }),
-        }),
-        dict({
-          'node': dict({
-            'document': dict({
-              'answers': dict({
-                'edges': list([
-                  dict({
-                    'node': dict({
-                      'fileValue': dict({
-                        'name': 'd',
-                      }),
-                    }),
-                  }),
-                  dict({
-                    'node': dict({
-                      'fileValue': dict({
-                        'name': 'c',
-                      }),
+                      'fileValue': list([
+                        dict({
+                          'name': 'a',
+                        }),
+                      ]),
                     }),
                   }),
                 ]),
@@ -251,16 +230,49 @@
                 'edges': list([
                   dict({
                     'node': dict({
-                      'fileValue': dict({
-                        'name': 'b',
-                      }),
+                      'fileValue': list([
+                        dict({
+                          'name': 'd',
+                        }),
+                      ]),
                     }),
                   }),
                   dict({
                     'node': dict({
-                      'fileValue': dict({
-                        'name': 'e',
-                      }),
+                      'fileValue': list([
+                        dict({
+                          'name': 'c',
+                        }),
+                      ]),
+                    }),
+                  }),
+                ]),
+                'totalCount': 2,
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
+                      'fileValue': list([
+                        dict({
+                          'name': 'b',
+                        }),
+                      ]),
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
+                      'fileValue': list([
+                        dict({
+                          'name': 'e',
+                        }),
+                      ]),
                     }),
                   }),
                 ]),
@@ -274,7 +286,7 @@
     }),
   })
 # ---
-# name: test_order_by_question_answer_value[file-True-True]
+# name: test_order_by_question_answer_value[files-True-True]
   dict({
     'allCases': dict({
       'edges': list([
@@ -285,41 +297,20 @@
                 'edges': list([
                   dict({
                     'node': dict({
-                      'fileValue': dict({
-                        'name': 'b',
-                      }),
+                      'fileValue': list([
+                        dict({
+                          'name': 'b',
+                        }),
+                      ]),
                     }),
                   }),
                   dict({
                     'node': dict({
-                      'fileValue': dict({
-                        'name': 'e',
-                      }),
-                    }),
-                  }),
-                ]),
-                'totalCount': 2,
-              }),
-            }),
-          }),
-        }),
-        dict({
-          'node': dict({
-            'document': dict({
-              'answers': dict({
-                'edges': list([
-                  dict({
-                    'node': dict({
-                      'fileValue': dict({
-                        'name': 'd',
-                      }),
-                    }),
-                  }),
-                  dict({
-                    'node': dict({
-                      'fileValue': dict({
-                        'name': 'c',
-                      }),
+                      'fileValue': list([
+                        dict({
+                          'name': 'e',
+                        }),
+                      ]),
                     }),
                   }),
                 ]),
@@ -335,16 +326,49 @@
                 'edges': list([
                   dict({
                     'node': dict({
-                      'fileValue': dict({
-                        'name': 'f',
-                      }),
+                      'fileValue': list([
+                        dict({
+                          'name': 'd',
+                        }),
+                      ]),
                     }),
                   }),
                   dict({
                     'node': dict({
-                      'fileValue': dict({
-                        'name': 'a',
-                      }),
+                      'fileValue': list([
+                        dict({
+                          'name': 'c',
+                        }),
+                      ]),
+                    }),
+                  }),
+                ]),
+                'totalCount': 2,
+              }),
+            }),
+          }),
+        }),
+        dict({
+          'node': dict({
+            'document': dict({
+              'answers': dict({
+                'edges': list([
+                  dict({
+                    'node': dict({
+                      'fileValue': list([
+                        dict({
+                          'name': 'f',
+                        }),
+                      ]),
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
+                      'fileValue': list([
+                        dict({
+                          'name': 'a',
+                        }),
+                      ]),
                     }),
                   }),
                 ]),

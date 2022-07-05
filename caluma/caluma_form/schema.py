@@ -495,7 +495,7 @@ class FormQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
         interfaces = (Question, graphene.Node)
 
 
-class FileQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
+class FilesQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     hint_text = graphene.String()
 
     class Meta:
@@ -735,7 +735,7 @@ class SaveFormQuestion(SaveQuestion):
         return_field_type = Question
 
 
-class SaveFileQuestion(SaveQuestion):
+class SaveFilesQuestion(SaveQuestion):
     class Meta:
         serializer_class = serializers.SaveFileQuestionSerializer
         return_field_type = Question
@@ -799,7 +799,7 @@ class IntegerAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("document", "documents", "file", "date")
+        exclude = ("document", "documents", "files", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -809,7 +809,7 @@ class FloatAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("document", "documents", "file", "date")
+        exclude = ("document", "documents", "files", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -822,7 +822,7 @@ class DateAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("document", "documents", "file")
+        exclude = ("document", "documents", "files")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -847,7 +847,7 @@ class StringAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("document", "documents", "file", "date")
+        exclude = ("document", "documents", "files", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -858,7 +858,7 @@ class ListAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("document", "documents", "file", "date")
+        exclude = ("document", "documents", "files", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -896,7 +896,7 @@ class TableAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
 
     class Meta:
         model = models.Answer
-        exclude = ("documents", "file", "date")
+        exclude = ("documents", "files", "date")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -906,7 +906,6 @@ class File(FormDjangoObjectType):
     upload_url = graphene.String()
     download_url = graphene.String()
     metadata = generic.GenericScalar()
-    answer = graphene.Field("caluma.caluma_form.schema.FileAnswer")
 
     class Meta:
         model = models.File
@@ -914,15 +913,15 @@ class File(FormDjangoObjectType):
         fields = "__all__"
 
 
-class FileAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
-    value = graphene.Field(File, required=True)
+class FilesAnswer(AnswerQuerysetMixin, FormDjangoObjectType):
+    value = graphene.List(File, required=True)
 
     def resolve_value(self, info, **args):
-        return self.file
+        return self.files.all()
 
     class Meta:
         model = models.Answer
-        exclude = ("document", "documents", "date")
+        exclude = ("document", "documents", "date", "files")
         use_connection = False
         interfaces = (Answer, graphene.Node)
 
@@ -992,9 +991,17 @@ class SaveDocumentTableAnswer(SaveDocumentAnswer):
         return_field_type = Answer
 
 
-class SaveDocumentFileAnswer(SaveDocumentAnswer):
+class SaveFile(graphene.InputObjectType):
+    id = graphene.String()
+    name = graphene.String()
+
+
+class SaveDocumentFilesAnswer(SaveDocumentAnswer):
+    class Input:
+        value = graphene.List(SaveFile, required=False)
+
     class Meta:
-        serializer_class = serializers.SaveDocumentFileAnswerSerializer
+        serializer_class = serializers.SaveDocumentFilesAnswerSerializer
         return_field_type = Answer
 
 
@@ -1087,7 +1094,7 @@ class Mutation(object):
     save_integer_question = SaveIntegerQuestion().Field()
     save_table_question = SaveTableQuestion().Field()
     save_form_question = SaveFormQuestion().Field()
-    save_file_question = SaveFileQuestion().Field()
+    save_files_question = SaveFilesQuestion().Field()
     save_static_question = SaveStaticQuestion().Field()
     save_calculated_float_question = SaveCalculatedFloatQuestion().Field()
     save_action_button_question = SaveActionButtonQuestion().Field()
@@ -1100,7 +1107,7 @@ class Mutation(object):
     save_document_date_answer = SaveDocumentDateAnswer().Field()
     save_document_list_answer = SaveDocumentListAnswer().Field()
     save_document_table_answer = SaveDocumentTableAnswer().Field()
-    save_document_file_answer = SaveDocumentFileAnswer().Field()
+    save_document_files_answer = SaveDocumentFilesAnswer().Field()
 
     save_default_string_answer = SaveDefaultStringAnswer().Field()
     save_default_integer_answer = SaveDefaultIntegerAnswer().Field()
@@ -1200,7 +1207,7 @@ QUESTION_ANSWER_TYPES = {
     models.Question.TYPE_TEXTAREA: StringAnswer,
     models.Question.TYPE_TEXT: StringAnswer,
     models.Question.TYPE_TABLE: TableAnswer,
-    models.Question.TYPE_FILE: FileAnswer,
+    models.Question.TYPE_FILES: FilesAnswer,
     models.Question.TYPE_DYNAMIC_CHOICE: StringAnswer,
     models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: ListAnswer,
     models.Question.TYPE_CALCULATED_FLOAT: FloatAnswer,
@@ -1218,7 +1225,7 @@ QUESTION_OBJECT_TYPES = {
     models.Question.TYPE_DATE: DateQuestion,
     models.Question.TYPE_TABLE: TableQuestion,
     models.Question.TYPE_FORM: FormQuestion,
-    models.Question.TYPE_FILE: FileQuestion,
+    models.Question.TYPE_FILES: FilesQuestion,
     models.Question.TYPE_STATIC: StaticQuestion,
     models.Question.TYPE_CALCULATED_FLOAT: CalculatedFloatQuestion,
     models.Question.TYPE_ACTION_BUTTON: ActionButtonQuestion,

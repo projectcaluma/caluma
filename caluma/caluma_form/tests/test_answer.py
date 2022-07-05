@@ -93,7 +93,7 @@ def test_remove_default_answer(db, snapshot, question, answer, schema_executor):
             False,
         ),
         (Question.TYPE_DATE, None, "2019-02-22", "SaveDefaultDateAnswer", True),
-        (Question.TYPE_FILE, None, None, "SaveDefaultFileAnswer", False),
+        (Question.TYPE_FILES, None, None, "SaveDefaultFilesAnswer", False),
         (Question.TYPE_TABLE, None, None, "SaveDefaultTableAnswer", True),
     ],
 )
@@ -200,7 +200,7 @@ def test_save_default_answer_graphql(
         (Question.TYPE_DYNAMIC_CHOICE, "5.5", None, False),
         (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, [], None, False),
         (Question.TYPE_DATE, None, "2019-02-22", True),
-        (Question.TYPE_FILE, None, None, False),
+        (Question.TYPE_FILES, None, None, False),
         (Question.TYPE_TABLE, None, None, True),
     ],
 )
@@ -286,7 +286,7 @@ def test_delete_question_with_default(db, question, answer):
     with pytest.raises(models.Answer.DoesNotExist):
         answer.refresh_from_db()
 
-    assert models.Answer.history.count() == 2
+    assert models.Answer.history.count() == 3
     assert all(
         h.history_question_type == question.type for h in models.Answer.history.all()
     )
@@ -334,12 +334,12 @@ def test_validation_class_save_document_answer(db, mocker, answer, schema_execut
     )
 
 
-@pytest.mark.parametrize("question__type", ["file"])
+@pytest.mark.parametrize("question__type", ["files"])
 def test_file_answer_metadata(db, answer, schema_executor, minio_mock):
     query = """
         query ans($id: ID!) {
             node(id:$id) {
-                ... on FileAnswer {
+                ... on FilesAnswer {
                     fileValue: value {
                         name
                         downloadUrl
@@ -349,7 +349,7 @@ def test_file_answer_metadata(db, answer, schema_executor, minio_mock):
             }
         }
     """
-    vars = {"id": to_global_id("FileAnswer", str(answer.pk))}
+    vars = {"id": to_global_id("FilesAnswer", str(answer.pk))}
 
     # before "upload"
     old_stat = minio_mock.stat_object.return_value
@@ -365,7 +365,7 @@ def test_file_answer_metadata(db, answer, schema_executor, minio_mock):
     # Before upload, no metadata is available
     result = schema_executor(query, variable_values=vars)
     assert not result.errors
-    assert result.data["node"]["fileValue"]["metadata"] is None
+    assert result.data["node"]["fileValue"][0]["metadata"] is None
 
     # After "upload", metadata should contain some useful data
     minio_mock.stat_object.return_value = old_stat
@@ -376,7 +376,7 @@ def test_file_answer_metadata(db, answer, schema_executor, minio_mock):
 
     # Make sure all the values (especially in metadata) are JSON serializable.
     # This is something the schema_executor doesn't test, but may bite us in prod
-    metadata = result.data["node"]["fileValue"]["metadata"]
+    metadata = result.data["node"]["fileValue"][0]["metadata"]
     assert json.dumps(metadata)
 
     # Ensure some of the important properties having the right types,
@@ -385,3 +385,131 @@ def test_file_answer_metadata(db, answer, schema_executor, minio_mock):
     assert isinstance(metadata["size"], int)
     assert all(isinstance(m, str) for m in metadata["metadata"].values())
     assert datetime.fromisoformat(metadata["last_modified"])
+
+
+SAVE_DOCUMENT_FILES_ANSWER_QUERY = """
+    mutation save ($input: SaveDocumentFilesAnswerInput!) {
+        saveDocumentFilesAnswer (input: $input) {
+            answer {
+                ... on FilesAnswer {
+                    value {
+                        name
+                        uploadUrl
+                        id
+                    }
+                }
+            }
+        }
+    }
+"""
+
+
+@pytest.mark.parametrize("answer__files", [[]])
+@pytest.mark.parametrize("question__type", ["files"])
+def test_file_answer_mutation_create(db, answer, document, schema_executor, minio_mock):
+    # Precondition check
+    assert answer.files.count() == 0
+
+    # Initial upload
+    result = schema_executor(
+        SAVE_DOCUMENT_FILES_ANSWER_QUERY,
+        variable_values={
+            "input": {
+                "document": str(document.pk),
+                "question": answer.question.slug,
+                "value": [{"name": "some test file.txt"}],
+            }
+        },
+    )
+    assert not result.errors
+    assert answer.files.count() == 1
+    first_file = answer.files.get()
+    assert first_file.name == "some test file.txt"
+
+
+@pytest.mark.parametrize("question__type", ["files"])
+def test_file_answer_mutation_add_file(
+    db, answer, document, schema_executor, minio_mock
+):
+
+    first_file = answer.files.get()
+    history_count_before = first_file.history.count()
+
+    # Second request: adding a file
+    result = schema_executor(
+        SAVE_DOCUMENT_FILES_ANSWER_QUERY,
+        variable_values={
+            "input": {
+                "document": str(document.pk),
+                "question": answer.question.slug,
+                "value": [
+                    {"name": first_file.name, "id": str(first_file.pk)},
+                    {"name": "another file.txt"},
+                ],
+            }
+        },
+    )
+    assert not result.errors
+    assert answer.files.count() == 2
+
+    second_file = answer.files.exclude(pk=first_file.pk).get()
+    assert second_file.name == "another file.txt"
+    # Check that previously-created file wasn't replaced or changed
+    assert first_file in answer.files.all()
+    assert history_count_before == first_file.history.count()
+
+
+@pytest.mark.parametrize("question__type", ["files"])
+def test_file_answer_mutation_remove_file(
+    db, answer, document, schema_executor, minio_mock
+):
+    # Add a file while removing another (replacing the full
+    # files set of an answer)
+    assert answer.files.count() == 1
+    orig_file = answer.files.get()
+    result = schema_executor(
+        SAVE_DOCUMENT_FILES_ANSWER_QUERY,
+        variable_values={
+            "input": {
+                "document": str(document.pk),
+                "question": answer.question.slug,
+                "value": [
+                    {"name": "another file.txt"},
+                ],
+            }
+        },
+    )
+    assert not result.errors
+    assert answer.files.count() == 1
+    with pytest.raises(type(orig_file).DoesNotExist):
+        # This file should be gone
+        orig_file.refresh_from_db()
+
+
+@pytest.mark.parametrize("question__type", ["files"])
+def test_file_answer_mutation_update_missing_file(
+    db, answer, document, schema_executor, minio_mock
+):
+    # Add a file while removing another (replacing the full
+    # files set of an answer)
+    orig_file = answer.files.get()
+    orig_file_id = str(orig_file.pk)
+    orig_file.delete()
+
+    result = schema_executor(
+        SAVE_DOCUMENT_FILES_ANSWER_QUERY,
+        variable_values={
+            "input": {
+                "document": str(document.pk),
+                "question": answer.question.slug,
+                "value": [
+                    {"name": "another file.txt", "id": orig_file_id},
+                ],
+            }
+        },
+    )
+    assert result.errors
+    assert f"File with id={orig_file_id} for given answer not found" in str(
+        result.errors[0].args[0]
+    )
+    assert answer.files.count() == 0
