@@ -1,3 +1,13 @@
+# v8.0.0-beta.11 (6 July 2022)
+
+### Feature
+* **core:** Allow input type override ([`ec4c899`](https://github.com/anehx/caluma/commit/ec4c8997187452a12e091d3e94c6851e7c235156))
+
+### Fix
+* **form:** Use potentially prefetched answer document set for table rows ([`58e0a7c`](https://github.com/anehx/caluma/commit/58e0a7c16747f8f0ec9a92c90171e898bbbe98e0))
+* **schema:** Reopen case schema clarification ([`a394273`](https://github.com/anehx/caluma/commit/a3942731645dcb94cc64923664be0c3733892d14))
+
+
 # v8.0.0-beta.10 (24 June 2022)
 
 ### Fix
