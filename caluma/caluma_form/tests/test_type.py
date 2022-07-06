@@ -7,7 +7,7 @@ from .. import models
 @pytest.mark.parametrize(
     "question__type,expected_typename,success",
     [
-        (models.Question.TYPE_FILES, "FilesAnswer", True),
+        (models.Question.TYPE_FILE, "FileAnswer", True),
         (models.Question.TYPE_TEXT, "StringAnswer", True),
         (models.Question.TYPE_TEXTAREA, "StringAnswer", True),
         (models.Question.TYPE_FLOAT, "FloatAnswer", True),
@@ -56,7 +56,7 @@ def test_answer_types(
         (models.Question.TYPE_DATE, "DateQuestion"),
         (models.Question.TYPE_TABLE, "TableQuestion"),
         (models.Question.TYPE_FORM, "FormQuestion"),
-        (models.Question.TYPE_FILES, "FilesQuestion"),
+        (models.Question.TYPE_FILE, "FileQuestion"),
         (models.Question.TYPE_STATIC, "StaticQuestion"),
     ],
 )

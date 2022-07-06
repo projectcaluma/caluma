@@ -91,8 +91,8 @@ class Field(Element):
                 for row in self.children()
             ]
 
-        elif self.question.type == Question.TYPE_FILES:
-            return [f.name for f in self.answer.files.all()]
+        elif self.question.type == Question.TYPE_FILE:
+            return self.answer.file
 
         elif self.question.type == Question.TYPE_DATE:
             return self.answer.date

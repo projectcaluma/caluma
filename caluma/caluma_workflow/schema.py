@@ -315,7 +315,7 @@ class ResumeCase(Mutation):
 
 class ReopenCase(Mutation):
     class Input:
-        id = graphene.ID(required=True)
+        id = graphene.ID()
         work_items = graphene.List(
             graphene.ID,
             required=True,

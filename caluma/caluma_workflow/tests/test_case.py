@@ -330,7 +330,7 @@ def test_family_workitems(schema_executor, db, case_factory, work_item_factory):
         (Question.TYPE_TEXT, True),
         (Question.TYPE_FORM, True),
         (Question.TYPE_DATE, True),
-        (Question.TYPE_FILES, True),
+        (Question.TYPE_FILE, True),
         (Question.TYPE_TABLE, False),
     ],
 )
@@ -343,7 +343,6 @@ def test_order_by_question_answer_value(
     success,
     case_factory,
     document_factory,
-    file_factory,
     question_factory,
     form_question_factory,
     form_factory,
@@ -423,20 +422,20 @@ def test_order_by_question_answer_value(
         case_factory(document=d2)
         case_factory(document=d3)
 
-    elif type == Question.TYPE_FILES:
+    elif type == Question.TYPE_FILE:
         d1 = document_factory()
         d2 = document_factory()
         d3 = document_factory()
 
-        q1 = question_factory(type=Question.TYPE_FILES, slug="test_question1")
-        answer_factory(question=q1, files=[file_factory(name="d")], document=d1)
-        answer_factory(question=q1, files=[file_factory(name="b")], document=d2)
-        answer_factory(question=q1, files=[file_factory(name="f")], document=d3)
+        q1 = question_factory(type=Question.TYPE_FILE, slug="test_question1")
+        answer_factory(question=q1, file__name="d", document=d1)
+        answer_factory(question=q1, file__name="b", document=d2)
+        answer_factory(question=q1, file__name="f", document=d3)
 
-        q2 = question_factory(type=Question.TYPE_FILES, slug="test_question2")
-        answer_factory(question=q2, files=[file_factory(name="c")], document=d1)
-        answer_factory(question=q2, files=[file_factory(name="e")], document=d2)
-        answer_factory(question=q2, files=[file_factory(name="a")], document=d3)
+        q2 = question_factory(type=Question.TYPE_FILE, slug="test_question2")
+        answer_factory(question=q2, file__name="c", document=d1)
+        answer_factory(question=q2, file__name="e", document=d2)
+        answer_factory(question=q2, file__name="a", document=d3)
 
         case_factory(document=d1)
         case_factory(document=d2)
@@ -466,7 +465,7 @@ def test_order_by_question_answer_value(
                         ... on DateAnswer {
                           dateValue: value
                         }
-                        ... on FilesAnswer {
+                        ... on FileAnswer {
                           fileValue: value {
                             name
                           }

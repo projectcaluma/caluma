@@ -182,10 +182,8 @@ class AnswerValidator:
                     f"Document {row_doc.pk} is not of form type {question.row_form.pk}."
                 )
 
-    def _validate_question_files(self, question, value, **kwargs):
-        if not isinstance(value, list) and value is not None:  # pragma: no cover
-            # should already have been rejected by schema / gql level
-            raise exceptions.ValidationError("Input files must be a list")
+    def _validate_question_file(self, question, value, **kwargs):
+        pass
 
     def _validate_question_calculated_float(self, question, value, **kwargs):
         pass
@@ -203,7 +201,7 @@ class AnswerValidator:
     ):
         # Check all possible fields for value
         value = None
-        for i in ["documents", "files", "date", "value"]:
+        for i in ["documents", "file", "date", "value"]:
             value = kwargs.get(i, value)
             if value:
                 break
