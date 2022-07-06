@@ -9,7 +9,7 @@ from . import models
 from .schema import (
     Answer,
     DateAnswer,
-    FilesAnswer,
+    FileAnswer,
     FloatAnswer,
     FormDjangoObjectType,
     IntegerAnswer,
@@ -55,7 +55,7 @@ class HistoricalAnswerConnection(CountableConnectionBase):
 class HistoricalIntegerAnswer(IntegerAnswer):
     class Meta:
         model = models.Answer.history.model
-        exclude = ("document", "date")
+        exclude = ("document", "file", "date")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
@@ -63,7 +63,7 @@ class HistoricalIntegerAnswer(IntegerAnswer):
 class HistoricalFloatAnswer(FloatAnswer):
     class Meta:
         model = models.Answer.history.model
-        exclude = ("document", "date")
+        exclude = ("document", "file", "date")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
@@ -71,7 +71,7 @@ class HistoricalFloatAnswer(FloatAnswer):
 class HistoricalDateAnswer(DateAnswer):
     class Meta:
         model = models.Answer.history.model
-        exclude = ("document",)
+        exclude = ("document", "file")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
@@ -79,7 +79,7 @@ class HistoricalDateAnswer(DateAnswer):
 class HistoricalStringAnswer(StringAnswer):
     class Meta:
         model = models.Answer.history.model
-        exclude = ("document", "date")
+        exclude = ("document", "file", "date")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
@@ -87,7 +87,7 @@ class HistoricalStringAnswer(StringAnswer):
 class HistoricalListAnswer(ListAnswer):
     class Meta:
         model = models.Answer.history.model
-        exclude = ("document", "date")
+        exclude = ("document", "file", "date")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
@@ -97,7 +97,7 @@ class HistoricalFile(ObjectType):
     download_url = graphene.String()
     metadata = generic.GenericScalar()
     historical_answer = graphene.Field(
-        "caluma.caluma_form.historical_schema.HistoricalFilesAnswer"
+        "caluma.caluma_form.historical_schema.HistoricalFileAnswer"
     )
     history_date = graphene.types.datetime.DateTime(required=True)
     history_user_id = graphene.String()
@@ -116,8 +116,8 @@ class HistoricalFile(ObjectType):
         interfaces = (relay.Node,)
 
 
-class HistoricalFilesAnswer(FilesAnswer):
-    value = graphene.List(
+class HistoricalFileAnswer(FileAnswer):
+    value = graphene.Field(
         HistoricalFile,
         required=False,
         as_of=graphene.types.datetime.DateTime(required=True),
@@ -125,7 +125,9 @@ class HistoricalFilesAnswer(FilesAnswer):
 
     def resolve_value(self, info, as_of, **args):
         # we need to use the HistoricalFile of the correct revision
-        return models.File.history.filter(answer_id=self.id, history_date__lte=as_of)
+        return models.File.history.filter(
+            id=self.file_id, history_date__lte=as_of
+        ).first()
 
     class Meta:
         model = models.Answer.history.model
@@ -194,7 +196,7 @@ class HistoricalTableAnswer(TableAnswer):
 
     class Meta:
         model = models.Answer.history.model
-        exclude = ("date",)
+        exclude = ("file", "date")
         use_connection = False
         interfaces = (HistoricalAnswer, graphene.Node)
 
@@ -228,7 +230,7 @@ HISTORICAL_ANSWER_TYPES = {
     models.Question.TYPE_TEXTAREA: HistoricalStringAnswer,
     models.Question.TYPE_TEXT: HistoricalStringAnswer,
     models.Question.TYPE_TABLE: HistoricalTableAnswer,
-    models.Question.TYPE_FILES: HistoricalFilesAnswer,
+    models.Question.TYPE_FILE: HistoricalFileAnswer,
     models.Question.TYPE_DYNAMIC_CHOICE: HistoricalStringAnswer,
     models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE: HistoricalListAnswer,
     models.Question.TYPE_CALCULATED_FLOAT: HistoricalFloatAnswer,

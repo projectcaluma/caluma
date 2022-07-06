@@ -48,7 +48,7 @@ types = [
     form_schema.DateQuestion,
     form_schema.TableQuestion,
     form_schema.FormQuestion,
-    form_schema.FilesQuestion,
+    form_schema.FileQuestion,
     form_schema.StaticQuestion,
     form_schema.StringAnswer,
     form_schema.ListAnswer,
@@ -56,7 +56,7 @@ types = [
     form_schema.FloatAnswer,
     form_schema.DateAnswer,
     form_schema.TableAnswer,
-    form_schema.FilesAnswer,
+    form_schema.FileAnswer,
     form_schema.CalculatedFloatQuestion,
     form_schema.ActionButtonQuestion,
     workflow_schema.SimpleTask,
@@ -73,7 +73,7 @@ historical_types = [
     form_historical_schema.HistoricalFloatAnswer,
     form_historical_schema.HistoricalDateAnswer,
     form_historical_schema.HistoricalTableAnswer,
-    form_historical_schema.HistoricalFilesAnswer,
+    form_historical_schema.HistoricalFileAnswer,
 ]
 
 if settings.ENABLE_HISTORICAL_API:

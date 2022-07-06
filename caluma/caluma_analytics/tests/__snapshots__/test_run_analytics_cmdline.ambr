@@ -65,7 +65,7 @@
           FROM
                  "caluma_form_document" INNER JOIN "caluma_form_form" ON ("caluma_form_document"."form_id" = "caluma_form_form"."slug") -- qs ref
           ),
-          answer_af542 AS (SELECT "caluma_form_answer"."created_at",  
+          answer_b4215 AS (SELECT "caluma_form_answer"."created_at",  
           "caluma_form_answer"."modified_at",  
           "caluma_form_answer"."created_by_user",  
           "caluma_form_answer"."created_by_group",  
@@ -76,7 +76,8 @@
           "caluma_form_answer"."value",  
           "caluma_form_answer"."meta",  
           "caluma_form_answer"."document_id",  
-          "caluma_form_answer"."date"
+          "caluma_form_answer"."date",  
+          "caluma_form_answer"."file_id"
           FROM
                  "caluma_form_answer" INNER JOIN "caluma_form_question" ON ("caluma_form_answer"."question_id" = "caluma_form_question"."slug") -- qs ref
           )
@@ -91,14 +92,14 @@
           FROM document_2a07e AS "document_2a07e" 
           LEFT JOIN (
                   SELECT DISTINCT ON (document_id)
-                         (answer_af542.value #>>'{}') AS "analytics_result_blablub",
+                         (answer_b4215.value #>>'{}') AS "analytics_result_blablub",
                          "document_id"
-                  FROM answer_af542 AS "answer_af542" 
+                  FROM answer_b4215 AS "answer_b4215" 
                   WHERE "question_id" = 'top_question' 
                   ORDER BY document_id
       
       
-          ) AS "answer_af542_caea5" ON (document_2a07e.id = "answer_af542_caea5".document_id)
+          ) AS "answer_b4215_caea5" ON (document_2a07e.id = "answer_b4215_caea5".document_id)
           WHERE form_id = 'top_form'
           ORDER BY id
       
@@ -106,7 +107,7 @@
       ) AS "document_2a07e_27f15" ON (case_ac50e.document_id = "document_2a07e_27f15".id)
       
       
-      ) AS analytics_2a8de
+      ) AS analytics_247d1
       -- PARAMS: 
   
     ''',
@@ -155,7 +156,7 @@
           FROM
                  "caluma_form_document" INNER JOIN "caluma_form_form" ON ("caluma_form_document"."form_id" = "caluma_form_form"."slug") -- qs ref
           ),
-          answer_af542 AS (SELECT "caluma_form_answer"."created_at",  
+          answer_b4215 AS (SELECT "caluma_form_answer"."created_at",  
           "caluma_form_answer"."modified_at",  
           "caluma_form_answer"."created_by_user",  
           "caluma_form_answer"."created_by_group",  
@@ -166,7 +167,8 @@
           "caluma_form_answer"."value",  
           "caluma_form_answer"."meta",  
           "caluma_form_answer"."document_id",  
-          "caluma_form_answer"."date"
+          "caluma_form_answer"."date",  
+          "caluma_form_answer"."file_id"
           FROM
                  "caluma_form_answer" INNER JOIN "caluma_form_question" ON ("caluma_form_answer"."question_id" = "caluma_form_question"."slug") -- qs ref
           )
@@ -181,14 +183,14 @@
           FROM document_2a07e AS "document_2a07e" 
           LEFT JOIN (
                   SELECT DISTINCT ON (document_id)
-                         (answer_af542.value #>>'{}') AS "analytics_result_blablub",
+                         (answer_b4215.value #>>'{}') AS "analytics_result_blablub",
                          "document_id"
-                  FROM answer_af542 AS "answer_af542" 
+                  FROM answer_b4215 AS "answer_b4215" 
                   WHERE "question_id" = 'top_question' 
                   ORDER BY document_id
       
       
-          ) AS "answer_af542_caea5" ON (document_2a07e.id = "answer_af542_caea5".document_id)
+          ) AS "answer_b4215_caea5" ON (document_2a07e.id = "answer_b4215_caea5".document_id)
           WHERE form_id = 'top_form'
           ORDER BY id
       
@@ -196,7 +198,7 @@
       ) AS "document_2a07e_27f15" ON (case_ac50e.document_id = "document_2a07e_27f15".id)
       
       
-      ) AS analytics_2a8de
+      ) AS analytics_247d1
       WHERE analytics_result_blablub IN (%(flt_analytics_result_blablub_8201d)s, %(flt_analytics_result_blablub_8e5e6)s)
       -- PARAMS: 
       --     flt_analytics_result_blablub_8201d: Shelly Watson
@@ -244,7 +246,7 @@
           FROM
                  "caluma_form_document" INNER JOIN "caluma_form_form" ON ("caluma_form_document"."form_id" = "caluma_form_form"."slug") -- qs ref
           ),
-          answer_af542 AS (SELECT "caluma_form_answer"."created_at",  
+          answer_b4215 AS (SELECT "caluma_form_answer"."created_at",  
           "caluma_form_answer"."modified_at",  
           "caluma_form_answer"."created_by_user",  
           "caluma_form_answer"."created_by_group",  
@@ -255,7 +257,8 @@
           "caluma_form_answer"."value",  
           "caluma_form_answer"."meta",  
           "caluma_form_answer"."document_id",  
-          "caluma_form_answer"."date"
+          "caluma_form_answer"."date",  
+          "caluma_form_answer"."file_id"
           FROM
                  "caluma_form_answer" INNER JOIN "caluma_form_question" ON ("caluma_form_answer"."question_id" = "caluma_form_question"."slug") -- qs ref
           )
@@ -270,14 +273,14 @@
           FROM document_2a07e AS "document_2a07e" 
           LEFT JOIN (
                   SELECT DISTINCT ON (document_id)
-                         (answer_af542.value #>>'{}') AS "analytics_result_blablub",
+                         (answer_b4215.value #>>'{}') AS "analytics_result_blablub",
                          "document_id"
-                  FROM answer_af542 AS "answer_af542" 
+                  FROM answer_b4215 AS "answer_b4215" 
                   WHERE "question_id" = 'top_question' 
                   ORDER BY document_id
       
       
-          ) AS "answer_af542_caea5" ON (document_2a07e.id = "answer_af542_caea5".document_id)
+          ) AS "answer_b4215_caea5" ON (document_2a07e.id = "answer_b4215_caea5".document_id)
           WHERE form_id = 'top_form'
           ORDER BY id
       
@@ -285,7 +288,7 @@
       ) AS "document_2a07e_27f15" ON (case_ac50e.document_id = "document_2a07e_27f15".id)
       
       
-      ) AS analytics_2a8de
+      ) AS analytics_247d1
       -- PARAMS: 
   
     ''',
@@ -330,7 +333,7 @@
           FROM
                  "caluma_form_document" INNER JOIN "caluma_form_form" ON ("caluma_form_document"."form_id" = "caluma_form_form"."slug") -- qs ref
           ),
-          answer_af542 AS (SELECT "caluma_form_answer"."created_at",  
+          answer_b4215 AS (SELECT "caluma_form_answer"."created_at",  
           "caluma_form_answer"."modified_at",  
           "caluma_form_answer"."created_by_user",  
           "caluma_form_answer"."created_by_group",  
@@ -341,7 +344,8 @@
           "caluma_form_answer"."value",  
           "caluma_form_answer"."meta",  
           "caluma_form_answer"."document_id",  
-          "caluma_form_answer"."date"
+          "caluma_form_answer"."date",  
+          "caluma_form_answer"."file_id"
           FROM
                  "caluma_form_answer" INNER JOIN "caluma_form_question" ON ("caluma_form_answer"."question_id" = "caluma_form_question"."slug") -- qs ref
           )
@@ -356,14 +360,14 @@
           FROM document_2a07e AS "document_2a07e" 
           LEFT JOIN (
                   SELECT DISTINCT ON (document_id)
-                         (answer_af542.value #>>'{}') AS "analytics_result_blablub",
+                         (answer_b4215.value #>>'{}') AS "analytics_result_blablub",
                          "document_id"
-                  FROM answer_af542 AS "answer_af542" 
+                  FROM answer_b4215 AS "answer_b4215" 
                   WHERE "question_id" = 'top_question' 
                   ORDER BY document_id
       
       
-          ) AS "answer_af542_caea5" ON (document_2a07e.id = "answer_af542_caea5".document_id)
+          ) AS "answer_b4215_caea5" ON (document_2a07e.id = "answer_b4215_caea5".document_id)
           WHERE form_id = 'top_form'
           ORDER BY id
       
@@ -371,7 +375,7 @@
       ) AS "document_2a07e_27f15" ON (case_ac50e.document_id = "document_2a07e_27f15".id)
       
       
-      ) AS analytics_2a8de
+      ) AS analytics_247d1
       WHERE analytics_result_blablub IN (%(flt_analytics_result_blablub_8201d)s, %(flt_analytics_result_blablub_8e5e6)s)
       -- PARAMS: 
       --     flt_analytics_result_blablub_8201d: Shelly Watson

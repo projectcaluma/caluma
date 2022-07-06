@@ -21,7 +21,7 @@ from .. import api, models, serializers
         (models.Question.TYPE_CHOICE, {}, None, []),
         (models.Question.TYPE_MULTIPLE_CHOICE, {}, None, []),
         (models.Question.TYPE_FORM, {}, None, []),
-        (models.Question.TYPE_FILES, {}, None, []),
+        (models.Question.TYPE_FILE, {}, None, []),
         (models.Question.TYPE_DYNAMIC_CHOICE, {}, "MyDataSource", []),
         (models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, {}, "MyDataSource", []),
         (models.Question.TYPE_STATIC, {}, None, []),
@@ -156,7 +156,7 @@ def test_query_all_questions(
                   hintText
                   calcExpression
                 }
-                ... on FilesQuestion {
+                ... on FileQuestion {
                   hintText
                 }
               }
@@ -233,7 +233,7 @@ def test_copy_question(db, question, question_option_factory, schema_executor):
         "SaveIntegerQuestion",
         "SaveFloatQuestion",
         "SaveDateQuestion",
-        "SaveFilesQuestion",
+        "SaveFileQuestion",
         "SaveCalculatedFloatQuestion",
     ],
 )

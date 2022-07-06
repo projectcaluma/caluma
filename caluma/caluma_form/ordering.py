@@ -39,7 +39,7 @@ class AnswerValueOrdering(CalumaOrdering):
             Question.TYPE_CHOICE: "value",
             Question.TYPE_TEXTAREA: "value",
             Question.TYPE_TEXT: "value",
-            Question.TYPE_FILES: "files__name",
+            Question.TYPE_FILE: "file__name",
             Question.TYPE_DYNAMIC_CHOICE: "value",
         }
 

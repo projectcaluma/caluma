@@ -5,7 +5,6 @@ from django.db.models import Q
 from rest_framework.exceptions import ValidationError
 
 from caluma.caluma_core.models import BaseModel
-from caluma.caluma_core.relay import extract_global_id
 from caluma.caluma_form import models, validators
 from caluma.caluma_user.models import BaseUser
 from caluma.utils import update_model
@@ -43,62 +42,12 @@ class SaveAnswerLogic:
             cls.validate_for_save(data, user, answer=answer, origin=True)
         )
 
-        files = validated_data.pop("files", None)
         if answer is None:
             answer = cls.create(validated_data, user)
         else:
             answer = cls.update(answer, validated_data, user)
 
-        # FILES type needs a bit more work due to the reverse
-        # relation of file -> answer
-        if answer.question.type == models.Question.TYPE_FILES:
-            if files is None:
-                raise ValidationError("Files input must be a list")
-            cls.update_answer_files(answer, files)
-
         return cls.post_save(answer)
-
-    @classmethod
-    def update_answer_files(cls, answer: models.Answer, files: list):
-        """Update the files of a "FILES" answer.
-
-        The files parameter is expected to be a list of dicts, where
-        each entry has a "name" (the file name), and optionally an "id"
-        for the case when the given file already exists.
-        """
-        if not files:
-            files = []
-
-        updated = []
-
-        for file_ in files:
-            file_id = extract_global_id(file_["id"]) if "id" in file_ else None
-            file_name = file_["name"]
-            file_model = (
-                answer.files.filter(pk=file_id).first()
-                if file_id
-                else models.File(answer=answer, name=file_name)
-            )
-            if not file_model:
-                # Client wants to update a file that doesn't exist anymore.
-                # Reject call - this is an inconsistency as either
-                # the file was never created, or was deleted in the mean
-                # time.
-                raise ValidationError(
-                    f"File with id={file_id} for given answer not found"
-                )
-
-            if file_model.name != file_name and file_id:
-                # Renaming existing file
-                file_model.rename(file_name)
-                file_model.save()
-            elif not file_id:
-                # New file
-                file_model.save()
-            updated.append(file_model.pk)
-
-        for file in answer.files.exclude(pk__in=updated):
-            file.delete()
 
     @staticmethod
     def validate_for_save(
@@ -119,8 +68,8 @@ class SaveAnswerLogic:
                 else models.Document.objects.none()
             )
             del data["value"]
-        elif question.type == models.Question.TYPE_FILES and not data.get("files"):
-            data["files"] = data["value"]
+        elif question.type == models.Question.TYPE_FILE and not data.get("file"):
+            data["file"] = data["value"]
             del data["value"]
         elif question.type == models.Question.TYPE_DATE and not data.get("date"):
             data["date"] = data["value"]
@@ -142,35 +91,35 @@ class SaveAnswerLogic:
         # TODO emit events
         return answer
 
-    @classmethod
+    @staticmethod
     @transaction.atomic
-    def create(
-        cls, validated_data: dict, user: Optional[BaseUser] = None
-    ) -> models.Answer:
+    def create(validated_data: dict, user: Optional[BaseUser] = None) -> models.Answer:
+        if validated_data["question"].type == models.Question.TYPE_FILE:
+            validated_data = __class__.set_file(validated_data)
 
         if validated_data["question"].type == models.Question.TYPE_TABLE:
             documents = validated_data.pop("documents")
 
-        files = validated_data.pop("files", None)
         answer = BaseLogic.create(models.Answer, validated_data, user)
-
-        if validated_data["question"].type == models.Question.TYPE_FILES:
-            cls.update_answer_files(answer, files)
 
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
 
         return answer
 
-    @classmethod
+    @staticmethod
     @transaction.atomic
-    def update(cls, answer, validated_data, user: Optional[BaseUser] = None):
+    def update(answer, validated_data, user: Optional[BaseUser] = None):
         if answer.question.type == models.Question.TYPE_TABLE:
             documents = validated_data.pop("documents")
             answer.unlink_unused_rows(docs_to_keep=documents)
 
-        if answer.question.type == models.Question.TYPE_FILES:
-            cls.update_answer_files(answer, validated_data.pop("files", None))
+        if (
+            answer.question.type == models.Question.TYPE_FILE
+            and answer.file.name is not validated_data["file"]
+        ):
+            answer.file.delete()
+            validated_data = __class__.set_file(validated_data)
 
         BaseLogic.update(answer, validated_data, user)
 
@@ -180,6 +129,13 @@ class SaveAnswerLogic:
         answer.refresh_from_db()
         return answer
 
+    @staticmethod
+    def set_file(validated_data):
+        file_name = validated_data.get("file")
+        file = models.File.objects.create(name=file_name)
+        validated_data["file"] = file
+        return validated_data
+
 
 class SaveDefaultAnswerLogic(SaveAnswerLogic):
     @staticmethod
@@ -187,7 +143,7 @@ class SaveDefaultAnswerLogic(SaveAnswerLogic):
         data: dict, user: BaseUser, answer: models.Answer = None, origin: bool = False
     ) -> dict:
         if data["question"].type in [
-            models.Question.TYPE_FILES,
+            models.Question.TYPE_FILE,
             models.Question.TYPE_STATIC,
             models.Question.TYPE_DYNAMIC_CHOICE,
             models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
