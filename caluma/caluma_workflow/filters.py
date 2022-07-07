@@ -109,13 +109,8 @@ class CaseOrderSet(BaseFilterSet):
         fields=[
             "created_at",
             "modified_at",
-            "allow_all_forms",
-            "description",
-            "is_archived",
-            "is_published",
-            "name",
             "status",
-            "slug",
+            "document__form__name",
         ],
     )
     document_answer = AnswerValueOrdering(document_via="document")
@@ -140,12 +135,10 @@ class TaskOrderSet(BaseFilterSet):
         fields=[
             "created_at",
             "modified_at",
-            "allow_all_forms",
             "lead_time",
             "type",
             "description",
             "is_archived",
-            "is_published",
             "name",
             "slug",
         ],
@@ -200,10 +193,7 @@ class WorkItemOrderSet(BaseFilterSet):
             "created_at",
             "modified_at",
             "closed_at",
-            "allow_all_forms",
             "description",
-            "is_archived",
-            "is_published",
             "name",
             "deadline",
             "status",
