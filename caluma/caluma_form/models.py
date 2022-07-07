@@ -31,6 +31,41 @@ class Form(core_models.SlugModel):
         on_delete=models.SET_NULL,
     )
 
+    @classmethod
+    def _get_all_raw_forms(cls, forms: list):
+        return cls.objects.raw(
+            """
+            WITH RECURSIVE
+                forms(slug) AS (
+                    SELECT slug
+                    FROM caluma_form_form
+                    WHERE slug = ANY (%s)
+                    UNION ALL
+                    SELECT
+                        all_subforms.subform_id AS slug
+                    FROM forms JOIN all_subforms ON (all_subforms.form_id = forms.slug )
+                ),
+                all_subforms(form_id, subform_id) AS (
+                    SELECT
+                        caluma_form_formquestion.form_id,
+                        COALESCE(caluma_form_question.row_form_id, caluma_form_question.sub_form_id) AS subform_id
+                    FROM caluma_form_formquestion
+                    JOIN caluma_form_question ON (caluma_form_formquestion.question_id = caluma_form_question.slug)
+                    WHERE caluma_form_question.type IN ('form', 'table')
+                )
+            SELECT * FROM forms;
+        """,
+            [forms],
+        )
+
+    @classmethod
+    def get_all_forms(cls, forms: list):
+        return Form.objects.filter(pk__in=cls._get_all_raw_forms(forms))
+
+    @classmethod
+    def get_all_questions(cls, forms: list):
+        return Question.objects.filter(forms__in=cls._get_all_raw_forms(forms))
+
     class Meta:
         indexes = [GinIndex(fields=["meta"])]
 

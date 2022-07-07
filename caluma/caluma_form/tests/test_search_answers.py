@@ -39,8 +39,10 @@ def test_search(
         }
     """
 
-    def _search(slugs, word, expect_count):
-        variables = {"search": [{"questions": slugs, "value": word}]}
+    def _search(q_slugs, f_slugs, word, expect_count):
+        variables = {
+            "search": [{"questions": q_slugs, "forms": f_slugs, "value": word}]
+        }
         result = schema_executor(query, variable_values=variables)
 
         assert not result.errors
@@ -49,12 +51,12 @@ def test_search(
         return edges
 
     # search for "hello world". this should return doc a
-    edges = _search([question_a.slug], "hello world", 1)
+    edges = _search([question_a.slug], [], "hello world", 1)
     assert extract_global_id(edges[0]["node"]["id"]) == str(doc_a.id)
 
     # search for "planet" across both questions. this should return both doc a
     # and b
-    edges = _search([question_b.slug, question_a.slug], "planet", 2)
+    edges = _search([question_b.slug, question_a.slug], [], "planet", 2)
     assert set([str(doc_a.id), str(doc_b.id)]) == set(
         extract_global_id(e["node"]["id"]) for e in edges
     )
