@@ -2887,13 +2887,8 @@
   enum SortableCaseAttributes {
     CREATED_AT
     MODIFIED_AT
-    ALLOW_ALL_FORMS
-    DESCRIPTION
-    IS_ARCHIVED
-    IS_PUBLISHED
-    NAME
     STATUS
-    SLUG
+    DOCUMENT__FORM__NAME
   }
   
   enum SortableDocumentAttributes {
@@ -2952,12 +2947,10 @@
   enum SortableTaskAttributes {
     CREATED_AT
     MODIFIED_AT
-    ALLOW_ALL_FORMS
     LEAD_TIME
     TYPE
     DESCRIPTION
     IS_ARCHIVED
-    IS_PUBLISHED
     NAME
     SLUG
   }
@@ -2966,10 +2959,7 @@
     CREATED_AT
     MODIFIED_AT
     CLOSED_AT
-    ALLOW_ALL_FORMS
     DESCRIPTION
-    IS_ARCHIVED
-    IS_PUBLISHED
     NAME
     DEADLINE
     STATUS
