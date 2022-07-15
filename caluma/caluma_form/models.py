@@ -59,7 +59,7 @@ class Form(core_models.SlugModel):
         )
 
     @classmethod
-    def get_all_forms(cls, forms: list):
+    def get_all_forms(cls, forms: list):  # pragma: no cover
         return Form.objects.filter(pk__in=cls._get_all_raw_forms(forms))
 
     @classmethod

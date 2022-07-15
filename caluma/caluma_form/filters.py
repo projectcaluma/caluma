@@ -297,7 +297,15 @@ class SearchLookupMode(Enum):
 
 
 class SearchAnswersFilterType(InputObjectType):
-    """Lookup type to search in answers."""
+    """
+    Lookup type to search in answers.
+
+    You may pass in a list of question slugs and/or a list of form slugs to define
+    which answers to search. If you pass in one or more forms, answers to the
+    questions in that form will be searched. If you pass in one or more question
+    slug, the corresponding answers are searched. If you pass both, a superset
+    of both is searched (ie. they do not limit each other).
+    """
 
     questions = List(graphene.ID)
     forms = List(graphene.ID)
@@ -326,9 +334,6 @@ class SearchAnswersFilter(Filter):
 
     def __init__(self, *args, **kwargs):
         self.document_id = kwargs.pop("document_id")
-        self.UNSUPPORTED_QUESTION_TYPES = [
-            type for type in Question.TYPE_CHOICES if type not in self.FIELD_MAP.keys()
-        ]
         super().__init__(*args, **kwargs)
 
     def filter(self, qs, value):
@@ -344,29 +349,36 @@ class SearchAnswersFilter(Filter):
         return qs
 
     def _get_questions(self, value):
-        raw_questions = questions = value.get("questions")
+        raw_questions = value.get("questions")
         raw_forms = value.get("forms")
+        questions = Question.objects.none()
+
         if not raw_questions and not raw_forms:
             raise exceptions.ValidationError(
                 '"forms" and/or "questions" parameter must be set'
             )
 
+        if raw_questions:
+            questions = self._validate_and_get_questions(raw_questions)
+
         if raw_forms:
             forms = self._validate_and_get_forms(raw_forms)
-            questions = Form.get_all_questions(forms).exclude(
-                type__in=self.UNSUPPORTED_QUESTION_TYPES
-            )
-            if raw_questions:
-                questions = questions.filter(slug__in=raw_questions)
+            form_questions = Form.get_all_questions(forms)
+            # Combine querysets: All questions of the given forms, as well as the
+            # explicitly-requested questions.
+            questions = questions | form_questions
 
-        return self._validate_and_get_questions(questions)
+        return questions
 
     def _apply_filter(self, qs, value):
         questions = self._get_questions(value)
 
         for word in value["value"].split():
             answers_with_word = self._answers_with_word(
-                questions, word, value.get("lookup", SearchLookupMode.CONTAINS.value)
+                questions,
+                word,
+                value.get("lookup", SearchLookupMode.CONTAINS.value),
+                value.get("forms"),
             )
             qs = qs.filter(
                 **{
@@ -425,26 +437,35 @@ class SearchAnswersFilter(Filter):
             lambda a, b: a | b, [Q(**{filt: slug}) for slug in matching_options]
         )
 
-    def _answers_with_word(self, questions, word, lookup):
+    def _answers_with_word(self, questions, word, lookup, form_slugs):
+        if not questions:
+            return Answer.objects.none()
+
         exprs = [
             self._word_lookup_for_question(question, word, lookup)
-            for q_slug, question in questions.items()
+            for question in questions
         ]
 
         # join expressions with OR
         answer_qs = Answer.objects.filter(reduce(lambda a, b: a | b, exprs))
+
+        # add form filter if given,
+        # otherwise it would return all answers of the question filter ignoring the form filter
+        if form_slugs not in EMPTY_VALUES:
+            answer_qs = answer_qs.filter(document__form__pk__in=form_slugs)
+
         return answer_qs
 
     def _validate_and_get_questions(self, question_slugs):
-        res = {}
+        res = []
         for q_slug in question_slugs:
             question = Question.objects.get(pk=q_slug)
             if question.type not in self.FIELD_MAP:
                 raise exceptions.ValidationError(
                     f"Questions of type {question.type} cannot be used in searchAnswers"
                 )
-            res[q_slug] = question
-        return res
+            res.append(question)
+        return Question.objects.filter(pk__in=res)
 
     @staticmethod
     def _validate_and_get_forms(form_slugs):
@@ -457,7 +478,7 @@ class SearchAnswersFilter(Filter):
             raise exceptions.ValidationError(
                 f"Following forms could not be found: {not_found_string}"
             )
-        return forms
+        return form_slugs
 
     @staticmethod
     @convert_form_field.register(SearchAnswersFilterField)
