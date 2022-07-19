@@ -32,7 +32,7 @@ def _retry_on_missing_bucket(fn):
                 and settings.MINIO_STORAGE_AUTO_CREATE_MEDIA_BUCKET
             ):
                 log.warning(
-                    b"Minio bucket '{self.bucket}' missing, trying to create it"
+                    f"Minio bucket '{self.bucket}' missing, trying to create it"
                 )
                 self.client.make_bucket(self.bucket)
                 return fn(self, *args, **kwargs)
@@ -81,7 +81,7 @@ class Minio:
         try:
             return self.client.stat_object(self.bucket, object_name)
         except S3Error as exc:
-            log.error(f"Minio error, cannot stat object: {exc.code}")
+            log.warning(f"Minio error, cannot stat object '{object_name}': {exc.code}")
             return None
 
     @_retry_on_missing_bucket
