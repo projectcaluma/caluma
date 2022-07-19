@@ -337,9 +337,8 @@
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
+        'COUNT',
         'VALUE',
-        'MAX',
-        'MIN',
       ]),
     }),
     'meta': dict({
@@ -5847,9 +5846,8 @@
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
+        'COUNT',
         'VALUE',
-        'MAX',
-        'MIN',
       ]),
     }),
     'meta': dict({
@@ -6042,9 +6040,8 @@
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
+        'COUNT',
         'VALUE',
-        'MAX',
-        'MIN',
       ]),
     }),
     'meta': dict({
