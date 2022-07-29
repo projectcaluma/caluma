@@ -18,6 +18,7 @@ from ..caluma_core.types import (
     Node,
     enum_type_from_field,
 )
+from ..caluma_workflow.domain_logic import RedoWorkItemLogic
 from . import filters, jexl, models, serializers
 
 
@@ -194,6 +195,19 @@ class WorkItem(DjangoObjectType):
     controlling_groups = graphene.List(graphene.String, required=True)
     addressed_groups = graphene.List(graphene.String, required=True)
     status = WorkItemStatus(required=True)
+    is_redoable = graphene.Boolean(
+        description=(
+            "This property potentially performs poorly if used in a large set"
+            "of entries, as the evaluation of the redoable jexl configuration"
+            "cannot be performed on the database level. Please use carefully."
+        )
+    )
+
+    def resolve_is_redoable(self, *args, **kwargs):
+        return (
+            self.status != models.WorkItem.STATUS_READY
+            and RedoWorkItemLogic.is_work_item_redoable(self)
+        )
 
     class Meta:
         model = models.WorkItem

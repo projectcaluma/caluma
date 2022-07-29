@@ -612,13 +612,18 @@ class RedoWorkItemLogic:
         if work_item.status == models.WorkItem.STATUS_READY:
             raise ValidationError("Ready work items can't be redone.")
 
+        if not cls.is_work_item_redoable(work_item):
+            raise ValidationError("Workflow doesn't allow to redo this work item.")
+
+    @classmethod
+    def is_work_item_redoable(cls, work_item):
         for wi in cls._find_ready_in_work_item_tree(
             work_item, allowed_states=[models.WorkItem.STATUS_READY]
         ):
             if work_item.task in wi.get_redoable():
-                return
+                return True
 
-        raise ValidationError("Workflow doesn't allow to redo this work item.")
+        return False
 
     @classmethod
     def set_succeeding_work_item_status_redo(cls, work_item):

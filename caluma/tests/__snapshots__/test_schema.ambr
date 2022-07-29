@@ -3333,6 +3333,11 @@
     document: Document
     previousWorkItem: WorkItem
     succeedingWorkItems(offset: Int, before: String, after: String, first: Int, last: Int): WorkItemConnection!
+  
+    """
+    This property potentially performs poorly if used in a large setof entries, as the evaluation of the redoable jexl configurationcannot be performed on the database level. Please use carefully.
+    """
+    isRedoable: Boolean
   }
   
   type WorkItemConnection {
