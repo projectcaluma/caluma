@@ -345,7 +345,7 @@ def form_and_document(
             questions["sub_question"] = fallback_factory(
                 question_factory,
                 slug="sub_question",
-                type="text",
+                type="integer",
                 is_required="true",
                 is_hidden="false",
             )

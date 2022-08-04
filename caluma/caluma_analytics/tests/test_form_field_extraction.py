@@ -67,7 +67,9 @@ def test_get_fields(
                 "document[top_form].form",
                 "document[top_form].top_question",
                 "document[top_form].another_top_question",
+                "document[top_form].form.form_id",
                 "document[top_form].form.sub_question",
+                "document[top_form].form_id",
                 "document[top_form].form.another_question",
                 "document[top_form].form.another_question.weekday",
                 "document[top_form].form.another_question.month",
@@ -168,7 +170,7 @@ def test_workitem_data(
 
     # Checking for presence of the workitem fields
     fields = start.get_fields(depth=3, prefix=[f"workitem[{task.slug},first]"])
-    assert len(fields) == 22
+    assert len(fields) == 24
 
     analytics_table.fields.create(
         alias="first_workitem_created",

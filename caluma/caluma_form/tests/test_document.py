@@ -1466,12 +1466,11 @@ def test_document_modified_content_properties(
 
     # same works with graphql
     query = """
-        mutation saveDocumentStringAnswer($input: SaveDocumentStringAnswerInput!) {
-          saveDocumentStringAnswer(input: $input) {
+        mutation saveDocumentStringAnswer($input: SaveDocumentIntegerAnswerInput!) {
+          saveDocumentIntegerAnswer(input: $input) {
             answer {
-              __typename
-              ... on StringAnswer {
-                stringValue: value
+              ... on IntegerAnswer {
+                integerValue: value
               }
             }
             clientMutationId
@@ -1483,9 +1482,9 @@ def test_document_modified_content_properties(
 
     variables = {
         "input": {
-            "document": to_global_id("StringAnswer", sub_a.document.pk),
-            "question": to_global_id("StringAnswer", sub_a.question.pk),
-            "value": "Test",
+            "document": to_global_id("Document", sub_a.document.pk),
+            "question": to_global_id("IntegerAnswer", sub_a.question.pk),
+            "value": 23,
         }
     }
 
@@ -1493,7 +1492,7 @@ def test_document_modified_content_properties(
     assert not result.errors
 
     sub_a.refresh_from_db()
-    assert sub_a.value == "Test"
+    assert sub_a.value == 23
 
     query = """
         query AllDocumentsQuery($id: ID) {

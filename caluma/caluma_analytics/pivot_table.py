@@ -1,11 +1,12 @@
 from __future__ import annotations  # self-referencing annotations
 
+from collections import defaultdict
 from functools import cached_property
 
 from django.db import connection
 from psycopg2.extras import DictCursor
 
-from . import models, simple_table, sql
+from . import simple_table, sql
 
 FUNCTION_PARAMETER_CAST = {
     "sum": "::float",
@@ -24,22 +25,18 @@ class PivotTable:
 
         context = {}
 
-    def __init__(self, table, info=_AnonymousInfo, is_summary=False):
+    def __init__(self, table, info=_AnonymousInfo):
         self.info = info
 
         self.table = table
         self.last_query = None
         self.last_query_params = None
-        self.base_table = simple_table.SimpleTable(
-            self.table, is_summary=is_summary, info=info
-        )
-        self.is_summary = is_summary
+        self.base_table = simple_table.SimpleTable(self.table, info=info)
+        self._summary = defaultdict(int)
 
     @cached_property
     def _fields(self):
         fields = self.table.fields.all()
-        if self.is_summary:
-            fields = fields.exclude(function=models.AnalyticsField.FUNCTION_VALUE)
 
         return list(fields)
 
@@ -74,10 +71,11 @@ class PivotTable:
             if field.function == field.FUNCTION_VALUE:
                 group_by.append(old_field)
                 new_selects.append((old_field, new_alias))
-            else:
+            elif field.function != field.FUNCTION_VALUE:
                 cast = FUNCTION_PARAMETER_CAST.get(field.function, "")
                 new_selects.append((f"{field.function}({old_field}{cast})", new_alias))
 
+        # TODO: instead of replacing selects, use sub-query
         aggregate_query.select = new_selects
         aggregate_query.group_by = group_by
         aggregate_query.select_direct_only = True
@@ -87,27 +85,34 @@ class PivotTable:
         return sql_query, params
 
     def get_records(self):
+        self._summary = defaultdict(int)
         sql_query, params = self.get_sql_and_params()
 
         with connection.connection.cursor(cursor_factory=DictCursor) as cursor:
             cursor.execute(sql_query, params)
             data = cursor.fetchall()
 
-            return [
-                {
-                    field.alias: field.parse_value(
-                        row[f"analytics_result_{field.alias}"]
-                    )
-                    for field in self.base_table._fields.values()
-                    if field.show_output
-                }
-                for row in data
-            ]
+            result = []
+            for row in data:
+                record = {}
+                for field in self._fields:
+                    field2 = self.base_table._fields[field.alias]
+                    if field.show_output:
+                        value = row[f"analytics_result_{field.alias}"]
+                        self._update_summary(field, value)
+                        record[field.alias] = field2.parse_value(value)
+                result.append(record)
+
+            return result
+
+    def _update_summary(self, field, value):
+        if field.function in [field.FUNCTION_SUM, field.FUNCTION_COUNT]:
+            self._summary[field.alias] += value
 
     def get_summary(self):
-        summary_self = PivotTable(self.table, self.info, is_summary=True)
-        summary = summary_self.get_records()
-        return summary[0]
+        if not self._summary:  # pragma: no cover
+            self.get_records()
+        return self._summary
 
     def _sql_alias(self, user_alias):  # pragma: no cover
         return f"analytics_pivot_{user_alias}"
