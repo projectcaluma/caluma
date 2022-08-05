@@ -507,6 +507,7 @@
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     id: ID
+    ids: [ID]
     documentForm: String
     documentForms: [String]
     hasAnswer: [HasAnswerFilterType]
