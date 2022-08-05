@@ -119,7 +119,7 @@ class Mutation(ClientIDMutation):
     permission_classes = None
 
     @classmethod
-    def __init_subclass_with_meta__(
+    def __init_subclass_with_meta__(  # noqa: C901
         cls,
         lookup_field=None,
         lookup_input_kwarg=None,
@@ -153,6 +153,17 @@ class Mutation(ClientIDMutation):
             lookup_input_kwarg = lookup_field
 
         input_fields = fields_for_serializer(serializer, fields, exclude, is_input=True)
+
+        if hasattr(cls, "Input"):
+            # Allow input type override in case the serializer fields cannot
+            # define exactly what we need
+            input_obj = cls.Input()
+            explicit_inputs = [
+                name for name in dir(input_obj) if not name.startswith("_")
+            ]
+            for name in explicit_inputs:
+                input_type = getattr(input_obj, name)
+                input_fields[name] = input_type
 
         if return_field_name is None:
             model_name = model_class.__name__

@@ -1,5 +1,14 @@
 import faker
-from factory import Faker, LazyAttribute, Maybe, SubFactory, lazy_attribute
+from django.db.models.signals import post_save
+from factory import (
+    Faker,
+    LazyAttribute,
+    Maybe,
+    SubFactory,
+    django,
+    lazy_attribute,
+    post_generation,
+)
 
 from ..caluma_core.factories import DjangoModelFactory
 from . import models
@@ -141,13 +150,6 @@ class DocumentFactory(DjangoModelFactory):
         model = models.Document
 
 
-class FileFactory(DjangoModelFactory):
-    name = Faker("file_name")
-
-    class Meta:
-        model = models.File
-
-
 class AnswerFactory(DjangoModelFactory):
     question = SubFactory(QuestionFactory)
     document = SubFactory(DocumentFactory)
@@ -166,24 +168,42 @@ class AnswerFactory(DjangoModelFactory):
             return faker.Faker().pyint()
         elif self.question.type not in [
             models.Question.TYPE_TABLE,
-            models.Question.TYPE_FILE,
+            models.Question.TYPE_FILES,
             models.Question.TYPE_DATE,
         ]:
             return faker.Faker().name()
 
         return None
 
-    file = Maybe(
-        "is_file", yes_declaration=SubFactory(FileFactory), no_declaration=None
-    )
     date = Maybe("is_date", yes_declaration=Faker("date"), no_declaration=None)
+
+    @post_generation
+    @django.mute_signals(post_save)
+    def files(self, create, extracted, **kwargs):
+        if not create:  # pragma: no cover
+            return
+        if self.question.type == models.Question.TYPE_FILES:
+            if extracted is not None:
+                self.files.set(extracted)
+            else:
+                num_files = kwargs.pop("count", 1)
+                self.files.set(
+                    FileFactory.create_batch(num_files, **kwargs, answer=self)
+                )
 
     class Meta:
         model = models.Answer
 
     class Params:
-        is_file = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_FILE)
         is_date = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_DATE)
+
+
+class FileFactory(DjangoModelFactory):
+    name = Faker("file_name")
+    answer = SubFactory(AnswerFactory)
+
+    class Meta:
+        model = models.File
 
 
 class AnswerDocumentFactory(DjangoModelFactory):

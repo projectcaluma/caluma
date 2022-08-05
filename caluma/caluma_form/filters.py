@@ -504,7 +504,7 @@ class DocumentFilterSet(MetaFilterSet):
             "form__name",
             "form__description",
             "answers__value",
-            "answers__file__name",
+            "answers__files__name",
         )
     )
     root_document = GlobalIDFilter(field_name="family")

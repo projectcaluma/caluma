@@ -93,7 +93,7 @@ class Question(core_models.SlugModel):
     TYPE_TEXT = "text"
     TYPE_TABLE = "table"
     TYPE_FORM = "form"
-    TYPE_FILE = "file"
+    TYPE_FILES = "files"
     TYPE_DYNAMIC_CHOICE = "dynamic_choice"
     TYPE_DYNAMIC_MULTIPLE_CHOICE = "dynamic_multiple_choice"
     TYPE_STATIC = "static"
@@ -110,7 +110,7 @@ class Question(core_models.SlugModel):
         TYPE_TEXT,
         TYPE_TABLE,
         TYPE_FORM,
-        TYPE_FILE,
+        TYPE_FILES,
         TYPE_DYNAMIC_CHOICE,
         TYPE_DYNAMIC_MULTIPLE_CHOICE,
         TYPE_STATIC,
@@ -441,9 +441,6 @@ class Answer(core_models.BaseModel):
         Document, through="AnswerDocument", related_name="+"
     )
     date = models.DateField(null=True, blank=True)
-    file = models.OneToOneField(
-        "File", on_delete=models.SET_NULL, null=True, blank=True
-    )
 
     # override history to add extra fields on historical model
     history = HistoricalRecords(
@@ -455,8 +452,10 @@ class Answer(core_models.BaseModel):
     )
 
     def delete(self, *args, **kwargs):
-        if self.file:
-            self.file.delete()
+        # Files need to be deleted in sequence (not via on_delete)
+        # so the deletion code on the storage is properly triggered
+        for file in self.files.all():
+            file.delete()
         super().delete(args, kwargs)
 
     def create_answer_documents(self, documents):
@@ -500,9 +499,9 @@ class Answer(core_models.BaseModel):
             },
         )
 
-        if self.question.type == Question.TYPE_FILE:
-            new_answer.file = self.file.copy()
-            new_answer.save()
+        if self.question.type == Question.TYPE_FILES:
+            for file in self.files.all():
+                file.copy(to_answer=new_answer)
 
         if self.question.type in [
             Question.TYPE_DYNAMIC_CHOICE,
@@ -606,11 +605,18 @@ def _ignore_missing_file(fn):
 class File(core_models.UUIDModel):
     name = models.CharField(max_length=255)
 
+    answer = models.ForeignKey(
+        Answer, on_delete=models.CASCADE, related_name="files", null=True, default=None
+    )
+
     @_ignore_missing_file
     def _move_blob(self):
         # move the file on update
         # this makes sure it stays available when querying the history
         old_file = self.history.first()
+        if not old_file:  # pragma: no cover
+            # No history - cannot move object to preserve history.
+            return
         new_name = f"{old_file.pk}_{old_file.name}"
         client.move_object(self.object_name, new_name)
 
@@ -618,10 +624,15 @@ class File(core_models.UUIDModel):
     def _copy(self, new_object_name):
         client.copy_object(self.object_name, new_object_name)
 
-    def copy(self):
-        copy = File.objects.create(name=self.name)
+    def copy(self, to_answer):
+        copy = File.objects.create(name=self.name, answer=to_answer or self.answer)
         self._copy(copy.object_name)
         return copy
+
+    def rename(self, new_name):
+        from_object_name = self.object_name
+        self.name = new_name
+        client.move_object(from_object_name, self.object_name)
 
     def delete(self, *args, **kwargs):
         self._move_blob()
