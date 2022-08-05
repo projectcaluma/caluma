@@ -233,9 +233,23 @@ class AttributeField(BaseField):
         return not self.is_date
 
     def is_value(self):
-        return True
+        # meta fields cannot be a value - they *contain* values
+        return self.identifier != "meta"
 
     def supported_functions(self):
+        if not self.is_value:  # pragma: no cover
+            # Non-value fields cannot have functions applied to them.
+            # This mainly applies to "meta" fields in this context
+            return []
+        elif self.identifier == "id":
+            # Identifiers cannot have aggregate functions applied in a
+            # meaningful manner, except counts. Potentially, we *could"
+            # imagine some string functions being useful for slug identifiers,
+            # but we'll keep it simple for now
+            return [
+                models.AnalyticsField.FUNCTION_COUNT.upper(),
+                models.AnalyticsField.FUNCTION_VALUE.upper(),
+            ]
         return [
             models.AnalyticsField.FUNCTION_VALUE.upper(),
             models.AnalyticsField.FUNCTION_MAX.upper(),
