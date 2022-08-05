@@ -11,7 +11,7 @@ def make_reverse_link(apps, schema_editor):
         file_answers = model.objects.filter(question__type="file")
         for ans in file_answers.iterator():
             file = ans.file
-            if file:
+            if file and ans.__class__.__name__ == "Answer":
                 file.answer = ans
                 file.save()
 
