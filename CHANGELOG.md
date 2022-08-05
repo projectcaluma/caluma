@@ -1,3 +1,35 @@
+# v8.0.0-beta.12 (5 August 2022)
+
+### Feature
+* **workflow:** Add ids filter to case
+([`89b70ec`](https://github.com/projectcaluma/caluma/commit/89b70ecf4cc098b8d43d0ddfe87491483f1ab6ae))
+* **form:** Multiple files in file questions
+([`4600ed0`](https://github.com/projectcaluma/caluma/commit/4600ed09bbb3efab6d25308d74384eef8f1a97f1))
+* **core:** Allow input type override
+([`215cdb7`](https://github.com/projectcaluma/caluma/commit/215cdb75f8bff500fcad9f3c58d4593f0b60f4b4))
+* Searchanswers in forms
+([`6a75f17`](https://github.com/projectcaluma/caluma/commit/6a75f17dbc66605a0624fb8b3b3777b30450d513))
+
+### Fix
+* **form:** Fix and test search_answers
+([`371a4f0`](https://github.com/projectcaluma/caluma/commit/371a4f0b019509d06b090908369710aafc2d48b0))
+* **analytics:** Provide more correct supported functions in analytics
+([`2130f34`](https://github.com/projectcaluma/caluma/commit/2130f34b367549cc71eb0977afc25984fc03bab7))
+* **log:** Minio stat errors shouldn't be errors
+([`701bafc`](https://github.com/projectcaluma/caluma/commit/701bafcd1ba0686a06b32c626928eaed0ca6e26b))
+* **workflow:** Remove and fix ordering keys
+([`409e54f`](https://github.com/projectcaluma/caluma/commit/409e54f3719205c07551b038f8de302708165de4))
+* **schema:** Reopen case schema clarification
+([`6153b45`](https://github.com/projectcaluma/caluma/commit/6153b453d92ace28593cb666dc7a399d2a7c9779))
+
+### Breaking
+* This renames the question type constant for file questions, and changes the
+semantics of the answer value for file questions as well: It is now a list of
+dicts instead of a single string. The response type for querying file(s) answers
+now also is a list instead of a single dict.
+([`4600ed0`](https://github.com/winged/caluma/commit/4600ed09bbb3efab6d25308d74384eef8f1a97f1))
+
+
 # v8.0.0-beta.11 (6 July 2022)
 
 ### Feature
