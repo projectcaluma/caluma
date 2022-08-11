@@ -356,8 +356,8 @@ def roll_back_migrations():
     """Roll back database migrations to ensure unapplied migrations exist."""
     # undo applied migrations for app contenttypes
     management.call_command("migrate", "contenttypes", "zero")
-
-    yield
-
-    # re-apply migrations for app contenttypes
-    management.call_command("migrate", "contenttypes")
+    try:
+        yield
+    finally:
+        # re-apply migrations for app contenttypes
+        management.call_command("migrate", "contenttypes")
