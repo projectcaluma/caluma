@@ -60,6 +60,7 @@ def test_run_analytics_gql(
     """
 
     example_analytics.fields.filter(alias="from_the_doc").delete()
+    example_analytics.fields.filter(alias="sub_question_sumsumsum").delete()
 
     if delete_case:
         # Test empty output
@@ -90,6 +91,7 @@ def test_sql_repeatability(
 ):
 
     example_analytics.fields.filter(alias="from_the_doc").delete()
+    example_analytics.fields.filter(alias="sub_question_sumsumsum").delete()
     table = SimpleTable(example_analytics)
 
     sql1, params1 = table.get_sql_and_params()

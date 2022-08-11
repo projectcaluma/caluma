@@ -1,24 +1,24 @@
 # name: test_extract_values[cases-fields0]
   list([
     dict({
-      'sub_question': 'Douglas Jackson',
+      'sub_question': '7504',
       'top_question': 'Amanda Valentine',
     }),
     dict({
-      'sub_question': 'Kimberly Long',
-      'top_question': 'George Johnson',
+      'sub_question': '1403',
+      'top_question': 'Eddie Henderson',
     }),
     dict({
-      'sub_question': 'Rebecca Zimmerman',
+      'sub_question': '438',
       'top_question': 'Joan Rodriguez',
     }),
     dict({
-      'sub_question': 'John Obrien',
+      'sub_question': '1364',
       'top_question': 'Kelly Brock',
     }),
     dict({
-      'sub_question': None,
-      'top_question': None,
+      'sub_question': '3290',
+      'top_question': 'Kenneth Bradford',
     }),
     dict({
       'sub_question': None,
@@ -37,8 +37,8 @@
       'top_question': None,
     }),
     dict({
-      'sub_question': 'David Poole',
-      'top_question': 'Shane Maldonado',
+      'sub_question': None,
+      'top_question': None,
     }),
   ])
 # ---
@@ -47,57 +47,57 @@
     dict({
       'form_id': 'top_form',
       'month': 2,
-      'sub_question': 'David Poole',
+      'sub_question': '1364',
     }),
     dict({
       'form_id': 'top_form',
       'month': 2,
-      'sub_question': 'David Poole',
+      'sub_question': '1364',
     }),
     dict({
       'form_id': 'top_form',
       'month': 2,
-      'sub_question': 'Douglas Jackson',
+      'sub_question': '1403',
     }),
     dict({
       'form_id': 'top_form',
       'month': 2,
-      'sub_question': 'Douglas Jackson',
+      'sub_question': '1403',
     }),
     dict({
       'form_id': 'top_form',
       'month': 2,
-      'sub_question': 'John Obrien',
+      'sub_question': '3290',
     }),
     dict({
       'form_id': 'top_form',
       'month': 2,
-      'sub_question': 'John Obrien',
+      'sub_question': '3290',
     }),
     dict({
       'form_id': 'top_form',
       'month': 2,
-      'sub_question': 'Kimberly Long',
+      'sub_question': '438',
     }),
     dict({
       'form_id': 'top_form',
       'month': 2,
-      'sub_question': 'Kimberly Long',
+      'sub_question': '438',
+    }),
+    dict({
+      'form_id': 'top_form',
+      'month': 2,
+      'sub_question': '7504',
+    }),
+    dict({
+      'form_id': 'top_form',
+      'month': 2,
+      'sub_question': '7504',
     }),
     dict({
       'form_id': 'top_form',
       'month': 4,
-      'sub_question': 'Kimberly Martin',
-    }),
-    dict({
-      'form_id': 'top_form',
-      'month': 2,
-      'sub_question': 'Rebecca Zimmerman',
-    }),
-    dict({
-      'form_id': 'top_form',
-      'month': 2,
-      'sub_question': 'Rebecca Zimmerman',
+      'sub_question': '8805',
     }),
   ])
 # ---
@@ -105,53 +105,53 @@
   list([
     dict({
       'closed_at': None,
-      'sub_question': 'Douglas Jackson',
+      'sub_question': '7504',
       'top_question': 'Amanda Valentine',
     }),
     dict({
       'closed_at': None,
-      'sub_question': 'Douglas Jackson',
+      'sub_question': '7504',
       'top_question': 'Amanda Valentine',
     }),
     dict({
       'closed_at': None,
-      'sub_question': 'Kimberly Long',
-      'top_question': 'George Johnson',
+      'sub_question': '1403',
+      'top_question': 'Eddie Henderson',
     }),
     dict({
       'closed_at': None,
-      'sub_question': 'Kimberly Long',
-      'top_question': 'George Johnson',
+      'sub_question': '1403',
+      'top_question': 'Eddie Henderson',
     }),
     dict({
       'closed_at': None,
-      'sub_question': 'Rebecca Zimmerman',
+      'sub_question': '438',
       'top_question': 'Joan Rodriguez',
     }),
     dict({
       'closed_at': None,
-      'sub_question': 'Rebecca Zimmerman',
+      'sub_question': '438',
       'top_question': 'Joan Rodriguez',
     }),
     dict({
       'closed_at': None,
-      'sub_question': 'John Obrien',
+      'sub_question': '1364',
       'top_question': 'Kelly Brock',
     }),
     dict({
       'closed_at': None,
-      'sub_question': 'John Obrien',
+      'sub_question': '1364',
       'top_question': 'Kelly Brock',
     }),
     dict({
       'closed_at': None,
-      'sub_question': 'David Poole',
-      'top_question': 'Shane Maldonado',
+      'sub_question': '3290',
+      'top_question': 'Kenneth Bradford',
     }),
     dict({
       'closed_at': None,
-      'sub_question': 'David Poole',
-      'top_question': 'Shane Maldonado',
+      'sub_question': '3290',
+      'top_question': 'Kenneth Bradford',
     }),
   ])
 # ---
@@ -164,6 +164,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'closed_at.month': dict({
@@ -221,6 +222,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'created_at.month': dict({
@@ -277,28 +279,68 @@
       'supported_functions': list([
       ]),
     }),
+    'document[admit-east-floor].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'document[close-employee]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'document[close-employee].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'document[either-nearly-top]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'document[go-southern-keep]': dict({
+    'document[either-nearly-top].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'document[imagine-new]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'document[option-across-model]': dict({
+    'document[imagine-new].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'document[together-seem-very]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'document[project-for-number]': dict({
-      'is_leaf': False,
-      'is_value': False,
+    'document[together-seem-very].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
       'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'document[top_form]': dict({
@@ -313,6 +355,14 @@
       'supported_functions': list([
       ]),
     }),
+    'document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -321,6 +371,16 @@
         'COUNT',
         'MAX',
         'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'document[top_form].top_question': dict({
@@ -384,24 +444,26 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[appear-hotel-day,first]': dict({
+    'workitem[bring-special,first]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[appear-hotel-day,first].closed_at': dict({
+    'workitem[bring-special,first].closed_at': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[appear-hotel-day,first].closed_at.month': dict({
+    'workitem[bring-special,first].closed_at.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -413,7 +475,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,first].closed_at.quarter': dict({
+    'workitem[bring-special,first].closed_at.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -425,7 +487,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,first].closed_at.weekday': dict({
+    'workitem[bring-special,first].closed_at.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -437,7 +499,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,first].closed_at.year': dict({
+    'workitem[bring-special,first].closed_at.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -449,16 +511,17 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,first].created_at': dict({
+    'workitem[bring-special,first].created_at': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[appear-hotel-day,first].created_at.month': dict({
+    'workitem[bring-special,first].created_at.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -470,7 +533,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,first].created_at.quarter': dict({
+    'workitem[bring-special,first].created_at.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -482,7 +545,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,first].created_at.weekday': dict({
+    'workitem[bring-special,first].created_at.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -494,7 +557,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,first].created_at.year': dict({
+    'workitem[bring-special,first].created_at.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -506,16 +569,17 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,first].deadline': dict({
+    'workitem[bring-special,first].deadline': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[appear-hotel-day,first].deadline.month': dict({
+    'workitem[bring-special,first].deadline.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -527,7 +591,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,first].deadline.quarter': dict({
+    'workitem[bring-special,first].deadline.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -539,7 +603,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,first].deadline.weekday': dict({
+    'workitem[bring-special,first].deadline.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -551,7 +615,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,first].deadline.year': dict({
+    'workitem[bring-special,first].deadline.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -563,282 +627,47 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,first].document[top_form]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[appear-hotel-day,first].document[top_form].form': dict({
+    'workitem[bring-special,first].document[top_form]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[appear-hotel-day,first].document[top_form].form.sub_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,first].document[top_form].top_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,first].meta': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,first].meta.foobar': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,first].meta.test-key': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,first].name': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,first].status': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed]': dict({
+    'workitem[bring-special,first].document[top_form].form': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[appear-hotel-day,firstclosed].closed_at': dict({
-      'is_leaf': False,
+    'workitem[bring-special,first].document[top_form].form.form_id': dict({
+      'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
+        'COUNT',
         'VALUE',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,firstclosed].closed_at.month': dict({
+    'workitem[bring-special,first].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
-        'SUM',
         'COUNT',
+        'MAX',
+        'MIN',
         'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].closed_at.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
         'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,firstclosed].closed_at.weekday': dict({
+    'workitem[bring-special,first].document[top_form].form_id': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
-        'VALUE',
-        'SUM',
         'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].closed_at.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
         'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,firstclosed].created_at': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].created_at.month': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].created_at.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].created_at.weekday': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].created_at.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].deadline': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].deadline.month': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].deadline.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].deadline.weekday': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].deadline.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].document[top_form]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].document[top_form].form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].document[top_form].form.sub_question': dict({
+    'workitem[bring-special,first].document[top_form].top_question': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -848,17 +677,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,firstclosed].document[top_form].top_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,firstclosed].meta': dict({
+    'workitem[bring-special,first].meta': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
@@ -870,7 +689,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,firstclosed].meta.foobar': dict({
+    'workitem[bring-special,first].meta.foobar': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -882,7 +701,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,firstclosed].meta.test-key': dict({
+    'workitem[bring-special,first].meta.test-key': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -894,40 +713,43 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,firstclosed].name': dict({
+    'workitem[bring-special,first].name': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[appear-hotel-day,firstclosed].status': dict({
+    'workitem[bring-special,first].status': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[appear-hotel-day,last]': dict({
+    'workitem[bring-special,firstclosed]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[appear-hotel-day,last].closed_at': dict({
+    'workitem[bring-special,firstclosed].closed_at': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[appear-hotel-day,last].closed_at.month': dict({
+    'workitem[bring-special,firstclosed].closed_at.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -939,7 +761,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,last].closed_at.quarter': dict({
+    'workitem[bring-special,firstclosed].closed_at.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -951,7 +773,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,last].closed_at.weekday': dict({
+    'workitem[bring-special,firstclosed].closed_at.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -963,7 +785,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,last].closed_at.year': dict({
+    'workitem[bring-special,firstclosed].closed_at.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -975,16 +797,17 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,last].created_at': dict({
+    'workitem[bring-special,firstclosed].created_at': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[appear-hotel-day,last].created_at.month': dict({
+    'workitem[bring-special,firstclosed].created_at.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -996,7 +819,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,last].created_at.quarter': dict({
+    'workitem[bring-special,firstclosed].created_at.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -1008,7 +831,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,last].created_at.weekday': dict({
+    'workitem[bring-special,firstclosed].created_at.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -1020,7 +843,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,last].created_at.year': dict({
+    'workitem[bring-special,firstclosed].created_at.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -1032,16 +855,17 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,last].deadline': dict({
+    'workitem[bring-special,firstclosed].deadline': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[appear-hotel-day,last].deadline.month': dict({
+    'workitem[bring-special,firstclosed].deadline.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -1053,7 +877,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,last].deadline.quarter': dict({
+    'workitem[bring-special,firstclosed].deadline.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -1065,7 +889,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,last].deadline.weekday': dict({
+    'workitem[bring-special,firstclosed].deadline.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -1077,7 +901,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,last].deadline.year': dict({
+    'workitem[bring-special,firstclosed].deadline.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -1089,282 +913,47 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,last].document[top_form]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[appear-hotel-day,last].document[top_form].form': dict({
+    'workitem[bring-special,firstclosed].document[top_form]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[appear-hotel-day,last].document[top_form].form.sub_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,last].document[top_form].top_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,last].meta': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,last].meta.foobar': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,last].meta.test-key': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,last].name': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,last].status': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed]': dict({
+    'workitem[bring-special,firstclosed].document[top_form].form': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[appear-hotel-day,lastclosed].closed_at': dict({
-      'is_leaf': False,
+    'workitem[bring-special,firstclosed].document[top_form].form.form_id': dict({
+      'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
+        'COUNT',
         'VALUE',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,lastclosed].closed_at.month': dict({
+    'workitem[bring-special,firstclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
-        'SUM',
         'COUNT',
+        'MAX',
+        'MIN',
         'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].closed_at.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
         'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,lastclosed].closed_at.weekday': dict({
+    'workitem[bring-special,firstclosed].document[top_form].form_id': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
-        'VALUE',
-        'SUM',
         'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].closed_at.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
         'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,lastclosed].created_at': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].created_at.month': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].created_at.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].created_at.weekday': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].created_at.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].deadline': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].deadline.month': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].deadline.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].deadline.weekday': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].deadline.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].document[top_form]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].document[top_form].form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].document[top_form].form.sub_question': dict({
+    'workitem[bring-special,firstclosed].document[top_form].top_question': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -1374,17 +963,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,lastclosed].document[top_form].top_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[appear-hotel-day,lastclosed].meta': dict({
+    'workitem[bring-special,firstclosed].meta': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
@@ -1396,7 +975,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,lastclosed].meta.foobar': dict({
+    'workitem[bring-special,firstclosed].meta.foobar': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -1408,7 +987,7 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,lastclosed].meta.test-key': dict({
+    'workitem[bring-special,firstclosed].meta.test-key': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -1420,22 +999,596 @@
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,lastclosed].name': dict({
+    'workitem[bring-special,firstclosed].name': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[bring-special,firstclosed].status': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[bring-special,last]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[bring-special,last].closed_at': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[bring-special,last].closed_at.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
         'MAX',
         'MIN',
       ]),
     }),
-    'workitem[appear-hotel-day,lastclosed].status': dict({
+    'workitem[bring-special,last].closed_at.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].closed_at.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].closed_at.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].created_at': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[bring-special,last].created_at.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].created_at.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].created_at.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].created_at.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].deadline': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[bring-special,last].deadline.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].deadline.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].deadline.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].deadline.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].document[top_form]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[bring-special,last].document[top_form].form': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[bring-special,last].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'workitem[bring-special,last].document[top_form].form.sub_question': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'COUNT',
+        'MAX',
+        'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[bring-special,last].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'workitem[bring-special,last].document[top_form].top_question': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'COUNT',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].meta': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].meta.foobar': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].meta.test-key': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,last].name': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[bring-special,last].status': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].closed_at': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].closed_at.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].closed_at.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].closed_at.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].closed_at.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].created_at': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].created_at.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].created_at.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].created_at.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].created_at.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].deadline': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].deadline.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].deadline.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].deadline.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].deadline.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].document[top_form]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].document[top_form].form': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].document[top_form].form.sub_question': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'COUNT',
+        'MAX',
+        'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].document[top_form].top_question': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'COUNT',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].meta': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].meta.foobar': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].meta.test-key': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].name': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[bring-special,lastclosed].status': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,first]': dict({
@@ -1451,6 +1604,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,first].closed_at.month': dict({
@@ -1508,6 +1662,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,first].created_at.month': dict({
@@ -1565,6 +1720,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,first].deadline.month': dict({
@@ -1627,6 +1783,14 @@
       'supported_functions': list([
       ]),
     }),
+    'workitem[detail-us-through,first].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'workitem[detail-us-through,first].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -1635,6 +1799,16 @@
         'COUNT',
         'MAX',
         'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[detail-us-through,first].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'workitem[detail-us-through,first].document[top_form].top_question': dict({
@@ -1690,6 +1864,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,first].status': dict({
@@ -1699,6 +1874,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,firstclosed]': dict({
@@ -1714,6 +1890,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,firstclosed].closed_at.month': dict({
@@ -1771,6 +1948,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,firstclosed].created_at.month': dict({
@@ -1828,6 +2006,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,firstclosed].deadline.month': dict({
@@ -1890,6 +2069,14 @@
       'supported_functions': list([
       ]),
     }),
+    'workitem[detail-us-through,firstclosed].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'workitem[detail-us-through,firstclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -1898,6 +2085,16 @@
         'COUNT',
         'MAX',
         'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[detail-us-through,firstclosed].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'workitem[detail-us-through,firstclosed].document[top_form].top_question': dict({
@@ -1953,6 +2150,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,firstclosed].status': dict({
@@ -1962,6 +2160,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,last]': dict({
@@ -1977,6 +2176,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,last].closed_at.month': dict({
@@ -2034,6 +2234,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,last].created_at.month': dict({
@@ -2091,6 +2292,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,last].deadline.month': dict({
@@ -2153,6 +2355,14 @@
       'supported_functions': list([
       ]),
     }),
+    'workitem[detail-us-through,last].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'workitem[detail-us-through,last].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -2161,6 +2371,16 @@
         'COUNT',
         'MAX',
         'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[detail-us-through,last].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'workitem[detail-us-through,last].document[top_form].top_question': dict({
@@ -2216,6 +2436,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,last].status': dict({
@@ -2225,6 +2446,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,lastclosed]': dict({
@@ -2240,6 +2462,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,lastclosed].closed_at.month': dict({
@@ -2297,6 +2520,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,lastclosed].created_at.month': dict({
@@ -2354,6 +2578,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,lastclosed].deadline.month': dict({
@@ -2416,6 +2641,14 @@
       'supported_functions': list([
       ]),
     }),
+    'workitem[detail-us-through,lastclosed].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'workitem[detail-us-through,lastclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -2424,6 +2657,16 @@
         'COUNT',
         'MAX',
         'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[detail-us-through,lastclosed].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'workitem[detail-us-through,lastclosed].document[top_form].top_question': dict({
@@ -2479,6 +2722,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,lastclosed].status': dict({
@@ -2488,6 +2732,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,first]': dict({
@@ -2503,6 +2748,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,first].closed_at.month': dict({
@@ -2560,6 +2806,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,first].created_at.month': dict({
@@ -2617,6 +2864,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,first].deadline.month': dict({
@@ -2679,6 +2927,14 @@
       'supported_functions': list([
       ]),
     }),
+    'workitem[matter-good-degree,first].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'workitem[matter-good-degree,first].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -2687,6 +2943,16 @@
         'COUNT',
         'MAX',
         'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[matter-good-degree,first].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'workitem[matter-good-degree,first].document[top_form].top_question': dict({
@@ -2742,6 +3008,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,first].status': dict({
@@ -2751,6 +3018,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,firstclosed]': dict({
@@ -2766,6 +3034,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,firstclosed].closed_at.month': dict({
@@ -2823,6 +3092,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,firstclosed].created_at.month': dict({
@@ -2880,6 +3150,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,firstclosed].deadline.month': dict({
@@ -2942,6 +3213,14 @@
       'supported_functions': list([
       ]),
     }),
+    'workitem[matter-good-degree,firstclosed].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'workitem[matter-good-degree,firstclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -2950,6 +3229,16 @@
         'COUNT',
         'MAX',
         'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[matter-good-degree,firstclosed].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'workitem[matter-good-degree,firstclosed].document[top_form].top_question': dict({
@@ -3005,6 +3294,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,firstclosed].status': dict({
@@ -3014,6 +3304,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,last]': dict({
@@ -3029,6 +3320,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,last].closed_at.month': dict({
@@ -3086,6 +3378,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,last].created_at.month': dict({
@@ -3143,6 +3436,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,last].deadline.month': dict({
@@ -3205,6 +3499,14 @@
       'supported_functions': list([
       ]),
     }),
+    'workitem[matter-good-degree,last].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'workitem[matter-good-degree,last].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -3213,6 +3515,16 @@
         'COUNT',
         'MAX',
         'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[matter-good-degree,last].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'workitem[matter-good-degree,last].document[top_form].top_question': dict({
@@ -3268,6 +3580,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,last].status': dict({
@@ -3277,6 +3590,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,lastclosed]': dict({
@@ -3292,6 +3606,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,lastclosed].closed_at.month': dict({
@@ -3349,6 +3664,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,lastclosed].created_at.month': dict({
@@ -3406,6 +3722,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,lastclosed].deadline.month': dict({
@@ -3468,6 +3785,14 @@
       'supported_functions': list([
       ]),
     }),
+    'workitem[matter-good-degree,lastclosed].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'workitem[matter-good-degree,lastclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -3476,6 +3801,16 @@
         'COUNT',
         'MAX',
         'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[matter-good-degree,lastclosed].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'workitem[matter-good-degree,lastclosed].document[top_form].top_question': dict({
@@ -3531,6 +3866,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,lastclosed].status': dict({
@@ -3540,24 +3876,26 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[positive-rock,first]': dict({
+    'workitem[out-hard-south-risk,first]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[positive-rock,first].closed_at': dict({
+    'workitem[out-hard-south-risk,first].closed_at': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[positive-rock,first].closed_at.month': dict({
+    'workitem[out-hard-south-risk,first].closed_at.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -3569,7 +3907,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,first].closed_at.quarter': dict({
+    'workitem[out-hard-south-risk,first].closed_at.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -3581,7 +3919,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,first].closed_at.weekday': dict({
+    'workitem[out-hard-south-risk,first].closed_at.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -3593,7 +3931,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,first].closed_at.year': dict({
+    'workitem[out-hard-south-risk,first].closed_at.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -3605,16 +3943,17 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,first].created_at': dict({
+    'workitem[out-hard-south-risk,first].created_at': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[positive-rock,first].created_at.month': dict({
+    'workitem[out-hard-south-risk,first].created_at.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -3626,7 +3965,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,first].created_at.quarter': dict({
+    'workitem[out-hard-south-risk,first].created_at.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -3638,7 +3977,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,first].created_at.weekday': dict({
+    'workitem[out-hard-south-risk,first].created_at.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -3650,7 +3989,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,first].created_at.year': dict({
+    'workitem[out-hard-south-risk,first].created_at.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -3662,16 +4001,17 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,first].deadline': dict({
+    'workitem[out-hard-south-risk,first].deadline': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[positive-rock,first].deadline.month': dict({
+    'workitem[out-hard-south-risk,first].deadline.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -3683,7 +4023,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,first].deadline.quarter': dict({
+    'workitem[out-hard-south-risk,first].deadline.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -3695,7 +4035,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,first].deadline.weekday': dict({
+    'workitem[out-hard-south-risk,first].deadline.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -3707,7 +4047,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,first].deadline.year': dict({
+    'workitem[out-hard-south-risk,first].deadline.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -3719,282 +4059,47 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,first].document[top_form]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[positive-rock,first].document[top_form].form': dict({
+    'workitem[out-hard-south-risk,first].document[top_form]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[positive-rock,first].document[top_form].form.sub_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,first].document[top_form].top_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,first].meta': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,first].meta.foobar': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,first].meta.test-key': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,first].name': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,first].status': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed]': dict({
+    'workitem[out-hard-south-risk,first].document[top_form].form': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[positive-rock,firstclosed].closed_at': dict({
-      'is_leaf': False,
+    'workitem[out-hard-south-risk,first].document[top_form].form.form_id': dict({
+      'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
+        'COUNT',
         'VALUE',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[positive-rock,firstclosed].closed_at.month': dict({
+    'workitem[out-hard-south-risk,first].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
-        'SUM',
         'COUNT',
+        'MAX',
+        'MIN',
         'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].closed_at.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
         'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[positive-rock,firstclosed].closed_at.weekday': dict({
+    'workitem[out-hard-south-risk,first].document[top_form].form_id': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
-        'VALUE',
-        'SUM',
         'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].closed_at.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
         'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[positive-rock,firstclosed].created_at': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].created_at.month': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].created_at.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].created_at.weekday': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].created_at.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].deadline': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].deadline.month': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].deadline.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].deadline.weekday': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].deadline.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].document[top_form]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].document[top_form].form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].document[top_form].form.sub_question': dict({
+    'workitem[out-hard-south-risk,first].document[top_form].top_question': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4004,17 +4109,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,firstclosed].document[top_form].top_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,firstclosed].meta': dict({
+    'workitem[out-hard-south-risk,first].meta': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
@@ -4026,7 +4121,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,firstclosed].meta.foobar': dict({
+    'workitem[out-hard-south-risk,first].meta.foobar': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4038,7 +4133,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,firstclosed].meta.test-key': dict({
+    'workitem[out-hard-south-risk,first].meta.test-key': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4050,40 +4145,43 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,firstclosed].name': dict({
+    'workitem[out-hard-south-risk,first].name': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[positive-rock,firstclosed].status': dict({
+    'workitem[out-hard-south-risk,first].status': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[positive-rock,last]': dict({
+    'workitem[out-hard-south-risk,firstclosed]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[positive-rock,last].closed_at': dict({
+    'workitem[out-hard-south-risk,firstclosed].closed_at': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[positive-rock,last].closed_at.month': dict({
+    'workitem[out-hard-south-risk,firstclosed].closed_at.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4095,7 +4193,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,last].closed_at.quarter': dict({
+    'workitem[out-hard-south-risk,firstclosed].closed_at.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4107,7 +4205,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,last].closed_at.weekday': dict({
+    'workitem[out-hard-south-risk,firstclosed].closed_at.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4119,7 +4217,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,last].closed_at.year': dict({
+    'workitem[out-hard-south-risk,firstclosed].closed_at.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4131,16 +4229,17 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,last].created_at': dict({
+    'workitem[out-hard-south-risk,firstclosed].created_at': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[positive-rock,last].created_at.month': dict({
+    'workitem[out-hard-south-risk,firstclosed].created_at.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4152,7 +4251,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,last].created_at.quarter': dict({
+    'workitem[out-hard-south-risk,firstclosed].created_at.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4164,7 +4263,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,last].created_at.weekday': dict({
+    'workitem[out-hard-south-risk,firstclosed].created_at.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4176,7 +4275,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,last].created_at.year': dict({
+    'workitem[out-hard-south-risk,firstclosed].created_at.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4188,16 +4287,17 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,last].deadline': dict({
+    'workitem[out-hard-south-risk,firstclosed].deadline': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[positive-rock,last].deadline.month': dict({
+    'workitem[out-hard-south-risk,firstclosed].deadline.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4209,7 +4309,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,last].deadline.quarter': dict({
+    'workitem[out-hard-south-risk,firstclosed].deadline.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4221,7 +4321,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,last].deadline.weekday': dict({
+    'workitem[out-hard-south-risk,firstclosed].deadline.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4233,7 +4333,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,last].deadline.year': dict({
+    'workitem[out-hard-south-risk,firstclosed].deadline.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4245,282 +4345,47 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,last].document[top_form]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[positive-rock,last].document[top_form].form': dict({
+    'workitem[out-hard-south-risk,firstclosed].document[top_form]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[positive-rock,last].document[top_form].form.sub_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,last].document[top_form].top_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,last].meta': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,last].meta.foobar': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,last].meta.test-key': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,last].name': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,last].status': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed]': dict({
+    'workitem[out-hard-south-risk,firstclosed].document[top_form].form': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[positive-rock,lastclosed].closed_at': dict({
-      'is_leaf': False,
+    'workitem[out-hard-south-risk,firstclosed].document[top_form].form.form_id': dict({
+      'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
+        'COUNT',
         'VALUE',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[positive-rock,lastclosed].closed_at.month': dict({
+    'workitem[out-hard-south-risk,firstclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
-        'SUM',
         'COUNT',
+        'MAX',
+        'MIN',
         'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].closed_at.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
         'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[positive-rock,lastclosed].closed_at.weekday': dict({
+    'workitem[out-hard-south-risk,firstclosed].document[top_form].form_id': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
-        'VALUE',
-        'SUM',
         'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].closed_at.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
         'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[positive-rock,lastclosed].created_at': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].created_at.month': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].created_at.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].created_at.weekday': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].created_at.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].deadline': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].deadline.month': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].deadline.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].deadline.weekday': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].deadline.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].document[top_form]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].document[top_form].form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].document[top_form].form.sub_question': dict({
+    'workitem[out-hard-south-risk,firstclosed].document[top_form].top_question': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4530,17 +4395,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,lastclosed].document[top_form].top_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[positive-rock,lastclosed].meta': dict({
+    'workitem[out-hard-south-risk,firstclosed].meta': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
@@ -4552,7 +4407,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,lastclosed].meta.foobar': dict({
+    'workitem[out-hard-south-risk,firstclosed].meta.foobar': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4564,7 +4419,7 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,lastclosed].meta.test-key': dict({
+    'workitem[out-hard-south-risk,firstclosed].meta.test-key': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4576,40 +4431,43 @@
         'MIN',
       ]),
     }),
-    'workitem[positive-rock,lastclosed].name': dict({
+    'workitem[out-hard-south-risk,firstclosed].name': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[positive-rock,lastclosed].status': dict({
+    'workitem[out-hard-south-risk,firstclosed].status': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[should-his-month,first]': dict({
+    'workitem[out-hard-south-risk,last]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[should-his-month,first].closed_at': dict({
+    'workitem[out-hard-south-risk,last].closed_at': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[should-his-month,first].closed_at.month': dict({
+    'workitem[out-hard-south-risk,last].closed_at.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4621,7 +4479,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,first].closed_at.quarter': dict({
+    'workitem[out-hard-south-risk,last].closed_at.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4633,7 +4491,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,first].closed_at.weekday': dict({
+    'workitem[out-hard-south-risk,last].closed_at.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4645,7 +4503,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,first].closed_at.year': dict({
+    'workitem[out-hard-south-risk,last].closed_at.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4657,16 +4515,17 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,first].created_at': dict({
+    'workitem[out-hard-south-risk,last].created_at': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[should-his-month,first].created_at.month': dict({
+    'workitem[out-hard-south-risk,last].created_at.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4678,7 +4537,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,first].created_at.quarter': dict({
+    'workitem[out-hard-south-risk,last].created_at.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4690,7 +4549,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,first].created_at.weekday': dict({
+    'workitem[out-hard-south-risk,last].created_at.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4702,7 +4561,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,first].created_at.year': dict({
+    'workitem[out-hard-south-risk,last].created_at.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4714,16 +4573,17 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,first].deadline': dict({
+    'workitem[out-hard-south-risk,last].deadline': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[should-his-month,first].deadline.month': dict({
+    'workitem[out-hard-south-risk,last].deadline.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4735,7 +4595,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,first].deadline.quarter': dict({
+    'workitem[out-hard-south-risk,last].deadline.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4747,7 +4607,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,first].deadline.weekday': dict({
+    'workitem[out-hard-south-risk,last].deadline.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4759,7 +4619,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,first].deadline.year': dict({
+    'workitem[out-hard-south-risk,last].deadline.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -4771,282 +4631,47 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,first].document[top_form]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[should-his-month,first].document[top_form].form': dict({
+    'workitem[out-hard-south-risk,last].document[top_form]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[should-his-month,first].document[top_form].form.sub_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,first].document[top_form].top_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,first].meta': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,first].meta.foobar': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,first].meta.test-key': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,first].name': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,first].status': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed]': dict({
+    'workitem[out-hard-south-risk,last].document[top_form].form': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[should-his-month,firstclosed].closed_at': dict({
-      'is_leaf': False,
+    'workitem[out-hard-south-risk,last].document[top_form].form.form_id': dict({
+      'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
+        'COUNT',
         'VALUE',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[should-his-month,firstclosed].closed_at.month': dict({
+    'workitem[out-hard-south-risk,last].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
-        'SUM',
         'COUNT',
+        'MAX',
+        'MIN',
         'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].closed_at.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
         'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[should-his-month,firstclosed].closed_at.weekday': dict({
+    'workitem[out-hard-south-risk,last].document[top_form].form_id': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
-        'VALUE',
-        'SUM',
         'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].closed_at.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
         'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[should-his-month,firstclosed].created_at': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].created_at.month': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].created_at.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].created_at.weekday': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].created_at.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].deadline': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].deadline.month': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].deadline.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].deadline.weekday': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].deadline.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].document[top_form]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].document[top_form].form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].document[top_form].form.sub_question': dict({
+    'workitem[out-hard-south-risk,last].document[top_form].top_question': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5056,17 +4681,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,firstclosed].document[top_form].top_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,firstclosed].meta': dict({
+    'workitem[out-hard-south-risk,last].meta': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
@@ -5078,7 +4693,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,firstclosed].meta.foobar': dict({
+    'workitem[out-hard-south-risk,last].meta.foobar': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5090,7 +4705,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,firstclosed].meta.test-key': dict({
+    'workitem[out-hard-south-risk,last].meta.test-key': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5102,40 +4717,43 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,firstclosed].name': dict({
+    'workitem[out-hard-south-risk,last].name': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[should-his-month,firstclosed].status': dict({
+    'workitem[out-hard-south-risk,last].status': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[should-his-month,last]': dict({
+    'workitem[out-hard-south-risk,lastclosed]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[should-his-month,last].closed_at': dict({
+    'workitem[out-hard-south-risk,lastclosed].closed_at': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[should-his-month,last].closed_at.month': dict({
+    'workitem[out-hard-south-risk,lastclosed].closed_at.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5147,7 +4765,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,last].closed_at.quarter': dict({
+    'workitem[out-hard-south-risk,lastclosed].closed_at.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5159,7 +4777,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,last].closed_at.weekday': dict({
+    'workitem[out-hard-south-risk,lastclosed].closed_at.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5171,7 +4789,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,last].closed_at.year': dict({
+    'workitem[out-hard-south-risk,lastclosed].closed_at.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5183,16 +4801,17 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,last].created_at': dict({
+    'workitem[out-hard-south-risk,lastclosed].created_at': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[should-his-month,last].created_at.month': dict({
+    'workitem[out-hard-south-risk,lastclosed].created_at.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5204,7 +4823,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,last].created_at.quarter': dict({
+    'workitem[out-hard-south-risk,lastclosed].created_at.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5216,7 +4835,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,last].created_at.weekday': dict({
+    'workitem[out-hard-south-risk,lastclosed].created_at.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5228,7 +4847,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,last].created_at.year': dict({
+    'workitem[out-hard-south-risk,lastclosed].created_at.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5240,16 +4859,17 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,last].deadline': dict({
+    'workitem[out-hard-south-risk,lastclosed].deadline': dict({
       'is_leaf': False,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
-    'workitem[should-his-month,last].deadline.month': dict({
+    'workitem[out-hard-south-risk,lastclosed].deadline.month': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5261,7 +4881,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,last].deadline.quarter': dict({
+    'workitem[out-hard-south-risk,lastclosed].deadline.quarter': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5273,7 +4893,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,last].deadline.weekday': dict({
+    'workitem[out-hard-south-risk,lastclosed].deadline.weekday': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5285,7 +4905,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,last].deadline.year': dict({
+    'workitem[out-hard-south-risk,lastclosed].deadline.year': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5297,282 +4917,47 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,last].document[top_form]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[should-his-month,last].document[top_form].form': dict({
+    'workitem[out-hard-south-risk,lastclosed].document[top_form]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[should-his-month,last].document[top_form].form.sub_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,last].document[top_form].top_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,last].meta': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,last].meta.foobar': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,last].meta.test-key': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,last].name': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,last].status': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed]': dict({
+    'workitem[out-hard-south-risk,lastclosed].document[top_form].form': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'workitem[should-his-month,lastclosed].closed_at': dict({
-      'is_leaf': False,
+    'workitem[out-hard-south-risk,lastclosed].document[top_form].form.form_id': dict({
+      'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
+        'COUNT',
         'VALUE',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[should-his-month,lastclosed].closed_at.month': dict({
+    'workitem[out-hard-south-risk,lastclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
-        'SUM',
         'COUNT',
+        'MAX',
+        'MIN',
         'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].closed_at.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
         'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[should-his-month,lastclosed].closed_at.weekday': dict({
+    'workitem[out-hard-south-risk,lastclosed].document[top_form].form_id': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
-        'VALUE',
-        'SUM',
         'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].closed_at.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
         'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
       ]),
     }),
-    'workitem[should-his-month,lastclosed].created_at': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].created_at.month': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].created_at.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].created_at.weekday': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].created_at.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].deadline': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].deadline.month': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].deadline.quarter': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].deadline.weekday': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].deadline.year': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'SUM',
-        'COUNT',
-        'AVG',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].document[top_form]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].document[top_form].form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].document[top_form].form.sub_question': dict({
+    'workitem[out-hard-south-risk,lastclosed].document[top_form].top_question': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5582,17 +4967,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,lastclosed].document[top_form].top_question': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'COUNT',
-        'MAX',
-        'MIN',
-      ]),
-    }),
-    'workitem[should-his-month,lastclosed].meta': dict({
+    'workitem[out-hard-south-risk,lastclosed].meta': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
@@ -5604,7 +4979,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,lastclosed].meta.foobar': dict({
+    'workitem[out-hard-south-risk,lastclosed].meta.foobar': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5616,7 +4991,7 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,lastclosed].meta.test-key': dict({
+    'workitem[out-hard-south-risk,lastclosed].meta.test-key': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
@@ -5628,22 +5003,1168 @@
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,lastclosed].name': dict({
+    'workitem[out-hard-south-risk,lastclosed].name': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[out-hard-south-risk,lastclosed].status': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].closed_at': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].closed_at.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
         'MAX',
         'MIN',
       ]),
     }),
-    'workitem[should-his-month,lastclosed].status': dict({
+    'workitem[seem-yet-serve,first].closed_at.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].closed_at.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].closed_at.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].created_at': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].created_at.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].created_at.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].created_at.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].created_at.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].deadline': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].deadline.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].deadline.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].deadline.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].deadline.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].document[top_form]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].document[top_form].form': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].document[top_form].form.sub_question': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'COUNT',
+        'MAX',
+        'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].document[top_form].top_question': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'COUNT',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].meta': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].meta.foobar': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].meta.test-key': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].name': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,first].status': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].closed_at': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].closed_at.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].closed_at.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].closed_at.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].closed_at.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].created_at': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].created_at.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].created_at.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].created_at.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].created_at.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].deadline': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].deadline.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].deadline.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].deadline.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].deadline.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].document[top_form]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].document[top_form].form': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].document[top_form].form.sub_question': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'COUNT',
+        'MAX',
+        'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].document[top_form].top_question': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'COUNT',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].meta': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].meta.foobar': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].meta.test-key': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].name': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,firstclosed].status': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].closed_at': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].closed_at.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].closed_at.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].closed_at.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].closed_at.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].created_at': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].created_at.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].created_at.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].created_at.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].created_at.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].deadline': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].deadline.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].deadline.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].deadline.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].deadline.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].document[top_form]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].document[top_form].form': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].document[top_form].form.sub_question': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'COUNT',
+        'MAX',
+        'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].document[top_form].top_question': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'COUNT',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].meta': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].meta.foobar': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].meta.test-key': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].name': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,last].status': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].closed_at': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].closed_at.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].closed_at.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].closed_at.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].closed_at.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].created_at': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].created_at.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].created_at.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].created_at.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].created_at.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].deadline': dict({
+      'is_leaf': False,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].deadline.month': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].deadline.quarter': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].deadline.weekday': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].deadline.year': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].document[top_form]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].document[top_form].form': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].document[top_form].form.sub_question': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'COUNT',
+        'MAX',
+        'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].document[top_form].top_question': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'COUNT',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].meta': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].meta.foobar': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].meta.test-key': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'SUM',
+        'COUNT',
+        'AVG',
+        'MAX',
+        'MIN',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].name': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
+      ]),
+    }),
+    'workitem[seem-yet-serve,lastclosed].status': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'VALUE',
+        'MAX',
+        'MIN',
+        'COUNT',
       ]),
     }),
   })
@@ -5656,10 +6177,40 @@
       'supported_functions': list([
       ]),
     }),
+    'answers[admit-east-floor].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'answers[animal-offer-sister]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
+      ]),
+    }),
+    'answers[animal-offer-sister].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'answers[close-employee]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'answers[close-employee].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'answers[either-nearly-top]': dict({
@@ -5668,46 +6219,54 @@
       'supported_functions': list([
       ]),
     }),
+    'answers[either-nearly-top].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'answers[foreign-book]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'answers[go-southern-keep]': dict({
+    'answers[foreign-book].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'answers[imagine-new]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'answers[key-college-issue]': dict({
+    'answers[imagine-new].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'answers[officer-avoid]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
       ]),
     }),
-    'answers[option-across-model]': dict({
-      'is_leaf': False,
-      'is_value': False,
+    'answers[officer-avoid].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
       'supported_functions': list([
-      ]),
-    }),
-    'answers[project-for-number]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'answers[provide-could-claim]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'answers[require-would-as]': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'answers[row_form]': dict({
@@ -5728,10 +6287,26 @@
         'SUM',
       ]),
     }),
+    'answers[row_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'answers[sub_form]': dict({
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
+      ]),
+    }),
+    'answers[sub_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'answers[sub_form].sub_question': dict({
@@ -5742,6 +6317,36 @@
         'COUNT',
         'MAX',
         'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'answers[sure-international]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'answers[sure-international].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
+    'answers[together-seem-very]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'answers[together-seem-very].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'answers[top_form]': dict({
@@ -5756,6 +6361,14 @@
       'supported_functions': list([
       ]),
     }),
+    'answers[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'answers[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -5764,6 +6377,16 @@
         'COUNT',
         'MAX',
         'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'answers[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'answers[top_form].top_question': dict({
@@ -5776,6 +6399,20 @@
         'MIN',
       ]),
     }),
+    'answers[various-military]': dict({
+      'is_leaf': False,
+      'is_value': False,
+      'supported_functions': list([
+      ]),
+    }),
+    'answers[various-military].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'created_at': dict({
       'is_leaf': False,
       'is_value': True,
@@ -5783,6 +6420,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'created_at.month': dict({
@@ -5837,9 +6475,8 @@
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
+        'COUNT',
         'VALUE',
-        'MAX',
-        'MIN',
       ]),
     }),
     'id': dict({
@@ -5897,6 +6534,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'closed_at.month': dict({
@@ -5954,6 +6592,7 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'created_at.month': dict({
@@ -6016,6 +6655,14 @@
       'supported_functions': list([
       ]),
     }),
+    'document[top_form].form.form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
+      ]),
+    }),
     'document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -6024,6 +6671,16 @@
         'COUNT',
         'MAX',
         'MIN',
+        'AVG',
+        'SUM',
+      ]),
+    }),
+    'document[top_form].form_id': dict({
+      'is_leaf': True,
+      'is_value': True,
+      'supported_functions': list([
+        'COUNT',
+        'VALUE',
       ]),
     }),
     'document[top_form].top_question': dict({
@@ -6087,15 +6744,15 @@
         'VALUE',
         'MAX',
         'MIN',
+        'COUNT',
       ]),
     }),
     'task_id': dict({
       'is_leaf': True,
       'is_value': True,
       'supported_functions': list([
+        'COUNT',
         'VALUE',
-        'MAX',
-        'MIN',
       ]),
     }),
   })

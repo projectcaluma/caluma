@@ -6,7 +6,7 @@ from . import models
 
 
 @pytest.fixture
-def example_analytics(analytics_table, form_and_document, settings):
+def example_analytics(analytics_table, settings):
     analytics_table.starting_object = "cases"
     analytics_table.save()
 
@@ -36,6 +36,11 @@ def example_analytics(analytics_table, form_and_document, settings):
         data_source="document[top_form].top_question",
         function=models.AnalyticsField.FUNCTION_VALUE,
         alias="from_the_doc",
+    )
+    analytics_table.fields.create(
+        data_source="document[top_form].form.sub_question",
+        function=models.AnalyticsField.FUNCTION_VALUE,
+        alias="sub_question_sumsumsum",
     )
     return analytics_table
 
@@ -96,8 +101,13 @@ def example_pivot_table(example_analytics):
     quarter_field.function = models.AnalyticsField.FUNCTION_MAX
     quarter_field.save()
 
+    sub_q_field = example_analytics.fields.get(alias="sub_question_sumsumsum")
+    sub_q_field.function = models.AnalyticsField.FUNCTION_SUM
+    sub_q_field.alias = "sub_question_sumsumsum"
+    sub_q_field.save()
+
     example_analytics.fields.all().exclude(
-        pk__in=[status_field.pk, created_field.pk, quarter_field.pk]
+        pk__in=[status_field.pk, created_field.pk, quarter_field.pk, sub_q_field.pk]
     ).delete()
 
     return example_analytics

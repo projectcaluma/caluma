@@ -358,7 +358,9 @@
     'created_at.year',
     'document[top_form]',
     'document[top_form].form',
+    'document[top_form].form.form_id',
     'document[top_form].form.sub_question',
+    'document[top_form].form_id',
     'document[top_form].top_question',
     'id',
     'meta',
@@ -381,7 +383,8 @@
     'workitem[baby-room-note,first].deadline.quarter',
     'workitem[baby-room-note,first].deadline.weekday',
     'workitem[baby-room-note,first].deadline.year',
-    'workitem[baby-room-note,first].document[someone-mother]',
+    'workitem[baby-room-note,first].document[might-parent-fund]',
+    'workitem[baby-room-note,first].document[might-parent-fund].form_id',
     'workitem[baby-room-note,first].meta',
     'workitem[baby-room-note,first].meta.foobar',
     'workitem[baby-room-note,first].meta.test-key',
@@ -403,7 +406,8 @@
     'workitem[baby-room-note,firstclosed].deadline.quarter',
     'workitem[baby-room-note,firstclosed].deadline.weekday',
     'workitem[baby-room-note,firstclosed].deadline.year',
-    'workitem[baby-room-note,firstclosed].document[someone-mother]',
+    'workitem[baby-room-note,firstclosed].document[might-parent-fund]',
+    'workitem[baby-room-note,firstclosed].document[might-parent-fund].form_id',
     'workitem[baby-room-note,firstclosed].meta',
     'workitem[baby-room-note,firstclosed].meta.foobar',
     'workitem[baby-room-note,firstclosed].meta.test-key',
@@ -425,7 +429,8 @@
     'workitem[baby-room-note,last].deadline.quarter',
     'workitem[baby-room-note,last].deadline.weekday',
     'workitem[baby-room-note,last].deadline.year',
-    'workitem[baby-room-note,last].document[someone-mother]',
+    'workitem[baby-room-note,last].document[might-parent-fund]',
+    'workitem[baby-room-note,last].document[might-parent-fund].form_id',
     'workitem[baby-room-note,last].meta',
     'workitem[baby-room-note,last].meta.foobar',
     'workitem[baby-room-note,last].meta.test-key',
@@ -447,7 +452,8 @@
     'workitem[baby-room-note,lastclosed].deadline.quarter',
     'workitem[baby-room-note,lastclosed].deadline.weekday',
     'workitem[baby-room-note,lastclosed].deadline.year',
-    'workitem[baby-room-note,lastclosed].document[someone-mother]',
+    'workitem[baby-room-note,lastclosed].document[might-parent-fund]',
+    'workitem[baby-room-note,lastclosed].document[might-parent-fund].form_id',
     'workitem[baby-room-note,lastclosed].meta',
     'workitem[baby-room-note,lastclosed].meta.foobar',
     'workitem[baby-room-note,lastclosed].meta.test-key',
@@ -460,6 +466,22 @@
     'analyticsTable': dict({
       'availableFields': dict({
         'edges': list([
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1ttaWdodC1wYXJlbnQtZnVuZF0=',
+              'isLeaf': False,
+              'label': 'answers[might-parent-fund]',
+              'sourcePath': 'answers[might-parent-fund]',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1ttaWdodC1wYXJlbnQtZnVuZF0uZm9ybV9pZA==',
+              'isLeaf': True,
+              'label': 'form_id',
+              'sourcePath': 'answers[might-parent-fund].form_id',
+            }),
+          }),
           dict({
             'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tyb3dfZm9ybV0=',
@@ -478,10 +500,10 @@
           }),
           dict({
             'node': dict({
-              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzb21lb25lLW1vdGhlcl0=',
-              'isLeaf': False,
-              'label': 'answers[someone-mother]',
-              'sourcePath': 'answers[someone-mother]',
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tyb3dfZm9ybV0uZm9ybV9pZA==',
+              'isLeaf': True,
+              'label': 'form_id',
+              'sourcePath': 'answers[row_form].form_id',
             }),
           }),
           dict({
@@ -490,6 +512,14 @@
               'isLeaf': False,
               'label': 'answers[sub_form]',
               'sourcePath': 'answers[sub_form]',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWJfZm9ybV0uZm9ybV9pZA==',
+              'isLeaf': True,
+              'label': 'form_id',
+              'sourcePath': 'answers[sub_form].form_id',
             }),
           }),
           dict({
@@ -510,6 +540,14 @@
           }),
           dict({
             'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWdnZXN0LWFkdWx0LWFsbG93XS5mb3JtX2lk',
+              'isLeaf': True,
+              'label': 'form_id',
+              'sourcePath': 'answers[suggest-adult-allow].form_id',
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0=',
               'isLeaf': False,
               'label': 'answers[top_form]',
@@ -526,10 +564,26 @@
           }),
           dict({
             'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5mb3JtX2lk',
+              'isLeaf': True,
+              'label': 'form_id',
+              'sourcePath': 'answers[top_form].form.form_id',
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5zdWJfcXVlc3Rpb24=',
               'isLeaf': True,
               'label': 'sub_question',
               'sourcePath': 'answers[top_form].form.sub_question',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybV9pZA==',
+              'isLeaf': True,
+              'label': 'form_id',
+              'sourcePath': 'answers[top_form].form_id',
             }),
           }),
           dict({

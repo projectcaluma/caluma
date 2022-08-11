@@ -155,6 +155,7 @@ class Query:
 @dataclass
 class Field:
     identifier: str
+    extract: str
     alias: Optional[str] = field(default=None)
     parent: Optional[Field] = field(default=None)
     filter_values: Optional[List[str]] = field(default=None)
@@ -201,8 +202,8 @@ class AttrField(Field):
             # we need to extract the actual value, otherwise, for strings, we
             # would get the quoted version back
             extractor_op = "#>>'{}'"  # noqa
-            return f"({alias}.{self.identifier} {extractor_op})"
-        return f"{alias}.{self.identifier}"
+            return f"({alias}.{self.extract} {extractor_op})"
+        return f"{alias}.{self.extract}"
 
 
 @dataclass
@@ -210,7 +211,7 @@ class DateExprField(AttrField):
     extract_part: Optional[str] = field(default=None)
 
     def expr(self, query):
-        q_id = connection.ops.quote_name(self.identifier)
+        q_id = connection.ops.quote_name(self.extract)
         return f"EXTRACT({self.extract_part} FROM {q_id})"
 
 
@@ -220,7 +221,7 @@ class JSONExtractorField(AttrField):
 
     def expr(self, query):
         key_param = query.makeparam(self.json_key)
-        q_id = connection.ops.quote_name(self.identifier)
+        q_id = connection.ops.quote_name(self.extract)
         self_alias = query.self_alias()
         # Extract text from JSON field, so that it comes from the DB
         # as actual text

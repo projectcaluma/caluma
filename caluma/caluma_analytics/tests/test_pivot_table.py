@@ -101,6 +101,5 @@ def test_run_analytics_gql(
 
         summary_dict = {col["node"]["alias"]: col["node"]["value"] for col in summary}
         assert summary_dict == {
-            "last_created": "2022-02-05 00:00:00+00:00",
-            "quarter": "4",
+            "sub_question_sumsumsum": "17085.0",
         }

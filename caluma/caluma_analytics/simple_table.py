@@ -206,10 +206,12 @@ class MetaField(BaseField):
         if self.meta_name:
             return sql.JSONExtractorField(
                 self.identifier,
+                self.identifier,
                 parent=self.parent.query_field() if self.parent else None,
                 json_key=self.meta_name,
             )
         return sql.NOOPField(
+            self.identifier,
             self.identifier,
             parent=self.parent.query_field() if self.parent else None,
         )
@@ -241,7 +243,7 @@ class AttributeField(BaseField):
             # Non-value fields cannot have functions applied to them.
             # This mainly applies to "meta" fields in this context
             return []
-        elif self.identifier == "id":
+        elif self.identifier == "id" or self.identifier.endswith("_id"):
             # Identifiers cannot have aggregate functions applied in a
             # meaningful manner, except counts. Potentially, we *could"
             # imagine some string functions being useful for slug identifiers,
@@ -254,15 +256,18 @@ class AttributeField(BaseField):
             models.AnalyticsField.FUNCTION_VALUE.upper(),
             models.AnalyticsField.FUNCTION_MAX.upper(),
             models.AnalyticsField.FUNCTION_MIN.upper(),
+            models.AnalyticsField.FUNCTION_COUNT.upper(),
         ]
 
     def query_field(self):
         if self.is_date and not self.required:
             return sql.NOOPField(
                 self.identifier,
+                self.identifier,
                 parent=self.parent.query_field() if self.parent else None,
             )
         return sql.AttrField(
+            self.identifier,
             self.identifier,
             parent=self.parent.query_field() if self.parent else None,
         )
@@ -340,6 +345,7 @@ class WorkItemField(BaseField):
 
     def query_field(self):
         return sql.JoinField(
+            self.identifier,
             self.identifier,
             table=self.visibility_source.work_items(),
             outer_ref=("id", "case_id"),
@@ -427,6 +433,7 @@ class FormDocumentField(BaseField):
         if self.subform_level == 0:
             return sql.JoinField(
                 self.identifier,
+                self.identifier,
                 table=self.visibility_source.documents(),
                 outer_ref=("document_id", "id"),
                 filters=[f"form_id = '{self.form_slug}'"],
@@ -448,7 +455,13 @@ class FormDocumentField(BaseField):
     def available_children(self):
         form = form_models.Form.objects.get(pk=self.form_slug)
         questions = form.questions.all().exclude(type=form_models.Question.TYPE_TABLE)
-        children = {}
+        children = {
+            "form_id": AttributeField(
+                parent=self,
+                identifier="form_id",
+                visibility_source=self.visibility_source,
+            )
+        }
 
         for question in questions:
             qf = self._question_field(question)
@@ -506,6 +519,7 @@ class DirectDocumentField(FormDocumentField):
     def query_field(self):
         return sql.NOOPField(
             self.identifier,
+            self.identifier,
             parent=self.parent.query_field() if self.parent else None,
         )
 
@@ -551,6 +565,7 @@ class FormAnswerField(AttributeField):
         # thus for those we return a NOOP field.
         answer_join_field = sql.JoinField(
             identifier=self.identifier,
+            extract=self.identifier,
             table=self.visibility_source.answers(),
             # TODO: turn this into SQL parameter
             filters=[f""""question_id" = '{self.identifier}' """],
@@ -559,6 +574,7 @@ class FormAnswerField(AttributeField):
         )
         value_field = sql.AttrField(
             identifier=self.attr_name,
+            extract=self.attr_name,
             parent=answer_join_field,
             filter_values=self.filters,
             answer_value_mode=(self.attr_name == "value"),
@@ -584,6 +600,7 @@ class DateExtractorField(AttributeField):
 
     def query_field(self):
         return sql.DateExprField(
+            self.identifier,
             self.date_field,
             parent=self.parent.query_field() if self.parent else None,
             extract_part=self.identifier,
@@ -885,12 +902,11 @@ class SimpleTable:
 
         context = {}
 
-    def __init__(self, table, info=_AnonymousInfo, is_summary=False):
+    def __init__(self, table, info=_AnonymousInfo):
         self.info = info
         self.table = table
         self.last_query = None
         self.last_query_params = None
-        self.is_summary = is_summary
 
         self.starting_object = BaseStartingObject.get_object(
             self.table.starting_object,
@@ -903,10 +919,6 @@ class SimpleTable:
     @cached_property
     def _fields(self):
         field_spec_qs = self.table.fields.all()
-        if self.is_summary:
-            field_spec_qs = field_spec_qs.exclude(
-                function=models.AnalyticsField.FUNCTION_VALUE
-            )
         # sort fields to join by length. This way, parent fields
         # will be already joined when their children get added, so
         # they will have the right alias.
