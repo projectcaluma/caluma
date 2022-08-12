@@ -72,7 +72,7 @@ pytest-xdist = "2.5.0"
 python-semantic-release = "7.29.4"
 requests-mock = "1.9.3"
 reuse = "1.0.0"
-syrupy = "2.3.0"
+syrupy = "3.0.0"
 
 [tool.isort]
 skip = [
