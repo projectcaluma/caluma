@@ -1,5 +1,6 @@
 from django.db import connection
 from django.db.migrations.executor import MigrationExecutor
+from django.utils import timezone
 
 
 def migrate_and_get_apps(state):
@@ -22,6 +23,7 @@ def test_migrate_to_multiple_files(transactional_db):
     Document = old_apps.get_model(app, "Document")
     Form = old_apps.get_model(app, "Form")
     Answer = old_apps.get_model(app, "Answer")
+    HistoricalAnswer = old_apps.get_model(app, "HistoricalAnswer")
     File = old_apps.get_model(app, "File")
     Question = old_apps.get_model(app, "Question")
     FormQuestion = old_apps.get_model(app, "FormQuestion")
@@ -36,6 +38,14 @@ def test_migrate_to_multiple_files(transactional_db):
     the_file = File.objects.create(name="foo.txt")
     file_ans = Answer.objects.create(
         question=file_question, document=doc, file=the_file
+    )
+    HistoricalAnswer.objects.create(
+        history_date=timezone.now(),
+        created_at=timezone.now(),
+        modified_at=timezone.now(),
+        question=file_question,
+        document=doc,
+        file=the_file,
     )
 
     new_apps = migrate_and_get_apps(migrate_to)

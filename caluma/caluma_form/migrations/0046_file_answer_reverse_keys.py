@@ -7,13 +7,22 @@ from django.db import migrations, models
 def make_reverse_link(apps, schema_editor):
     Answer = apps.get_model("caluma_form.Answer")
     HistoricalAnswer = apps.get_model("caluma_form.HistoricalAnswer")
-    for model in [Answer, HistoricalAnswer]:
-        file_answers = model.objects.filter(question__type="file")
-        for ans in file_answers.iterator():
-            file = ans.file
-            if file:
-                file.answer = ans
-                file.save()
+    HistoricalFile = apps.get_model("caluma_form.HistoricalFile")
+
+    # All files on current answers need to get the pointer file -> answer
+    for ans in Answer.objects.filter(question__type="file"):
+        file = ans.file
+        file.answer = ans
+        file.save()
+
+    # Find the historical files that were once part of this
+    # answer, then have them point to the answer as well
+    for hans in HistoricalAnswer.objects.filter(
+        question__type="file", file__isnull=False
+    ):
+        file = hans.file
+        hist = HistoricalFile.objects.filter(id=file.pk)
+        hist.all().update(answer_id=hans.id)
 
 
 def _rename_type(from_type, to_type, model):
