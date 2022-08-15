@@ -125,7 +125,9 @@ class HistoricalFilesAnswer(FilesAnswer):
 
     def resolve_value(self, info, as_of, **args):
         # we need to use the HistoricalFile of the correct revision
-        return models.File.history.filter(answer_id=self.id, history_date__lte=as_of)
+        return historical_qs_as_of(models.File.history, as_of, pk_attr="id").filter(
+            answer_id=self.id
+        )
 
     class Meta:
         model = models.Answer.history.model
