@@ -1,3 +1,14 @@
+# v8.0.0-beta.13 (15 August 2022)
+
+### Fix
+* **historical-schema:** Fetch the correct historical files
+([`2580e80`](https://github.com/projectcaluma/caluma/commit/2580e80fceb5bdaa2636ffbc30e1f9bf16eac46b))
+* **form:** Migration problem with historicalanswer
+([`a8633b6`](https://github.com/projectcaluma/caluma/commit/a8633b60acc0b3d1ecfc180faf3f4c611f82f293))
+* Multiple fixes for analytics
+([`e78b8d2`](https://github.com/projectcaluma/caluma/commit/e78b8d28a7349c953541c3b4953b8fe7f5476ac6))
+
+
 # v8.0.0-beta.12 (5 August 2022)
 
 ### Feature
