@@ -1,3 +1,14 @@
+# v8.0.0-beta.14 (18 August 2022)
+
+### Fix
+* Exclude not supported questions from answer search
+([`a27681c`](https://github.com/projectcaluma/caluma/commit/a27681ca59079c6783d4498e12f3cfcca17ba53a))
+* Fix multifile migration again
+([`d812956`](https://github.com/projectcaluma/caluma/commit/d812956cffde04f1d10ffc05e674a6942ef19892))
+* Handle files from history that don't exist anymore in migration
+([`21611c3`](https://github.com/projectcaluma/caluma/commit/21611c3636c4a66c67ff2f2593649feca2f6f547))
+
+
 # v8.0.0-beta.13 (15 August 2022)
 
 ### Fix
