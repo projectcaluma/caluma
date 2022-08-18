@@ -11,23 +11,19 @@ def make_reverse_link(apps, schema_editor):
     HistoricalFile = apps.get_model("caluma_form.HistoricalFile")
 
     # All files on current answers need to get the pointer file -> answer
-    for ans in Answer.objects.filter(question__type="file"):
-        file = ans.file
+    for file in File.objects.iterator():
+        ans = Answer.objects.filter(file=file).first()
         file.answer = ans
         file.save()
 
-    # Find the historical files that were once part of this
-    # answer, then have them point to the answer as well
-    for hans in HistoricalAnswer.objects.filter(
-        question__type="file", file__isnull=False
-    ):
-        try:
-            file = hans.file
-        except File.DoesNotExist:
-            # file does not exist anymore
+    # Set answer on all HistoricalFiles
+    for hfile in HistoricalFile.objects.iterator():
+        hans = HistoricalAnswer.objects.filter(file_id=hfile.id).first()
+        if not hans:  # pragma: no cover
+            # really shouldn't happen
             continue
-        hist = HistoricalFile.objects.filter(id=file.pk)
-        hist.all().update(answer_id=hans.id)
+        hfile.answer_id = hans.id
+        hfile.save()
 
 
 def _rename_type(from_type, to_type, model):

@@ -24,6 +24,7 @@ def test_migrate_to_multiple_files(transactional_db):
     Form = old_apps.get_model(app, "Form")
     Answer = old_apps.get_model(app, "Answer")
     HistoricalAnswer = old_apps.get_model(app, "HistoricalAnswer")
+    HistoricalFile = old_apps.get_model(app, "HistoricalFile")
     File = old_apps.get_model(app, "File")
     Question = old_apps.get_model(app, "Question")
     FormQuestion = old_apps.get_model(app, "FormQuestion")
@@ -48,13 +49,31 @@ def test_migrate_to_multiple_files(transactional_db):
         file=the_file,
     )
 
+    hfile = HistoricalFile.objects.create(
+        history_date=timezone.now(),
+        created_at=timezone.now(),
+        modified_at=timezone.now(),
+    )
+
+    hans_without_existing_ans = HistoricalAnswer.objects.create(
+        history_date=timezone.now(),
+        created_at=timezone.now(),
+        modified_at=timezone.now(),
+        question=file_question,
+        document=doc,
+        file_id=hfile.id,
+    )
+
     new_apps = migrate_and_get_apps(migrate_to)
 
     # Test the new data: `answer.file` should be gone, `answer.files`
     # must contain the old file data
     Answer = new_apps.get_model(app, "Answer")
+    HistoricalFile = new_apps.get_model(app, "HistoricalFile")
 
     file_ans_after = Answer.objects.get(pk=file_ans.pk)
 
     assert file_ans_after.files.count() == 1
     assert not hasattr(file_ans_after, "file")
+
+    assert HistoricalFile.objects.get(answer_id=hans_without_existing_ans.id)
