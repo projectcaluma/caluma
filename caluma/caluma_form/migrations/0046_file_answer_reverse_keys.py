@@ -6,6 +6,7 @@ from django.db import migrations, models
 
 def make_reverse_link(apps, schema_editor):
     Answer = apps.get_model("caluma_form.Answer")
+    File = apps.get_model("caluma_form.File")
     HistoricalAnswer = apps.get_model("caluma_form.HistoricalAnswer")
     HistoricalFile = apps.get_model("caluma_form.HistoricalFile")
 
@@ -20,7 +21,11 @@ def make_reverse_link(apps, schema_editor):
     for hans in HistoricalAnswer.objects.filter(
         question__type="file", file__isnull=False
     ):
-        file = hans.file
+        try:
+            file = hans.file
+        except File.DoesNotExist:
+            # file does not exist anymore
+            continue
         hist = HistoricalFile.objects.filter(id=file.pk)
         hist.all().update(answer_id=hans.id)
 
