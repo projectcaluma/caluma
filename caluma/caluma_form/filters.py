@@ -366,7 +366,9 @@ class SearchAnswersFilter(Filter):
             form_questions = Form.get_all_questions(forms)
             # Combine querysets: All questions of the given forms, as well as the
             # explicitly-requested questions.
-            questions = questions | form_questions
+            questions = questions | form_questions.filter(
+                type__in=self.FIELD_MAP.keys()
+            )
 
         return questions
 
