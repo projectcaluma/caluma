@@ -2979,6 +2979,7 @@
     DEADLINE
     STATUS
     SLUG
+    CASE__DOCUMENT__FORM__NAME
   }
   
   enum SortableWorkflowAttributes {

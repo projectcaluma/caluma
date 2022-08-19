@@ -201,6 +201,7 @@ class WorkItemOrderSet(BaseFilterSet):
             "deadline",
             "status",
             "slug",
+            "case__document__form__name",
         ],
     )
     document_answer = AnswerValueOrdering(document_via="document")
