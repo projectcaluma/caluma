@@ -7,7 +7,7 @@ optional = false
 python-versions = "*"
 
 [package.extras]
-dev = ["black", "coverage", "isort", "pre-commit", "pyenchant", "pylint"]
+dev = ["pylint", "pyenchant", "pre-commit", "isort", "coverage", "black"]
 
 [[package]]
 name = "arrow"
@@ -48,10 +48,10 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [package.extras]
-dev = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "furo", "sphinx", "sphinx-notfound-page", "pre-commit", "cloudpickle"]
-docs = ["furo", "sphinx", "zope.interface", "sphinx-notfound-page"]
-tests = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "zope.interface", "cloudpickle"]
-tests_no_zope = ["coverage[toml] (>=5.0.2)", "hypothesis", "pympler", "pytest (>=4.3.0)", "six", "mypy", "pytest-mypy-plugins", "cloudpickle"]
+tests_no_zope = ["cloudpickle", "pytest-mypy-plugins", "mypy", "six", "pytest (>=4.3.0)", "pympler", "hypothesis", "coverage[toml] (>=5.0.2)"]
+tests = ["cloudpickle", "zope.interface", "pytest-mypy-plugins", "mypy", "six", "pytest (>=4.3.0)", "pympler", "hypothesis", "coverage[toml] (>=5.0.2)"]
+docs = ["sphinx-notfound-page", "zope.interface", "sphinx", "furo"]
+dev = ["cloudpickle", "pre-commit", "sphinx-notfound-page", "sphinx", "furo", "zope.interface", "pytest-mypy-plugins", "mypy", "six", "pytest (>=4.3.0)", "pympler", "hypothesis", "coverage[toml] (>=5.0.2)"]
 
 [[package]]
 name = "backports.zoneinfo"
@@ -92,10 +92,10 @@ tomli = {version = ">=1.1.0", markers = "python_full_version < \"3.11.0a7\""}
 typing-extensions = {version = ">=3.10.0.0", markers = "python_version < \"3.10\""}
 
 [package.extras]
-uvloop = ["uvloop (>=0.15.2)"]
-jupyter = ["tokenize-rt (>=3.2.0)", "ipython (>=7.8.0)"]
-d = ["aiohttp (>=3.7.4)"]
 colorama = ["colorama (>=0.4.3)"]
+d = ["aiohttp (>=3.7.4)"]
+jupyter = ["ipython (>=7.8.0)", "tokenize-rt (>=3.2.0)"]
+uvloop = ["uvloop (>=0.15.2)"]
 
 [[package]]
 name = "bleach"
@@ -110,8 +110,8 @@ six = ">=1.9.0"
 webencodings = "*"
 
 [package.extras]
+dev = ["mypy (==0.942)", "black (==22.3.0)", "hashin (==0.17.0)", "wheel (==0.37.1)", "twine (==4.0.0)", "sphinx (==4.3.2)", "tox (==3.24.5)", "flake8 (==4.0.1)", "pytest (==7.1.1)", "pip-tools (==6.5.1)"]
 css = ["tinycss2 (>=1.1.0)"]
-dev = ["pip-tools (==6.5.1)", "pytest (==7.1.1)", "flake8 (==4.0.1)", "tox (==3.24.5)", "sphinx (==4.3.2)", "twine (==4.0.0)", "wheel (==0.37.1)", "hashin (==0.17.0)", "black (==22.3.0)", "mypy (==0.942)"]
 
 [[package]]
 name = "boolean.py"
@@ -290,8 +290,8 @@ pytz = "*"
 sqlparse = ">=0.2.2"
 
 [package.extras]
-argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
+argon2 = ["argon2-cffi (>=19.1.0)"]
 
 [[package]]
 name = "django-cors-headers"
@@ -353,9 +353,9 @@ Django = ">=2.0"
 django-postgres-extra = ">=2.0,<3.0"
 
 [package.extras]
-test = ["psycopg2 (==2.8.4)", "django-bleach (==0.6.1)", "django-autoslug (==1.9.6)", "dj-database-url (==0.5.0)", "pytest-cov (==2.8.1)", "pytest-django (==3.7.0)", "pytest (==5.3.2)", "tox (==3.14.3)"]
-docs = ["sphinx-rtd-theme (==0.4.3)", "Sphinx (==2.2.0)"]
-analysis = ["sl-docformatter (==1.4)", "isort (==4.3.20)", "autopep8 (==1.4.4)", "autoflake (==1.3)", "flake8 (==3.7.7)", "black (==19.3b0)"]
+analysis = ["black (==19.3b0)", "flake8 (==3.7.7)", "autoflake (==1.3)", "autopep8 (==1.4.4)", "isort (==4.3.20)", "sl-docformatter (==1.4)"]
+docs = ["Sphinx (==2.2.0)", "sphinx-rtd-theme (==0.4.3)"]
+test = ["tox (==3.14.3)", "pytest (==5.3.2)", "pytest-django (==3.7.0)", "pytest-cov (==2.8.1)", "dj-database-url (==0.5.0)", "django-autoslug (==1.9.6)", "django-bleach (==0.6.1)", "psycopg2 (==2.8.4)"]
 
 [[package]]
 name = "django-postgres-extra"
@@ -370,10 +370,10 @@ Django = ">=2.0,<5.0"
 python-dateutil = ">=2.8.0,<=3.0.0"
 
 [package.extras]
-test = ["snapshottest (==0.6.0)", "coveralls (==3.3.0)", "freezegun (==1.1.0)", "tox (==3.24.4)", "pytest-cov (==3.0.0)", "pytest-django (==4.4.0)", "pytest-benchmark (==3.4.1)", "pytest (==6.2.5)", "dj-database-url (==0.5.0)", "psycopg2 (>=2.8.4,<3.0.0)"]
-publish = ["twine (==3.7.1)", "build (==0.7.0)"]
-docs = ["docutils (<0.18)", "sphinx-rtd-theme (==0.4.3)", "Sphinx (==2.2.0)"]
-analysis = ["docformatter (==1.4)", "isort (==5.10.0)", "autopep8 (==1.6.0)", "autoflake (==1.4)", "flake8 (==4.0.1)", "black (==21.10b0)"]
+analysis = ["black (==21.10b0)", "flake8 (==4.0.1)", "autoflake (==1.4)", "autopep8 (==1.6.0)", "isort (==5.10.0)", "docformatter (==1.4)"]
+docs = ["Sphinx (==2.2.0)", "sphinx-rtd-theme (==0.4.3)", "docutils (<0.18)"]
+publish = ["build (==0.7.0)", "twine (==3.7.1)"]
+test = ["psycopg2 (>=2.8.4,<3.0.0)", "dj-database-url (==0.5.0)", "pytest (==6.2.5)", "pytest-benchmark (==3.4.1)", "pytest-django (==4.4.0)", "pytest-cov (==3.0.0)", "tox (==3.24.4)", "freezegun (==1.1.0)", "coveralls (==3.3.0)", "snapshottest (==0.6.0)"]
 
 [[package]]
 name = "django-simple-history"
@@ -483,8 +483,8 @@ optional = false
 python-versions = ">=3.7"
 
 [package.extras]
-testing = ["pytest-timeout (>=1.4.2)", "pytest-cov", "pytest (>=4)", "coverage (>=4)", "covdefaults (>=1.2.0)"]
-docs = ["sphinx-autodoc-typehints (>=1.12)", "sphinx (>=4.1)", "furo (>=2021.8.17b43)"]
+docs = ["furo (>=2021.8.17b43)", "sphinx (>=4.1)", "sphinx-autodoc-typehints (>=1.12)"]
+testing = ["covdefaults (>=1.2.0)", "coverage (>=4)", "pytest (>=4)", "pytest-cov", "pytest-timeout (>=1.4.2)"]
 
 [[package]]
 name = "flake8"
@@ -501,7 +501,7 @@ pyflakes = ">=2.4.0,<2.5.0"
 
 [[package]]
 name = "flake8-bugbear"
-version = "22.6.22"
+version = "22.7.1"
 description = "A plugin for flake8 finding likely bugs and design problems in your program. Contains warnings that don't belong in pyflakes and pycodestyle."
 category = "dev"
 optional = false
@@ -512,7 +512,7 @@ attrs = ">=19.2.0"
 flake8 = ">=3.0.0"
 
 [package.extras]
-dev = ["pre-commit", "hypothesmith (>=0.2)", "hypothesis", "coverage"]
+dev = ["coverage", "hypothesis", "hypothesmith (>=0.2)", "pre-commit"]
 
 [[package]]
 name = "flake8-debugger"
@@ -640,7 +640,7 @@ sh = [
 ]
 
 [package.extras]
-trusted-deps = ["Click (==8.0.3)", "arrow (==1.2.1)", "sh (==1.14.2)"]
+trusted-deps = ["sh (==1.14.2)", "arrow (==1.2.1)", "Click (==8.0.3)"]
 
 [[package]]
 name = "gitpython"
@@ -686,9 +686,9 @@ promise = ">=2.1"
 text-unidecode = "*"
 
 [package.extras]
-test = ["djangorestframework (>=3.6.3)", "pytest-django (>=3.3.2)", "django-filter (>=2)", "pytz", "mock", "coveralls", "pytest-random-order", "pytest-cov", "pytest (>=3.6.3)"]
+dev = ["black (==19.10b0)", "flake8 (==3.7.9)", "flake8-black (==0.1.1)", "flake8-bugbear (==20.1.4)", "pytest (>=3.6.3)", "pytest-cov", "pytest-random-order", "coveralls", "mock", "pytz", "django-filter (>=2)", "pytest-django (>=3.3.2)", "djangorestframework (>=3.6.3)"]
 rest_framework = ["djangorestframework (>=3.6.3)"]
-dev = ["djangorestframework (>=3.6.3)", "pytest-django (>=3.3.2)", "django-filter (>=2)", "pytz", "mock", "coveralls", "pytest-random-order", "pytest-cov", "pytest (>=3.6.3)", "flake8-bugbear (==20.1.4)", "flake8-black (==0.1.1)", "flake8 (==3.7.9)", "black (==19.10b0)"]
+test = ["pytest (>=3.6.3)", "pytest-cov", "pytest-random-order", "coveralls", "mock", "pytz", "django-filter (>=2)", "pytest-django (>=3.3.2)", "djangorestframework (>=3.6.3)"]
 
 [[package]]
 name = "graphql-core"
@@ -740,9 +740,9 @@ python-versions = ">=3.7"
 zipp = ">=0.5"
 
 [package.extras]
-testing = ["importlib-resources (>=1.3)", "pytest-mypy (>=0.9.1)", "pytest-black (>=0.3.7)", "pytest-perf (>=0.9.2)", "flufl.flake8", "pyfakefs", "packaging", "pytest-enabler (>=1.0.1)", "pytest-cov", "pytest-flake8", "pytest-checkdocs (>=2.4)", "pytest (>=6)"]
+docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)"]
 perf = ["ipython"]
-docs = ["rst.linker (>=1.9)", "jaraco.packaging (>=9)", "sphinx"]
+testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "packaging", "pyfakefs", "flufl.flake8", "pytest-perf (>=0.9.2)", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)", "importlib-resources (>=1.3)"]
 
 [[package]]
 name = "inflection"
@@ -777,10 +777,10 @@ optional = false
 python-versions = ">=3.6.1,<4.0"
 
 [package.extras]
-pipfile_deprecated_finder = ["pipreqs", "requirementslib"]
-requirements_deprecated_finder = ["pipreqs", "pip-api"]
-colors = ["colorama (>=0.4.3,<0.5.0)"]
 plugins = ["setuptools"]
+colors = ["colorama (>=0.4.3,<0.5.0)"]
+requirements_deprecated_finder = ["pip-api", "pipreqs"]
+pipfile_deprecated_finder = ["requirementslib", "pipreqs"]
 
 [[package]]
 name = "jeepney"
@@ -823,8 +823,8 @@ pywin32-ctypes = {version = "<0.1.0 || >0.1.0,<0.1.1 || >0.1.1", markers = "sys_
 SecretStorage = {version = ">=3.2", markers = "sys_platform == \"linux\""}
 
 [package.extras]
-docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)", "jaraco.tidelift (>=1.4)"]
-testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)"]
+testing = ["pytest-mypy (>=0.9.1)", "pytest-black (>=0.3.7)", "pytest-enabler (>=1.0.1)", "pytest-cov", "pytest-flake8", "pytest-checkdocs (>=2.4)", "pytest (>=6)"]
+docs = ["jaraco.tidelift (>=1.4)", "rst.linker (>=1.9)", "jaraco.packaging (>=9)", "sphinx"]
 
 [[package]]
 name = "license-expression"
@@ -838,8 +838,8 @@ python-versions = ">=3.6.*"
 "boolean.py" = ">=4.0"
 
 [package.extras]
-testing = ["black", "pytest-xdist (>=2)", "pytest (>=6,!=7.0.0)"]
-docs = ["doc8 (>=0.8.1)", "sphinx-rtd-theme (>=0.5.0)", "Sphinx (>=3.3.1)"]
+docs = ["Sphinx (>=3.3.1)", "sphinx-rtd-theme (>=0.5.0)", "doc8 (>=0.8.1)"]
+testing = ["pytest (>=6,!=7.0.0)", "pytest-xdist (>=2)", "black"]
 
 [[package]]
 name = "markupsafe"
@@ -929,8 +929,8 @@ pygments = "*"
 wmctrl = "*"
 
 [package.extras]
-testing = ["pytest", "funcsigs"]
 funcsigs = ["funcsigs"]
+testing = ["funcsigs", "pytest"]
 
 [[package]]
 name = "pkginfo"
@@ -952,8 +952,8 @@ optional = false
 python-versions = ">=3.7"
 
 [package.extras]
-docs = ["furo (>=2021.7.5b38)", "proselint (>=0.10.2)", "sphinx-autodoc-typehints (>=1.12)", "sphinx (>=4)"]
-test = ["appdirs (==1.4.4)", "pytest-cov (>=2.7)", "pytest-mock (>=3.6)", "pytest (>=6)"]
+test = ["pytest (>=6)", "pytest-mock (>=3.6)", "pytest-cov (>=2.7)", "appdirs (==1.4.4)"]
+docs = ["sphinx (>=4)", "sphinx-autodoc-typehints (>=1.12)", "proselint (>=0.10.2)", "furo (>=2021.7.5b38)"]
 
 [[package]]
 name = "pluggy"
@@ -1080,7 +1080,7 @@ optional = false
 python-versions = ">=3.6.8"
 
 [package.extras]
-diagrams = ["railroad-diagrams", "jinja2"]
+diagrams = ["jinja2", "railroad-diagrams"]
 
 [[package]]
 name = "pyreadline"
@@ -1117,7 +1117,7 @@ py = ">=1.8.2"
 tomli = ">=1.0.0"
 
 [package.extras]
-testing = ["argcomplete", "hypothesis (>=3.56)", "mock", "nose", "pygments (>=2.7.2)", "requests", "xmlschema"]
+testing = ["xmlschema", "requests", "pygments (>=2.7.2)", "nose", "mock", "hypothesis (>=3.56)", "argcomplete"]
 
 [[package]]
 name = "pytest-cov"
@@ -1146,8 +1146,8 @@ python-versions = ">=3.5"
 pytest = ">=5.4.0"
 
 [package.extras]
-docs = ["sphinx", "sphinx-rtd-theme"]
-testing = ["django", "django-configurations (>=2.0)"]
+testing = ["django-configurations (>=2.0)", "django"]
+docs = ["sphinx-rtd-theme", "sphinx"]
 
 [[package]]
 name = "pytest-env"
@@ -1238,9 +1238,9 @@ pytest = ">=6.2.0"
 pytest-forked = "*"
 
 [package.extras]
-psutil = ["psutil (>=3.0)"]
-setproctitle = ["setproctitle"]
 testing = ["filelock"]
+setproctitle = ["setproctitle"]
+psutil = ["psutil (>=3.0)"]
 
 [[package]]
 name = "python-dateutil"
@@ -1393,8 +1393,8 @@ idna = ">=2.5,<4"
 urllib3 = ">=1.21.1,<1.27"
 
 [package.extras]
-socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
+socks = ["PySocks (>=1.5.6,!=1.5.7)"]
 
 [[package]]
 name = "requests-mock"
@@ -1582,10 +1582,10 @@ python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,>=2.7"
 colorama = {version = "*", markers = "platform_system == \"Windows\""}
 
 [package.extras]
-dev = ["py-make (>=0.1.0)", "twine", "wheel"]
-notebook = ["ipywidgets (>=6)"]
-slack = ["slack-sdk"]
 telegram = ["requests"]
+slack = ["slack-sdk"]
+notebook = ["ipywidgets (>=6)"]
+dev = ["wheel", "twine", "py-make (>=0.1.0)"]
 
 [[package]]
 name = "twine"
@@ -1649,9 +1649,9 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, <4"
 
 [package.extras]
-brotli = ["brotlicffi (>=0.8.0)", "brotli (>=1.0.9)", "brotlipy (>=0.6.0)"]
-secure = ["pyOpenSSL (>=0.14)", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "certifi", "ipaddress"]
 socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
+secure = ["ipaddress", "certifi", "idna (>=2.0.0)", "cryptography (>=1.3.4)", "pyOpenSSL (>=0.14)"]
+brotli = ["brotlipy (>=0.6.0)", "brotli (>=1.0.9)", "brotlicffi (>=0.8.0)"]
 
 [[package]]
 name = "uwsgi"
@@ -1704,13 +1704,13 @@ optional = false
 python-versions = ">=3.7"
 
 [package.extras]
-docs = ["sphinx", "jaraco.packaging (>=9)", "rst.linker (>=1.9)"]
-testing = ["pytest (>=6)", "pytest-checkdocs (>=2.4)", "pytest-flake8", "pytest-cov", "pytest-enabler (>=1.0.1)", "jaraco.itertools", "func-timeout", "pytest-black (>=0.3.7)", "pytest-mypy (>=0.9.1)"]
+testing = ["pytest-mypy (>=0.9.1)", "pytest-black (>=0.3.7)", "func-timeout", "jaraco.itertools", "pytest-enabler (>=1.0.1)", "pytest-cov", "pytest-flake8", "pytest-checkdocs (>=2.4)", "pytest (>=6)"]
+docs = ["rst.linker (>=1.9)", "jaraco.packaging (>=9)", "sphinx"]
 
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "7298c6bacf5593a519dd6ed5720425b80e19d0b228199984ab9aef386504898a"
+content-hash = "7c929f6923b02b08676486e20e26bc4b0a11b46d0324835fff8a190cbd22b087"
 
 [metadata.files]
 aniso8601 = [
@@ -2030,8 +2030,8 @@ flake8 = [
     {file = "flake8-4.0.1.tar.gz", hash = "sha256:806e034dda44114815e23c16ef92f95c91e4c71100ff52813adf7132a6ad870d"},
 ]
 flake8-bugbear = [
-    {file = "flake8-bugbear-22.6.22.tar.gz", hash = "sha256:ac3317eba27d79dc19dcdeb7356ca1f656f0cde11d899c4551badf770f05cbef"},
-    {file = "flake8_bugbear-22.6.22-py3-none-any.whl", hash = "sha256:ad2b33dbe33a6d4ca1f0037e1d156d0a89107ee63c0600e3b4f7b60e37998ac2"},
+    {file = "flake8-bugbear-22.7.1.tar.gz", hash = "sha256:e450976a07e4f9d6c043d4f72b17ec1baf717fe37f7997009c8ae58064f88305"},
+    {file = "flake8_bugbear-22.7.1-py3-none-any.whl", hash = "sha256:db5d7a831ef4412a224b26c708967ff816818cabae415e76b8c58df156c4b8e5"},
 ]
 flake8-debugger = [
     {file = "flake8-debugger-4.1.2.tar.gz", hash = "sha256:52b002560941e36d9bf806fca2523dc7fb8560a295d5f1a6e15ac2ded7a73840"},
