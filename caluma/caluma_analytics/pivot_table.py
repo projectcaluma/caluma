@@ -106,7 +106,8 @@ class PivotTable:
             return result
 
     def _update_summary(self, field, value):
-        if field.function in [field.FUNCTION_SUM, field.FUNCTION_COUNT]:
+        # value must to eval to True in order to not break on `None` and also ignore `0`
+        if value and field.function in [field.FUNCTION_SUM, field.FUNCTION_COUNT]:
             self._summary[field.alias] += value
 
     def get_summary(self):
