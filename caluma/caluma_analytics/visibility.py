@@ -33,3 +33,4 @@ class CalumaVisibilitySource:
     work_items = qs_method_factory(workflow_schema.WorkItem)
     documents = qs_method_factory(form_schema.Document)
     answers = qs_method_factory(form_schema.Answer, form_models.Answer)
+    options = qs_method_factory(form_schema.Option, form_models.Option)

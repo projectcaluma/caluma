@@ -80,6 +80,58 @@ def test_get_fields(
     )
 
 
+def test_get_fields_for_choice(
+    db,
+    settings,
+    snapshot,
+    form_and_document,
+    info,
+    case,
+    form_question_factory,
+    question_option_factory,
+):
+    form, document, *_ = form_and_document(True, True)
+    choice_q = form_question_factory(
+        form=form,
+        question__slug="some_choice",
+        question__type="choice",
+    ).question
+    question_option_factory.create_batch(3, question=choice_q)
+
+    # we need a case doc for this to work
+    case.document = document
+    case.save()
+
+    start = CaseStartingObject(info, disable_visibilities=True)
+
+    # Choice field should be value and non-leaf, as it
+    # has the label as sub-field
+    fields = start.get_fields(depth=1, prefix="document[top_form]")
+    choice_field = fields["document[top_form].some_choice"]
+    assert not choice_field.is_leaf()
+    assert choice_field.is_value()
+
+    # Check if choice label fields give correct information
+    # about being values / leaves as well
+    fields = start.get_fields(depth=2, prefix="document[top_form].some_choice")
+    assert set(fields.keys()) == set(
+        [
+            "document[top_form].some_choice.label",
+            "document[top_form].some_choice.label.de",
+            "document[top_form].some_choice.label.en",
+            "document[top_form].some_choice.label.fr",
+        ]
+    )
+
+    assert fields["document[top_form].some_choice.label"].is_leaf() is False
+    assert fields["document[top_form].some_choice.label"].is_value() is True
+    assert fields["document[top_form].some_choice.label.en"].is_leaf() is True
+    assert fields["document[top_form].some_choice.label.en"].is_value() is True
+
+    for path, field in fields.items():
+        assert ".".join(field.source_path()) == path
+
+
 @pytest.mark.parametrize("analytics_table__starting_object", ["cases"])
 def test_extract_form_field_values(
     db,

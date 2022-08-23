@@ -1,4 +1,5 @@
 import math
+import random
 
 import pytest
 
@@ -139,3 +140,63 @@ def test_unusual_aliases(db, table, analytics_cases, alias, request):
     # and that the alias is represented in the columns
     assert result
     assert alias in result[0]
+
+
+@pytest.mark.parametrize("use_lang", [None, "de", "en"])
+def test_extract_choice_labels(
+    settings,
+    db,
+    form_question_factory,
+    question_option_factory,
+    answer_factory,
+    example_analytics,
+    analytics_cases,
+    use_lang,
+    form_and_document,
+):
+    settings.LANGUAGES = [("de", "de"), ("en", "en")]
+
+    # We need a form with a choice question ...
+    form, *_ = form_and_document(False, False)
+    choice_q = form_question_factory(form=form, question__type="choice").question
+    options = question_option_factory.create_batch(4, question=choice_q)
+
+    # ... as well as some cases with corresponding answers in their docs
+    for case in analytics_cases:
+        answer_factory(
+            question=choice_q,
+            document=case.document,
+            value=random.choice(options).option.slug,
+        )
+
+        # just checking assumptions..
+        assert case.document.form_id == form.pk
+
+    # we're only interested in seeing the choice field work here
+    example_analytics.fields.all().delete()
+    lang_suffix = f".{use_lang}" if use_lang else ""
+    example_analytics.fields.create(
+        data_source=f"document[top_form].{choice_q.slug}",
+        alias="choice_value",
+    )
+    example_analytics.fields.create(
+        data_source=f"document[top_form].{choice_q.slug}.label{lang_suffix}",
+        alias="choice_label",
+    )
+
+    # Define valid outputs for label and value (slug)
+    lang = use_lang if use_lang else settings.LANGUAGE_CODE
+    valid_options = {opt.slug: opt.label[lang] for opt in choice_q.options.all()}
+
+    # Run the analysis
+    table = SimpleTable(example_analytics)
+    result = table.get_records()
+
+    choice_count = 0
+    assert len(result)
+    for row in result:
+        if row["choice_value"]:
+            choice_count += 1
+            assert row["choice_value"] in valid_options
+            assert row["choice_label"] == valid_options[row["choice_value"]]
+    assert choice_count >= len(analytics_cases)
