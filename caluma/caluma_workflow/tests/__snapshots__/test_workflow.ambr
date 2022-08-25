@@ -72,6 +72,40 @@
     }),
   })
 # ---
+# name: test_add_workflow_flow[task-slug-[]|tasks-"task-slug"|task-True]
+  dict({
+    'addWorkflowFlow': dict({
+      'clientMutationId': None,
+      'workflow': dict({
+        'flows': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'createdByGroup': 'admin',
+                'createdByUser': 'admin',
+                'next': '[]|tasks',
+                'tasks': list([
+                  dict({
+                    'slug': 'task-slug',
+                  }),
+                ]),
+              }),
+            }),
+          ]),
+          'totalCount': 1,
+        }),
+        'tasks': list([
+          dict({
+            'slug': 'season-fish-share',
+          }),
+          dict({
+            'slug': 'song-light',
+          }),
+        ]),
+      }),
+    }),
+  })
+# ---
 # name: test_query_all_workflows
   dict({
     'allWorkflows': dict({
