@@ -165,10 +165,18 @@ def test_work_items_not_lost(db, admin_user, schema_executor, reopen_case_setup)
     assert work_items[2] in case.work_items.all()
 
 
-def test_only_cases_without_parent_case(
-    db, case_factory, work_item_factory, admin_user, reopen_case_setup
+@pytest.mark.parametrize(
+    "work_item__status,success",
+    [(models.WorkItem.STATUS_READY, True), (models.WorkItem.STATUS_COMPLETED, False)],
+)
+def test_only_child_cases_of_ready_work_items(
+    db,
+    work_item,
+    case,
+    admin_user,
+    reopen_case_setup,
+    success,
 ):
-    parent_case = case_factory()
     child_case, work_items = reopen_case_setup(
         models.Case.STATUS_COMPLETED,
         [
@@ -178,11 +186,16 @@ def test_only_cases_without_parent_case(
         ],
     )
 
-    child_case.family = parent_case
+    child_case.parent_work_item = work_item
+    child_case.family = case
     child_case.save()
 
-    with pytest.raises(ValidationError):
-        api.reopen_case(child_case, work_items, admin_user)
+    if success:
+        reopened_case = api.reopen_case(child_case, work_items, admin_user)
+        assert reopened_case.status == models.Case.STATUS_RUNNING
+    else:
+        with pytest.raises(ValidationError):
+            api.reopen_case(child_case, work_items, admin_user)
 
 
 def test_only_work_items_at_end_of_branch(

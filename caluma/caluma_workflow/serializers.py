@@ -74,18 +74,22 @@ class AddWorkflowFlowSerializer(serializers.ModelSerializer):
     next = FlowJexlField(required=True)
     redoable = FlowJexlField(required=False, write_only=True)
 
-    def validate_next(self, value):
-        jexl = FlowJexl()
-        tasks = set(jexl.extract_tasks(value))
+    def has_tasks_in_jexl(self, expression):
+        if not expression:
+            return False
 
-        if not tasks:
+        return len(set(FlowJexl().extract_tasks(expression))) > 0
+
+    def validate(self, data):
+        next_has_tasks = self.has_tasks_in_jexl(data.get("next"))
+        redoable_has_tasks = self.has_tasks_in_jexl(data.get("redoable"))
+
+        if not next_has_tasks and not redoable_has_tasks:
             raise exceptions.ValidationError(
-                f"jexl `{value}` does not contain any tasks as return value"
+                "Either `next` or `redoable` must contain tasks"
             )
-        return value
 
-    def validate_redoable(self, value):
-        return self.validate_next(value)
+        return super().validate(data)
 
     @transaction.atomic
     def update(self, instance, validated_data):

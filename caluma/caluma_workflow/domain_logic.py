@@ -180,8 +180,16 @@ class CompleteWorkItemLogic:
             )
 
             if all_siblings_complete:
+                redo_work_items = work_item.case.work_items.filter(
+                    task__in=next_tasks, status=models.WorkItem.STATUS_REDO
+                )
+
                 created_work_items = utils.create_work_items(
-                    next_tasks, case, user, work_item, context
+                    next_tasks.exclude(pk__in=redo_work_items.values("task")),
+                    case,
+                    user,
+                    work_item,
+                    context,
                 )
 
                 for created_work_item in created_work_items:  # pragma: no cover
@@ -192,6 +200,8 @@ class CompleteWorkItemLogic:
                         user=user,
                         context=context,
                     )
+
+                redo_work_items.update(status=models.WorkItem.STATUS_READY)
 
         if (
             not next_tasks.exists()
@@ -379,8 +389,13 @@ class ReopenCaseLogic:
         ]:
             raise ValidationError("Only completed and canceled cases can be reopened.")
 
-        if not case.family == case:
-            raise ValidationError("Child cases can not be reopened.")
+        if (
+            case.family != case
+            and case.parent_work_item.status != models.WorkItem.STATUS_READY
+        ):
+            raise ValidationError(
+                "Only child cases of ready work items can be reopened."
+            )
 
         for work_item in work_items:
             if work_item.succeeding_work_items.exclude(
@@ -612,13 +627,18 @@ class RedoWorkItemLogic:
         if work_item.status == models.WorkItem.STATUS_READY:
             raise ValidationError("Ready work items can't be redone.")
 
+        if not cls.is_work_item_redoable(work_item):
+            raise ValidationError("Workflow doesn't allow to redo this work item.")
+
+    @classmethod
+    def is_work_item_redoable(cls, work_item):
         for wi in cls._find_ready_in_work_item_tree(
             work_item, allowed_states=[models.WorkItem.STATUS_READY]
         ):
             if work_item.task in wi.get_redoable():
-                return
+                return True
 
-        raise ValidationError("Workflow doesn't allow to redo this work item.")
+        return False
 
     @classmethod
     def set_succeeding_work_item_status_redo(cls, work_item):

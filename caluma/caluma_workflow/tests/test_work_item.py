@@ -946,6 +946,57 @@ def test_filter_document_has_answer(
         assert node_id == str(expected.id)
 
 
+def test_is_redoable(
+    db,
+    schema_executor,
+    work_item_factory,
+    task_flow_factory,
+    case,
+):
+    redoable_work_item = work_item_factory(
+        case=case, status=models.WorkItem.STATUS_COMPLETED
+    )
+    ready_redoable_work_item = work_item_factory(
+        case=case, status=models.WorkItem.STATUS_READY
+    )
+    non_redoable_work_item = work_item_factory(
+        case=case,
+        previous_work_item=redoable_work_item,
+        status=models.WorkItem.STATUS_READY,
+    )
+    task_flow_factory(
+        workflow=case.workflow,
+        task=non_redoable_work_item.task,
+        redoable=f"['{redoable_work_item.task.slug}', '{ready_redoable_work_item}']|tasks",
+    )
+
+    result = schema_executor(
+        """
+        query {
+            allWorkItems {
+                edges {
+                    node {
+                        id
+                        isRedoable
+                    }
+                }
+            }
+        }
+    """
+    )
+
+    assert not result.errors
+
+    is_redoable = {
+        extract_global_id(work_item["node"]["id"]): work_item["node"]["isRedoable"]
+        for work_item in result.data["allWorkItems"]["edges"]
+    }
+
+    assert is_redoable[str(redoable_work_item.pk)]
+    assert not is_redoable[str(ready_redoable_work_item.pk)]
+    assert not is_redoable[str(non_redoable_work_item.pk)]
+
+
 @pytest.mark.parametrize(
     "lookup_expr,int,value,len_results",
     [
@@ -1586,6 +1637,16 @@ def test_redo_work_item(
     assert case.work_items.get(task=tasks[0]).status == models.WorkItem.STATUS_READY
     assert case.work_items.get(task=tasks[1]).status == models.WorkItem.STATUS_REDO
     assert case.work_items.get(task=tasks[2]).status == models.WorkItem.STATUS_REDO
+    assert case.work_items.get(task=tasks[3]).status == models.WorkItem.STATUS_REDO
+    assert case.work_items.get(task=tasks[4]).status == models.WorkItem.STATUS_REDO
+
+    api.complete_work_item(
+        work_item=case.work_items.get(task=tasks[0]), user=admin_user
+    )
+
+    assert case.work_items.get(task=tasks[0]).status == models.WorkItem.STATUS_COMPLETED
+    assert case.work_items.get(task=tasks[1]).status == models.WorkItem.STATUS_READY
+    assert case.work_items.get(task=tasks[2]).status == models.WorkItem.STATUS_READY
     assert case.work_items.get(task=tasks[3]).status == models.WorkItem.STATUS_REDO
     assert case.work_items.get(task=tasks[4]).status == models.WorkItem.STATUS_REDO
 
