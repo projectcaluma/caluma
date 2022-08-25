@@ -1640,6 +1640,16 @@ def test_redo_work_item(
     assert case.work_items.get(task=tasks[3]).status == models.WorkItem.STATUS_REDO
     assert case.work_items.get(task=tasks[4]).status == models.WorkItem.STATUS_REDO
 
+    api.complete_work_item(
+        work_item=case.work_items.get(task=tasks[0]), user=admin_user
+    )
+
+    assert case.work_items.get(task=tasks[0]).status == models.WorkItem.STATUS_COMPLETED
+    assert case.work_items.get(task=tasks[1]).status == models.WorkItem.STATUS_READY
+    assert case.work_items.get(task=tasks[2]).status == models.WorkItem.STATUS_READY
+    assert case.work_items.get(task=tasks[3]).status == models.WorkItem.STATUS_REDO
+    assert case.work_items.get(task=tasks[4]).status == models.WorkItem.STATUS_REDO
+
 
 @pytest.mark.parametrize("use_graphql", [False, True])
 def test_redo_work_item_not_redoable(
