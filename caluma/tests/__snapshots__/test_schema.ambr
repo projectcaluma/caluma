@@ -3382,6 +3382,7 @@
     caseDocumentHasAnswer: [HasAnswerFilterType]
     caseMetaValue: [JSONValueFilterType]
     rootCaseMetaValue: [JSONValueFilterType]
+    caseSearchAnswers: [SearchAnswersFilterType]
     invert: Boolean
   }
   
