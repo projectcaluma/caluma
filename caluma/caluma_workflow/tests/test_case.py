@@ -36,9 +36,7 @@ def test_query_all_cases(db, snapshot, case, result_count, flow, schema_executor
 
 @pytest.mark.parametrize("task__lead_time", [100, None])
 @pytest.mark.parametrize("task__address_groups", ['["group-name"]|groups', None])
-@pytest.mark.parametrize(
-    "mutation,update", [("startCase", False), ("saveCase", False), ("saveCase", True)]
-)
+@pytest.mark.parametrize("update", [True, False])
 def test_save_case(
     db,
     snapshot,
@@ -49,16 +47,12 @@ def test_save_case(
     form,
     case,
     schema_executor,
-    mutation,
     update,
 ):
 
-    input_type = {"startCase": "StartCaseInput!", "saveCase": "SaveCaseInput!"}[
-        mutation
-    ]
     query = """
-        mutation StartCase($input: %s) {
-          %s (input: $input) {
+        mutation SaveCase($input: SaveCaseInput!) {
+          saveCase(input: $input) {
             case {
               id
               document {
@@ -87,15 +81,15 @@ def test_save_case(
             clientMutationId
           }
         }
-    """ % (
-        input_type,
-        mutation,
-    )
+    """
 
-    inp = {"input": {"workflow": workflow.slug, "form": form.slug}}
-
-    if mutation == "saveCase":
-        inp["_context"] = json.dumps({"additional_data": "foo"})
+    inp = {
+        "input": {
+            "workflow": workflow.slug,
+            "form": form.slug,
+            "context": json.dumps({"additional_data": "foo"}),
+        }
+    }
 
     if update:
         inp["input"]["id"] = str(case.id)
@@ -105,11 +99,13 @@ def test_save_case(
     assert not result.errors
 
     # if it was an update, we expect the same ID else we need a new ID
-    is_same_id = extract_global_id(result.data[mutation]["case"]["id"]) == str(case.id)
+    is_same_id = extract_global_id(result.data["saveCase"]["case"]["id"]) == str(
+        case.id
+    )
     assert is_same_id == update
 
     # can't snapshot IDs, they change
-    del result.data[mutation]["case"]["id"]
+    del result.data["saveCase"]["case"]["id"]
     snapshot.assert_match(result.data)
 
 
@@ -124,8 +120,8 @@ def test_start_sub_sub_case(
     sub_work_item = work_item_factory(child_case=None, case=child_case)
 
     query = """
-        mutation StartCase($input: StartCaseInput!) {
-          startCase(input: $input) {
+        mutation SaveCase($input: SaveCaseInput!) {
+          saveCase(input: $input) {
             case {
               id
             }
@@ -141,7 +137,7 @@ def test_start_sub_sub_case(
 
     assert not result.errors
 
-    case_id = result.data["startCase"]["case"]["id"]
+    case_id = result.data["saveCase"]["case"]["id"]
     child_child_case = models.Case.objects.get(pk=extract_global_id(case_id))
     assert child_child_case.parent_work_item.pk == sub_work_item.pk
     assert child_child_case.family == child_case.family == case.family == case
@@ -149,8 +145,8 @@ def test_start_sub_sub_case(
 
 def test_start_case_invalid_form(db, workflow, form, schema_executor):
     query = """
-        mutation StartCase($input: StartCaseInput!) {
-          startCase(input: $input) {
+        mutation SaveCase($input: SaveCaseInput!) {
+          saveCase(input: $input) {
             case {
               id
             }
@@ -214,8 +210,8 @@ def test_multiple_instance_task_address_groups(
     db, workflow, workflow_start_tasks, task, count, schema_executor
 ):
     query = """
-        mutation StartCase($input: StartCaseInput!) {
-          startCase(input: $input) {
+        mutation SaveCase($input: SaveCaseInput!) {
+          saveCase(input: $input) {
             clientMutationId
           }
         }

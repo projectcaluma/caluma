@@ -280,12 +280,6 @@ class SaveCompleteTaskFormTask(SaveTask):
         return_field_type = Task
 
 
-class StartCase(Mutation):
-    class Meta:
-        serializer_class = serializers.CaseSerializer
-        model_operations = ["create"]
-
-
 class SaveCase(Mutation):
     class Input:
         id = graphene.String()
@@ -385,15 +379,12 @@ class Mutation(object):
     save_complete_workflow_form_task = SaveCompleteWorkflowFormTask().Field()
     save_complete_task_form_task = SaveCompleteTaskFormTask().Field()
 
-    start_case = StartCase().Field()
-
-    start_case.deprecation_reason = "Use SaveCase mutation instead"
-
     save_case = SaveCase().Field()
     cancel_case = CancelCase().Field()
     suspend_case = SuspendCase().Field()
     resume_case = ResumeCase().Field()
     reopen_case = ReopenCase().Field()
+
     complete_work_item = CompleteWorkItem().Field()
     skip_work_item = SkipWorkItem().Field()
     cancel_work_item = CancelWorkItem().Field()

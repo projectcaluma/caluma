@@ -1,5 +1,3 @@
-from warnings import warn
-
 from django.conf import settings
 
 
@@ -11,15 +9,6 @@ class BaseUser:  # pragma: no cover
         self.token = token
         self.claims = {} if claims is None else claims
         self.is_authenticated = False
-
-    def __getattribute__(self, name):
-        if name in ["userinfo", "introspection"]:
-            warn(
-                f'"{name}" is deprecated. Use the new "claims" attribute',
-                DeprecationWarning,
-            )
-            return self.claims
-        return super().__getattribute__(name)
 
     def __str__(self):
         raise NotImplementedError
