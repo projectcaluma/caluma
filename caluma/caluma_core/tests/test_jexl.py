@@ -79,7 +79,7 @@ def test_jexl_cache():
 
     # fill the cache "to the brim"
     for x in range(19):
-        cache.get_or_set(x, lambda: x)
+        cache.get_or_set(x, lambda: "test")
     assert len(cache._mru) == 19
     assert len(cache._cache) == 19
 
