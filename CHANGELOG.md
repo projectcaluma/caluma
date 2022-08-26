@@ -1,3 +1,20 @@
+# v8.0.0-beta.15 (26 August 2022)
+
+### Feature
+* **flow:** Allow flows to not have tasks in next if redoable is given ([`867b796`](https://github.com/projectcaluma/caluma/commit/867b796394c55fda5960d6b889cc594f55594b52))
+* **reopen case:** Allow reopening child cases of ready work items ([`e073cad`](https://github.com/projectcaluma/caluma/commit/e073cad3afb204af18e484f6b59758fdcba09476))
+* **workflow:** Add is_redoable property to work item schema ([`709965d`](https://github.com/projectcaluma/caluma/commit/709965d9822433b58e00d51ec71500fb4865a802))
+* **workflow:** Add search answer filter to work item filters ([`0ceb2c6`](https://github.com/projectcaluma/caluma/commit/0ceb2c6db8405c7eb611cb58bca7881a51e22cdc))
+* **caluma:** Add new work item order key ([`a794211`](https://github.com/projectcaluma/caluma/commit/a794211421846099173a72300309b693888eabe1))
+
+### Fix
+* **redo:** Fix workflow of work items in status redo ([`abbdb92`](https://github.com/projectcaluma/caluma/commit/abbdb924c4d8fa004d4c5eb0f56748218810de49))
+* **analytics:** Handle None and ignore 0 in summary ([`d5c9669`](https://github.com/projectcaluma/caluma/commit/d5c96692c69db4323593563d3cda0298feba38dc))
+
+### Breaking
+* This removes the deprecated properties `userinfo` and `introspection` on the base user class which have been deprecated for a long time.  ([`b4fd9e2`](https://github.com/projectcaluma/caluma/commit/b4fd9e227f5e85c89f800b018e1ca2ae079c434b))
+* This drops the `saveCase` mutation which has been deprecated for a long time.  ([`6cf701d`](https://github.com/projectcaluma/caluma/commit/6cf701d749e34182c6a2e495b3050f3f47bc17b6))
+
 # v8.0.0-beta.14 (18 August 2022)
 
 ### Fix
@@ -55,11 +72,11 @@ now also is a list instead of a single dict.
 # v8.0.0-beta.11 (6 July 2022)
 
 ### Feature
-* **core:** Allow input type override ([`ec4c899`](https://github.com/anehx/caluma/commit/ec4c8997187452a12e091d3e94c6851e7c235156))
+* **core:** Allow input type override ([`ec4c899`](https://github.com/projectcaluma/caluma/commit/ec4c8997187452a12e091d3e94c6851e7c235156))
 
 ### Fix
-* **form:** Use potentially prefetched answer document set for table rows ([`58e0a7c`](https://github.com/anehx/caluma/commit/58e0a7c16747f8f0ec9a92c90171e898bbbe98e0))
-* **schema:** Reopen case schema clarification ([`a394273`](https://github.com/anehx/caluma/commit/a3942731645dcb94cc64923664be0c3733892d14))
+* **form:** Use potentially prefetched answer document set for table rows ([`58e0a7c`](https://github.com/projectcaluma/caluma/commit/58e0a7c16747f8f0ec9a92c90171e898bbbe98e0))
+* **schema:** Reopen case schema clarification ([`a394273`](https://github.com/projectcaluma/caluma/commit/a3942731645dcb94cc64923664be0c3733892d14))
 
 
 # v8.0.0-beta.10 (24 June 2022)
