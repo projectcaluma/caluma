@@ -180,12 +180,8 @@ class CompleteWorkItemLogic:
             )
 
             if all_siblings_complete:
-                redo_work_items = work_item.case.work_items.filter(
-                    task__in=next_tasks, status=models.WorkItem.STATUS_REDO
-                )
-
                 created_work_items = utils.create_work_items(
-                    next_tasks.exclude(pk__in=redo_work_items.values("task")),
+                    next_tasks,
                     case,
                     user,
                     work_item,
@@ -200,8 +196,6 @@ class CompleteWorkItemLogic:
                         user=user,
                         context=context,
                     )
-
-                redo_work_items.update(status=models.WorkItem.STATUS_READY)
 
         if (
             not next_tasks.exists()

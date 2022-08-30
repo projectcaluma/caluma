@@ -1578,7 +1578,11 @@ def redo_test_setup(
     task_flow_factory,
     admin_user,
 ):
-    tasks = task_factory.create_batch(5, type=models.Task.TYPE_SIMPLE)
+    tasks = task_factory.create_batch(
+        5,
+        type=models.Task.TYPE_SIMPLE,
+        lead_time=86400,  # 1 day
+    )
 
     workflow.start_tasks.add(tasks[0])
 
@@ -1602,6 +1606,7 @@ def redo_test_setup(
     return task_flow, case, tasks, work_item_to_be_redone
 
 
+@pytest.mark.freeze_time("2022-08-30")
 @pytest.mark.parametrize("use_graphql", [False, True])
 def test_redo_work_item(
     db,
@@ -1609,6 +1614,7 @@ def test_redo_work_item(
     schema_executor,
     admin_user,
     use_graphql,
+    freezer,
 ):
     task_flow, case, tasks, work_item_to_be_redone = redo_test_setup
 
@@ -1635,20 +1641,28 @@ def test_redo_work_item(
         api.redo_work_item(work_item=work_item_to_be_redone, user=admin_user)
 
     assert case.work_items.get(task=tasks[0]).status == models.WorkItem.STATUS_READY
-    assert case.work_items.get(task=tasks[1]).status == models.WorkItem.STATUS_REDO
-    assert case.work_items.get(task=tasks[2]).status == models.WorkItem.STATUS_REDO
-    assert case.work_items.get(task=tasks[3]).status == models.WorkItem.STATUS_REDO
-    assert case.work_items.get(task=tasks[4]).status == models.WorkItem.STATUS_REDO
+
+    for task in tasks[1:]:
+        work_item = case.work_items.get(task=task)
+        assert work_item.status == models.WorkItem.STATUS_REDO
+        assert work_item.deadline.date().isoformat() == "2022-08-31"
+
+    freezer.move_to("2022-09-12")
 
     api.complete_work_item(
         work_item=case.work_items.get(task=tasks[0]), user=admin_user
     )
 
     assert case.work_items.get(task=tasks[0]).status == models.WorkItem.STATUS_COMPLETED
-    assert case.work_items.get(task=tasks[1]).status == models.WorkItem.STATUS_READY
-    assert case.work_items.get(task=tasks[2]).status == models.WorkItem.STATUS_READY
-    assert case.work_items.get(task=tasks[3]).status == models.WorkItem.STATUS_REDO
-    assert case.work_items.get(task=tasks[4]).status == models.WorkItem.STATUS_REDO
+
+    for task in tasks[1:3]:
+        work_item = case.work_items.get(task=task)
+        assert work_item.status == models.WorkItem.STATUS_READY
+        assert work_item.deadline.date().isoformat() == "2022-09-13"
+
+    for task in tasks[3:5]:
+        work_item = case.work_items.get(task=task)
+        assert work_item.status == models.WorkItem.STATUS_REDO
 
 
 @pytest.mark.parametrize("use_graphql", [False, True])
