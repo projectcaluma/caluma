@@ -1,3 +1,10 @@
+# v8.0.0-beta.16 (1 September 2022)
+
+### Fix
+* **redo:** Recalculate deadline after updating a redo work item to ready ([`f803fbe`](https://github.com/projectcaluma/caluma/commit/f803fbe9951b09bd677ba3b8c5dda88af258203b))
+* **permissions:** Make sure user permission classes call super ([`6e1945b`](https://github.com/projectcaluma/caluma/commit/6e1945b7a75f15b9ffefcb33173d4202523147af))
+
+
 # v8.0.0-beta.15 (26 August 2022)
 
 ### Feature
@@ -14,6 +21,7 @@
 ### Breaking
 * This removes the deprecated properties `userinfo` and `introspection` on the base user class which have been deprecated for a long time.  ([`b4fd9e2`](https://github.com/projectcaluma/caluma/commit/b4fd9e227f5e85c89f800b018e1ca2ae079c434b))
 * This drops the `saveCase` mutation which has been deprecated for a long time.  ([`6cf701d`](https://github.com/projectcaluma/caluma/commit/6cf701d749e34182c6a2e495b3050f3f47bc17b6))
+
 
 # v8.0.0-beta.14 (18 August 2022)
 
