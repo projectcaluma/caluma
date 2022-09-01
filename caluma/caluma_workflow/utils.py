@@ -106,6 +106,25 @@ def create_work_items(tasks, case, user, prev_work_item=None, context: dict = No
                 # work item already exists, do not create a new one
                 continue
 
+            work_items_to_redo = models.WorkItem.objects.filter(
+                addressed_groups=groups,
+                controlling_groups=controlling_groups,
+                task_id=task.pk,
+                case=case,
+                status=models.WorkItem.STATUS_REDO,
+            )
+
+            if work_items_to_redo.exists():
+                # there is already an existing work item in status redo that
+                # needs to be reopened instead of creating a new one.
+                work_items_to_redo.update(
+                    deadline=task.calculate_deadline(),
+                    modified_by_user=user.username,
+                    modified_by_group=user.username,
+                    status=models.WorkItem.STATUS_READY,
+                )
+                continue
+
             work_items.append(
                 models.WorkItem.objects.create(
                     addressed_groups=groups,
