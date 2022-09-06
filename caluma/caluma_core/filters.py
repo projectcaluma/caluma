@@ -225,6 +225,15 @@ def CollectionFilterSetFactory(filterset_class, orderset_class=None):
         return CollectionFilterSetFactory._cache[cache_key]
 
     coll_fields = {"filter": FilterCollectionFactory(filterset_class, ordering=False)}
+
+    custom_filterset_class = CollectionFilterSetFactory.custom_filter_classes.get(
+        filterset_class.__name__
+    )
+
+    if custom_filterset_class:
+        coll_fields["custom_filter"] = FilterCollectionFactory(
+            custom_filterset_class, ordering=False
+        )
     if orderset_class:
         coll_fields["order"] = FilterCollectionFactory(orderset_class, ordering=True)
 

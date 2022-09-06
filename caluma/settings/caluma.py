@@ -93,6 +93,14 @@ DYNAMIC_GROUPS_CLASSES = env.list("DYNAMIC_GROUPS_CLASSES", default=[])
 
 DYNAMIC_TASKS_CLASSES = env.list("DYNAMIC_TASKS_CLASSES", default=[])
 
+CUSTOM_FILTER_CLASSES = env.dict(
+    "CUSTOM_FILTER_CLASSES",
+    default={
+        # This is just an example
+        "QuestionFilterSet": "caluma.caluma_form.custom_filters.CustomQuestionFilterSet"
+    },
+)
+
 # simple history
 SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
 
