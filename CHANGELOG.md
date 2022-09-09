@@ -1,3 +1,12 @@
+# v8.0.0-beta.17 (9 September 2022)
+
+### Fix
+* **events:** Don't emit create work item events when updating ([`4f2f491`](https://github.com/projectcaluma/caluma/commit/4f2f4916d62e689b59b805bdfdb6bf12e76d53d7))
+
+### Breaking
+* The `saveWorkItem` mutation doesn't emit `pre_create_work_item` `post_create_work_item` anymore since this is not the expected behaviour.  ([`4f2f491`](https://github.com/projectcaluma/caluma/commit/4f2f4916d62e689b59b805bdfdb6bf12e76d53d7))
+
+
 # v8.0.0-beta.16 (1 September 2022)
 
 ### Fix
