@@ -47,7 +47,7 @@ graphql-core = "~3.1.7"
 [tool.poetry.dev-dependencies]
 black = "22.6.0"
 factory-boy = "3.2.1"
-Faker = "14.1.0"
+Faker = "14.2.0"
 flake8 = "5.0.4"
 flake8-bugbear = "22.8.23"
 flake8-debugger = "4.1.2"
