@@ -515,6 +515,7 @@
     rootCase: ID
     searchAnswers: [SearchAnswersFilterType]
     status: [CaseStatusArgument]
+    excludeChildCases: Boolean
     invert: Boolean
   }
   

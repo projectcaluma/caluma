@@ -698,3 +698,33 @@ def test_cancel_suspend_resume_case(
 
         assert case.status == expected_case_status
         assert work_item.status == expected_work_item_status
+
+
+@pytest.mark.parametrize(
+    "exclude_child_cases,expected_count", [(True, 2), (False, 3), (None, 3)]
+)
+def test_case_filter_exclude_child_cases(
+    db, work_item, case_factory, schema_executor, exclude_child_cases, expected_count
+):
+    case_factory(parent_work_item=work_item)
+    case_factory(parent_work_item=None)
+
+    query = """
+        query AllCases($filter: [CaseFilterSetType]!) {
+          allCases(filter: $filter){
+            totalCount
+          }
+        }
+    """
+
+    result = schema_executor(
+        query,
+        variables={
+            "filter": []
+            if exclude_child_cases is None
+            else [{"excludeChildCases": exclude_child_cases}]
+        },
+    )
+
+    assert not result.errors
+    assert result.data["allCases"]["totalCount"] == expected_count
