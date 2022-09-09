@@ -452,7 +452,7 @@ class CancelWorkItemSerializer(ContextModelSerializer):
         fields = ["id", "context"]
 
 
-class SaveWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer):
+class SaveWorkItemSerializer(ContextModelSerializer):
     work_item = serializers.GlobalIDField(source="id")
     name = CharField(
         required=False,
@@ -466,17 +466,6 @@ class SaveWorkItemSerializer(SendEventSerializerMixin, ContextModelSerializer):
         allow_null=True,
         help_text=models.WorkItem._meta.get_field("description").help_text,
     )
-
-    @transaction.atomic
-    def update(self, instance, validated_data):
-        self.send_event(
-            events.pre_create_work_item,
-            work_item=instance,
-            validated_data=validated_data,
-        )
-        instance = super().update(instance, validated_data)
-        self.send_event(events.post_create_work_item, work_item=instance)
-        return instance
 
     class Meta:
         model = models.WorkItem
