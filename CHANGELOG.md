@@ -1,3 +1,10 @@
+# v8.0.0-beta.18 (12 September 2022)
+
+### Feature
+* **analytics:** Provide option labels ([`d1f7a38`](https://github.com/projectcaluma/caluma/commit/d1f7a380caa664e9b24dc6f205f212952a63e63c))
+* **cases:** Add filter to exclude child cases ([`dd58f6c`](https://github.com/projectcaluma/caluma/commit/dd58f6c1d0f8df73b620616d061bc90f73a6a8e8))
+
+
 # v8.0.0-beta.17 (9 September 2022)
 
 ### Fix
