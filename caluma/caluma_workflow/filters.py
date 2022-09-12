@@ -99,6 +99,13 @@ class CaseFilterSet(MetaFilterSet):
     root_case = GlobalIDFilter(field_name="family")
     search_answers = SearchAnswersFilter(document_id="document__pk")
     status = case_status_filter(lookup_expr="in")
+    exclude_child_cases = BooleanFilter(method="filter_exclude_child_cases")
+
+    def filter_exclude_child_cases(self, queryset, name, value):
+        if not value:
+            return queryset
+
+        return queryset.filter(parent_work_item__isnull=True)
 
     class Meta:
         model = models.Case
