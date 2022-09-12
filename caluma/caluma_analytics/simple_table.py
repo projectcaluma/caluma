@@ -9,7 +9,7 @@ from typing import List, Optional
 
 from django.conf import settings
 from django.db import connection
-from django.utils import timezone
+from django.utils import timezone, translation
 from psycopg2.extras import DictCursor
 
 from caluma.caluma_form import models as form_models
@@ -531,9 +531,9 @@ class FormAnswerField(AttributeField):
         super().__init__(parent=parent, identifier=identifier, **kwargs)
         self.subform_level = subform_level
         self.attr_name = attr_name
+        self._question = form_models.Question.objects.get(pk=self.identifier)
 
     def supported_functions(self):
-        question = form_models.Question.objects.get(pk=self.identifier)
         base_functions = [
             models.AnalyticsField.FUNCTION_VALUE.upper(),
             models.AnalyticsField.FUNCTION_COUNT.upper(),
@@ -557,7 +557,7 @@ class FormAnswerField(AttributeField):
             form_models.Question.TYPE_FLOAT: numeric_functions,
         }
 
-        return base_functions + function_support[question.type]
+        return base_functions + function_support[self._question.type]
 
     def query_field(self):
         # Only for top-level form do we need a Join field.
@@ -580,6 +580,95 @@ class FormAnswerField(AttributeField):
             answer_value_mode=(self.attr_name == "value"),
         )
         return value_field
+
+    def is_leaf(self):
+        if self._question.type == form_models.Question.TYPE_CHOICE:
+            return False
+        return super().is_leaf()
+
+    def is_value(self):
+        return (
+            self._question.type == form_models.Question.TYPE_CHOICE
+            or super().is_value()
+        )
+
+    @cached_property
+    def available_children(self):
+        if self._question.type == form_models.Question.TYPE_CHOICE:
+            return {
+                "label": ChoiceLabelField(
+                    parent=self,
+                    identifier="label",
+                    visibility_source=self.visibility_source,
+                )
+            }
+        return super().available_children
+
+
+class ChoiceLabelField(AttributeField):
+    def __init__(
+        self, parent, identifier, *, visibility_source, language=None, main_field=None
+    ):
+        super().__init__(
+            parent=parent, identifier=identifier, visibility_source=visibility_source
+        )
+        self.language = language
+        self._main_field = main_field
+
+    def is_leaf(self):
+        return bool(self.language)
+
+    def is_value(self):  # pragma: no cover
+        # without language, we return the default language as
+        # per request, so we can still "be" a value
+        return True
+
+    def source_path(self) -> List[str]:
+        """Return the full source path of this field as a list."""
+        fragment = (
+            [self._main_field.identifier, self.identifier]
+            if self._main_field
+            else [self.identifier]
+        )
+        return self.parent.source_path() + fragment if self.parent else fragment
+
+    def query_field(self):
+        # The label is in the choices table, so we need to join
+        # that one.
+        label_join_field = sql.JoinField(
+            identifier=self.identifier,
+            extract=self.identifier,
+            table=self.visibility_source.options(),
+            filters=[],
+            outer_ref=("value #>>'{}'", "slug"),  # noqa:P103
+            parent=self.parent.query_field() if self.parent else None,
+        )
+
+        language = self.language or translation.get_language()
+
+        value_field = sql.HStoreExtractorField(
+            "label",
+            "label",
+            parent=label_join_field,
+            hstore_key=language,
+        )
+
+        return value_field
+
+    @cached_property
+    def available_children(self):
+        if self.language:
+            return {}
+        return {
+            lang: ChoiceLabelField(
+                self.parent,
+                lang,
+                main_field=self,
+                visibility_source=self.visibility_source,
+                language=lang,
+            )
+            for lang, _ in settings.LANGUAGES
+        }
 
 
 class DateExtractorField(AttributeField):

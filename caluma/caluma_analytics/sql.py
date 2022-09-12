@@ -230,6 +230,19 @@ class JSONExtractorField(AttrField):
 
 
 @dataclass
+class HStoreExtractorField(AttrField):
+    hstore_key: Optional[str] = field(default=None)
+
+    def expr(self, query):
+        key_param = query.makeparam(self.hstore_key)
+        q_id = connection.ops.quote_name(self.extract)
+        self_alias = query.self_alias()
+        # Extract text from HStore field, so that it comes from the DB
+        # as actual text
+        return f"""({self_alias}.{q_id} -> {key_param})"""
+
+
+@dataclass
 class JoinField(Field):
     table: Optional[Union[str, Query]] = field(default=None)
     filters: List[str] = field(default_factory=list)
