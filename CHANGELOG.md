@@ -1,3 +1,9 @@
+# v8.0.0-beta.19 (27 September 2022)
+
+### Fix
+* **deps:** Pin graphene-django to v3.0.0b7 ([`3efc320`](https://github.com/projectcaluma/caluma/commit/3efc3209e79d8ea010802e9c11bd0e1b91f0c8b2))
+
+
 # v8.0.0-beta.18 (12 September 2022)
 
 ### Feature
