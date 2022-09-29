@@ -235,7 +235,7 @@ def CollectionFilterSetFactory(filterset_class, orderset_class=None):
             **coll_fields,
             "Meta": type(
                 "Meta",
-                (filterset_class.Meta,),
+                tuple(),
                 {
                     "model": filterset_class.Meta.model,
                     "fields": tuple(coll_fields.keys()),

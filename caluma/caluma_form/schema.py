@@ -2,6 +2,7 @@ import graphene
 from django.shortcuts import get_object_or_404
 from graphene import relay
 from graphene.types import ObjectType, generic
+from graphene_django.registry import get_global_registry
 from graphene_django.rest_framework import serializer_converter
 
 from ..caluma_core.filters import (
@@ -139,6 +140,20 @@ class Question(Node, graphene.Interface):
     @classmethod
     def resolve_type(cls, instance, info):
         return resolve_question(instance)
+
+    class Meta:
+        model = models.Question
+        fields = "__all__"
+        connection_class = CountableConnectionBase
+
+        class _meta:
+            fields = []
+            interfaces = (relay.Node,)
+            registry = get_global_registry()
+
+            @staticmethod
+            def freeze():
+                pass
 
 
 class Option(FormDjangoObjectType):
@@ -771,7 +786,7 @@ class CopyOption(UserDefinedPrimaryKeyMixin, Mutation):
 
 
 class Answer(Node, graphene.Interface):
-    id = graphene.ID()
+    id = graphene.ID(required=True)
     created_at = graphene.DateTime(required=True)
     modified_at = graphene.DateTime(required=True)
     created_by_user = graphene.String()
@@ -784,6 +799,20 @@ class Answer(Node, graphene.Interface):
     @classmethod
     def resolve_type(cls, instance, info):
         return resolve_answer(instance)
+
+    class Meta:
+        model = models.Answer
+        fields = "__all__"
+        connection_class = CountableConnectionBase
+
+        class _meta:
+            fields = []
+            interfaces = (relay.Node,)
+            registry = get_global_registry()
+
+            @staticmethod
+            def freeze():
+                pass
 
 
 class AnswerQuerysetMixin(object):

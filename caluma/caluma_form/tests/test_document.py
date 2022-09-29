@@ -279,7 +279,7 @@ def test_complex_document_query_performance(
         }
     """
 
-    with django_assert_num_queries(7):
+    with django_assert_num_queries(10):
         result = schema_executor(query, variable_values={"id": str(document.pk)})
     assert not result.errors
 

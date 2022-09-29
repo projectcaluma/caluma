@@ -4,6 +4,7 @@ import graphene
 from django.db.models import Q
 from graphene import relay
 from graphene.types import generic
+from graphene_django.registry import get_global_registry
 from graphene_django.rest_framework import serializer_converter
 
 from ..caluma_core.filters import (
@@ -96,6 +97,19 @@ class Task(Node, graphene.Interface):
         }
 
         return TASK_TYPE[instance.type]
+
+    class Meta:
+        model = models.Task
+        connection_class = CountableConnectionBase
+
+        class _meta:
+            fields = []
+            interfaces = (relay.Node,)
+            registry = get_global_registry()
+
+            @staticmethod
+            def freeze():
+                pass
 
 
 class TaskConnection(CountableConnectionBase):

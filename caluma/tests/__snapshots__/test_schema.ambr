@@ -225,8 +225,8 @@
     direction: AscDesc
   }
   
-  interface Answer {
-    id: ID
+  interface Answer implements Node {
+    id: ID!
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -817,6 +817,21 @@
   type DjangoDebug {
     """Executed SQL queries for this API query."""
     sql: [DjangoDebugSQL]
+  
+    """Raise exceptions for this API query."""
+    exceptions: [DjangoDebugException]
+  }
+  
+  """Represents a single exception raised."""
+  type DjangoDebugException {
+    """The class of the exception"""
+    excType: String!
+  
+    """The message of the exception"""
+    message: String!
+  
+    """The stack trace"""
+    stack: String!
   }
   
   """Represents a single database query made to a Django managed DB."""
@@ -1365,7 +1380,7 @@
   }
   
   interface HistoricalAnswer {
-    id: ID
+    id: ID!
     createdAt: DateTime!
     modifiedAt: DateTime!
     createdByUser: String
@@ -1869,7 +1884,7 @@
     _debug: DjangoDebug
   }
   
-  interface Question {
+  interface Question implements Node {
     id: ID!
     createdAt: DateTime!
     modifiedAt: DateTime!
@@ -3134,7 +3149,7 @@
     id: ID!
   }
   
-  interface Task {
+  interface Task implements Node {
     id: ID!
     createdAt: DateTime!
     modifiedAt: DateTime!
