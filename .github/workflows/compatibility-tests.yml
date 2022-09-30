@@ -35,26 +35,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install poetry
+        run: pipx install poetry
+
       - name: Setup python
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python}}
-
-      - uses: actions/cache@v3
-        with:
-          path: .venv
-          key: poetry-${{ hashFiles('poetry.lock') }}
-          restore-keys: |
-            poetry-
+          cache: "poetry"
 
       - name: Set UID
         run: echo "UID=$(id --user)" > .env
 
       - name: Install dependencies
-        run: |
-          pip install -U poetry
-          poetry config virtualenvs.in-project true
-          poetry install
+        run: poetry install
 
       - name: Run tests
         run: poetry run pytest --no-cov-on-fail --cov --create-db -vv

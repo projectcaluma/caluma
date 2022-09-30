@@ -25,28 +25,23 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
+          # This is needed for gitlint to work
           fetch-depth: 0
+
+      - name: Install poetry
+        run: pipx install poetry
 
       - name: Setup python
         uses: actions/setup-python@v4
         with:
           python-version: "3.8"
-
-      - uses: actions/cache@v3
-        with:
-          path: .venv
-          key: poetry-${{ hashFiles('poetry.lock') }}
-          restore-keys: |
-            poetry-
+          cache: "poetry"
 
       - name: Set UID
         run: echo "UID=$(id --user)" > .env
 
       - name: Install dependencies
-        run: |
-          pip install -U poetry
-          poetry config virtualenvs.in-project true
-          poetry install
+        run: poetry install
 
       - name: Run gitlint
         run: poetry run gitlint --contrib contrib-title-conventional-commits
@@ -104,26 +99,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install poetry
+        run: pipx install poetry
+
       - name: Setup python
         uses: actions/setup-python@v4
         with:
           python-version: "3.8"
-
-      - uses: actions/cache@v3
-        with:
-          path: .venv
-          key: poetry-${{ hashFiles('poetry.lock') }}
-          restore-keys: |
-            poetry-
+          cache: "poetry"
 
       - name: Set UID
         run: echo "UID=$(id --user)" > .env
 
       - name: Install dependencies
-        run: |
-          pip install -U poetry
-          poetry config virtualenvs.in-project true
-          poetry install
+        run: poetry install
 
       - name: Build and install package
         run: |
