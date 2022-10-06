@@ -78,8 +78,8 @@ class AnalyticsOutput(ObjectType):
         rows = [
             AnalyticsRow(
                 edges=[
-                    {"node": {"alias": alias, "value": val}}
-                    for alias, val in row.items()
+                    {"node": {"alias": alias, "value": row[alias]}}
+                    for alias in table.field_ordering
                 ]
             )
             for row in table.get_records()
@@ -91,8 +91,8 @@ class AnalyticsOutput(ObjectType):
         summary_row = table.get_summary()
         return AnalyticsRow(
             edges=[
-                {"node": {"alias": alias, "value": val}}
-                for alias, val in summary_row.items()
+                {"node": {"alias": alias, "value": summary_row[alias]}}
+                for alias in table.field_ordering
             ]
         )
 
@@ -169,7 +169,7 @@ class AnalyticsField(DjangoObjectType):
 
     @classmethod
     def get_queryset(cls, queryset, info):
-        return super().get_queryset(queryset, info).order_by("-created_at")
+        return super().get_queryset(queryset, info)
 
     class Meta:
         model = models.AnalyticsField
@@ -204,12 +204,20 @@ class RemoveAnalyticsField(Mutation):
         model_operations = ["update"]
 
 
+class ReorderAnalyticsFields(Mutation):
+    class Meta:
+        serializer_class = serializers.ReorderAnalyticsFieldSerializer
+        lookup_input_kwarg = "table"
+        model_operations = ["update"]
+
+
 class Mutation:
     save_analytics_table = SaveAnalyticsTable().Field()
     remove_analytics_table = RemoveAnalyticsTable().Field()
 
     save_analytics_field = SaveAnalyticsField().Field()
     remove_analytics_field = RemoveAnalyticsField().Field()
+    reorder_analytics_fields = ReorderAnalyticsFields().Field()
 
 
 class Query:

@@ -361,3 +361,54 @@ def test_full_field_list(
         start = CaseStartingObject(info, disable_visibilities=False)
         fields = start.get_fields(depth=100)
         snapshot.assert_match(sorted(fields.keys()))
+
+
+def test_reorder_analytics_fields(db, example_analytics, schema_executor):
+
+    query = """
+        mutation ReorderAnalyticsFields($input: ReorderAnalyticsFieldsInput!) {
+          reorderAnalyticsFields(input: $input) {
+            analyticsTable {
+              fields {
+                edges {
+                  node {
+                    id
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    analytics_fields_ids = example_analytics.fields.order_by("id").values_list(
+        "id", flat=True
+    )
+
+    result = schema_executor(
+        query,
+        variable_values={
+            "input": {
+                "table": to_global_id(
+                    type(example_analytics).__name__, example_analytics.pk
+                ),
+                "fields": [
+                    to_global_id(models.AnalyticsField.__name__, field_id)
+                    for field_id in analytics_fields_ids
+                ],
+            }
+        },
+    )
+
+    assert not result.errors
+    result_fields = [
+        field["node"]["id"]
+        for field in result.data["reorderAnalyticsFields"]["analyticsTable"]["fields"][
+            "edges"
+        ]
+    ]
+
+    assert result_fields == [
+        to_global_id(models.AnalyticsField.__name__, field_id)
+        for field_id in analytics_fields_ids
+    ]

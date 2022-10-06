@@ -84,6 +84,12 @@ class PivotTable:
 
         return sql_query, params
 
+    @cached_property
+    def field_ordering(self):
+        return list(
+            self.table.fields.all().order_by("sort").values_list("alias", flat=True)
+        )
+
     def get_records(self):
         self._summary = defaultdict(int)
         sql_query, params = self.get_sql_and_params()

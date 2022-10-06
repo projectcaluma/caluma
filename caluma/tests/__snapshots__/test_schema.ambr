@@ -84,6 +84,7 @@
     filters: [String]
     function: AggregateFunction
     showOutput: Boolean!
+    sort: Int!
   }
   
   type AnalyticsFieldConnection {
@@ -1699,6 +1700,7 @@
     removeAnalyticsTable(input: RemoveAnalyticsTableInput!): RemoveAnalyticsTablePayload
     saveAnalyticsField(input: SaveAnalyticsFieldInput!): SaveAnalyticsFieldPayload
     removeAnalyticsField(input: RemoveAnalyticsFieldInput!): RemoveAnalyticsFieldPayload
+    reorderAnalyticsFields(input: ReorderAnalyticsFieldsInput!): ReorderAnalyticsFieldsPayload
     saveWorkflow(input: SaveWorkflowInput!): SaveWorkflowPayload
     addWorkflowFlow(input: AddWorkflowFlowInput!): AddWorkflowFlowPayload
     removeFlow(input: RemoveFlowInput!): RemoveFlowPayload
@@ -2051,6 +2053,17 @@
   
   type ReopenCasePayload {
     case: Case
+    clientMutationId: String
+  }
+  
+  input ReorderAnalyticsFieldsInput {
+    table: ID!
+    fields: [ID]!
+    clientMutationId: String
+  }
+  
+  type ReorderAnalyticsFieldsPayload {
+    analyticsTable: AnalyticsTable
     clientMutationId: String
   }
   

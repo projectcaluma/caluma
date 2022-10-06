@@ -91,11 +91,13 @@ class AnalyticsField(UUIDModel):
     )
 
     show_output = models.BooleanField(default=True)
+    sort = models.PositiveIntegerField(editable=False, db_index=True, default=0)
 
     def __repr__(self):
         return f"AnalyticsField<{self.table.slug}.{self.alias}>"
 
     class Meta:
+        ordering = ["sort", "alias"]
         constraints = [
             UniqueConstraint(
                 name="unique_data_source",
