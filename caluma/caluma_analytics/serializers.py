@@ -120,3 +120,29 @@ class RemoveAnalyticsFieldSerializer(serializers.ModelSerializer):
     class Meta:
         fields = ["id"]
         model = models.AnalyticsField
+
+
+class TableFieldRelatedField(serializers.GlobalIDPrimaryKeyRelatedField):
+    def get_queryset(self):
+        table = self.parent.parent.instance
+        return table.fields.all()
+
+
+class ReorderAnalyticsFieldSerializer(serializers.ModelSerializer):
+    table = serializers.GlobalIDField(source="slug")
+    fields = TableFieldRelatedField(many=True)
+
+    def update(self, instance, validated_data):
+        for sort, analytic_field in enumerate(validated_data["fields"], start=1):
+            models.AnalyticsField.objects.filter(
+                table=instance, pk=analytic_field.pk
+            ).update(sort=sort)
+
+        return instance
+
+    class Meta:
+        model = models.AnalyticsTable
+        fields = [
+            "table",
+            "fields",
+        ]

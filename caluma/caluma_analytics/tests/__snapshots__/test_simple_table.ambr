@@ -93,8 +93,8 @@
                 'edges': list([
                   dict({
                     'node': dict({
-                      'alias': 'statuuuuuus',
-                      'value': 'running',
+                      'alias': 'created_at',
+                      'value': '2021-10-10 00:00:00+00:00',
                     }),
                   }),
                   dict({
@@ -105,14 +105,14 @@
                   }),
                   dict({
                     'node': dict({
-                      'alias': 'created_at',
-                      'value': '2021-10-10 00:00:00+00:00',
+                      'alias': 'quarter',
+                      'value': '4',
                     }),
                   }),
                   dict({
                     'node': dict({
-                      'alias': 'quarter',
-                      'value': '4',
+                      'alias': 'statuuuuuus',
+                      'value': 'running',
                     }),
                   }),
                 ]),
