@@ -167,10 +167,6 @@ class AnalyticsField(DjangoObjectType):
     filters = graphene.List(String, required=False)
     function = AggregateFunction(required=False)
 
-    @classmethod
-    def get_queryset(cls, queryset, info):
-        return super().get_queryset(queryset, info)
-
     class Meta:
         model = models.AnalyticsField
         interfaces = (relay.Node,)

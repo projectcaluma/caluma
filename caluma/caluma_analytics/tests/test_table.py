@@ -381,9 +381,11 @@ def test_reorder_analytics_fields(db, example_analytics, schema_executor):
         }
     """
 
-    analytics_fields_ids = example_analytics.fields.order_by("id").values_list(
-        "id", flat=True
-    )
+    analytics_fields_ids = example_analytics.fields.values_list("id", flat=True)
+    reversed_analytics_fields = [
+        to_global_id(models.AnalyticsField.__name__, field_id)
+        for field_id in analytics_fields_ids.reverse()
+    ]
 
     result = schema_executor(
         query,
@@ -392,10 +394,7 @@ def test_reorder_analytics_fields(db, example_analytics, schema_executor):
                 "table": to_global_id(
                     type(example_analytics).__name__, example_analytics.pk
                 ),
-                "fields": [
-                    to_global_id(models.AnalyticsField.__name__, field_id)
-                    for field_id in analytics_fields_ids
-                ],
+                "fields": reversed_analytics_fields,
             }
         },
     )
@@ -408,7 +407,4 @@ def test_reorder_analytics_fields(db, example_analytics, schema_executor):
         ]
     ]
 
-    assert result_fields == [
-        to_global_id(models.AnalyticsField.__name__, field_id)
-        for field_id in analytics_fields_ids
-    ]
+    assert result_fields == reversed_analytics_fields

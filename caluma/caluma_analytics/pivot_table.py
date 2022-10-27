@@ -86,9 +86,7 @@ class PivotTable:
 
     @cached_property
     def field_ordering(self):
-        return list(
-            self.table.fields.all().order_by("sort").values_list("alias", flat=True)
-        )
+        return list(self.table.fields.all().values_list("alias", flat=True))
 
     def get_records(self):
         self._summary = defaultdict(int)
