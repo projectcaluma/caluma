@@ -97,7 +97,7 @@ class AnalyticsField(UUIDModel):
         return f"AnalyticsField<{self.table.slug}.{self.alias}>"
 
     class Meta:
-        ordering = ["sort", "alias"]
+        ordering = ["sort", "-created_at"]
         constraints = [
             UniqueConstraint(
                 name="unique_data_source",
