@@ -12,7 +12,7 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AlterModelOptions(
             name="analyticsfield",
-            options={"ordering": ["sort", "alias"]},
+            options={"ordering": ["sort", "-created_at"]},
         ),
         migrations.AddField(
             model_name="analyticsfield",

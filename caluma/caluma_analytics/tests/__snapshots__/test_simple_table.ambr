@@ -99,14 +99,14 @@
                   }),
                   dict({
                     'node': dict({
-                      'alias': 'foo',
-                      'value': 'bar',
+                      'alias': 'quarter',
+                      'value': '4',
                     }),
                   }),
                   dict({
                     'node': dict({
-                      'alias': 'quarter',
-                      'value': '4',
+                      'alias': 'foo',
+                      'value': 'bar',
                     }),
                   }),
                   dict({

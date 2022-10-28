@@ -56,14 +56,14 @@
             'edges': list([
               dict({
                 'node': dict({
-                  'alias': 'existing',
-                  'dataSource': 'meta.foobar',
+                  'alias': 'quarter',
+                  'dataSource': 'created_at.quarter',
                 }),
               }),
               dict({
                 'node': dict({
-                  'alias': 'quarter',
-                  'dataSource': 'created_at.quarter',
+                  'alias': 'existing',
+                  'dataSource': 'meta.foobar',
                 }),
               }),
             ]),
@@ -89,14 +89,14 @@
             'edges': list([
               dict({
                 'node': dict({
-                  'alias': 'existing',
-                  'dataSource': 'meta.foobar',
+                  'alias': 'foobar',
+                  'dataSource': 'meta.baz',
                 }),
               }),
               dict({
                 'node': dict({
-                  'alias': 'foobar',
-                  'dataSource': 'meta.baz',
+                  'alias': 'existing',
+                  'dataSource': 'meta.foobar',
                 }),
               }),
             ]),
