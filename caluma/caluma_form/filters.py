@@ -19,7 +19,9 @@ from ..caluma_core.filters import (
     MetaFilterSet,
     SearchFilter,
 )
+from ..caluma_core.forms import GlobalIDFormField
 from ..caluma_core.ordering import AttributeOrderingFactory, MetaFieldOrdering
+from ..caluma_core.relay import extract_global_id
 from ..caluma_form.models import Answer, DynamicOption, Form, Question
 from ..caluma_form.ordering import AnswerValueOrdering
 from . import models, validators
@@ -79,23 +81,6 @@ class OptionOrderSet(FilterSet):
     class Meta:
         model = models.Question
         fields = ("meta", "attribute")
-
-
-class QuestionFilterSet(MetaFilterSet):
-    exclude_forms = GlobalIDMultipleChoiceFilter(field_name="forms", exclude=True)
-    search = SearchFilter(fields=("slug", "label"))
-    slugs = MultipleChoiceFilter(field_name="slug")
-
-    class Meta:
-        model = models.Question
-        fields = (
-            "label",
-            "is_required",
-            "is_hidden",
-            "is_archived",
-            "sub_form",
-            "row_form",
-        )
 
 
 class QuestionOrderSet(FilterSet):
@@ -546,6 +531,40 @@ class VisibleAnswerFilter(Filter):
         document = qs.first().document.family
         validator = validators.DocumentValidator()
         return qs.filter(question__slug__in=validator.visible_questions(document))
+
+
+class VisibleQuestionFilter(Filter):
+    field_class = GlobalIDFormField
+
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES or not qs.exists():  # pragma: no cover
+            return qs
+
+        document_id = extract_global_id(value)
+
+        # assuming qs can only ever be in the context of a single document
+        document = models.Document.objects.get(pk=document_id)
+        validator = validators.DocumentValidator()
+        return qs.filter(slug__in=validator.visible_questions(document))
+
+
+class QuestionFilterSet(MetaFilterSet):
+    exclude_forms = GlobalIDMultipleChoiceFilter(field_name="forms", exclude=True)
+    search = SearchFilter(fields=("slug", "label"))
+    slugs = MultipleChoiceFilter(field_name="slug")
+
+    visible_in_document = VisibleQuestionFilter()
+
+    class Meta:
+        model = models.Question
+        fields = (
+            "label",
+            "is_required",
+            "is_hidden",
+            "is_archived",
+            "sub_form",
+            "row_form",
+        )
 
 
 class AnswerFilterSet(MetaFilterSet):
