@@ -1,4 +1,5 @@
 import pytest
+from graphql_relay import to_global_id
 
 from ...caluma_core.relay import extract_global_id
 from ...caluma_form.filters import AnswerHierarchyMode, AnswerLookupMode
@@ -249,7 +250,7 @@ def test_has_answer_intersect(
 
 
 @pytest.mark.parametrize("question__is_hidden,expected", [("false", 1), ("true", 0)])
-def test_visible_in_context(
+def test_visible_answer_in_context(
     schema_executor, db, document, form, question, form_question, answer, expected
 ):
     query = """
@@ -275,5 +276,52 @@ def test_visible_in_context(
     assert not result.errors
     assert (
         len(result.data["allDocuments"]["edges"][0]["node"]["answers"]["edges"])
+        == expected
+    )
+
+
+@pytest.mark.parametrize("question__is_hidden,expected", [("false", 1), ("true", 0)])
+@pytest.mark.parametrize("use_global_id", [False, True])
+def test_visible_question_in_document(
+    schema_executor,
+    db,
+    document,
+    form,
+    question,
+    form_question,
+    expected,
+    use_global_id,
+):
+    query = """
+        query asdf ($document: ID!) {
+          allDocuments {
+            edges {
+              node {
+                form {
+                  questions(filter: [{visibleInDocument: $document}]) {
+                    edges {
+                      node {
+                        id
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+    variables = {"document": str(document.pk)}
+    if use_global_id:
+        variables = {"document": to_global_id("Document", str(document.pk))}
+
+    result = schema_executor(query, variable_values=variables)
+    assert not result.errors
+    assert (
+        len(
+            result.data["allDocuments"]["edges"][0]["node"]["form"]["questions"][
+                "edges"
+            ]
+        )
         == expected
     )

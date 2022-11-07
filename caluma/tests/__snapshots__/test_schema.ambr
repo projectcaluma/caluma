@@ -1928,6 +1928,7 @@
     excludeForms: [ID]
     search: String
     slugs: [String]
+    visibleInDocument: ID
     invert: Boolean
   }
   
