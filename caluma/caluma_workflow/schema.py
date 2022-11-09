@@ -239,9 +239,9 @@ class Case(DjangoObjectType):
 
     class Meta:
         model = models.Case
-        exclude = ("family",)
         interfaces = (relay.Node,)
         connection_class = CountableConnectionBase
+        fields = "__all__"
 
 
 class SaveWorkflow(UserDefinedPrimaryKeyMixin, Mutation):
