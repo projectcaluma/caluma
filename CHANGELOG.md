@@ -1,3 +1,15 @@
+# v8.0.0-beta.20 (10 November 2022)
+
+### Feature
+* **workflow:** Include family field on case schema model ([`aea98f9`](https://github.com/projectcaluma/caluma/commit/aea98f9d24e9eba3ae82bb789a1bcb12f62f5324))
+* **filters:** Add `visibleInDocument`-filter for questions ([`9f5caa2`](https://github.com/projectcaluma/caluma/commit/9f5caa2527e27fc4185d7fcca4339a60ec0ccb83))
+* **analytics:** Enable reordering of analytics fields ([`59eadbc`](https://github.com/projectcaluma/caluma/commit/59eadbc799a2486f7606ce6d5d1eac3d12b86398))
+
+### Fix
+* Fix breaking change introduced in 59eadbc ([`34be9bf`](https://github.com/projectcaluma/caluma/commit/34be9bfedfd893e0dd86f117df8b61d011359f53))
+* Remove order_by in field_ordering, refactor test ([`121a433`](https://github.com/projectcaluma/caluma/commit/121a433cbf12b7151aab7cab88611ab77f531adb))
+
+
 # v8.0.0-beta.19 (27 September 2022)
 
 ### Fix
