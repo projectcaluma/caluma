@@ -975,7 +975,14 @@
     meta: GenericScalar!
     source: Question
     forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
-    options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+    options(
+      """JSON object passed as context to the data source"""
+      context: JSONString
+      before: String
+      after: String
+      first: Int
+      last: Int
+    ): DataSourceDataConnection
     dataSource: String!
   
     """The ID of the object"""
@@ -1001,7 +1008,14 @@
     meta: GenericScalar!
     source: Question
     forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
-    options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+    options(
+      """JSON object passed as context to the data source"""
+      context: JSONString
+      before: String
+      after: String
+      first: Int
+      last: Int
+    ): DataSourceDataConnection
     dataSource: String!
   
     """The ID of the object"""
@@ -1055,7 +1069,14 @@
   }
   
   interface DynamicQuestion {
-    options(before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+    options(
+      """JSON object passed as context to the data source"""
+      context: JSONString
+      before: String
+      after: String
+      first: Int
+      last: Int
+    ): DataSourceDataConnection
     dataSource: String!
     hintText: String
   }
@@ -1856,7 +1877,19 @@
     analyticsTable(slug: String!): AnalyticsTable
     allAnalyticsFields(offset: Int, before: String, after: String, first: Int, last: Int, filter: [AnalyticsFieldFilterSetType], order: [AnalyticsFieldOrderSetType]): AnalyticsFieldConnection
     allDataSources(before: String, after: String, first: Int, last: Int): DataSourceConnection
-    dataSource(name: String!, before: String, after: String, first: Int, last: Int): DataSourceDataConnection
+    dataSource(
+      name: String!
+  
+      """Slug of the question passed as context to the data source"""
+      question: String
+  
+      """JSON object passed as context to the data source"""
+      context: JSONString
+      before: String
+      after: String
+      first: Int
+      last: Int
+    ): DataSourceDataConnection
     allWorkflows(offset: Int, before: String, after: String, first: Int, last: Int, filter: [WorkflowFilterSetType], order: [WorkflowOrderSetType]): WorkflowConnection
     allTasks(offset: Int, before: String, after: String, first: Int, last: Int, filter: [TaskFilterSetType], order: [TaskOrderSetType]): TaskConnection
     allCases(offset: Int, before: String, after: String, first: Int, last: Int, filter: [CaseFilterSetType], order: [CaseOrderSetType]): CaseConnection
@@ -2389,6 +2422,9 @@
     document: ID!
     meta: JSONString
     value: Date
+  
+    """JSON object passed as context to the data source of dynamic questions"""
+    dataSourceContext: JSONString
     clientMutationId: String
   }
   
@@ -2402,6 +2438,9 @@
     question: ID!
     document: ID!
     meta: JSONString
+  
+    """JSON object passed as context to the data source of dynamic questions"""
+    dataSourceContext: JSONString
     clientMutationId: String
   }
   
@@ -2415,6 +2454,9 @@
     document: ID!
     meta: JSONString
     value: Float
+  
+    """JSON object passed as context to the data source of dynamic questions"""
+    dataSourceContext: JSONString
     clientMutationId: String
   }
   
@@ -2435,6 +2477,9 @@
     document: ID!
     meta: JSONString
     value: Int
+  
+    """JSON object passed as context to the data source of dynamic questions"""
+    dataSourceContext: JSONString
     clientMutationId: String
   }
   
@@ -2448,6 +2493,9 @@
     document: ID!
     meta: JSONString
     value: [String]
+  
+    """JSON object passed as context to the data source of dynamic questions"""
+    dataSourceContext: JSONString
     clientMutationId: String
   }
   
@@ -2466,6 +2514,9 @@
     document: ID!
     meta: JSONString
     value: String
+  
+    """JSON object passed as context to the data source of dynamic questions"""
+    dataSourceContext: JSONString
     clientMutationId: String
   }
   
@@ -2481,6 +2532,9 @@
   
     """List of document IDs representing the rows in the table."""
     value: [ID]
+  
+    """JSON object passed as context to the data source of dynamic questions"""
+    dataSourceContext: JSONString
     clientMutationId: String
   }
   

@@ -107,18 +107,20 @@ class AnswerValidator:
             )
 
     def _validate_question_dynamic_choice(
-        self, question, value, document, user, **kwargs
+        self, question, value, document, user, data_source_context, **kwargs
     ):
         if not isinstance(value, str):
             raise CustomValidationError(
                 f'Invalid value "{value}". Must be of type str.', slugs=[question.slug]
             )
 
-        self._validate_dynamic_option(question, document, value, user)
+        self._validate_dynamic_option(
+            question, document, value, user, data_source_context
+        )
         self._remove_unused_dynamic_options(question, document, [value])
 
     def _validate_question_dynamic_multiple_choice(
-        self, question, value, document, user, **kwargs
+        self, question, value, document, user, data_source_context, **kwargs
     ):
         if not isinstance(value, list):
             raise CustomValidationError(
@@ -131,16 +133,20 @@ class AnswerValidator:
                     f'Invalid value: "{v}". Must be of type string',
                     slugs=[question.slug],
                 )
-            self._validate_dynamic_option(question, document, v, user)
+            self._validate_dynamic_option(
+                question, document, v, user, data_source_context
+            )
 
         self._remove_unused_dynamic_options(question, document, value)
 
-    def _validate_dynamic_option(self, question, document, option, user):
+    def _validate_dynamic_option(
+        self, question, document, option, user, data_source_context
+    ):
         data_source = get_data_sources(dic=True)[question.data_source]
         data_source_object = data_source()
 
         valid_label = data_source_object.validate_answer_value(
-            option, document, question, user
+            option, document, question, user, data_source_context
         )
         if valid_label is False:
             raise CustomValidationError(
@@ -199,6 +205,7 @@ class AnswerValidator:
         validation_context=None,
         instance=None,
         origin=False,
+        data_source_context=None,
         **kwargs,
     ):
         # Check all possible fields for value
@@ -222,6 +229,7 @@ class AnswerValidator:
             validation_context=validation_context,
             instance=instance,
             origin=origin,
+            data_source_context=data_source_context,
         )
 
         format_validators = get_format_validators(dic=True)
@@ -230,7 +238,14 @@ class AnswerValidator:
 
 
 class DocumentValidator:
-    def validate(self, document, user, validation_context=None, **kwargs):
+    def validate(
+        self,
+        document,
+        user,
+        validation_context=None,
+        data_source_context=None,
+        **kwargs,
+    ):
         if not validation_context:
             validation_context = self._validation_context(document)
 
@@ -247,6 +262,7 @@ class DocumentValidator:
                 documents=answer.documents.all(),
                 user=user,
                 validation_context=validation_context,
+                data_source_context=data_source_context,
             )
 
     def _validation_context(self, document):

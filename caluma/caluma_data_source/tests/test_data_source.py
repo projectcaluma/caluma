@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from django.core.cache import cache
 from django.utils import translation
@@ -254,3 +256,42 @@ def test_data_sources_stores_user(
         created_by_user="asdf",
         created_by_group="foobar",
     ).exists()
+
+
+@pytest.mark.parametrize("has_question", [True, False])
+@pytest.mark.parametrize("has_context", [True, False])
+def test_data_source_context(
+    db, snapshot, schema_executor, settings, question, has_question, has_context
+):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.caluma_data_source.tests.data_sources.MyDataSourceWithContext"
+    ]
+
+    query = """
+        query($question: String, $context: JSONString) {
+            dataSource(
+                name: "MyDataSourceWithContext"
+                question: $question
+                context: $context
+            ) {
+                edges {
+                    node {
+                        label
+                        slug
+                    }
+                }
+            }
+        }
+    """
+
+    variables = {}
+
+    if has_question:
+        variables["question"] = question.slug
+
+    if has_context:
+        variables["context"] = json.dumps({"foo": "bar"})
+
+    result = schema_executor(query, variable_values=variables)
+    assert not result.errors
+    snapshot.assert_match(result.data)

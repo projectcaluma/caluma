@@ -9,10 +9,10 @@ logger = logging.getLogger(__name__)
 def data_source_cache(timeout=None):
     def decorator(method):
         @functools.wraps(method)
-        def handle_cache(self, info):
+        def handle_cache(self, *args, **kwargs):
             key = f"data_source_{type(self).__name__}"
 
-            get_data_method = functools.partial(method, self, info)
+            get_data_method = functools.partial(method, self, *args, **kwargs)
             return cache.get_or_set(key, get_data_method, timeout)
 
         return handle_cache

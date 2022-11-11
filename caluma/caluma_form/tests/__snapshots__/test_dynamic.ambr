@@ -1,0 +1,172 @@
+# name: test_dynamic_choice_options_context[None-dynamic_choice-MyDataSourceWithContext]
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+            'options': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
+                    'label': 'q: environmental-ten',
+                    'slug': 'option-without-context',
+                  }),
+                }),
+              ]),
+            }),
+          }),
+        }),
+      ]),
+    }),
+  })
+# ---
+# name: test_dynamic_choice_options_context[None-dynamic_multiple_choice-MyDataSourceWithContext]
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
+            'options': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
+                    'label': 'q: environmental-ten',
+                    'slug': 'option-without-context',
+                  }),
+                }),
+              ]),
+            }),
+          }),
+        }),
+      ]),
+    }),
+  })
+# ---
+# name: test_dynamic_choice_options_context[context0-dynamic_choice-MyDataSourceWithContext]
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+            'options': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
+                    'label': 'q: environmental-ten foo: bar',
+                    'slug': 'option-with-context',
+                  }),
+                }),
+              ]),
+            }),
+          }),
+        }),
+      ]),
+    }),
+  })
+# ---
+# name: test_dynamic_choice_options_context[context0-dynamic_multiple_choice-MyDataSourceWithContext]
+  dict({
+    'allQuestions': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
+            'options': dict({
+              'edges': list([
+                dict({
+                  'node': dict({
+                    'label': 'q: environmental-ten foo: bar',
+                    'slug': 'option-with-context',
+                  }),
+                }),
+              ]),
+            }),
+          }),
+        }),
+      ]),
+    }),
+  })
+# ---
+# name: test_save_dynamic_choice_options_context[dynamic_choice-option-with-context-None-False-MyDataSourceWithContext]
+  dict({
+    'saveDocumentStringAnswer': None,
+  })
+# ---
+# name: test_save_dynamic_choice_options_context[dynamic_choice-option-with-context-context0-True-MyDataSourceWithContext]
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
+        'selectedOption': dict({
+          'label': 'q: environmental-ten foo: bar',
+          'slug': 'option-with-context',
+        }),
+      }),
+    }),
+  })
+# ---
+# name: test_save_dynamic_choice_options_context[dynamic_choice-option-without-context-None-True-MyDataSourceWithContext]
+  dict({
+    'saveDocumentStringAnswer': dict({
+      'answer': dict({
+        'selectedOption': dict({
+          'label': 'q: environmental-ten',
+          'slug': 'option-without-context',
+        }),
+      }),
+    }),
+  })
+# ---
+# name: test_save_dynamic_choice_options_context[dynamic_choice-option-without-context-context3-False-MyDataSourceWithContext]
+  dict({
+    'saveDocumentStringAnswer': None,
+  })
+# ---
+# name: test_save_dynamic_choice_options_context[dynamic_multiple_choice-value4-context4-True-MyDataSourceWithContext]
+  dict({
+    'saveDocumentListAnswer': dict({
+      'answer': dict({
+        'selectedOptions': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'label': 'q: environmental-ten foo: bar',
+                'slug': 'option-with-context',
+              }),
+            }),
+          ]),
+        }),
+      }),
+    }),
+  })
+# ---
+# name: test_save_dynamic_choice_options_context[dynamic_multiple_choice-value5-None-False-MyDataSourceWithContext]
+  dict({
+    'saveDocumentListAnswer': None,
+  })
+# ---
+# name: test_save_dynamic_choice_options_context[dynamic_multiple_choice-value6-None-True-MyDataSourceWithContext]
+  dict({
+    'saveDocumentListAnswer': dict({
+      'answer': dict({
+        'selectedOptions': dict({
+          'edges': list([
+            dict({
+              'node': dict({
+                'label': 'q: environmental-ten',
+                'slug': 'option-without-context',
+              }),
+            }),
+          ]),
+        }),
+      }),
+    }),
+  })
+# ---
+# name: test_save_dynamic_choice_options_context[dynamic_multiple_choice-value7-context7-False-MyDataSourceWithContext]
+  dict({
+    'saveDocumentListAnswer': None,
+  })
+# ---

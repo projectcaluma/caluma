@@ -102,7 +102,11 @@ class SaveAnswerLogic:
 
     @staticmethod
     def validate_for_save(
-        data: dict, user: BaseUser, answer: models.Answer = None, origin: bool = False
+        data: dict,
+        user: BaseUser,
+        answer: models.Answer = None,
+        origin: bool = False,
+        data_source_context: dict = None,
     ) -> dict:
         question = data["question"]
 
@@ -127,7 +131,11 @@ class SaveAnswerLogic:
             del data["value"]
 
         validators.AnswerValidator().validate(
-            **data, user=user, instance=answer, origin=origin
+            **data,
+            user=user,
+            instance=answer,
+            origin=origin,
+            data_source_context=data_source_context,
         )
 
         return data

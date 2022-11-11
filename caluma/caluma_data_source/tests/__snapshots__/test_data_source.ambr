@@ -1,3 +1,47 @@
+# name: test_data_source_context[False-False]
+  dict({
+    'dataSource': dict({
+      'edges': list([
+      ]),
+    }),
+  })
+# ---
+# name: test_data_source_context[False-True]
+  dict({
+    'dataSource': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'label': 'q: environmental-ten',
+            'slug': 'option-without-context',
+          }),
+        }),
+      ]),
+    }),
+  })
+# ---
+# name: test_data_source_context[True-False]
+  dict({
+    'dataSource': dict({
+      'edges': list([
+      ]),
+    }),
+  })
+# ---
+# name: test_data_source_context[True-True]
+  dict({
+    'dataSource': dict({
+      'edges': list([
+        dict({
+          'node': dict({
+            'label': 'q: environmental-ten foo: bar',
+            'slug': 'option-with-context',
+          }),
+        }),
+      ]),
+    }),
+  })
+# ---
 # name: test_data_source_defaults
   dict({
     'dataSource': dict({

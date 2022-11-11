@@ -6,6 +6,7 @@ from rest_framework.serializers import (
     DateField,
     FloatField,
     IntegerField,
+    JSONField,
     ListField,
     PrimaryKeyRelatedField,
 )
@@ -524,9 +525,21 @@ class DocumentSerializer(serializers.ModelSerializer):
 
 
 class SaveAnswerSerializer(serializers.ModelSerializer):
+    data_source_context = JSONField(
+        encoder=None,
+        required=False,
+        allow_null=True,
+        write_only=True,
+        help_text="JSON object passed as context to the data source of dynamic questions",
+    )
+
     def validate(self, data):
         data = domain_logic.SaveAnswerLogic.validate_for_save(
-            data, self.context["request"].user, self.instance, True
+            data,
+            self.context["request"].user,
+            self.instance,
+            True,
+            data.pop("data_source_context", None),
         )
         return super().validate(data)
 
@@ -542,7 +555,14 @@ class SaveAnswerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.Answer
-        fields = ["question", "document", "meta", "value"]
+        fields = [
+            "question",
+            "document",
+            "meta",
+            "value",
+            "question",
+            "data_source_context",
+        ]
 
 
 class SaveDocumentStringAnswerSerializer(SaveAnswerSerializer):

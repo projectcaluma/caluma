@@ -9,7 +9,7 @@ class MyDataSource(BaseDataSource):
     default = [1, 2, 3]
 
     @data_source_cache(timeout=3600)
-    def get_data(self, user):
+    def get_data(self, user, question, context):
         return [
             1,
             (5.5,),
@@ -36,7 +36,7 @@ class MyDataSource(BaseDataSource):
 
 
 class MyOtherDataSource(MyDataSource):
-    def validate_answer_value(self, value, document, question, info):
+    def validate_answer_value(self, value, document, question, info, context):
         return "Test 123"
 
 
@@ -45,7 +45,7 @@ class MyFaultyDataSource(BaseDataSource):
     default = None
 
     @data_source_cache(timeout=3600)
-    def get_data(self, user):
+    def get_data(self, user, question, context):
         return "just a string"
 
 
@@ -54,7 +54,7 @@ class MyOtherFaultyDataSource(BaseDataSource):
     default = None
 
     @data_source_cache(timeout=3600)
-    def get_data(self, user):
+    def get_data(self, user, question, context):
         return [["just", "some", "strings"]]
 
 
@@ -63,7 +63,7 @@ class MyBrokenDataSource(BaseDataSource):
     default = [1, 2, 3]
 
     @data_source_cache(timeout=3600)
-    def get_data(self, user):
+    def get_data(self, user, question, context):
         raise Exception()
 
 
@@ -72,5 +72,22 @@ class MyOtherBrokenDataSource(BaseDataSource):
     default = None
 
     @data_source_cache(timeout=3600)
-    def get_data(self, user):
+    def get_data(self, user, question, context):
         raise Exception()
+
+
+class MyDataSourceWithContext(BaseDataSource):
+    info = "Data source using context for testing"
+
+    def get_data(self, user, question, context):
+        if not question:
+            return []
+
+        slug = "option-without-context"
+        label = f"q: {question.slug}"
+
+        if context:
+            slug = "option-with-context"
+            label += f" foo: {context['foo']}"
+
+        return [[slug, label]]
