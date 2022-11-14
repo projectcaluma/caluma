@@ -1284,7 +1284,7 @@ six = ">=1.5"
 
 [[package]]
 name = "python-debian"
-version = "0.1.44"
+version = "0.1.48"
 description = "Debian package related modules"
 category = "dev"
 optional = false
@@ -1748,7 +1748,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "ede486ed8af6f544368676837d1dcb62eda0cdce58533c9b39a820e9319056fd"
+content-hash = "c10cab84967cd8c7aad419ecdc64ed8e93ef8f615eda9ac3d3abf3c13bf3ce28"
 
 [metadata.files]
 aniso8601 = [
@@ -2434,8 +2434,8 @@ python-dateutil = [
     {file = "python_dateutil-2.8.2-py2.py3-none-any.whl", hash = "sha256:961d03dc3453ebbc59dbdea9e4e11c5651520a876d0f4db161e8674aae935da9"},
 ]
 python-debian = [
-    {file = "python-debian-0.1.44.tar.gz", hash = "sha256:65592fe3b64f6c6c93d94e2d2599db5e0c22831d3bcff07cb7b96d3840b1333e"},
-    {file = "python_debian-0.1.44-py3-none-any.whl", hash = "sha256:11bd6f01c46da57982bdd66dd595e2d240feb32a85de3fd37c452102fd0337ab"},
+    {file = "python-debian-0.1.48.tar.gz", hash = "sha256:62d50547d06a5638ce1c5e80d7d701ddf16963b407afcf5bdc83c7de4db94f7c"},
+    {file = "python_debian-0.1.48-py3-none-any.whl", hash = "sha256:00edb2c95a9e28e17067c055d17a66e90abf9d7c80cfda93095e7193e5ae58c3"},
 ]
 python-gitlab = [
     {file = "python-gitlab-3.10.0.tar.gz", hash = "sha256:14930a16fdd7f36f67b9373e7d4d4720e8e374800028380289db3306e9f74614"},
