@@ -1322,7 +1322,7 @@ six = ">=1.4.0"
 
 [[package]]
 name = "python-semantic-release"
-version = "7.32.0"
+version = "7.32.2"
 description = "Automatic Semantic Versioning for Python projects"
 category = "dev"
 optional = false
@@ -1748,7 +1748,7 @@ testing = ["func-timeout", "jaraco.itertools", "pytest (>=6)", "pytest-black (>=
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "28857c79c716736a84472851c4ba3d2471dcc117475fb3ef015e4a0a51c0b96c"
+content-hash = "ede486ed8af6f544368676837d1dcb62eda0cdce58533c9b39a820e9319056fd"
 
 [metadata.files]
 aniso8601 = [
@@ -2446,8 +2446,8 @@ python-memcached = [
     {file = "python_memcached-1.59-py2.py3-none-any.whl", hash = "sha256:4dac64916871bd3550263323fc2ce18e1e439080a2d5670c594cf3118d99b594"},
 ]
 python-semantic-release = [
-    {file = "python-semantic-release-7.32.0.tar.gz", hash = "sha256:e74087107e6c03478cc8672b561cc7b88a91ee0f528fd327112a90f6c684439d"},
-    {file = "python_semantic_release-7.32.0-py3-none-any.whl", hash = "sha256:a7e20d35e74b635762dc13f16e944d002bde849a23a088842d02422327416902"},
+    {file = "python-semantic-release-7.32.2.tar.gz", hash = "sha256:4d8f5d20680723e1329765b6f3e28b43f058fd1ef5f423f6f95397cd927c3ebc"},
+    {file = "python_semantic_release-7.32.2-py3-none-any.whl", hash = "sha256:9fcf82f403b91a61e58728ea05e2e2e25010ce9ed07830fe78251819b4b834d9"},
 ]
 pytz = [
     {file = "pytz-2022.2.1-py2.py3-none-any.whl", hash = "sha256:220f481bdafa09c3955dfbdddb7b57780e9a94f5127e35456a48589b9e0c0197"},
