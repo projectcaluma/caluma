@@ -1,3 +1,12 @@
+# v8.0.0-beta.21 (17 November 2022)
+
+### Feature
+* **data_source:** Add question and context arguments for data sources ([`cb2739e`](https://github.com/projectcaluma/caluma/commit/cb2739ed40a7afabf95f2ce0386b38dc07d919bb))
+
+### Breaking
+* The method `get_data` on data sources receives two new arguments `question` (caluma question model) and `context` (dict). The method `validate_answer_value` on data sources receives a new argument `context` (dict).  ([`cb2739e`](https://github.com/projectcaluma/caluma/commit/cb2739ed40a7afabf95f2ce0386b38dc07d919bb))
+
+
 # v8.0.0-beta.20 (10 November 2022)
 
 ### Feature
