@@ -53,12 +53,12 @@ def get_data_sources(dic=False):
     ]
 
 
-def get_data_source_data(user, name):
+def get_data_source_data(user, name, question, context):
     data_sources = get_data_sources(dic=True)
     if name not in data_sources:
         raise DataSourceException(f"No data_source found for name: {name}")
 
-    raw_data = data_sources[name]().try_get_data_with_fallback(user)
+    raw_data = data_sources[name]().try_get_data_with_fallback(user, question, context)
     if not is_iterable_and_no_string(raw_data):
         raise DataSourceException(f"Failed to parse data from source: {name}")
 

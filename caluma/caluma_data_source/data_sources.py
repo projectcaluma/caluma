@@ -14,9 +14,10 @@ class BaseDataSource:
     two items. The first will be used for the option name, the second one for it's
     value. If only one value is provided, this value will also be used as choice name.
 
-    The `validate_answer_value`-method checks if each value in `self.get_data(user)` equals the value
-    of the parameter `value`. If this is correct the method returns the label as a String
-    and otherwise the method returns `False`.
+    The `validate_answer_value`-method checks if each value in
+    `self.get_data(user, question, context)` equals the value of the parameter
+    `value`. If this is correct the method returns the label as a String and
+    otherwise the method returns `False`.
 
     Examples:
         [['my-option', {"en": "english description", "de": "deutsche Beschreibung"}, ...]
@@ -40,7 +41,7 @@ class BaseDataSource:
     ...     info = 'User choices from "someapi"'
     ...
     ...     @data_source_cache(timeout=3600)
-    ...     def get_data(self, user):
+    ...     def get_data(self, user, question, context):
     ...         response = requests.get(f"https://someapi/?user={user.username}")
     ...         return [result["value"] for result in response.json()["results"]]
     ```
@@ -53,11 +54,11 @@ class BaseDataSource:
     def __init__(self):
         pass
 
-    def get_data(self, user):  # pragma: no cover
+    def get_data(self, user, question, context):  # pragma: no cover
         raise NotImplementedError()
 
-    def validate_answer_value(self, value, document, question, user):
-        for data in self.get_data(user):
+    def validate_answer_value(self, value, document, question, user, context):
+        for data in self.get_data(user, question, context):
             label = data
             if is_iterable_and_no_string(data):
                 label = data[-1]
@@ -73,9 +74,9 @@ class BaseDataSource:
             return dynamic_option.label
         return False
 
-    def try_get_data_with_fallback(self, user):
+    def try_get_data_with_fallback(self, user, question, context):
         try:
-            new_data = self.get_data(user)
+            new_data = self.get_data(user, question, context)
         except Exception as e:
             logger.exception(
                 f"Executing {type(self).__name__}.get_data() failed:"

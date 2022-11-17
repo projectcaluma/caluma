@@ -328,12 +328,17 @@ class MultipleChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 
 class DynamicQuestion(graphene.Interface):
-    options = ConnectionField(DataSourceDataConnection)
+    options = ConnectionField(
+        DataSourceDataConnection,
+        context=graphene.JSONString(
+            description="JSON object passed as context to the data source"
+        ),
+    )
     data_source = graphene.String(required=True)
     hint_text = graphene.String()
 
-    def resolve_options(self, info, *args, **kwargs):
-        return get_data_source_data(info.context.user, self.data_source)
+    def resolve_options(self, info, context=None, *args, **kwargs):
+        return get_data_source_data(info.context.user, self.data_source, self, context)
 
 
 class DynamicChoiceQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
