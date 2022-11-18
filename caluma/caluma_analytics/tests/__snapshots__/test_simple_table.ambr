@@ -120,6 +120,10 @@
             }),
           ]),
         }),
+        'summary': dict({
+          'edges': list([
+          ]),
+        }),
       }),
     }),
   })
@@ -129,6 +133,10 @@
     'analyticsTable': dict({
       'resultData': dict({
         'records': dict({
+          'edges': list([
+          ]),
+        }),
+        'summary': dict({
           'edges': list([
           ]),
         }),

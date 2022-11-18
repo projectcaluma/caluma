@@ -42,22 +42,30 @@ def test_run_analytics_gql(
     query = """
         query run ($input: String!) {
           analyticsTable(slug: $input) {
-              resultData {
-                records {
-                  edges {
-                    node {
-                      edges {
-                        node {
-                          alias
-                          value
-                        }
+            resultData {
+              records {
+                edges {
+                  node {
+                    edges {
+                      node {
+                        alias
+                        value
                       }
                     }
                   }
                 }
-             }
+              }
+              summary {
+                edges {
+                  node {
+                    alias
+                    value
+                  }
+                }
+              }
+            }
           }
-       }
+        }
     """
 
     example_analytics.fields.filter(alias="from_the_doc").delete()
