@@ -89,12 +89,14 @@ class AnalyticsOutput(ObjectType):
     @staticmethod
     def resolve_summary(table, info, *args, **kwargs):
         summary_row = table.get_summary()
-        return AnalyticsRow(
-            edges=[
-                {"node": {"alias": alias, "value": summary_row[alias]}}
-                for alias in table.field_ordering
-            ]
-        )
+        if summary_row:
+            return AnalyticsRow(
+                edges=[
+                    {"node": {"alias": alias, "value": summary_row[alias]}}
+                    for alias in table.field_ordering
+                ]
+            )
+        return AnalyticsRow(edges=[])
 
 
 StartingObject = enum_type_from_field(
