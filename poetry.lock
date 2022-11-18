@@ -43,7 +43,7 @@ python-versions = ">=3.5"
 dev = ["cloudpickle", "coverage[toml] (>=5.0.2)", "furo", "hypothesis", "mypy (>=0.900,!=0.940)", "pre-commit", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins", "sphinx", "sphinx-notfound-page", "zope.interface"]
 docs = ["furo", "sphinx", "sphinx-notfound-page", "zope.interface"]
 tests = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy (>=0.900,!=0.940)", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins", "zope.interface"]
-tests_no_zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy (>=0.900,!=0.940)", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins"]
+tests-no-zope = ["cloudpickle", "coverage[toml] (>=5.0.2)", "hypothesis", "mypy (>=0.900,!=0.940)", "pympler", "pytest (>=4.3.0)", "pytest-mypy-plugins"]
 
 [[package]]
 name = "backports.zoneinfo"
@@ -157,7 +157,7 @@ optional = false
 python-versions = ">=3.6.0"
 
 [package.extras]
-unicode_backport = ["unicodedata2"]
+unicode-backport = ["unicodedata2"]
 
 [[package]]
 name = "click"
@@ -608,18 +608,18 @@ smmap = ">=3.0.1,<6"
 
 [[package]]
 name = "gitlint"
-version = "0.17.0"
+version = "0.18.0"
 description = "Git commit message linter written in python, checks your commit messages for style."
 category = "dev"
 optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-gitlint-core = {version = "0.17.0", extras = ["trusted-deps"]}
+gitlint-core = {version = "0.18.0", extras = ["trusted-deps"]}
 
 [[package]]
 name = "gitlint-core"
-version = "0.17.0"
+version = "0.18.0"
 description = "Git commit message linter written in python, checks your commit messages for style."
 category = "dev"
 optional = false
@@ -687,7 +687,7 @@ text-unidecode = "*"
 
 [package.extras]
 dev = ["black (==19.10b0)", "coveralls", "django-filter (>=2)", "djangorestframework (>=3.6.3)", "flake8 (==3.7.9)", "flake8-black (==0.1.1)", "flake8-bugbear (==20.1.4)", "mock", "pytest (>=3.6.3)", "pytest-cov", "pytest-django (>=3.3.2)", "pytest-random-order", "pytz"]
-rest_framework = ["djangorestframework (>=3.6.3)"]
+rest-framework = ["djangorestframework (>=3.6.3)"]
 test = ["coveralls", "django-filter (>=2)", "djangorestframework (>=3.6.3)", "mock", "pytest (>=3.6.3)", "pytest-cov", "pytest-django (>=3.3.2)", "pytest-random-order", "pytz"]
 
 [[package]]
@@ -778,9 +778,9 @@ python-versions = ">=3.6.1,<4.0"
 
 [package.extras]
 colors = ["colorama (>=0.4.3,<0.5.0)"]
-pipfile_deprecated_finder = ["pipreqs", "requirementslib"]
+pipfile-deprecated-finder = ["pipreqs", "requirementslib"]
 plugins = ["setuptools"]
-requirements_deprecated_finder = ["pip-api", "pipreqs"]
+requirements-deprecated-finder = ["pip-api", "pipreqs"]
 
 [[package]]
 name = "jaraco.classes"
@@ -1427,7 +1427,7 @@ urllib3 = ">=1.21.1,<1.27"
 
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)"]
-use_chardet_on_py3 = ["chardet (>=3.0.2,<6)"]
+use-chardet-on-py3 = ["chardet (>=3.0.2,<6)"]
 
 [[package]]
 name = "requests-mock"
@@ -1751,7 +1751,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "ed66745e8be4112858b55942d5c9a48d57fe22c3aefa7e4ddcd752477dad7b2e"
+content-hash = "8e82ba94b36897a89c9a4dd9aaac7046b8e6b989d48dad8d516c34cead6bfa07"
 
 [metadata.files]
 aniso8601 = [
@@ -2124,12 +2124,12 @@ gitdb = [
     {file = "gitdb-4.0.9.tar.gz", hash = "sha256:bac2fd45c0a1c9cf619e63a90d62bdc63892ef92387424b855792a6cabe789aa"},
 ]
 gitlint = [
-    {file = "gitlint-0.17.0-py2.py3-none-any.whl", hash = "sha256:46469d5db3f3bca72fa946c159d0733dc8c75211309477676295cf2d80d177b4"},
-    {file = "gitlint-0.17.0.tar.gz", hash = "sha256:8c10c6b404d255b43ddc4a2f5f13bcb10284bc162adfb2c03b10708309009189"},
+    {file = "gitlint-0.18.0-py2.py3-none-any.whl", hash = "sha256:77ad954738b400019c1bc51241abdae5fea28c81d1586ef9fe133b96b503531e"},
+    {file = "gitlint-0.18.0.tar.gz", hash = "sha256:b0edf947a9202ace282d084bbf481a1d0fdb2fba40e32dd4a520bfd3ef6d3963"},
 ]
 gitlint-core = [
-    {file = "gitlint-core-0.17.0.tar.gz", hash = "sha256:772dfd33effaa8515ca73e901466aa938c19ced894bec6783d19691f57429691"},
-    {file = "gitlint_core-0.17.0-py2.py3-none-any.whl", hash = "sha256:cb99ccd736a698b910385211203bda94bf4ce29086d0c08f8f58a18c40a98377"},
+    {file = "gitlint-core-0.18.0.tar.gz", hash = "sha256:b032eb574f7399aec6a5246a78810bacb7ce9c9fd2d9e4375950549196cae681"},
+    {file = "gitlint_core-0.18.0-py2.py3-none-any.whl", hash = "sha256:6434ca13360e448f9a7b00d24651aabab9b3a1875b4590d20e1d6cb55c78444f"},
 ]
 GitPython = [
     {file = "GitPython-3.1.29-py3-none-any.whl", hash = "sha256:41eea0deec2deea139b459ac03656f0dd28fc4a3387240ec1d3c259a2c47850f"},
@@ -2319,6 +2319,8 @@ psycopg2-binary = [
     {file = "psycopg2_binary-2.9.5-cp311-cp311-musllinux_1_1_i686.whl", hash = "sha256:e67b3c26e9b6d37b370c83aa790bbc121775c57bfb096c2e77eacca25fd0233b"},
     {file = "psycopg2_binary-2.9.5-cp311-cp311-musllinux_1_1_ppc64le.whl", hash = "sha256:5fc447058d083b8c6ac076fc26b446d44f0145308465d745fba93a28c14c9e32"},
     {file = "psycopg2_binary-2.9.5-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:d892bfa1d023c3781a3cab8dd5af76b626c483484d782e8bd047c180db590e4c"},
+    {file = "psycopg2_binary-2.9.5-cp311-cp311-win32.whl", hash = "sha256:2abccab84d057723d2ca8f99ff7b619285d40da6814d50366f61f0fc385c3903"},
+    {file = "psycopg2_binary-2.9.5-cp311-cp311-win_amd64.whl", hash = "sha256:bef7e3f9dc6f0c13afdd671008534be5744e0e682fb851584c8c3a025ec09720"},
     {file = "psycopg2_binary-2.9.5-cp36-cp36m-macosx_10_14_x86_64.macosx_10_9_intel.macosx_10_9_x86_64.macosx_10_10_intel.macosx_10_10_x86_64.whl", hash = "sha256:6e63814ec71db9bdb42905c925639f319c80e7909fb76c3b84edc79dadef8d60"},
     {file = "psycopg2_binary-2.9.5-cp36-cp36m-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:212757ffcecb3e1a5338d4e6761bf9c04f750e7d027117e74aa3cd8a75bb6fbd"},
     {file = "psycopg2_binary-2.9.5-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6f8a9bcab7b6db2e3dbf65b214dfc795b4c6b3bb3af922901b6a67f7cb47d5f8"},
@@ -2399,8 +2401,6 @@ pyparsing = [
     {file = "pyparsing-3.0.9.tar.gz", hash = "sha256:2b020ecf7d21b687f219b71ecad3631f644a47f01403fa1d1036b0c6416d70fb"},
 ]
 pyreadline = [
-    {file = "pyreadline-2.1.win-amd64.exe", hash = "sha256:9ce5fa65b8992dfa373bddc5b6e0864ead8f291c94fbfec05fbd5c836162e67b"},
-    {file = "pyreadline-2.1.win32.exe", hash = "sha256:65540c21bfe14405a3a77e4c085ecfce88724743a4ead47c66b84defcf82c32e"},
     {file = "pyreadline-2.1.zip", hash = "sha256:4530592fc2e85b25b1a9f79664433da09237c1a270e4d78ea5aa3a2c7229e2d1"},
 ]
 pyrepl = [
@@ -2453,7 +2453,6 @@ python-dateutil = [
 python-debian = [
     {file = "python-debian-0.1.48.tar.gz", hash = "sha256:62d50547d06a5638ce1c5e80d7d701ddf16963b407afcf5bdc83c7de4db94f7c"},
     {file = "python_debian-0.1.48-py3-none-any.whl", hash = "sha256:00edb2c95a9e28e17067c055d17a66e90abf9d7c80cfda93095e7193e5ae58c3"},
-    {file = "python_debian-0.1.48-py3.9.egg", hash = "sha256:4359730b32eedd16d79e3206914b283f4f2afdb38f6da236cb1455cb119ebe6c"},
 ]
 python-gitlab = [
     {file = "python-gitlab-3.11.0.tar.gz", hash = "sha256:db9472b6ae4fba968b409dc32faee20dd65089065daa93e08d21b796a65d6578"},
