@@ -92,3 +92,33 @@ def test_no_client_id(rf, requests_mock, settings):
     request = rf.get("/graphql", HTTP_AUTHORIZATION=authentication_header)
     response = views.AuthenticationGraphQLView.as_view()(request)
     assert response.status_code == status.HTTP_401_UNAUTHORIZED
+
+
+@pytest.mark.parametrize(
+    "client_as_username, client_claim, expect_success",
+    [
+        (True, "client_id", True),
+        (True, "other_key", False),
+        (False, "client_id", False),
+    ],
+)
+def test_introspection_no_username(
+    rf, requests_mock, settings, client_as_username, client_claim, expect_success
+):
+
+    settings.OIDC_CLIENT_CLAIM = client_claim
+    if client_as_username:
+        settings.OIDC_CLIENT_AS_USERNAME = True
+
+    requests_mock.get(settings.OIDC_USERINFO_ENDPOINT, status_code=401)
+    requests_mock.post(
+        settings.OIDC_INTROSPECT_ENDPOINT, text=json.dumps({"client_id": "test_client"})
+    )
+
+    request = rf.get("/graphql", HTTP_AUTHORIZATION="Bearer foo")
+    if expect_success:
+        views.AuthenticationGraphQLView.as_view()(request)
+        assert request.user.is_authenticated == expect_success
+    else:
+        with pytest.raises(KeyError):
+            views.AuthenticationGraphQLView.as_view()(request)

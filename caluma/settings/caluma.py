@@ -58,6 +58,12 @@ OIDC_USERINFO_ENDPOINT = env.str("OIDC_USERINFO_ENDPOINT", default=None)
 OIDC_VERIFY_SSL = env.bool("OIDC_VERIFY_SSL", default=True)
 OIDC_GROUPS_CLAIM = env.str("OIDC_GROUPS_CLAIM", default="caluma_groups")
 OIDC_USERNAME_CLAIM = env.str("OIDC_USERNAME_CLAIM", default="sub")
+# Claim to use for the "client" claim. Should normally be left to the default value
+OIDC_CLIENT_CLAIM = env.str("OIDC_CLIENT_CLAIM", default="client_id")
+
+# When service clients are used, should we pretend they're users?
+OIDC_CLIENT_AS_USERNAME = env.bool("OIDC_CLIENT_AS_USERNAME", default=False)
+
 OIDC_BEARER_TOKEN_REVALIDATION_TIME = env.int(
     "OIDC_BEARER_TOKEN_REVALIDATION_TIME", default=0
 )

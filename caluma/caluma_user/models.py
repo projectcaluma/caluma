@@ -24,7 +24,16 @@ class OIDCUser(BaseUser):
         super().__init__()
 
         self.claims, self.claims_source = self._get_claims(userinfo, introspection)
-        self.username = self.claims[settings.OIDC_USERNAME_CLAIM]
+
+        if (
+            self.claims_source == "introspection"
+            and settings.OIDC_CLIENT_AS_USERNAME
+            and settings.OIDC_USERNAME_CLAIM not in self.claims
+        ):
+            self.username = self.claims[settings.OIDC_CLIENT_CLAIM]
+        else:
+            self.username = self.claims[settings.OIDC_USERNAME_CLAIM]
+
         self.groups = self.claims.get(settings.OIDC_GROUPS_CLAIM)
         self.group = self.groups[0] if self.groups else None
         self.token = token
