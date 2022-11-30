@@ -1,6 +1,7 @@
 from __future__ import annotations  # self-referencing annotations
 
 import hashlib
+import re
 import textwrap
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, Union
@@ -144,7 +145,12 @@ class Query:
         self = cls(from_=name, is_plain_cte=True)
 
         # Django does positional parameters, we do named params. Convert them
-        named_params = [self.makeparam(param) for param in params]
+        # In some cases, the SELECT list may contain params, which we don't
+        # use here and thus need to discard
+        discard_placeholders = len(re.findall("(%s)", select))
+        used_params = params[discard_placeholders:]
+
+        named_params = [self.makeparam(param) for param in used_params]
         final_sql = wrapped_sql % tuple(named_params)
 
         self.with_queries[name] = final_sql
