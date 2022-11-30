@@ -1,3 +1,4 @@
+import hashlib
 import json
 from collections import defaultdict
 
@@ -82,12 +83,21 @@ class Command(BaseCommand):
     def show_table(self, records):
         """Output the analytics table as an ASCII table to the console."""
 
+        def _rowkey(val):
+            # rowkey is used so any column names (aliases) incompatible
+            # with format string syntax won't trip up the output code
+            return "row" + hashlib.md5(val.encode("utf-8")).hexdigest()
+
         col_lengths = defaultdict(int)
 
         for rec in records:
-            for key, val in rec.items():
-                new_len = max(col_lengths[key], len(str(val)), len(key))
+            for alias, val in rec.items():
+                key = _rowkey(alias)
+                new_len = max(col_lengths[key], len(str(val)), len(alias))
                 col_lengths[key] = new_len
+
+        # just use the last record to get the labels
+        col_labels = {_rowkey(k): k for k in rec.keys()}
 
         format_string = " ".join(
             [
@@ -95,8 +105,9 @@ class Command(BaseCommand):
                 for col, length in col_lengths.items()
             ]
         )
-        print(format_string.format(**{k: k for k in col_lengths}))
+        print(format_string.format(**col_labels))
         print(format_string.format(**{k: "-" * l for k, l in col_lengths.items()}))
 
         for rec in records:
-            print(format_string.format(**{k: str(v) for k, v in rec.items()}))
+            fdata = {_rowkey(k): str(v) for k, v in rec.items()}
+            print(format_string.format(**fdata))
