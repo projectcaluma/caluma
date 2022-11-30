@@ -40,7 +40,7 @@ def test_get_fields(
             "documents",
             [
                 "created_at.month",
-                "form_id",
+                "caluma_form.slug",
                 "answers[sub_form].sub_question",
             ],
         ),
@@ -71,7 +71,7 @@ def test_extract_values(
         last_field = field.split(".")[-1]
         analytics_table.fields.create(
             data_source=field,
-            alias=last_field,
+            alias=f"output_{last_field}",
             function=AnalyticsField.FUNCTION_VALUE,
         )
 
@@ -83,13 +83,13 @@ def test_extract_values(
             work_item_factory(document=case.document)
     elif analytics_table.starting_object == "documents":
         # only analyze one form - for now
-        form_id_field = analytics_table.fields.get(alias="form_id")
+        form_id_field = analytics_table.fields.get(alias="output_slug")
         form_id_field.filters = ["top_form"]
         form_id_field.save()
 
     table = analytics_table.get_analytics(info)
 
     output = table.get_records()
-    output_sorted = sorted(output, key=lambda r: str(r[last_field]))
+    output_sorted = sorted(output, key=lambda r: str(r[f"output_{last_field}"]))
 
     snapshot.assert_match(output_sorted)

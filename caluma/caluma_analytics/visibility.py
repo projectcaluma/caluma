@@ -8,10 +8,13 @@ def qs_method_factory(node_cls, model_cls=None):
     if not model_cls:
         model_cls = node_cls._meta.model
 
-    def method(self):
+    def method(self, as_queryset=False):
         queryset = model_cls.objects.all()
         if not self.is_disabled:
             queryset = node_cls.get_queryset(queryset, self.info)
+
+        if as_queryset:
+            return queryset
         return sql.Query.from_queryset(queryset)
 
     method.__doc__ = f"""
@@ -34,3 +37,5 @@ class CalumaVisibilitySource:
     documents = qs_method_factory(form_schema.Document)
     answers = qs_method_factory(form_schema.Answer, form_models.Answer)
     options = qs_method_factory(form_schema.Option, form_models.Option)
+    forms = qs_method_factory(form_schema.Form, form_models.Form)
+    questions = qs_method_factory(form_schema.Question, form_models.Question)

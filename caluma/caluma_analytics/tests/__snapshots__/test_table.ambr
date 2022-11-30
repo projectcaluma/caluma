@@ -318,6 +318,13 @@
             }),
             dict({
               'node': dict({
+                'isLeaf': False,
+                'label': 'document[*]',
+                'sourcePath': 'document[*]',
+              }),
+            }),
+            dict({
+              'node': dict({
                 'isLeaf': True,
                 'label': 'id',
                 'sourcePath': 'id',
@@ -356,11 +363,39 @@
     'created_at.quarter',
     'created_at.weekday',
     'created_at.year',
+    'document[*]',
+    'document[*].caluma_form',
+    'document[*].caluma_form.name',
+    'document[*].caluma_form.name.de',
+    'document[*].caluma_form.name.en',
+    'document[*].caluma_form.name.fr',
+    'document[*].caluma_form.slug',
+    'document[*].column',
+    'document[*].form',
+    'document[*].form.caluma_form',
+    'document[*].form.caluma_form.name',
+    'document[*].form.caluma_form.name.de',
+    'document[*].form.caluma_form.name.en',
+    'document[*].form.caluma_form.name.fr',
+    'document[*].form.caluma_form.slug',
+    'document[*].form.sub_question',
+    'document[*].sub_question',
+    'document[*].top_question',
     'document[top_form]',
+    'document[top_form].caluma_form',
+    'document[top_form].caluma_form.name',
+    'document[top_form].caluma_form.name.de',
+    'document[top_form].caluma_form.name.en',
+    'document[top_form].caluma_form.name.fr',
+    'document[top_form].caluma_form.slug',
     'document[top_form].form',
-    'document[top_form].form.form_id',
+    'document[top_form].form.caluma_form',
+    'document[top_form].form.caluma_form.name',
+    'document[top_form].form.caluma_form.name.de',
+    'document[top_form].form.caluma_form.name.en',
+    'document[top_form].form.caluma_form.name.fr',
+    'document[top_form].form.caluma_form.slug',
     'document[top_form].form.sub_question',
-    'document[top_form].form_id',
     'document[top_form].top_question',
     'id',
     'meta',
@@ -384,7 +419,18 @@
     'workitem[baby-room-note,first].deadline.weekday',
     'workitem[baby-room-note,first].deadline.year',
     'workitem[baby-room-note,first].document[might-parent-fund]',
-    'workitem[baby-room-note,first].document[might-parent-fund].form_id',
+    'workitem[baby-room-note,first].document[might-parent-fund].caluma_form',
+    'workitem[baby-room-note,first].document[might-parent-fund].caluma_form.name',
+    'workitem[baby-room-note,first].document[might-parent-fund].caluma_form.name.de',
+    'workitem[baby-room-note,first].document[might-parent-fund].caluma_form.name.en',
+    'workitem[baby-room-note,first].document[might-parent-fund].caluma_form.name.fr',
+    'workitem[baby-room-note,first].document[might-parent-fund].caluma_form.slug',
+    'workitem[baby-room-note,first].document_form',
+    'workitem[baby-room-note,first].document_form.name',
+    'workitem[baby-room-note,first].document_form.name.de',
+    'workitem[baby-room-note,first].document_form.name.en',
+    'workitem[baby-room-note,first].document_form.name.fr',
+    'workitem[baby-room-note,first].document_form.slug',
     'workitem[baby-room-note,first].meta',
     'workitem[baby-room-note,first].meta.foobar',
     'workitem[baby-room-note,first].meta.test-key',
@@ -407,7 +453,18 @@
     'workitem[baby-room-note,firstclosed].deadline.weekday',
     'workitem[baby-room-note,firstclosed].deadline.year',
     'workitem[baby-room-note,firstclosed].document[might-parent-fund]',
-    'workitem[baby-room-note,firstclosed].document[might-parent-fund].form_id',
+    'workitem[baby-room-note,firstclosed].document[might-parent-fund].caluma_form',
+    'workitem[baby-room-note,firstclosed].document[might-parent-fund].caluma_form.name',
+    'workitem[baby-room-note,firstclosed].document[might-parent-fund].caluma_form.name.de',
+    'workitem[baby-room-note,firstclosed].document[might-parent-fund].caluma_form.name.en',
+    'workitem[baby-room-note,firstclosed].document[might-parent-fund].caluma_form.name.fr',
+    'workitem[baby-room-note,firstclosed].document[might-parent-fund].caluma_form.slug',
+    'workitem[baby-room-note,firstclosed].document_form',
+    'workitem[baby-room-note,firstclosed].document_form.name',
+    'workitem[baby-room-note,firstclosed].document_form.name.de',
+    'workitem[baby-room-note,firstclosed].document_form.name.en',
+    'workitem[baby-room-note,firstclosed].document_form.name.fr',
+    'workitem[baby-room-note,firstclosed].document_form.slug',
     'workitem[baby-room-note,firstclosed].meta',
     'workitem[baby-room-note,firstclosed].meta.foobar',
     'workitem[baby-room-note,firstclosed].meta.test-key',
@@ -430,7 +487,18 @@
     'workitem[baby-room-note,last].deadline.weekday',
     'workitem[baby-room-note,last].deadline.year',
     'workitem[baby-room-note,last].document[might-parent-fund]',
-    'workitem[baby-room-note,last].document[might-parent-fund].form_id',
+    'workitem[baby-room-note,last].document[might-parent-fund].caluma_form',
+    'workitem[baby-room-note,last].document[might-parent-fund].caluma_form.name',
+    'workitem[baby-room-note,last].document[might-parent-fund].caluma_form.name.de',
+    'workitem[baby-room-note,last].document[might-parent-fund].caluma_form.name.en',
+    'workitem[baby-room-note,last].document[might-parent-fund].caluma_form.name.fr',
+    'workitem[baby-room-note,last].document[might-parent-fund].caluma_form.slug',
+    'workitem[baby-room-note,last].document_form',
+    'workitem[baby-room-note,last].document_form.name',
+    'workitem[baby-room-note,last].document_form.name.de',
+    'workitem[baby-room-note,last].document_form.name.en',
+    'workitem[baby-room-note,last].document_form.name.fr',
+    'workitem[baby-room-note,last].document_form.slug',
     'workitem[baby-room-note,last].meta',
     'workitem[baby-room-note,last].meta.foobar',
     'workitem[baby-room-note,last].meta.test-key',
@@ -453,7 +521,18 @@
     'workitem[baby-room-note,lastclosed].deadline.weekday',
     'workitem[baby-room-note,lastclosed].deadline.year',
     'workitem[baby-room-note,lastclosed].document[might-parent-fund]',
-    'workitem[baby-room-note,lastclosed].document[might-parent-fund].form_id',
+    'workitem[baby-room-note,lastclosed].document[might-parent-fund].caluma_form',
+    'workitem[baby-room-note,lastclosed].document[might-parent-fund].caluma_form.name',
+    'workitem[baby-room-note,lastclosed].document[might-parent-fund].caluma_form.name.de',
+    'workitem[baby-room-note,lastclosed].document[might-parent-fund].caluma_form.name.en',
+    'workitem[baby-room-note,lastclosed].document[might-parent-fund].caluma_form.name.fr',
+    'workitem[baby-room-note,lastclosed].document[might-parent-fund].caluma_form.slug',
+    'workitem[baby-room-note,lastclosed].document_form',
+    'workitem[baby-room-note,lastclosed].document_form.name',
+    'workitem[baby-room-note,lastclosed].document_form.name.de',
+    'workitem[baby-room-note,lastclosed].document_form.name.en',
+    'workitem[baby-room-note,lastclosed].document_form.name.fr',
+    'workitem[baby-room-note,lastclosed].document_form.slug',
     'workitem[baby-room-note,lastclosed].meta',
     'workitem[baby-room-note,lastclosed].meta.foobar',
     'workitem[baby-room-note,lastclosed].meta.test-key',
@@ -476,10 +555,50 @@
           }),
           dict({
             'node': dict({
-              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1ttaWdodC1wYXJlbnQtZnVuZF0uZm9ybV9pZA==',
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1ttaWdodC1wYXJlbnQtZnVuZF0uZm9ybQ==',
+              'isLeaf': False,
+              'label': 'form',
+              'sourcePath': 'answers[might-parent-fund].form',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1ttaWdodC1wYXJlbnQtZnVuZF0uZm9ybS5uYW1l',
+              'isLeaf': False,
+              'label': 'name',
+              'sourcePath': 'answers[might-parent-fund].form.name',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1ttaWdodC1wYXJlbnQtZnVuZF0uZm9ybS5uYW1lLmRl',
               'isLeaf': True,
-              'label': 'form_id',
-              'sourcePath': 'answers[might-parent-fund].form_id',
+              'label': 'de',
+              'sourcePath': 'answers[might-parent-fund].form.name.de',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1ttaWdodC1wYXJlbnQtZnVuZF0uZm9ybS5uYW1lLmVu',
+              'isLeaf': True,
+              'label': 'en',
+              'sourcePath': 'answers[might-parent-fund].form.name.en',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1ttaWdodC1wYXJlbnQtZnVuZF0uZm9ybS5uYW1lLmZy',
+              'isLeaf': True,
+              'label': 'fr',
+              'sourcePath': 'answers[might-parent-fund].form.name.fr',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1ttaWdodC1wYXJlbnQtZnVuZF0uZm9ybS5zbHVn',
+              'isLeaf': True,
+              'label': 'slug',
+              'sourcePath': 'answers[might-parent-fund].form.slug',
             }),
           }),
           dict({
@@ -500,10 +619,50 @@
           }),
           dict({
             'node': dict({
-              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tyb3dfZm9ybV0uZm9ybV9pZA==',
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tyb3dfZm9ybV0uZm9ybQ==',
+              'isLeaf': False,
+              'label': 'form',
+              'sourcePath': 'answers[row_form].form',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tyb3dfZm9ybV0uZm9ybS5uYW1l',
+              'isLeaf': False,
+              'label': 'name',
+              'sourcePath': 'answers[row_form].form.name',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tyb3dfZm9ybV0uZm9ybS5uYW1lLmRl',
               'isLeaf': True,
-              'label': 'form_id',
-              'sourcePath': 'answers[row_form].form_id',
+              'label': 'de',
+              'sourcePath': 'answers[row_form].form.name.de',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tyb3dfZm9ybV0uZm9ybS5uYW1lLmVu',
+              'isLeaf': True,
+              'label': 'en',
+              'sourcePath': 'answers[row_form].form.name.en',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tyb3dfZm9ybV0uZm9ybS5uYW1lLmZy',
+              'isLeaf': True,
+              'label': 'fr',
+              'sourcePath': 'answers[row_form].form.name.fr',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tyb3dfZm9ybV0uZm9ybS5zbHVn',
+              'isLeaf': True,
+              'label': 'slug',
+              'sourcePath': 'answers[row_form].form.slug',
             }),
           }),
           dict({
@@ -516,10 +675,50 @@
           }),
           dict({
             'node': dict({
-              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWJfZm9ybV0uZm9ybV9pZA==',
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWJfZm9ybV0uZm9ybQ==',
+              'isLeaf': False,
+              'label': 'form',
+              'sourcePath': 'answers[sub_form].form',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWJfZm9ybV0uZm9ybS5uYW1l',
+              'isLeaf': False,
+              'label': 'name',
+              'sourcePath': 'answers[sub_form].form.name',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWJfZm9ybV0uZm9ybS5uYW1lLmRl',
               'isLeaf': True,
-              'label': 'form_id',
-              'sourcePath': 'answers[sub_form].form_id',
+              'label': 'de',
+              'sourcePath': 'answers[sub_form].form.name.de',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWJfZm9ybV0uZm9ybS5uYW1lLmVu',
+              'isLeaf': True,
+              'label': 'en',
+              'sourcePath': 'answers[sub_form].form.name.en',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWJfZm9ybV0uZm9ybS5uYW1lLmZy',
+              'isLeaf': True,
+              'label': 'fr',
+              'sourcePath': 'answers[sub_form].form.name.fr',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWJfZm9ybV0uZm9ybS5zbHVn',
+              'isLeaf': True,
+              'label': 'slug',
+              'sourcePath': 'answers[sub_form].form.slug',
             }),
           }),
           dict({
@@ -540,10 +739,50 @@
           }),
           dict({
             'node': dict({
-              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWdnZXN0LWFkdWx0LWFsbG93XS5mb3JtX2lk',
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWdnZXN0LWFkdWx0LWFsbG93XS5mb3Jt',
+              'isLeaf': False,
+              'label': 'form',
+              'sourcePath': 'answers[suggest-adult-allow].form',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWdnZXN0LWFkdWx0LWFsbG93XS5mb3JtLm5hbWU=',
+              'isLeaf': False,
+              'label': 'name',
+              'sourcePath': 'answers[suggest-adult-allow].form.name',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWdnZXN0LWFkdWx0LWFsbG93XS5mb3JtLm5hbWUuZGU=',
               'isLeaf': True,
-              'label': 'form_id',
-              'sourcePath': 'answers[suggest-adult-allow].form_id',
+              'label': 'de',
+              'sourcePath': 'answers[suggest-adult-allow].form.name.de',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWdnZXN0LWFkdWx0LWFsbG93XS5mb3JtLm5hbWUuZW4=',
+              'isLeaf': True,
+              'label': 'en',
+              'sourcePath': 'answers[suggest-adult-allow].form.name.en',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWdnZXN0LWFkdWx0LWFsbG93XS5mb3JtLm5hbWUuZnI=',
+              'isLeaf': True,
+              'label': 'fr',
+              'sourcePath': 'answers[suggest-adult-allow].form.name.fr',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1tzdWdnZXN0LWFkdWx0LWFsbG93XS5mb3JtLnNsdWc=',
+              'isLeaf': True,
+              'label': 'slug',
+              'sourcePath': 'answers[suggest-adult-allow].form.slug',
             }),
           }),
           dict({
@@ -564,10 +803,98 @@
           }),
           dict({
             'node': dict({
-              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5mb3JtX2lk',
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybQ==',
+              'isLeaf': False,
+              'label': 'form',
+              'sourcePath': 'answers[top_form].form',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5mb3Jt',
+              'isLeaf': False,
+              'label': 'form',
+              'sourcePath': 'answers[top_form].form.form',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5mb3JtLm5hbWU=',
+              'isLeaf': False,
+              'label': 'name',
+              'sourcePath': 'answers[top_form].form.form.name',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5mb3JtLm5hbWUuZGU=',
               'isLeaf': True,
-              'label': 'form_id',
-              'sourcePath': 'answers[top_form].form.form_id',
+              'label': 'de',
+              'sourcePath': 'answers[top_form].form.form.name.de',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5mb3JtLm5hbWUuZW4=',
+              'isLeaf': True,
+              'label': 'en',
+              'sourcePath': 'answers[top_form].form.form.name.en',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5mb3JtLm5hbWUuZnI=',
+              'isLeaf': True,
+              'label': 'fr',
+              'sourcePath': 'answers[top_form].form.form.name.fr',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5mb3JtLnNsdWc=',
+              'isLeaf': True,
+              'label': 'slug',
+              'sourcePath': 'answers[top_form].form.form.slug',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5uYW1l',
+              'isLeaf': False,
+              'label': 'name',
+              'sourcePath': 'answers[top_form].form.name',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5uYW1lLmRl',
+              'isLeaf': True,
+              'label': 'de',
+              'sourcePath': 'answers[top_form].form.name.de',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5uYW1lLmVu',
+              'isLeaf': True,
+              'label': 'en',
+              'sourcePath': 'answers[top_form].form.name.en',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5uYW1lLmZy',
+              'isLeaf': True,
+              'label': 'fr',
+              'sourcePath': 'answers[top_form].form.name.fr',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybS5zbHVn',
+              'isLeaf': True,
+              'label': 'slug',
+              'sourcePath': 'answers[top_form].form.slug',
             }),
           }),
           dict({
@@ -576,14 +903,6 @@
               'isLeaf': True,
               'label': 'sub_question',
               'sourcePath': 'answers[top_form].form.sub_question',
-            }),
-          }),
-          dict({
-            'node': dict({
-              'id': 'QXZhaWxhYmxlRmllbGQ6YW5zd2Vyc1t0b3BfZm9ybV0uZm9ybV9pZA==',
-              'isLeaf': True,
-              'label': 'form_id',
-              'sourcePath': 'answers[top_form].form_id',
             }),
           }),
           dict({
@@ -636,10 +955,50 @@
           }),
           dict({
             'node': dict({
-              'id': 'QXZhaWxhYmxlRmllbGQ6Zm9ybV9pZA==',
+              'id': 'QXZhaWxhYmxlRmllbGQ6Zm9ybQ==',
+              'isLeaf': False,
+              'label': 'form',
+              'sourcePath': 'form',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6Zm9ybS5uYW1l',
+              'isLeaf': False,
+              'label': 'name',
+              'sourcePath': 'form.name',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6Zm9ybS5uYW1lLmRl',
               'isLeaf': True,
-              'label': 'form_id',
-              'sourcePath': 'form_id',
+              'label': 'de',
+              'sourcePath': 'form.name.de',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6Zm9ybS5uYW1lLmVu',
+              'isLeaf': True,
+              'label': 'en',
+              'sourcePath': 'form.name.en',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6Zm9ybS5uYW1lLmZy',
+              'isLeaf': True,
+              'label': 'fr',
+              'sourcePath': 'form.name.fr',
+            }),
+          }),
+          dict({
+            'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6Zm9ybS5zbHVn',
+              'isLeaf': True,
+              'label': 'slug',
+              'sourcePath': 'form.slug',
             }),
           }),
           dict({

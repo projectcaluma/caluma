@@ -42,6 +42,7 @@ def test_get_fields(
             "closed_at",
             "created_at",
             "status",
+            "document[*]",
             "document[top_form]",
         ]
     )
@@ -64,17 +65,56 @@ def test_get_fields(
                 "closed_at.year",
                 "meta.foobar",
                 "meta.test-key",
+                "document[*].another_question",
+                "document[*].another_question.month",
+                "document[*].another_question.quarter",
+                "document[*].another_question.weekday",
+                "document[*].another_question.year",
+                "document[*].another_top_question",
+                "document[*].caluma_form",
+                "document[*].caluma_form.name",
+                "document[*].caluma_form.name.de",
+                "document[*].caluma_form.name.en",
+                "document[*].caluma_form.name.fr",
+                "document[*].caluma_form.slug",
+                "document[*].column",
+                "document[*].form",
+                "document[*].form.another_question",
+                "document[*].form.another_question.month",
+                "document[*].form.another_question.quarter",
+                "document[*].form.another_question.weekday",
+                "document[*].form.another_question.year",
+                "document[*].form.caluma_form",
+                "document[*].form.caluma_form.name",
+                "document[*].form.caluma_form.name.de",
+                "document[*].form.caluma_form.name.en",
+                "document[*].form.caluma_form.name.fr",
+                "document[*].form.caluma_form.slug",
+                "document[*].form.sub_question",
+                "document[*].sub_question",
+                "document[*].top_question",
+                "document[top_form].caluma_form",
+                "document[top_form].caluma_form.name",
+                "document[top_form].caluma_form.name.de",
+                "document[top_form].caluma_form.name.en",
+                "document[top_form].caluma_form.name.fr",
+                "document[top_form].caluma_form.slug",
                 "document[top_form].form",
                 "document[top_form].top_question",
                 "document[top_form].another_top_question",
-                "document[top_form].form.form_id",
+                "document[top_form].caluma_form.slug",
                 "document[top_form].form.sub_question",
-                "document[top_form].form_id",
                 "document[top_form].form.another_question",
                 "document[top_form].form.another_question.weekday",
                 "document[top_form].form.another_question.month",
                 "document[top_form].form.another_question.year",
                 "document[top_form].form.another_question.quarter",
+                "document[top_form].form.caluma_form",
+                "document[top_form].form.caluma_form.name",
+                "document[top_form].form.caluma_form.name.de",
+                "document[top_form].form.caluma_form.name.en",
+                "document[top_form].form.caluma_form.name.fr",
+                "document[top_form].form.caluma_form.slug",
             ]
         )
     )
@@ -222,7 +262,7 @@ def test_workitem_data(
 
     # Checking for presence of the workitem fields
     fields = start.get_fields(depth=3, prefix=[f"workitem[{task.slug},first]"])
-    assert len(fields) == 24
+    assert len(fields) == 34
 
     analytics_table.fields.create(
         alias="first_workitem_created",

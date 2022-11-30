@@ -389,6 +389,11 @@ class WorkItemField(BaseField):
             "name": AttributeField(
                 parent=self, identifier="name", visibility_source=self.visibility_source
             ),
+            "document_form": FormInfoField(
+                parent=None,
+                identifier="form",
+                visibility_source=self.visibility_source,
+            ),
         }
 
         wi_forms = form_models.Form.objects.filter(
@@ -418,6 +423,8 @@ class FormDocumentField(BaseField):
         )
 
         self.form_slug = form_slug if form_slug else self.path_args()[0]
+        if self.form_slug == "*":
+            self.form_slug = None
 
         # subform level is used so we can have the "path" as it is presented
         # to the user (our `location`) separate from where the corresponding
@@ -436,7 +443,7 @@ class FormDocumentField(BaseField):
                 self.identifier,
                 table=self.visibility_source.documents(),
                 outer_ref=("document_id", "id"),
-                filters=[f"form_id = '{self.form_slug}'"],
+                filters=[f"form_id = '{self.form_slug}'"] if self.form_slug else [],
                 parent=self.parent.query_field() if self.parent else None,
             )
         # else - we just return the field from our "virtual" parent
@@ -453,12 +460,20 @@ class FormDocumentField(BaseField):
 
     @cached_property
     def available_children(self):
-        form = form_models.Form.objects.get(pk=self.form_slug)
-        questions = form.questions.all().exclude(type=form_models.Question.TYPE_TABLE)
+        if self.form_slug:
+            form = form_models.Form.objects.get(pk=self.form_slug)
+            questions = form.questions.all().exclude(
+                type=form_models.Question.TYPE_TABLE
+            )
+        else:
+            questions = self.visibility_source.questions(as_queryset=True).exclude(
+                type=form_models.Question.TYPE_TABLE
+            )
+
         children = {
-            "form_id": AttributeField(
+            "caluma_form": FormInfoField(
                 parent=self,
-                identifier="form_id",
+                identifier="form",
                 visibility_source=self.visibility_source,
             )
         }
@@ -605,6 +620,54 @@ class FormAnswerField(AttributeField):
         return super().available_children
 
 
+class FormInfoField(BaseField):
+    """Represent information about a form (Name, slug)."""
+
+    def __init__(self, parent, identifier, *, visibility_source, **kwargs):
+
+        super().__init__(
+            parent=parent,
+            identifier=identifier,
+            visibility_source=visibility_source,
+            **kwargs,
+        )
+
+    def supported_functions(self):  # pragma: no cover
+        return []
+
+    def query_field(self):
+        return sql.JoinField(
+            identifier=self.identifier,
+            extract=self.identifier,
+            table=self.visibility_source.forms(),
+            filters=[],
+            outer_ref=("form_id", "slug"),
+            parent=self.parent.query_field() if self.parent else None,
+        )
+
+    def is_leaf(self):
+        return False
+
+    def is_value(self):
+        return False
+
+    @cached_property
+    def available_children(self):
+        return {
+            "name": LocalizedAttributeField(
+                parent=self,
+                identifier="name",
+                visibility_source=self.visibility_source,
+            ),
+            "slug": AttributeField(
+                parent=self,
+                identifier="slug",
+                is_date=False,
+                visibility_source=self.visibility_source,
+            ),
+        }
+
+
 class ChoiceLabelField(AttributeField):
     def __init__(
         self, parent, identifier, *, visibility_source, language=None, main_field=None
@@ -661,6 +724,64 @@ class ChoiceLabelField(AttributeField):
             return {}
         return {
             lang: ChoiceLabelField(
+                self.parent,
+                lang,
+                main_field=self,
+                visibility_source=self.visibility_source,
+                language=lang,
+            )
+            for lang, _ in settings.LANGUAGES
+        }
+
+
+class LocalizedAttributeField(AttributeField):
+    def __init__(
+        self, parent, identifier, *, visibility_source, language=None, main_field=None
+    ):
+        super().__init__(
+            parent=parent, identifier=identifier, visibility_source=visibility_source
+        )
+        self.language = language
+        self._main_field = main_field
+
+    def is_leaf(self):
+        return bool(self.language)
+
+    def is_value(self):  # pragma: no cover
+        # without language, we return the default language as
+        # per request, so we can still "be" a value
+        return True
+
+    def source_path(self) -> List[str]:
+        """Return the full source path of this field as a list."""
+        fragment = (
+            [self._main_field.identifier, self.identifier]
+            if self._main_field
+            else [self.identifier]
+        )
+        return self.parent.source_path() + fragment if self.parent else fragment
+
+    def query_field(self):
+        # The label is in the choices table, so we need to join
+        # that one.
+
+        language = self.language or translation.get_language()
+
+        value_field = sql.HStoreExtractorField(
+            "name",
+            "name",
+            parent=self.parent.query_field() if self.parent else None,
+            hstore_key=language,
+        )
+
+        return value_field
+
+    @cached_property
+    def available_children(self):
+        if self.language:
+            return {}
+        return {
+            lang: LocalizedAttributeField(
                 self.parent,
                 lang,
                 main_field=self,
@@ -843,6 +964,11 @@ class CaseStartingObject(BaseStartingObject):
                 identifier="id",
                 visibility_source=self.visibility_source,
             ),
+            "document[*]": FormDocumentField(
+                identifier="document[*]",
+                parent=None,
+                visibility_source=self.visibility_source,
+            ),
         }
 
         case_forms = form_models.Form.objects.filter(
@@ -954,16 +1080,15 @@ class DocumentsStartingObject(BaseStartingObject):
                 label="Meta",
                 visibility_source=self.visibility_source,
             ),
-            "form_id": AttributeField(
-                parent=None,
-                identifier="form_id",
-                is_date=False,
-                visibility_source=self.visibility_source,
-            ),
             "created_at": AttributeField(
                 parent=None,
                 identifier="created_at",
                 is_date=True,
+                visibility_source=self.visibility_source,
+            ),
+            "caluma_form": FormInfoField(
+                parent=None,
+                identifier="form",
                 visibility_source=self.visibility_source,
             ),
         }

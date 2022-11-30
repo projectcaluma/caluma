@@ -3,8 +3,10 @@ import random
 
 import pytest
 
+from caluma.caluma_analytics.models import AnalyticsField
 from caluma.caluma_analytics.pivot_table import PivotTable
 from caluma.caluma_analytics.simple_table import SimpleTable
+from caluma.caluma_form.models import Form
 
 
 @pytest.mark.parametrize("analytics_table__starting_object", ["cases"])
@@ -208,3 +210,29 @@ def test_extract_choice_labels(
             assert row["choice_value"] in valid_options
             assert row["choice_label"] == valid_options[row["choice_value"]]
     assert choice_count >= len(analytics_cases)
+
+
+@pytest.mark.parametrize(
+    "analytics_table__starting_object, data_source",
+    [
+        ("cases", "document[*].caluma_form.name"),
+        ("documents", "caluma_form.name"),
+    ],
+)
+def test_form_info_field_cases(db, analytics_table, analytics_cases, data_source):
+    valid_form_names = [
+        str(n) for n in Form.objects.all().values_list("name", flat=True)
+    ]
+
+    analytics_table.fields.create(
+        alias="the_thing",
+        data_source=data_source,
+        function=AnalyticsField.FUNCTION_VALUE,
+    )
+
+    table = SimpleTable(analytics_table)
+
+    records = table.get_records()
+    assert records
+    for record in records:
+        assert record["the_thing"] in valid_form_names
