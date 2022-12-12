@@ -1,3 +1,16 @@
+# v8.0.0-beta.22 (12 December 2022)
+
+### Feature
+* **analytics:** Add support for form name extraction ([`1df3f53`](https://github.com/projectcaluma/caluma/commit/1df3f536a7968b5d0f6bf0dcc0392af338e36bcb))
+* Allow using client id as user for client-secret auth ([`3e45c61`](https://github.com/projectcaluma/caluma/commit/3e45c61a9feda916fefc06ab6f2764bbe415bf5f))
+
+### Fix
+* Do not crash when django-extensions is missing ([`6028be3`](https://github.com/projectcaluma/caluma/commit/6028be3d297ec76bd0b584553fb56679a85a43b9))
+* **analytics:** Fix commandline output crash with certain aliases ([`1839423`](https://github.com/projectcaluma/caluma/commit/1839423b5ef5559b392138c04881abbb204a2c0e))
+* **analytics:** Do not crash with more complex visibility layers ([`71be082`](https://github.com/projectcaluma/caluma/commit/71be0822e467bfe5edf757b8068c483a91c73f18))
+* **analytics:** Do not output summary for simple tables ([`34205cf`](https://github.com/projectcaluma/caluma/commit/34205cfe9a7ffc6cc9e3d2d4ae807f0a25e59cad))
+
+
 # v8.0.0-beta.21 (17 November 2022)
 
 ### Feature
