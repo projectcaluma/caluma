@@ -1155,7 +1155,11 @@ class SimpleTable:
 
     @cached_property
     def field_ordering(self):
-        return list(self.table.fields.all().values_list("alias", flat=True))
+        return list(
+            self.table.fields.all()
+            .filter(show_output=True)
+            .values_list("alias", flat=True)
+        )
 
     def get_sql_and_params(self):
         """Return a list of records as specified in the given table config."""

@@ -7,16 +7,24 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, Union
 from uuid import uuid4
 
+import psycopg2.sql
 from django.db import connection
 from django.utils.text import slugify
 
 
 def _make_name(value, name_hint=None):
+    if name_hint:
+        name_hint = re.sub(r"[^a-zA-Z_]", "_", name_hint)
     prefix = name_hint if name_hint else "p"
     length = 5 if name_hint else 12
 
     suffix = hashlib.md5(str(value).encode("utf-8")).hexdigest()
     return f"{prefix}_{suffix[:length]}"
+
+
+def quote_identifier(name):
+    name = name.replace("%", "%%")
+    return psycopg2.sql.Identifier(name).as_string(connection.connection)
 
 
 @dataclass
@@ -109,7 +117,7 @@ class Query:
         filters_sql = ", ".join(
             [self.makeparam(val, f"flt_{alias}") for val in filter_values]
         )
-        self.filters.append(f"{alias} IN ({filters_sql})")
+        self.filters.append(f"{quote_identifier(alias)} IN ({filters_sql})")
 
     @classmethod
     def from_queryset(cls, queryset):
@@ -123,12 +131,11 @@ class Query:
         # we're not interested in, as we're JOINing our stuff by ourselves.
         # To avoid ambiguity, we select ONLY what's in the main model's
         # field list
-        q = connection.ops.quote_name
         field_list = ",  \n".join(
             [
-                q(queryset.model._meta.db_table)
+                quote_identifier(queryset.model._meta.db_table)
                 + "."
-                + q(field.db_column or field.attname)
+                + quote_identifier(field.db_column or field.attname)
                 for field in queryset.model._meta.concrete_fields
             ]
         )
@@ -217,7 +224,7 @@ class DateExprField(AttrField):
     extract_part: Optional[str] = field(default=None)
 
     def expr(self, query):
-        q_id = connection.ops.quote_name(self.extract)
+        q_id = quote_identifier(self.extract)
         return f"EXTRACT({self.extract_part} FROM {q_id})"
 
 
@@ -227,7 +234,7 @@ class JSONExtractorField(AttrField):
 
     def expr(self, query):
         key_param = query.makeparam(self.json_key)
-        q_id = connection.ops.quote_name(self.extract)
+        q_id = quote_identifier(self.extract)
         self_alias = query.self_alias()
         # Extract text from JSON field, so that it comes from the DB
         # as actual text
@@ -241,7 +248,7 @@ class HStoreExtractorField(AttrField):
 
     def expr(self, query):
         key_param = query.makeparam(self.hstore_key)
-        q_id = connection.ops.quote_name(self.extract)
+        q_id = quote_identifier(self.extract)
         self_alias = query.self_alias()
         # Extract text from HStore field, so that it comes from the DB
         # as actual text
@@ -402,18 +409,18 @@ class QueryRender:
         # we always need to select everything, even from subqueries
         fields = [
             # First, the direct fields
-            f'''{expr} AS "{alias}"'''
+            f"""{expr} AS {quote_identifier(alias)}"""
             for expr, alias in self.query.select
         ]
         if self.query.outer_ref:
             _, inner = self.query.outer_ref
-            fields.append(f'"{inner}"')
+            fields.append(f"{quote_identifier(inner)}")
 
         # The subquery fields are already aliased, so no need
         # to re-alias them
         def _collect(q):
             for _, alias in q.select:
-                yield f'"{alias}"'
+                yield f"{quote_identifier(alias)}"
             for sub_q, _ in q.joins:
                 yield from _collect(sub_q)
 
