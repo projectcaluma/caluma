@@ -1559,7 +1559,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "syrupy"
-version = "3.0.4"
+version = "3.0.5"
 description = "Pytest Snapshot Test Utility"
 category = "dev"
 optional = false
@@ -1751,7 +1751,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8e82ba94b36897a89c9a4dd9aaac7046b8e6b989d48dad8d516c34cead6bfa07"
+content-hash = "dcfe5e56111d3c0a2d366106be8bbd6283988ed3bad053f9f0cee80b6e8e2a4b"
 
 [metadata.files]
 aniso8601 = [
@@ -2653,8 +2653,8 @@ sqlparse = [
     {file = "sqlparse-0.4.3.tar.gz", hash = "sha256:69ca804846bb114d2ec380e4360a8a340db83f0ccf3afceeb1404df028f57268"},
 ]
 syrupy = [
-    {file = "syrupy-3.0.4-py3-none-any.whl", hash = "sha256:85c4f5c51618eefab02e60e0172664a22987f20ea17efa815c4832cd64822fc6"},
-    {file = "syrupy-3.0.4.tar.gz", hash = "sha256:cbb1e28149340e31a01d3644a234d3195a4b6806c7b8c18e4930ca9add5c6af1"},
+    {file = "syrupy-3.0.5-py3-none-any.whl", hash = "sha256:6dc0472cc690782b517d509a2854b5ca552a9851acf43b8a847cfa1aed6f6b01"},
+    {file = "syrupy-3.0.5.tar.gz", hash = "sha256:928962a6c14abb2695be9a49b42a016a4e4abdb017a69104cde958f2faf01f98"},
 ]
 text-unidecode = [
     {file = "text-unidecode-1.3.tar.gz", hash = "sha256:bad6603bb14d279193107714b288be206cac565dfa49aa5b105294dd5c4aab93"},
