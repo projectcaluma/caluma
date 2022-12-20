@@ -1458,19 +1458,18 @@ requests = ">=2.0.1,<3.0.0"
 
 [[package]]
 name = "reuse"
-version = "1.0.0"
+version = "1.1.0"
 description = "reuse is a tool for compliance with the REUSE recommendations."
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.6.2,<4.0.0"
 
 [package.dependencies]
-binaryornot = "*"
-"boolean.py" = "*"
-Jinja2 = "*"
-license-expression = "*"
-python-debian = "*"
-requests = "*"
+binaryornot = ">=0.4.4,<0.5.0"
+"boolean.py" = ">=3.8"
+Jinja2 = ">=3.0.0,<4.0.0"
+license-expression = ">=1.0"
+python-debian = ">=0.1.38,<0.1.45 || >0.1.45,<0.1.46 || >0.1.46,<0.1.47 || >0.1.47,<0.2.0"
 setuptools = "*"
 
 [[package]]
@@ -1751,7 +1750,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8e82ba94b36897a89c9a4dd9aaac7046b8e6b989d48dad8d516c34cead6bfa07"
+content-hash = "cdda78059fabbf01c834d4a6dc756482765195bddd19d5597e8784a62fd32f4e"
 
 [metadata.files]
 aniso8601 = [
@@ -2613,8 +2612,8 @@ requests-toolbelt = [
     {file = "requests_toolbelt-0.10.1-py2.py3-none-any.whl", hash = "sha256:18565aa58116d9951ac39baa288d3adb5b3ff975c4f25eee78555d89e8f247f7"},
 ]
 reuse = [
-    {file = "reuse-1.0.0-py3-none-any.whl", hash = "sha256:e2605e796311c424465d741ea2a1e1ad03bbb90b921d74750119c331ca5af46e"},
-    {file = "reuse-1.0.0.tar.gz", hash = "sha256:db3022be2d87f69c8f508b928023de3026f454ce17d01e22f770f7147ac1e8d4"},
+    {file = "reuse-1.1.0-cp311-cp311-manylinux_2_36_x86_64.whl", hash = "sha256:b0f3fb9091ff513af04b555d14a4c529ab05f6a575ab192dd9b68244f1e0721d"},
+    {file = "reuse-1.1.0.tar.gz", hash = "sha256:7a054f6e372ad02d0b1b07368030fc38746b50ed45f5422a81994e7a88b52f1f"},
 ]
 rfc3986 = [
     {file = "rfc3986-2.0.0-py2.py3-none-any.whl", hash = "sha256:50b1502b60e289cb37883f3dfd34532b8873c7de9f49bb546641ce9cbd256ebd"},
