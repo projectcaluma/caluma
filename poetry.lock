@@ -1194,7 +1194,7 @@ test = ["coverage (>=6.5)", "pytest-mock (>=3.10)"]
 
 [[package]]
 name = "pytest-factoryboy"
-version = "2.5.0"
+version = "2.5.1"
 description = "Factory Boy support for pytest."
 category = "dev"
 optional = false
@@ -1751,7 +1751,7 @@ testing = ["flake8 (<5)", "func-timeout", "jaraco.functools", "jaraco.itertools"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8e82ba94b36897a89c9a4dd9aaac7046b8e6b989d48dad8d516c34cead6bfa07"
+content-hash = "854d5e90a361ddc78bb2677e95f0764de5c23ebff78182afcd9129e80e317f26"
 
 [metadata.files]
 aniso8601 = [
@@ -2423,8 +2423,8 @@ pytest-env = [
     {file = "pytest_env-0.8.1.tar.gz", hash = "sha256:d7b2f5273ec6d1e221757998bc2f50d2474ed7d0b9331b92556011fadc4e9abf"},
 ]
 pytest-factoryboy = [
-    {file = "pytest-factoryboy-2.5.0.tar.gz", hash = "sha256:8abcfe5396a2cadf0b2d6fc1ba607d05f191db915eac95733ab741cb30968a46"},
-    {file = "pytest_factoryboy-2.5.0-py3-none-any.whl", hash = "sha256:37c6b3a17689b197025260ad06047d0dd8ec54a70556995b22617e9df1fd8797"},
+    {file = "pytest_factoryboy-2.5.1-py3-none-any.whl", hash = "sha256:41e3465935322188daefc8720f83cebb16bf3d3a430356dc91151c55f31d99c7"},
+    {file = "pytest_factoryboy-2.5.1.tar.gz", hash = "sha256:7275a52299b20c0f58b63fdf7326b3fd2b7cbefbdaa90fdcfc776bbe92197484"},
 ]
 pytest-forked = [
     {file = "pytest-forked-1.4.0.tar.gz", hash = "sha256:8b67587c8f98cbbadfdd804539ed5455b6ed03802203485dd2f53c1422d7440e"},
