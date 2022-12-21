@@ -14,7 +14,7 @@ from django.utils.text import slugify
 
 def _make_name(value, name_hint=None):
     if name_hint:
-        name_hint = re.sub(r"[^a-zA-Z_]", "_", name_hint)
+        name_hint = re.sub(r"[^a-zA-Z0-9_]", "_", name_hint)
     prefix = name_hint if name_hint else "p"
     length = 5 if name_hint else 12
 
