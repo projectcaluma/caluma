@@ -470,13 +470,13 @@ class FormDocumentField(BaseField):
                 type=form_models.Question.TYPE_TABLE
             )
 
-        children = {
-            "caluma_form": FormInfoField(
+        children = {}
+        if self.subform_level == 0:
+            children["caluma_form"] = FormInfoField(
                 parent=self,
-                identifier="form",
+                identifier="caluma_form",
                 visibility_source=self.visibility_source,
             )
-        }
 
         for question in questions:
             qf = self._question_field(question)
@@ -1088,7 +1088,7 @@ class DocumentsStartingObject(BaseStartingObject):
             ),
             "caluma_form": FormInfoField(
                 parent=None,
-                identifier="form",
+                identifier="caluma_form",
                 visibility_source=self.visibility_source,
             ),
         }

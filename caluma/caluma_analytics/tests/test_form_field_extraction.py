@@ -84,12 +84,6 @@ def test_get_fields(
                 "document[*].form.another_question.quarter",
                 "document[*].form.another_question.weekday",
                 "document[*].form.another_question.year",
-                "document[*].form.caluma_form",
-                "document[*].form.caluma_form.name",
-                "document[*].form.caluma_form.name.de",
-                "document[*].form.caluma_form.name.en",
-                "document[*].form.caluma_form.name.fr",
-                "document[*].form.caluma_form.slug",
                 "document[*].form.sub_question",
                 "document[*].sub_question",
                 "document[*].top_question",
@@ -109,12 +103,6 @@ def test_get_fields(
                 "document[top_form].form.another_question.month",
                 "document[top_form].form.another_question.year",
                 "document[top_form].form.another_question.quarter",
-                "document[top_form].form.caluma_form",
-                "document[top_form].form.caluma_form.name",
-                "document[top_form].form.caluma_form.name.de",
-                "document[top_form].form.caluma_form.name.en",
-                "document[top_form].form.caluma_form.name.fr",
-                "document[top_form].form.caluma_form.slug",
             ]
         )
     )

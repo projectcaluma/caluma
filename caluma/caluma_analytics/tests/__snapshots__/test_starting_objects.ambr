@@ -353,62 +353,6 @@
       'supported_functions': list([
       ]),
     }),
-    'document[*].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'document[*].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'document[*].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'document[*].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'document[*].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'document[*].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'document[*].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -821,62 +765,6 @@
       'supported_functions': list([
       ]),
     }),
-    'document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -1199,62 +1087,6 @@
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
-      ]),
-    }),
-    'workitem[bring-special,first].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[bring-special,first].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,first].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,first].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,first].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,first].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
       ]),
     }),
     'workitem[bring-special,first].document[top_form].form.sub_question': dict({
@@ -1639,62 +1471,6 @@
       'supported_functions': list([
       ]),
     }),
-    'workitem[bring-special,firstclosed].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[bring-special,firstclosed].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,firstclosed].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,firstclosed].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,firstclosed].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,firstclosed].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'workitem[bring-special,firstclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -2075,62 +1851,6 @@
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
-      ]),
-    }),
-    'workitem[bring-special,last].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[bring-special,last].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,last].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,last].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,last].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,last].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
       ]),
     }),
     'workitem[bring-special,last].document[top_form].form.sub_question': dict({
@@ -2515,62 +2235,6 @@
       'supported_functions': list([
       ]),
     }),
-    'workitem[bring-special,lastclosed].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[bring-special,lastclosed].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,lastclosed].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,lastclosed].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,lastclosed].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[bring-special,lastclosed].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'workitem[bring-special,lastclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -2951,62 +2615,6 @@
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
-      ]),
-    }),
-    'workitem[detail-us-through,first].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[detail-us-through,first].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,first].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,first].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,first].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,first].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,first].document[top_form].form.sub_question': dict({
@@ -3391,62 +2999,6 @@
       'supported_functions': list([
       ]),
     }),
-    'workitem[detail-us-through,firstclosed].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[detail-us-through,firstclosed].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,firstclosed].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,firstclosed].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,firstclosed].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,firstclosed].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'workitem[detail-us-through,firstclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -3827,62 +3379,6 @@
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
-      ]),
-    }),
-    'workitem[detail-us-through,last].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[detail-us-through,last].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,last].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,last].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,last].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,last].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
       ]),
     }),
     'workitem[detail-us-through,last].document[top_form].form.sub_question': dict({
@@ -4267,62 +3763,6 @@
       'supported_functions': list([
       ]),
     }),
-    'workitem[detail-us-through,lastclosed].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[detail-us-through,lastclosed].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,lastclosed].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,lastclosed].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,lastclosed].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[detail-us-through,lastclosed].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'workitem[detail-us-through,lastclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -4703,62 +4143,6 @@
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
-      ]),
-    }),
-    'workitem[matter-good-degree,first].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[matter-good-degree,first].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,first].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,first].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,first].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,first].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,first].document[top_form].form.sub_question': dict({
@@ -5143,62 +4527,6 @@
       'supported_functions': list([
       ]),
     }),
-    'workitem[matter-good-degree,firstclosed].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[matter-good-degree,firstclosed].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,firstclosed].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,firstclosed].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,firstclosed].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,firstclosed].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'workitem[matter-good-degree,firstclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -5579,62 +4907,6 @@
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
-      ]),
-    }),
-    'workitem[matter-good-degree,last].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[matter-good-degree,last].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,last].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,last].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,last].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,last].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
       ]),
     }),
     'workitem[matter-good-degree,last].document[top_form].form.sub_question': dict({
@@ -6019,62 +5291,6 @@
       'supported_functions': list([
       ]),
     }),
-    'workitem[matter-good-degree,lastclosed].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[matter-good-degree,lastclosed].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,lastclosed].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,lastclosed].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,lastclosed].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[matter-good-degree,lastclosed].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'workitem[matter-good-degree,lastclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -6455,62 +5671,6 @@
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
-      ]),
-    }),
-    'workitem[out-hard-south-risk,first].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[out-hard-south-risk,first].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,first].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,first].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,first].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,first].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
       ]),
     }),
     'workitem[out-hard-south-risk,first].document[top_form].form.sub_question': dict({
@@ -6895,62 +6055,6 @@
       'supported_functions': list([
       ]),
     }),
-    'workitem[out-hard-south-risk,firstclosed].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[out-hard-south-risk,firstclosed].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,firstclosed].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,firstclosed].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,firstclosed].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,firstclosed].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'workitem[out-hard-south-risk,firstclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -7331,62 +6435,6 @@
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
-      ]),
-    }),
-    'workitem[out-hard-south-risk,last].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[out-hard-south-risk,last].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,last].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,last].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,last].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,last].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
       ]),
     }),
     'workitem[out-hard-south-risk,last].document[top_form].form.sub_question': dict({
@@ -7771,62 +6819,6 @@
       'supported_functions': list([
       ]),
     }),
-    'workitem[out-hard-south-risk,lastclosed].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[out-hard-south-risk,lastclosed].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,lastclosed].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,lastclosed].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,lastclosed].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[out-hard-south-risk,lastclosed].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'workitem[out-hard-south-risk,lastclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -8207,62 +7199,6 @@
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
-      ]),
-    }),
-    'workitem[seem-yet-serve,first].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[seem-yet-serve,first].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,first].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,first].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,first].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,first].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
       ]),
     }),
     'workitem[seem-yet-serve,first].document[top_form].form.sub_question': dict({
@@ -8647,62 +7583,6 @@
       'supported_functions': list([
       ]),
     }),
-    'workitem[seem-yet-serve,firstclosed].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[seem-yet-serve,firstclosed].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,firstclosed].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,firstclosed].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,firstclosed].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,firstclosed].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'workitem[seem-yet-serve,firstclosed].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -9085,62 +7965,6 @@
       'supported_functions': list([
       ]),
     }),
-    'workitem[seem-yet-serve,last].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[seem-yet-serve,last].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,last].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,last].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,last].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,last].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'workitem[seem-yet-serve,last].document[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -9521,62 +8345,6 @@
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
-      ]),
-    }),
-    'workitem[seem-yet-serve,lastclosed].document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'workitem[seem-yet-serve,lastclosed].document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,lastclosed].document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,lastclosed].document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,lastclosed].document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'workitem[seem-yet-serve,lastclosed].document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
       ]),
     }),
     'workitem[seem-yet-serve,lastclosed].document[top_form].form.sub_question': dict({
@@ -10491,62 +9259,6 @@
       'supported_functions': list([
       ]),
     }),
-    'answers[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'answers[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'answers[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'answers[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'answers[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'answers[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
     'answers[top_form].form.sub_question': dict({
       'is_leaf': True,
       'is_value': True,
@@ -10975,62 +9687,6 @@
       'is_leaf': False,
       'is_value': False,
       'supported_functions': list([
-      ]),
-    }),
-    'document[top_form].form.caluma_form': dict({
-      'is_leaf': False,
-      'is_value': False,
-      'supported_functions': list([
-      ]),
-    }),
-    'document[top_form].form.caluma_form.name': dict({
-      'is_leaf': False,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'document[top_form].form.caluma_form.name.de': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'document[top_form].form.caluma_form.name.en': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'document[top_form].form.caluma_form.name.fr': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
-      ]),
-    }),
-    'document[top_form].form.caluma_form.slug': dict({
-      'is_leaf': True,
-      'is_value': True,
-      'supported_functions': list([
-        'VALUE',
-        'MAX',
-        'MIN',
-        'COUNT',
       ]),
     }),
     'document[top_form].form.sub_question': dict({
