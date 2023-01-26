@@ -1,3 +1,10 @@
+# v8.0.0-beta.23 (26 January 2023)
+
+### Fix
+* **analytics:** Fix form identifier; disable subform form ([`94542ac`](https://github.com/projectcaluma/caluma/commit/94542aca4c9e9d5df26240aee1e465ad01c4db58))
+* Properly quote aliases - small additional fixes ([`535c703`](https://github.com/projectcaluma/caluma/commit/535c7030a019672ce72d2db8efe532cfab492125))
+
+
 # v8.0.0-beta.22 (12 December 2022)
 
 ### Feature
