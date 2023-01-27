@@ -61,7 +61,7 @@ class PivotTable:
             key = f"analytics_result_{field.alias}"
 
             # old field might be directly selected in the base query,
-            # in which case we need to alias it's expression. If it's
+            # in which case we need to alias its expression. If it's
             # not directly in the base, it won't be in the top-level selects
             # list, but will be aliased to the known name in a subquery.
             old_field = selects_by_alias.get(key, key)

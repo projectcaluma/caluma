@@ -209,14 +209,15 @@ class AttrField(Field):
 
     def expr(self, query):
         # TODO: should the table alias be prefixed in all field expr()s?
-        alias = query.self_alias()
+        alias = quote_identifier(query.self_alias())
+        extract = quote_identifier(self.extract)
         if self.answer_value_mode:
             # Caluma form answers are in a JSON field named "value", from where
             # we need to extract the actual value, otherwise, for strings, we
             # would get the quoted version back
             extractor_op = "#>>'{}'"  # noqa
-            return f"({alias}.{self.extract} {extractor_op})"
-        return f"{alias}.{self.extract}"
+            return f"({alias}.{extract} {extractor_op})"
+        return f"{alias}.{extract}"
 
 
 @dataclass
@@ -224,8 +225,8 @@ class DateExprField(AttrField):
     extract_part: Optional[str] = field(default=None)
 
     def expr(self, query):
-        q_id = quote_identifier(self.extract)
-        return f"EXTRACT({self.extract_part} FROM {q_id})"
+        extract = quote_identifier(self.extract)
+        return f"EXTRACT({self.extract_part} FROM {extract})"
 
 
 @dataclass
@@ -234,12 +235,12 @@ class JSONExtractorField(AttrField):
 
     def expr(self, query):
         key_param = query.makeparam(self.json_key)
-        q_id = quote_identifier(self.extract)
-        self_alias = query.self_alias()
+        extract = quote_identifier(self.extract)
+        self_alias = quote_identifier(query.self_alias())
         # Extract text from JSON field, so that it comes from the DB
         # as actual text
         extractor_op = "#>>'{}'"  # noqa
-        return f"""(({self_alias}.{q_id} -> {key_param}) {extractor_op})"""
+        return f"""(({self_alias}.{extract} -> {key_param}) {extractor_op})"""
 
 
 @dataclass
@@ -248,11 +249,11 @@ class HStoreExtractorField(AttrField):
 
     def expr(self, query):
         key_param = query.makeparam(self.hstore_key)
-        q_id = quote_identifier(self.extract)
-        self_alias = query.self_alias()
+        extract = quote_identifier(self.extract)
+        self_alias = quote_identifier(query.self_alias())
         # Extract text from HStore field, so that it comes from the DB
         # as actual text
-        return f"""({self_alias}.{q_id} -> {key_param})"""
+        return f"""({self_alias}.{extract} -> {key_param})"""
 
 
 @dataclass

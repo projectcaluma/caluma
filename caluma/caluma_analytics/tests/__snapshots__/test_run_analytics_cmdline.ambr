@@ -81,7 +81,7 @@
                  "caluma_form_answer" INNER JOIN "caluma_form_question" ON ("caluma_form_answer"."question_id" = "caluma_form_question"."slug") -- qs ref
           )
       SELECT * FROM (SELECT 
-             case_ac50e.id AS "analytics_result_case_id",
+             "case_ac50e"."id" AS "analytics_result_case_id",
              "analytics_result_blablub"
       FROM case_ac50e AS "case_ac50e" 
       LEFT JOIN (
@@ -91,7 +91,7 @@
           FROM document_2a07e AS "document_2a07e" 
           LEFT JOIN (
                   SELECT DISTINCT ON (document_id)
-                         (answer_af542.value #>>'{}') AS "analytics_result_blablub",
+                         ("answer_af542"."value" #>>'{}') AS "analytics_result_blablub",
                          "document_id"
                   FROM answer_af542 AS "answer_af542" 
                   WHERE "question_id" = 'top_question' 
@@ -106,7 +106,7 @@
       ) AS "document_2a07e_27f15" ON (case_ac50e.document_id = "document_2a07e_27f15".id)
       
       
-      ) AS analytics_2a8de
+      ) AS analytics_39820
       -- PARAMS: 
   
     ''',
@@ -171,7 +171,7 @@
                  "caluma_form_answer" INNER JOIN "caluma_form_question" ON ("caluma_form_answer"."question_id" = "caluma_form_question"."slug") -- qs ref
           )
       SELECT * FROM (SELECT 
-             case_ac50e.id AS "analytics_result_case_id",
+             "case_ac50e"."id" AS "analytics_result_case_id",
              "analytics_result_blablub"
       FROM case_ac50e AS "case_ac50e" 
       LEFT JOIN (
@@ -181,7 +181,7 @@
           FROM document_2a07e AS "document_2a07e" 
           LEFT JOIN (
                   SELECT DISTINCT ON (document_id)
-                         (answer_af542.value #>>'{}') AS "analytics_result_blablub",
+                         ("answer_af542"."value" #>>'{}') AS "analytics_result_blablub",
                          "document_id"
                   FROM answer_af542 AS "answer_af542" 
                   WHERE "question_id" = 'top_question' 
@@ -196,7 +196,7 @@
       ) AS "document_2a07e_27f15" ON (case_ac50e.document_id = "document_2a07e_27f15".id)
       
       
-      ) AS analytics_2a8de
+      ) AS analytics_39820
       WHERE "analytics_result_blablub" IN (%(flt_analytics_result_blablub_8201d)s, %(flt_analytics_result_blablub_8e5e6)s)
       -- PARAMS: 
       --     flt_analytics_result_blablub_8201d: Shelly Watson
@@ -260,7 +260,7 @@
                  "caluma_form_answer" INNER JOIN "caluma_form_question" ON ("caluma_form_answer"."question_id" = "caluma_form_question"."slug") -- qs ref
           )
       SELECT * FROM (SELECT 
-             case_ac50e.id AS "analytics_result_case_id",
+             "case_ac50e"."id" AS "analytics_result_case_id",
              "analytics_result_blablub"
       FROM case_ac50e AS "case_ac50e" 
       LEFT JOIN (
@@ -270,7 +270,7 @@
           FROM document_2a07e AS "document_2a07e" 
           LEFT JOIN (
                   SELECT DISTINCT ON (document_id)
-                         (answer_af542.value #>>'{}') AS "analytics_result_blablub",
+                         ("answer_af542"."value" #>>'{}') AS "analytics_result_blablub",
                          "document_id"
                   FROM answer_af542 AS "answer_af542" 
                   WHERE "question_id" = 'top_question' 
@@ -285,7 +285,7 @@
       ) AS "document_2a07e_27f15" ON (case_ac50e.document_id = "document_2a07e_27f15".id)
       
       
-      ) AS analytics_2a8de
+      ) AS analytics_39820
       -- PARAMS: 
   
     ''',
@@ -346,7 +346,7 @@
                  "caluma_form_answer" INNER JOIN "caluma_form_question" ON ("caluma_form_answer"."question_id" = "caluma_form_question"."slug") -- qs ref
           )
       SELECT * FROM (SELECT 
-             case_ac50e.id AS "analytics_result_case_id",
+             "case_ac50e"."id" AS "analytics_result_case_id",
              "analytics_result_blablub"
       FROM case_ac50e AS "case_ac50e" 
       LEFT JOIN (
@@ -356,7 +356,7 @@
           FROM document_2a07e AS "document_2a07e" 
           LEFT JOIN (
                   SELECT DISTINCT ON (document_id)
-                         (answer_af542.value #>>'{}') AS "analytics_result_blablub",
+                         ("answer_af542"."value" #>>'{}') AS "analytics_result_blablub",
                          "document_id"
                   FROM answer_af542 AS "answer_af542" 
                   WHERE "question_id" = 'top_question' 
@@ -371,7 +371,7 @@
       ) AS "document_2a07e_27f15" ON (case_ac50e.document_id = "document_2a07e_27f15".id)
       
       
-      ) AS analytics_2a8de
+      ) AS analytics_39820
       WHERE "analytics_result_blablub" IN (%(flt_analytics_result_blablub_8201d)s, %(flt_analytics_result_blablub_8e5e6)s)
       -- PARAMS: 
       --     flt_analytics_result_blablub_8201d: Shelly Watson
