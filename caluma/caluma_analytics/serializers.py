@@ -23,6 +23,7 @@ class SaveAnalyticsTableSerializer(serializers.ModelSerializer):
         fields = [
             "slug",
             "name",
+            "description",
             "starting_object",
             "created_at",
             "modified_at",

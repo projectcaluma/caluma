@@ -63,6 +63,18 @@ QUERY_AVAILABLE_FIELDS = """
     }
 """
 
+QUERY_SEARCH_TABLE = """
+    query($search: String!) {
+      allAnalyticsTables(filter: [{ search: $search }]) {
+        edges {
+          node {
+            slug
+          }
+        }
+      }
+    }
+"""
+
 
 def test_create_table(db, snapshot, schema_executor):
     result = schema_executor(
@@ -71,15 +83,25 @@ def test_create_table(db, snapshot, schema_executor):
             "table_input": {
                 "slug": "test-table",
                 "name": "Test table thingy",
+                "description": "Foo bar",
                 "startingObject": "CASES",
             }
         },
     )
 
     assert not result.errors
-    assert models.AnalyticsTable.objects.filter(pk="test-table").exists()
+    item = models.AnalyticsTable.objects.filter(pk="test-table").first()
+    assert str(item.description) == "Foo bar"
 
     snapshot.assert_match(result.data)
+    assert result.data["saveAnalyticsTable"]["analyticsTable"]
+    print(result.data)
+
+    result = schema_executor(QUERY_SEARCH_TABLE, variable_values={"search": "bar Foo"})
+    assert not result.errors
+    assert (
+        len(result.data["allAnalyticsTables"]["edges"]) == 1
+    ), "Search in description should work"
 
 
 @pytest.mark.parametrize(

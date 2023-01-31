@@ -15,6 +15,7 @@ class AnalyticsTable(SlugModel):
 
     disable_visibilities = models.BooleanField(default=False)
     name = LocalizedField(blank=False, null=False, required=False)
+    description = LocalizedField(blank=True, null=True, required=False)
 
     starting_object = models.CharField(max_length=250, choices=STARTING_OBJECT_CHOICES)
 

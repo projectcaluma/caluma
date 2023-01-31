@@ -160,6 +160,7 @@ class AnalyticsTable(DjangoObjectType):
             "result_data",
             "fields",
             "name",
+            "description",
             "starting_object",
         ]
 
