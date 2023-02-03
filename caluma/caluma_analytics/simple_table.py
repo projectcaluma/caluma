@@ -824,7 +824,7 @@ class DateExtractorField(AttributeField):
         same datatype which leads to inconsistency. E.g versions < 12 returns a
         float while later versions return a decimal.
         """
-        return int(value)
+        return int(value) if value is not None else None
 
 
 class BaseStartingObject:
