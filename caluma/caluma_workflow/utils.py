@@ -115,14 +115,13 @@ def create_work_items(tasks, case, user, prev_work_item=None, context: dict = No
             )
 
             if work_items_to_redo.exists():
-                # there is already an existing work item in status redo that
-                # needs to be reopened instead of creating a new one.
-                work_items_to_redo.update(
-                    deadline=task.calculate_deadline(),
-                    modified_by_user=user.username,
-                    modified_by_group=user.username,
-                    status=models.WorkItem.STATUS_READY,
-                )
+                for work_item in work_items_to_redo:
+                    work_item.deadline = task.calculate_deadline()
+                    work_item.modified_by_user = user.username
+                    work_item.modified_by_group = user.username
+                    work_item.status = models.WorkItem.STATUS_READY
+                    work_item.save()
+                    work_items.append(work_item)
                 continue
 
             work_items.append(
