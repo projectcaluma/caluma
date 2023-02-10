@@ -496,6 +496,7 @@ class FormDocumentField(BaseField):
             question.TYPE_TEXTAREA,
             question.TYPE_CHOICE,
             question.TYPE_DYNAMIC_CHOICE,
+            question.TYPE_CALCULATED_FLOAT,
         ):
             return FormAnswerField(
                 parent=self,
@@ -570,6 +571,7 @@ class FormAnswerField(AttributeField):
             form_models.Question.TYPE_DATE: text_functions,
             form_models.Question.TYPE_INTEGER: numeric_functions,
             form_models.Question.TYPE_FLOAT: numeric_functions,
+            form_models.Question.TYPE_CALCULATED_FLOAT: numeric_functions,
         }
 
         return base_functions + function_support[self._question.type]
