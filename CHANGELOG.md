@@ -1,3 +1,20 @@
+# v8.0.0-beta.25 (17 February 2023)
+
+This release provides a management command for recalculating calculated Answers that
+contain values from `TableQuestions`. Due to a bug, answers to calculated questions
+were wrong under certain conditions, if they contained values from table rows. This
+command recalculates all of them.
+
+If you use `CalculatedFloatQuestions` in your forms, it is advised to run this command:
+
+```shell
+python manage.py recalculate_calc_answers
+```
+
+### Fix
+* Replace faulty migration for calc answers with a command ([`4a3e85c`](https://github.com/projectcaluma/caluma/commit/4a3e85cf5a1ac105541dde1b04d8081d01a90e12))
+
+
 # v8.0.0-beta.24 (17 February 2023)
 
 ### Feature
