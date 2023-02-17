@@ -187,12 +187,12 @@ def update_calc_from_answer(sender, instance, **kwargs):
 
 @receiver(post_save, sender=models.Document)
 @disable_raw
-@filter_events(lambda created: created)
+# We're only interested in table row forms
+@filter_events(lambda instance, created: instance.pk != instance.family_id or created)
 def update_calc_from_document(sender, instance, created, **kwargs):
-
-    for question in instance.form.questions.filter(
-        type=models.Question.TYPE_CALCULATED_FLOAT
-    ):
+    for question in models.Form.get_all_questions(
+        [(instance.family or instance).form_id]
+    ).filter(type=models.Question.TYPE_CALCULATED_FLOAT):
         _update_or_create_calc_answer(question, instance)
 
 

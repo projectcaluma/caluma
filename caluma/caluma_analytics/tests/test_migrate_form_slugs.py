@@ -5,7 +5,7 @@ from django.db.migrations.executor import MigrationExecutor
 from caluma.caluma_analytics import simple_table
 
 
-def test_migrate_rename_form_slugs(transactional_db):
+def test_migrate_rename_form_slugs(post_migrate_to_current_state):
     executor = MigrationExecutor(connection)
     migrate_from = [
         ("caluma_analytics", "0005_analytics_field_ordering"),

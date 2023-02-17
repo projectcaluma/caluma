@@ -58,8 +58,6 @@ def test_query_all_questions(
         question__sub_form__slug="subform",
     ).question
 
-    subform_document = document_factory(form=subform_question.sub_form)
-
     # "randomly" set the hierarchy lookup mode. Not parametrized, as it would
     # explode the test run time three-fold
     possible_hierarchy_lookups = [None, *AnswerHierarchyMode._meta.enum.__members__]
@@ -111,7 +109,7 @@ def test_query_all_questions(
         if qtype == models.Question.TYPE_DATE:
             answer_factory(
                 question=question,
-                document=subform_document,
+                document=document,
                 date=TEST_VALUES[qtype][form_value],
             )
         elif qtype == models.Question.TYPE_CALCULATED_FLOAT:
@@ -123,7 +121,7 @@ def test_query_all_questions(
         else:
             answer_factory(
                 question=question,
-                document=subform_document,
+                document=document,
                 value=TEST_VALUES[qtype][form_value],
             )
 

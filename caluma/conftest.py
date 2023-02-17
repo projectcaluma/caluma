@@ -3,11 +3,14 @@ import datetime
 import functools
 import inspect
 import sys
+from collections import defaultdict
 
 import pytest
 import urllib3
 from django.apps import apps
 from django.core.cache import cache
+from django.db import connection
+from django.db.migrations.executor import MigrationExecutor
 from factory import Faker
 from factory.base import FactoryMetaClass
 from graphene import ResolveInfo
@@ -411,3 +414,28 @@ def set_date(freezer):
         freezer.move_to(old_now)
 
     return make_context
+
+
+@pytest.fixture
+def post_migrate_to_current_state(transactional_db):
+    """
+    Apply all current migrations after test has run.
+
+    In migration-tests, the `transactional_db` fixture seems to fail to apply the
+    newest migrations for all apps, leading to flaky tests. This fixture makes sure,
+    that all apps are migrated to their most current state.
+    """
+    try:
+        yield
+    finally:
+        executor = MigrationExecutor(connection)
+        migrations_dict = defaultdict(list)
+        for app, migration in executor.loader.disk_migrations.keys():
+            migrations_dict[app].append(migration)
+
+        migrations_list = [
+            (app, max(migrations)) for app, migrations in migrations_dict.items()
+        ]
+        executor.loader.build_graph()
+        executor.migrate(migrations_list)
+        executor.loader.build_graph()
