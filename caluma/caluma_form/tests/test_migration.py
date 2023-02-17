@@ -8,6 +8,8 @@ from django.db.migrations.executor import MigrationExecutor
 from django.db.utils import DataError
 from django.utils import timezone
 
+from caluma.caluma_form.api import save_answer, save_document
+from caluma.caluma_form.models import Question
 from caluma.utils import col_type_from_db
 
 
@@ -429,3 +431,82 @@ def test_migrate_answer_history_question_type(post_migrate_to_current_state):
 
     new_hist_ans = MigratedHistAns.objects.get(history_id=new_hist_ans.history_id)
     assert new_hist_ans.history_question_type == new_hist_quest.type
+
+
+def test_migrate_recalculate_calc_answers(
+    post_migrate_to_current_state,
+    form_factory,
+    question_factory,
+    form_question_factory,
+):
+    # set up form structure
+    main_form_question = form_question_factory(
+        question__type=Question.TYPE_INTEGER, question__slug="dep1_main"
+    )
+    main_form = main_form_question.form
+    dep1_main = main_form_question.question
+
+    row_form = form_factory(slug="row_form")
+    table_question = question_factory(
+        type="table",
+        slug="table_question",
+        row_form=row_form,
+        is_required="true",
+        is_hidden="false",
+    )
+    form_question_factory(form=main_form, question=table_question)
+
+    row_form_question = form_question_factory(
+        form=row_form,
+        question__type=Question.TYPE_INTEGER,
+        question__slug="dep2_row",
+        question__is_required=True,
+    )
+    dep2_row = row_form_question.question
+
+    form_question_factory(
+        form=main_form,
+        question__slug="calc_question",
+        question__type=Question.TYPE_CALCULATED_FLOAT,
+        question__calc_expression=(
+            f'"dep1_main"|answer(0) + "{table_question.slug}"|answer([])|mapby("dep2_row")|sum'
+        ),
+    )
+
+    # assert calc_dependents
+    dep1_main.refresh_from_db()
+    dep2_row.refresh_from_db()
+    assert dep1_main.calc_dependents == ["calc_question"]
+    assert dep2_row.calc_dependents == ["calc_question"]
+
+    # set up document and answers
+    main_doc = save_document(form=main_form)
+    save_answer(question=dep1_main, value=10, document=main_doc)
+    row_doc = save_document(form=row_form)
+    save_answer(question=dep2_row, value=13, document=row_doc)
+    save_answer(table_question, document=main_doc, value=[str(row_doc.pk)])
+    calc_answer = main_doc.answers.get(question_id="calc_question")
+
+    # assert calc bug is fixed
+    assert calc_answer.value == 23
+
+    # set calc_answer.value to 10, like it would have been without the fix
+    calc_answer.value = 10
+    calc_answer.save()
+
+    # migrate back and forth in order to run the data-migration
+    executor = MigrationExecutor(connection)
+    app = "caluma_form"
+    migrate_from = [(app, "0046_file_answer_reverse_keys")]
+    migrate_to = [(app, "0047_recalculate_calc_answers")]
+    executor.migrate(migrate_from)
+    executor.loader.build_graph()
+    executor.migrate(migrate_to)
+
+    new_apps = executor.loader.project_state(migrate_to).apps
+
+    MigratedAnswer = new_apps.get_model(app, "Answer")
+
+    # assert correct calc_value after migration
+    calc_answer = MigratedAnswer.objects.get(question_id="calc_question")
+    assert calc_answer.value == 23
