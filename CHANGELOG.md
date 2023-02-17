@@ -1,3 +1,15 @@
+# v8.0.0-beta.24 (17 February 2023)
+
+### Feature
+* **analytics:** Add support for calculated questions ([`196ab05`](https://github.com/projectcaluma/caluma/commit/196ab054abb94aa4e27900ade6c3920b14829ee6))
+
+### Fix
+* Fix calc answer evaluation when adding new table rows ([`cb668ba`](https://github.com/projectcaluma/caluma/commit/cb668ba88371fe5d48ee4402348ec9182068ee18))
+* **workflow:** Emit post_create_work_item when redo is set to ready ([`5e9744a`](https://github.com/projectcaluma/caluma/commit/5e9744a0b9cbcc2fdbf741f77fa1603b8d3bf69d))
+* **analytics:** Handle missing dates ([`a06181a`](https://github.com/projectcaluma/caluma/commit/a06181a11994a9e40600b419753b83d35557b76e))
+* **analytics:** Properly quote expressions ([`3ff7f36`](https://github.com/projectcaluma/caluma/commit/3ff7f368c87f1f058ad0420fb14e8fda522ccffd))
+
+
 # v8.0.0-beta.23 (26 January 2023)
 
 ### Fix
