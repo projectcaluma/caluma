@@ -11,7 +11,7 @@ def migrate_and_get_apps(state):
     return apps
 
 
-def test_migrate_to_multiple_files(transactional_db):
+def test_migrate_to_multiple_files(post_migrate_to_current_state):
     app = "caluma_form"
     migrate_from = [(app, "0045_simple_history")]
     migrate_to = [(app, "0046_file_answer_reverse_keys")]

@@ -12,7 +12,7 @@ from caluma.utils import col_type_from_db
 
 
 @pytest.mark.xfail(reason="Migration dependency issue, migration not required anymore.")
-def test_migrate_to_flat_answers(transactional_db):  # pragma: no cover
+def test_migrate_to_flat_answers(post_migrate_to_current_state):  # pragma: no cover
     executor = MigrationExecutor(connection)
     app = "caluma_form"
     migrate_from = [(app, "0017_auto_20190619_1320")]
@@ -82,7 +82,7 @@ def test_migrate_to_flat_answers(transactional_db):  # pragma: no cover
     assert text_answer.document.pk == main_document.pk
 
 
-def test_migrate_to_form_question_natural_key_forward(transactional_db):
+def test_migrate_to_form_question_natural_key_forward(post_migrate_to_current_state):
     executor = MigrationExecutor(connection)
     app = "caluma_form"
     migrate_from = [(app, "0023_auto_20190729_1448")]
@@ -117,7 +117,7 @@ def test_migrate_to_form_question_natural_key_forward(transactional_db):
     assert form_question.pk == "form-1.question-1"
 
 
-def test_migrate_to_form_question_natural_key_reverse(transactional_db):
+def test_migrate_to_form_question_natural_key_reverse(post_migrate_to_current_state):
     executor = MigrationExecutor(connection)
     app = "caluma_form"
     migrate_from = [(app, "0024_auto_20190919_1244")]
@@ -143,7 +143,7 @@ def test_migrate_to_form_question_natural_key_reverse(transactional_db):
         executor.migrate(migrate_to)
 
 
-def test_dynamic_option_unique_together(transactional_db):
+def test_dynamic_option_unique_together(post_migrate_to_current_state):
     executor = MigrationExecutor(connection)
     app = "caluma_form"
     migrate_from = [(app, "0028_auto_20200210_0929")]
@@ -226,7 +226,7 @@ def test_dynamic_option_unique_together(transactional_db):
     )
 
 
-def test_migrate_to_family_as_pk(transactional_db, caplog):
+def test_migrate_to_family_as_pk(post_migrate_to_current_state, caplog):
     """Ensure correct behaviour when moving family to PK.
 
     Document family may not match an existing document.
@@ -309,7 +309,7 @@ def _verify_foreign_key_types(apps):
                 ), f"Foreign key field {field}: type mismatch with destination in DB"
 
 
-def test_slugfield_length_correctness(transactional_db):
+def test_slugfield_length_correctness(post_migrate_to_current_state):
     """Detect deviation of foreign key types from target field types.
 
     Note: If this test fails, you'll most likely need to create a new
@@ -324,7 +324,7 @@ def test_slugfield_length_correctness(transactional_db):
 
 
 @pytest.mark.xfail(reason="Seems to be fixed upstream.")
-def test_migrate_slugfield_length(transactional_db):  # pragma: no cover
+def test_migrate_slugfield_length(post_migrate_to_current_state):  # pragma: no cover
     """Ensure migration of slugfield length works correctly."""
 
     # we need to migrate down and up again to consistently trigger
@@ -352,7 +352,7 @@ def test_migrate_slugfield_length(transactional_db):  # pragma: no cover
     _verify_foreign_key_types(new_apps)
 
 
-def test_migrate_answer_history_question_type(transactional_db):
+def test_migrate_answer_history_question_type(post_migrate_to_current_state):
     """Make sure migration to custom history field history_question_type works."""
 
     executor = MigrationExecutor(connection)

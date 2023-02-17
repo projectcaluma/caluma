@@ -9,7 +9,7 @@ from django.utils import timezone
 from caluma.caluma_workflow.models import Case
 
 
-def test_add_case_families(transactional_db):
+def test_add_case_families(post_migrate_to_current_state):
     executor = MigrationExecutor(connection)
     app = "caluma_workflow"
     migrate_from = [(app, "0019_slugfield_length")]
@@ -106,7 +106,7 @@ def test_set_family_with_broken_data(
     migra_module.set_family(apps, schema_editor=FakeEditor)
 
 
-def test_workitem_name_description(transactional_db):
+def test_workitem_name_description(post_migrate_to_current_state):
     executor = MigrationExecutor(connection)
     app = "caluma_workflow"
     migrate_from = [(app, "0021_work_item_controlling_groups")]
