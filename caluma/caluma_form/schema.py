@@ -1151,7 +1151,7 @@ def validate_document(info, document_global_id):
     document_qs = Document.get_queryset(models.Document.objects.all(), info)
 
     document = get_object_or_404(document_qs, pk=document_id)
-    result = get_document_validity(document, info)
+    result = get_document_validity(document, info.context.user)
 
     errors = result.pop("errors")
     result = ValidationResult(
