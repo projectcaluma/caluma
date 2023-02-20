@@ -1,3 +1,9 @@
+# v8.0.0-beta.26 (20 February 2023)
+
+### Fix
+* **form:** Fix validation in document validity graph ([`6b859fa`](https://github.com/projectcaluma/caluma/commit/6b859fa1f76762a8fcfadff7f1010ec4b17d02f4))
+
+
 # v8.0.0-beta.25 (17 February 2023)
 
 This release provides a management command for recalculating calculated Answers that
