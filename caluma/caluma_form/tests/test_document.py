@@ -1099,30 +1099,44 @@ def test_query_answer_node(db, answer, schema_executor):
     assert not result.errors
 
 
-@pytest.mark.parametrize(
-    "question__is_required,question__type,question__data_source,is_valid",
-    [
-        ("true", Question.TYPE_TEXT, None, False),
-        ("false", Question.TYPE_TEXT, None, True),
-        ("true", Question.TYPE_TEXT, None, True),
-    ],
-)
-def test_validity_query(db, form, question, document, is_valid, schema_executor):
+@pytest.mark.parametrize("value,is_valid", [(None, False), ("Test", True)])
+def test_validity_query(
+    db,
+    document,
+    form_question_factory,
+    form,
+    is_valid,
+    schema_executor,
+    settings,
+    value,
+):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.caluma_data_source.tests.data_sources.MyDataSource"
+    ]
 
-    form.questions.through.objects.create(form=form, question=question, sort=1)
+    text_question = form_question_factory(
+        form=form,
+        question__type=Question.TYPE_TEXT,
+        question__data_source=None,
+        question__is_required="true",
+    ).question
+
+    dynamic_question = form_question_factory(
+        form=form,
+        question__type=Question.TYPE_DYNAMIC_CHOICE,
+        question__data_source="MyDataSource",
+        question__is_required="true",
+    ).question
+
     document.form = form
     document.save()
 
-    if is_valid:
-        document.answers.create(question=question, value="hello")
-    else:
-        assert not document.answers.exists()
+    document.answers.create(question=text_question, value=value)
+    document.answers.create(question=dynamic_question, value="something")
 
     query = """
-        query ValidateBaugesuch ($document_id: ID!) {
-          documentValidity(
-            id: $document_id
-          ) {
+        query($id: ID!) {
+          documentValidity(id: $id) {
             edges {
               node {
                 id
@@ -1137,7 +1151,7 @@ def test_validity_query(db, form, question, document, is_valid, schema_executor)
         }
     """
 
-    result = schema_executor(query, variable_values={"document_id": str(document.id)})
+    result = schema_executor(query, variable_values={"id": str(document.id)})
 
     # if is_valid, we expect 0 errors, otherwise one
     num_errors = int(not is_valid)
