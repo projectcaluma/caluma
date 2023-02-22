@@ -3440,6 +3440,7 @@
     assignedUsers: [String]
     documentHasAnswer: [HasAnswerFilterType]
     caseDocumentHasAnswer: [HasAnswerFilterType]
+    caseDocumentForms: [String]
     caseMetaValue: [JSONValueFilterType]
     rootCaseMetaValue: [JSONValueFilterType]
     caseSearchAnswers: [SearchAnswersFilterType]
