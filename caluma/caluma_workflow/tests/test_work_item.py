@@ -1797,3 +1797,44 @@ def test_complete_multiple_instance_continue_async(
         ).count()
         == expected_next_count_2
     )
+
+
+@pytest.mark.parametrize("value,len_results", [("foo", 1), ("bar", 0)])
+def test_query_all_work_items_filter_case_document_forms(
+    db,
+    work_item_factory,
+    case_factory,
+    form_factory,
+    document_factory,
+    schema_executor,
+    value,
+    len_results,
+):
+    form = form_factory(slug="foo")
+    document = document_factory(form=form)
+    case = case_factory(document=document)
+    work_item_factory(case=case)
+
+    query = """
+        query WorkItems($case_document_forms: [String]) {
+          allWorkItems(filter: [{caseDocumentForms: $case_document_forms}]) {
+            totalCount
+            edges {
+              node {
+                case {
+                  document {
+                    form {
+                      slug
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+    """
+
+    result = schema_executor(query, variable_values={"case_document_forms": [value]})
+
+    assert not result.errors
+    assert len(result.data["allWorkItems"]["edges"]) == len_results
