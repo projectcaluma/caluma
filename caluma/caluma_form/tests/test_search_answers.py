@@ -10,11 +10,11 @@ def test_search(
     form_factory,
     form_question_factory,
     document_factory,
-    answer_factory,
 ):
-    form_a, form_b = form_factory.create_batch(2)
+    form_a, form_b, form_c = form_factory.create_batch(3)
     doc_a = document_factory.create(form=form_a)
     doc_b = document_factory.create(form=form_b)
+    doc_c = document_factory.create(form=form_c)
 
     question_a = form_question_factory(
         question__type=models.Question.TYPE_TEXT, form=form_a
@@ -24,12 +24,16 @@ def test_search(
     ).question
     form_question_factory(question=question_a, form=form_b)
     form_question_factory(question=question_b, form=form_b)
+    form_question_factory(question=question_a, form=form_c)
+    form_question_factory(question=question_b, form=form_c)
 
     doc_a.answers.create(question=question_a, value="hello world")
     doc_a.answers.create(question=question_b, value="whatsup planet")
 
     doc_b.answers.create(question=question_a, value="world planet")
     doc_b.answers.create(question=question_b, value="seeya world")
+
+    doc_c.answers.create(question=question_a, value="planet world")
 
     query = """
         query ($search: [SearchAnswersFilterType!]) {
@@ -58,10 +62,9 @@ def test_search(
     edges = _search([question_a.slug], [], "hello world", 1)
     assert extract_global_id(edges[0]["node"]["id"]) == str(doc_a.id)
 
-    # search for "planet" across both questions. this should return both doc a
-    # and b
-    edges = _search([question_b.slug, question_a.slug], [], "planet", 2)
-    assert set([str(doc_a.id), str(doc_b.id)]) == set(
+    # search for "planet" across both questions. this should return doc a, b and c
+    edges = _search([question_b.slug, question_a.slug], [], "planet", 3)
+    assert set([str(doc_a.id), str(doc_b.id), str(doc_c.id)]) == set(
         extract_global_id(e["node"]["id"]) for e in edges
     )
 
@@ -69,9 +72,26 @@ def test_search(
     edges = _search([], [form_a.slug], "world", 1)
     assert extract_global_id(edges[0]["node"]["id"]) == str(doc_a.id)
 
-    # search for "world" in question b and form b. this should return both doc b
+    # search for "world" in question b and form b. this should return doc b
     edges = _search([question_a.slug], [form_b.slug], "world", 1)
     assert extract_global_id(edges[0]["node"]["id"]) == str(doc_b.id)
+
+    # search for "world planet" in form b and c. this should return both doc b
+    # and c
+    edges = _search([], [form_b.slug, form_c.slug], "world planet", 2)
+    assert set([str(doc_b.id), str(doc_c.id)]) == set(
+        extract_global_id(e["node"]["id"]) for e in edges
+    )
+
+    # search for exact word combination "planet world" in form a, b and c. this should
+    # return doc c
+    edges = _search([], [form_a.slug, form_b.slug, form_c.slug], '"planet world"', 1)
+    assert extract_global_id(edges[0]["node"]["id"]) == str(doc_c.id)
+
+    # search for exact word combination "planet world" (with missing quotation end) in
+    # forms a, b and c. this should return doc c
+    edges = _search([], [form_a.slug, form_b.slug, form_c.slug], '"planet world', 1)
+    assert extract_global_id(edges[0]["node"]["id"]) == str(doc_c.id)
 
 
 @pytest.mark.parametrize(
