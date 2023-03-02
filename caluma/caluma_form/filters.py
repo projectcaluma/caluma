@@ -1,3 +1,4 @@
+import shlex
 from functools import reduce
 
 import graphene
@@ -321,6 +322,22 @@ class SearchAnswersFilter(Filter):
         self.document_id = kwargs.pop("document_id")
         super().__init__(*args, **kwargs)
 
+    @staticmethod
+    def _split(value):
+        lex = shlex.shlex(value, posix=True)
+        lex.whitespace_split = True
+        lex.commenters = ""
+        lex.quotes = '"'
+        return [i.strip() for i in lex if i.strip()]
+
+    def get_search_terms(self, value):
+        value = value.replace("\x00", "")  # strip null characters
+        try:
+            return self._split(value)
+        except ValueError as e:
+            if e.args[0] == "No closing quotation":
+                return self._split(f'{value}"')
+
     def filter(self, qs, value):
         if value in EMPTY_VALUES:  # pragma: no cover
             return qs
@@ -360,7 +377,7 @@ class SearchAnswersFilter(Filter):
     def _apply_filter(self, qs, value):
         questions = self._get_questions(value)
 
-        for word in value["value"].split():
+        for word in self.get_search_terms(value["value"]):
             answers_with_word = self._answers_with_word(
                 questions,
                 word,
