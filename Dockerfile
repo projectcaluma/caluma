@@ -3,7 +3,7 @@ FROM python:3.8.12-slim@sha256:8be266ad3b9d0381396ad4fe705d39217773343fdb1efdf90
 WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends wget build-essential \
-&& wget -q https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -P /usr/local/bin \
+&& wget -q https://raw.githubusercontent.com/vishnubob/wait-for-it/81b1373/wait-for-it.sh -P /usr/local/bin \
 && chmod +x /usr/local/bin/wait-for-it.sh \
 && mkdir -p /app \
 && useradd -u 901 -r caluma --create-home \
