@@ -1,3 +1,10 @@
+# v8.0.0-beta.27 (10 March 2023)
+
+### Feature
+* **filters:** Support word combinations in SearchAnswersFilter ([`4c3e910`](https://github.com/projectcaluma/caluma/commit/4c3e910db65cc34677856a97b07b812c3db28233))
+* **workflow:** Add case_document_forms filter to work item ([`e351de3`](https://github.com/projectcaluma/caluma/commit/e351de3b9c4c48e70f529295b13a61cc5052daec))
+
+
 # v8.0.0-beta.26 (20 February 2023)
 
 ### Fix
