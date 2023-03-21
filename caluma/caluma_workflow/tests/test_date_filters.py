@@ -59,3 +59,33 @@ def test_before_after_filters(
     )
 
     assert result_info == set(expected_result)
+
+
+@pytest.mark.parametrize(
+    "lookup, date, expect_result",
+    [
+        ("deadlineBefore", "2023-03-01T00:00:00+00:00", 0),
+        ("deadlineAfter", "2023-03-01T00:00:00+00:00", 1),
+        ("deadlineBefore", "2023-04-01T00:00:00+00:00", 1),
+        ("deadlineAfter", "2023-04-01T00:00:00+00:00", 0),
+    ],
+)
+@pytest.mark.parametrize("work_item__deadline", ["2023-03-20T12:00:00+00:00"])
+def test_deadline_filters(db, work_item, schema_executor, lookup, date, expect_result):
+    query = """
+            query Q($filter: [WorkItemFilterSetType]) {
+              allWorkItems(filter: $filter) {
+                edges {
+                  node {
+                    id
+                    meta
+                  }
+                }
+              }
+            }
+        """
+
+    #
+    result = schema_executor(query, variable_values={"filter": [{lookup: date}]})
+    assert not result.errors
+    assert len(result.data["allWorkItems"]["edges"]) == expect_result
