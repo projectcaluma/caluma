@@ -1,3 +1,9 @@
+# v8.0.0-beta.28 (21 March 2023)
+
+### Feature
+* **filters:** Add useful deadline filters to workitems ([`f74d641`](https://github.com/projectcaluma/caluma/commit/f74d641eac81151aa0b7a435f804a43078a952a2))
+
+
 # v8.0.0-beta.27 (10 March 2023)
 
 ### Feature
