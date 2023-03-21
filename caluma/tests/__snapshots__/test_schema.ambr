@@ -3444,6 +3444,8 @@
     caseMetaValue: [JSONValueFilterType]
     rootCaseMetaValue: [JSONValueFilterType]
     caseSearchAnswers: [SearchAnswersFilterType]
+    deadlineBefore: DateTime
+    deadlineAfter: DateTime
     invert: Boolean
   }
   

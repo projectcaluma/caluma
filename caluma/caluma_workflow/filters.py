@@ -1,5 +1,9 @@
 import graphene
-from django_filters.rest_framework import BooleanFilter, MultipleChoiceFilter
+from django_filters.rest_framework import (
+    BooleanFilter,
+    DateTimeFilter,
+    MultipleChoiceFilter,
+)
 
 from ..caluma_core.filters import (
     BaseFilterSet,
@@ -171,6 +175,17 @@ class WorkItemFilterSet(MetaFilterSet):
     case_meta_value = JSONValueFilter(field_name="case__meta")
     root_case_meta_value = JSONValueFilter(field_name="case__family__meta")
     case_search_answers = SearchAnswersFilter(document_id="case__document__pk")
+
+    deadline_before = DateTimeFilter(
+        field_name="deadline",
+        lookup_expr="lt",
+        label="Only return work items whose deadline is set to before the given datetime",
+    )
+    deadline_after = DateTimeFilter(
+        field_name="deadline",
+        lookup_expr="gte",
+        label="Only return work items whose deadline is set to after the given datetime",
+    )
 
     tasks = MultipleChoiceFilter(field_name="task_id")
 
