@@ -222,7 +222,7 @@ class FieldSet(Element):
                 answer=answers.get(question.slug),
                 parent=self,
             )
-            for question in self.form.questions.all()
+            for question in self.form.questions.all().order_by("-formquestion__sort")
         ]
 
     def __repr__(self):
