@@ -7,6 +7,7 @@ from ...caluma_core.tests import extract_serializer_input_fields
 from ...caluma_core.visibilities import BaseVisibility, filter_queryset_for
 from ...caluma_form.models import Answer, Document, DynamicOption, Question
 from ...caluma_form.schema import Document as DocumentNodeType
+from ...caluma_form.validators import CustomValidationError
 from .. import api, serializers
 
 
@@ -864,7 +865,7 @@ def test_save_document_answer(  # noqa:C901
             )
             snapshot.assert_match(answer)
         else:
-            with pytest.raises(Exception):
+            with pytest.raises(CustomValidationError):
                 api.save_answer(
                     question,
                     answer.document,

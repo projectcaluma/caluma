@@ -11,6 +11,7 @@ from caluma.caluma_core.validations import BaseValidation
 
 from .. import api, models, serializers
 from ..models import Answer, Question
+from ..validators import CustomValidationError
 
 
 @pytest.mark.parametrize(
@@ -251,7 +252,7 @@ def test_save_default_answer_python_api(
         answer = api.save_default_answer(question, user=admin_user, value=inp["value"])
         snapshot.assert_match(answer)
     else:
-        with pytest.raises(Exception):
+        with pytest.raises(CustomValidationError):
             api.save_default_answer(question, user=admin_user, value=inp["value"])
 
 
