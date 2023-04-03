@@ -13,7 +13,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_form", "0019_remove_answer_value_document")]
 
     operations = [

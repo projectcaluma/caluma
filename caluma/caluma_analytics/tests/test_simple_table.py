@@ -100,7 +100,6 @@ def test_sql_repeatability(
     db,
     example_analytics,
 ):
-
     example_analytics.fields.filter(alias="from_the_doc").delete()
     example_analytics.fields.filter(alias="sub_question_sumsumsum").delete()
     table = SimpleTable(example_analytics)
@@ -132,7 +131,6 @@ def test_sql_repeatability(
 )
 @pytest.mark.freeze_time("2021-10-10")
 def test_unusual_aliases(db, table, analytics_cases, alias, request):
-
     table_obj = request.getfixturevalue(table)
 
     some_field = table_obj.fields.get(alias="quarter")

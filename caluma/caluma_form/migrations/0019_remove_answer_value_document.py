@@ -6,7 +6,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_form", "0018_remove_answer_value_document_data_migration")]
 
     operations = [migrations.RemoveField(model_name="answer", name="value_document")]

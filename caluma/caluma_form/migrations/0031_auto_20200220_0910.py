@@ -20,7 +20,6 @@ def cleanup_invalid_family_pointers(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_form", "0030_auto_20200219_1359")]
 
     operations = [

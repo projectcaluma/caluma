@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_form", "0025_dynamicoption_historicaldynamicoption")]
 
     operations = [

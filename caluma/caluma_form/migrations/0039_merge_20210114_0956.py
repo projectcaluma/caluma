@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("caluma_form", "0038_auto_20201224_0920"),
         ("caluma_form", "0038_remove_table_answer_value"),

@@ -18,7 +18,6 @@ def reverse_func(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_form", "0005_auto_20190208_1016")]
 
     operations = [migrations.RunPython(forwards_func, reverse_func)]

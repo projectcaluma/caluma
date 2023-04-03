@@ -6,7 +6,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_form", "0006_choice_type_conversion")]
 
     operations = [

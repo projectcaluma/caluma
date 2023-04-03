@@ -72,7 +72,6 @@ def test_cmdline_output(
 
 
 def test_list_tables(db, analytics_table, capsys, snapshot):
-
     call_command("run_analytics")
     out, err = capsys.readouterr()
 

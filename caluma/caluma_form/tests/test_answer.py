@@ -431,7 +431,6 @@ def test_file_answer_mutation_create(db, answer, document, schema_executor, mini
 def test_file_answer_mutation_add_file(
     db, answer, document, schema_executor, minio_mock
 ):
-
     first_file = answer.files.get()
     history_count_before = first_file.history.count()
 

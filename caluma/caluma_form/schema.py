@@ -1145,7 +1145,6 @@ class DocumentValidityConnection(CountableConnectionBase):
 
 
 def validate_document(info, document_global_id):
-
     document_id = extract_global_id(document_global_id)
 
     document_qs = Document.get_queryset(models.Document.objects.all(), info)

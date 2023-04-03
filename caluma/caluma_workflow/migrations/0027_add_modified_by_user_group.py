@@ -21,7 +21,6 @@ def initial_modified_properties(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("caluma_workflow", "0026_auto_20200901_1435"),
     ]

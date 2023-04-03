@@ -372,7 +372,6 @@ def test_answer_transform_in_tables(
     expr,
     answer_document_factory,
 ):
-
     form, document, questions, answers = form_and_document(
         use_table=True, use_subform=False
     )

@@ -49,7 +49,6 @@ def test_save_case(
     schema_executor,
     update,
 ):
-
     query = """
         mutation SaveCase($input: SaveCaseInput!) {
           saveCase(input: $input) {
@@ -490,7 +489,6 @@ def test_order_by_question_answer_value(
 def test_document_form(
     db, schema_executor, case_factory, document_factory, form_factory
 ):
-
     form_a, form_b = form_factory.create_batch(2)
 
     # two cases, one for each form

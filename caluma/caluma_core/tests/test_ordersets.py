@@ -7,7 +7,6 @@ from ..relay import extract_global_id
 
 @pytest.mark.parametrize("question__type", ["text"])
 def test_inversible_with_vars(db, schema_executor, document_factory, question):
-
     doc_a, doc_b, doc_c = (
         document_factory(meta={"foo": "a", "blah": "xxx"}),
         document_factory(meta={"foo": "b", "blah": "xxx"}),
@@ -79,7 +78,6 @@ def test_inversible_with_vars(db, schema_executor, document_factory, question):
 def test_order_by_case_document_answer(
     db, schema_executor, work_item_factory, direction, question
 ):
-
     w1, w2 = work_item_factory.create_batch(2)
 
     w1.case.document.answers.create(question=question, value="aa")

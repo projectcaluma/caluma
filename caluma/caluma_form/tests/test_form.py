@@ -308,7 +308,6 @@ def test_reorder_form_questions(db, form, form_question_factory, schema_executor
 def test_reorder_form_questions_invalid_question(
     db, form, question_factory, schema_executor
 ):
-
     invalid_question = question_factory()
 
     query = """
@@ -346,7 +345,6 @@ def test_reorder_form_questions_invalid_question(
 def test_reorder_form_questions_duplicated_question(
     db, form, question, form_question, schema_executor
 ):
-
     query = """
         mutation ReorderFormQuestions($input: ReorderFormQuestionsInput!) {
           reorderFormQuestions(input: $input) {

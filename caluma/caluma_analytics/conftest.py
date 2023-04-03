@@ -85,7 +85,6 @@ def analytics_cases(form_and_document, case_factory, set_date, work_item_factory
 
 @pytest.fixture
 def example_pivot_table(example_analytics):
-
     status_field = example_analytics.fields.get(alias="statuuuuuus")
 
     status_field.function = models.AnalyticsField.FUNCTION_VALUE

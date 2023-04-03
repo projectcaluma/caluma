@@ -282,7 +282,6 @@ def test_migrate_to_family_as_pk(post_migrate_to_current_state, caplog):
 
 
 def _verify_foreign_key_types(apps):
-
     for models in apps.all_models.values():
         for model in models.values():
             slug_fks = [

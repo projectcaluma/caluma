@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("caluma_workflow", "0030_remove_choices_char_field"),
     ]

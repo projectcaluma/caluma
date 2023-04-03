@@ -6,7 +6,6 @@ import caluma.caluma_core.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_workflow", "0014_add_gin_index_to_jsonfields")]
 
     operations = [

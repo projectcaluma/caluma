@@ -462,7 +462,6 @@ class QueryRender:
         return sql, params, alias
 
     def _from_list(self):
-
         from_sql, from_params, from_alias = self._join_source(self.query.from_)
         self.collected_params.update(from_params)
         self.with_queries.update(self.query.with_queries)

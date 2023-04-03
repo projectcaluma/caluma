@@ -105,7 +105,6 @@ def test_no_client_id(rf, requests_mock, settings):
 def test_introspection_no_username(
     rf, requests_mock, settings, client_as_username, client_claim, expect_success
 ):
-
     settings.OIDC_CLIENT_CLAIM = client_claim
     if client_as_username:
         settings.OIDC_CLIENT_AS_USERNAME = True

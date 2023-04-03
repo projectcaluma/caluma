@@ -181,7 +181,6 @@ def test_validate_table(
     answer_factory,
     admin_user,
 ):
-
     # F: main-form
     #     Q: main_table_1: table
     #        ROW_FORM
@@ -315,7 +314,6 @@ def test_validate_empty_answers(
     answer_factory,
     expected_value,
 ):
-
     struct = structure.FieldSet(document, document.form)
     field = struct.get_field(question.slug)
     answer_value = field.value() if field else field
@@ -354,7 +352,6 @@ def test_validate_empty_answers(
 def test_validate_invalid_jexl(
     db, form_question, document, answer, question, exception_message, admin_user
 ):
-
     if exception_message is not None:
         with pytest.raises(RuntimeError) as exc:
             DocumentValidator().validate(document, admin_user)

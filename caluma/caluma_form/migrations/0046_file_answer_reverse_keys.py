@@ -42,7 +42,6 @@ def rename_file_type_reverse(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("caluma_form", "0045_simple_history"),
     ]

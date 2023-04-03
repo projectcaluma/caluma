@@ -22,7 +22,6 @@ def set_name_and_description(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_workflow", "0021_work_item_controlling_groups")]
 
     operations = [

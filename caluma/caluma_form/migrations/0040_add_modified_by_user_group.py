@@ -25,7 +25,6 @@ def initial_modified_properties(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("caluma_form", "0039_merge_20210114_0956"),
     ]

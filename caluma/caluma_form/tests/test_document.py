@@ -144,7 +144,6 @@ def test_complex_document_query_performance(
     django_assert_num_queries,
     minio_mock,
 ):
-
     answers = answer_factory.create_batch(5, document=document)
     for answer in answers:
         form_question_factory(question=answer.question, form=form)
@@ -1167,7 +1166,6 @@ def test_validity_query(
 def test_validity_with_visibility(
     db, form, document, schema_executor, hide_documents, mocker
 ):
-
     query = """
         query ValidateBaugesuch ($document_id: ID!) {
           documentValidity(

@@ -13,5 +13,4 @@ MODEL_ACTIONS = {
 for obj, actions in MODEL_ACTIONS.items():
     for action in actions:
         for prefix in ["pre", "post"]:
-
             setattr(module, f"{prefix}_{action}_{obj}", Signal())

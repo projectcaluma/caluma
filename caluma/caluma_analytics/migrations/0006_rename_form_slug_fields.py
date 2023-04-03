@@ -11,7 +11,6 @@ def rename_form_slug_fields(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("caluma_analytics", "0005_analytics_field_ordering"),
     ]
