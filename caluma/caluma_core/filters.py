@@ -361,6 +361,16 @@ class BaseFilterSet(GrapheneFilterSetMixin, FilterSet):
         lookup_expr="gte",
         label="Only return entries created at or after the given DateTime (inclusive)",
     )
+    modified_before = DateTimeFilter(
+        field_name="modified_at",
+        lookup_expr="lt",
+        label="Only return entries modified before the given DateTime (exclusive)",
+    )
+    modified_after = DateTimeFilter(
+        field_name="modified_at",
+        lookup_expr="gte",
+        label="Only return entries modified at or after the given DateTime (inclusive)",
+    )
 
 
 class JSONLookupMode(Enum):
