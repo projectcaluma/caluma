@@ -5,6 +5,7 @@ from copy import deepcopy
 from datetime import datetime
 from decimal import Decimal
 from functools import cached_property, partial
+from hashlib import md5
 from typing import List, Optional
 
 from django.conf import settings
@@ -1107,7 +1108,22 @@ class DocumentsStartingObject(BaseStartingObject):
         return {**direct_fields, **form_fields}
 
 
-class SimpleTable:
+class SQLAliasMixin:
+    def _sql_alias(self, user_alias):
+        """
+        Compose sql alias.
+
+        Returns f"{prefix}{alias}" by default. If this exceeds 63 bytes (limit by
+        postgresql), it returns f"{prefix}{md5_alias}"
+        """
+        prefix = "analytics_result_"
+        alias = f"{prefix}{user_alias}"
+        if len(alias.encode("utf-8")) > 63:
+            alias = f"{prefix}{md5(user_alias.encode('utf-8')).hexdigest()}"
+        return alias
+
+
+class SimpleTable(SQLAliasMixin):
     class _AnonymousInfo:
         """
         Pseudo GraphQL info object.
@@ -1209,9 +1225,7 @@ class SimpleTable:
 
             return [
                 {
-                    field.alias: field.parse_value(
-                        row[f"analytics_result_{field.alias}"]
-                    )
+                    field.alias: field.parse_value(row[self._sql_alias(field.alias)])
                     for field in self._fields.values()
                     if field.show_output
                 }
@@ -1222,6 +1236,3 @@ class SimpleTable:
         # simple tables can't do summary, but we must implement
         # it as both table types share the same GQL interface
         return {}  # pragma: no cover
-
-    def _sql_alias(self, user_alias):
-        return f"analytics_result_{user_alias}"
