@@ -121,6 +121,7 @@ def test_sql_repeatability(
         "with punctuation.",
         "with punctuation?",
         "with punctuation!",
+        "Lorem ipsum dolor sit amet, consetetur sadipsci",  # will be md5-ed
     ],
 )
 @pytest.mark.parametrize(

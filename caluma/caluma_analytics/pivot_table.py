@@ -14,7 +14,7 @@ FUNCTION_PARAMETER_CAST = {
 }
 
 
-class PivotTable:
+class PivotTable(simple_table.SQLAliasMixin):
     class _AnonymousInfo:
         """
         Pseudo GraphQL info object.
@@ -58,7 +58,7 @@ class PivotTable:
         new_selects = []
 
         for field in self._fields:
-            key = f"analytics_result_{field.alias}"
+            key = self._sql_alias(field.alias)
 
             # old field might be directly selected in the base query,
             # in which case we need to alias its expression. If it's
@@ -66,7 +66,7 @@ class PivotTable:
             # list, but will be aliased to the known name in a subquery.
             old_field = selects_by_alias.get(key, key)
 
-            new_alias = f"analytics_result_{field.alias}"
+            new_alias = self._sql_alias(field.alias)
 
             if field.function == field.FUNCTION_VALUE:
                 group_by.append(old_field)
@@ -102,7 +102,7 @@ class PivotTable:
                 for field in self._fields:
                     field2 = self.base_table._fields[field.alias]
                     if field.show_output:
-                        value = row[f"analytics_result_{field.alias}"]
+                        value = row[self._sql_alias(field.alias)]
                         self._update_summary(field, value)
                         record[field.alias] = field2.parse_value(value)
                 result.append(record)
@@ -118,6 +118,3 @@ class PivotTable:
         if not self._summary:  # pragma: no cover
             self.get_records()
         return self._summary
-
-    def _sql_alias(self, user_alias):  # pragma: no cover
-        return f"analytics_pivot_{user_alias}"
