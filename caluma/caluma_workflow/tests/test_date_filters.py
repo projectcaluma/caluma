@@ -6,36 +6,52 @@ import pytest
     [
         ([{"createdBefore": "2020-04-21T00:00:00Z"}], [20]),
         ([{"createdBefore": "2020-04-22T00:00:00Z"}], [20, 21]),
-        ([{"createdAfter": "2020-04-21T00:00:00Z"}], [21, 22, 23, 24]),
-        ([{"createdAfter": "2020-04-22T00:00:00Z"}], [22, 23, 24]),
+        ([{"createdAfter": "2020-04-21T00:00:00Z"}], [21, 22, 23, 24, 27]),
+        ([{"createdAfter": "2020-04-22T00:00:00Z"}], [22, 23, 24, 27]),
         # combinations
         (
             [
-                {"createdBefore": "2020-04-23T00:00:00Z"},
                 {"createdAfter": "2020-04-22T00:00:00Z"},
+                {"createdBefore": "2020-04-23T00:00:00Z"},
             ],
             [22],
         ),
         (
             [
-                {"createdBefore": "2020-04-24T00:00:00Z"},
                 {"createdAfter": "2020-04-21T00:00:00Z"},
+                {"createdBefore": "2020-04-24T00:00:00Z"},
             ],
             [21, 22, 23],
         ),
+        (
+            [
+                {"modifiedAfter": "2020-05-21T00:00:00Z"},
+                {"modifiedBefore": "2020-05-22T00:00:00Z"},
+            ],
+            [20, 21, 22, 23, 24],
+        ),
+        (
+            [
+                {"modifiedAfter": "2020-05-27T00:00:00Z"},
+            ],
+            [27],
+        ),
     ],
 )
+@pytest.mark.freeze_time("2020-05-21")
 def test_before_after_filters(
-    db, case_factory, schema_executor, filter, expected_result
+    db, case_factory, schema_executor, filter, expected_result, freezer
 ):
     # thanks, auto_now_add!
     cases = case_factory.create_batch(5)
-    case_dict = {}
     for day, case in zip(range(20, 25), cases):
-        case_dict[day] = case.pk
         case.created_at = f"2020-04-{day} 00:00:00Z"
         case.meta = {"test_created": day}
         case.save()
+
+    # create another case at a different point in time to test modified_at filter
+    freezer.move_to("2020-05-27")
+    case_factory(meta={"test_created": 27})
 
     query = """
             query Q($filter: [CaseFilterSetType]) {

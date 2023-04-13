@@ -114,6 +114,8 @@
     modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
+    modifiedBefore: DateTime
+    modifiedAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     search: String
@@ -213,6 +215,8 @@
     modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
+    modifiedBefore: DateTime
+    modifiedAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     search: String
@@ -265,6 +269,8 @@
     modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
+    modifiedBefore: DateTime
+    modifiedAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     questions: [ID]
@@ -508,6 +514,8 @@
     modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
+    modifiedBefore: DateTime
+    modifiedAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     id: ID
@@ -923,6 +931,8 @@
     modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
+    modifiedBefore: DateTime
+    modifiedAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     rootDocument: ID
@@ -1220,6 +1230,8 @@
     modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
+    modifiedBefore: DateTime
+    modifiedAfter: DateTime
     invert: Boolean
   }
   
@@ -1295,6 +1307,8 @@
     modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
+    modifiedBefore: DateTime
+    modifiedAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     search: String
@@ -1842,6 +1856,8 @@
     modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
+    modifiedBefore: DateTime
+    modifiedAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     search: String
@@ -1959,6 +1975,8 @@
     modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
+    modifiedBefore: DateTime
+    modifiedAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     excludeForms: [ID]
@@ -3254,6 +3272,8 @@
     modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
+    modifiedBefore: DateTime
+    modifiedAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     search: String
@@ -3432,6 +3452,8 @@
     modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
+    modifiedBefore: DateTime
+    modifiedAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     id: ID
@@ -3527,6 +3549,8 @@
     modifiedByGroup: String
     createdBefore: DateTime
     createdAfter: DateTime
+    modifiedBefore: DateTime
+    modifiedAfter: DateTime
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     search: String
