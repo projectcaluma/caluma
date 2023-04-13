@@ -1,3 +1,10 @@
+# v8.0.0-beta.29 (13 April 2023)
+
+### Feature
+
+- **filters:** Add filters for modified_at ([`16fdb73`](https://github.com/projectcaluma/caluma/commit/16fdb732f127fb06038784e87582441f303526de))
+
+
 # v8.0.0-beta.28 (21 March 2023)
 
 ### Feature
