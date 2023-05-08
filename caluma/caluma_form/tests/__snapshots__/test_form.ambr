@@ -1,3 +1,4 @@
+# serializer version: 1
 # name: test_query_all_forms[First result-1st-float]
   dict({
     'allForms': dict({

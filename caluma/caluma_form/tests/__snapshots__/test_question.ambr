@@ -1,3 +1,4 @@
+# serializer version: 1
 # name: test_query_all_questions[action_button-question__configuration14-None-question__format_validators14]
   dict({
     'allQuestions': dict({

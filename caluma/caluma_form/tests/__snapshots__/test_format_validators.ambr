@@ -1,3 +1,4 @@
+# serializer version: 1
 # name: test_base_format_validators[question__format_validators1--True-text]
   dict({
     'saveDocumentStringAnswer': dict({

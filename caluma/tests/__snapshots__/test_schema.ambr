@@ -1,3 +1,4 @@
+# serializer version: 1
 # name: test_schema_introspect_direct
   '''
   type ActionButtonQuestion implements Question & Node {
