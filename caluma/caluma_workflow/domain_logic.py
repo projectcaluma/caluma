@@ -113,7 +113,7 @@ class CompleteWorkItemLogic:
         ).exists()
 
     @staticmethod
-    def validate_for_complete(work_item, user):
+    def validate_for_complete(work_item, user, context=None):
         validators.WorkItemValidator().validate(
             status=work_item.status,
             child_case=work_item.child_case,
@@ -121,6 +121,8 @@ class CompleteWorkItemLogic:
             case=work_item.case,
             document=work_item.document,
             user=user,
+            validation_context=context.get("validation_context") if context else None,
+            data_source_context=context.get("data_source_context") if context else None,
         )
 
     @staticmethod

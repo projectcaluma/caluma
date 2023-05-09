@@ -1144,13 +1144,13 @@ class DocumentValidityConnection(CountableConnectionBase):
         node = ValidationResult
 
 
-def validate_document(info, document_global_id):
+def validate_document(info, document_global_id, **kwargs):
     document_id = extract_global_id(document_global_id)
 
     document_qs = Document.get_queryset(models.Document.objects.all(), info)
 
     document = get_object_or_404(document_qs, pk=document_id)
-    result = get_document_validity(document, info.context.user)
+    result = get_document_validity(document, info.context.user, **kwargs)
 
     errors = result.pop("errors")
     result = ValidationResult(
@@ -1192,14 +1192,16 @@ class Query:
     )
 
     document_validity = ConnectionField(
-        DocumentValidityConnection, id=graphene.ID(required=True)
+        DocumentValidityConnection,
+        id=graphene.ID(required=True),
+        data_source_context=graphene.JSONString(),
     )
 
     def resolve_all_format_validators(self, info, **kwargs):
         return get_format_validators()
 
     def resolve_document_validity(self, info, id, **kwargs):
-        return validate_document(info, id)
+        return validate_document(info, id, **kwargs)
 
 
 QUESTION_ANSWER_TYPES = {

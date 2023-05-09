@@ -1,3 +1,5 @@
+import json
+
 import pytest
 from django.utils.dateparse import parse_date
 from graphql_relay import to_global_id
@@ -1160,6 +1162,71 @@ def test_validity_query(
     assert result.data["documentValidity"]["edges"][0]["node"]["isValid"] == is_valid
     assert (
         len(result.data["documentValidity"]["edges"][0]["node"]["errors"]) == num_errors
+    )
+
+
+@pytest.mark.parametrize("question__data_source", ["MyDataSourceWithContext"])
+@pytest.mark.parametrize(
+    "question__type,answer__value,context",
+    [
+        (
+            Question.TYPE_DYNAMIC_CHOICE,
+            "option-with-context",
+            {"foo": "bar"},
+        ),
+        (
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            ["option-with-context"],
+            {"foo": "bar"},
+        ),
+    ],
+)
+def test_validity_query_with_context(
+    db,
+    document,
+    form_question,
+    schema_executor,
+    settings,
+    answer,
+    context,
+    question,
+):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.caluma_data_source.tests.data_sources.MyDataSourceWithContext"
+    ]
+
+    answer.document = document
+    answer.save()
+
+    query = """
+        query($id: ID!, $dataSourceContext: JSONString) {
+          documentValidity(id: $id, dataSourceContext: $dataSourceContext) {
+            edges {
+              node {
+                id
+                isValid
+                errors {
+                  slug
+                  errorMsg
+                }
+              }
+            }
+          }
+        }
+    """
+    result = schema_executor(
+        query,
+        variable_values={
+            "id": str(document.id),
+            "dataSourceContext": json.dumps(context),
+        },
+    )
+
+    assert result.data["documentValidity"]["edges"][0]["node"]["id"] == str(document.id)
+    assert result.data["documentValidity"]["edges"][0]["node"]["isValid"] is True
+    assert (
+        bool(len(result.data["documentValidity"]["edges"][0]["node"]["errors"]))
+        is False
     )
 
 

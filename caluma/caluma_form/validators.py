@@ -463,13 +463,13 @@ class QuestionValidator:
             self._validate_data_source(data["dataSource"])
 
 
-def get_document_validity(document, user):
+def get_document_validity(document, user, **kwargs):
     validator = DocumentValidator()
     is_valid = True
     errors = []
 
     try:
-        validator.validate(document, user)
+        validator.validate(document, user, **kwargs)
     except CustomValidationError as exc:
         is_valid = False
         detail = str(exc.detail[0])

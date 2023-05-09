@@ -1916,7 +1916,7 @@
     allDocuments(offset: Int, before: String, after: String, first: Int, last: Int, filter: [DocumentFilterSetType], order: [DocumentOrderSetType]): DocumentConnection
     allFormatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     allUsedDynamicOptions(offset: Int, before: String, after: String, first: Int, last: Int, filter: [DynamicOptionFilterSetType], order: [DynamicOptionOrderSetType]): DynamicOptionConnection
-    documentValidity(id: ID!, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
+    documentValidity(id: ID!, dataSourceContext: JSONString, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
     node(
       """The ID of the object"""
       id: ID!
