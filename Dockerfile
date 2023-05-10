@@ -2,9 +2,7 @@ FROM python:3.8.12-slim@sha256:8be266ad3b9d0381396ad4fe705d39217773343fdb1efdf90
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y --no-install-recommends wget build-essential \
-&& wget -q https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -P /usr/local/bin \
-&& chmod +x /usr/local/bin/wait-for-it.sh \
+RUN apt-get update && apt-get install -y --no-install-recommends wget build-essential wait-for-it \
 && mkdir -p /app \
 && useradd -u 901 -r caluma --create-home \
 # all project specific folders need to be accessible by newly created user but also for unknown users (when UID is set manually). Such users are in group root.
@@ -31,4 +29,4 @@ COPY . $APP_HOME
 
 EXPOSE 8000
 
-CMD /bin/sh -c "wait-for-it.sh $DATABASE_HOST:${DATABASE_PORT:-5432} -- poetry run python manage.py migrate && poetry run uwsgi"
+CMD /bin/sh -c "wait-for-it $DATABASE_HOST:${DATABASE_PORT:-5432} -- poetry run python manage.py migrate && poetry run uwsgi"
