@@ -188,7 +188,6 @@ def test_search_multiple(
     answer_factory,
     form,
 ):
-
     doc_a, doc_b, doc_c = document_factory.create_batch(3, form=form)
 
     question_a = question_factory(type=models.Question.TYPE_TEXT)
@@ -237,7 +236,6 @@ def test_search_multiple(
 
 
 def test_search_invalid_question_type(schema_executor, db, question_factory):
-
     question = question_factory(type=models.Question.TYPE_FORM)
 
     result = schema_executor(

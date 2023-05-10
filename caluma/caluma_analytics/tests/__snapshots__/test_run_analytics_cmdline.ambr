@@ -1,3 +1,4 @@
+# serializer version: 1
 # name: test_cmdline_output[output_mode0-False-expect_output1-cases]
   dict({
     'data': list([

@@ -156,7 +156,6 @@ def FilterCollectionFactory(filterset_class, ordering):  # noqa:C901
 
     @convert_form_field.register(custom_field_class)
     def convert_field(field):
-
         registry = get_global_registry()
         converted = registry.get_converted_field(field)
         if converted:

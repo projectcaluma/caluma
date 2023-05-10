@@ -5,7 +5,6 @@ import localized_fields.fields.field
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("caluma_form", "0041_action_button_question"),
     ]

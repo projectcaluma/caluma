@@ -1213,7 +1213,6 @@ def test_skip_multiple_instance_task_form_work_item(
         assert error in str(result.errors[0])
 
     else:
-
         assert result.data["skipWorkItem"]["workItem"]["status"] == to_const(
             models.WorkItem.STATUS_SKIPPED
         )

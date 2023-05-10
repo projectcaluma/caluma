@@ -175,7 +175,6 @@ def test_query_all_questions(
 def test_has_answer_in(
     schema_executor, db, question, answer_factory, values, search, expect_count
 ):
-
     for value in values:
         answer_factory(question=question, value=value)
 

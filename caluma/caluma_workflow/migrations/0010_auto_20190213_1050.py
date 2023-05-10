@@ -6,7 +6,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_workflow", "0009_auto_20190213_0939")]
 
     operations = [

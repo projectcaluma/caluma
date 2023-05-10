@@ -95,7 +95,6 @@ def test_create_table(db, snapshot, schema_executor):
 def test_available_fields(
     db, analytics_table, schema_executor, snapshot, prefix, depth
 ):
-
     variables = {"table": analytics_table.pk}
 
     if prefix:
@@ -364,7 +363,6 @@ def test_full_field_list(
 
 
 def test_reorder_analytics_fields(db, example_analytics, schema_executor):
-
     query = """
         mutation ReorderAnalyticsFields($input: ReorderAnalyticsFieldsInput!) {
           reorderAnalyticsFields(input: $input) {

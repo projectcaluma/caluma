@@ -48,7 +48,6 @@ def undo_attach_form_sub_answers_to_main_document(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_form", "0017_auto_20190619_1320")]
 
     operations = [

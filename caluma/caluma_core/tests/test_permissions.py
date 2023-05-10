@@ -155,7 +155,6 @@ def test_custom_permission_override_has_object_permission_with_multiple_mutation
 
 
 def test_validate_permission():
-
     with pytest.raises(ImproperlyConfigured) as exc:
 
         @object_permission_for(Node)

@@ -29,7 +29,6 @@ class QuestionValidatingAnalyzer(ValidatingAnalyzer):
 
 class QuestionJexl(JEXL):
     def __init__(self, validation_context=None, **kwargs):
-
         if validation_context:
             if "jexl_cache" not in validation_context:
                 validation_context["jexl_cache"] = defaultdict(dict)

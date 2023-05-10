@@ -16,7 +16,6 @@ def save_natural_keys(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_form", "0023_auto_20190729_1448")]
 
     operations = [

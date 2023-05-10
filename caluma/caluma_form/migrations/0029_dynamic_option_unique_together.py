@@ -31,7 +31,6 @@ def remove_duplicates(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_form", "0028_auto_20200210_0929")]
 
     operations = [

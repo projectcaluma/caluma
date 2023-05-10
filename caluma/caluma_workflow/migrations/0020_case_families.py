@@ -20,7 +20,6 @@ def set_family(apps, schema_editor):
         # Navigate up the hierarchy, but avoid hanging
         # if we have a loop in the data structure
         try:
-
             while (
                 hasattr(family, "parent_work_item")
                 and family.parent_work_item.case != family
@@ -54,7 +53,6 @@ def set_family(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_workflow", "0019_slugfield_length")]
 
     operations = [

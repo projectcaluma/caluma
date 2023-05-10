@@ -155,7 +155,6 @@ class SaveAnswerLogic:
     def create(
         cls, validated_data: dict, user: Optional[BaseUser] = None
     ) -> models.Answer:
-
         if validated_data["question"].type == models.Question.TYPE_TABLE:
             documents = validated_data.pop("documents")
 

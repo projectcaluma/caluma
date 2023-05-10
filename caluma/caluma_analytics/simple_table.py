@@ -627,7 +627,6 @@ class FormInfoField(BaseField):
     """Represent information about a form (Name, slug)."""
 
     def __init__(self, parent, identifier, *, visibility_source, **kwargs):
-
         super().__init__(
             parent=parent,
             identifier=identifier,
@@ -907,7 +906,6 @@ class BaseStartingObject:
 
         output = {}
         for path, field in fields.items():
-
             output[".".join(prefix + [path])] = field
             for subpath, child in _children_at_depth(field, depth - 1):
                 output[".".join(prefix + [path] + subpath)] = child
@@ -1191,7 +1189,6 @@ class SimpleTable(SQLAliasMixin):
         return sql_query, params
 
     def get_query_object(self):
-
         fields = self._fields
 
         step_queries = {}
@@ -1216,7 +1213,6 @@ class SimpleTable(SQLAliasMixin):
         return base_query
 
     def get_records(self):
-
         sql_query, params = self.get_sql_and_params()
 
         with connection.connection.cursor(cursor_factory=DictCursor) as cursor:

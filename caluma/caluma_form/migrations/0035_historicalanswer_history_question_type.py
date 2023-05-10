@@ -27,7 +27,6 @@ FALLBACK_UPDATE = """
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_form", "0034_fix_fk_lengths")]
 
     operations = [

@@ -1,3 +1,4 @@
+# serializer version: 1
 # name: test_dynamic_choice_options_context[None-dynamic_choice-MyDataSourceWithContext]
   dict({
     'allQuestions': dict({

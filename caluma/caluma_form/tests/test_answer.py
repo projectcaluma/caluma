@@ -5,6 +5,7 @@ import minio.error
 import pytest
 from django.utils.dateparse import parse_date
 from graphql_relay import to_global_id
+from rest_framework.exceptions import ValidationError
 
 from caluma.caluma_core.tests import extract_serializer_input_fields
 from caluma.caluma_core.validations import BaseValidation
@@ -251,7 +252,7 @@ def test_save_default_answer_python_api(
         answer = api.save_default_answer(question, user=admin_user, value=inp["value"])
         snapshot.assert_match(answer)
     else:
-        with pytest.raises(Exception):
+        with pytest.raises(ValidationError):
             api.save_default_answer(question, user=admin_user, value=inp["value"])
 
 
@@ -431,7 +432,6 @@ def test_file_answer_mutation_create(db, answer, document, schema_executor, mini
 def test_file_answer_mutation_add_file(
     db, answer, document, schema_executor, minio_mock
 ):
-
     first_file = answer.files.get()
     history_count_before = first_file.history.count()
 

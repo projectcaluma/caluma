@@ -1,6 +1,7 @@
 import pytest
 from django.utils.dateparse import parse_date
 from graphql_relay import to_global_id
+from rest_framework.exceptions import ValidationError
 
 from ...caluma_core.relay import extract_global_id
 from ...caluma_core.tests import extract_serializer_input_fields
@@ -144,7 +145,6 @@ def test_complex_document_query_performance(
     django_assert_num_queries,
     minio_mock,
 ):
-
     answers = answer_factory.create_batch(5, document=document)
     for answer in answers:
         form_question_factory(question=answer.question, form=form)
@@ -865,7 +865,7 @@ def test_save_document_answer(  # noqa:C901
             )
             snapshot.assert_match(answer)
         else:
-            with pytest.raises(Exception):
+            with pytest.raises(ValidationError):
                 api.save_answer(
                     question,
                     answer.document,
@@ -1167,7 +1167,6 @@ def test_validity_query(
 def test_validity_with_visibility(
     db, form, document, schema_executor, hide_documents, mocker
 ):
-
     query = """
         query ValidateBaugesuch ($document_id: ID!) {
           documentValidity(

@@ -283,6 +283,7 @@ def minio_mock_read_error(minio_mock, mocker):
     This scenario might occur when there is a internal minio issue or if a
     previous upload isn't successful (which doesn't issue exception).
     """
+
     # raise exception instead of handling request
     def download_side_effect(*args, **kwargs):  # pragma: no cover
         raise requests.exceptions.RequestException("GET request failed")
@@ -316,6 +317,7 @@ def minio_mock_write_error(minio_mock, mocker):
 
     This scenario might occur when there is a internal minio issue.
     """
+
     # raise exception instead of handling request
     def upload_side_effect(*args, **kwargs):
         raise requests.exceptions.RequestException("PUT request failed")

@@ -119,7 +119,6 @@ def _update_or_create_calc_answer(question, document):
 @disable_raw
 @filter_events(lambda instance: instance.type == models.Question.TYPE_CALCULATED_FLOAT)
 def save_calc_dependents(sender, instance, **kwargs):
-
     original = models.Question.objects.filter(pk=instance.pk).first()
     if not original:
         _update_calc_dependents(
@@ -152,7 +151,6 @@ def remove_calc_dependents(sender, instance, **kwargs):
 @disable_raw
 @filter_events(lambda instance: instance.type == models.Question.TYPE_CALCULATED_FLOAT)
 def update_calc_from_question(sender, instance, created, update_fields, **kwargs):
-
     # TODO optimize: only update answers if calc_expression is updated
     # needs to happen during save() or __init__()
 

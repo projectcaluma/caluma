@@ -5,7 +5,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_workflow", "0015_add_work_item_skipped")]
 
     operations = [

@@ -7,7 +7,6 @@ import caluma.caluma_core.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("caluma_workflow", "0027_add_modified_by_user_group"),
     ]

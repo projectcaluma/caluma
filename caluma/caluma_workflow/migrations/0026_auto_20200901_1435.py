@@ -6,7 +6,6 @@ import caluma.caluma_core.models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [("caluma_workflow", "0025_auto_20200901_1415")]
 
     operations = [

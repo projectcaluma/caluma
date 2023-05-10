@@ -1,3 +1,4 @@
+# serializer version: 1
 # name: test_query_all_documents[date-None-None-2019-02-22]
   dict({
     'allDocuments': dict({
