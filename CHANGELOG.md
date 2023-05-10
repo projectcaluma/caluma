@@ -1,3 +1,10 @@
+# v8.0.0-beta.30 (10 May 2023)
+
+### Fix
+
+* **analytics:** Fix aliases exceeding 63 bytes ([`cdca090`](https://github.com/projectcaluma/caluma/commit/cdca090e6a8cafbeb3dde5aad29bb1c866dea518))
+
+
 # v8.0.0-beta.29 (13 April 2023)
 
 ### Feature
