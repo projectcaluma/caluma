@@ -19,7 +19,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  IMAGE_NAME: caluma
+  IMAGE_NAME: projectcaluma/caluma
   REGISTRY: ghcr.io
 
 jobs:
