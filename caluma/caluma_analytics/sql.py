@@ -59,6 +59,10 @@ class Query:
     is_plain_cte: bool = field(default=False)
     select_direct_only: bool = field(default=False)
 
+    @property
+    def outer_ref_alias(self):
+        return _make_name(self.outer_ref)
+
     def makeparam(self, value, name_hint=None):
         """Return a parameter name for the given value.
 
@@ -264,6 +268,7 @@ class JoinField(Field):
     outer_ref: Optional[Tuple[str, str]] = field(
         default=None
     )  # name_in_outer -> name_in_inner
+    disable_distinct_on: bool = field(default=False)
 
     def annotate(self, query: Query):
         if self._activated_query:  # pragma: no cover (safeguard)
@@ -272,19 +277,23 @@ class JoinField(Field):
         self._activated_query = Query(
             from_=self.table,
             # distinct_on is the inner part of the outer_ref
-            distinct_on=self.outer_ref[1],
+            distinct_on=None if self.disable_distinct_on else self.outer_ref[1],
             filters=self.filters,
             outer_ref=self.outer_ref,
             order_by=self.order_by,
             # limit=1,
         )
 
-        outer_ref, inner_ref = self.outer_ref
+        outer_ref, _ = self.outer_ref
+        quoted_outer_ref_alias = quote_identifier(self._activated_query.outer_ref_alias)
 
         query.joins.append(
             (
                 self._activated_query,
-                f'{query.self_alias()}.{outer_ref} = "{self._activated_query.outer_alias()}".{inner_ref}',
+                (
+                    f"{query.self_alias()}.{outer_ref} = "
+                    f'"{self._activated_query.outer_alias()}".{quoted_outer_ref_alias}'
+                ),
             )
         )
         return self._activated_query
@@ -303,6 +312,7 @@ class QueryRender:
         self.collected_params = {}
         self.with_queries = {}
         self.is_subquery = is_subquery
+        self.outer_ref_alias = None
 
     def _collect_params(self, query):
         params = query.params.copy()
@@ -415,7 +425,9 @@ class QueryRender:
         ]
         if self.query.outer_ref:
             _, inner = self.query.outer_ref
-            fields.append(f"{quote_identifier(inner)}")
+            quoted_inner = quote_identifier(inner)
+            quoted_alias = quote_identifier(self.query.outer_ref_alias)
+            fields.append(f"{quoted_inner} AS {quoted_alias}")
 
         # The subquery fields are already aliased, so no need
         # to re-alias them
@@ -426,10 +438,10 @@ class QueryRender:
                 yield from _collect(sub_q)
 
         # Normally, we take all the "selects" from the inner queries and
-        # pass them further on. However in aggregate queries, this is not
+        # pass them further on. However, in aggregate queries, this is not
         # desired, as any unused field will lead to an SQL error (fields
         # MUST be used in aggregates or group by, which may not be desired).
-        # Thus we allow the query to specify "select direct only", which means
+        # Thus, we allow the query to specify "select direct only", which means
         # we do not pass on any selected fields from inner queries / joins
         # as we usually would.
         if not self.query.select_direct_only:

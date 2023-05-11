@@ -413,6 +413,120 @@ class WorkItemField(BaseField):
         return {**direct_fields, **form_fields}
 
 
+class CaseField(BaseField):
+    """Field that provides access to a case's data."""
+
+    def __init__(
+        self,
+        parent,
+        identifier,
+        visibility_source,
+        is_family=False,
+    ):
+        super().__init__(
+            parent=parent, identifier=identifier, visibility_source=visibility_source
+        )
+
+        # TODO translate?
+        self.label = "Case family" if is_family else "Case"
+        self.is_family = is_family
+
+    def is_leaf(self):
+        return False
+
+    def is_value(self):
+        return False
+
+    def supported_functions(self):
+        return []
+
+    def query_field(self):
+        outer_ref_left = "case_id"
+        if self.is_family:
+            outer_ref_left = "family_id"
+        return sql.JoinField(
+            self.identifier,
+            self.identifier,
+            table=self.visibility_source.cases(),
+            outer_ref=(outer_ref_left, "id"),
+            parent=self.parent.query_field() if self.parent else None,
+        )
+
+    @cached_property
+    def available_children(self):
+        direct_fields = {
+            "meta": MetaField(
+                parent=self,
+                identifier="meta",
+                label="Meta",
+                visibility_source=self.visibility_source,
+            ),
+            "id": AttributeField(
+                parent=self,
+                identifier="id",
+                is_date=False,
+                visibility_source=self.visibility_source,
+            ),
+            "closed_at": AttributeField(
+                parent=self,
+                identifier="closed_at",
+                is_date=True,
+                visibility_source=self.visibility_source,
+            ),
+            "created_at": AttributeField(
+                parent=self,
+                identifier="created_at",
+                is_date=True,
+                visibility_source=self.visibility_source,
+            ),
+            "status": AttributeField(
+                parent=self,
+                identifier="status",
+                visibility_source=self.visibility_source,
+            ),
+            "document[*]": FormDocumentField(
+                parent=self,
+                identifier="document[*]",
+                visibility_source=self.visibility_source,
+            ),
+        }
+
+        if not self.is_family:
+            direct_fields["family"] = CaseField(
+                parent=self,
+                identifier="family",
+                visibility_source=self.visibility_source,
+                is_family=True,
+            )
+
+        case_forms = form_models.Form.objects.filter(
+            documents__case__isnull=False
+        ).distinct()
+
+        form_fields = {
+            f"document[{form.slug}]": FormDocumentField(
+                identifier=f"document[{form.slug}]",
+                parent=self,
+                visibility_source=self.visibility_source,
+            )
+            for form in case_forms
+        }
+
+        tasks = workflow_models.Task.objects.all()
+
+        workitem_fields = {
+            f"workitem[{task.slug},{selector}]": WorkItemField(
+                identifier=f"workitem[{task.slug},{selector}]",
+                parent=self,
+                visibility_source=self.visibility_source,
+            )
+            for selector in ["first", "last", "firstclosed", "lastclosed"]
+            for task in tasks
+        }
+
+        return {**direct_fields, **form_fields, **workitem_fields}
+
+
 class FormDocumentField(BaseField):
     """Field that provides access to a form's data."""
 
@@ -427,7 +541,7 @@ class FormDocumentField(BaseField):
         if self.form_slug == "*":
             self.form_slug = None
 
-        # subform level is used so we can have the "path" as it is presented
+        # subform level is used, so we can have the "path" as it is presented
         # to the user (our `location`) separate from where the corresponding
         # `Answer` is found (remember, answers of questions in subforms are
         # NOT put into sub-documents according to hierarchy, but stored in a
@@ -436,7 +550,7 @@ class FormDocumentField(BaseField):
 
     def query_field(self):
         # Only for top-level form do we need a Join field.
-        # The "sub-forms"' answers are all on the same document,
+        # The "sub-forms" answers are all on the same document,
         # thus for those we return a NOOP field.
         if self.subform_level == 0:
             return sql.JoinField(
@@ -446,6 +560,7 @@ class FormDocumentField(BaseField):
                 outer_ref=("document_id", "id"),
                 filters=[f"form_id = '{self.form_slug}'"] if self.form_slug else [],
                 parent=self.parent.query_field() if self.parent else None,
+                disable_distinct_on=True,
             )
         # else - we just return the field from our "virtual" parent
         return self.parent.query_field()
@@ -1041,6 +1156,11 @@ class WorkItemsStartingObject(BaseStartingObject):
             "id": AttributeField(
                 parent=None,
                 identifier="id",
+                visibility_source=self.visibility_source,
+            ),
+            "case": CaseField(
+                parent=None,
+                identifier="case",
                 visibility_source=self.visibility_source,
             ),
         }
