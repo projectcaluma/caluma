@@ -9,7 +9,7 @@ on:
     branches:
       - main
 
-  # Publish `main` as Docker `latest` image.
+  # Publish `main` as Docker `dev` image.
   push:
     branches:
       - main
@@ -20,10 +20,11 @@ concurrency:
 
 env:
   IMAGE_NAME: caluma
+  REGISTRY: ghcr.io
 
 jobs:
   # Push image to GitHub Packages.
-  # See also https://docs.docker.com/docker-hub/builds/
+  # See also https://docs.docker.com/build/ci/github-actions/
   container-registry:
     runs-on: ubuntu-latest
     permissions:
@@ -33,36 +34,30 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Build image
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME --label "runnumber=${GITHUB_RUN_ID}"
-
-      - name: Log in to registry
+      - name: Log in to the Container registry
+        uses: docker/login-action@v2
         if: github.event_name != 'pull_request'
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push image
-        if: github.event_name != 'pull_request'
-        run: |
-          IMAGE_ID=ghcr.io/${{ github.repository_owner }}/$IMAGE_NAME
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=raw,value=dev,enable={{is_default_branch}}
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
 
-          # Change all uppercase to lowercase
-          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
-          # Strip git ref prefix from version
-          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
-          # Strip "v" prefix from tag name
-          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
-          # Use Docker `latest` tag convention
-          if [[ "$VERSION" == "main" ]]; then
-            # only push "dev" image from main branch build
-            echo "Pushing $IMAGE_ID:dev"
-            docker tag $IMAGE_NAME $IMAGE_ID:dev
-            docker push $IMAGE_ID:dev
-          else
-            # new version released - push "latest" and version tag
-            echo "Pushing $IMAGE_ID:$VERSION"
-            docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
-            docker push $IMAGE_ID:$VERSION
-            echo "Pushing $IMAGE_ID:latest"
-            docker tag $IMAGE_NAME $IMAGE_ID:latest
-            docker push $IMAGE_ID:latest
-          fi
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./Dockerfile
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
