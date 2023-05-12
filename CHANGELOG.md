@@ -1,3 +1,11 @@
+# v8.0.0 (12 May 2023)
+
+### Fix
+* **workflow:** Provide context to WorkItemValidator ([`2fb5308`](https://github.com/projectcaluma/caluma/commit/2fb530874869898a0e03ce9af16038003ce1f56a))
+
+**This is the long overdue stable release of Caluma v8. For a detailed description of the changes to v7, please refer to the changelogs of the v8 beta versions.**
+
+
 # v8.0.0-beta.30 (10 May 2023)
 
 ### Fix
