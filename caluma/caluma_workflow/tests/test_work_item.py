@@ -376,6 +376,141 @@ def test_complete_multiple_instance_task_form_work_item_next(
 
 
 @pytest.mark.parametrize(
+    "question__data_source,work_item__status,work_item__child_case,case__status",
+    [
+        (
+            "MyDataSourceWithContext",
+            models.WorkItem.STATUS_READY,
+            None,
+            models.Case.STATUS_RUNNING,
+        )
+    ],
+)
+@pytest.mark.parametrize(
+    "task__type,question__type,answer__value,context",
+    [
+        (
+            models.Task.TYPE_COMPLETE_WORKFLOW_FORM,
+            Question.TYPE_DYNAMIC_CHOICE,
+            "option-with-context",
+            {"foo": "bar"},
+        ),
+        (
+            models.Task.TYPE_COMPLETE_WORKFLOW_FORM,
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            ["option-with-context"],
+            {"foo": "bar"},
+        ),
+    ],
+)
+def test_complete_work_item_with_data_source_context(
+    db,
+    work_item,
+    form_question,
+    document,
+    question,
+    answer,
+    context,
+    schema_executor,
+    settings,
+):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.caluma_data_source.tests.data_sources.MyDataSourceWithContext"
+    ]
+
+    answer.document = document
+    answer.save()
+    work_item.document = document
+    work_item.save()
+
+    query = """
+        mutation CompleteWorkItem($input: CompleteWorkItemInput!) {
+          completeWorkItem(input: $input) {
+            workItem {
+              status
+              case {
+                status
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    variables = {
+        "input": {
+            "id": str(work_item.pk),
+            "context": json.dumps({"data_source_context": context}),
+        }
+    }
+    result = schema_executor(query, variable_values=variables)
+
+    assert result.data["completeWorkItem"]["workItem"]["status"] == to_const(
+        models.WorkItem.STATUS_COMPLETED
+    )
+
+    assert not bool(result.errors)
+
+
+@pytest.mark.parametrize(
+    "question__data_source,work_item__status,work_item__child_case,case__status",
+    [
+        (
+            "MyDataSourceWithContext",
+            models.WorkItem.STATUS_READY,
+            None,
+            models.Case.STATUS_RUNNING,
+        )
+    ],
+)
+@pytest.mark.parametrize(
+    "task__type,question__type,answer__value,context",
+    [
+        (
+            models.Task.TYPE_COMPLETE_WORKFLOW_FORM,
+            Question.TYPE_DYNAMIC_CHOICE,
+            "option-with-context",
+            {"foo": "bar"},
+        ),
+        (
+            models.Task.TYPE_COMPLETE_WORKFLOW_FORM,
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            ["option-with-context"],
+            {"foo": "bar"},
+        ),
+    ],
+)
+def test_complete_work_item_with_data_source_context_api(
+    db,
+    work_item,
+    admin_user,
+    settings,
+    form_question,
+    question,
+    answer,
+    document,
+    context,
+):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.caluma_data_source.tests.data_sources.MyDataSourceWithContext"
+    ]
+
+    answer.document = document
+    answer.save()
+    work_item.document = document
+    work_item.save()
+
+    api.complete_work_item(
+        work_item, admin_user, context={"data_source_context": context}
+    )
+
+    work_item.refresh_from_db()
+
+    assert work_item.status == models.WorkItem.STATUS_COMPLETED
+    assert work_item.case.status == models.Case.STATUS_COMPLETED
+
+
+@pytest.mark.parametrize(
     "work_item__status,work_item__child_case,task__type,work_item__controlling_groups,work_item__created_by_group,case__created_by_group",
     [
         (

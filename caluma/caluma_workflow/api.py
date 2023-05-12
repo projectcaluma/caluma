@@ -54,7 +54,9 @@ def complete_work_item(
     <WorkItem: WorkItem object (some-uuid)>
     ```
     """
-    domain_logic.CompleteWorkItemLogic.validate_for_complete(work_item, user)
+    domain_logic.CompleteWorkItemLogic.validate_for_complete(
+        work_item, user, context=context
+    )
     validated_data = domain_logic.CompleteWorkItemLogic.pre_complete(
         work_item, {}, user, context
     )

@@ -363,7 +363,7 @@ class CompleteWorkItemSerializer(ContextModelSerializer):
     def validate(self, data):
         try:
             domain_logic.CompleteWorkItemLogic.validate_for_complete(
-                self.instance, self.context["request"].user
+                self.instance, self.context["request"].user, context=data.get("context")
             )
         except ValidationError as e:
             raise exceptions.ValidationError(str(e))
