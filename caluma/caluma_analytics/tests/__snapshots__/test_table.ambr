@@ -126,6 +126,14 @@
         'edges': list([
           dict({
             'node': dict({
+              'id': 'QXZhaWxhYmxlRmllbGQ6Y2FzZQ==',
+              'isLeaf': False,
+              'label': 'Case',
+              'sourcePath': 'case',
+            }),
+          }),
+          dict({
+            'node': dict({
               'id': 'QXZhaWxhYmxlRmllbGQ6Y2xvc2VkX2F0',
               'isLeaf': False,
               'label': 'closed_at',

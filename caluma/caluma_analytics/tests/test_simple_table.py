@@ -6,7 +6,7 @@ import pytest
 from caluma.caluma_analytics.models import AnalyticsField
 from caluma.caluma_analytics.pivot_table import PivotTable
 from caluma.caluma_analytics.simple_table import SimpleTable
-from caluma.caluma_form.models import Form
+from caluma.caluma_form.models import Form, Question
 
 
 @pytest.mark.parametrize("analytics_table__starting_object", ["cases"])
@@ -235,3 +235,62 @@ def test_form_info_field_cases(db, analytics_table, analytics_cases, data_source
     assert records
     for record in records:
         assert record["the_thing"] in valid_form_names
+
+
+@pytest.mark.parametrize("analytics_table__starting_object", ["work_items"])
+def test_subcase(
+    db,
+    workflow_factory,
+    case_factory,
+    work_item_factory,
+    form_question_factory,
+    answer_factory,
+    analytics_table,
+):
+    # parent workflow & case
+    workflow = workflow_factory()
+    form_question = form_question_factory(
+        question__type=Question.TYPE_TEXT,
+        question__slug="main-form-q",
+        form__slug="main-form",
+    )
+    main_answer = answer_factory(
+        question=form_question.question,
+        document__form=form_question.form,
+    )
+    case = case_factory(workflow=workflow, document=main_answer.document)
+
+    # sub workflow & child case
+    sub_workflow = workflow_factory()
+    child_case = case_factory(workflow=sub_workflow, family=case)
+    child_form_question = form_question_factory(
+        question__type=Question.TYPE_TEXT,
+        question__slug="sub-case-form-q",
+        form__slug="sub-case-form",
+    )
+    child_answer = answer_factory(
+        question=child_form_question.question,
+        document__form=child_form_question.form,
+    )
+    work_item_factory(case=child_case, document=child_answer.document)
+
+    # access value from parent case document
+    analytics_table.fields.create(
+        alias="main-form-q",
+        data_source="case.family.document[main-form].main-form-q",
+        function=AnalyticsField.FUNCTION_VALUE,
+    )
+
+    # access value from child case document
+    analytics_table.fields.create(
+        alias="sub-case-form-q",
+        data_source="document[sub-case-form].sub-case-form-q",
+        function=AnalyticsField.FUNCTION_VALUE,
+    )
+
+    table = SimpleTable(analytics_table)
+
+    records = table.get_records()
+    assert records == [
+        {"sub-case-form-q": child_answer.value, "main-form-q": main_answer.value}
+    ]
