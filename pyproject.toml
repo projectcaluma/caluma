@@ -23,7 +23,7 @@ exclude = [
 python = "^3.8.1"
 dateparser = "^1.1.0"
 Django = "^3.2.19"
-django-cors-headers = "^3.11.0"
+django-cors-headers = ">=3.11,<5.0"
 django-environ = "^0.10.0"
 django-filter = "^23.1"
 django-localized-fields = "^6.6"
