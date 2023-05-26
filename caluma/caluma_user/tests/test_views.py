@@ -9,7 +9,6 @@ from rest_framework import status
 from .. import views
 
 
-@pytest.mark.parametrize("is_id_token", [True, False])
 @pytest.mark.parametrize(
     "authentication_header,authenticated,error",
     [
@@ -25,43 +24,28 @@ def test_authentication_view(
     authentication_header,
     authenticated,
     error,
-    is_id_token,
     requests_mock,
     settings,
 ):
     userinfo = {"sub": "1"}
     requests_mock.get(settings.OIDC_USERINFO_ENDPOINT, text=json.dumps(userinfo))
 
-    if not is_id_token:
-        userinfo = {"client_id": "test_client", "sub": "service-account-foo-bar"}
-        requests_mock.get(settings.OIDC_USERINFO_ENDPOINT, status_code=401)
-        requests_mock.post(settings.OIDC_INTROSPECT_ENDPOINT, text=json.dumps(userinfo))
-
     request = rf.get("/graphql", HTTP_AUTHORIZATION=authentication_header)
     response = views.AuthenticationGraphQLView.as_view()(request)
     assert bool(response.status_code == status.HTTP_401_UNAUTHORIZED) == error
     if not error:
-        key = "userinfo" if is_id_token else "introspect"
-
         assert request.user.is_authenticated == authenticated
         if authenticated:
             assert (
                 cache.get(
-                    f"authentication.{key}.{hashlib.sha256(b'Token').hexdigest()}"
+                    f"authentication.userinfo.{hashlib.sha256(b'Token').hexdigest()}"
                 )
                 == userinfo
             )
 
 
-@pytest.mark.parametrize("introspection", [False, True])
-def test_authentication_invalid_provider(introspection, rf, requests_mock, settings):
+def test_authentication_invalid_provider(rf, requests_mock, settings):
     requests_mock.get(settings.OIDC_USERINFO_ENDPOINT, status_code=400)
-
-    if introspection:
-        requests_mock.get(settings.OIDC_USERINFO_ENDPOINT, status_code=401)
-        requests_mock.post(settings.OIDC_INTROSPECT_ENDPOINT, status_code=400)
-    elif not introspection:
-        settings.OIDC_INTROSPECT_ENDPOINT = None
 
     request = rf.get("/graphql", HTTP_AUTHORIZATION="Bearer Token")
     response = views.AuthenticationGraphQLView.as_view()(request)
@@ -69,7 +53,7 @@ def test_authentication_invalid_provider(introspection, rf, requests_mock, setti
     result = json.loads(response.content)
     assert (
         result["errors"][0]["message"]
-        == f'400 Client Error: None for url: mock://caluma.io/openid/{"introspect" if introspection else "userinfo"}'
+        == "400 Client Error: None for url: mock://caluma.io/openid/userinfo"
     )
 
 
@@ -78,46 +62,3 @@ def test_authentication_view_improperly_configured(rf, settings):
     request = rf.get("/graphql", HTTP_AUTHORIZATION="Bearer Token")
     with pytest.raises(ImproperlyConfigured):
         views.AuthenticationGraphQLView.as_view()(request)
-
-
-def test_no_client_id(rf, requests_mock, settings):
-    cache.clear()
-    authentication_header = "Bearer Token"
-    userinfo = {"sub": "1"}
-    requests_mock.get(
-        settings.OIDC_USERINFO_ENDPOINT, text=json.dumps(userinfo), status_code=401
-    )
-    requests_mock.post(settings.OIDC_INTROSPECT_ENDPOINT, text=json.dumps(userinfo))
-
-    request = rf.get("/graphql", HTTP_AUTHORIZATION=authentication_header)
-    response = views.AuthenticationGraphQLView.as_view()(request)
-    assert response.status_code == status.HTTP_401_UNAUTHORIZED
-
-
-@pytest.mark.parametrize(
-    "client_as_username, client_claim, expect_success",
-    [
-        (True, "client_id", True),
-        (True, "other_key", False),
-        (False, "client_id", False),
-    ],
-)
-def test_introspection_no_username(
-    rf, requests_mock, settings, client_as_username, client_claim, expect_success
-):
-    settings.OIDC_CLIENT_CLAIM = client_claim
-    if client_as_username:
-        settings.OIDC_CLIENT_AS_USERNAME = True
-
-    requests_mock.get(settings.OIDC_USERINFO_ENDPOINT, status_code=401)
-    requests_mock.post(
-        settings.OIDC_INTROSPECT_ENDPOINT, text=json.dumps({"client_id": "test_client"})
-    )
-
-    request = rf.get("/graphql", HTTP_AUTHORIZATION="Bearer foo")
-    if expect_success:
-        views.AuthenticationGraphQLView.as_view()(request)
-        assert request.user.is_authenticated == expect_success
-    else:
-        with pytest.raises(KeyError):
-            views.AuthenticationGraphQLView.as_view()(request)

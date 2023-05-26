@@ -20,34 +20,14 @@ class AnonymousUser(BaseUser):
 
 
 class OIDCUser(BaseUser):
-    def __init__(self, token: str, userinfo: dict = None, introspection: dict = None):
-        super().__init__()
+    def __init__(self, token: str, claims: dict):
+        super().__init__(token=token, claims=claims)
 
-        self.claims, self.claims_source = self._get_claims(userinfo, introspection)
-
-        if (
-            self.claims_source == "introspection"
-            and settings.OIDC_CLIENT_AS_USERNAME
-            and settings.OIDC_USERNAME_CLAIM not in self.claims
-        ):
-            self.username = self.claims[settings.OIDC_CLIENT_CLAIM]
-        else:
-            self.username = self.claims[settings.OIDC_USERNAME_CLAIM]
-
+        self.username = self.claims[settings.OIDC_USERNAME_CLAIM]
         self.groups = self.claims.get(settings.OIDC_GROUPS_CLAIM)
         self.group = self.groups[0] if self.groups else None
         self.token = token
         self.is_authenticated = True
-
-    def _get_claims(self, userinfo, introspection):
-        result = (userinfo, "userinfo")
-        if all([userinfo, introspection]):  # pragma: no cover
-            raise AttributeError("You can't set userinfo AND introspection.")
-        elif not any([userinfo, introspection]):  # pragma: no cover
-            raise AttributeError("You must provide either userinfo or introspection.")
-        elif introspection is not None:
-            result = (introspection, "introspection")
-        return result
 
     def __str__(self):
         return self.username
