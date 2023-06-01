@@ -61,16 +61,9 @@ OIDC_USERNAME_CLAIM = env.str("OIDC_USERNAME_CLAIM", default="sub")
 # Claim to use for the "client" claim. Should normally be left to the default value
 OIDC_CLIENT_CLAIM = env.str("OIDC_CLIENT_CLAIM", default="client_id")
 
-# When service clients are used, should we pretend they're users?
-OIDC_CLIENT_AS_USERNAME = env.bool("OIDC_CLIENT_AS_USERNAME", default=False)
-
 OIDC_BEARER_TOKEN_REVALIDATION_TIME = env.int(
     "OIDC_BEARER_TOKEN_REVALIDATION_TIME", default=0
 )
-
-OIDC_INTROSPECT_ENDPOINT = env.str("OIDC_INTROSPECT_ENDPOINT", default=None)
-OIDC_INTROSPECT_CLIENT_ID = env.str("OIDC_INTROSPECT_CLIENT_ID", default=None)
-OIDC_INTROSPECT_CLIENT_SECRET = env.str("OIDC_INTROSPECT_CLIENT_SECRET", default=None)
 
 CALUMA_OIDC_USER_FACTORY = env.str(
     "CALUMA_OIDC_USER_FACTORY", default="caluma.caluma_user.models.OIDCUser"

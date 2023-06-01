@@ -1,4 +1,3 @@
-import base64
 import functools
 import hashlib
 
@@ -51,25 +50,6 @@ class AuthenticationGraphQLView(GraphQLView):
         response.raise_for_status()
         return response.json()
 
-    def get_introspection(self, token):
-        basic = base64.b64encode(
-            f"{settings.OIDC_INTROSPECT_CLIENT_ID}:{settings.OIDC_INTROSPECT_CLIENT_SECRET}".encode(
-                "utf-8"
-            )
-        ).decode()
-        headers = {
-            "Authorization": f"Basic {basic}",
-            "Content-Type": "application/x-www-form-urlencoded",
-        }
-        response = requests.post(
-            settings.OIDC_INTROSPECT_ENDPOINT,
-            verify=settings.OIDC_VERIFY_SSL,
-            headers=headers,
-            data={"token": token},
-        )
-        response.raise_for_status()
-        return response.json()
-
     def _oidc_user(self, *args, **kwargs):
         factory = import_string(settings.CALUMA_OIDC_USER_FACTORY)
         return factory(*args, **kwargs)
@@ -86,41 +66,22 @@ class AuthenticationGraphQLView(GraphQLView):
             )
 
         userinfo_method = functools.partial(self.get_userinfo, token=token)
-        # token might be too long for key so we use hash sum instead.
+        # token might be too long for key, so we use hash sum instead.
         hashsum_token = hashlib.sha256(force_bytes(token)).hexdigest()
 
         try:
-            userinfo = cache.get_or_set(
+            claims = cache.get_or_set(
                 f"authentication.userinfo.{hashsum_token}",
                 userinfo_method,
                 timeout=settings.OIDC_BEARER_TOKEN_REVALIDATION_TIME,
             )
-            return self._oidc_user(token=token, userinfo=userinfo)
         except requests.HTTPError as e:
-            try:
-                if (
-                    e.response.status_code in [401, 403]
-                    and settings.OIDC_INTROSPECT_ENDPOINT
-                ):
-                    introspect_method = functools.partial(
-                        self.get_introspection, token=token
-                    )
-                    introspection = cache.get_or_set(
-                        f"authentication.introspect.{hashsum_token}",
-                        introspect_method,
-                        timeout=settings.OIDC_BEARER_TOKEN_REVALIDATION_TIME,
-                    )
-                    if "client_id" not in introspection:
-                        response = HttpResponse(status=401)
-                        raise HttpError(response)
-                    return self._oidc_user(token=token, introspection=introspection)
-                else:
-                    raise e
-            except requests.HTTPError as internal_exception:
-                # convert request error to django http error
-                response = HttpResponse()
-                response.status_code = internal_exception.response.status_code
-                raise HttpError(response, message=str(internal_exception))
+            # convert request error to django http error
+            response = HttpResponse()
+            response.status_code = e.response.status_code
+            raise HttpError(response, message=str(e))
+
+        return self._oidc_user(token=token, claims=claims)
 
     def dispatch(self, request, *args, **kwargs):
         try:
