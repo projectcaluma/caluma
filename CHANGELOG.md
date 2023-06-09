@@ -1,3 +1,13 @@
+# v9.0.0 (9 June 2023)
+
+### Feature
+* **auth:** Only use userinfo for auth (drop introspect) ([`d065ef8`](https://github.com/projectcaluma/caluma/commit/d065ef8fd52f0c09d7c5f660c72441ef1cb3a0a6))
+* **analytics:** Support accessing sub-cases and their parent ([`6dfc4f9`](https://github.com/projectcaluma/caluma/commit/6dfc4f9c5f7eeb92042447e77954639d298a907b))
+
+### Breaking
+* setting the `OIDC_INTROSPECT_*` and `OIDC_CLIENT_AS_USERNAME` env vars is obsolete now. Auth now only calls the userinfo endpoint without any fallback to the introspect endpoint. This will possibly have an impact on the `username` property of the user object. If your extensions depend on that property, please update them if necessary. Additionally, all requests sent to Caluma must include the `openid`-scope. ([`d065ef8`](https://github.com/projectcaluma/caluma/commit/d065ef8fd52f0c09d7c5f660c72441ef1cb3a0a6))
+
+
 # v8.0.0 (12 May 2023)
 
 ### Fix
