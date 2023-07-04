@@ -201,7 +201,7 @@ class QuestionJexl(JEXL):
     def evaluate(self, expr, raise_on_error=True):
         try:
             return super().evaluate(expr)
-        except TypeError:
+        except (TypeError, ValueError, ZeroDivisionError):
             if raise_on_error:
                 raise
             return None
