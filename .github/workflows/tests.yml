@@ -159,3 +159,10 @@ jobs:
     needs: [lint]
     with:
       postgres: "14"
+
+  compatibility-tests-postgres-15:
+    name: "Compatibility tests"
+    uses: ./.github/workflows/compatibility-tests.yml
+    needs: [lint]
+    with:
+      postgres: "15"
