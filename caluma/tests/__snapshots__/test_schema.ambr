@@ -1990,19 +1990,38 @@
   """
   Question jexl expression returning boolean.
   
-  Following transform can be used:
-  * answer - access answer of document by question slug
-  * mapby - map list by key. Helpful to work with table answers
+  Following transforms can be used:
+  * `answer`: get answer of document by question slug
+  * `mapby`: map list by key. Helpful to work with table answers
     whereas an answer is a list of dicts.
+  * `stringify`: JSON stringify
+  * `flatten`: flatten list values
+  * `min`: get min value in a list
+  * `max`: get max value in a list
+  * `sum`: sum of a list
+  * `round`: round the value
+  * `ceil`: round value up
+  * `floor`: round value down
+  * `debug`: debug output
+  
+  Following binary operators can be used:
+  * `intersects`: list intersection operator
   
   Following context is available:
-  * form - access form of document
+  * `form`: legacy property pointing to the root form (this should not be used anymore)
+  * `info.form`: slug of the form this question is attached to
+  * `info.formMeta`: meta property of the form this question is attached to
+  * `info.parent.form`: parent form slug
+  * `info.parent.formMeta`: parent form meta property
+  * `info.root.form`: top level form slug
+  * `info.root.formMeta`: top level form meta property
   
   Examples:
   * 'answer' == 'question-slug'|answer
   * 'answer' in 'list-question-slug'|answer
   * 'answer' in 'table-question-slug'|answer|mapby('column-question')
-  * 'form-slug' == form
+  * 'answer' in 'table-question-slug'|answer|mapby('multiple-choice-question')|flatten
+  * 'form-slug' == info.form
   """
   scalar QuestionJexl
   
