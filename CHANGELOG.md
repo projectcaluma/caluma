@@ -1,3 +1,15 @@
+# v9.1.0 (17 July 2023)
+
+### Feature
+* **jexl:** Add flatten transform ([`42144cb`](https://github.com/projectcaluma/caluma/commit/42144cb64ec43baa52db82cf1304d700f6e6673e))
+
+### Fix
+* Also catch ValueError and ZeroDivision errors on early jexl evaluation ([`0fe96ea`](https://github.com/projectcaluma/caluma/commit/0fe96ea9268781b2ab604c2e6398f27baf407f8b))
+
+### Documentation
+* **jexl:** Update question jexl docstring ([`cdf1e73`](https://github.com/projectcaluma/caluma/commit/cdf1e7369f08eb7de8af9ec821b7331276a60ab9))
+
+
 # v9.0.0 (9 June 2023)
 
 ### Feature
