@@ -136,6 +136,7 @@ def test_intersects_operator(expression, result):
 @pytest.mark.parametrize(
     "expression,result",
     [
+        # math transforms
         ("[1, 2, 3]|min", 1),
         ("['a', 'b']|min", None),
         ("[1, 2, '3']|min", 1),
@@ -184,20 +185,18 @@ def test_intersects_operator(expression, result):
         ("[{ key: 1.4 }, {key: 2.6}]|mapby('key')|sum", 4),
         ("[{ key: 1.4 }, {key: 2.6}]|mapby('key')|sum", 4),
         ("[[{ key: 1.4 }, {key: 2.6}]|mapby('key')|sum]|round", None),
-    ],
-)
-def test_math_transforms(expression, result):
-    assert JEXL().evaluate(expression) == result
-
-
-@pytest.mark.parametrize(
-    "expression,result",
-    [
+        # stringify
         ("[['test1', 'test2'], [1,2]]|stringify", '[["test1", "test2"], [1, 2]]'),
         ("1|stringify", "1"),
+        # flatten
+        (
+            "[['some-value'], ['some-other-value']]|flatten",
+            ["some-value", "some-other-value"],
+        ),
+        ("null|flatten", None),
     ],
 )
-def test_stringify_transform(expression, result):
+def test_simple_transforms(expression, result):
     assert JEXL().evaluate(expression) == result
 
 

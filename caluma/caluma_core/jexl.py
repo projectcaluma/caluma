@@ -2,7 +2,7 @@ import json
 import math
 import numbers
 from functools import partial
-from itertools import count
+from itertools import chain, count
 from logging import getLogger
 
 import pyjexl
@@ -74,6 +74,7 @@ class JEXL(pyjexl.JEXL):
 
         self.add_transform("mapby", self._mapby_transform)
         self.add_transform("stringify", lambda obj: json.dumps(obj))
+        self.add_transform("flatten", self._flatten_transform)
         self.add_binary_operator(
             "intersects", 20, lambda left, right: any(x in right for x in left)
         )
@@ -151,6 +152,12 @@ class JEXL(pyjexl.JEXL):
             [obj.get(key) for key in keys] if len(keys) > 1 else obj.get(keys[0])
             for obj in arr
         ]
+
+    def _flatten_transform(self, arr, *options):
+        if not isinstance(arr, list):
+            return None
+
+        return list(chain(*arr))
 
     def evaluate(self, expression, context=None):
         self._expr_stack.append(expression)
