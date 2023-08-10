@@ -93,6 +93,17 @@ def test_run_analytics_gql(
         assert first_row["quarter"] == str(int(math.ceil(case.created_at.month / 3)))
         assert first_row["foo"] == "bar"
 
+    # sort the result for snapshotting
+    if result.data["analyticsTable"]["resultData"]["records"]["edges"]:
+        result.data["analyticsTable"]["resultData"]["records"]["edges"][0]["node"][
+            "edges"
+        ] = sorted(
+            result.data["analyticsTable"]["resultData"]["records"]["edges"][0]["node"][
+                "edges"
+            ],
+            key=lambda x: x["node"]["alias"],
+        )
+
     snapshot.assert_match(result.data)
 
 

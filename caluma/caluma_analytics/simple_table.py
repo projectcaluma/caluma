@@ -155,7 +155,16 @@ class MetaField(BaseField):
     settings, it will not be usable in Analytics.
     """
 
-    def __init__(self, parent, identifier, label, *, visibility_source, meta_name=None):
+    def __init__(
+        self,
+        parent,
+        identifier,
+        label,
+        *,
+        visibility_source,
+        meta_name=None,
+        meta_field=None,
+    ):
         super().__init__(
             parent=parent,
             identifier=identifier,
@@ -163,6 +172,7 @@ class MetaField(BaseField):
             visibility_source=visibility_source,
         )
         self.meta_name = meta_name
+        self.meta_field = meta_field
 
     def is_leaf(self):
         # if we have a meta field name, we are a leaf:
@@ -186,9 +196,10 @@ class MetaField(BaseField):
         return {
             name: MetaField(
                 parent=self,
-                identifier=self.identifier,
+                identifier=name,
                 label=f"Key '{name}'",
                 meta_name=name,
+                meta_field=self.identifier,
                 visibility_source=self.visibility_source,
             )
             for name in settings.META_FIELDS
@@ -206,8 +217,8 @@ class MetaField(BaseField):
     def query_field(self):
         if self.meta_name:
             return sql.JSONExtractorField(
-                self.identifier,
-                self.identifier,
+                self.meta_name,
+                self.meta_field,
                 parent=self.parent.query_field() if self.parent else None,
                 json_key=self.meta_name,
             )
@@ -362,6 +373,7 @@ class WorkItemField(BaseField):
                 parent=self,
                 identifier="meta",
                 label="Meta",
+                meta_field="meta",
                 visibility_source=self.visibility_source,
             ),
             "closed_at": AttributeField(
@@ -459,6 +471,7 @@ class CaseField(BaseField):
                 parent=self,
                 identifier="meta",
                 label="Meta",
+                meta_field="meta",
                 visibility_source=self.visibility_source,
             ),
             "id": AttributeField(
@@ -1056,6 +1069,7 @@ class CaseStartingObject(BaseStartingObject):
                 parent=None,
                 identifier="meta",
                 label="Meta",
+                meta_field="meta",
                 visibility_source=self.visibility_source,
             ),
             "closed_at": AttributeField(
@@ -1128,6 +1142,7 @@ class WorkItemsStartingObject(BaseStartingObject):
                 parent=None,
                 identifier="meta",
                 label="Meta",
+                meta_field="meta",
                 visibility_source=self.visibility_source,
             ),
             "task_id": AttributeField(
@@ -1199,6 +1214,7 @@ class DocumentsStartingObject(BaseStartingObject):
                 parent=None,
                 identifier="meta",
                 label="Meta",
+                meta_field="meta",
                 visibility_source=self.visibility_source,
             ),
             "created_at": AttributeField(
