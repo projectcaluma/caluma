@@ -12,6 +12,11 @@ from ...caluma_core.relay import extract_global_id
         ("CONTAINS", "bar", ["contains", "starts", "exact"]),
         ("ICONTAINS", "bar", ["icontains", "contains", "starts", "exact"]),
         ("IN", [1, 2], ["in"]),
+        (
+            "INTERSECTS",
+            [2, "with"],
+            ["intersects_mixed", "intersects_string", "intersects_int"],
+        ),
         (None, True, ["bool"]),
         (None, 123, ["int"]),
         (None, 123.456, ["float"]),
@@ -30,6 +35,10 @@ def test_meta_value_filter(
         "bool": document_factory(meta={"foo": True}),
         "int": document_factory(meta={"foo": 123}),
         "float": document_factory(meta={"foo": 123.456}),
+        "intersects_none": document_factory(meta={"foo": ["none"]}),
+        "intersects_mixed": document_factory(meta={"foo": [2, 3, "with"]}),
+        "intersects_string": document_factory(meta={"foo": ["start", "with"]}),
+        "intersects_int": document_factory(meta={"foo": [1, 2, 3]}),
     }
 
     query = """
