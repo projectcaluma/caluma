@@ -2,6 +2,7 @@
 # name: test_run_analytics_direct[cases]
   list([
     dict({
+      'baz': 'qux',
       'created_at': datetime.datetime(2022, 2, 1, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Annette Bradley',
@@ -10,6 +11,7 @@
       'sub_question_sumsumsum': '9193',
     }),
     dict({
+      'baz': None,
       'created_at': datetime.datetime(2022, 2, 1, 0, 0, tzinfo=<UTC>),
       'foo': None,
       'from_the_doc': None,
@@ -18,6 +20,7 @@
       'sub_question_sumsumsum': None,
     }),
     dict({
+      'baz': 'qux',
       'created_at': datetime.datetime(2022, 2, 2, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Brendan Anthony',
@@ -26,6 +29,7 @@
       'sub_question_sumsumsum': '5765',
     }),
     dict({
+      'baz': None,
       'created_at': datetime.datetime(2022, 2, 2, 0, 0, tzinfo=<UTC>),
       'foo': None,
       'from_the_doc': None,
@@ -34,6 +38,7 @@
       'sub_question_sumsumsum': None,
     }),
     dict({
+      'baz': 'qux',
       'created_at': datetime.datetime(2022, 2, 3, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Susan Valenzuela',
@@ -42,6 +47,7 @@
       'sub_question_sumsumsum': '8625',
     }),
     dict({
+      'baz': None,
       'created_at': datetime.datetime(2022, 2, 3, 0, 0, tzinfo=<UTC>),
       'foo': None,
       'from_the_doc': None,
@@ -50,6 +56,7 @@
       'sub_question_sumsumsum': None,
     }),
     dict({
+      'baz': 'qux',
       'created_at': datetime.datetime(2022, 2, 4, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Michelle Wise',
@@ -58,6 +65,7 @@
       'sub_question_sumsumsum': '7437',
     }),
     dict({
+      'baz': None,
       'created_at': datetime.datetime(2022, 2, 4, 0, 0, tzinfo=<UTC>),
       'foo': None,
       'from_the_doc': None,
@@ -66,6 +74,7 @@
       'sub_question_sumsumsum': None,
     }),
     dict({
+      'baz': 'qux',
       'created_at': datetime.datetime(2022, 2, 5, 0, 0, tzinfo=<UTC>),
       'foo': 'bar',
       'from_the_doc': 'Nicholas Clarke',
@@ -74,6 +83,7 @@
       'sub_question_sumsumsum': '7881',
     }),
     dict({
+      'baz': None,
       'created_at': datetime.datetime(2022, 2, 5, 0, 0, tzinfo=<UTC>),
       'foo': None,
       'from_the_doc': None,
@@ -94,20 +104,26 @@
                 'edges': list([
                   dict({
                     'node': dict({
+                      'alias': 'baz',
+                      'value': None,
+                    }),
+                  }),
+                  dict({
+                    'node': dict({
                       'alias': 'created_at',
                       'value': '2021-10-10 00:00:00+00:00',
                     }),
                   }),
                   dict({
                     'node': dict({
-                      'alias': 'quarter',
-                      'value': '4',
+                      'alias': 'foo',
+                      'value': 'bar',
                     }),
                   }),
                   dict({
                     'node': dict({
-                      'alias': 'foo',
-                      'value': 'bar',
+                      'alias': 'quarter',
+                      'value': '4',
                     }),
                   }),
                   dict({

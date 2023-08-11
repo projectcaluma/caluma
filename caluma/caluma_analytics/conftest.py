@@ -10,7 +10,7 @@ def example_analytics(analytics_table, settings):
     analytics_table.starting_object = "cases"
     analytics_table.save()
 
-    settings.META_FIELDS = ["foo"]
+    settings.META_FIELDS = ["foo", "baz"]
 
     analytics_table.fields.create(
         data_source="created_at",
@@ -26,6 +26,11 @@ def example_analytics(analytics_table, settings):
         data_source="meta.foo",
         function=models.AnalyticsField.FUNCTION_VALUE,
         alias="foo",
+    )
+    analytics_table.fields.create(
+        data_source="meta.baz",
+        function=models.AnalyticsField.FUNCTION_VALUE,
+        alias="baz",
     )
     analytics_table.fields.create(
         data_source="status",
@@ -70,7 +75,7 @@ def analytics_cases(form_and_document, case_factory, set_date, work_item_factory
         with set_date(date):
             _f, document, _q, _a = form_and_document(use_subform=True)
             case = case_factory(
-                meta={"foo": "bar"},
+                meta={"foo": "bar", "baz": "qux"},
                 document=document,
                 **kwargs,
             )
