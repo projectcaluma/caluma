@@ -6,6 +6,7 @@ from django import forms
 from django.contrib.postgres.fields.hstore import KeyTransform
 from django.contrib.postgres.search import SearchVector
 from django.db import models
+from django.db.models import Q
 from django.db.models.constants import LOOKUP_SEP
 from django.db.models.expressions import OrderBy
 from django.db.models.fields.json import KeyTextTransform
@@ -378,6 +379,7 @@ class JSONLookupMode(Enum):
     CONTAINS = "contains"
     ICONTAINS = "icontains"
     IN = "in"
+    INTERSECTS = "intersects"
     GTE = "gte"
     GT = "gt"
     LTE = "lte"
@@ -423,13 +425,23 @@ class JSONValueFilter(Filter):
                         KeyTextTransform(expr["key"], self.field_name),
                         models.CharField(),
                     ),
-                )
-                lookup = {f"field_val__{lookup_expr}": expr["value"]}
+                ).filter(**{f"field_val__{lookup_expr}": expr["value"]})
+            elif lookup_expr == JSONLookupMode.INTERSECTS:
+                exprs = [
+                    Q(**{f"{self.field_name}__{expr['key']}__contains": val})
+                    for val in expr["value"]
+                ]
+                # connect all expressions with OR
+                qs = qs.filter(reduce(lambda a, b: a | b, exprs))
             else:
-                lookup = {
-                    f"{self.field_name}__{expr['key']}__{lookup_expr}": expr["value"]
-                }
-            qs = qs.filter(**lookup)
+                qs = qs.filter(
+                    **{
+                        f"{self.field_name}__{expr['key']}__{lookup_expr}": expr[
+                            "value"
+                        ]
+                    }
+                )
+
         return qs
 
     @staticmethod
