@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "caluma"
-version = "9.1.0"
+version = "9.2.0"
 description = "Caluma Service providing GraphQL API"
 homepage = "https://caluma.io"
 repository = "https://github.com/projectcaluma/caluma"
@@ -15,9 +15,7 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
 ]
 include = ["CHANGELOG.md"]
-exclude = [
-    "caluma/**/tests",
-]
+exclude = ["caluma/**/tests"]
 
 [tool.poetry.dependencies]
 python = "^3.8.1"
@@ -78,10 +76,7 @@ reuse = "1.1.2"
 syrupy = "4.0.2"
 
 [tool.isort]
-skip = [
-  "migrations",
-  "snapshots",
-]
+skip = ["migrations", "snapshots"]
 known_first_party = ["caluma"]
 known_third_party = ["dateparser"]
 multi_line_output = 3
@@ -105,12 +100,12 @@ env = [
 filterwarnings = [
     "error::DeprecationWarning",
     "error::PendingDeprecationWarning",
-    "ignore:The 'arrayconnection' module is deprecated:DeprecationWarning", # deprecation in graphene
-    "ignore:distutils Version classes are deprecated:DeprecationWarning", # deprecation in pytest-freezegun
+    "ignore:The 'arrayconnection' module is deprecated:DeprecationWarning",            # deprecation in graphene
+    "ignore:distutils Version classes are deprecated:DeprecationWarning",              # deprecation in pytest-freezegun
     "ignore:'django_extensions' defines default_app_config:PendingDeprecationWarning", # deprecation in django_extensions
-    "ignore::requests.packages.urllib3.exceptions.InsecureRequestWarning", # MinIO tests do "insecure" requests - that's ok
+    "ignore::requests.packages.urllib3.exceptions.InsecureRequestWarning",             # MinIO tests do "insecure" requests - that's ok
     "ignore:invalid escape sequence",
-    "ignore:pkg_resources is deprecated as an API:DeprecationWarning", # deprecation in django-simple-history
+    "ignore:pkg_resources is deprecated as an API:DeprecationWarning",                 # deprecation in django-simple-history
 ]
 
 [tool.coverage.run]
@@ -136,6 +131,7 @@ show_missing = true
 
 [tool.semantic_release]
 version_source = "tag"
+version_toml = ["pyproject.toml:tool.poetry.version"]
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

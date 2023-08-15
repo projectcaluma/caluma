@@ -1,3 +1,10 @@
+# v9.2.0 (15 August 2023)
+### Feature
+* **core:** Add meta intersection filter ([`1a54a7f`](https://github.com/projectcaluma/caluma/commit/1a54a7f1798d4f816a29e2c68935294899fa2a88))
+
+### Fix
+* **analytics:** Fix meta field extraction ([`704ffb9`](https://github.com/projectcaluma/caluma/commit/704ffb907d7863f9928fe10bb8826e226c286cb0))
+
 # v9.1.0 (17 July 2023)
 
 ### Feature
