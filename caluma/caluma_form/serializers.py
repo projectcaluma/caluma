@@ -468,6 +468,7 @@ class SaveActionButtonQuestionSerializer(SaveQuestionSerializer):
     action = ButtonActionField(required=True)
     color = ButtonColorField(required=True)
     validate_on_enter = BooleanField(required=True)
+    show_validation = BooleanField(required=True)
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_ACTION_BUTTON
@@ -484,6 +485,7 @@ class SaveActionButtonQuestionSerializer(SaveQuestionSerializer):
             "action",
             "color",
             "validate_on_enter",
+            "show_validation",
         ]
 
 

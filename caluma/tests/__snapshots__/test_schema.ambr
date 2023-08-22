@@ -25,6 +25,7 @@
     action: ButtonAction!
     color: ButtonColor!
     validateOnEnter: Boolean!
+    showValidation: Boolean!
   }
   
   input AddFormQuestionInput {
@@ -2190,6 +2191,7 @@
     action: ButtonAction!
     color: ButtonColor!
     validateOnEnter: Boolean!
+    showValidation: Boolean!
     clientMutationId: String
   }
   
