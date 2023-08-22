@@ -600,6 +600,7 @@ class ActionButtonQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     action = ButtonAction(required=True)
     color = ButtonColor(required=True)
     validate_on_enter = graphene.Boolean(required=True)
+    show_validation = graphene.Boolean(required=True)
 
     class Meta:
         model = models.Question

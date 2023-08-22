@@ -244,6 +244,14 @@ class Question(core_models.SlugModel):
     def validate_on_enter(self, value):
         self.configuration["validate_on_enter"] = value
 
+    @property
+    def show_validation(self):
+        return self.configuration.get("show_validation")
+
+    @show_validation.setter
+    def show_validation(self, value):
+        self.configuration["show_validation"] = value
+
     def empty_value(self):
         """Return empty value for this question type."""
 

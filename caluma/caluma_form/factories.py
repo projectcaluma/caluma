@@ -90,6 +90,11 @@ class QuestionFactory(DjangoModelFactory):
         yes_declaration=False,
         no_declaration=None,
     )
+    show_validation = Maybe(
+        "is_action_button",
+        yes_declaration=False,
+        no_declaration=None,
+    )
 
     class Meta:
         model = models.Question
