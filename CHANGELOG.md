@@ -1,3 +1,7 @@
+# v9.3.0 (22 August 2023)
+### Feature
+* **form:** Add show_validation property for action buttons ([`6dea57e`](https://github.com/projectcaluma/caluma/commit/6dea57e35657559288625a24c9ab6bb62e76b4e4))
+
 # v9.2.0 (15 August 2023)
 ### Feature
 * **core:** Add meta intersection filter ([`1a54a7f`](https://github.com/projectcaluma/caluma/commit/1a54a7f1798d4f816a29e2c68935294899fa2a88))
