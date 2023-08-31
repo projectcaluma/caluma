@@ -1,6 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.db import connection
 from django.db.utils import ProgrammingError
+from psycopg2.errors import UndefinedTable
 
 
 class Command(BaseCommand):
@@ -35,8 +36,10 @@ class Command(BaseCommand):
             try:
                 cursor.execute(query, params=None)
             except ProgrammingError as e:  # pragma: no cover
-                # happens only on initial migration for new project
-                if e.args[0].startswith('relation "django_migrations" does not exist'):
+                # Happens only on initial migration for new project.
+                # `e.__cause__` contains the underlying psycopg2 exception
+                # which is more specific than the django wrapper exception
+                if isinstance(e.__cause__, UndefinedTable):
                     return False
                 raise
             if cursor.fetchone():
