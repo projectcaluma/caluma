@@ -1,3 +1,7 @@
+# v9.3.1 (1 September 2023)
+### Fix
+* **migrations:** Make app prefix migration language independent ([`2f3a5d3`](https://github.com/projectcaluma/caluma/commit/2f3a5d3a86c133da531cc0204adb9d7094ff1e15))
+
 # v9.3.0 (22 August 2023)
 ### Feature
 * **form:** Add show_validation property for action buttons ([`6dea57e`](https://github.com/projectcaluma/caluma/commit/6dea57e35657559288625a24c9ab6bb62e76b4e4))
