@@ -200,7 +200,6 @@ WATCHMAN_CHECKS = env.list(
     default=(
         "caluma.caluma_core.health_checks.check_migrations",
         "caluma.caluma_core.health_checks.check_media_storage_service",
-        "caluma.caluma_core.health_checks.check_models",
         "watchman.checks.caches",
         "watchman.checks.databases",
     ),

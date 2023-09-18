@@ -15,13 +15,6 @@
         }),
       }),
     ]),
-    'database models': list([
-      dict({
-        'default': dict({
-          'ok': False,
-        }),
-      }),
-    ]),
     'databases': list([
       dict({
         'default': dict({
@@ -44,13 +37,6 @@
       }),
     ]),
     'database migrations': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database models': list([
       dict({
         'default': dict({
           'ok': True,
@@ -85,13 +71,6 @@
         }),
       }),
     ]),
-    'database models': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
     'databases': list([
       dict({
         'default': dict({
@@ -120,13 +99,6 @@
         }),
       }),
     ]),
-    'database models': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
     'databases': list([
       dict({
         'default': dict({
@@ -139,7 +111,7 @@
     }),
   })
 # ---
-# name: test_db_model_accessible
+# name: test_storage_service_not_configured
   dict({
     'caches': list([
       dict({
@@ -149,188 +121,6 @@
       }),
     ]),
     'database migrations': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database models': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'databases': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'media storage service': dict({
-      'ok': True,
-    }),
-  })
-# ---
-# name: test_db_model_read_error
-  dict({
-    'caches': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database migrations': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database models': list([
-      dict({
-        'default': dict({
-          'ok': False,
-        }),
-      }),
-    ]),
-    'databases': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'media storage service': dict({
-      'ok': True,
-    }),
-  })
-# ---
-# name: test_db_model_write_error
-  dict({
-    'caches': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database migrations': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database models': list([
-      dict({
-        'default': dict({
-          'ok': False,
-        }),
-      }),
-    ]),
-    'databases': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'media storage service': dict({
-      'ok': True,
-    }),
-  })
-# ---
-# name: test_minio_connection_broken
-  dict({
-    'caches': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database migrations': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database models': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'databases': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'media storage service': dict({
-      'ok': False,
-    }),
-  })
-# ---
-# name: test_minio_connection_working
-  dict({
-    'caches': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database migrations': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database models': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'databases': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'media storage service': dict({
-      'ok': True,
-    }),
-  })
-# ---
-# name: test_minio_not_configured
-  dict({
-    'caches': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database migrations': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database models': list([
       dict({
         'default': dict({
           'ok': True,
@@ -346,76 +136,6 @@
     ]),
     'media storage service (not configured)': dict({
       'ok': True,
-    }),
-  })
-# ---
-# name: test_minio_read_error
-  dict({
-    'caches': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database migrations': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database models': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'databases': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'media storage service': dict({
-      'ok': False,
-    }),
-  })
-# ---
-# name: test_minio_write_error
-  dict({
-    'caches': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database migrations': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'database models': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'databases': list([
-      dict({
-        'default': dict({
-          'ok': True,
-        }),
-      }),
-    ]),
-    'media storage service': dict({
-      'ok': False,
     }),
   })
 # ---
