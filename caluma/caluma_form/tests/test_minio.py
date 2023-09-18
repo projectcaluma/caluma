@@ -104,3 +104,7 @@ def test_minio_handle_exceptions(exc_code, caplog, mocker):
     assert caplog.messages == [
         f"Minio error, cannot stat object 'test_object': {exc_code}"
     ]
+    assert len(caplog.messages) == 1
+    stat = client.stat_object("test_object", suppress_warning=True)
+    assert stat is None
+    assert len(caplog.messages) == 1

@@ -71,17 +71,21 @@ class Minio:
         self.bucket = settings.MINIO_STORAGE_MEDIA_BUCKET_NAME
 
     @_retry_on_missing_bucket
-    def stat_object(self, object_name):
+    def stat_object(self, object_name, suppress_warning=False):
         """
         Get stat of object in bucket.
 
         :param object_name: str
+        :param suppress_warning: bool
         :return: stat response if successful, otherwise None
         """
         try:
             return self.client.stat_object(self.bucket, object_name)
         except S3Error as exc:
-            log.warning(f"Minio error, cannot stat object '{object_name}': {exc.code}")
+            if not suppress_warning:
+                log.warning(
+                    f"Minio error, cannot stat object '{object_name}': {exc.code}"
+                )
             return None
 
     @_retry_on_missing_bucket
