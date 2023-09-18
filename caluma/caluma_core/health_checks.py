@@ -58,7 +58,7 @@ def _check_media_storage_service():
 
         # remove object
         storage_client.remove_object(object_name)
-        assert not storage_client.stat_object(object_name)
+        assert not storage_client.stat_object(object_name, suppress_warning=True)
 
         return {"ok": True}
 
