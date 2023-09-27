@@ -277,9 +277,17 @@ class HasAnswerFilter(Filter):
 
 
 class SearchLookupMode(Enum):
+    """
+    Lookup used in SearchAnswersFilterType.
+
+    Keep in mind that the SearchAnswer filter operates on a word-by-word basis.
+    This defines the lookup used for every single word.
+    """
+
     STARTSWITH = "startswith"
     CONTAINS = "icontains"
     TEXT = "search"
+    EXACT_WORD = "exact"
 
 
 class SearchAnswersFilterType(InputObjectType):
@@ -289,7 +297,7 @@ class SearchAnswersFilterType(InputObjectType):
     You may pass in a list of question slugs and/or a list of form slugs to define
     which answers to search. If you pass in one or more forms, answers to the
     questions in that form will be searched. If you pass in one or more question
-    slug, the corresponding answers are searched. If you pass both, a superset
+    slugs, the corresponding answers are searched. If you pass both, a superset
     of both is searched (ie. they do not limit each other).
     """
 
