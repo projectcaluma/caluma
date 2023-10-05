@@ -74,6 +74,9 @@ class QuestionFactory(DjangoModelFactory):
     )
     calc_dependents = []
 
+    min_date = None
+    max_date = None
+
     # action button question
     action = Maybe(
         "is_action_button",
