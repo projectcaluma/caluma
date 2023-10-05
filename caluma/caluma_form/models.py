@@ -221,6 +221,22 @@ class Question(core_models.SlugModel):
         self.configuration["min_value"] = value
 
     @property
+    def max_date(self):
+        return self.configuration.get("max_date")
+
+    @max_date.setter
+    def max_date(self, value):
+        self.configuration["max_date"] = value
+
+    @property
+    def min_date(self):
+        return self.configuration.get("min_date")
+
+    @min_date.setter
+    def min_date(self, value):
+        self.configuration["min_date"] = value
+
+    @property
     def action(self):
         return self.configuration.get("action")
 

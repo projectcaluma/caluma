@@ -1,4 +1,5 @@
 from django.db import transaction
+from datetime import date
 from rest_framework import exceptions
 from rest_framework.serializers import (
     BooleanField,
@@ -240,12 +241,30 @@ class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
 
 
 class SaveDateQuestionSerializer(SaveQuestionSerializer):
+    min_date = DateField(format="%Y/%m/%d", required=False, allow_null=True)
+    max_date = DateField(format="%Y/%m/%d", required=False, allow_null=True)
     def validate(self, data):
+        min_date = (
+            data.get("min_value") if data.get("min_value") is not None else date(1970, 1, 1)
+        )
+        max_date = (
+            data.get("max_value") if data.get("max_value") is not None else date(9999, 12, 31)
+        )
+
+        if min_date > max_date:
+            raise exceptions.ValidationError(
+                f"max_value {max_date} is smaller than {min_date}"
+            )
+
         data["type"] = models.Question.TYPE_DATE
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["hint_text"]
+        fields = SaveQuestionSerializer.Meta.fields + [
+            "hint_text",
+            "min_date",
+            "max_date",
+            ]
 
 
 class SaveQuestionOptionsMixin(object):
