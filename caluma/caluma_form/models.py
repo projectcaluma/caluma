@@ -1,8 +1,10 @@
 import uuid
 from functools import wraps
 
+import dateutil.parser
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
+from django.core.serializers.json import DjangoJSONEncoder, json
 from django.db import models, transaction
 from django.utils.functional import cached_property
 from localized_fields.fields import LocalizedField, LocalizedTextField
@@ -222,19 +224,21 @@ class Question(core_models.SlugModel):
 
     @property
     def max_date(self):
-        return self.configuration.get("max_date")
+        if max_date := self.configuration.get("max_date"):
+            return dateutil.parser.parse(json.loads(max_date)).date()
 
     @max_date.setter
     def max_date(self, value):
-        self.configuration["max_date"] = value
+        self.configuration["max_date"] = json.dumps(value, cls=DjangoJSONEncoder)
 
     @property
     def min_date(self):
-        return self.configuration.get("min_date")
+        if min_date := self.configuration.get("min_date"):
+            return dateutil.parser.parse(json.loads(min_date)).date()
 
     @min_date.setter
     def min_date(self, value):
-        self.configuration["min_date"] = value
+        self.configuration["min_date"] = json.dumps(value, cls=DjangoJSONEncoder)
 
     @property
     def action(self):
