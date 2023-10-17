@@ -334,6 +334,40 @@ class Document(core_models.UUIDModel):
     )
     meta = models.JSONField(default=dict)
 
+    def flat_answer_map(self):
+        """
+        Return a dictionary with the flattened answer map for this document.
+
+        The keys are the question IDs, and the values are either the answer value
+        or date for non-table questions, or a list of flattened answer maps for
+        table questions.
+
+        Example usage:
+        >>> doc = Document.objects.get(pk=1)
+        >>> flat_map = doc.flat_answer_map()
+        >>> print(flat_map)
+        {
+            "first-name": 'John',
+            "second-name": 'Doe',
+            "email-in-subform": 'john.doe@example.com',
+            "projects": [
+                {"title": 'Project A', "date": '2022-01-01'},
+                {"title": 'Project B', "date": '2022-02-01'},
+                {"title": 'Project C', "date": '2022-03-01'}
+            ]
+        }
+        """
+        answers = {}
+        for answer in self.answers.all():
+            if answer.question.type == Question.TYPE_TABLE:
+                answers[answer.question_id] = [
+                    answer.flat_answer_map() for answer in answer.documents.all()
+                ]
+            else:
+                answers[answer.question_id] = answer.value or answer.date
+
+        return answers
+
     def set_family(self, root_doc):
         """Set the family to the given root_doc.
 
