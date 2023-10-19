@@ -1714,3 +1714,17 @@ def test_selected_options(
         )
 
     assert returned_value == expected_values
+
+
+def test_flat_answer_map(db, form_and_document):
+    (_form, document, _questions_dict, answers_dict) = form_and_document(
+        use_table=True, use_subform=True
+    )
+
+    flat_answer_map = document.flat_answer_map()
+
+    assert flat_answer_map["top_question"] == answers_dict["top_question"].value
+    assert flat_answer_map["sub_question"] == answers_dict["sub_question"].value
+    assert flat_answer_map["table"] == [
+        {"column": answers_dict["table"].documents.first().answers.first().value}
+    ]
