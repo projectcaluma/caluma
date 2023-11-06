@@ -51,6 +51,7 @@ GRAPHENE = {
     "MIDDLEWARE": [],
     "RELAY_CONNECTION_MAX_LIMIT": None,
 }
+DISABLE_INTROSPECTION = env.bool("DISABLE_INTROSPECTION", default=default(False, True))
 
 # OpenID connect
 
