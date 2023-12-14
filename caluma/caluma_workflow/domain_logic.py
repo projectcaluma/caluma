@@ -210,7 +210,14 @@ class CompleteWorkItemLogic:
             case.closed_at = timezone.now()
             case.closed_by_user = user.username
             case.closed_by_group = user.group
-            case.save()
+            case.save(
+                update_fields=[
+                    "status",
+                    "closed_at",
+                    "closed_by_user",
+                    "closed_by_group",
+                ]
+            )
 
             send_event(
                 events.post_complete_case,
