@@ -45,7 +45,7 @@ graphql-core = "~3.1.7"
 # Dev dependencies are always pinned to an exact version (No caret or tilde
 # matching) to ensure everyone uses the same version of the tools, especially
 # linters & formatters
-black = "23.3.0"
+black = "23.12.0"
 django-extensions = "3.2.1"
 factory-boy = "3.2.1"
 Faker = "20.1.0"
