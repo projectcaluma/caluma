@@ -1,3 +1,7 @@
+# v9.3.2 (21 December 2023)
+### Fix
+* New keycloak versions omit groups in claims if no groups are set ([`d88affa`](https://github.com/projectcaluma/caluma/commit/d88affaee5129164bc034a4897b8c40bb2e1cc10))
+
 # v9.3.1 (1 September 2023)
 ### Fix
 * **migrations:** Make app prefix migration language independent ([`2f3a5d3`](https://github.com/projectcaluma/caluma/commit/2f3a5d3a86c133da531cc0204adb9d7094ff1e15))
