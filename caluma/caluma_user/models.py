@@ -24,7 +24,7 @@ class OIDCUser(BaseUser):
         super().__init__(token=token, claims=claims)
 
         self.username = self.claims[settings.OIDC_USERNAME_CLAIM]
-        self.groups = self.claims.get(settings.OIDC_GROUPS_CLAIM)
+        self.groups = self.claims.get(settings.OIDC_GROUPS_CLAIM, [])
         self.group = self.groups[0] if self.groups else None
         self.token = token
         self.is_authenticated = True
