@@ -1,3 +1,22 @@
+# v10.0.0 (21 December 2023)
+### Feature
+
+* Implement flat_answer_map (analog to ember-caluma) ([`d96d33e`](https://github.com/projectcaluma/caluma/commit/d96d33e575abdb079adf97f3918ba6d04b34fadd))
+* **filters:** Add EXACT_WORD lookup type to SearchAnswer ([`23c0e55`](https://github.com/projectcaluma/caluma/commit/23c0e552a91dd882a79e1f76407159c4383a2861))
+* **healthz:** Overhaul health-checks for them to be less intrusive ([`4a585da`](https://github.com/projectcaluma/caluma/commit/4a585da789d111806faf8e4bfb130f5d71e0a889))
+* **healthz:** Overhaul health-checks for them to be less intrusive ([`54c545f`](https://github.com/projectcaluma/caluma/commit/54c545f3d484661f8c9b29b1ce20384b8df5bfc5))
+
+### Fix
+
+* New keycloak versions omit groups in claims if no groups are set ([`d88affa`](https://github.com/projectcaluma/caluma/commit/d88affaee5129164bc034a4897b8c40bb2e1cc10))
+* Only save updated fields in post_complete case logic ([`8c9edae`](https://github.com/projectcaluma/caluma/commit/8c9edaebaa3be2c0c90797b8f848b430102f2287))
+* **healthz:** Do not warn about expected events ([`b747c1f`](https://github.com/projectcaluma/caluma/commit/b747c1f6d89932f16d65a495bf213156982e4542))
+
+### Breaking
+
+* In the healthz response, the key `database models` has been dropped. ([`4a585da`](https://github.com/projectcaluma/caluma/commit/4a585da789d111806faf8e4bfb130f5d71e0a889))
+
+
 # v9.3.1 (1 September 2023)
 ### Fix
 * **migrations:** Make app prefix migration language independent ([`2f3a5d3`](https://github.com/projectcaluma/caluma/commit/2f3a5d3a86c133da531cc0204adb9d7094ff1e15))
