@@ -1,12 +1,8 @@
-from functools import partial
-
 import graphene
 from django.conf import settings
 from graphene.relay import Node
-from graphene.validation import DisableIntrospection
 from graphene_django.converter import convert_django_field, convert_field_to_string
 from graphene_django.debug import DjangoDebug
-from graphql import validate
 from localized_fields.fields import LocalizedField
 
 from .caluma_analytics import schema as analytics_schema
@@ -96,11 +92,4 @@ schema = graphene.Schema(
     mutation=_mutation,
     # TODO: define what app exposes what types
     types=types,
-)
-
-if settings.DISABLE_INTROSPECTION:
-    validate = partial(validate, rules=(DisableIntrospection,))
-
-validation_errors = validate(
-    schema=schema.graphql_schema,
 )
