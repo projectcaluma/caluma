@@ -1,3 +1,7 @@
+# v9.3.3 (5 January 2024)
+### Fix
+* Only save updated fields in post_complete case logic ([`eeabb02`](https://github.com/projectcaluma/caluma/commit/eeabb02b2812e50b1f279cf04bd13518f5f9872d))
+
 # v9.3.2 (21 December 2023)
 ### Fix
 * New keycloak versions omit groups in claims if no groups are set ([`d88affa`](https://github.com/projectcaluma/caluma/commit/d88affaee5129164bc034a4897b8c40bb2e1cc10))
