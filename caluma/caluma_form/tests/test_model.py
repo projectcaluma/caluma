@@ -1,7 +1,7 @@
 import pytest
 from minio import Minio, S3Error
 
-from ...caluma_form.models import File, Question
+from ...caluma_form.models import Question
 
 
 @pytest.mark.parametrize("have_history", [True, False])
@@ -34,8 +34,12 @@ def test_delete_file_answer(
         remove.assert_called()
         copy.assert_called()
 
-    with pytest.raises(File.DoesNotExist):
+    with pytest.raises(ValueError) as excinfo:
         answer.files.get()
+    assert excinfo.match(
+        "'Answer' instance needs to have a primary key value before "
+        "this relationship can be used."
+    )
 
 
 def test_update_file(db, file_factory, mocker):

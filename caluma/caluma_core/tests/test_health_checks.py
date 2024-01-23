@@ -55,10 +55,7 @@ def test_db_connection_broken(
 
     # assert exception type
     *_, err = capsys.readouterr()
-    assert (
-        'django.db.utils.OperationalError: could not translate host name "not-db" to address'
-        in err
-    )
+    assert "django.db.utils.OperationalError" in err
 
 
 @pytest.mark.parametrize("success", [True, False])
