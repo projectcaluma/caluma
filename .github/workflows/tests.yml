@@ -125,20 +125,6 @@ jobs:
       - name: Run tests
         run: poetry run pytest --no-cov-on-fail --cov --create-db -vv
 
-  compatibility-tests-postgres-10:
-    name: "Compatibility tests"
-    uses: ./.github/workflows/compatibility-tests.yml
-    needs: [lint]
-    with:
-      postgres: "10"
-
-  compatibility-tests-postgres-11:
-    name: "Compatibility tests"
-    uses: ./.github/workflows/compatibility-tests.yml
-    needs: [lint]
-    with:
-      postgres: "11"
-
   compatibility-tests-postgres-12:
     name: "Compatibility tests"
     uses: ./.github/workflows/compatibility-tests.yml
@@ -166,3 +152,10 @@ jobs:
     needs: [lint]
     with:
       postgres: "15"
+
+  compatibility-tests-postgres-16:
+    name: "Compatibility tests"
+    uses: ./.github/workflows/compatibility-tests.yml
+    needs: [lint]
+    with:
+      postgres: "16"
