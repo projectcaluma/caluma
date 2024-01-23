@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 from django.db import connection
 from django.db.utils import ProgrammingError
-from psycopg2.errors import UndefinedTable
+from psycopg.errors import UndefinedTable
 
 
 class Command(BaseCommand):
