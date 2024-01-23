@@ -4,7 +4,7 @@ from django.db.utils import ProgrammingError
 from psycopg.errors import UndefinedTable
 
 
-class Command(BaseCommand):
+class Command(BaseCommand):  # pragma: no cover
     """Migrate db to prefixed apps."""
 
     help = "Migrate db to prefixed apps."

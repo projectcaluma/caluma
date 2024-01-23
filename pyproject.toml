@@ -127,6 +127,8 @@ omit = [
     "manage.py",
     "caluma/settings_*.py",
     "caluma/wsgi.py",
+    "migrate_to_prefixed_apps.py",
+    "test_migrate_to_prefixed_apps.py",
 ]
 show_missing = true
 
