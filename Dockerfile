@@ -1,4 +1,4 @@
-FROM python:3.8.12-slim@sha256:8be266ad3b9d0381396ad4fe705d39217773343fdb1efdf909c23daa1fcdf3ac
+FROM python:3.9.13-slim@sha256:dcf2eafca55558d8b1aa73edd6aa41b7187c5bcb63e533a7b04a0673f81f37fe
 
 # Needs to be set for users with manually set UID
 ENV HOME=/home/caluma
