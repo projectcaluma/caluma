@@ -109,8 +109,8 @@ class FilterCollectionOrdering(Filter):
             OrderBy(
                 field,
                 descending=(direction == "DESC"),
-                nulls_first=(direction == "DESC"),
-                nulls_last=(direction == "ASC"),
+                nulls_first=(direction == "DESC" or None),
+                nulls_last=(direction == "ASC" or None),
             ),
         )
 
