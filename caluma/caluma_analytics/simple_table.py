@@ -105,7 +105,7 @@ class BaseField:
             # (Note they're still correct, just not labeled in a
             # useful way)
             current_tz = timezone.get_current_timezone()
-            return current_tz.normalize(value)
+            return value.astimezone(current_tz)
 
         return value
 

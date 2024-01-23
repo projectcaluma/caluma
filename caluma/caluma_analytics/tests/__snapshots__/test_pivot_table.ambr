@@ -2,19 +2,19 @@
 # name: test_run_analytics_direct[cases]
   list([
     dict({
-      'last_created': datetime.datetime(2022, 2, 4, 0, 0, tzinfo=<UTC>),
+      'last_created': FakeDatetime(2022, 2, 4, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
       'quarter': 1,
       'status': 'completed',
       'sub_question_sumsumsum': 7437.0,
     }),
     dict({
-      'last_created': datetime.datetime(2022, 2, 5, 0, 0, tzinfo=<UTC>),
+      'last_created': FakeDatetime(2022, 2, 5, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
       'quarter': 1,
       'status': 'running',
       'sub_question_sumsumsum': 23583.0,
     }),
     dict({
-      'last_created': datetime.datetime(2022, 2, 5, 0, 0, tzinfo=<UTC>),
+      'last_created': FakeDatetime(2022, 2, 5, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
       'quarter': 1,
       'status': 'suspended',
       'sub_question_sumsumsum': 7881.0,
