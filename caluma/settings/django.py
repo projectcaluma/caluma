@@ -38,8 +38,8 @@ if DEBUG:
         INSTALLED_APPS.append("django_extensions")
     except ImportError:  # pragma: no cover
         # Nothing bad, just won't have django-extensions
-        # niceties installed (Most likely Caluma was built)
-        # without dev dependencies
+        # niceties installed (Most likely Caluma was built
+        # without dev dependencies)
         pass
 
 MIDDLEWARE = [
