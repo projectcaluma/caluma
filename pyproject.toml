@@ -101,6 +101,7 @@ filterwarnings = [
     "error::DeprecationWarning",
     "error::PendingDeprecationWarning",
     "ignore:The 'arrayconnection' module is deprecated:DeprecationWarning",            # deprecation in graphene
+    "ignore:'cgi' is deprecated:DeprecationWarning",
     "ignore:distutils Version classes are deprecated:DeprecationWarning",              # deprecation in pytest-freezegun
     "ignore:'django_extensions' defines default_app_config:PendingDeprecationWarning", # deprecation in django_extensions
     "ignore::requests.packages.urllib3.exceptions.InsecureRequestWarning",             # MinIO tests do "insecure" requests - that's ok
