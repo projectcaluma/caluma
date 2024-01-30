@@ -104,6 +104,7 @@ filterwarnings = [
     # warning in python 3.12 about deprecation coming in 3.14. issue is with graphene
     "ignore:.*typing.ByteString.*deprecated and slated for removal in Python 3.14",
     "ignore:The 'arrayconnection' module is deprecated:DeprecationWarning",            # deprecation in graphene
+    "ignore:'cgi' is deprecated:DeprecationWarning",
     "ignore:distutils Version classes are deprecated:DeprecationWarning",              # deprecation in pytest-freezegun
     "ignore:'django_extensions' defines default_app_config:PendingDeprecationWarning", # deprecation in django_extensions
     "ignore::requests.packages.urllib3.exceptions.InsecureRequestWarning",             # MinIO tests do "insecure" requests - that's ok
