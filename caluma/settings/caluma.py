@@ -52,6 +52,12 @@ GRAPHENE = {
     "RELAY_CONNECTION_MAX_LIMIT": None,
 }
 
+# If you set DISABLE_INTROSPECTION to True, any GQL client will not be able to
+# query the types and connections, making crafting queries much harder (but not
+# impossible, and this is an Open Source product, so they can still go check
+# the source).
+DISABLE_INTROSPECTION = env.bool("DISABLE_INTROSPECTION", default=default(False, True))
+
 # OpenID connect
 
 OIDC_USERINFO_ENDPOINT = env.str("OIDC_USERINFO_ENDPOINT", default=None)
