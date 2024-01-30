@@ -90,8 +90,6 @@ class FlowOrderSet(BaseFilterSet):
 
 
 class CaseFilterSet(MetaFilterSet):
-    id = GlobalIDFilter()
-    id.deprecation_reason = "Use ids filter instead"
     ids = GlobalIDMultipleChoiceFilter(field_name="pk")
 
     document_form = CharFilter(field_name="document__form_id")
