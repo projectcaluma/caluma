@@ -2,8 +2,17 @@
 # name: test_run_analytics_direct[cases]
   list([
     dict({
+      'baz': None,
+      'created_at': FakeDatetime(2022, 2, 1, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
+      'foo': None,
+      'from_the_doc': None,
+      'quarter': 1,
+      'statuuuuuus': 'running',
+      'sub_question_sumsumsum': None,
+    }),
+    dict({
       'baz': 'qux',
-      'created_at': datetime.datetime(2022, 2, 1, 0, 0, tzinfo=<UTC>),
+      'created_at': FakeDatetime(2022, 2, 1, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
       'foo': 'bar',
       'from_the_doc': 'Annette Bradley',
       'quarter': 1,
@@ -12,7 +21,7 @@
     }),
     dict({
       'baz': None,
-      'created_at': datetime.datetime(2022, 2, 1, 0, 0, tzinfo=<UTC>),
+      'created_at': FakeDatetime(2022, 2, 2, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
       'foo': None,
       'from_the_doc': None,
       'quarter': 1,
@@ -21,7 +30,7 @@
     }),
     dict({
       'baz': 'qux',
-      'created_at': datetime.datetime(2022, 2, 2, 0, 0, tzinfo=<UTC>),
+      'created_at': FakeDatetime(2022, 2, 2, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
       'foo': 'bar',
       'from_the_doc': 'Brendan Anthony',
       'quarter': 1,
@@ -30,7 +39,7 @@
     }),
     dict({
       'baz': None,
-      'created_at': datetime.datetime(2022, 2, 2, 0, 0, tzinfo=<UTC>),
+      'created_at': FakeDatetime(2022, 2, 3, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
       'foo': None,
       'from_the_doc': None,
       'quarter': 1,
@@ -39,7 +48,7 @@
     }),
     dict({
       'baz': 'qux',
-      'created_at': datetime.datetime(2022, 2, 3, 0, 0, tzinfo=<UTC>),
+      'created_at': FakeDatetime(2022, 2, 3, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
       'foo': 'bar',
       'from_the_doc': 'Susan Valenzuela',
       'quarter': 1,
@@ -48,7 +57,7 @@
     }),
     dict({
       'baz': None,
-      'created_at': datetime.datetime(2022, 2, 3, 0, 0, tzinfo=<UTC>),
+      'created_at': FakeDatetime(2022, 2, 4, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
       'foo': None,
       'from_the_doc': None,
       'quarter': 1,
@@ -57,7 +66,7 @@
     }),
     dict({
       'baz': 'qux',
-      'created_at': datetime.datetime(2022, 2, 4, 0, 0, tzinfo=<UTC>),
+      'created_at': FakeDatetime(2022, 2, 4, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
       'foo': 'bar',
       'from_the_doc': 'Michelle Wise',
       'quarter': 1,
@@ -66,7 +75,7 @@
     }),
     dict({
       'baz': None,
-      'created_at': datetime.datetime(2022, 2, 4, 0, 0, tzinfo=<UTC>),
+      'created_at': FakeDatetime(2022, 2, 5, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
       'foo': None,
       'from_the_doc': None,
       'quarter': 1,
@@ -75,21 +84,12 @@
     }),
     dict({
       'baz': 'qux',
-      'created_at': datetime.datetime(2022, 2, 5, 0, 0, tzinfo=<UTC>),
+      'created_at': FakeDatetime(2022, 2, 5, 0, 0, tzinfo=zoneinfo.ZoneInfo(key='UTC')),
       'foo': 'bar',
       'from_the_doc': 'Nicholas Clarke',
       'quarter': 1,
       'statuuuuuus': 'suspended',
       'sub_question_sumsumsum': '7881',
-    }),
-    dict({
-      'baz': None,
-      'created_at': datetime.datetime(2022, 2, 5, 0, 0, tzinfo=<UTC>),
-      'foo': None,
-      'from_the_doc': None,
-      'quarter': 1,
-      'statuuuuuus': 'running',
-      'sub_question_sumsumsum': None,
     }),
   ])
 # ---

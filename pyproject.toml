@@ -18,28 +18,29 @@ include = ["CHANGELOG.md"]
 exclude = ["caluma/**/tests"]
 
 [tool.poetry.dependencies]
-python = "^3.8.1"
-dateparser = "^1.1.0"
-Django = "^3.2.19"
-django-cors-headers = "^3.11.0"
-django-environ = "^0.10.0"
-django-filter = "^23.1"
-django-localized-fields = "^6.6"
-django-postgres-extra = "^2.0.4"
-django-watchman = "^1.2.0"
-djangorestframework = "^3.13.1"
-django-simple-history = "^3.0.0"
+python = "^3.9.13"
+dateparser = "^1.2.0"
+Django = "^4.2.9"
+django-cors-headers = "^4.3.1"
+django-environ = "^0.11.2"
+django-filter = "^23.5"
+django-localized-fields = "^6.7"
+django-postgres-extra = "^2.0.8"
+django-watchman = "^1.3.0"
+djangorestframework = "^3.14.0"
+django-simple-history = "^3.4.0"
 graphene-django = "3.0.0b7"
 graphql-relay = "^3.1.5"
-idna = "^3.3"
-minio = "^7.1.4"
-psycopg2-binary = "^2.9.3"
+idna = "^3.6"
+minio = "^7.2.3"
 pyjexl = "^0.3.0"
-python-memcached = "^1.59"
-requests = "^2.27.1"
+python-memcached = "^1.62"
+requests = "^2.31.0"
 urllib3 = ">=1.26.8,<3.0.0"
 uWSGI = "^2.0.20"
 graphql-core = "~3.1.7"
+psycopg = {extras = ["binary"], version = "^3.1.17"}
+psycopg-binary = "^3.1.17"
 
 [tool.poetry.group.dev.dependencies]
 # Dev dependencies are always pinned to an exact version (No caret or tilde
@@ -61,10 +62,10 @@ isort = "5.12.0"
 pdbpp = "0.10.3"
 pre-commit = "3.5.0"
 pydocstyle = "6.3.0"
-pytest = "7.3.1"
+pytest = "7.4.4"
 pytest-cov = "4.1.0"
-pytest-django = "4.5.2"
-pytest-env = "0.8.1"
+pytest-django = "4.7.0"
+pytest-env = "1.1.3"
 pytest-factoryboy = "2.5.1"
 pytest-freezegun = "0.4.2"
 pytest-mock = "3.10.0"
@@ -100,6 +101,8 @@ env = [
 filterwarnings = [
     "error::DeprecationWarning",
     "error::PendingDeprecationWarning",
+    # warning in python 3.12 about deprecation coming in 3.14. issue is with graphene
+    "ignore:.*typing.ByteString.*deprecated and slated for removal in Python 3.14",
     "ignore:The 'arrayconnection' module is deprecated:DeprecationWarning",            # deprecation in graphene
     "ignore:distutils Version classes are deprecated:DeprecationWarning",              # deprecation in pytest-freezegun
     "ignore:'django_extensions' defines default_app_config:PendingDeprecationWarning", # deprecation in django_extensions
@@ -126,6 +129,8 @@ omit = [
     "manage.py",
     "caluma/settings_*.py",
     "caluma/wsgi.py",
+    "migrate_to_prefixed_apps.py",
+    "test_migrate_to_prefixed_apps.py",
 ]
 show_missing = true
 

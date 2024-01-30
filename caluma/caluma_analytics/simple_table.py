@@ -11,7 +11,7 @@ from typing import List, Optional
 from django.conf import settings
 from django.db import connection
 from django.utils import timezone, translation
-from psycopg2.extras import DictCursor
+from psycopg.rows import dict_row
 
 from caluma.caluma_form import models as form_models
 from caluma.caluma_workflow import models as workflow_models
@@ -105,7 +105,7 @@ class BaseField:
             # (Note they're still correct, just not labeled in a
             # useful way)
             current_tz = timezone.get_current_timezone()
-            return current_tz.normalize(value)
+            return value.astimezone(current_tz)
 
         return value
 
@@ -1351,7 +1351,7 @@ class SimpleTable(SQLAliasMixin):
     def get_records(self):
         sql_query, params = self.get_sql_and_params()
 
-        with connection.connection.cursor(cursor_factory=DictCursor) as cursor:
+        with connection.connection.cursor(row_factory=dict_row) as cursor:
             cursor.execute(sql_query, params)
             data = cursor.fetchall()
 

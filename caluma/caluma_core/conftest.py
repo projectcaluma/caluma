@@ -5,7 +5,7 @@ import pytest
 from django.conf import settings
 from django.core import management
 from django.db import connection
-from psycopg2 import OperationalError
+from psycopg import OperationalError
 from watchman.decorators import check as watchman_check_decorator
 
 from caluma.caluma_form import storage_clients

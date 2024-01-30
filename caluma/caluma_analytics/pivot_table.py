@@ -4,7 +4,7 @@ from collections import defaultdict
 from functools import cached_property
 
 from django.db import connection
-from psycopg2.extras import DictCursor
+from psycopg.rows import dict_row
 
 from . import simple_table, sql
 
@@ -92,7 +92,7 @@ class PivotTable(simple_table.SQLAliasMixin):
         self._summary = defaultdict(int)
         sql_query, params = self.get_sql_and_params()
 
-        with connection.connection.cursor(cursor_factory=DictCursor) as cursor:
+        with connection.connection.cursor(row_factory=dict_row) as cursor:
             cursor.execute(sql_query, params)
             data = cursor.fetchall()
 

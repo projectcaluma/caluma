@@ -20,12 +20,19 @@ def test_run_analytics_direct(db, snapshot, example_analytics, analytics_cases):
     """
 
     table = SimpleTable(example_analytics)
-
     result = table.get_records()
 
+    # one row for each 5 analytics_cases and one for each subcase
     assert len(result) == 10
 
-    snapshot.assert_match(result)
+    # analytics here is not explicitly sorted, so we
+    # don't validate row output ordering
+    snapshot.assert_match(
+        # The sort needs two values, as each "factory" case comes with
+        # a work item and associated subcase, which need
+        # to be sorted in consistently
+        sorted(result, key=lambda r: str(r["created_at"]) + str(r["foo"]))
+    )
 
 
 @pytest.mark.parametrize("analytics_table__starting_object", ["cases"])

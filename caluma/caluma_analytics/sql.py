@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional, Tuple, Union
 from uuid import uuid4
 
-import psycopg2.sql
+import psycopg.sql
 from django.db import connection
 from django.utils.text import slugify
 
@@ -24,7 +24,7 @@ def _make_name(value, name_hint=None):
 
 def quote_identifier(name):
     name = name.replace("%", "%%")
-    return psycopg2.sql.Identifier(name).as_string(connection.connection)
+    return psycopg.sql.Identifier(name).as_string(connection.connection)
 
 
 @dataclass
