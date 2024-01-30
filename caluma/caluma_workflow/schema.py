@@ -10,6 +10,7 @@ from ..caluma_core.filters import (
     CollectionFilterSetFactory,
     DjangoFilterConnectionField,
     DjangoFilterInterfaceConnectionField,
+    InterfaceMetaFactory,
 )
 from ..caluma_core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..caluma_core.types import (
@@ -96,6 +97,8 @@ class Task(Node, graphene.Interface):
         }
 
         return TASK_TYPE[instance.type]
+
+    Meta = InterfaceMetaFactory()
 
 
 class TaskConnection(CountableConnectionBase):
