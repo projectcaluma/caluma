@@ -8,6 +8,7 @@ from ..caluma_core.filters import (
     CollectionFilterSetFactory,
     DjangoFilterConnectionField,
     DjangoFilterInterfaceConnectionField,
+    InterfaceMetaFactory,
 )
 from ..caluma_core.mutation import Mutation, UserDefinedPrimaryKeyMixin
 from ..caluma_core.relay import extract_global_id
@@ -158,6 +159,8 @@ class Question(Node, graphene.Interface):
     @classmethod
     def resolve_type(cls, instance, info):
         return resolve_question(instance)
+
+    Meta = InterfaceMetaFactory()
 
 
 class Option(FormDjangoObjectType):
@@ -809,6 +812,8 @@ class Answer(Node, graphene.Interface):
     @classmethod
     def resolve_type(cls, instance, info):
         return resolve_answer(instance)
+
+    Meta = InterfaceMetaFactory()
 
 
 class AnswerQuerysetMixin(object):

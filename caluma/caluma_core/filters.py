@@ -200,6 +200,36 @@ def FilterCollectionFactory(filterset_class, ordering):  # noqa:C901
     return filter_coll()
 
 
+def InterfaceMetaFactory():
+    """
+    Build a meta class suitable for the schema type classes that represent
+    "interface" types (those that have concrete subclasses, but could be mixed
+    in a connection type, such as Question, Answer, and Task).
+
+    Usage:
+
+    >>> class Foo(Node, graphene.Interface):
+    >>>     ...
+    >>>     Meta = InterfaceMetaFactory()
+    """
+
+    class _meta(graphene.types.interface.InterfaceOptions):
+        @classmethod
+        # This is kinda useless but required as graphene tries to freeze()
+        # it's meta class objects
+        def freeze(cls):
+            cls._frozen = True
+
+        # This is what we're actually "fixing": On non-Interface types,
+        # this somehow works (or isn't needed), but here, if _meta.registry
+        # is not set, the whole schema construction fails
+        registry = get_global_registry()
+
+    # We need a new type (= class) each time it's called, because reuse
+    # triggers some weird errors
+    return type("Meta", (), {"_meta": _meta})
+
+
 def CollectionFilterSetFactory(filterset_class, orderset_class=None):
     """
     Build single-filter filterset classes.
