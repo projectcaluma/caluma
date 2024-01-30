@@ -831,6 +831,21 @@
   type DjangoDebug {
     """Executed SQL queries for this API query."""
     sql: [DjangoDebugSQL]
+  
+    """Raise exceptions for this API query."""
+    exceptions: [DjangoDebugException]
+  }
+  
+  """Represents a single exception raised."""
+  type DjangoDebugException {
+    """The class of the exception"""
+    excType: String!
+  
+    """The message of the exception"""
+    message: String!
+  
+    """The stack trace"""
+    stack: String!
   }
   
   """Represents a single database query made to a Django managed DB."""
