@@ -8,7 +8,7 @@ from django.core.exceptions import ImproperlyConfigured
 from django.http.response import HttpResponse
 from django.utils.encoding import force_bytes, smart_str
 from django.utils.module_loading import import_string
-from graphene.validation import DisableIntrospection
+from graphene.validation import DisableIntrospection, depth_limit_validator
 from graphene_django.views import GraphQLView, HttpError
 from rest_framework.authentication import get_authorization_header
 
@@ -19,9 +19,19 @@ class HttpResponseUnauthorized(HttpResponse):
     status_code = 401
 
 
+custom_validation_rules = []
+if settings.DISABLE_INTROSPECTION:  # pragma: no cover
+    custom_validation_rules.append(DisableIntrospection)
+
+if settings.QUERY_DEPTH_LIMIT:  # pragma: no cover
+    custom_validation_rules.append(
+        depth_limit_validator(max_depth=settings.QUERY_DEPTH_LIMIT)
+    )
+
+
 class AuthenticationGraphQLView(GraphQLView):
-    if settings.DISABLE_INTROSPECTION:  # pragma: no cover
-        validation_rules = (DisableIntrospection,)
+    if custom_validation_rules:  # pragma: no cover
+        validation_rules = tuple(custom_validation_rules)
 
     def get_bearer_token(self, request):
         auth = get_authorization_header(request).split()
