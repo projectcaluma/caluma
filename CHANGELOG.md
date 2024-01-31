@@ -1,3 +1,41 @@
+# v10.0.0 (31 Jan 2024)
+
+## Breaking
+
+* chore: drop deprecated id filter on cases filterset
+  BREAKING CHANGE: you now must use the `ids` filter instead ([`e6356fa`](https://github.com/projectcaluma/caluma/commit/e6356fa7dea5f7848dd1c8758ea9000ab736c452))
+
+* chore: update lots of dependencies
+  Notable change: replacing `psycopg2` with `psycopg`, version 3
+
+  BREAKING CHANGE: This drops support for PostgreSQL versions 9, 10 and 11,
+  as well as Python 3.8.
+
+* feat(healthz)!: overhaul health-checks for them to be less intrusive
+
+  This commit contains no changes. Its only purpose is to mark the commit
+  `54c545f3d484661f8c9b29b1ce20384b8df5bfc5` as breaking, because this was
+  forgotten.
+
+  BREAKING CHANGE: In the healthz response, the key `database models` has
+  been dropped. ([`4a585da`](https://github.com/projectcaluma/caluma/commit/4a585da789d111806faf8e4bfb130f5d71e0a889))
+
+## Feature
+
+* feat: disable introspection via validation rules property ([`21afd5d`](https://github.com/projectcaluma/caluma/commit/21afd5d9343a900fc262f5edb75137462d8403f2))
+* feat: implement flat_answer_map (analog to ember-caluma) ([`d96d33e`](https://github.com/projectcaluma/caluma/commit/d96d33e575abdb079adf97f3918ba6d04b34fadd))
+* feat(filters): add EXACT_WORD lookup type to SearchAnswer ([`23c0e55`](https://github.com/projectcaluma/caluma/commit/23c0e552a91dd882a79e1f76407159c4383a2861))
+* feat(healthz): overhaul health-checks for them to be less intrusive ([`54c545f`](https://github.com/projectcaluma/caluma/commit/54c545f3d484661f8c9b29b1ce20384b8df5bfc5))
+
+## Fix
+
+* fix(graphene): add a custom metaclass factory for interface types ([`d56f131`](https://github.com/projectcaluma/caluma/commit/d56f13134cf781ce4b46c81b55efb922a8a549f2))
+* fix(analytics/tests): do not assume sorted output ([`136f1ae`](https://github.com/projectcaluma/caluma/commit/136f1aed9af31d72108f8fa4cf56272e2a5ad6a6))
+* fix: new keycloak versions omit groups in claims if no groups are set ([`d88affa`](https://github.com/projectcaluma/caluma/commit/d88affaee5129164bc034a4897b8c40bb2e1cc10))
+* fix: only save updated fields in post_complete case logic ([`8c9edae`](https://github.com/projectcaluma/caluma/commit/8c9edaebaa3be2c0c90797b8f848b430102f2287))
+* fix(healthz): do not warn about expected events ([`b747c1f`](https://github.com/projectcaluma/caluma/commit/b747c1f6d89932f16d65a495bf213156982e4542))
+
+
 # v9.3.3 (5 January 2024)
 ### Fix
 * Only save updated fields in post_complete case logic ([`eeabb02`](https://github.com/projectcaluma/caluma/commit/eeabb02b2812e50b1f279cf04bd13518f5f9872d))
