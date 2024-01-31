@@ -13,7 +13,7 @@ def start_case(
     form: Optional[Form] = None,
     parent_work_item: Optional[models.WorkItem] = None,
     context: Optional[dict] = None,
-    **kwargs
+    **kwargs,
 ) -> models.Case:
     """
     Start a case of a given workflow (just like `saveCase`).

@@ -1,7 +1,8 @@
 """
-This settings module only contains caluma specific settings.
+Caluma specific settings.
 
-It's imported by the main caluma settings and is intended to also be used by third party
+This settings module only contains caluma-internal settings. It's imported
+by the main caluma settings and is intended to also be used by third party
 applications integrating Caluma.
 """
 

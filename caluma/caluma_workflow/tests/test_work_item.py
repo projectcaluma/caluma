@@ -1062,9 +1062,7 @@ def test_filter_document_has_answer(
                 }
               }
             }
-        """ % {
-            "filt": filt
-        }
+        """ % {"filt": filt}
 
         result = schema_executor(
             query,

@@ -10,7 +10,7 @@ def save_answer(
     user: Optional[BaseUser] = None,
     value: Optional[Any] = None,
     context: Optional[dict] = None,
-    **kwargs
+    **kwargs,
 ) -> models.Answer:
     """
     Save an answer for given question, document.
@@ -32,7 +32,7 @@ def save_default_answer(
     question: models.Question,
     user: Optional[BaseUser] = None,
     value: Optional[Any] = None,
-    **kwargs
+    **kwargs,
 ) -> models.Answer:
     """
     Save default_answer for given question.
