@@ -1,23 +1,17 @@
 repos:
 -   repo: local
     hooks:
-    - id: black
+    - id: ruff-format
       stages: [commit]
-      name: black
+      name: format code
       language: system
-      entry: black
+      entry: ruff format .
       types: [python]
-    - id: isort
+    - id: ruff-check
       stages: [commit]
-      name: isort
+      name: check format,import
       language: system
-      entry: isort
-      types: [python]
-    - id: flake8
-      stages: [commit]
-      name: flake8
-      language: system
-      entry: flake8
+      entry: ruff check .
       types: [python]
     - id: reuse
       stages: [commit]

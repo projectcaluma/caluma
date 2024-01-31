@@ -46,19 +46,10 @@ psycopg-binary = "^3.1.17"
 # Dev dependencies are always pinned to an exact version (No caret or tilde
 # matching) to ensure everyone uses the same version of the tools, especially
 # linters & formatters
-black = "23.3.0"
 django-extensions = "3.2.1"
 factory-boy = "3.2.1"
 Faker = "20.1.0"
-flake8 = "6.0.0"
-flake8-bugbear = "23.5.9"
-flake8-debugger = "4.1.2"
-flake8-docstrings = "1.7.0"
-flake8-isort = "6.0.0"
-flake8-string-format = "0.3.0"
-flake8-tuple = "0.4.1"
 gitlint = "0.19.1"
-isort = "5.12.0"
 pdbpp = "0.10.3"
 pre-commit = "3.5.0"
 pydocstyle = "6.3.0"
@@ -75,6 +66,8 @@ python-semantic-release = "8.7.0"
 requests-mock = "1.10.0"
 reuse = "1.1.2"
 syrupy = "4.0.2"
+ruff = "^0.1.15"
+
 
 [tool.isort]
 skip = ["migrations", "snapshots"]
@@ -111,6 +104,46 @@ filterwarnings = [
     "ignore:invalid escape sequence",
     "ignore:pkg_resources is deprecated as an API:DeprecationWarning",                 # deprecation in django-simple-history
 ]
+
+[tool.ruff]
+exclude = [
+    "migrations",
+    "snapshots",
+    ".venv",
+]
+ignore = [
+    "D100",
+    "D101",
+    "D102",
+    "D103",
+    "D104",
+    "D105",
+    "D106",
+    "D107",
+    "D202",
+    "E501",
+    "D212", # Multi-line docstring summary should start at the first line
+    "D213", # Multi-line docstring summary should start at the second line
+    "D407", # Missing dashed underline after section
+    "D406", # Section name should end with a newline
+    "D203", # one-blank-line-before-class (docstring)
+]
+line-length = 88
+select = [
+    "C9",
+    "D",
+    "E",
+    "F",
+    "W",
+    "I",
+]
+
+[tool.ruff.mccabe]
+max-complexity = 11
+
+[tool.ruff.lint.isort]
+combine-as-imports = true
+
 
 [tool.coverage.run]
 source = ["."]

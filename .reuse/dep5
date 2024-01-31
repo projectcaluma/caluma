@@ -8,7 +8,6 @@ Files:
     .dockerignore
     .editorconfig
     .env
-    .flake8
     .github/dependabot.yml
     .github/workflows/compatibility-tests.yml
     .github/workflows/ghcr.yml

@@ -46,11 +46,11 @@ jobs:
       - name: Run gitlint
         run: poetry run gitlint --contrib contrib-title-conventional-commits
 
-      - name: Run black
-        run: poetry run black --check .
+      - name: Check code format
+        run: poetry run ruff format --check .
 
-      - name: Run flake8
-        run: poetry run flake8 --exclude .venv
+      - name: Check code style
+        run: poetry run ruff check .
 
       - name: Run migration check
         run: poetry run python manage.py makemigrations --check --dry-run --no-input
