@@ -106,7 +106,11 @@ class Command(BaseCommand):
             ]
         )
         print(format_string.format(**col_labels))
-        print(format_string.format(**{k: "-" * l for k, l in col_lengths.items()}))
+        print(
+            format_string.format(
+                **{col: "-" * length for col, length in col_lengths.items()}
+            )
+        )
 
         for rec in records:
             fdata = {_rowkey(k): str(v) for k, v in rec.items()}

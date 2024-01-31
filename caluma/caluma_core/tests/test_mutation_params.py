@@ -52,9 +52,7 @@ def test_get_mutation_params_inline(
               }
             }
         }
-    """ % {
-        "form": form.slug
-    }
+    """ % {"form": form.slug}
 
     result = schema_executor(query)
     assert result.data == {
@@ -79,7 +77,7 @@ def test_get_mutation_params_with_vars(db, schema_executor, permission_classes, 
         assert len(params) == 1
         assert len(params["input"]) == 3
         assert params["input"]["slug"] == "email_addr"
-        assert type(params["input"]["format_validators"]) is list
+        assert isinstance(params["input"]["format_validators"], list)
         return True
 
     mocker.patch(f"{__name__}._TestPermission.permission_impl", check_perm)
