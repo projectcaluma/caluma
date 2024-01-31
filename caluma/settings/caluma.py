@@ -59,6 +59,10 @@ GRAPHENE = {
 # the source).
 DISABLE_INTROSPECTION = env.bool("DISABLE_INTROSPECTION", default=default(False, True))
 
+# DOS protection: Limit query depth to a given level. Default is 0, which means
+# it is disabled
+QUERY_DEPTH_LIMIT = env.int("QUERY_DEPTH_LIMIT", default=0)
+
 # OpenID connect
 
 OIDC_USERINFO_ENDPOINT = env.str("OIDC_USERINFO_ENDPOINT", default=None)
