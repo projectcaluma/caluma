@@ -14,8 +14,12 @@ from simple_history.signals import pre_create_historical_record
 from caluma.caluma_core.events import filter_events
 from caluma.utils import disable_raw
 
-from . import models, structure
-from .jexl import QuestionJexl
+from . import models
+from .api import (
+    recalculate_answers_from_document,
+    update_calc_dependents,
+    update_or_create_calc_answer,
+)
 
 
 @receiver(pre_create_historical_record, sender=models.HistoricalAnswer)
@@ -58,56 +62,6 @@ def set_document_family(sender, instance, **kwargs):
     instance.family = instance
 
 
-def _update_calc_dependents(slug, old_expr, new_expr):
-    jexl = QuestionJexl()
-    old_q = set(
-        list(jexl.extract_referenced_questions(old_expr))
-        + list(jexl.extract_referenced_mapby_questions(old_expr))
-    )
-    new_q = set(
-        list(jexl.extract_referenced_questions(new_expr))
-        + list(jexl.extract_referenced_mapby_questions(new_expr))
-    )
-
-    to_add = new_q - old_q
-    to_remove = old_q - new_q
-
-    questions = models.Question.objects.filter(pk__in=list(to_add | to_remove))
-
-    for question in questions:
-        deps = set(question.calc_dependents)
-        if question.slug in to_add:
-            deps.add(slug)
-        else:
-            deps.remove(slug)
-        question.calc_dependents = list(deps)
-        question.save()
-
-
-def _update_or_create_calc_answer(question, document):
-    root_doc = document.family
-
-    struc = structure.FieldSet(root_doc, root_doc.form)
-    field = struc.get_field(question.slug)
-
-    # skip if question doesn't exist in this document structure
-    if field is None:
-        return
-
-    jexl = QuestionJexl(
-        {"form": field.form, "document": field.document, "structure": field.parent()}
-    )
-
-    # Ignore errors because we evaluate greedily as soon as possible. At
-    # this moment we might be missing some answers or the expression might
-    # be invalid, in which case we return None
-    value = jexl.evaluate(field.question.calc_expression, raise_on_error=False)
-
-    models.Answer.objects.update_or_create(
-        question=question, document=field.document, defaults={"value": value}
-    )
-
-
 # Update calc dependents on pre_save
 #
 # Every question that is referenced in a `calcExpression` will memoize the
@@ -121,12 +75,12 @@ def _update_or_create_calc_answer(question, document):
 def save_calc_dependents(sender, instance, **kwargs):
     original = models.Question.objects.filter(pk=instance.pk).first()
     if not original:
-        _update_calc_dependents(
+        update_calc_dependents(
             instance.slug, old_expr="false", new_expr=instance.calc_expression
         )
 
     elif original.calc_expression != instance.calc_expression:
-        _update_calc_dependents(
+        update_calc_dependents(
             instance.slug,
             old_expr=original.calc_expression,
             new_expr=instance.calc_expression,
@@ -136,7 +90,7 @@ def save_calc_dependents(sender, instance, **kwargs):
 @receiver(pre_delete, sender=models.Question)
 @filter_events(lambda instance: instance.type == models.Question.TYPE_CALCULATED_FLOAT)
 def remove_calc_dependents(sender, instance, **kwargs):
-    _update_calc_dependents(
+    update_calc_dependents(
         instance.slug, old_expr=instance.calc_expression, new_expr="false"
     )
 
@@ -155,7 +109,7 @@ def update_calc_from_question(sender, instance, created, update_fields, **kwargs
     # needs to happen during save() or __init__()
 
     for document in models.Document.objects.filter(form__questions=instance):
-        _update_or_create_calc_answer(instance, document)
+        update_or_create_calc_answer(instance, document)
 
 
 @receiver(post_save, sender=models.FormQuestion)
@@ -165,7 +119,7 @@ def update_calc_from_question(sender, instance, created, update_fields, **kwargs
 )
 def update_calc_from_form_question(sender, instance, created, **kwargs):
     for document in instance.form.documents.all():
-        _update_or_create_calc_answer(instance.question, document)
+        update_or_create_calc_answer(instance.question, document)
 
 
 @receiver(post_save, sender=models.Answer)
@@ -176,11 +130,10 @@ def update_calc_from_answer(sender, instance, **kwargs):
     # answer. They shouldn't trigger a recalculation of a calculated field
     # even when they are technically listed as a dependency.
     # Also skip non-referenced answers.
-
     for question in models.Question.objects.filter(
         pk__in=instance.question.calc_dependents
     ):
-        _update_or_create_calc_answer(question, instance.document)
+        update_or_create_calc_answer(question, instance.document)
 
 
 @receiver(post_save, sender=models.Document)
@@ -188,10 +141,7 @@ def update_calc_from_answer(sender, instance, **kwargs):
 # We're only interested in table row forms
 @filter_events(lambda instance, created: instance.pk != instance.family_id or created)
 def update_calc_from_document(sender, instance, created, **kwargs):
-    for question in models.Form.get_all_questions(
-        [(instance.family or instance).form_id]
-    ).filter(type=models.Question.TYPE_CALCULATED_FLOAT):
-        _update_or_create_calc_answer(question, instance)
+    recalculate_answers_from_document(instance)
 
 
 @receiver(m2m_changed, sender=models.AnswerDocument)
@@ -203,4 +153,4 @@ def update_calc_from_answerdocument(sender, instance, **kwargs):
     dependent_questions = list(itertools.chain(*dependents))
 
     for question in models.Question.objects.filter(pk__in=dependent_questions):
-        _update_or_create_calc_answer(question, instance.document)
+        update_or_create_calc_answer(question, instance.document)
