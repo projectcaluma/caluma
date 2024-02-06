@@ -95,7 +95,6 @@ def test_create_table(db, snapshot, schema_executor):
 
     snapshot.assert_match(result.data)
     assert result.data["saveAnalyticsTable"]["analyticsTable"]
-    print(result.data)
 
     result = schema_executor(QUERY_SEARCH_TABLE, variable_values={"search": "bar Foo"})
     assert not result.errors
