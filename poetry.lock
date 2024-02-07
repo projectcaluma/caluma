@@ -2124,13 +2124,13 @@ requests = ">=2.0.1,<3.0.0"
 
 [[package]]
 name = "reuse"
-version = "1.1.2"
+version = "3.0.1"
 description = "reuse is a tool for compliance with the REUSE recommendations."
 optional = false
-python-versions = ">=3.6.2,<4.0.0"
+python-versions = ">=3.8,<4.0"
 files = [
-    {file = "reuse-1.1.2-cp311-cp311-manylinux_2_36_x86_64.whl", hash = "sha256:d3cf6981e9b2855845a0cf323526fd1cde94a640ea1d8dce22d4156788b282bc"},
-    {file = "reuse-1.1.2.tar.gz", hash = "sha256:80eb6e5ab5f73c784b5a9153e61a282045f6f9292124e1b55d4a7265dbad4246"},
+    {file = "reuse-3.0.1-cp311-cp311-manylinux_2_36_x86_64.whl", hash = "sha256:2f13d9f31268e566e715fffe97299a002376477fada7ccd3d05a1458310cbf98"},
+    {file = "reuse-3.0.1.tar.gz", hash = "sha256:590ce429ad964c515ed5e18b1f755d9b6cf027943d940d472d107e64ede70a6f"},
 ]
 
 [package.dependencies]
@@ -2138,8 +2138,7 @@ binaryornot = ">=0.4.4,<0.5.0"
 "boolean.py" = ">=3.8"
 Jinja2 = ">=3.0.0,<4.0.0"
 license-expression = ">=1.0"
-python-debian = ">=0.1.38,<0.1.45 || >0.1.45,<0.1.46 || >0.1.46,<0.1.47 || >0.1.47,<0.2.0"
-setuptools = "*"
+python-debian = ">=0.1.34,<0.1.45 || >0.1.45,<0.1.46 || >0.1.46,<0.1.47 || >0.1.47,<0.2.0"
 
 [[package]]
 name = "rich"
@@ -2450,4 +2449,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9.13"
-content-hash = "369adb7ac079b6d42e7da515967ec40cd25798e43b16149031579ee66b68bc57"
+content-hash = "11c880be3a535682e78c14f3cd1834603c09695568d8cf7176468405c8f23b77"
