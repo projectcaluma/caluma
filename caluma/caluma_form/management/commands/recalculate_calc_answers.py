@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
+from caluma.caluma_form.api import update_or_create_calc_answer
 from caluma.caluma_form.models import Answer, Question
-from caluma.caluma_form.signals import _update_or_create_calc_answer
 
 
 class Command(BaseCommand):
@@ -32,4 +32,4 @@ class Command(BaseCommand):
         )
 
         for answer in calc_answers.iterator():
-            _update_or_create_calc_answer(answer.question, answer.document)
+            update_or_create_calc_answer(answer.question, answer.document)
