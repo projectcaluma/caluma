@@ -382,33 +382,47 @@ def test_save_document(
         mutation SaveDocument($input: SaveDocumentInput!) {
           saveDocument(input: $input) {
             document {
-                form {
-                  slug
-                }
-                id
-                answers {
-                  edges {
-                    node {
-                      ... on StringAnswer {
-                        value
-                      }
+              form {
+                slug
+              }
+              id
+              answers {
+                edges {
+                  node {
+                    ... on StringAnswer {
+                      strValue: value
+                    }
+                    ... on IntegerAnswer {
+                      intValue: value
+                    }
+                    ... on FloatAnswer {
+                      floatValue: value
                     }
                   }
                 }
+              }
             }
             clientMutationId
           }
         }
     """
 
-    form_question = form_question_factory(
-        question__type=Question.TYPE_TEXT, form=document.form
+    # create an integer question that has a default answer
+    form_question_int = form_question_factory(
+        question__type=Question.TYPE_INTEGER, form=document.form
     )
     default_answer = answer_factory(
-        question=form_question.question, value="foo", document=None
+        question=form_question_int.question, value=23, document=None
     )
-    form_question.question.default_answer = default_answer
-    form_question.question.save()
+    form_question_int.question.default_answer = default_answer
+    form_question_int.question.save()
+
+    # create a calculated question referencing the integer question we created above
+    form_question_factory(
+        question__type=Question.TYPE_CALCULATED_FLOAT,
+        form=document.form,
+        question__calc_expression=f"'{form_question_int.question.slug}'|answer * 2",
+    )
 
     # create a sub-form with a question with a default_answer
     sub_form = form_factory()
@@ -421,7 +435,7 @@ def test_save_document(
         question__type=Question.TYPE_TEXT, form=sub_form
     )
     sub_default_answer = answer_factory(
-        question=sub_form_question.question, value="bar"
+        question=sub_form_question.question, value="foo"
     )
     sub_form_question.question.default_answer = sub_default_answer
     sub_form_question.question.save()
@@ -453,17 +467,23 @@ def test_save_document(
         assert same_id == update
 
         assert (
-            len(result.data["saveDocument"]["document"]["answers"]["edges"]) == 0
+            len(result.data["saveDocument"]["document"]["answers"]["edges"]) == 1
             if update
-            else 2
+            else 3
         )
         if not update:
             assert sorted(
                 [
-                    a["node"]["value"]
+                    str(a["node"]["intValue"])
+                    if "intValue" in a["node"]
+                    else (
+                        a["node"]["strValue"]
+                        if "strValue" in a["node"]
+                        else str(a["node"]["floatValue"])
+                    )
                     for a in result.data["saveDocument"]["document"]["answers"]["edges"]
                 ]
-            ) == ["bar", "foo"]
+            ) == ["23", "46.0", "foo"]
     else:
         doc = (
             api.save_document(document.form, document=document)
@@ -472,9 +492,13 @@ def test_save_document(
         )
         assert (doc.pk == document.pk) == update
 
-        assert doc.answers.count() == 0 if update else 2
+        assert doc.answers.count() == 1 if update else 3
         if not update:
-            assert sorted([a.value for a in doc.answers.iterator()]) == ["bar", "foo"]
+            assert sorted([str(a.value) for a in doc.answers.iterator()]) == [
+                "23",
+                "46",
+                "foo",
+            ]
 
     # Make sure the default answers document is still None
     default_answer.refresh_from_db()

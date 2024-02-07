@@ -258,11 +258,26 @@ class SaveDocumentLogic:
     def create(
         validated_data: dict, user: Optional[BaseUser] = None
     ) -> models.Document:
+        # When creating a new document, we want to defer the calculation of calculated
+        # answers until after all the default answers are created. Otherwise, this would
+        # start a huge matrix of recalculations.
+        validated_data.setdefault("meta", {})
+        validated_data["meta"]["_defer_calculation"] = True
+
         document = BaseLogic.create(models.Document, validated_data, user=user)
 
         document = SaveDocumentLogic._set_default_answers_for_form(
             document.form, document, user
         )
+
+        # Now, all default answers are created. We remove the _defer_calculation-key
+        # from the meta and manually trigger the calculation.
+        document.meta.pop("_defer_calculation", None)
+        document.save()
+
+        from caluma.caluma_form.api import recalculate_answers_from_document
+
+        recalculate_answers_from_document(document)
         return document
 
     @staticmethod

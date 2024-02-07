@@ -146,6 +146,8 @@ def update_or_create_calc_answer(question, document):
 
 
 def recalculate_answers_from_document(instance):
+    if (instance.family or instance).meta.get("_defer_calculation"):
+        return
     for question in models.Form.get_all_questions(
         [(instance.family or instance).form_id]
     ).filter(type=models.Question.TYPE_CALCULATED_FLOAT):

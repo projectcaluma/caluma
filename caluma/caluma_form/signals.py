@@ -130,6 +130,9 @@ def update_calc_from_answer(sender, instance, **kwargs):
     # answer. They shouldn't trigger a recalculation of a calculated field
     # even when they are technically listed as a dependency.
     # Also skip non-referenced answers.
+    if instance.document.family.meta.get("_defer_calculation"):
+        return
+
     for question in models.Question.objects.filter(
         pk__in=instance.question.calc_dependents
     ):
