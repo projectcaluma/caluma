@@ -7,6 +7,7 @@ from rest_framework.exceptions import ValidationError
 from caluma.caluma_core.models import BaseModel
 from caluma.caluma_core.relay import extract_global_id
 from caluma.caluma_form import models, validators
+from caluma.caluma_form.utils import recalculate_answers_from_document
 from caluma.caluma_user.models import BaseUser
 from caluma.utils import update_model
 
@@ -274,8 +275,6 @@ class SaveDocumentLogic:
         # from the meta and manually trigger the calculation.
         document.meta.pop("_defer_calculation", None)
         document.save()
-
-        from caluma.caluma_form.api import recalculate_answers_from_document
 
         recalculate_answers_from_document(document)
         return document
