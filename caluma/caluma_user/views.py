@@ -19,9 +19,24 @@ class HttpResponseUnauthorized(HttpResponse):
     status_code = 401
 
 
+class SuppressIntrospection(DisableIntrospection):
+    """Validate request to reject any introspection, except the bare minimum."""
+
+    # The base class, graphene.validation.DisableIntrospection, is too strict:
+    # It rejects everything starting with double underscores (as per GQL spec)
+    # but we need `__typename` for our frontends to work correctly.
+
+    ALLOWED_INTROSPECTION_KEYS = ["__typename"]
+
+    def enter_field(self, node, *_args):
+        field_name = node.name.value
+        if field_name not in self.ALLOWED_INTROSPECTION_KEYS:
+            super().enter_field(node, *_args)
+
+
 custom_validation_rules = []
 if settings.DISABLE_INTROSPECTION:  # pragma: no cover
-    custom_validation_rules.append(DisableIntrospection)
+    custom_validation_rules.append(SuppressIntrospection)
 
 if settings.QUERY_DEPTH_LIMIT:  # pragma: no cover
     custom_validation_rules.append(
