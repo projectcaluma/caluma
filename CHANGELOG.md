@@ -1,3 +1,9 @@
+# v10.1.1 (8 February 2024)
+### Fix
+
+* Do not query for non-existent buckets in healthz ([`7d5e8ab`](https://github.com/projectcaluma/caluma/commit/7d5e8ab0d2188ee10f9b304737c5835ccb0d0e49))
+
+
 # v10.1.0 (8 February 2024)
 
 ### Feature
