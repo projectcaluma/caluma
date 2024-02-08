@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
-from caluma.caluma_form.api import update_or_create_calc_answer
 from caluma.caluma_form.models import Answer, Question
+from caluma.caluma_form.utils import update_or_create_calc_answer
 
 
 class Command(BaseCommand):
