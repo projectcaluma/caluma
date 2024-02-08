@@ -6,15 +6,12 @@ from . import models
 
 
 class AnalyticsTableFilterSet(MetaFilterSet):
-    search = SearchFilter(fields=("slug", "name"))
+    search = SearchFilter(fields=("slug", "name", "description"))
     slugs = MultipleChoiceFilter(field_name="slug")
 
     class Meta:
         model = models.AnalyticsTable
-        fields = (
-            "slug",
-            "name",
-        )
+        fields = ("slug", "name", "description")
 
 
 class AnalyticsFieldFilterSet(MetaFilterSet):
@@ -53,7 +50,7 @@ class AnalyticsTableOrderSet(FilterSet):
     meta = MetaFieldOrdering()
     attribute = AttributeOrderingFactory(
         models.AnalyticsTable,
-        fields=["created_at", "modified_at", "slug", "name"],
+        fields=["created_at", "modified_at", "slug", "name", "description"],
     )
 
     class Meta:
