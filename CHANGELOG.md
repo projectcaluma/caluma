@@ -1,3 +1,13 @@
+# v10.1.0 (8 February 2024)
+
+### Feature
+* **settings:** Add setting to limit query depth ([`dde9c9a`](https://github.com/projectcaluma/caluma/commit/dde9c9a22306edd717e40bde7603d75178887fb9))
+
+### Fix
+
+* Defer calculation of calc answers until after creating a new doc ([`8111843`](https://github.com/projectcaluma/caluma/commit/81118437498ec902d62fe2611232c2b1d29fb10e))
+
+
 # v10.0.0 (31 Jan 2024)
 
 ## Breaking
