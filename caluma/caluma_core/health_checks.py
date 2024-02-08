@@ -1,5 +1,4 @@
 from io import StringIO
-from uuid import uuid4
 
 from django.conf import settings
 from django.core import management
@@ -28,8 +27,11 @@ def _check_pending_migrations(db_name):
 @check
 def _check_media_storage_service():
     """Check media storage service connectivity."""
-    assert not storage_clients.client.client.bucket_exists(str(uuid4()))
-    return {"ok": True}
+    return {
+        "ok": storage_clients.client.client.bucket_exists(
+            settings.MINIO_STORAGE_MEDIA_BUCKET_NAME
+        )
+    }
 
 
 def check_media_storage_service():

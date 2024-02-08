@@ -84,7 +84,7 @@ def db_broken_connection(transactional_db):
 def minio_mock_working(mocker):
     """Provide working minio mock for health checks."""
     return mocker.patch.object(
-        storage_clients.client.client, "bucket_exists", return_value=False
+        storage_clients.client.client, "bucket_exists", return_value=True
     )
 
 
