@@ -1,4 +1,5 @@
 import pytest
+from django.utils.timezone import datetime
 
 from caluma.caluma_core.relay import extract_global_id
 from caluma.caluma_core.tests import (
@@ -369,7 +370,6 @@ def test_save_textarea_question(db, question, answer, schema_executor):
           }
         }
     """
-
     question.default_answer = answer
     question.hint_text = "test"
     question.save()
@@ -387,6 +387,82 @@ def test_save_textarea_question(db, question, answer, schema_executor):
         == "foo"
     )
     assert result.data["saveTextareaQuestion"]["question"]["hintText"] == "test"
+
+
+@pytest.mark.parametrize(
+    "question__type, min_date, max_date, success",
+    [
+        (models.Question.TYPE_DATE, "2022-01-31", "2022-12-31", True),
+        (models.Question.TYPE_DATE, "2022-01-31", None, True),
+        (models.Question.TYPE_DATE, None, "2022-12-31", True),
+        (models.Question.TYPE_DATE, "2022-12-01", "2022-01-31", False),
+    ],
+)
+@pytest.mark.parametrize("existing_values", [False, True])
+def test_save_date_question(
+    db,
+    snapshot,
+    question,
+    success,
+    schema_executor,
+    min_date,
+    max_date,
+    existing_values,
+):
+    query = """
+        mutation SaveDateQuestion($input: SaveDateQuestionInput!) {
+          saveDateQuestion(input: $input) {
+            question {
+              id
+              slug
+              label
+              meta
+              __typename
+              ... on DateQuestion {
+                minDate
+                maxDate
+                hintText
+                defaultAnswer {
+                  value
+                }
+              }
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    if max_date:
+        question.max_date = datetime.strptime(max_date, "%Y-%m-%d").date()
+    if min_date:
+        question.min_date = datetime.strptime(min_date, "%Y-%m-%d").date()
+
+    inp = {
+        "input": extract_serializer_input_fields(
+            serializers.SaveDateQuestionSerializer, question
+        )
+    }
+
+    if existing_values:
+        question.save()
+
+    result = schema_executor(query, variable_values=inp)
+    assert not bool(result.errors) == success
+    if not success:
+        return
+
+    snapshot.assert_match(result.data)
+
+    question.refresh_from_db()
+    if not min_date:
+        assert question.min_date is None
+    else:
+        assert question.min_date == datetime.strptime(min_date, "%Y-%m-%d").date()
+
+    if not max_date:
+        assert question.max_date is None
+    else:
+        assert question.max_date == datetime.strptime(max_date, "%Y-%m-%d").date()
 
 
 @pytest.mark.parametrize(

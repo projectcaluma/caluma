@@ -240,12 +240,28 @@ class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
 
 
 class SaveDateQuestionSerializer(SaveQuestionSerializer):
+    min_date = DateField("%Y-%m-%d", required=False, allow_null=True)
+    max_date = DateField("%Y-%m-%d", required=False, allow_null=True)
+
     def validate(self, data):
+        if (
+            (min_date := data.get("min_date"))
+            and (max_date := data.get("max_date"))
+            and max_date < min_date
+        ):
+            raise exceptions.ValidationError(
+                f"max_value {max_date} is smaller than {min_date}"
+            )
+
         data["type"] = models.Question.TYPE_DATE
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["hint_text"]
+        fields = SaveQuestionSerializer.Meta.fields + [
+            "hint_text",
+            "min_date",
+            "max_date",
+        ]
 
 
 class SaveQuestionOptionsMixin(object):

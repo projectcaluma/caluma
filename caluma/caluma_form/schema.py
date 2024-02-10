@@ -265,6 +265,8 @@ class TextareaQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 
 class DateQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     hint_text = graphene.String()
+    min_date = graphene.Date()
+    max_date = graphene.Date()
     default_answer = graphene.Field("caluma.caluma_form.schema.DateAnswer")
 
     class Meta:
