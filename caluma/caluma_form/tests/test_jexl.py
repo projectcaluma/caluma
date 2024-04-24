@@ -197,16 +197,25 @@ def test_reference_missing_question(
         ("sub_question", "info.parent.form == 'top_form'", True, "subform"),
         ("sub_question", "info.parent.formMeta.level == 0", True, "subform"),
         ("sub_question", "info.parent.formMeta['is-top-form']", True, "subform"),
+        ("sub_question", "info.mainCaseForm == 'main-case-form'", True, "subform"),
         ("column", "info.parent.form == 'top_form'", True, "table"),
         ("column", "info.parent.formMeta.level == 0", True, "table"),
         ("column", "info.parent.formMeta['is-top-form']", True, "table"),
         ("column", "info.root.form == 'top_form'", True, "table"),
         ("column", "info.root.formMeta.level == 0", True, "table"),
         ("column", "info.root.formMeta['is-top-form']", True, "table"),
+        ("column", "info.mainCaseForm == 'main-case-form'", True, "table"),
     ],
 )
 def test_new_jexl_expressions(
-    question, expr, expectation, features, info, form_and_document
+    question,
+    expr,
+    expectation,
+    features,
+    info,
+    form_and_document,
+    case_factory,
+    work_item_factory,
 ):
     """Evaluate a JEXL expression in the context of a full document.
 
@@ -230,6 +239,9 @@ def test_new_jexl_expressions(
     form, document, questions, answers = form_and_document(
         use_table=use_table, use_subform=use_subform
     )
+
+    main_case = case_factory(document__form__slug="main-case-form")
+    work_item_factory(case=main_case, document=document)
 
     # expression test method: we delete an answer and set it's is_hidden
     # to an expression to be tested. If the expression evaluates to True,
