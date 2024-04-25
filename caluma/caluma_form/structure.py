@@ -134,7 +134,7 @@ class RowField(Field):
 
 
 class FieldSet(Element):
-    aliases = {"formMeta": "form_meta"}
+    aliases = {"formMeta": "form_meta", "mainCaseForm": "main_case_form"}
 
     def __init__(self, document, form, question=None, parent=None):
         super().__init__(parent)
@@ -144,6 +144,18 @@ class FieldSet(Element):
         self.question = question
         self._fields = None
         self._sub_forms = None
+        self._main_case_form = "NOTSET"
+
+    @property
+    def main_case_form(self):
+        if self._main_case_form == "NOTSET":
+            try:
+                self._main_case_form = (
+                    self.document.family.work_item.case.family.document.form.slug
+                )
+            except Exception:  # pragma: no cover
+                self._main_case_form = None
+        return self._main_case_form
 
     @property
     def fields(self):
