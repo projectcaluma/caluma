@@ -49,6 +49,8 @@ class Element:
             out = out()
         if isinstance(out, Element) or isinstance(out, dict):
             return out
+        if out is None:
+            return None
         return str(out)
 
 
@@ -134,7 +136,7 @@ class RowField(Field):
 
 
 class FieldSet(Element):
-    aliases = {"formMeta": "form_meta", "mainCaseForm": "main_case_form"}
+    aliases = {"formMeta": "form_meta"}
 
     def __init__(self, document, form, question=None, parent=None):
         super().__init__(parent)
@@ -144,18 +146,37 @@ class FieldSet(Element):
         self.question = question
         self._fields = None
         self._sub_forms = None
-        self._main_case_form = "NOTSET"
+        self._case = "NOTSET"
 
     @property
-    def main_case_form(self):
-        if self._main_case_form == "NOTSET":
-            try:
-                self._main_case_form = (
-                    self.document.family.work_item.case.family.document.form.slug
-                )
-            except Exception:  # pragma: no cover
-                self._main_case_form = None
-        return self._main_case_form
+    def case(self):
+        if self._case != "NOTSET":
+            return self._case  # pragma: no cover
+
+        if hasattr(self.document.family, "work_item"):
+            case = self.document.family.work_item.case
+        elif hasattr(self.document.family, "case"):
+            # if we're not in a task form, we might be the root document
+            case = self.document.family.case
+        else:
+            self._case = None
+            return self._case
+
+        if hasattr(case, "parent_work_item"):
+            root = case.parent_work_item.case.family
+            root_info = {
+                "form": root.document.form.slug,
+                "workflow": root.workflow.slug,
+            }
+        else:
+            root_info = None
+
+        self._case = {
+            "form": case.document.form.slug,
+            "workflow": case.workflow.slug,
+            "root": root_info,
+        }
+        return self._case
 
     @property
     def fields(self):
