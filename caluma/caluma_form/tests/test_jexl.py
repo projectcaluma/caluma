@@ -188,30 +188,51 @@ def test_reference_missing_question(
 
 
 @pytest.mark.parametrize(
-    "question,expr,expectation,features",
+    "question,expr,expectation,document_owner",
     [
-        ("sub_question", "info.form == 'sub_form'", True, "subform"),
-        ("sub_question", "info.formMeta.level == 1", True, "subform"),
-        ("sub_question", "info.formMeta['is-top-form']", False, "subform"),
-        ("sub_question", "info.formMeta['non-existent-key'] == null", True, "subform"),
-        ("sub_question", "info.parent.form == 'top_form'", True, "subform"),
-        ("sub_question", "info.parent.formMeta.level == 0", True, "subform"),
-        ("sub_question", "info.parent.formMeta['is-top-form']", True, "subform"),
-        ("sub_question", "info.mainCaseForm == 'main-case-form'", True, "subform"),
-        ("column", "info.parent.form == 'top_form'", True, "table"),
-        ("column", "info.parent.formMeta.level == 0", True, "table"),
-        ("column", "info.parent.formMeta['is-top-form']", True, "table"),
-        ("column", "info.root.form == 'top_form'", True, "table"),
-        ("column", "info.root.formMeta.level == 0", True, "table"),
-        ("column", "info.root.formMeta['is-top-form']", True, "table"),
-        ("column", "info.mainCaseForm == 'main-case-form'", True, "table"),
+        ("sub_question", "info.case.form == 'top_form'", True, "root_case"),
+        ("sub_question", "info.case.form == 'child-case-form'", True, "child_case"),
+        (
+            "sub_question",
+            "info.case.workflow == 'child-case-workflow'",
+            True,
+            "child_case",
+        ),
+        ("sub_question", "info.case.root.form == 'main-case-form'", True, "child_case"),
+        (
+            "sub_question",
+            "info.case.root.workflow == 'main-case-workflow'",
+            True,
+            "child_case",
+        ),
+        ("sub_question", "info.form == 'sub_form'", True, "child_case"),
+        ("sub_question", "info.formMeta.level == 1", True, "child_case"),
+        ("sub_question", "info.formMeta['is-top-form']", False, "child_case"),
+        (
+            "sub_question",
+            "info.formMeta['non-existent-key'] == null",
+            True,
+            "child_case",
+        ),
+        ("sub_question", "info.parent.form == 'top_form'", True, "child_case"),
+        ("sub_question", "info.parent.formMeta.level == 0", True, "child_case"),
+        ("sub_question", "info.parent.formMeta['is-top-form']", True, "child_case"),
+        ("column", "info.case.form == 'top_form'", True, "root_case"),
+        ("column", "info.parent.form == 'top_form'", True, "child_case"),
+        ("column", "info.parent.formMeta.level == 0", True, "child_case"),
+        ("column", "info.parent.formMeta['is-top-form']", True, "child_case"),
+        ("column", "info.root.form == 'top_form'", True, "child_case"),
+        ("column", "info.root.formMeta.level == 0", True, "child_case"),
+        ("column", "info.root.formMeta['is-top-form']", True, "child_case"),
+        ("column", "info.case.form == 'child-case-form'", True, "child_case"),
+        ("column", "info.case == null", True, None),
     ],
 )
 def test_new_jexl_expressions(
     question,
     expr,
     expectation,
-    features,
+    document_owner,
     info,
     form_and_document,
     case_factory,
@@ -225,23 +246,31 @@ def test_new_jexl_expressions(
 
     * form: top_form
        * question: top_question
-       * question: table [enabled by putting 'table' in features param]
+       * question: table
            * row_form: row_form
                * question: column
-       * question: form_question [enabled by putting 'subform' in features param]
+       * question: form_question
            * sub_form: sub_form
                * question: sub_question
     """
 
-    use_table = "table" in features
-    use_subform = "subform" in features
-
     form, document, questions, answers = form_and_document(
-        use_table=use_table, use_subform=use_subform
+        use_table=True, use_subform=True
     )
 
-    main_case = case_factory(document__form__slug="main-case-form")
-    work_item_factory(case=main_case, document=document)
+    if document_owner == "child_case":
+        root_case = case_factory(
+            workflow__slug="main-case-workflow", document__form__slug="main-case-form"
+        )
+        child_case = case_factory(
+            workflow__slug="child-case-workflow",
+            document__form__slug="child-case-form",
+            family=root_case,
+        )
+        work_item_factory(case=root_case, child_case=child_case)
+        work_item_factory(case=child_case, document=document)
+    elif document_owner == "root_case":
+        root_case = case_factory(workflow__slug="main-case-workflow", document=document)
 
     # expression test method: we delete an answer and set it's is_hidden
     # to an expression to be tested. If the expression evaluates to True,
