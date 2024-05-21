@@ -1,3 +1,22 @@
+# v10.2.0 (21 May 2024)
+### Feature
+
+* feat(form): add more case info to jexl context ([`ab73edd`](https://github.com/projectcaluma/caluma/commit/ab73eddb03215d288c782e12ca15e04bc7dc2e48))
+
+* feat(jexl): add main_case_form to info object
+
+This is convenient when you&#39;d like to write a JEXL expression in a task
+form attached to some work item, that depends on the main case&#39;s form. ([`bcb9136`](https://github.com/projectcaluma/caluma/commit/bcb913668e2454ca0dd0c8990eba310efef32b96))
+
+### Fix
+
+* fix(validation): do not block __typename when introspection is disabled
+
+The `DisableIntrospection` validator rejects everything that could
+lead to insight into the schema. Sadly, our frontends rely on having
+`__typename` available, thus we need our own validator that allows this
+specific introspection key (but not anything else) ([`46f2184`](https://github.com/projectcaluma/caluma/commit/46f21840610be6ddb3569a2b96b7866ae9f33e12))
+
 # v10.1.1 (8 February 2024)
 ### Fix
 
