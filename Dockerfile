@@ -24,11 +24,11 @@ RUN \
 
 RUN pip install -U poetry
 
+USER caluma
+
 ARG INSTALL_DEV_DEPENDENCIES=false
 COPY pyproject.toml poetry.lock $APP_HOME/
 RUN if [ "$INSTALL_DEV_DEPENDENCIES" = "true" ]; then poetry install; else poetry install --without dev; fi
-
-USER caluma
 
 COPY . $APP_HOME
 
