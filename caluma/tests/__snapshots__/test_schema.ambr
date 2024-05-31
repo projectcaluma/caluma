@@ -1837,6 +1837,7 @@
     modifiedByGroup: String
     slug: String!
     label: String!
+    isHidden: String!
     isArchived: Boolean!
     meta: GenericScalar
   
@@ -1880,6 +1881,7 @@
     metaHasKey: String
     metaValue: [JSONValueFilterType]
     search: String
+    visibleInDocument: ID
     invert: Boolean
   }
   

@@ -4,7 +4,7 @@ from functools import reduce
 import graphene
 from django.core import exceptions
 from django.db import ProgrammingError
-from django.db.models import Q
+from django.db.models import F, Func, OuterRef, Q, Subquery
 from django.forms import BooleanField
 from django.utils import translation
 from django_filters.constants import EMPTY_VALUES
@@ -12,6 +12,7 @@ from django_filters.rest_framework import Filter, FilterSet, MultipleChoiceFilte
 from graphene import Enum, InputObjectType, List
 from graphene_django.forms.converter import convert_form_field
 from graphene_django.registry import get_global_registry
+from rest_framework.exceptions import ValidationError
 
 from ..caluma_core.filters import (
     CompositeFieldClass,
@@ -23,7 +24,7 @@ from ..caluma_core.filters import (
 from ..caluma_core.forms import GlobalIDFormField
 from ..caluma_core.ordering import AttributeOrderingFactory, MetaFieldOrdering
 from ..caluma_core.relay import extract_global_id
-from ..caluma_form.models import Answer, DynamicOption, Form, Question
+from ..caluma_form.models import Answer, DynamicOption, Form, Question, QuestionOption
 from ..caluma_form.ordering import AnswerValueOrdering
 from . import models, validators
 
@@ -64,8 +65,70 @@ class FormOrderSet(FilterSet):
         fields = ("meta", "attribute")
 
 
+class VisibleOptionFilter(Filter):
+    """
+    Filter options to only show ones whose `is_hidden` JEXL evaluates to false.
+
+    This will make sure all the `is_hidden`-JEXLs on the options are evaluated in the
+    context of the provided document.
+
+    Note:
+    This filter can only be used if the options in the QuerySet all belong only to
+    one single question. Generally forms are built that way, but theoretically,
+    options could be shared between questions. In that case it will throw a
+    `ValidationError`.
+
+    Also note that this evaluates JEXL for all the options of the question, which
+    has a good bit of performance impact.
+
+    """
+
+    field_class = GlobalIDFormField
+
+    def _validate(self, qs):
+        # can't directly annotate, because the filter might already restrict to a
+        # certain Question. In that case, the count would always be one
+        questions = (
+            QuestionOption.objects.filter(option_id=OuterRef("pk"))
+            .order_by()
+            .annotate(count=Func(F("pk"), function="Count"))
+            .values("count")
+        )
+
+        qs = qs.annotate(num_questions=Subquery(questions)).annotate(
+            question=F("questions")
+        )
+
+        if (
+            qs.filter(num_questions__gt=1).exists()
+            or len(set(qs.values_list("question", flat=True))) > 1
+        ):
+            raise ValidationError(
+                "The `visibleInDocument`-filter can only be used if the filtered "
+                "Options all belong to one unique question"
+            )
+
+    def filter(self, qs, value):
+        if value in EMPTY_VALUES or not qs.exists():  # pragma: no cover
+            return qs
+
+        self._validate(qs)
+
+        document_id = extract_global_id(value)
+
+        # assuming qs can only ever be in the context of a single document
+        document = models.Document.objects.get(pk=document_id)
+        validator = validators.AnswerValidator()
+        return qs.filter(
+            slug__in=validator.visible_options(
+                document, qs.first().questionoption_set.first().question, qs
+            )
+        )
+
+
 class OptionFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "label"))
+    visible_in_document = VisibleOptionFilter()
 
     class Meta:
         model = models.Option

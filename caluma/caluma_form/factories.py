@@ -121,6 +121,7 @@ class QuestionFactory(DjangoModelFactory):
 class OptionFactory(DjangoModelFactory):
     slug = Faker("slug")
     label = Faker("multilang", faker_provider="name")
+    is_hidden = "false"
     is_archived = False
     meta = {}
 
@@ -130,7 +131,7 @@ class OptionFactory(DjangoModelFactory):
 
 class QuestionOptionFactory(DjangoModelFactory):
     option = SubFactory(OptionFactory)
-    question = SubFactory(QuestionFactory)
+    question = SubFactory(QuestionFactory, type=models.Question.TYPE_CHOICE)
     sort = 0
 
     class Meta:
