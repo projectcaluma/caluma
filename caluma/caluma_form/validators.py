@@ -3,6 +3,7 @@ from collections import defaultdict
 from datetime import date
 from logging import getLogger
 
+from django.db.models import Q
 from django_filters.constants import EMPTY_VALUES
 from rest_framework import exceptions
 
@@ -10,6 +11,7 @@ from caluma.caluma_data_source.data_source_handlers import get_data_sources
 
 from . import jexl, models, structure
 from .format_validators import get_format_validators
+from .jexl import QuestionJexl
 from .models import DynamicOption, Question
 
 log = getLogger()
@@ -87,8 +89,49 @@ class AnswerValidator:
                 f"Invalid value {value}. Should be of type date.", slugs=[question.slug]
             )
 
-    def _validate_question_choice(self, question, value, **kwargs):
-        options = question.options.values_list("slug", flat=True)
+    def _evaluate_options_jexl(
+        self, document, question, validation_context=None, qs=None
+    ):
+        def _validation_context(document):
+            # we need to build the context in two steps (for now), as
+            # `self.visible_questions()` already needs a context to evaluate
+            # `is_hidden` expressions
+            intermediate_context = {
+                "form": document.family.form,
+                "document": document.family,
+                "visible_questions": None,
+                "jexl_cache": defaultdict(dict),
+                "structure": structure.FieldSet(document.family, document.family.form),
+            }
+
+            return intermediate_context
+
+        options = qs if qs else question.options.all()
+
+        # short circuit if none of the options has an `is_hidden`-jexl
+        if not options.exclude(
+            Q(is_hidden="false") | Q(is_hidden__isnull=True)
+        ).exists():
+            return [o.slug for o in options]
+
+        validation_context = validation_context or _validation_context(document)
+
+        jexl = QuestionJexl(validation_context)
+        with jexl.use_field_context(
+            validation_context["structure"].get_field(question.slug)
+        ):
+            return [o.slug for o in options if not jexl.evaluate(o.is_hidden)]
+
+    def visible_options(self, document, question, qs):
+        return self._evaluate_options_jexl(document, question, qs=qs)
+
+    def _validate_question_choice(
+        self, question, value, validation_context, document, **kwargs
+    ):
+        options = self._evaluate_options_jexl(
+            document, question, validation_context=validation_context
+        )
+
         if not isinstance(value, str) or value not in options:
             raise CustomValidationError(
                 f"Invalid value {value}. "
@@ -96,8 +139,13 @@ class AnswerValidator:
                 slugs=[question.slug],
             )
 
-    def _validate_question_multiple_choice(self, question, value, **kwargs):
-        options = question.options.values_list("slug", flat=True)
+    def _validate_question_multiple_choice(
+        self, question, value, validation_context, document, **kwargs
+    ):
+        options = self._evaluate_options_jexl(
+            document, question, validation_context=validation_context
+        )
+
         invalid_options = set(value) - set(options)
         if not isinstance(value, list) or invalid_options:
             raise CustomValidationError(
@@ -220,7 +268,22 @@ class AnswerValidator:
         if value in EMPTY_VALUES:
             return
 
-        validate_func = getattr(self, f"_validate_question_{question.type}")
+        validate_mapping = {
+            "text": self._validate_question_text,
+            "textarea": self._validate_question_textarea,
+            "float": self._validate_question_float,
+            "integer": self._validate_question_integer,
+            "date": self._validate_question_date,
+            "choice": self._validate_question_choice,
+            "multiple_choice": self._validate_question_multiple_choice,
+            "dynamic_choice": self._validate_question_dynamic_choice,
+            "dynamic_multiple_choice": self._validate_question_dynamic_multiple_choice,
+            "table": self._validate_question_table,
+            "files": self._validate_question_files,
+            "calculated_float": self._validate_question_calculated_float,
+        }
+
+        validate_func = validate_mapping[question.type]
         validate_func(
             question,
             value,

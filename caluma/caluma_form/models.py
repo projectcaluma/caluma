@@ -285,6 +285,7 @@ class QuestionOption(core_models.NaturalKeyModel):
 
 class Option(core_models.SlugModel):
     label = LocalizedField(blank=False, null=False, required=False)
+    is_hidden = models.TextField(default="false")
     is_archived = models.BooleanField(default=False)
     meta = models.JSONField(default=dict)
     source = models.ForeignKey(
