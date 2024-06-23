@@ -819,6 +819,8 @@
   
     """The ID of the object"""
     id: ID!
+    minDate: Date
+    maxDate: Date
   }
   
   """
@@ -2395,6 +2397,8 @@
     meta: JSONString
     isArchived: Boolean
     hintText: String
+    minDate: Date
+    maxDate: Date
     clientMutationId: String
   }
   

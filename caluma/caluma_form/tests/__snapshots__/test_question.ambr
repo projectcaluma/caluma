@@ -524,6 +524,120 @@
     }),
   })
 # ---
+# name: test_save_date_question[False-date-2022-01-31-2022-12-31-True]
+  dict({
+    'saveDateQuestion': dict({
+      'clientMutationId': 'testid',
+      'question': dict({
+        '__typename': 'DateQuestion',
+        'defaultAnswer': None,
+        'hintText': '',
+        'id': 'RGF0ZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+        'label': 'Bonnie Moreno',
+        'maxDate': '2022-12-31',
+        'meta': dict({
+        }),
+        'minDate': '2022-01-31',
+        'slug': 'environmental-ten',
+      }),
+    }),
+  })
+# ---
+# name: test_save_date_question[False-date-2022-01-31-None-True]
+  dict({
+    'saveDateQuestion': dict({
+      'clientMutationId': 'testid',
+      'question': dict({
+        '__typename': 'DateQuestion',
+        'defaultAnswer': None,
+        'hintText': '',
+        'id': 'RGF0ZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+        'label': 'Bonnie Moreno',
+        'maxDate': None,
+        'meta': dict({
+        }),
+        'minDate': '2022-01-31',
+        'slug': 'environmental-ten',
+      }),
+    }),
+  })
+# ---
+# name: test_save_date_question[False-date-None-2022-12-31-True]
+  dict({
+    'saveDateQuestion': dict({
+      'clientMutationId': 'testid',
+      'question': dict({
+        '__typename': 'DateQuestion',
+        'defaultAnswer': None,
+        'hintText': '',
+        'id': 'RGF0ZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+        'label': 'Bonnie Moreno',
+        'maxDate': '2022-12-31',
+        'meta': dict({
+        }),
+        'minDate': None,
+        'slug': 'environmental-ten',
+      }),
+    }),
+  })
+# ---
+# name: test_save_date_question[True-date-2022-01-31-2022-12-31-True]
+  dict({
+    'saveDateQuestion': dict({
+      'clientMutationId': 'testid',
+      'question': dict({
+        '__typename': 'DateQuestion',
+        'defaultAnswer': None,
+        'hintText': '',
+        'id': 'RGF0ZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+        'label': 'Bonnie Moreno',
+        'maxDate': '2022-12-31',
+        'meta': dict({
+        }),
+        'minDate': '2022-01-31',
+        'slug': 'environmental-ten',
+      }),
+    }),
+  })
+# ---
+# name: test_save_date_question[True-date-2022-01-31-None-True]
+  dict({
+    'saveDateQuestion': dict({
+      'clientMutationId': 'testid',
+      'question': dict({
+        '__typename': 'DateQuestion',
+        'defaultAnswer': None,
+        'hintText': '',
+        'id': 'RGF0ZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+        'label': 'Bonnie Moreno',
+        'maxDate': None,
+        'meta': dict({
+        }),
+        'minDate': '2022-01-31',
+        'slug': 'environmental-ten',
+      }),
+    }),
+  })
+# ---
+# name: test_save_date_question[True-date-None-2022-12-31-True]
+  dict({
+    'saveDateQuestion': dict({
+      'clientMutationId': 'testid',
+      'question': dict({
+        '__typename': 'DateQuestion',
+        'defaultAnswer': None,
+        'hintText': '',
+        'id': 'RGF0ZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+        'label': 'Bonnie Moreno',
+        'maxDate': '2022-12-31',
+        'meta': dict({
+        }),
+        'minDate': None,
+        'slug': 'environmental-ten',
+      }),
+    }),
+  })
+# ---
 # name: test_save_dynamic_choice_question[dynamic_choice-False]
   dict({
     'saveDynamicChoiceQuestion': dict({
