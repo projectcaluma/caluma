@@ -1,3 +1,18 @@
+# v10.3.0 (15 July 2024)
+### Feature
+
+* feat: allow calculated fields to depend on other calculated fields ([`92a8c1b`](https://github.com/projectcaluma/caluma/commit/92a8c1bd4734673cd2b37ac86236c2e6cc3ca5e8))
+
+* feat(options): implement is_hidden jexl on options
+
+    This commit adds an `is_hidden` jexl to Options. This will be evaluated
+    and enforced on saving of answers. Addiotionally, the Options got a new
+    filter `visible_in_document`. ([`38ca1c4`](https://github.com/projectcaluma/caluma/commit/38ca1c4570a02bc3086b9897eff19956cf46c3ec))
+
+### Fix
+
+* fix(docker): install dependencies as caluma user ([`9623107`](https://github.com/projectcaluma/caluma/commit/962310774681c32845fb8c17b4eeadbdc686ae0d))
+
 # v10.2.0 (21 May 2024)
 ### Feature
 
@@ -5,8 +20,8 @@
 
 * feat(jexl): add main_case_form to info object
 
-This is convenient when you&#39;d like to write a JEXL expression in a task
-form attached to some work item, that depends on the main case&#39;s form. ([`bcb9136`](https://github.com/projectcaluma/caluma/commit/bcb913668e2454ca0dd0c8990eba310efef32b96))
+    This is convenient when you&#39;d like to write a JEXL expression in a task
+    form attached to some work item, that depends on the main case&#39;s form. ([`bcb9136`](https://github.com/projectcaluma/caluma/commit/bcb913668e2454ca0dd0c8990eba310efef32b96))
 
 ### Fix
 
