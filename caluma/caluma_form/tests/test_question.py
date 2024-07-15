@@ -1,4 +1,5 @@
 import pytest
+from graphql_relay import to_global_id
 
 from caluma.caluma_core.relay import extract_global_id
 from caluma.caluma_core.tests import (
@@ -1064,51 +1065,48 @@ def test_nested_calculated_question(
         assert questions[dep].calc_dependents == ["calc"]
 
 
-@pytest.mark.parametrize("question__slug", ["simple-question"])
-@pytest.mark.parametrize(
-    "calc_expression,has_error",
-    [
-        ("1.0", False),
-        ("'simple-question'|answer", False),
-        ("'other-calc-question'|answer + 10", True),
-    ],
-)
 def test_recursive_calculated_question(
-    db, schema_executor, form_question, question_factory, calc_expression, has_error
+    db, schema_executor, form, form_question_factory, question_factory, document_factory
 ):
-    form = form_question.form
-
-    other_q = question_factory(
-        slug="other-calc-question",
-        type=models.Question.TYPE_CALCULATED_FLOAT,
-        calc_expression="0.0",
+    base = question_factory(
+        slug="base",
+        type=models.Question.TYPE_INTEGER,
     )
-    form.questions.add(other_q)
+    calc_1 = question_factory(
+        slug="calc-1",
+        type=models.Question.TYPE_CALCULATED_FLOAT,
+        calc_expression='"base"|answer(0) + 1',
+    )
+    calc_2 = question_factory(
+        slug="calc-2",
+        type=models.Question.TYPE_CALCULATED_FLOAT,
+        calc_expression='"calc-1"|answer(0) * 2',
+    )
+    form_question_factory(form=form, question=base)
+    form_question_factory(form=form, question=calc_1)
+    form_question_factory(form=form, question=calc_2)
 
+    document = document_factory(form=form)
     query = """
-        mutation SaveCalculatedQuestion($input: SaveCalculatedFloatQuestionInput!) {
-          saveCalculatedFloatQuestion (input: $input) {
-            question {
-              slug
-             __typename
-             ... on CalculatedFloatQuestion {
-               calcExpression
-             }
-            }
+        mutation saveDocumentIntegerAnswer($input: SaveDocumentIntegerAnswerInput!) {
+          saveDocumentIntegerAnswer(input: $input) {
+            clientMutationId
           }
         }
     """
 
-    inp = {
+    variables = {
         "input": {
-            "slug": "calc-question",
-            "label": "Calculated Float Question",
-            "calcExpression": calc_expression,
+            "document": to_global_id("Document", document.pk),
+            "question": to_global_id("Question", base.pk),
+            "value": 3,
         }
     }
-    result = schema_executor(query, variable_values=inp)
 
-    assert has_error == bool(result.errors)
+    schema_executor(query, variable_values=variables)
+
+    calc_ans = document.answers.get(question_id="calc-2")
+    assert calc_ans.value == 8
 
 
 def test_calculated_question_update_calc_expr(

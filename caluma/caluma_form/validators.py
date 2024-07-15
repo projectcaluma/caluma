@@ -501,19 +501,14 @@ class QuestionValidator:
         question_jexl = jexl.QuestionJexl()
         deps = set(question_jexl.extract_referenced_questions(expr))
 
-        calc_slugs = set(
-            models.Question.objects.filter(
-                pk__in=deps, type=models.Question.TYPE_CALCULATED_FLOAT
-            ).values_list("slug", flat=True)
-        )
         inexistent_slugs = deps - set(
             models.Question.objects.filter(pk__in=deps).values_list("slug", flat=True)
         )
-        illegal_deps = ", ".join(calc_slugs.union(inexistent_slugs))
+        illegal_deps = ", ".join(inexistent_slugs)
 
-        if illegal_deps:
+        if illegal_deps:  # pragma: no cover
             raise exceptions.ValidationError(
-                f"Calc expression references other calculated or inexistent questions: {illegal_deps}"
+                f"Calc expression references inexistent questions: {illegal_deps}"
             )
 
     def validate(self, data):
