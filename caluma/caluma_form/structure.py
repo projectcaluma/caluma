@@ -162,19 +162,14 @@ class FieldSet(Element):
             self._case = None
             return self._case
 
-        if hasattr(case, "parent_work_item"):
-            root = case.parent_work_item.case.family
-            root_info = {
-                "form": root.document.form.slug,
-                "workflow": root.workflow.slug,
-            }
-        else:
-            root_info = None
-
+        root = case.family
         self._case = {
             "form": case.document.form.slug,
             "workflow": case.workflow.slug,
-            "root": root_info,
+            "root": {
+                "form": root.document.form.slug,
+                "workflow": root.workflow.slug,
+            },
         }
         return self._case
 
