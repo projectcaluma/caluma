@@ -77,7 +77,7 @@ def test_mutation_mutate_and_get_payload_without_model(info):
             serializer_class = MySerializer
 
     result = NoModelMutation.mutate_and_get_payload(None, info, name="test")
-    assert type(result) == NoModelMutation
+    assert type(result) is NoModelMutation
 
 
 def test_mutation_mutate_and_get_payload_without_permission(db, info):

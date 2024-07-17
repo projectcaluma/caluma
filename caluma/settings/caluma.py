@@ -6,7 +6,6 @@ by the main caluma settings and is intended to also be used by third party
 applications integrating Caluma.
 """
 
-
 import os
 
 import environ

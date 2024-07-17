@@ -39,7 +39,7 @@ requests = "^2.31.0"
 urllib3 = ">=1.26.8,<3.0.0"
 uWSGI = "^2.0.20"
 graphql-core = "~3.1.7"
-psycopg = {extras = ["binary"], version = "^3.1.17"}
+psycopg = { extras = ["binary"], version = "^3.1.17" }
 psycopg-binary = "^3.1.17"
 
 [tool.poetry.group.dev.dependencies]
@@ -66,7 +66,7 @@ python-semantic-release = "8.7.0"
 requests-mock = "1.12.1"
 reuse = "4.0.3"
 syrupy = "4.6.1"
-ruff = ">=0.1.15,<0.3.0"
+ruff = "0.5.2"
 
 
 [tool.isort]
@@ -94,21 +94,20 @@ env = [
 filterwarnings = [
     "error::DeprecationWarning",
     "error::PendingDeprecationWarning",
-    "ignore::requests.packages.urllib3.exceptions.InsecureRequestWarning",             # MinIO tests do "insecure" requests - that's ok
+    "ignore::requests.packages.urllib3.exceptions.InsecureRequestWarning", # MinIO tests do "insecure" requests - that's ok
     # warning in python 3.12 about deprecation coming in 3.14. issue is with graphene
     "ignore:.*typing.ByteString.*deprecated and slated for removal in Python 3.14",
     "ignore:The 'arrayconnection' module is deprecated:DeprecationWarning",            # deprecation in graphene
-    "ignore:'cgi' is deprecated:DeprecationWarning",
+    #"ignore:'cgi' is deprecated:DeprecationWarning",
     "ignore:'django_extensions' defines default_app_config:PendingDeprecationWarning", # deprecation in django_extensions
-    "ignore:invalid escape sequence",                                    # django-localized-fields
+    "ignore:invalid escape sequence",                                                  # django-localized-fields
 ]
 
 [tool.ruff]
-exclude = [
-    "migrations",
-    "snapshots",
-    ".venv",
-]
+exclude = ["migrations", "snapshots", ".venv"]
+line-length = 88
+
+[tool.ruff.lint]
 ignore = [
     "D100",
     "D101",
@@ -126,17 +125,9 @@ ignore = [
     "D406", # Section name should end with a newline
     "D203", # one-blank-line-before-class (docstring)
 ]
-line-length = 88
-select = [
-    "C9",
-    "D",
-    "E",
-    "F",
-    "W",
-    "I",
-]
+select = ["C9", "D", "E", "F", "W", "I"]
 
-[tool.ruff.mccabe]
+[tool.ruff.lint.mccabe]
 max-complexity = 11
 
 [tool.ruff.lint.isort]

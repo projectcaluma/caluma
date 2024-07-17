@@ -48,7 +48,7 @@ def test_migrate_rename_form_slugs(post_migrate_to_current_state):
         # `form_id` data source anymore.
         runner.get_records()
     assert exc_info.value.args == ("form_id",)
-    assert type(exc_info.value) == KeyError
+    assert type(exc_info.value) is KeyError
 
     # Migrate forwards.
     executor.loader.build_graph()  # reload.
