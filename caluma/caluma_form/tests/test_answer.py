@@ -287,7 +287,7 @@ def test_delete_question_with_default(db, question, answer):
     with pytest.raises(models.Answer.DoesNotExist):
         answer.refresh_from_db()
 
-    assert models.Answer.history.count() == 3
+    assert models.Answer.history.count() == 2
     assert all(
         h.history_question_type == question.type for h in models.Answer.history.all()
     )

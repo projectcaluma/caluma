@@ -196,9 +196,11 @@ class AnswerFactory(DjangoModelFactory):
                 self.files.set(
                     FileFactory.create_batch(num_files, **kwargs, answer=self)
                 )
+            self.save()
 
     class Meta:
         model = models.Answer
+        skip_postgeneration_save = True
 
     class Params:
         is_date = LazyAttribute(lambda a: a.question.type == models.Question.TYPE_DATE)

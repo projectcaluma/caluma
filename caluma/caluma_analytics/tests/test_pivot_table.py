@@ -104,5 +104,5 @@ def test_run_analytics_gql(
             "status": "0",
             "last_created": "0",
             "quarter": "0",
-            "sub_question_sumsumsum": "17085.0",
+            "sub_question_sumsumsum": "17448.0",
         }
