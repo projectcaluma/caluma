@@ -18,7 +18,10 @@ updates:
     ignore:
       - dependency-name: django
         versions:
-          - ">=4"
+          - ">4"
+      - dependency-name: python-semantic-release
+        versions:
+          - ">8"
   - package-ecosystem: docker
     directory: "/"
     schedule:

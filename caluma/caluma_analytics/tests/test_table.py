@@ -218,13 +218,13 @@ def test_validate_function(
         (
             "meta.foobar",
             "foobar",
-            'duplicate key value violates unique constraint "unique_data_source"',
+            "must make a unique set",
             "dataSource",
         ),
         (
             "meta.foobar",
             "existing",
-            'duplicate key value violates unique constraint "unique_alias"',
+            "must make a unique set",
             "alias",
         ),
         (
