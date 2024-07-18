@@ -469,13 +469,13 @@ langdetect = ["langdetect"]
 
 [[package]]
 name = "deprecation"
-version = "2.0.7"
+version = "2.1.0"
 description = "A library to handle automated deprecations"
 optional = false
 python-versions = "*"
 files = [
-    {file = "deprecation-2.0.7-py2.py3-none-any.whl", hash = "sha256:dc9b4f252b7aca8165ce2764a71da92a653b5ffbf7a389461d7a640f6536ecb2"},
-    {file = "deprecation-2.0.7.tar.gz", hash = "sha256:c0392f676a6146f0238db5744d73e786a43510d54033f80994ef2f4c9df192ed"},
+    {file = "deprecation-2.1.0-py2.py3-none-any.whl", hash = "sha256:a10811591210e1fb0e768a8c25517cabeabcba6f0bf96564f8ff45189f90b14a"},
+    {file = "deprecation-2.1.0.tar.gz", hash = "sha256:72b3bde64e5d778694b0cf68178aed03d15e15477116add3fb773e581f9518ff"},
 ]
 
 [package.dependencies]
@@ -573,23 +573,23 @@ Django = ">=4.2"
 
 [[package]]
 name = "django-localized-fields"
-version = "6.7"
+version = "6.8b5"
 description = "Implementation of localized model fields using PostgreSQL HStore fields."
 optional = false
 python-versions = ">=3.6"
 files = [
-    {file = "django_localized_fields-6.7-py3-none-any.whl", hash = "sha256:21ffd76d15d2b9b557b13839290ea00be03bc16bcaa4ffdbff5a5d74b81d26de"},
+    {file = "django_localized_fields-6.8b5-py3-none-any.whl", hash = "sha256:f14bad895203b91f5443b18fc8e1f5649c144125d9390296ebdc732ebe7d6f39"},
 ]
 
 [package.dependencies]
-deprecation = "2.0.7"
+deprecation = ">=2.0.7"
 Django = ">=2.0"
 django-postgres-extra = ">=2.0,<3.0"
 
 [package.extras]
-analysis = ["autoflake (==1.3)", "autopep8 (==1.4.4)", "black (==22.3.0)", "flake8 (==3.7.7)", "isort (==4.3.20)", "sl-docformatter (==1.4)"]
+analysis = ["autoflake (==1.3)", "autopep8 (==1.4.4)", "black (==22.3.0)", "click (==8.0.2)", "flake8 (==3.7.7)", "isort (==4.3.20)", "sl-docformatter (==1.4)"]
 docs = ["Sphinx (==2.2.0)", "sphinx-rtd-theme (==0.4.3)"]
-test = ["dj-database-url (==0.5.0)", "django-autoslug (==1.9.6)", "django-bleach (==0.6.1)", "psycopg2 (==2.8.4)", "pytest (==5.3.2)", "pytest-cov (==2.8.1)", "pytest-django (==3.7.0)", "tox (==3.14.3)"]
+test = ["dj-database-url (==0.5.0)", "django-autoslug (==1.9.9)", "django-bleach (==0.9.0)", "psycopg2 (==2.9.8)", "pytest (==7.0.1)", "pytest-cov (==2.12.1)", "pytest-django (==4.5.2)", "tox (==3.28.0)"]
 
 [[package]]
 name = "django-postgres-extra"
@@ -1898,7 +1898,6 @@ files = [
     {file = "PyYAML-6.0.1-cp311-cp311-win_amd64.whl", hash = "sha256:bf07ee2fef7014951eeb99f56f39c9bb4af143d8aa3c21b1677805985307da34"},
     {file = "PyYAML-6.0.1-cp312-cp312-macosx_10_9_x86_64.whl", hash = "sha256:855fb52b0dc35af121542a76b9a84f8d1cd886ea97c84703eaa6d88e37a2ad28"},
     {file = "PyYAML-6.0.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:40df9b996c2b73138957fe23a16a4f0ba614f4c0efce1e9406a184b6d07fa3a9"},
-    {file = "PyYAML-6.0.1-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:a08c6f0fe150303c1c6b71ebcd7213c2858041a7e01975da3a99aed1e7a378ef"},
     {file = "PyYAML-6.0.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6c22bec3fbe2524cde73d7ada88f6566758a8f7227bfbf93a408a9d86bcc12a0"},
     {file = "PyYAML-6.0.1-cp312-cp312-musllinux_1_1_x86_64.whl", hash = "sha256:8d4e9c88387b0f5c7d5f281e55304de64cf7f9c0021a3525bd3b1c542da3b0e4"},
     {file = "PyYAML-6.0.1-cp312-cp312-win32.whl", hash = "sha256:d483d2cdf104e7c9fa60c544d92981f12ad66a457afae824d146093b8c294c54"},
@@ -2386,4 +2385,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.9.13"
-content-hash = "de0a51dd5fb93fa71878aff004db1d812ed3146ab6ad8bf19435cfc1fbfa4090"
+content-hash = "e6f71079bc2033a2e80d7046eaaad2cd0e543c3456a67058d3981788c35b3bce"
