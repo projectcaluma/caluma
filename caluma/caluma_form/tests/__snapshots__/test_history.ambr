@@ -73,7 +73,7 @@
                     'edges': list([
                       dict({
                         'node': dict({
-                          'historyType': '~',
+                          'historyType': '+',
                           'value': 'first row value',
                         }),
                       }),
@@ -85,7 +85,7 @@
                     'edges': list([
                       dict({
                         'node': dict({
-                          'historyType': '~',
+                          'historyType': '+',
                           'value': 'second row value',
                         }),
                       }),
@@ -110,7 +110,7 @@
                     'edges': list([
                       dict({
                         'node': dict({
-                          'historyType': '~',
+                          'historyType': '+',
                           'value': 'first row value',
                         }),
                       }),

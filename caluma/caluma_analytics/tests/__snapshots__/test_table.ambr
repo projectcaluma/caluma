@@ -109,12 +109,12 @@
     }),
   })
 # ---
-# name: test_add_field_validations[meta.foobar-existing-duplicate key value violates unique constraint "unique_alias"-alias]
+# name: test_add_field_validations[meta.foobar-existing-must make a unique set-alias]
   dict({
     'saveAnalyticsField': None,
   })
 # ---
-# name: test_add_field_validations[meta.foobar-foobar-duplicate key value violates unique constraint "unique_data_source"-dataSource]
+# name: test_add_field_validations[meta.foobar-foobar-must make a unique set-dataSource]
   dict({
     'saveAnalyticsField': None,
   })
