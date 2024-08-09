@@ -1,3 +1,10 @@
+# v10.3.1 (9 August 2024)
+### Fix
+
+* **deps:** Update dependencies ([`322dc23`](https://github.com/anehx/caluma/commit/322dc23853ebfd4c7f2039523da3c268cb623d49))
+* **jexl:** Always add root info ([`7b154f8`](https://github.com/anehx/caluma/commit/7b154f82bc9525548a2203d1a8cd022fca026fbc))
+* **code of conduct:** Contact mail address ([`29aaf2e`](https://github.com/anehx/caluma/commit/29aaf2e725f726140330be766d8ebc4e054e82af))
+
 # v10.3.0 (15 July 2024)
 ### Feature
 
