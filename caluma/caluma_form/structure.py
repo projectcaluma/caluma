@@ -1,4 +1,5 @@
 """Hierarchical representation of a document / form."""
+
 import weakref
 from functools import singledispatch
 from typing import List, Optional

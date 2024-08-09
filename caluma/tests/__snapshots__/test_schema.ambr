@@ -3612,6 +3612,5 @@
     attribute: SortableWorkflowAttributes
     direction: AscDesc
   }
-  
   '''
 # ---
