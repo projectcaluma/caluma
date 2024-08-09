@@ -18,7 +18,7 @@ updates:
     ignore:
       - dependency-name: django
         versions:
-          - ">=4"
+          - ">=5"
   - package-ecosystem: docker
     directory: "/"
     schedule:
@@ -30,4 +30,4 @@ updates:
     ignore:
       - dependency-name: python
         versions:
-          - ">3.8"
+          - ">3.12"
