@@ -2755,6 +2755,7 @@
     slug: String!
     label: String!
     isArchived: Boolean
+    isHidden: String
     meta: JSONString
     clientMutationId: String
   }
