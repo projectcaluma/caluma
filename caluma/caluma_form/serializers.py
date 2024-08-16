@@ -491,7 +491,7 @@ class SaveActionButtonQuestionSerializer(SaveQuestionSerializer):
 
 class SaveOptionSerializer(serializers.ModelSerializer):
     class Meta:
-        fields = ["slug", "label", "is_archived", "meta"]
+        fields = ["slug", "label", "is_archived", "is_hidden", "meta"]
         model = models.Option
 
 
