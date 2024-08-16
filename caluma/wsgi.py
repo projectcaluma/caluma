@@ -1,5 +1,5 @@
 """
-WSGI config for project_app2 project.
+WSGI config for caluma project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
