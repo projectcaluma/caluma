@@ -194,6 +194,13 @@ def test_intersects_operator(expression, result):
             ["some-value", "some-other-value"],
         ),
         ("null|flatten", None),
+        # count
+        ("['test1', 'test2']|length", 2),
+        ("{key: 1}|length", 1),
+        ("'foobar'|length", 6),
+        ("1|length", None),
+        ("1.1|length", None),
+        ("null|length", None),
     ],
 )
 def test_simple_transforms(expression, result):
