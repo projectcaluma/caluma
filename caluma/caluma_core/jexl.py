@@ -75,6 +75,7 @@ class JEXL(pyjexl.JEXL):
         self.add_transform("mapby", self._mapby_transform)
         self.add_transform("stringify", lambda obj: json.dumps(obj))
         self.add_transform("flatten", self._flatten_transform)
+        self.add_transform("length", self._length_transform)
         self.add_binary_operator(
             "intersects", 20, lambda left, right: any(x in right for x in left)
         )
@@ -158,6 +159,12 @@ class JEXL(pyjexl.JEXL):
             return None
 
         return list(chain(*arr))
+
+    def _length_transform(self, value, *options):
+        try:
+            return len(value)
+        except TypeError:
+            return None
 
     def evaluate(self, expression, context=None):
         self._expr_stack.append(expression)
