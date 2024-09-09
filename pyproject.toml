@@ -66,7 +66,7 @@ python-semantic-release = "7.34.6"
 requests-mock = "1.12.1"
 reuse = "4.0.3"
 ruff = "0.6.4"
-syrupy = "4.6.1"
+syrupy = "4.7.1"
 
 
 [tool.isort]
