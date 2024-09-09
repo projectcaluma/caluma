@@ -48,7 +48,7 @@ urllib3 = ">=1.26.8,<3.0.0"
 # linters & formatters
 django-extensions = "3.2.3"
 factory-boy = "3.3.1"
-Faker = "26.3.0"
+Faker = "28.4.1"
 gitlint = "0.19.1"
 pdbpp = "0.10.3"
 pre-commit = "3.8.0"
