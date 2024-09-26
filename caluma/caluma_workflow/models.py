@@ -295,7 +295,9 @@ class WorkItem(UUIDModel):
 
     class Meta:
         indexes = [
+            models.Index(fields=["status"]),
             GinIndex(fields=["addressed_groups"]),
+            GinIndex(fields=["controlling_groups"]),
             GinIndex(fields=["assigned_users"]),
             GinIndex(fields=["meta"]),
         ]
