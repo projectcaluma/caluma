@@ -1,3 +1,14 @@
+# v10.4.0 (26 September 2024)
+### Feature
+
+* **jexl:** Add length transform ([`b4fbd99`](https://github.com/projectcaluma/caluma/commit/b4fbd997b866f82b3b65bcc0fb6e1237ca69e0df))
+
+### Fix
+
+* **form:** Speed up copying of documents ([`fac7a98`](https://github.com/projectcaluma/caluma/commit/fac7a986de97cd8fb1a7d1f8444df8c83afeab3a))
+* Add missing "is_hidden" to SaveOptionSerializer ([`ab63598`](https://github.com/projectcaluma/caluma/commit/ab63598d1051739eb3989d48d446e61e8d19568b))
+
+
 # v10.3.1 (9 August 2024)
 ### Fix
 
