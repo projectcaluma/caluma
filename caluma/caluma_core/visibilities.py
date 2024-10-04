@@ -37,7 +37,17 @@ class BaseVisibility(object):
     ...     @filter_queryset_for(Form)
     ...     def filter_queryset_for_form(self, node, queryset, info):
     ...         return queryset.exclude(slug='protected-form')
+    ...
+    ...     # Do not trigger visibility when looking up case from workitem
+    ...     suppress_visibilities = [
+    ...         "WorkItem.case",
+    ...         "WorkItem.child_case",
+    ...     ]
     """
+
+    # Used by the @suppressable_visibility decorator to store
+    # the *allowed* values for the `suppress_visibilities` property
+    _suppressable_visibilities = set()
 
     def __init__(self):
         queryset_fns = inspect.getmembers(self, lambda m: hasattr(m, "_visibilities"))
@@ -56,12 +66,29 @@ class BaseVisibility(object):
             node: fn for _, fn in queryset_fns for node in fn._visibilities
         }
 
+        self._validate_suppress_visibility()
+
+    def _validate_suppress_visibility(self):
+        requested_suppressors = set(self.suppress_visibilities)
+        available_suppressors = type(self)._suppressable_visibilities
+
+        invalid = requested_suppressors - available_suppressors
+        if invalid:  # pragma: no cover
+            invalid_str_list = ", ".join(f"`{x}`" for x in (sorted(invalid)))
+            raise ImproperlyConfigured(
+                f"`{type(self).__name__}` contains invalid `suppress_visibilities`: "
+                f"{invalid_str_list}"
+            )
+
     def filter_queryset(self, node, queryset, info):
         for cls in node.mro():
             if cls in self._filter_querysets_for:
                 return self._filter_querysets_for[cls](node, queryset, info)
 
         return queryset
+
+    # Default: suppress no visibilities
+    suppress_visibilities = []
 
 
 class Any(BaseVisibility):

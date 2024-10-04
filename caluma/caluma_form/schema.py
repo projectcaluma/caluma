@@ -4,6 +4,8 @@ from graphene import relay
 from graphene.types import ObjectType, generic
 from graphene_django.rest_framework import serializer_converter
 
+from caluma.utils import suppressable_visibility_resolver
+
 from ..caluma_core.filters import (
     CollectionFilterSetFactory,
     DjangoFilterConnectionField,
@@ -147,6 +149,8 @@ class Question(Node, graphene.Interface):
     )
     source = graphene.Field("caluma.caluma_form.schema.Question")
 
+    resolve_source = suppressable_visibility_resolver()
+
     @classmethod
     def get_queryset(cls, queryset, info):
         queryset = super().get_queryset(queryset, info)
@@ -165,6 +169,8 @@ class Question(Node, graphene.Interface):
 
 class Option(FormDjangoObjectType):
     meta = generic.GenericScalar()
+
+    resolve_source = suppressable_visibility_resolver()
 
     class Meta:
         model = models.Option
@@ -638,6 +644,8 @@ class Form(FormDjangoObjectType):
     )
     meta = generic.GenericScalar()
 
+    resolve_source = suppressable_visibility_resolver()
+
     class Meta:
         model = models.Form
         interfaces = (relay.Node,)
@@ -809,6 +817,8 @@ class Answer(Node, graphene.Interface):
     question = graphene.Field(Question, required=True)
     meta = generic.GenericScalar(required=True)
 
+    resolve_question = suppressable_visibility_resolver()
+
     @classmethod
     def resolve_type(cls, instance, info):
         return resolve_answer(instance)
@@ -910,6 +920,11 @@ class Document(FormDjangoObjectType):
     modified_content_at = graphene.DateTime()
     modified_content_by_user = graphene.String()
     modified_content_by_group = graphene.String()
+
+    resolve_form = suppressable_visibility_resolver()
+    resolve_case = suppressable_visibility_resolver()
+    resolve_source = suppressable_visibility_resolver()
+    resolve_work_item = suppressable_visibility_resolver()
 
     class Meta:
         model = models.Document

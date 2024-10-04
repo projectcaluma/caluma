@@ -6,6 +6,8 @@ from graphene import relay
 from graphene.types import generic
 from graphene_django.rest_framework import serializer_converter
 
+from caluma.utils import suppressable_visibility_resolver
+
 from ..caluma_core.filters import (
     CollectionFilterSetFactory,
     DjangoFilterConnectionField,
@@ -98,6 +100,7 @@ class Task(Node, graphene.Interface):
 
         return TASK_TYPE[instance.type]
 
+    resolve_form = suppressable_visibility_resolver()
     Meta = InterfaceMetaFactory()
 
 
@@ -206,6 +209,12 @@ class WorkItem(DjangoObjectType):
         )
     )
 
+    resolve_case = suppressable_visibility_resolver()
+    resolve_child_case = suppressable_visibility_resolver()
+    resolve_task = suppressable_visibility_resolver()
+    resolve_document = suppressable_visibility_resolver()
+    resolve_previous_work_item = suppressable_visibility_resolver()
+
     def resolve_is_redoable(self, *args, **kwargs):
         return (
             self.status != models.WorkItem.STATUS_READY
@@ -236,6 +245,14 @@ class Case(DjangoObjectType):
     )
     meta = generic.GenericScalar()
     status = CaseStatus(required=True)
+
+    resolve_document = suppressable_visibility_resolver()
+
+    resolve_parent_work_item = suppressable_visibility_resolver()
+
+    resolve_family = suppressable_visibility_resolver()
+
+    resolve_workflow = suppressable_visibility_resolver()
 
     def resolve_family_work_items(self, info, **args):
         return models.WorkItem.objects.filter(case__family=self.family)
