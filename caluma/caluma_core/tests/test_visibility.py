@@ -2,6 +2,8 @@ import pytest
 from django.core.exceptions import ImproperlyConfigured
 from django.db.models import CharField, QuerySet
 
+from caluma.caluma_form.schema import Question
+
 from .. import models
 from ..types import DjangoObjectType, Node
 from ..visibilities import BaseVisibility, Union, filter_queryset_for
@@ -252,3 +254,67 @@ def test_custom_visibility_chained_decorators(db, history_mock):
     assert queryset.count() == 1
     queryset = CustomVisibility().filter_queryset(CustomNode2, FakeModel2.objects, None)
     assert queryset.count() == 1
+
+
+@pytest.mark.xfail(
+    reason="Didn't find a way to actually test the visibility aware resolver"
+)
+@pytest.mark.parametrize("suppress, expect_calls", [(True, False), (False, True)])
+def test_suppress_visibility(
+    db,
+    history_mock,
+    mocker,
+    suppress,
+    expect_calls,
+    answer_factory,
+    question_factory,
+    schema_executor,
+):  # pragma: no cover
+    class CustomVisibility(BaseVisibility):
+        was_called = False
+
+        @filter_queryset_for(Question)
+        def filter_queryset_for_custom_node(self, node, queryset, info):
+            CustomVisibility.was_called = True
+            # only care about being called, not actual filtering
+            return queryset.all()
+
+        @property
+        def suppress_visibilities(self):
+            return ["Answer.question"] if suppress else []
+
+    mocker.patch("caluma.caluma_core.types.Node.visibility_classes", [CustomVisibility])
+
+    # Just so we have something to fetch (document and
+    # question created implicitly)
+    answer_factory(question__type="integer")
+
+    # This should trigger the `question` resolver on the answer, which
+    # we test the suppressor on
+    res = schema_executor(
+        """
+        query foo {
+            allDocuments {
+                edges {
+                    node {
+                       answers {
+                           edges {
+                               node {
+                                   id
+                                   ... on IntegerAnswer {
+                                       question {
+                                           slug
+                                       }
+                                   }
+                               }
+                           }
+                       }
+                    }
+                }
+           }
+       }
+        """
+    )
+    assert not res.errors
+
+    assert expect_calls == CustomVisibility.was_called

@@ -3,6 +3,8 @@ from logging import getLogger
 
 from django.db.models import Model
 
+from caluma.caluma_core.types import Node
+
 log = getLogger(__name__)
 
 
@@ -102,3 +104,78 @@ def disable_raw(signal_handler):  # pragma: no cover
         signal_handler(*args, **kwargs)
 
     return wrapper
+
+
+def suppressable_visibility_resolver():
+    """Make a resolver that can be suppressed in the visibility layer.
+
+    The visibility layer may cause additional load on the database, so
+    in cases where it's not needed, the visibility classes can choose to
+    skip filtering where it's not absolutely needed.
+
+    For example, if the visibility of a child case is always dependent
+    on the associated work item, you can disable enforcing visibility
+    on that relationship.
+
+    Example in the GraphQL schema:
+
+    >>> class Form(FormDjangoObjectType):
+    >>>     ...
+    >>>     resolve_child_case = suppressable_visibility_resolver()
+
+    Example in the visibility class:
+
+    >>> class MyCustomVisibility(BaseVisibility):
+    >>>     @filter_queryset_for(Case)
+    >>>     def filter_queryset_for_case(self, node, queryset, info):
+    >>>         # do the filtering as usual
+    >>>         ...
+    >>>     ...
+    >>>     suppress_visibilities = [
+    >>>         "WorkItem.child_case",
+    >>>         ...
+    >>>     ]
+
+    With the above setting, when looking up child cases from work items,
+    the visibility layer would not be run, and the child case would always
+    be shown (if the workitem can be shown, of course).
+
+    You may also define it as a `@property` on the visibility class. Note
+    however that it's initialized on app startup, you can't change it during
+    runtime and make suppression work in some cases and not in others.
+    """
+
+    # Avoid circular imports
+    from caluma.caluma_core.visibilities import BaseVisibility
+
+    # TODO: This is currently untested (as in unit test), because
+    # the checks are done at startup (where the schema is initialized)
+    # and we can't swap out the visibility class during test runs
+    # to validate the behavour as we'd usually do.
+    class SuppressableResolver:
+        def __call__(self, inner_self, *args, **kwargs):
+            return getattr(inner_self, self.prop)
+
+        @property
+        def _bypass_get_queryset(self):  # pragma: no cover
+            """Tell Graphene to bypass get_queryset()."""
+            # If any visibility class tells us to bypass the
+            # queryset of this property, we return True
+            return any(
+                self.qualname in vis_class().suppress_visibilities
+                for vis_class in Node.visibility_classes
+            )
+
+        def __repr__(self):  # pragma: no cover
+            return f"SuppressableResolver({self.qualname})"
+
+        def __set_name__(self, owner, name):
+            # Magic. This is called by Python after setting the attribute on
+            # the node class, and we use it to figure out which resolver we're
+            # building.
+            self.name = owner.__name__
+            self.prop = name.replace("resolve_", "")
+            self.qualname = f"{self.name}.{self.prop}"
+            BaseVisibility._suppressable_visibilities.add(self.qualname)
+
+    return SuppressableResolver()
