@@ -1,6 +1,7 @@
 import itertools
 
 import graphene
+from graphene_django import bypass_get_queryset
 from django.db.models import Q
 from graphene import relay
 from graphene.types import generic
@@ -206,6 +207,14 @@ class WorkItem(DjangoObjectType):
         )
     )
 
+    @bypass_get_queryset
+    def resolve_case(self, *args, **kwargs):
+        return getattr(self, "case", None)
+
+    @bypass_get_queryset
+    def resolve_child_case(self, *args, **kwargs):
+        return getattr(self, "child_case", None)
+
     def resolve_is_redoable(self, *args, **kwargs):
         return (
             self.status != models.WorkItem.STATUS_READY
@@ -236,6 +245,18 @@ class Case(DjangoObjectType):
     )
     meta = generic.GenericScalar()
     status = CaseStatus(required=True)
+
+    @bypass_get_queryset
+    def resolve_document(self, *args, **kwargs):
+        return getattr(self, "document", None)
+
+    @bypass_get_queryset
+    def resolve_parent_work_item(self, *args, **kwargs):
+        return getattr(self, "parent_work_item", None)
+
+    @bypass_get_queryset
+    def resolve_family(self, *args, **kwargs):
+        return getattr(self, "family", None)
 
     def resolve_family_work_items(self, info, **args):
         return models.WorkItem.objects.filter(case__family=self.family)
