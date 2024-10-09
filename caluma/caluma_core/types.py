@@ -6,11 +6,11 @@ from django.db.models.query import QuerySet
 from django.db.models.query_utils import DeferredAttribute
 from graphene.relay import PageInfo
 from graphene.relay.connection import ConnectionField
-from graphene_django import types
 from graphene_django.fields import DjangoConnectionField
 from graphene_django.rest_framework import serializer_converter
 from graphene_django.utils import maybe_queryset
 from graphql_relay import cursor_to_offset, get_offset_with_default, offset_to_cursor
+from query_optimizer import DjangoObjectType
 
 from .pagination import connection_from_array, connection_from_array_slice
 
@@ -76,7 +76,7 @@ class Node(object):
         return queryset.select_related()
 
 
-class DjangoObjectType(Node, types.DjangoObjectType):
+class DjangoObjectType(Node, DjangoObjectType):
     """Django object type implementing default get_queryset with visibility layer."""
 
     class Meta:

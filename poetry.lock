@@ -715,6 +715,17 @@ publish = ["build (==0.7.0)", "twine (==3.7.1)"]
 test = ["coveralls (==3.3.0)", "dj-database-url (==0.5.0)", "freezegun (==1.1.0)", "psycopg2 (>=2.8.4,<3.0.0)", "pytest (==6.2.5)", "pytest-benchmark (==3.4.1)", "pytest-cov (==3.0.0)", "pytest-django (==4.4.0)", "snapshottest (==0.6.0)", "tox (==3.24.4)"]
 
 [[package]]
+name = "django-settings-holder"
+version = "0.1.2"
+description = "Object that allows settings to be accessed with attributes."
+optional = false
+python-versions = ">=3.9,<4"
+files = [
+    {file = "django_settings_holder-0.1.2-py3-none-any.whl", hash = "sha256:7a65f888fc1e8427a807be72d43d5f3f242163e0a0eaf33a393592e6fff3e102"},
+    {file = "django_settings_holder-0.1.2.tar.gz", hash = "sha256:8ab0f2dabf5a1c79ec9e95e97a296808e0f2c48f6f9aa1da1b77b433ee1e2f9e"},
+]
+
+[[package]]
 name = "django-simple-history"
 version = "3.7.0"
 description = "Store model history and view/revert changes from admin site."
@@ -1012,6 +1023,25 @@ text-unidecode = "*"
 dev = ["coveralls", "django-filter (>=22.1)", "djangorestframework (>=3.6.3)", "mock", "pre-commit", "pytest (>=7.3.1)", "pytest-cov", "pytest-django (>=4.5.2)", "pytest-random-order", "pytz", "ruff (==0.1.2)"]
 rest-framework = ["djangorestframework (>=3.6.3)"]
 test = ["coveralls", "django-filter (>=22.1)", "djangorestframework (>=3.6.3)", "mock", "pytest (>=7.3.1)", "pytest-cov", "pytest-django (>=4.5.2)", "pytest-random-order", "pytz"]
+
+[[package]]
+name = "graphene-django-query-optimizer"
+version = "0.10.2"
+description = "Automatically optimize SQL queries in Graphene-Django schemas."
+optional = false
+python-versions = "<4,>=3.10"
+files = [
+    {file = "graphene_django_query_optimizer-0.10.2-py3-none-any.whl", hash = "sha256:7157522a889c8aa78350b8eeff77575af75f163dc77437233ac812ac27fba27e"},
+    {file = "graphene_django_query_optimizer-0.10.2.tar.gz", hash = "sha256:1c8e5676b956f78c9c05cc5abb61001f0d6f60def6ac93ef5498e6bab56497dc"},
+]
+
+[package.dependencies]
+Django = ">=4.2"
+django-settings-holder = ">=0.1.2"
+graphene-django = ">=3.0.0"
+
+[package.extras]
+filter = ["django-filter (>=21.1)"]
 
 [[package]]
 name = "graphql-core"
@@ -1868,7 +1898,6 @@ files = [
 ]
 
 [package.dependencies]
-importlib-metadata = {version = ">=3.6.0", markers = "python_version < \"3.10\""}
 pytest = "*"
 
 [[package]]
@@ -2593,5 +2622,5 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 
 [metadata]
 lock-version = "2.0"
-python-versions = "^3.9.13"
-content-hash = "b2eb318c5054025893722042175d1fb22a843309b3c12192ff4bf6363e646581"
+python-versions = "^3.10.0"
+content-hash = "99ddff5b212ee6ed8e53a2a73aed4062adf02a5b2bf510f015eb32161e3ec5d8"
