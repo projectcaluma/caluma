@@ -1,3 +1,14 @@
+# v10.5.0 (15 October 2024)
+
+### Feature
+
+* **visibilities:** Make visibilities suppressable on n:1 relationships ([`0899cc7`](https://github.com/projectcaluma/caluma/commit/0899cc75372af0e3fdfbfaa16932419364a39a6f))
+
+### Fix
+
+* **perf:** Add indexes for frequently filtered attributes on work item ([`b9a2032`](https://github.com/projectcaluma/caluma/commit/b9a2032b6dc396c016766ae3a1bd80ad3dc8b0c1))
+
+
 # v10.4.0 (26 September 2024)
 ### Feature
 
