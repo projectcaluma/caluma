@@ -1,3 +1,10 @@
+# v10.5.1 (16 October 2024)
+
+### Fix
+
+* **visibilities:** Don't crash in the suppressable visibility resolver ([`26fd823`](https://github.com/projectcaluma/caluma/commit/26fd82366a8ae3389e3d2d498605bf136cd6924d))
+
+
 # v10.5.0 (15 October 2024)
 
 ### Feature
