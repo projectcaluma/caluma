@@ -1,5 +1,4 @@
-import uuid
-
+import uuid_extensions
 from django.db import models
 from simple_history.models import HistoricalRecords
 
@@ -79,7 +78,9 @@ class UUIDModel(BaseModel, HistoricalModel):
     Defined as Caluma default
     """
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(
+        primary_key=True, default=uuid_extensions.uuid7, editable=False
+    )
 
     def __repr__(self):
         return f"{self.__class__.__name__}(id={self.id})"
