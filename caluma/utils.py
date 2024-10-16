@@ -154,7 +154,7 @@ def suppressable_visibility_resolver():
     # to validate the behavour as we'd usually do.
     class SuppressableResolver:
         def __call__(self, inner_self, *args, **kwargs):
-            return getattr(inner_self, self.prop)
+            return getattr(inner_self, self.prop, None)
 
         @property
         def _bypass_get_queryset(self):  # pragma: no cover
