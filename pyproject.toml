@@ -42,6 +42,7 @@ pyjexl = "^0.3.0"
 python-memcached = "^1.62"
 requests = "^2.32.3"
 urllib3 = ">=1.26.8,<3.0.0"
+uuid7 = "^0.1.0"
 
 [tool.poetry.group.dev.dependencies]
 # Dev dependencies are always pinned to an exact version (No caret or tilde
