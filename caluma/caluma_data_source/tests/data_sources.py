@@ -1,4 +1,4 @@
-from uuid import uuid4
+from uuid_extensions import uuid7str
 
 from caluma.caluma_data_source.data_sources import BaseDataSource
 from caluma.caluma_data_source.utils import data_source_cache
@@ -28,11 +28,11 @@ class MyDataSource(BaseDataSource):
 
     @data_source_cache(timeout=60)
     def get_data_uuid(self, info):
-        return str(uuid4())
+        return uuid7str()
 
     @data_source_cache(timeout=1)
     def get_data_expire(self, info):
-        return str(uuid4())
+        return uuid7str()
 
 
 class MyOtherDataSource(MyDataSource):

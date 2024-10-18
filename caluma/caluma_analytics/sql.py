@@ -189,6 +189,7 @@ class Field:
 
     def _alias(self):
         if not self.alias:  # pragma: todo cover
+            # Note: Not using UUID7 here, as we need the "full" randomness
             self.alias = slugify(self.identifier + "_" + str(uuid4())[:5]).replace(
                 "-", "_"
             )
