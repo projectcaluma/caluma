@@ -22,17 +22,21 @@ class AccessLogMiddleware:
         try:
             doc = parser.parse(body["query"])
             visitor.visit(doc, vis)
-        except GraphQLSyntaxError:
+        except (GraphQLSyntaxError, KeyError):
             pass
 
-        AccessLog.objects.create(
-            username=request.user.username,
-            query=body.get("query"),
-            variables=body.get("variables"),
-            status_code=response.status_code,
-            has_error=response.status_code >= 400,
-            **vis.values,
-        )
+        try:
+            AccessLog.objects.create(
+                username=request.user.username,
+                query=body.get("query"),
+                variables=body.get("variables"),
+                status_code=response.status_code,
+                has_error=response.status_code >= 400,
+                **vis.values,
+            )
+        except AttributeError:
+            pass
+        # create might fail if the request has no user.
 
         return response
 
