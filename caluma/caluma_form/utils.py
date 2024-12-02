@@ -36,6 +36,7 @@ def update_or_create_calc_answer(question, document):
 
     # skip if question doesn't exist in this document structure
     if field is None:
+        print("-- didn't find question, stopping")
         return
 
     jexl = QuestionJexl(
@@ -53,8 +54,11 @@ def update_or_create_calc_answer(question, document):
 
 
 def recalculate_answers_from_document(instance):
+    """When a table row is added, update dependent questions"""
     if (instance.family or instance).meta.get("_defer_calculation"):
+        print("- defered")
         return
+    print(f"saved document {instance.pk}, recalculate answers")
     for question in models.Form.get_all_questions(
         [(instance.family or instance).form_id]
     ).filter(type=models.Question.TYPE_CALCULATED_FLOAT):
