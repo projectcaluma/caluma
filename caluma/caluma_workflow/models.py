@@ -300,6 +300,8 @@ class WorkItem(UUIDModel):
             GinIndex(fields=["controlling_groups"]),
             GinIndex(fields=["assigned_users"]),
             GinIndex(fields=["meta"]),
+            models.Index(fields=["created_at"]),
+            models.Index(fields=["deadline"]),
         ]
 
 
