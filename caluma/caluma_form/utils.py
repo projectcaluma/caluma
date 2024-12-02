@@ -1,6 +1,6 @@
 from caluma.caluma_form import models, structure
 from caluma.caluma_form.jexl import QuestionJexl
-
+from itertools import chain
 
 def update_calc_dependents(slug, old_expr, new_expr):
     jexl = QuestionJexl()
@@ -29,9 +29,11 @@ def update_calc_dependents(slug, old_expr, new_expr):
 
 
 def update_or_create_calc_answer(question, document):
+    print("update_or_create", question, document.family.form, document.form, flush=True)
     root_doc = document.family
 
     struc = structure.FieldSet(root_doc, root_doc.form)
+    # TODO: Doesn't get_field return the first field instance it finds in the document for that question, starting from the root document? 
     field = struc.get_field(question.slug)
 
     # skip if question doesn't exist in this document structure
@@ -51,11 +53,49 @@ def update_or_create_calc_answer(question, document):
         question=question, document=field.document, defaults={"value": value}
     )
 
+def update_or_create_calc_answers(questions, document):
+    print("bulk update_or_create", questions, document.family.form, document.form, flush=True)
+    root_doc = document.family
+
+    struc = structure.FieldSet(root_doc, root_doc.form)
+    
+    for question in questions:
+        field = struc.get_field(question.slug)
+
+        # skip if question doesn't exist in this document structure
+        if field is None:
+            continue
+
+        jexl = QuestionJexl(
+            {"form": field.form, "document": field.document, "structure": field.parent()}
+        )
+
+    # Ignore errors because we evaluate greedily as soon as possible. At
+    # this moment we might be missing some answers or the expression might
+    # be invalid, in which case we return None
+        value = jexl.evaluate(field.question.calc_expression, raise_on_error=False)
+
+        models.Answer.objects.update_or_create(
+            question=question, document=field.document, defaults={"value": value}
+        )
 
 def recalculate_answers_from_document(instance):
+
+    # Only re-evaluate calc-dependents
     if (instance.family or instance).meta.get("_defer_calculation"):
         return
-    for question in models.Form.get_all_questions(
+
+    #print("instance", set(chain(*instance.form.questions.values_list("calc_dependents", flat=True))), flush=True)
+    calc_dependent_questions = set(chain(*instance.form.questions.values_list("calc_dependents", flat=True)))
+
+    
+    questions = models.Form.get_all_questions(
         [(instance.family or instance).form_id]
-    ).filter(type=models.Question.TYPE_CALCULATED_FLOAT):
-        update_or_create_calc_answer(question, instance)
+    ).filter(type=models.Question.TYPE_CALCULATED_FLOAT)
+        
+    update_or_create_calc_answers(questions, instance)
+
+    return
+    #print("recalc update", calc_dependent_questions, flush=True)
+    questions = models.Question.objects.filter(slug__in=calc_dependent_questions)
+    update_or_create_calc_answers(questions, instance)

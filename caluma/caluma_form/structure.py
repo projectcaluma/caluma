@@ -13,7 +13,9 @@ def object_local_memoise(method):
             self._memoise = {}
 
         key = str([args, kwargs, method])
+        #print("key", key, flush=True)
         if key in self._memoise:
+            #print("returning memoise",flush=True)
             return self._memoise[key]
         ret = method(self, *args, **kwargs)
         self._memoise[key] = ret

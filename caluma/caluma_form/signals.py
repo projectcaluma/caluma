@@ -19,6 +19,7 @@ from .utils import (
     recalculate_answers_from_document,
     update_calc_dependents,
     update_or_create_calc_answer,
+    update_or_create_calc_answers,
 )
 
 
@@ -107,7 +108,7 @@ def remove_calc_dependents(sender, instance, **kwargs):
 def update_calc_from_question(sender, instance, created, update_fields, **kwargs):
     # TODO optimize: only update answers if calc_expression is updated
     # needs to happen during save() or __init__()
-
+    print("update_fields", update_fields, flush=True)
     for document in models.Document.objects.filter(form__questions=instance):
         update_or_create_calc_answer(instance, document)
 
@@ -118,6 +119,7 @@ def update_calc_from_question(sender, instance, created, update_fields, **kwargs
     lambda instance: instance.question.type == models.Question.TYPE_CALCULATED_FLOAT
 )
 def update_calc_from_form_question(sender, instance, created, **kwargs):
+    # TODO: Update or create always uses root document, does it make sense to be recalculating?
     for document in instance.form.documents.all():
         update_or_create_calc_answer(instance.question, document)
 
@@ -130,13 +132,14 @@ def update_calc_from_answer(sender, instance, **kwargs):
     # answer. They shouldn't trigger a recalculation of a calculated field
     # even when they are technically listed as a dependency.
     # Also skip non-referenced answers.
+    print("update_calc_from_answer", instance.question, instance.question.calc_dependents, flush=True)
     if instance.document.family.meta.get("_defer_calculation"):
         return
 
-    for question in models.Question.objects.filter(
+    questions = models.Question.objects.filter(
         pk__in=instance.question.calc_dependents
-    ):
-        update_or_create_calc_answer(question, instance.document)
+    )
+    update_or_create_calc_answers(questions, instance.document)
 
 
 @receiver(post_save, sender=models.Document)
@@ -144,16 +147,21 @@ def update_calc_from_answer(sender, instance, **kwargs):
 # We're only interested in table row forms
 @filter_events(lambda instance, created: instance.pk != instance.family_id or created)
 def update_calc_from_document(sender, instance, created, **kwargs):
+    # I think we need these singals for tables, but instead we shouldn't update calculated questions from unsaved row documents in table rows
+    print("update_calc_from_document", flush=True)
+    return
     recalculate_answers_from_document(instance)
 
 
 @receiver(m2m_changed, sender=models.AnswerDocument)
 def update_calc_from_answerdocument(sender, instance, **kwargs):
+    return
+    print("update_calc_from_answerdocument", flush=True)
     dependents = instance.document.form.questions.exclude(
         calc_dependents=[]
     ).values_list("calc_dependents", flat=True)
 
     dependent_questions = list(itertools.chain(*dependents))
 
-    for question in models.Question.objects.filter(pk__in=dependent_questions):
-        update_or_create_calc_answer(question, instance.document)
+    questions = models.Question.objects.filter(pk__in=dependent_questions)
+    update_or_create_calc_answers(questions, instance.document)
