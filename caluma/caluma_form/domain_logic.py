@@ -6,10 +6,12 @@ from rest_framework.exceptions import ValidationError
 
 from caluma.caluma_core.models import BaseModel
 from caluma.caluma_core.relay import extract_global_id
-from caluma.caluma_form import models, validators
-from caluma.caluma_form.utils import recalculate_answers_from_document
+from caluma.caluma_form import models, validators, structure, utils
+from caluma.caluma_form.utils import recalculate_answers_from_document, update_or_create_calc_answer
 from caluma.caluma_user.models import BaseUser
 from caluma.utils import update_model
+
+
 
 
 class BaseLogic:
@@ -168,6 +170,18 @@ class SaveAnswerLogic:
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
 
+        if answer.question.calc_dependents:
+            for question in models.Question.objects.filter(
+                pk__in=answer.question.calc_dependents
+            ):
+                print(f"recalculating {question} from domain logic _create_")
+                document = models.Document.objects.filter(pk=answer.document_id).prefetch_related(
+                    *utils.build_document_prefetch_statements(
+                        "family", prefetch_options=True
+                    ),
+                ).first()
+                update_or_create_calc_answer(question, document, None)
+
         return answer
 
     @classmethod
@@ -184,6 +198,20 @@ class SaveAnswerLogic:
 
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
+
+        if answer.question.calc_dependents:
+            root_doc = answer.document.family
+            root_doc = models.Document.objects.filter(pk=answer.document.family_id).prefetch_related(
+                *utils.build_document_prefetch_statements(prefetch_options=True)
+            ).first()
+            print("init structure top level")
+            struc = structure.FieldSet(root_doc, root_doc.form)
+
+            for question in models.Question.objects.filter(
+                pk__in=answer.question.calc_dependents
+            ):
+                print(f"recalculating {question} from domain logic _update_")
+                update_or_create_calc_answer(question, root_doc, struc)
 
         answer.refresh_from_db()
         return answer
@@ -276,7 +304,12 @@ class SaveDocumentLogic:
         document.meta.pop("_defer_calculation", None)
         document.save()
 
-        recalculate_answers_from_document(document)
+        # TODO do we need really this? If yes, can we make it more efficient?
+        print("domain logic: update calc answers after document has been created")
+        for question in models.Form.get_all_questions(
+            [(document.family or document).form_id]
+        ).filter(type=models.Question.TYPE_CALCULATED_FLOAT):
+            update_or_create_calc_answer(question, document, None)
         return document
 
     @staticmethod
