@@ -170,16 +170,17 @@ class SaveAnswerLogic:
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
 
-        for question in models.Question.objects.filter(
-            pk__in=answer.question.calc_dependents
-        ):
-            print(f"recalculating {question} from domain logic _create_")
-            document = models.Document.objects.filter(pk=answer.document_id).prefetch_related(
-                *utils.build_document_prefetch_statements(
-                    "family", prefetch_options=True
-                ),
-            ).first()
-            update_or_create_calc_answer(question, document, None)
+        if answer.question.calc_dependents:
+            for question in models.Question.objects.filter(
+                pk__in=answer.question.calc_dependents
+            ):
+                print(f"recalculating {question} from domain logic _create_")
+                document = models.Document.objects.filter(pk=answer.document_id).prefetch_related(
+                    *utils.build_document_prefetch_statements(
+                        "family", prefetch_options=True
+                    ),
+                ).first()
+                update_or_create_calc_answer(question, document, None)
 
         return answer
 
@@ -198,18 +199,19 @@ class SaveAnswerLogic:
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
 
-        root_doc = answer.document.family
-        root_doc = models.Document.objects.filter(pk=answer.document.family_id).prefetch_related(
-            *utils.build_document_prefetch_statements(prefetch_options=True)
-        ).first()
-        print("init structure top level")
-        struc = structure.FieldSet(root_doc, root_doc.form)
+        if answer.question.calc_dependents:
+            root_doc = answer.document.family
+            root_doc = models.Document.objects.filter(pk=answer.document.family_id).prefetch_related(
+                *utils.build_document_prefetch_statements(prefetch_options=True)
+            ).first()
+            print("init structure top level")
+            struc = structure.FieldSet(root_doc, root_doc.form)
 
-        for question in models.Question.objects.filter(
-            pk__in=answer.question.calc_dependents
-        ):
-            print(f"recalculating {question} from domain logic _update_")
-            update_or_create_calc_answer(question, root_doc, struc)
+            for question in models.Question.objects.filter(
+                pk__in=answer.question.calc_dependents
+            ):
+                print(f"recalculating {question} from domain logic _update_")
+                update_or_create_calc_answer(question, root_doc, struc)
 
         answer.refresh_from_db()
         return answer
