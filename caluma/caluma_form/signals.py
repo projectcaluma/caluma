@@ -138,11 +138,12 @@ def update_calc_from_answer(sender, instance, **kwargs):
         return
 
     print(f"saved answer to {instance.question.pk}, recalculate dependents:")
+    document = models.Document.objects.filter(pk=instance.document_id).prefetch_related("family__answers", "family__form__questions").first()
     for question in models.Question.objects.filter(
         pk__in=instance.question.calc_dependents
     ):
         print(f"- {question.pk}")
-        update_or_create_calc_answer(question, instance.document)
+        update_or_create_calc_answer(question, document)
 
 
 @receiver(post_save, sender=models.Document)
