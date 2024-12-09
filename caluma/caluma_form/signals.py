@@ -1,4 +1,5 @@
 import itertools
+from django.db.models import Prefetch
 
 from django.db.models.signals import (
     m2m_changed,
@@ -122,28 +123,33 @@ def update_calc_from_form_question(sender, instance, created, **kwargs):
         update_or_create_calc_answer(instance.question, document)
 
 
-@receiver(post_save, sender=models.Answer)
-@disable_raw
-@filter_events(lambda instance: instance.document and instance.question.calc_dependents)
-def update_calc_from_answer(sender, instance, **kwargs):
-    # If there is no document on the answer it means that it's a default
-    # answer. They shouldn't trigger a recalculation of a calculated field
-    # even when they are technically listed as a dependency.
-    # Also skip non-referenced answers.
-    if instance.document.family.meta.get("_defer_calculation"):
-        return
-
-    if instance.question.type == models.Question.TYPE_TABLE:
-        print("skipping update calc of table questions in event layer, because we don't have access to the question slug here")
-        return
-
-    print(f"saved answer to {instance.question.pk}, recalculate dependents:")
-    document = models.Document.objects.filter(pk=instance.document_id).prefetch_related("family__answers", "family__form__questions").first()
-    for question in models.Question.objects.filter(
-        pk__in=instance.question.calc_dependents
-    ):
-        print(f"- {question.pk}")
-        update_or_create_calc_answer(question, document)
+# @receiver(post_save, sender=models.Answer)
+# @disable_raw
+# @filter_events(lambda instance: instance.document and instance.question.calc_dependents)
+# def update_calc_from_answer(sender, instance, **kwargs):
+#     # If there is no document on the answer it means that it's a default
+#     # answer. They shouldn't trigger a recalculation of a calculated field
+#     # even when they are technically listed as a dependency.
+#     # Also skip non-referenced answers.
+#     if instance.document.family.meta.get("_defer_calculation"):
+#         return
+# 
+#     if instance.question.type == models.Question.TYPE_TABLE:
+#         print("skipping update calc of table questions in event layer, because we don't have access to the question slug here")
+#         return
+# 
+#     print(f"saved answer to {instance.question.pk}, recalculate dependents:")
+#     document = models.Document.objects.filter(pk=instance.document_id).prefetch_related(
+#         *build_document_prefetch_statements(
+#             "family", prefetch_options=True
+#         ),
+#     ).first()
+# 
+#     for question in models.Question.objects.filter(
+#         pk__in=instance.question.calc_dependents
+#     ):
+#         print(f"- {question.pk}")
+#         update_or_create_calc_answer(question, document)
 
 
 @receiver(post_save, sender=models.Document)
