@@ -2,7 +2,7 @@ from caluma.caluma_form import models, structure
 from django.db.models import Prefetch
 from caluma.caluma_form.jexl import QuestionJexl
 from time import time
-
+import inspect
 
 def build_document_prefetch_statements(prefix="", prefetch_options=False):
     """Build needed prefetch statements to performantly fetch a document.
@@ -102,6 +102,8 @@ def update_calc_dependents(slug, old_expr, new_expr):
 
 
 def update_or_create_calc_answer(question, document, struc):
+    print("callsite", inspect.stack()[1][3], flush=True)
+
     root_doc = document.family
 
     if not struc:
@@ -115,9 +117,10 @@ def update_or_create_calc_answer(question, document, struc):
 
     # skip if question doesn't exist in this document structure
     if field is None:
-        print("-- didn't find question, stopping")
+        print("-- didn't find question, stopping", question)
         return
 
+    print("-- found field", question)
     jexl = QuestionJexl(
         {"form": field.form, "document": field.document, "structure": field.parent()}
     )
