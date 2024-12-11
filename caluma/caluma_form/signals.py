@@ -1,4 +1,5 @@
 import itertools
+from django.db.models import Prefetch
 
 from django.db.models.signals import (
     m2m_changed,
@@ -122,21 +123,33 @@ def update_calc_from_form_question(sender, instance, created, **kwargs):
         update_or_create_calc_answer(instance.question, document)
 
 
-@receiver(post_save, sender=models.Answer)
-@disable_raw
-@filter_events(lambda instance: instance.document and instance.question.calc_dependents)
-def update_calc_from_answer(sender, instance, **kwargs):
-    # If there is no document on the answer it means that it's a default
-    # answer. They shouldn't trigger a recalculation of a calculated field
-    # even when they are technically listed as a dependency.
-    # Also skip non-referenced answers.
-    if instance.document.family.meta.get("_defer_calculation"):
-        return
-
-    for question in models.Question.objects.filter(
-        pk__in=instance.question.calc_dependents
-    ):
-        update_or_create_calc_answer(question, instance.document)
+# @receiver(post_save, sender=models.Answer)
+# @disable_raw
+# @filter_events(lambda instance: instance.document and instance.question.calc_dependents)
+# def update_calc_from_answer(sender, instance, **kwargs):
+#     # If there is no document on the answer it means that it's a default
+#     # answer. They shouldn't trigger a recalculation of a calculated field
+#     # even when they are technically listed as a dependency.
+#     # Also skip non-referenced answers.
+#     if instance.document.family.meta.get("_defer_calculation"):
+#         return
+# 
+#     if instance.question.type == models.Question.TYPE_TABLE:
+#         print("skipping update calc of table questions in event layer, because we don't have access to the question slug here")
+#         return
+# 
+#     print(f"saved answer to {instance.question.pk}, recalculate dependents:")
+#     document = models.Document.objects.filter(pk=instance.document_id).prefetch_related(
+#         *build_document_prefetch_statements(
+#             "family", prefetch_options=True
+#         ),
+#     ).first()
+# 
+#     for question in models.Question.objects.filter(
+#         pk__in=instance.question.calc_dependents
+#     ):
+#         print(f"- {question.pk}")
+#         update_or_create_calc_answer(question, document)
 
 
 @receiver(post_save, sender=models.Document)
@@ -144,7 +157,9 @@ def update_calc_from_answer(sender, instance, **kwargs):
 # We're only interested in table row forms
 @filter_events(lambda instance, created: instance.pk != instance.family_id or created)
 def update_calc_from_document(sender, instance, created, **kwargs):
-    recalculate_answers_from_document(instance)
+    # we do this in a more focused way (only updating the calc dependents in the domain logic
+    # recalculate_answers_from_document(instance)
+    pass
 
 
 @receiver(m2m_changed, sender=models.AnswerDocument)
@@ -154,6 +169,8 @@ def update_calc_from_answerdocument(sender, instance, **kwargs):
     ).values_list("calc_dependents", flat=True)
 
     dependent_questions = list(itertools.chain(*dependents))
+    # TODO: when is this even called?
+    print(f"answerdocument {instance.pk} changed, update {dependent_questions}")
 
     for question in models.Question.objects.filter(pk__in=dependent_questions):
         update_or_create_calc_answer(question, instance.document)
