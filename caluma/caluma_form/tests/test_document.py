@@ -466,10 +466,8 @@ def test_save_document(
         # if updating, the resulting document must be the same
         assert same_id == update
 
-        assert (
-            len(result.data["saveDocument"]["document"]["answers"]["edges"]) == 1
-            if update
-            else 3
+        assert len(result.data["saveDocument"]["document"]["answers"]["edges"]) == (
+            0 if update else 3
         )
         if not update:
             assert sorted(
@@ -492,7 +490,7 @@ def test_save_document(
         )
         assert (doc.pk == document.pk) == update
 
-        assert doc.answers.count() == 1 if update else 3
+        assert doc.answers.count() == (0 if update else 3)
         if not update:
             assert sorted([str(a.value) for a in doc.answers.iterator()]) == [
                 "23",
@@ -511,269 +509,35 @@ def test_save_document(
 @pytest.mark.parametrize(
     "question__type,question__configuration,question__data_source,question__format_validators,answer__value,answer__date,mutation,success",
     [
-        (
-            Question.TYPE_INTEGER,
-            {},
-            None,
-            [],
-            1,
-            None,
-            "SaveDocumentIntegerAnswer",
-            True,
-        ),
-        (
-            Question.TYPE_INTEGER,
-            {"min_value": 100},
-            None,
-            [],
-            1,
-            None,
-            "SaveDocumentIntegerAnswer",
-            False,
-        ),
+        (Question.TYPE_INTEGER, {}, None, [], 1, None, "SaveDocumentIntegerAnswer", True),
+        (Question.TYPE_INTEGER, {"min_value": 100}, None, [], 1, None, "SaveDocumentIntegerAnswer", False),
         (Question.TYPE_FLOAT, {}, None, [], 2.1, None, "SaveDocumentFloatAnswer", True),
-        (
-            Question.TYPE_FLOAT,
-            {"min_value": 100.0},
-            None,
-            [],
-            1,
-            None,
-            "SaveDocumentFloatAnswer",
-            False,
-        ),
-        (
-            Question.TYPE_TEXT,
-            {},
-            None,
-            [],
-            "Test",
-            None,
-            "SaveDocumentStringAnswer",
-            True,
-        ),
-        (
-            Question.TYPE_TEXT,
-            {"max_length": 1},
-            None,
-            [],
-            "toolong",
-            None,
-            "SaveDocumentStringAnswer",
-            False,
-        ),
-        (
-            Question.TYPE_DATE,
-            {},
-            None,
-            [],
-            None,
-            "1900-01-01",
-            "SaveDocumentDateAnswer",
-            False,
-        ),
-        (
-            Question.TYPE_DATE,
-            {},
-            None,
-            [],
-            None,
-            "2019-02-22",
-            "SaveDocumentDateAnswer",
-            True,
-        ),
-        (
-            Question.TYPE_FILES,
-            {},
-            None,
-            [],
-            None,
-            None,
-            "SaveDocumentFilesAnswer",
-            False,
-        ),
-        (
-            Question.TYPE_FILES,
-            {},
-            None,
-            [],
-            [{"name": "some-file.pdf"}],
-            None,
-            "SaveDocumentFilesAnswer",
-            True,
-        ),
-        (
-            Question.TYPE_FILES,
-            {},
-            None,
-            [],
-            [{"name": "not-exist.pdf"}],
-            None,
-            "SaveDocumentFilesAnswer",
-            True,
-        ),
-        (
-            Question.TYPE_TEXT,
-            {"min_length": 10},
-            None,
-            [],
-            "tooshort",
-            None,
-            "SaveDocumentStringAnswer",
-            False,
-        ),
-        (
-            Question.TYPE_TABLE,
-            {},
-            None,
-            [],
-            None,
-            None,
-            "SaveDocumentTableAnswer",
-            True,
-        ),
-        (
-            Question.TYPE_TEXTAREA,
-            {},
-            None,
-            [],
-            "Test",
-            None,
-            "SaveDocumentStringAnswer",
-            True,
-        ),
-        (
-            Question.TYPE_TEXTAREA,
-            {"max_length": 1},
-            None,
-            [],
-            "toolong",
-            None,
-            "SaveDocumentStringAnswer",
-            False,
-        ),
-        (
-            Question.TYPE_MULTIPLE_CHOICE,
-            {},
-            None,
-            [],
-            ["option-slug"],
-            None,
-            "SaveDocumentListAnswer",
-            True,
-        ),
-        (
-            Question.TYPE_MULTIPLE_CHOICE,
-            {},
-            None,
-            [],
-            ["option-slug", "option-invalid-slug"],
-            None,
-            "SaveDocumentStringAnswer",
-            False,
-        ),
-        (
-            Question.TYPE_CHOICE,
-            {},
-            None,
-            [],
-            "option-slug",
-            None,
-            "SaveDocumentStringAnswer",
-            True,
-        ),
-        (
-            Question.TYPE_CHOICE,
-            {},
-            None,
-            [],
-            "invalid-option-slug",
-            None,
-            "SaveDocumentStringAnswer",
-            False,
-        ),
-        (
-            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
-            {},
-            "MyDataSource",
-            [],
-            ["5.5", "1"],
-            None,
-            "SaveDocumentListAnswer",
-            True,
-        ),
-        (
-            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
-            {},
-            "MyDataSource",
-            [],
-            ["not in data"],
-            None,
-            "SaveDocumentStringAnswer",
-            False,
-        ),
-        (
-            Question.TYPE_DYNAMIC_CHOICE,
-            {},
-            "MyDataSource",
-            [],
-            "5.5",
-            None,
-            "SaveDocumentStringAnswer",
-            True,
-        ),
-        (
-            Question.TYPE_DYNAMIC_CHOICE,
-            {},
-            "MyDataSource",
-            [],
-            "not in data",
-            None,
-            "SaveDocumentStringAnswer",
-            False,
-        ),
-        (
-            Question.TYPE_TEXT,
-            {},
-            None,
-            ["email"],
-            "some text",
-            None,
-            "SaveDocumentStringAnswer",
-            False,
-        ),
-        (
-            Question.TYPE_TEXT,
-            {},
-            None,
-            ["email"],
-            "test@example.com",
-            None,
-            "SaveDocumentStringAnswer",
-            True,
-        ),
-        (
-            Question.TYPE_TEXTAREA,
-            {},
-            None,
-            ["email"],
-            "some text",
-            None,
-            "SaveDocumentStringAnswer",
-            False,
-        ),
-        (
-            Question.TYPE_TEXTAREA,
-            {},
-            None,
-            ["email"],
-            "test@example.com",
-            None,
-            "SaveDocumentStringAnswer",
-            True,
-        ),
+        (Question.TYPE_FLOAT, {"min_value": 100.0}, None, [], 1, None, "SaveDocumentFloatAnswer", False),
+        (Question.TYPE_TEXT, {}, None, [], "Test", None, "SaveDocumentStringAnswer", True),
+        (Question.TYPE_TEXT, {"max_length": 1}, None, [], "toolong", None, "SaveDocumentStringAnswer", False),
+        (Question.TYPE_DATE, {}, None, [], None, "1900-01-01", "SaveDocumentDateAnswer", False),
+        (Question.TYPE_DATE, {}, None, [], None, "2019-02-22", "SaveDocumentDateAnswer", True),
+        (Question.TYPE_FILES, {}, None, [], None, None, "SaveDocumentFilesAnswer", False),
+        (Question.TYPE_FILES, {}, None, [], [{"name": "some-file.pdf"}], None, "SaveDocumentFilesAnswer", True),
+        (Question.TYPE_FILES, {}, None, [], [{"name": "not-exist.pdf"}], None, "SaveDocumentFilesAnswer", True),
+        (Question.TYPE_TEXT, {"min_length": 10}, None, [], "tooshort", None, "SaveDocumentStringAnswer", False),
+        (Question.TYPE_TABLE, {}, None, [], None, None, "SaveDocumentTableAnswer", True),
+        (Question.TYPE_TEXTAREA, {}, None, [], "Test", None, "SaveDocumentStringAnswer", True),
+        (Question.TYPE_TEXTAREA, {"max_length": 1}, None, [], "toolong", None, "SaveDocumentStringAnswer", False),
+        (Question.TYPE_MULTIPLE_CHOICE, {}, None, [], ["option-slug"], None, "SaveDocumentListAnswer", True),
+        (Question.TYPE_MULTIPLE_CHOICE, {}, None, [], ["option-slug", "option-invalid-slug"], None, "SaveDocumentStringAnswer", False),
+        (Question.TYPE_CHOICE, {}, None, [], "option-slug", None, "SaveDocumentStringAnswer", True),
+        (Question.TYPE_CHOICE, {}, None, [], "invalid-option-slug", None, "SaveDocumentStringAnswer", False),
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, {}, "MyDataSource", [], ["5.5", "1"], None, "SaveDocumentListAnswer", True),
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, {}, "MyDataSource", [], ["not in data"], None, "SaveDocumentStringAnswer", False),
+        (Question.TYPE_DYNAMIC_CHOICE, {}, "MyDataSource", [], "5.5", None, "SaveDocumentStringAnswer", True),
+        (Question.TYPE_DYNAMIC_CHOICE, {}, "MyDataSource", [], "not in data", None, "SaveDocumentStringAnswer", False),
+        (Question.TYPE_TEXT, {}, None, ["email"], "some text", None, "SaveDocumentStringAnswer", False),
+        (Question.TYPE_TEXT, {}, None, ["email"], "test@example.com", None, "SaveDocumentStringAnswer", True),
+        (Question.TYPE_TEXTAREA, {}, None, ["email"], "some text", None, "SaveDocumentStringAnswer", False),
+        (Question.TYPE_TEXTAREA, {}, None, ["email"], "test@example.com", None, "SaveDocumentStringAnswer", True),
     ],
-)
+)  # fmt:skip
 def test_save_document_answer(  # noqa:C901
     db,
     snapshot,
@@ -1755,3 +1519,31 @@ def test_flat_answer_map(db, form_and_document):
     assert flat_answer_map["table"] == [
         {"column": answers_dict["table"].documents.first().answers.first().value}
     ]
+
+
+def test_efficient_init_of_calc_questions(
+    db, schema_executor, form, form_question_factory, question_factory, mocker
+):
+    calc_1 = question_factory(
+        slug="calc-1",
+        type=Question.TYPE_CALCULATED_FLOAT,
+        calc_expression="1",
+    )
+    calc_2 = question_factory(
+        slug="calc-2",
+        type=Question.TYPE_CALCULATED_FLOAT,
+        calc_expression='"calc-1"|answer(0) * 2',
+    )
+    form_question_factory(form=form, question=calc_1)
+    form_question_factory(form=form, question=calc_2)
+
+    from caluma.caluma_form import utils
+    from caluma.caluma_form.jexl import QuestionJexl
+
+    spy = mocker.spy(QuestionJexl, "evaluate")
+    document = api.save_document(form)
+    # twice for calc value, once for hidden state of calc-1
+    assert spy.call_count == 3
+
+    calc_ans = document.answers.get(question_id="calc-2")
+    assert calc_ans.value == 2

@@ -254,6 +254,11 @@ class FieldSet(Element):
             for question in self.form.questions.all()
         ]
 
+    def set_answer(self, question_slug, answer):
+        field = self.get_field(question_slug)
+        if field:
+            field.answer = answer
+
     def __repr__(self):
         q_slug = self.question.slug if self.question else None
         if q_slug:

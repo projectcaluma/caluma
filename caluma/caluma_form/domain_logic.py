@@ -1,4 +1,3 @@
-import itertools
 from graphlib import TopologicalSorter
 from typing import Optional
 
@@ -9,10 +8,7 @@ from rest_framework.exceptions import ValidationError
 from caluma.caluma_core.models import BaseModel
 from caluma.caluma_core.relay import extract_global_id
 from caluma.caluma_form import models, structure, utils, validators
-from caluma.caluma_form.utils import (
-    recalculate_answers_from_document,
-    update_or_create_calc_answer,
-)
+from caluma.caluma_form.utils import update_or_create_calc_answer
 from caluma.caluma_user.models import BaseUser
 from caluma.utils import update_model
 
@@ -156,6 +152,26 @@ class SaveAnswerLogic:
         # TODO emit events
         return answer
 
+    @staticmethod
+    def update_calc_dependents(answer):
+        if not answer.question.calc_dependents:
+            return
+
+        root_doc = answer.document.family
+        root_doc = (
+            models.Document.objects.filter(pk=answer.document.family_id)
+            .prefetch_related(
+                *utils.build_document_prefetch_statements(prefetch_options=True)
+            )
+            .first()
+        )
+        struc = structure.FieldSet(root_doc, root_doc.form)
+
+        for question in models.Question.objects.filter(
+            pk__in=answer.question.calc_dependents
+        ):
+            update_or_create_calc_answer(question, root_doc, struc)
+
     @classmethod
     @transaction.atomic
     def create(
@@ -173,29 +189,7 @@ class SaveAnswerLogic:
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
 
-        print("creating answer", flush=True)
-        if answer.question.calc_dependents:
-            print(
-                "creating answer for question",
-                answer.question,
-                answer.question.calc_dependents,
-            )
-            root_doc = answer.document.family
-            root_doc = (
-                models.Document.objects.filter(pk=answer.document.family_id)
-                .prefetch_related(
-                    *utils.build_document_prefetch_statements(prefetch_options=True)
-                )
-                .first()
-            )
-            print("init structure top level")
-            struc = structure.FieldSet(root_doc, root_doc.form)
-
-            for question in models.Question.objects.filter(
-                pk__in=answer.question.calc_dependents
-            ):
-                print(f"recalculating {question} from domain logic _create_")
-                update_or_create_calc_answer(question, root_doc, struc)
+        cls.update_calc_dependents(answer)
 
         return answer
 
@@ -214,23 +208,7 @@ class SaveAnswerLogic:
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
 
-        if answer.question.calc_dependents:
-            root_doc = answer.document.family
-            root_doc = (
-                models.Document.objects.filter(pk=answer.document.family_id)
-                .prefetch_related(
-                    *utils.build_document_prefetch_statements(prefetch_options=True)
-                )
-                .first()
-            )
-            print("init structure top level")
-            struc = structure.FieldSet(root_doc, root_doc.form)
-
-            for question in models.Question.objects.filter(
-                pk__in=answer.question.calc_dependents
-            ):
-                print(f"recalculating {question} from domain logic _update_")
-                update_or_create_calc_answer(question, root_doc, struc)
+        cls.update_calc_dependents(answer)
 
         answer.refresh_from_db()
         return answer
@@ -323,7 +301,6 @@ class SaveDocumentLogic:
         document.meta.pop("_defer_calculation", None)
         document.save()
 
-        print("domain logic: update calc answers after document has been created")
         root_doc = document.family
         root_doc = (
             models.Document.objects.filter(pk=document.family_id)
@@ -332,7 +309,6 @@ class SaveDocumentLogic:
             )
             .first()
         )
-        print("init structure top level")
         struc = structure.FieldSet(root_doc, root_doc.form)
 
         # Initialize all calculated questions in the form.

@@ -1057,9 +1057,6 @@ def test_nested_calculated_question(
         question__calc_expression=expr,
     )
 
-    calc_ans = document.answers.get(question_id="calc")
-    assert calc_ans.value == expected
-
     for dep in calc_deps:
         questions[dep].refresh_from_db()
         assert questions[dep].calc_dependents == ["calc"]
@@ -1109,34 +1106,6 @@ def test_recursive_calculated_question(
     assert calc_ans.value == 8
 
 
-def test_calculated_question_update_calc_expr(
-    db, schema_executor, form_and_document, form_question_factory
-):
-    form, document, questions_dict, answers_dict = form_and_document(True, True)
-
-    sub_question = questions_dict["sub_question"]
-    sub_question.type = models.Question.TYPE_INTEGER
-    sub_question.save()
-    sub_question_a = answers_dict["sub_question"]
-    sub_question_a.value = 100
-    sub_question_a.save()
-
-    calc_question = form_question_factory(
-        form=form,
-        question__slug="calc_question",
-        question__type=models.Question.TYPE_CALCULATED_FLOAT,
-        question__calc_expression="'sub_question'|answer + 1",
-    ).question
-
-    calc_ans = document.answers.get(question_id="calc_question")
-    assert calc_ans.value == 101
-
-    calc_question.calc_expression = "'sub_question'|answer -1"
-    calc_question.save()
-    calc_ans.refresh_from_db()
-    assert calc_ans.value == 99
-
-
 def test_calculated_question_answer_document(
     db,
     schema_executor,
@@ -1165,19 +1134,24 @@ def test_calculated_question_answer_document(
         question__calc_expression="'table'|answer|mapby('column')[0] + 'table'|answer|mapby('column')[1]",
     ).question
 
-    calc_ans = document.answers.get(question_id="calc_question")
-    assert calc_ans.value is None
-
     # adding another row will make make the expression valid
     row_doc = document_factory(form=row_form, family=document)
     column_a2 = answer_factory(document=row_doc, question_id=column.slug, value=200)
-    table_a.documents.add(row_doc)
 
-    calc_ans.refresh_from_db()
+    api.save_answer(
+        question=table,
+        document=document,
+        documents=list(table_a.documents.all()) + [row_doc],
+    )
+
+    calc_ans = document.answers.get(question_id="calc_question")
     assert calc_ans.value == 300
 
-    column_a2.value = 100
-    column_a2.save()
+    api.save_answer(
+        question=column_a2.question,
+        document=row_doc,
+        value=100,
+    )
     calc_ans.refresh_from_db()
     column.refresh_from_db()
     assert column.calc_dependents == ["calc_question"]
@@ -1185,7 +1159,11 @@ def test_calculated_question_answer_document(
 
     # removing the row will make it invalid again
     table_a.documents.remove(row_doc)
-    row_doc.delete()
+    api.save_answer(
+        question=table,
+        document=document,
+        documents=[table_a.documents.first()],
+    )
     calc_ans.refresh_from_db()
     assert calc_ans.value is None
 

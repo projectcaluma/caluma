@@ -1,8 +1,7 @@
-from caluma.caluma_form import models, structure
 from django.db.models import Prefetch
+
+from caluma.caluma_form import models, structure
 from caluma.caluma_form.jexl import QuestionJexl
-from time import time
-import inspect
 
 
 def build_document_prefetch_statements(prefix="", prefetch_options=False):
@@ -25,7 +24,7 @@ def build_document_prefetch_statements(prefix="", prefetch_options=False):
             )
         )
 
-    if prefix:
+    if prefix:  # pragma: no cover
         prefix += "__"
 
     return [
@@ -101,27 +100,20 @@ def update_calc_dependents(slug, old_expr, new_expr):
         question.save()
 
 
-def update_or_create_calc_answer(question, document, struc, update_dependents=True):
-    # print("callsite", inspect.stack()[1][3], flush=True)
-
+def update_or_create_calc_answer(
+    question, document, struc=None, update_dependents=True
+):
     root_doc = document.family
 
     if not struc:
-        print("init structure")
         struc = structure.FieldSet(root_doc, root_doc.form)
-    else:
-        # print("reusing struc")
-        pass
-    start = time()
+
     field = struc.get_field(question.slug)
-    # print(f"get_field: ", time() - start)
 
     # skip if question doesn't exist in this document structure
     if field is None:
-        print("-- didn't find question, stopping", question)
         return
 
-    print("-- found field", question)
     jexl = QuestionJexl(
         {"form": field.form, "document": field.document, "structure": field.parent()}
     )
@@ -131,28 +123,14 @@ def update_or_create_calc_answer(question, document, struc, update_dependents=Tr
     # be invalid, in which case we return None
     value = jexl.evaluate(field.question.calc_expression, raise_on_error=False)
 
-    models.Answer.objects.update_or_create(
+    answer, _ = models.Answer.objects.update_or_create(
         question=question, document=field.document, defaults={"value": value}
     )
+    # also save new answer to structure for reuse
+    struc.set_answer(question.slug, answer)
 
     if update_dependents:
-        print(
-            f"{question.pk}: updating {len(field.question.calc_dependents)} calc dependents)"
-        )
         for _question in models.Question.objects.filter(
             pk__in=field.question.calc_dependents
         ):
-            # print(f"{question.pk} -> {_question.pk}")
             update_or_create_calc_answer(_question, document, struc)
-
-
-def recalculate_answers_from_document(instance):
-    """When a table row is added, update dependent questions"""
-    if (instance.family or instance).meta.get("_defer_calculation"):
-        print("- defered")
-        return
-    print(f"saved document {instance.pk}, recalculate answers")
-    for question in models.Form.get_all_questions(
-        [(instance.family or instance).form_id]
-    ).filter(type=models.Question.TYPE_CALCULATED_FLOAT):
-        update_or_create_calc_answer(question, instance)

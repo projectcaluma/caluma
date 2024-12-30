@@ -1,11 +1,6 @@
-import itertools
-from django.db.models import Prefetch
-
 from django.db.models.signals import (
-    m2m_changed,
     post_delete,
     post_init,
-    post_save,
     pre_delete,
     pre_save,
 )
@@ -16,11 +11,7 @@ from caluma.caluma_core.events import filter_events
 from caluma.utils import disable_raw
 
 from . import models
-from .utils import (
-    recalculate_answers_from_document,
-    update_calc_dependents,
-    update_or_create_calc_answer,
-)
+from .utils import update_calc_dependents
 
 
 @receiver(pre_create_historical_record, sender=models.HistoricalAnswer)
@@ -94,83 +85,3 @@ def remove_calc_dependents(sender, instance, **kwargs):
     update_calc_dependents(
         instance.slug, old_expr=instance.calc_expression, new_expr="false"
     )
-
-
-# Update calculated answer on post_save
-#
-# Try to update the calculated answer value whenever a mutation on a possibly
-# related model is performed.
-
-
-@receiver(post_save, sender=models.Question)
-@disable_raw
-@filter_events(lambda instance: instance.type == models.Question.TYPE_CALCULATED_FLOAT)
-def update_calc_from_question(sender, instance, created, update_fields, **kwargs):
-    # TODO optimize: only update answers if calc_expression is updated
-    # needs to happen during save() or __init__()
-
-    for document in models.Document.objects.filter(form__questions=instance):
-        update_or_create_calc_answer(instance, document)
-
-
-@receiver(post_save, sender=models.FormQuestion)
-@disable_raw
-@filter_events(
-    lambda instance: instance.question.type == models.Question.TYPE_CALCULATED_FLOAT
-)
-def update_calc_from_form_question(sender, instance, created, **kwargs):
-    for document in instance.form.documents.all():
-        update_or_create_calc_answer(instance.question, document)
-
-
-# @receiver(post_save, sender=models.Answer)
-# @disable_raw
-# @filter_events(lambda instance: instance.document and instance.question.calc_dependents)
-# def update_calc_from_answer(sender, instance, **kwargs):
-#     # If there is no document on the answer it means that it's a default
-#     # answer. They shouldn't trigger a recalculation of a calculated field
-#     # even when they are technically listed as a dependency.
-#     # Also skip non-referenced answers.
-#     if instance.document.family.meta.get("_defer_calculation"):
-#         return
-#
-#     if instance.question.type == models.Question.TYPE_TABLE:
-#         print("skipping update calc of table questions in event layer, because we don't have access to the question slug here")
-#         return
-#
-#     print(f"saved answer to {instance.question.pk}, recalculate dependents:")
-#     document = models.Document.objects.filter(pk=instance.document_id).prefetch_related(
-#         *build_document_prefetch_statements(
-#             "family", prefetch_options=True
-#         ),
-#     ).first()
-#
-#     for question in models.Question.objects.filter(
-#         pk__in=instance.question.calc_dependents
-#     ):
-#         print(f"- {question.pk}")
-#         update_or_create_calc_answer(question, document)
-
-
-@receiver(post_save, sender=models.Document)
-@disable_raw
-# We're only interested in table row forms
-@filter_events(lambda instance, created: instance.pk != instance.family_id or created)
-def update_calc_from_document(sender, instance, created, **kwargs):
-    # we do this in a more focused way (only updating the calc dependents in the domain logic
-    # recalculate_answers_from_document(instance)
-    pass
-
-
-@receiver(m2m_changed, sender=models.AnswerDocument)
-def update_calc_from_answerdocument(sender, instance, **kwargs):
-    dependents = instance.document.form.questions.exclude(
-        calc_dependents=[]
-    ).values_list("calc_dependents", flat=True)
-
-    dependent_questions = list(itertools.chain(*dependents))
-    # TODO: when is this even called?
-    print(f"answerdocument {instance.pk} changed, update {dependent_questions}")
-
-    for question in models.Question.objects.filter(pk__in=dependent_questions):
-        update_or_create_calc_answer(question, instance.document)
