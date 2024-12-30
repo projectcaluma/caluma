@@ -1,3 +1,5 @@
+import itertools
+from graphlib import TopologicalSorter
 from typing import Optional
 
 from django.db import transaction
@@ -6,12 +8,13 @@ from rest_framework.exceptions import ValidationError
 
 from caluma.caluma_core.models import BaseModel
 from caluma.caluma_core.relay import extract_global_id
-from caluma.caluma_form import models, validators, structure, utils
-from caluma.caluma_form.utils import recalculate_answers_from_document, update_or_create_calc_answer
+from caluma.caluma_form import models, structure, utils, validators
+from caluma.caluma_form.utils import (
+    recalculate_answers_from_document,
+    update_or_create_calc_answer,
+)
 from caluma.caluma_user.models import BaseUser
 from caluma.utils import update_model
-import itertools
-
 
 
 class BaseLogic:
@@ -172,11 +175,19 @@ class SaveAnswerLogic:
 
         print("creating answer", flush=True)
         if answer.question.calc_dependents:
-            print("creating answer for question", answer.question, answer.question.calc_dependents)
+            print(
+                "creating answer for question",
+                answer.question,
+                answer.question.calc_dependents,
+            )
             root_doc = answer.document.family
-            root_doc = models.Document.objects.filter(pk=answer.document.family_id).prefetch_related(
-                *utils.build_document_prefetch_statements(prefetch_options=True)
-            ).first()
+            root_doc = (
+                models.Document.objects.filter(pk=answer.document.family_id)
+                .prefetch_related(
+                    *utils.build_document_prefetch_statements(prefetch_options=True)
+                )
+                .first()
+            )
             print("init structure top level")
             struc = structure.FieldSet(root_doc, root_doc.form)
 
@@ -205,9 +216,13 @@ class SaveAnswerLogic:
 
         if answer.question.calc_dependents:
             root_doc = answer.document.family
-            root_doc = models.Document.objects.filter(pk=answer.document.family_id).prefetch_related(
-                *utils.build_document_prefetch_statements(prefetch_options=True)
-            ).first()
+            root_doc = (
+                models.Document.objects.filter(pk=answer.document.family_id)
+                .prefetch_related(
+                    *utils.build_document_prefetch_statements(prefetch_options=True)
+                )
+                .first()
+            )
             print("init structure top level")
             struc = structure.FieldSet(root_doc, root_doc.form)
 
@@ -308,30 +323,43 @@ class SaveDocumentLogic:
         document.meta.pop("_defer_calculation", None)
         document.save()
 
-        # TODO do we need really this? If yes, can we make it more efficient?
         print("domain logic: update calc answers after document has been created")
-        #for question in models.Form.get_all_questions(
-        #    [(document.family or document).form_id]
-        #).filter(type=models.Question.TYPE_CALCULATED_FLOAT):
-        #    update_or_create_calc_answer(question, document, None)
-        
         root_doc = document.family
-        root_doc = models.Document.objects.filter(pk=document.family_id).prefetch_related(
-            *utils.build_document_prefetch_statements(prefetch_options=True)
-        ).first()
+        root_doc = (
+            models.Document.objects.filter(pk=document.family_id)
+            .prefetch_related(
+                *utils.build_document_prefetch_statements(prefetch_options=True)
+            )
+            .first()
+        )
         print("init structure top level")
         struc = structure.FieldSet(root_doc, root_doc.form)
 
-        dependents = document.form.questions.exclude(
-            calc_dependents=[]
-        ).values_list("calc_dependents", flat=True)
+        # Initialize all calculated questions in the form.
+        # In order to do this efficiently, we get all calculated questions with their dependents,
+        # sort them topoligically, and then update their answer.
+        calculated_questions = (
+            models.Form.get_all_questions([(document.family or document).form_id])
+            .filter(type=models.Question.TYPE_CALCULATED_FLOAT)
+            .values("slug", "calc_dependents")
+        )
+        adjacency_list = {
+            dep["slug"]: dep["calc_dependents"] for dep in calculated_questions
+        }
+        ts = TopologicalSorter(adjacency_list)
+        # TopologicalSorter expects the adjacency_list the "other way around", i.e.
+        # for every node the incoming nodes should be given. To account for this, we
+        # just reverse the resulting order.
+        sorted_question_slugs = list(reversed(list(ts.static_order())))
 
-        dependent_questions = list(itertools.chain(*dependents))
-        print(f"document {document.form.pk} created, update {dependent_questions}")
-
-        for question in models.Question.objects.filter(pk__in=dependent_questions):
-            print("question", question)
-            update_or_create_calc_answer(question, document, struc)
+        # fetch all related questions in one query, but iterate according
+        # to pre-established sorting
+        _questions = models.Question.objects.in_bulk(sorted_question_slugs)
+        for slug in sorted_question_slugs:
+            print("question", slug)
+            update_or_create_calc_answer(
+                _questions[slug], document, struc, update_dependents=False
+            )
 
         return document
 

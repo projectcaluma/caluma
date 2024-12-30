@@ -133,18 +133,18 @@ def update_calc_from_form_question(sender, instance, created, **kwargs):
 #     # Also skip non-referenced answers.
 #     if instance.document.family.meta.get("_defer_calculation"):
 #         return
-# 
+#
 #     if instance.question.type == models.Question.TYPE_TABLE:
 #         print("skipping update calc of table questions in event layer, because we don't have access to the question slug here")
 #         return
-# 
+#
 #     print(f"saved answer to {instance.question.pk}, recalculate dependents:")
 #     document = models.Document.objects.filter(pk=instance.document_id).prefetch_related(
 #         *build_document_prefetch_statements(
 #             "family", prefetch_options=True
 #         ),
 #     ).first()
-# 
+#
 #     for question in models.Question.objects.filter(
 #         pk__in=instance.question.calc_dependents
 #     ):
