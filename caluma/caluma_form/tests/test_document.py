@@ -1537,7 +1537,6 @@ def test_efficient_init_of_calc_questions(
     form_question_factory(form=form, question=calc_1)
     form_question_factory(form=form, question=calc_2)
 
-    from caluma.caluma_form import utils
     from caluma.caluma_form.jexl import QuestionJexl
 
     spy = mocker.spy(QuestionJexl, "evaluate")

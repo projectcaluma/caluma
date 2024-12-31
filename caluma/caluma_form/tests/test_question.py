@@ -1198,3 +1198,25 @@ def test_save_action_button_question(db, snapshot, question, schema_executor):
     result = schema_executor(query, variable_values=inp)
     assert not bool(result.errors)
     snapshot.assert_match(result.data)
+
+
+def test_init_of_calc_questions_queries(
+    db,
+    form,
+    form_and_document,
+    form_question_factory,
+    django_assert_num_queries,
+):
+    (form, document, questions_dict, _) = form_and_document(
+        use_table=True, use_subform=True, table_row_count=10
+    )
+
+    form_question_factory(
+        form=form,
+        question__slug="calc_question",
+        question__type=models.Question.TYPE_CALCULATED_FLOAT,
+        question__calc_expression="'table'|answer|mapby('column')|sum + 'top_question'|answer + 'sub_question'|answer",
+    )
+
+    with django_assert_num_queries(38):
+        api.save_answer(questions_dict["top_question"], document, value="1")
