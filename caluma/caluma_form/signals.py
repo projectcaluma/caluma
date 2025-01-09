@@ -101,10 +101,8 @@ def remove_calc_dependents(sender, instance, **kwargs):
 @receiver(post_save, sender=models.Question)
 @disable_raw
 @filter_events(lambda instance: instance.type == models.Question.TYPE_CALCULATED_FLOAT)
+@filter_events(lambda instance: getattr(instance, "calc_expression_changed"))
 def update_calc_from_question(sender, instance, created, update_fields, **kwargs):
-    if not instance.calc_expression_changed:
-        return
-
     for document in models.Document.objects.filter(form__questions=instance):
         update_or_create_calc_answer(instance, document)
 

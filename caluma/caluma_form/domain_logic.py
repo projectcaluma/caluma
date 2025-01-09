@@ -306,14 +306,7 @@ class SaveDocumentLogic:
         In order to do this efficiently, we get all calculated questions with their dependents,
         sort them topoligically, and then update their answer.
         """
-        root_doc = document.family
-        root_doc = (
-            models.Document.objects.filter(pk=document.family_id)
-            .prefetch_related(
-                *utils.build_document_prefetch_statements(prefetch_options=True)
-            )
-            .first()
-        )
+        root_doc = utils.prefetch_document(document.family_id)
         struc = structure.FieldSet(root_doc, root_doc.form)
 
         calculated_questions = (

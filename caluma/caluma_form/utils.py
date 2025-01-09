@@ -5,21 +5,21 @@ from caluma.caluma_form.jexl import QuestionJexl
 
 
 def prefetch_document(document_id):
-    return (
-        models.Document.objects.filter(pk=document_id)
-        .prefetch_related(*build_document_prefetch_statements(prefetch_options=True))
-        .first()
-    )
-
-
-def build_document_prefetch_statements(prefix="", prefetch_options=False):
-    """Build needed prefetch statements to performantly fetch a document.
+    """Fetch a document while prefetching the entire structure.
 
     This is needed to reduce the query count when almost all the form data
     is needed for a given document, e.g. when recalculating calculated
     answers: in order to evaluate calc expressions the complete document
     structure is needed, which would otherwise result in a lot of queries.
     """
+    return (
+        models.Document.objects.filter(pk=document_id)
+        .prefetch_related(*_build_document_prefetch_statements(prefetch_options=True))
+        .first()
+    )
+
+
+def _build_document_prefetch_statements(prefix="", prefetch_options=False):
     question_queryset = models.Question.objects.select_related(
         "sub_form", "row_form"
     ).order_by("-formquestion__sort")
