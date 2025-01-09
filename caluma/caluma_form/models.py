@@ -396,9 +396,9 @@ class Document(core_models.UUIDModel):
 
     def copy(self, family=None, user=None):
         """Create a copy including all its answers."""
-        from caluma.caluma_form.utils import recalculate_answers_from_document
 
-        # defer calculated questions, as many unecessary recomputations will happen otherwise
+        # no need to update calculated questions, since calculated answers
+        # are copied as well
         meta = dict(self.meta)
         meta["_defer_calculation"] = True
 
@@ -423,7 +423,6 @@ class Document(core_models.UUIDModel):
 
         new_document.meta.pop("_defer_calculation", None)
         new_document.save()
-        recalculate_answers_from_document(new_document)
 
         return new_document
 

@@ -8,6 +8,7 @@ from caluma.caluma_core.tests import (
 )
 
 from .. import api, models, serializers
+from ..jexl import QuestionJexl
 
 
 @pytest.mark.parametrize(
@@ -1057,9 +1058,6 @@ def test_nested_calculated_question(
         question__calc_expression=expr,
     )
 
-    calc_ans = document.answers.get(question_id="calc")
-    assert calc_ans.value == expected
-
     for dep in calc_deps:
         questions[dep].refresh_from_db()
         assert questions[dep].calc_dependents == ["calc"]
@@ -1110,7 +1108,7 @@ def test_recursive_calculated_question(
 
 
 def test_calculated_question_update_calc_expr(
-    db, schema_executor, form_and_document, form_question_factory
+    db, schema_executor, form_and_document, form_question_factory, mocker
 ):
     form, document, questions_dict, answers_dict = form_and_document(True, True)
 
@@ -1130,11 +1128,19 @@ def test_calculated_question_update_calc_expr(
 
     calc_ans = document.answers.get(question_id="calc_question")
     assert calc_ans.value == 101
-
+    # spying on update_or_create_calc_answer doesn't seem to work, so we spy on QuestionJexl.evaluate instead
+    spy = mocker.spy(QuestionJexl, "evaluate")
     calc_question.calc_expression = "'sub_question'|answer -1"
     calc_question.save()
+    assert spy.call_count > 0
+    call_count = spy.call_count
     calc_ans.refresh_from_db()
     assert calc_ans.value == 99
+
+    calc_question.label = "New Label"
+    calc_question.save()
+    # if the calc expression is not changed, no jexl evaluation should be done
+    assert spy.call_count == call_count
 
 
 def test_calculated_question_answer_document(
@@ -1165,19 +1171,24 @@ def test_calculated_question_answer_document(
         question__calc_expression="'table'|answer|mapby('column')[0] + 'table'|answer|mapby('column')[1]",
     ).question
 
-    calc_ans = document.answers.get(question_id="calc_question")
-    assert calc_ans.value is None
-
     # adding another row will make make the expression valid
     row_doc = document_factory(form=row_form, family=document)
     column_a2 = answer_factory(document=row_doc, question_id=column.slug, value=200)
-    table_a.documents.add(row_doc)
 
-    calc_ans.refresh_from_db()
+    api.save_answer(
+        question=table,
+        document=document,
+        documents=list(table_a.documents.all()) + [row_doc],
+    )
+
+    calc_ans = document.answers.get(question_id="calc_question")
     assert calc_ans.value == 300
 
-    column_a2.value = 100
-    column_a2.save()
+    api.save_answer(
+        question=column_a2.question,
+        document=row_doc,
+        value=100,
+    )
     calc_ans.refresh_from_db()
     column.refresh_from_db()
     assert column.calc_dependents == ["calc_question"]
@@ -1185,7 +1196,11 @@ def test_calculated_question_answer_document(
 
     # removing the row will make it invalid again
     table_a.documents.remove(row_doc)
-    row_doc.delete()
+    api.save_answer(
+        question=table,
+        document=document,
+        documents=[table_a.documents.first()],
+    )
     calc_ans.refresh_from_db()
     assert calc_ans.value is None
 
@@ -1220,3 +1235,25 @@ def test_save_action_button_question(db, snapshot, question, schema_executor):
     result = schema_executor(query, variable_values=inp)
     assert not bool(result.errors)
     snapshot.assert_match(result.data)
+
+
+def test_init_of_calc_questions_queries(
+    db,
+    form,
+    form_and_document,
+    form_question_factory,
+    django_assert_num_queries,
+):
+    (form, document, questions_dict, _) = form_and_document(
+        use_table=True, use_subform=True, table_row_count=10
+    )
+
+    form_question_factory(
+        form=form,
+        question__slug="calc_question",
+        question__type=models.Question.TYPE_CALCULATED_FLOAT,
+        question__calc_expression="'table'|answer|mapby('column')|sum + 'top_question'|answer + 'sub_question'|answer",
+    )
+
+    with django_assert_num_queries(35):
+        api.save_answer(questions_dict["top_question"], document, value="1")

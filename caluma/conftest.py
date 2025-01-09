@@ -272,7 +272,7 @@ def form_and_document(
             return existing
         return factory(**kwargs)
 
-    def factory(use_table=False, use_subform=False):
+    def factory(use_table=False, use_subform=False, table_row_count=1):
         form = fallback_factory(
             form_factory, slug="top_form", meta={"is-top-form": True, "level": 0}
         )
@@ -324,11 +324,12 @@ def form_and_document(
                 document=document, question=questions["table"]
             )
 
-            row_doc = document_factory(form=row_form, family=document)
-            answers["column"] = answer_factory(
-                document=row_doc, question=questions["column"]
-            )
-            answers["table"].documents.add(row_doc)
+            for _ in range(table_row_count):
+                row_doc = document_factory(form=row_form, family=document)
+                answers["column"] = answer_factory(
+                    document=row_doc, question=questions["column"]
+                )
+                answers["table"].documents.add(row_doc)
 
         if use_subform:
             sub_form = fallback_factory(

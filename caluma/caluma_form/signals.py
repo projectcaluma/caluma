@@ -1,7 +1,4 @@
-import itertools
-
 from django.db.models.signals import (
-    m2m_changed,
     post_delete,
     post_init,
     post_save,
@@ -15,11 +12,7 @@ from caluma.caluma_core.events import filter_events
 from caluma.utils import disable_raw
 
 from . import models
-from .utils import (
-    recalculate_answers_from_document,
-    update_calc_dependents,
-    update_or_create_calc_answer,
-)
+from .utils import update_calc_dependents, update_or_create_calc_answer
 
 
 @receiver(pre_create_historical_record, sender=models.HistoricalAnswer)
@@ -78,6 +71,7 @@ def save_calc_dependents(sender, instance, **kwargs):
         update_calc_dependents(
             instance.slug, old_expr="false", new_expr=instance.calc_expression
         )
+        instance.calc_expression_changed = True
 
     elif original.calc_expression != instance.calc_expression:
         update_calc_dependents(
@@ -85,6 +79,9 @@ def save_calc_dependents(sender, instance, **kwargs):
             old_expr=original.calc_expression,
             new_expr=instance.calc_expression,
         )
+        instance.calc_expression_changed = True
+    else:
+        instance.calc_expression_changed = False
 
 
 @receiver(pre_delete, sender=models.Question)
@@ -104,10 +101,8 @@ def remove_calc_dependents(sender, instance, **kwargs):
 @receiver(post_save, sender=models.Question)
 @disable_raw
 @filter_events(lambda instance: instance.type == models.Question.TYPE_CALCULATED_FLOAT)
+@filter_events(lambda instance: getattr(instance, "calc_expression_changed", False))
 def update_calc_from_question(sender, instance, created, update_fields, **kwargs):
-    # TODO optimize: only update answers if calc_expression is updated
-    # needs to happen during save() or __init__()
-
     for document in models.Document.objects.filter(form__questions=instance):
         update_or_create_calc_answer(instance, document)
 
@@ -120,40 +115,3 @@ def update_calc_from_question(sender, instance, created, update_fields, **kwargs
 def update_calc_from_form_question(sender, instance, created, **kwargs):
     for document in instance.form.documents.all():
         update_or_create_calc_answer(instance.question, document)
-
-
-@receiver(post_save, sender=models.Answer)
-@disable_raw
-@filter_events(lambda instance: instance.document and instance.question.calc_dependents)
-def update_calc_from_answer(sender, instance, **kwargs):
-    # If there is no document on the answer it means that it's a default
-    # answer. They shouldn't trigger a recalculation of a calculated field
-    # even when they are technically listed as a dependency.
-    # Also skip non-referenced answers.
-    if instance.document.family.meta.get("_defer_calculation"):
-        return
-
-    for question in models.Question.objects.filter(
-        pk__in=instance.question.calc_dependents
-    ):
-        update_or_create_calc_answer(question, instance.document)
-
-
-@receiver(post_save, sender=models.Document)
-@disable_raw
-# We're only interested in table row forms
-@filter_events(lambda instance, created: instance.pk != instance.family_id or created)
-def update_calc_from_document(sender, instance, created, **kwargs):
-    recalculate_answers_from_document(instance)
-
-
-@receiver(m2m_changed, sender=models.AnswerDocument)
-def update_calc_from_answerdocument(sender, instance, **kwargs):
-    dependents = instance.document.form.questions.exclude(
-        calc_dependents=[]
-    ).values_list("calc_dependents", flat=True)
-
-    dependent_questions = list(itertools.chain(*dependents))
-
-    for question in models.Question.objects.filter(pk__in=dependent_questions):
-        update_or_create_calc_answer(question, instance.document)

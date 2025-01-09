@@ -57,6 +57,8 @@ def test_recalculate_calc_answers(
     save_answer(question=dep1_main, value=10, document=main_doc)
     row_doc = save_document(form=row_form)
     save_answer(question=dep2_row, value=13, document=row_doc)
+    # make sure table questions' calc dependents are up to date
+    table_question.refresh_from_db()
     save_answer(table_question, document=main_doc, value=[str(row_doc.pk)])
     calc_answer = main_doc.answers.get(question_id="calc_question")
 

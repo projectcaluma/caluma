@@ -3,6 +3,7 @@ import pytest
 from rest_framework.exceptions import ValidationError
 
 from ...caluma_core.tests import extract_serializer_input_fields
+from ...caluma_form import api
 from ...caluma_form.models import DynamicOption, Question
 from .. import serializers, structure
 from ..jexl import QuestionMissing
@@ -59,10 +60,8 @@ def test_validate_special_fields(
         (Question.TYPE_CALCULATED_FLOAT, "false"),
     ],
 )
-def test_validate_calc_fields(
-    db, form_question, question, document_factory, answer_factory, admin_user
-):
-    document = document_factory(form=form_question.form)
+def test_validate_calc_fields(db, form_question, question, admin_user):
+    document = api.save_document(form=form_question.form)
     assert document.answers.filter(question_id=question.pk).exists()
     DocumentValidator().validate(document, admin_user)
 

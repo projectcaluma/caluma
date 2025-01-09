@@ -1,3 +1,4 @@
+from graphlib import TopologicalSorter
 from typing import Optional
 
 from django.db import transaction
@@ -6,8 +7,8 @@ from rest_framework.exceptions import ValidationError
 
 from caluma.caluma_core.models import BaseModel
 from caluma.caluma_core.relay import extract_global_id
-from caluma.caluma_form import models, validators
-from caluma.caluma_form.utils import recalculate_answers_from_document
+from caluma.caluma_form import models, structure, utils, validators
+from caluma.caluma_form.utils import update_or_create_calc_answer
 from caluma.caluma_user.models import BaseUser
 from caluma.utils import update_model
 
@@ -151,6 +152,19 @@ class SaveAnswerLogic:
         # TODO emit events
         return answer
 
+    @staticmethod
+    def update_calc_dependents(answer):
+        if not answer.question.calc_dependents:
+            return
+
+        root_doc = utils.prefetch_document(answer.document.family_id)
+        struc = structure.FieldSet(root_doc, root_doc.form)
+
+        for question in models.Question.objects.filter(
+            pk__in=answer.question.calc_dependents
+        ):
+            update_or_create_calc_answer(question, root_doc, struc)
+
     @classmethod
     @transaction.atomic
     def create(
@@ -168,6 +182,8 @@ class SaveAnswerLogic:
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
 
+        cls.update_calc_dependents(answer)
+
         return answer
 
     @classmethod
@@ -184,6 +200,8 @@ class SaveAnswerLogic:
 
         if answer.question.type == models.Question.TYPE_TABLE:
             answer.create_answer_documents(documents)
+
+        cls.update_calc_dependents(answer)
 
         answer.refresh_from_db()
         return answer
@@ -276,7 +294,44 @@ class SaveDocumentLogic:
         document.meta.pop("_defer_calculation", None)
         document.save()
 
-        recalculate_answers_from_document(document)
+        SaveDocumentLogic._initialize_calculated_answers(document)
+
+        return document
+
+    @staticmethod
+    def _initialize_calculated_answers(document):
+        """
+        Initialize all calculated questions in the document.
+
+        In order to do this efficiently, we get all calculated questions with their dependents,
+        sort them topoligically, and then update their answer.
+        """
+        root_doc = utils.prefetch_document(document.family_id)
+        struc = structure.FieldSet(root_doc, root_doc.form)
+
+        calculated_questions = (
+            models.Form.get_all_questions([(document.family or document).form_id])
+            .filter(type=models.Question.TYPE_CALCULATED_FLOAT)
+            .values("slug", "calc_dependents")
+        )
+        adjacency_list = {
+            dep["slug"]: dep["calc_dependents"] for dep in calculated_questions
+        }
+        ts = TopologicalSorter(adjacency_list)
+        # TopologicalSorter expects the adjacency_list the "other way around", i.e.
+        # for every node the incoming nodes should be given. To account for this, we
+        # just reverse the resulting order.
+        sorted_question_slugs = list(reversed(list(ts.static_order())))
+
+        # fetch all related questions in one query, but iterate according
+        # to pre-established sorting
+        _questions = models.Question.objects.in_bulk(sorted_question_slugs)
+        for slug in sorted_question_slugs:
+            print("question", slug)
+            update_or_create_calc_answer(
+                _questions[slug], document, struc, update_dependents=False
+            )
+
         return document
 
     @staticmethod
