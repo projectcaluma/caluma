@@ -4,6 +4,14 @@ from caluma.caluma_form import models, structure
 from caluma.caluma_form.jexl import QuestionJexl
 
 
+def prefetch_document(document_id):
+    return (
+        models.Document.objects.filter(pk=document_id)
+        .prefetch_related(*build_document_prefetch_statements(prefetch_options=True))
+        .first()
+    )
+
+
 def build_document_prefetch_statements(prefix="", prefetch_options=False):
     """Build needed prefetch statements to performantly fetch a document.
 
@@ -11,7 +19,6 @@ def build_document_prefetch_statements(prefix="", prefetch_options=False):
     is needed for a given document, e.g. when recalculating calculated
     answers.
     """
-
     question_queryset = models.Question.objects.select_related(
         "sub_form", "row_form"
     ).order_by("-formquestion__sort")

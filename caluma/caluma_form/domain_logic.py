@@ -157,14 +157,7 @@ class SaveAnswerLogic:
         if not answer.question.calc_dependents:
             return
 
-        root_doc = answer.document.family
-        root_doc = (
-            models.Document.objects.filter(pk=answer.document.family_id)
-            .prefetch_related(
-                *utils.build_document_prefetch_statements(prefetch_options=True)
-            )
-            .first()
-        )
+        root_doc = utils.prefetch_document(answer.document.family_id)
         struc = structure.FieldSet(root_doc, root_doc.form)
 
         for question in models.Question.objects.filter(
@@ -301,6 +294,18 @@ class SaveDocumentLogic:
         document.meta.pop("_defer_calculation", None)
         document.save()
 
+        SaveDocumentLogic._initialize_calculated_answers(document)
+
+        return document
+
+    @staticmethod
+    def _initialize_calculated_answers(document):
+        """
+        Initialize all calculated questions in the document.
+
+        In order to do this efficiently, we get all calculated questions with their dependents,
+        sort them topoligically, and then update their answer.
+        """
         root_doc = document.family
         root_doc = (
             models.Document.objects.filter(pk=document.family_id)
@@ -311,9 +316,6 @@ class SaveDocumentLogic:
         )
         struc = structure.FieldSet(root_doc, root_doc.form)
 
-        # Initialize all calculated questions in the form.
-        # In order to do this efficiently, we get all calculated questions with their dependents,
-        # sort them topoligically, and then update their answer.
         calculated_questions = (
             models.Form.get_all_questions([(document.family or document).form_id])
             .filter(type=models.Question.TYPE_CALCULATED_FLOAT)

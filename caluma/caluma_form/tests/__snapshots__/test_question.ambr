@@ -1,4 +1,156 @@
 # serializer version: 1
+# name: test_init_of_calc_questions_queries
+  list([
+    dict({
+      'sql': 'SELECT "caluma_form_answer"."created_at", "caluma_form_answer"."modified_at", "caluma_form_answer"."created_by_user", "caluma_form_answer"."created_by_group", "caluma_form_answer"."modified_by_user", "caluma_form_answer"."modified_by_group", "caluma_form_answer"."id", "caluma_form_answer"."question_id", "caluma_form_answer"."value", "caluma_form_answer"."meta", "caluma_form_answer"."document_id", "caluma_form_answer"."date" FROM "caluma_form_answer" WHERE ("caluma_form_answer"."document_id" = \'9df16143c288452b8b6435ebe3be969f\'::uuid AND "caluma_form_answer"."question_id" = \'top_question\') ORDER BY "caluma_form_answer"."id" ASC LIMIT 1',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SAVEPOINT "s138278537434944_x63"',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_question"."created_at", "caluma_form_question"."modified_at", "caluma_form_question"."created_by_user", "caluma_form_question"."created_by_group", "caluma_form_question"."modified_by_user", "caluma_form_question"."modified_by_group", "caluma_form_question"."slug", "caluma_form_question"."label", "caluma_form_question"."type", "caluma_form_question"."is_required", "caluma_form_question"."is_hidden", "caluma_form_question"."is_archived", "caluma_form_question"."placeholder", "caluma_form_question"."info_text", "caluma_form_question"."hint_text", "caluma_form_question"."static_content", "caluma_form_question"."configuration", "caluma_form_question"."meta", "caluma_form_question"."data_source", "caluma_form_question"."row_form_id", "caluma_form_question"."sub_form_id", "caluma_form_question"."source_id", "caluma_form_question"."format_validators", "caluma_form_question"."default_answer_id", "caluma_form_question"."calc_expression", "caluma_form_question"."calc_dependents" FROM "caluma_form_question" WHERE "caluma_form_question"."slug" = \'top_question\' LIMIT 21',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SAVEPOINT "s138278537434944_x64"',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'UPDATE "caluma_form_answer" SET "created_at" = \'2025-01-09 09:37:43.921891+00:00\'::timestamptz, "modified_at" = \'2025-01-09 09:37:44.030007+00:00\'::timestamptz, "created_by_user" = \'9018a766-da92-4600-a3d9-5971fc8d80b6\', "created_by_group" = \'c08de5f9-49d2-46fe-8315-e090eeeb46db\', "modified_by_user" = \'9018a766-da92-4600-a3d9-5971fc8d80b6\', "modified_by_group" = \'c08de5f9-49d2-46fe-8315-e090eeeb46db\', "question_id" = \'top_question\', "value" = \'"1"\'::jsonb, "meta" = \'{}\'::jsonb, "document_id" = \'9df16143c288452b8b6435ebe3be969f\'::uuid, "date" = NULL WHERE "caluma_form_answer"."id" = \'d5900ce6bb6d4b0e96d6fa77a191aecd\'::uuid',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_question"."created_at", "caluma_form_question"."modified_at", "caluma_form_question"."created_by_user", "caluma_form_question"."created_by_group", "caluma_form_question"."modified_by_user", "caluma_form_question"."modified_by_group", "caluma_form_question"."slug", "caluma_form_question"."label", "caluma_form_question"."type", "caluma_form_question"."is_required", "caluma_form_question"."is_hidden", "caluma_form_question"."is_archived", "caluma_form_question"."placeholder", "caluma_form_question"."info_text", "caluma_form_question"."hint_text", "caluma_form_question"."static_content", "caluma_form_question"."configuration", "caluma_form_question"."meta", "caluma_form_question"."data_source", "caluma_form_question"."row_form_id", "caluma_form_question"."sub_form_id", "caluma_form_question"."source_id", "caluma_form_question"."format_validators", "caluma_form_question"."default_answer_id", "caluma_form_question"."calc_expression", "caluma_form_question"."calc_dependents" FROM "caluma_form_question" WHERE "caluma_form_question"."slug" = \'top_question\' LIMIT 21',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'INSERT INTO "caluma_form_historicalanswer" ("created_at", "modified_at", "created_by_user", "created_by_group", "modified_by_user", "modified_by_group", "history_question_type", "id", "value", "meta", "date", "history_user_id", "question_id", "document_id", "history_id", "history_date", "history_change_reason", "history_type") VALUES (\'2025-01-09 09:37:43.921891+00:00\'::timestamptz, \'2025-01-09 09:37:44.030007+00:00\'::timestamptz, \'9018a766-da92-4600-a3d9-5971fc8d80b6\', \'c08de5f9-49d2-46fe-8315-e090eeeb46db\', \'9018a766-da92-4600-a3d9-5971fc8d80b6\', \'c08de5f9-49d2-46fe-8315-e090eeeb46db\', \'text\', \'d5900ce6bb6d4b0e96d6fa77a191aecd\'::uuid, \'"1"\'::jsonb, \'{}\'::jsonb, NULL, \'AnonymousUser\', \'top_question\', \'9df16143c288452b8b6435ebe3be969f\'::uuid, \'528217079f5f4726940a44cd7aeacbcd\'::uuid, \'2025-01-09 09:37:44.030619+00:00\'::timestamptz, NULL, \'~\')',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_answer"."created_at", "caluma_form_answer"."modified_at", "caluma_form_answer"."created_by_user", "caluma_form_answer"."created_by_group", "caluma_form_answer"."modified_by_user", "caluma_form_answer"."modified_by_group", "caluma_form_answer"."id", "caluma_form_answer"."question_id", "caluma_form_answer"."value", "caluma_form_answer"."meta", "caluma_form_answer"."document_id", "caluma_form_answer"."date" FROM "caluma_form_answer" WHERE "caluma_form_answer"."id" = \'d5900ce6bb6d4b0e96d6fa77a191aecd\'::uuid LIMIT 21',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'RELEASE SAVEPOINT "s138278537434944_x64"',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_question"."created_at", "caluma_form_question"."modified_at", "caluma_form_question"."created_by_user", "caluma_form_question"."created_by_group", "caluma_form_question"."modified_by_user", "caluma_form_question"."modified_by_group", "caluma_form_question"."slug", "caluma_form_question"."label", "caluma_form_question"."type", "caluma_form_question"."is_required", "caluma_form_question"."is_hidden", "caluma_form_question"."is_archived", "caluma_form_question"."placeholder", "caluma_form_question"."info_text", "caluma_form_question"."hint_text", "caluma_form_question"."static_content", "caluma_form_question"."configuration", "caluma_form_question"."meta", "caluma_form_question"."data_source", "caluma_form_question"."row_form_id", "caluma_form_question"."sub_form_id", "caluma_form_question"."source_id", "caluma_form_question"."format_validators", "caluma_form_question"."default_answer_id", "caluma_form_question"."calc_expression", "caluma_form_question"."calc_dependents" FROM "caluma_form_question" WHERE "caluma_form_question"."slug" = \'top_question\' LIMIT 21',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_document"."created_at", "caluma_form_document"."modified_at", "caluma_form_document"."created_by_user", "caluma_form_document"."created_by_group", "caluma_form_document"."modified_by_user", "caluma_form_document"."modified_by_group", "caluma_form_document"."id", "caluma_form_document"."family_id", "caluma_form_document"."form_id", "caluma_form_document"."source_id", "caluma_form_document"."meta" FROM "caluma_form_document" WHERE "caluma_form_document"."id" = \'9df16143c288452b8b6435ebe3be969f\'::uuid LIMIT 21',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_document"."created_at", "caluma_form_document"."modified_at", "caluma_form_document"."created_by_user", "caluma_form_document"."created_by_group", "caluma_form_document"."modified_by_user", "caluma_form_document"."modified_by_group", "caluma_form_document"."id", "caluma_form_document"."family_id", "caluma_form_document"."form_id", "caluma_form_document"."source_id", "caluma_form_document"."meta" FROM "caluma_form_document" WHERE "caluma_form_document"."id" = \'9df16143c288452b8b6435ebe3be969f\'::uuid ORDER BY "caluma_form_document"."id" ASC LIMIT 1',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_answer"."created_at", "caluma_form_answer"."modified_at", "caluma_form_answer"."created_by_user", "caluma_form_answer"."created_by_group", "caluma_form_answer"."modified_by_user", "caluma_form_answer"."modified_by_group", "caluma_form_answer"."id", "caluma_form_answer"."question_id", "caluma_form_answer"."value", "caluma_form_answer"."meta", "caluma_form_answer"."document_id", "caluma_form_answer"."date" FROM "caluma_form_answer" WHERE "caluma_form_answer"."document_id" IN (\'9df16143c288452b8b6435ebe3be969f\'::uuid)',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_dynamicoption"."created_at", "caluma_form_dynamicoption"."modified_at", "caluma_form_dynamicoption"."created_by_user", "caluma_form_dynamicoption"."created_by_group", "caluma_form_dynamicoption"."modified_by_user", "caluma_form_dynamicoption"."modified_by_group", "caluma_form_dynamicoption"."id", "caluma_form_dynamicoption"."slug", "caluma_form_dynamicoption"."label", "caluma_form_dynamicoption"."document_id", "caluma_form_dynamicoption"."question_id" FROM "caluma_form_dynamicoption" WHERE "caluma_form_dynamicoption"."document_id" IN (\'9df16143c288452b8b6435ebe3be969f\'::uuid)',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_answerdocument"."created_at", "caluma_form_answerdocument"."modified_at", "caluma_form_answerdocument"."created_by_user", "caluma_form_answerdocument"."created_by_group", "caluma_form_answerdocument"."modified_by_user", "caluma_form_answerdocument"."modified_by_group", "caluma_form_answerdocument"."id", "caluma_form_answerdocument"."answer_id", "caluma_form_answerdocument"."document_id", "caluma_form_answerdocument"."sort", "caluma_form_document"."created_at", "caluma_form_document"."modified_at", "caluma_form_document"."created_by_user", "caluma_form_document"."created_by_group", "caluma_form_document"."modified_by_user", "caluma_form_document"."modified_by_group", "caluma_form_document"."id", "caluma_form_document"."family_id", "caluma_form_document"."form_id", "caluma_form_document"."source_id", "caluma_form_document"."meta", T4."created_at", T4."modified_at", T4."created_by_user", T4."created_by_group", T4."modified_by_user", T4."modified_by_group", T4."id", T4."family_id", T4."form_id", T4."source_id", T4."meta", "caluma_form_form"."created_at", "caluma_form_form"."modified_at", "caluma_form_form"."created_by_user", "caluma_form_form"."created_by_group", "caluma_form_form"."modified_by_user", "caluma_form_form"."modified_by_group", "caluma_form_form"."slug", "caluma_form_form"."name", "caluma_form_form"."description", "caluma_form_form"."meta", "caluma_form_form"."is_published", "caluma_form_form"."is_archived", "caluma_form_form"."source_id" FROM "caluma_form_answerdocument" INNER JOIN "caluma_form_document" ON ("caluma_form_answerdocument"."document_id" = "caluma_form_document"."id") LEFT OUTER JOIN "caluma_form_document" T4 ON ("caluma_form_document"."family_id" = T4."id") INNER JOIN "caluma_form_form" ON ("caluma_form_document"."form_id" = "caluma_form_form"."slug") WHERE "caluma_form_answerdocument"."answer_id" IN (\'b6f250f21acd42f3b875d84f24f322af\'::uuid, \'63402fbf811b41bd9d26435130837bb8\'::uuid, \'d5900ce6bb6d4b0e96d6fa77a191aecd\'::uuid) ORDER BY "caluma_form_answerdocument"."sort" DESC',
+      'time': '0.001',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_answer"."created_at", "caluma_form_answer"."modified_at", "caluma_form_answer"."created_by_user", "caluma_form_answer"."created_by_group", "caluma_form_answer"."modified_by_user", "caluma_form_answer"."modified_by_group", "caluma_form_answer"."id", "caluma_form_answer"."question_id", "caluma_form_answer"."value", "caluma_form_answer"."meta", "caluma_form_answer"."document_id", "caluma_form_answer"."date" FROM "caluma_form_answer" WHERE "caluma_form_answer"."document_id" IN (\'d74d9e8527c44248a9718ca65517add2\'::uuid, \'607d99f831b744ec834f6545b6bcf4ec\'::uuid, \'273189dda7f0483ab34c2803153f8bc8\'::uuid, \'455a554e26594957a448a1d271e8a1e9\'::uuid, \'9829ebd4b30742cc82571d378632a60f\'::uuid, \'77c7b88cbc0a462f95b40488d8646fe2\'::uuid, \'775855c77fe2479895cff5877846b2fd\'::uuid, \'a0a08ac5b0e74cd7bf716d655d152200\'::uuid, \'7b07a7eda7f74dd4802c80880d572c66\'::uuid, \'3245e8ce4fae418ea5fcf2aa86b73bd3\'::uuid)',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT ("caluma_form_formquestion"."form_id") AS "_prefetch_related_val_form_id", "caluma_form_question"."created_at", "caluma_form_question"."modified_at", "caluma_form_question"."created_by_user", "caluma_form_question"."created_by_group", "caluma_form_question"."modified_by_user", "caluma_form_question"."modified_by_group", "caluma_form_question"."slug", "caluma_form_question"."label", "caluma_form_question"."type", "caluma_form_question"."is_required", "caluma_form_question"."is_hidden", "caluma_form_question"."is_archived", "caluma_form_question"."placeholder", "caluma_form_question"."info_text", "caluma_form_question"."hint_text", "caluma_form_question"."static_content", "caluma_form_question"."configuration", "caluma_form_question"."meta", "caluma_form_question"."data_source", "caluma_form_question"."row_form_id", "caluma_form_question"."sub_form_id", "caluma_form_question"."source_id", "caluma_form_question"."format_validators", "caluma_form_question"."default_answer_id", "caluma_form_question"."calc_expression", "caluma_form_question"."calc_dependents" FROM "caluma_form_question" INNER JOIN "caluma_form_formquestion" ON ("caluma_form_question"."slug" = "caluma_form_formquestion"."question_id") WHERE "caluma_form_formquestion"."form_id" IN (\'row_form\')',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_form"."created_at", "caluma_form_form"."modified_at", "caluma_form_form"."created_by_user", "caluma_form_form"."created_by_group", "caluma_form_form"."modified_by_user", "caluma_form_form"."modified_by_group", "caluma_form_form"."slug", "caluma_form_form"."name", "caluma_form_form"."description", "caluma_form_form"."meta", "caluma_form_form"."is_published", "caluma_form_form"."is_archived", "caluma_form_form"."source_id" FROM "caluma_form_form" WHERE "caluma_form_form"."slug" IN (\'top_form\')',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT ("caluma_form_formquestion"."form_id") AS "_prefetch_related_val_form_id", "caluma_form_question"."created_at", "caluma_form_question"."modified_at", "caluma_form_question"."created_by_user", "caluma_form_question"."created_by_group", "caluma_form_question"."modified_by_user", "caluma_form_question"."modified_by_group", "caluma_form_question"."slug", "caluma_form_question"."label", "caluma_form_question"."type", "caluma_form_question"."is_required", "caluma_form_question"."is_hidden", "caluma_form_question"."is_archived", "caluma_form_question"."placeholder", "caluma_form_question"."info_text", "caluma_form_question"."hint_text", "caluma_form_question"."static_content", "caluma_form_question"."configuration", "caluma_form_question"."meta", "caluma_form_question"."data_source", "caluma_form_question"."row_form_id", "caluma_form_question"."sub_form_id", "caluma_form_question"."source_id", "caluma_form_question"."format_validators", "caluma_form_question"."default_answer_id", "caluma_form_question"."calc_expression", "caluma_form_question"."calc_dependents", T4."created_at", T4."modified_at", T4."created_by_user", T4."created_by_group", T4."modified_by_user", T4."modified_by_group", T4."slug", T4."name", T4."description", T4."meta", T4."is_published", T4."is_archived", T4."source_id", T5."created_at", T5."modified_at", T5."created_by_user", T5."created_by_group", T5."modified_by_user", T5."modified_by_group", T5."slug", T5."name", T5."description", T5."meta", T5."is_published", T5."is_archived", T5."source_id" FROM "caluma_form_question" INNER JOIN "caluma_form_formquestion" ON ("caluma_form_question"."slug" = "caluma_form_formquestion"."question_id") LEFT OUTER JOIN "caluma_form_form" T4 ON ("caluma_form_question"."row_form_id" = T4."slug") LEFT OUTER JOIN "caluma_form_form" T5 ON ("caluma_form_question"."sub_form_id" = T5."slug") WHERE "caluma_form_formquestion"."form_id" IN (\'top_form\') ORDER BY "caluma_form_formquestion"."sort" DESC',
+      'time': '0.001',
+    }),
+    dict({
+      'sql': 'SELECT ("caluma_form_questionoption"."question_id") AS "_prefetch_related_val_question_id", "caluma_form_option"."created_at", "caluma_form_option"."modified_at", "caluma_form_option"."created_by_user", "caluma_form_option"."created_by_group", "caluma_form_option"."modified_by_user", "caluma_form_option"."modified_by_group", "caluma_form_option"."slug", "caluma_form_option"."label", "caluma_form_option"."is_hidden", "caluma_form_option"."is_archived", "caluma_form_option"."meta", "caluma_form_option"."source_id" FROM "caluma_form_option" INNER JOIN "caluma_form_questionoption" ON ("caluma_form_option"."slug" = "caluma_form_questionoption"."option_id") WHERE "caluma_form_questionoption"."question_id" IN (\'top_question\', \'table\', \'form\', \'calc_question\') ORDER BY "caluma_form_questionoption"."sort" DESC',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT ("caluma_form_formquestion"."form_id") AS "_prefetch_related_val_form_id", "caluma_form_question"."created_at", "caluma_form_question"."modified_at", "caluma_form_question"."created_by_user", "caluma_form_question"."created_by_group", "caluma_form_question"."modified_by_user", "caluma_form_question"."modified_by_group", "caluma_form_question"."slug", "caluma_form_question"."label", "caluma_form_question"."type", "caluma_form_question"."is_required", "caluma_form_question"."is_hidden", "caluma_form_question"."is_archived", "caluma_form_question"."placeholder", "caluma_form_question"."info_text", "caluma_form_question"."hint_text", "caluma_form_question"."static_content", "caluma_form_question"."configuration", "caluma_form_question"."meta", "caluma_form_question"."data_source", "caluma_form_question"."row_form_id", "caluma_form_question"."sub_form_id", "caluma_form_question"."source_id", "caluma_form_question"."format_validators", "caluma_form_question"."default_answer_id", "caluma_form_question"."calc_expression", "caluma_form_question"."calc_dependents", T4."created_at", T4."modified_at", T4."created_by_user", T4."created_by_group", T4."modified_by_user", T4."modified_by_group", T4."slug", T4."name", T4."description", T4."meta", T4."is_published", T4."is_archived", T4."source_id", T5."created_at", T5."modified_at", T5."created_by_user", T5."created_by_group", T5."modified_by_user", T5."modified_by_group", T5."slug", T5."name", T5."description", T5."meta", T5."is_published", T5."is_archived", T5."source_id" FROM "caluma_form_question" INNER JOIN "caluma_form_formquestion" ON ("caluma_form_question"."slug" = "caluma_form_formquestion"."question_id") LEFT OUTER JOIN "caluma_form_form" T4 ON ("caluma_form_question"."row_form_id" = T4."slug") LEFT OUTER JOIN "caluma_form_form" T5 ON ("caluma_form_question"."sub_form_id" = T5."slug") WHERE "caluma_form_formquestion"."form_id" IN (\'row_form\') ORDER BY "caluma_form_formquestion"."sort" DESC',
+      'time': '0.001',
+    }),
+    dict({
+      'sql': 'SELECT ("caluma_form_questionoption"."question_id") AS "_prefetch_related_val_question_id", "caluma_form_option"."created_at", "caluma_form_option"."modified_at", "caluma_form_option"."created_by_user", "caluma_form_option"."created_by_group", "caluma_form_option"."modified_by_user", "caluma_form_option"."modified_by_group", "caluma_form_option"."slug", "caluma_form_option"."label", "caluma_form_option"."is_hidden", "caluma_form_option"."is_archived", "caluma_form_option"."meta", "caluma_form_option"."source_id" FROM "caluma_form_option" INNER JOIN "caluma_form_questionoption" ON ("caluma_form_option"."slug" = "caluma_form_questionoption"."option_id") WHERE "caluma_form_questionoption"."question_id" IN (\'column\') ORDER BY "caluma_form_questionoption"."sort" DESC',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT ("caluma_form_formquestion"."form_id") AS "_prefetch_related_val_form_id", "caluma_form_question"."created_at", "caluma_form_question"."modified_at", "caluma_form_question"."created_by_user", "caluma_form_question"."created_by_group", "caluma_form_question"."modified_by_user", "caluma_form_question"."modified_by_group", "caluma_form_question"."slug", "caluma_form_question"."label", "caluma_form_question"."type", "caluma_form_question"."is_required", "caluma_form_question"."is_hidden", "caluma_form_question"."is_archived", "caluma_form_question"."placeholder", "caluma_form_question"."info_text", "caluma_form_question"."hint_text", "caluma_form_question"."static_content", "caluma_form_question"."configuration", "caluma_form_question"."meta", "caluma_form_question"."data_source", "caluma_form_question"."row_form_id", "caluma_form_question"."sub_form_id", "caluma_form_question"."source_id", "caluma_form_question"."format_validators", "caluma_form_question"."default_answer_id", "caluma_form_question"."calc_expression", "caluma_form_question"."calc_dependents", T4."created_at", T4."modified_at", T4."created_by_user", T4."created_by_group", T4."modified_by_user", T4."modified_by_group", T4."slug", T4."name", T4."description", T4."meta", T4."is_published", T4."is_archived", T4."source_id", T5."created_at", T5."modified_at", T5."created_by_user", T5."created_by_group", T5."modified_by_user", T5."modified_by_group", T5."slug", T5."name", T5."description", T5."meta", T5."is_published", T5."is_archived", T5."source_id" FROM "caluma_form_question" INNER JOIN "caluma_form_formquestion" ON ("caluma_form_question"."slug" = "caluma_form_formquestion"."question_id") LEFT OUTER JOIN "caluma_form_form" T4 ON ("caluma_form_question"."row_form_id" = T4."slug") LEFT OUTER JOIN "caluma_form_form" T5 ON ("caluma_form_question"."sub_form_id" = T5."slug") WHERE "caluma_form_formquestion"."form_id" IN (\'sub_form\') ORDER BY "caluma_form_formquestion"."sort" DESC',
+      'time': '0.001',
+    }),
+    dict({
+      'sql': 'SELECT ("caluma_form_questionoption"."question_id") AS "_prefetch_related_val_question_id", "caluma_form_option"."created_at", "caluma_form_option"."modified_at", "caluma_form_option"."created_by_user", "caluma_form_option"."created_by_group", "caluma_form_option"."modified_by_user", "caluma_form_option"."modified_by_group", "caluma_form_option"."slug", "caluma_form_option"."label", "caluma_form_option"."is_hidden", "caluma_form_option"."is_archived", "caluma_form_option"."meta", "caluma_form_option"."source_id" FROM "caluma_form_option" INNER JOIN "caluma_form_questionoption" ON ("caluma_form_option"."slug" = "caluma_form_questionoption"."option_id") WHERE "caluma_form_questionoption"."question_id" IN (\'sub_question\') ORDER BY "caluma_form_questionoption"."sort" DESC',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_question"."created_at", "caluma_form_question"."modified_at", "caluma_form_question"."created_by_user", "caluma_form_question"."created_by_group", "caluma_form_question"."modified_by_user", "caluma_form_question"."modified_by_group", "caluma_form_question"."slug", "caluma_form_question"."label", "caluma_form_question"."type", "caluma_form_question"."is_required", "caluma_form_question"."is_hidden", "caluma_form_question"."is_archived", "caluma_form_question"."placeholder", "caluma_form_question"."info_text", "caluma_form_question"."hint_text", "caluma_form_question"."static_content", "caluma_form_question"."configuration", "caluma_form_question"."meta", "caluma_form_question"."data_source", "caluma_form_question"."row_form_id", "caluma_form_question"."sub_form_id", "caluma_form_question"."source_id", "caluma_form_question"."format_validators", "caluma_form_question"."default_answer_id", "caluma_form_question"."calc_expression", "caluma_form_question"."calc_dependents" FROM "caluma_form_question" WHERE "caluma_form_question"."slug" IN (\'calc_question\')',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_document"."created_at", "caluma_form_document"."modified_at", "caluma_form_document"."created_by_user", "caluma_form_document"."created_by_group", "caluma_form_document"."modified_by_user", "caluma_form_document"."modified_by_group", "caluma_form_document"."id", "caluma_form_document"."family_id", "caluma_form_document"."form_id", "caluma_form_document"."source_id", "caluma_form_document"."meta" FROM "caluma_form_document" WHERE "caluma_form_document"."id" = \'9df16143c288452b8b6435ebe3be969f\'::uuid LIMIT 21',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SAVEPOINT "s138278537434944_x65"',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_answer"."created_at", "caluma_form_answer"."modified_at", "caluma_form_answer"."created_by_user", "caluma_form_answer"."created_by_group", "caluma_form_answer"."modified_by_user", "caluma_form_answer"."modified_by_group", "caluma_form_answer"."id", "caluma_form_answer"."question_id", "caluma_form_answer"."value", "caluma_form_answer"."meta", "caluma_form_answer"."document_id", "caluma_form_answer"."date" FROM "caluma_form_answer" WHERE ("caluma_form_answer"."document_id" = \'9df16143c288452b8b6435ebe3be969f\'::uuid AND "caluma_form_answer"."question_id" = \'calc_question\') LIMIT 21 FOR UPDATE',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SAVEPOINT "s138278537434944_x66"',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'INSERT INTO "caluma_form_answer" ("created_at", "modified_at", "created_by_user", "created_by_group", "modified_by_user", "modified_by_group", "id", "question_id", "value", "meta", "document_id", "date") VALUES (\'2025-01-09 09:37:44.056354+00:00\'::timestamptz, \'2025-01-09 09:37:44.056366+00:00\'::timestamptz, NULL, NULL, NULL, NULL, \'21677e8245f84289bb6af3e17ec0366d\'::uuid, \'calc_question\', NULL, \'{}\'::jsonb, \'9df16143c288452b8b6435ebe3be969f\'::uuid, NULL)',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_question"."created_at", "caluma_form_question"."modified_at", "caluma_form_question"."created_by_user", "caluma_form_question"."created_by_group", "caluma_form_question"."modified_by_user", "caluma_form_question"."modified_by_group", "caluma_form_question"."slug", "caluma_form_question"."label", "caluma_form_question"."type", "caluma_form_question"."is_required", "caluma_form_question"."is_hidden", "caluma_form_question"."is_archived", "caluma_form_question"."placeholder", "caluma_form_question"."info_text", "caluma_form_question"."hint_text", "caluma_form_question"."static_content", "caluma_form_question"."configuration", "caluma_form_question"."meta", "caluma_form_question"."data_source", "caluma_form_question"."row_form_id", "caluma_form_question"."sub_form_id", "caluma_form_question"."source_id", "caluma_form_question"."format_validators", "caluma_form_question"."default_answer_id", "caluma_form_question"."calc_expression", "caluma_form_question"."calc_dependents" FROM "caluma_form_question" WHERE "caluma_form_question"."slug" = \'calc_question\' LIMIT 21',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'INSERT INTO "caluma_form_historicalanswer" ("created_at", "modified_at", "created_by_user", "created_by_group", "modified_by_user", "modified_by_group", "history_question_type", "id", "value", "meta", "date", "history_user_id", "question_id", "document_id", "history_id", "history_date", "history_change_reason", "history_type") VALUES (\'2025-01-09 09:37:44.056354+00:00\'::timestamptz, \'2025-01-09 09:37:44.056366+00:00\'::timestamptz, NULL, NULL, NULL, NULL, \'calculated_float\', \'21677e8245f84289bb6af3e17ec0366d\'::uuid, NULL, \'{}\'::jsonb, NULL, \'AnonymousUser\', \'calc_question\', \'9df16143c288452b8b6435ebe3be969f\'::uuid, \'fe2295cba2ed4a9fbd3c54cba14ab7ad\'::uuid, \'2025-01-09 09:37:44.056789+00:00\'::timestamptz, NULL, \'+\')',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'RELEASE SAVEPOINT "s138278537434944_x66"',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'RELEASE SAVEPOINT "s138278537434944_x65"',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_answer"."created_at", "caluma_form_answer"."modified_at", "caluma_form_answer"."created_by_user", "caluma_form_answer"."created_by_group", "caluma_form_answer"."modified_by_user", "caluma_form_answer"."modified_by_group", "caluma_form_answer"."id", "caluma_form_answer"."question_id", "caluma_form_answer"."value", "caluma_form_answer"."meta", "caluma_form_answer"."document_id", "caluma_form_answer"."date" FROM "caluma_form_answer" WHERE "caluma_form_answer"."id" = \'d5900ce6bb6d4b0e96d6fa77a191aecd\'::uuid LIMIT 21',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'RELEASE SAVEPOINT "s138278537434944_x63"',
+      'time': '0.000',
+    }),
+    dict({
+      'sql': 'SELECT "caluma_form_question"."created_at", "caluma_form_question"."modified_at", "caluma_form_question"."created_by_user", "caluma_form_question"."created_by_group", "caluma_form_question"."modified_by_user", "caluma_form_question"."modified_by_group", "caluma_form_question"."slug", "caluma_form_question"."label", "caluma_form_question"."type", "caluma_form_question"."is_required", "caluma_form_question"."is_hidden", "caluma_form_question"."is_archived", "caluma_form_question"."placeholder", "caluma_form_question"."info_text", "caluma_form_question"."hint_text", "caluma_form_question"."static_content", "caluma_form_question"."configuration", "caluma_form_question"."meta", "caluma_form_question"."data_source", "caluma_form_question"."row_form_id", "caluma_form_question"."sub_form_id", "caluma_form_question"."source_id", "caluma_form_question"."format_validators", "caluma_form_question"."default_answer_id", "caluma_form_question"."calc_expression", "caluma_form_question"."calc_dependents" FROM "caluma_form_question" WHERE "caluma_form_question"."slug" = \'top_question\' LIMIT 21',
+      'time': '0.000',
+    }),
+  ])
+# ---
 # name: test_query_all_questions[action_button-question__configuration14-None-question__format_validators14]
   dict({
     'allQuestions': dict({
