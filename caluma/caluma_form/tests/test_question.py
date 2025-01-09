@@ -1242,7 +1242,7 @@ def test_init_of_calc_questions_queries(
     form,
     form_and_document,
     form_question_factory,
-    snapshot,
+    django_assert_num_queries,
 ):
     (form, document, questions_dict, _) = form_and_document(
         use_table=True, use_subform=True, table_row_count=10
@@ -1255,9 +1255,5 @@ def test_init_of_calc_questions_queries(
         question__calc_expression="'table'|answer|mapby('column')|sum + 'top_question'|answer + 'sub_question'|answer",
     )
 
-    from django.db import connection
-    from django.test.utils import CaptureQueriesContext
-
-    with CaptureQueriesContext(connection):
+    with django_assert_num_queries(35):
         api.save_answer(questions_dict["top_question"], document, value="1")
-        snapshot.assert_match(connection.queries)

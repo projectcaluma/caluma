@@ -464,7 +464,7 @@ def test_save_document(
         assert same_id == update
 
         assert len(result.data["saveDocument"]["document"]["answers"]["edges"]) == (
-            0 if update else 3
+            1 if update else 3
         )
         if not update:
             assert sorted(
@@ -487,7 +487,7 @@ def test_save_document(
         )
         assert (doc.pk == document.pk) == update
 
-        assert doc.answers.count() == (0 if update else 3)
+        assert doc.answers.count() == (1 if update else 3)
         if not update:
             assert sorted([str(a.value) for a in doc.answers.iterator()]) == [
                 "23",
