@@ -27,7 +27,7 @@ USER caluma
 
 ARG INSTALL_DEV_DEPENDENCIES=false
 COPY pyproject.toml poetry.lock $APP_HOME/
-RUN if [ "$INSTALL_DEV_DEPENDENCIES" = "true" ]; then poetry install; else poetry install --without dev; fi
+RUN if [ "$INSTALL_DEV_DEPENDENCIES" = "true" ]; then poetry install --no-root; else poetry install --without dev --no-root; fi
 
 COPY . $APP_HOME
 
