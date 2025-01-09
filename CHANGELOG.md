@@ -1,3 +1,16 @@
+# v10.6.0 (09 January 2025)
+
+### Feature
+
+* **workflow:** Add indices to created_at and deadline of work item ([`8e7b8d7`](https://github.com/projectcaluma/caluma/commit/8e7b8d7e100adf58d14296338f76077f1ad077bc))
+
+### Fix
+
+* **form:** Optimize calculated question performance ([#2339](https://github.com/projectcaluma/caluma/issues/2339)) ([`db6468b`](https://github.com/projectcaluma/caluma/commit/db6468be0ae72ea572d805c65ad424c8bfabebde))
+* **build:** Don't crash build step due to missing readme at this stage ([`75f3c93`](https://github.com/projectcaluma/caluma/commit/75f3c932c2a7575a6a3ffef60c1639a7e1d72d82))
+* Update (and pin) graphene dependency ([`7572c55`](https://github.com/projectcaluma/caluma/commit/7572c55572326a45bc455736e33282a9c2ee6d69))
+
+
 # v10.5.1 (16 October 2024)
 
 ### Fix
