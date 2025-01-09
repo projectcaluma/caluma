@@ -8,6 +8,7 @@ from caluma.caluma_core.tests import (
 )
 
 from .. import api, models, serializers
+from ..jexl import QuestionJexl
 
 
 @pytest.mark.parametrize(
@@ -1104,6 +1105,42 @@ def test_recursive_calculated_question(
 
     calc_ans = document.answers.get(question_id="calc-2")
     assert calc_ans.value == 8
+
+
+def test_calculated_question_update_calc_expr(
+    db, schema_executor, form_and_document, form_question_factory, mocker
+):
+    form, document, questions_dict, answers_dict = form_and_document(True, True)
+
+    sub_question = questions_dict["sub_question"]
+    sub_question.type = models.Question.TYPE_INTEGER
+    sub_question.save()
+    sub_question_a = answers_dict["sub_question"]
+    sub_question_a.value = 100
+    sub_question_a.save()
+
+    calc_question = form_question_factory(
+        form=form,
+        question__slug="calc_question",
+        question__type=models.Question.TYPE_CALCULATED_FLOAT,
+        question__calc_expression="'sub_question'|answer + 1",
+    ).question
+
+    calc_ans = document.answers.get(question_id="calc_question")
+    assert calc_ans.value == 101
+    # spying on update_or_create_calc_answer doesn't seem to work, so we spy on QuestionJexl.evaluate instead
+    spy = mocker.spy(QuestionJexl, "evaluate")
+    calc_question.calc_expression = "'sub_question'|answer -1"
+    calc_question.save()
+    assert spy.call_count > 0
+    call_count = spy.call_count
+    calc_ans.refresh_from_db()
+    assert calc_ans.value == 99
+
+    calc_question.label = "New Label"
+    calc_question.save()
+    # if the calc expression is not changed, no jexl evaluation should be done
+    assert spy.call_count == call_count
 
 
 def test_calculated_question_answer_document(

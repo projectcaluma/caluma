@@ -17,7 +17,8 @@ def build_document_prefetch_statements(prefix="", prefetch_options=False):
 
     This is needed to reduce the query count when almost all the form data
     is needed for a given document, e.g. when recalculating calculated
-    answers.
+    answers: in order to evaluate calc expressions the complete document
+    structure is needed, which would otherwise result in a lot of queries.
     """
     question_queryset = models.Question.objects.select_related(
         "sub_form", "row_form"

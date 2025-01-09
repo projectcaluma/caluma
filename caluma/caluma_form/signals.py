@@ -1,6 +1,7 @@
 from django.db.models.signals import (
     post_delete,
     post_init,
+    post_save,
     pre_delete,
     pre_save,
 )
@@ -11,7 +12,7 @@ from caluma.caluma_core.events import filter_events
 from caluma.utils import disable_raw
 
 from . import models
-from .utils import update_calc_dependents
+from .utils import update_calc_dependents, update_or_create_calc_answer
 
 
 @receiver(pre_create_historical_record, sender=models.HistoricalAnswer)
@@ -70,6 +71,7 @@ def save_calc_dependents(sender, instance, **kwargs):
         update_calc_dependents(
             instance.slug, old_expr="false", new_expr=instance.calc_expression
         )
+        instance.calc_expression_changed = True
 
     elif original.calc_expression != instance.calc_expression:
         update_calc_dependents(
@@ -77,6 +79,9 @@ def save_calc_dependents(sender, instance, **kwargs):
             old_expr=original.calc_expression,
             new_expr=instance.calc_expression,
         )
+        instance.calc_expression_changed = True
+    else:
+        instance.calc_expression_changed = False
 
 
 @receiver(pre_delete, sender=models.Question)
@@ -85,3 +90,30 @@ def remove_calc_dependents(sender, instance, **kwargs):
     update_calc_dependents(
         instance.slug, old_expr=instance.calc_expression, new_expr="false"
     )
+
+
+# Update calculated answer on post_save
+#
+# Try to update the calculated answer value whenever a mutation on a possibly
+# related model is performed.
+
+
+@receiver(post_save, sender=models.Question)
+@disable_raw
+@filter_events(lambda instance: instance.type == models.Question.TYPE_CALCULATED_FLOAT)
+def update_calc_from_question(sender, instance, created, update_fields, **kwargs):
+    if not instance.calc_expression_changed:
+        return
+
+    for document in models.Document.objects.filter(form__questions=instance):
+        update_or_create_calc_answer(instance, document)
+
+
+@receiver(post_save, sender=models.FormQuestion)
+@disable_raw
+@filter_events(
+    lambda instance: instance.question.type == models.Question.TYPE_CALCULATED_FLOAT
+)
+def update_calc_from_form_question(sender, instance, created, **kwargs):
+    for document in instance.form.documents.all():
+        update_or_create_calc_answer(instance.question, document)
