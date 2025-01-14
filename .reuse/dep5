@@ -33,6 +33,7 @@ License: CC0-1.0
 Files:
     caluma/*.py
     caluma/*.ambr
+    caluma/*.json
 Copyright: 2019 Adfinis AG <info@adfinis.com>
 License: GPL-3.0-or-later
 
