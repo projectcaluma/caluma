@@ -2,19 +2,19 @@ repos:
 -   repo: local
     hooks:
     - id: ruff-format
-      stages: [commit]
+      stages: [pre-commit]
       name: format code
       language: system
       entry: ruff format .
       types: [python]
     - id: ruff-check
-      stages: [commit]
+      stages: [pre-commit]
       name: check format,import
       language: system
-      entry: ruff check .
+      entry: ruff check --fix .
       types: [python]
     - id: reuse
-      stages: [commit]
+      stages: [pre-commit]
       name: reuse
       description: Check licenses
       entry: reuse lint
