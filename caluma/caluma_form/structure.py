@@ -4,7 +4,7 @@ import weakref
 from functools import singledispatch
 from typing import List, Optional
 
-from .models import Question
+from .models import FormQuestion, Question
 
 
 def object_local_memoise(method):
@@ -123,7 +123,7 @@ class RowField(Field):
         # for the answerdocument_set. Sorting in DB would re-issue the query
         rows = sorted(
             self.answer.answerdocument_set.all(),
-            key=lambda answer_document: answer_document.sort,
+            key=lambda answer_document: -answer_document.sort,
         )
         return [
             FieldSet(
@@ -243,15 +243,17 @@ class FieldSet(Element):
     @object_local_memoise
     def children(self):
         answers = {ans.question_id: ans for ans in self.document.answers.all()}
+        formquestions = FormQuestion.objects.filter(form=self.form).order_by("-sort")
+
         return [
             Field.factory(
                 document=self.document,
                 form=self.form,
-                question=question,
-                answer=answers.get(question.slug),
+                question=fq.question,
+                answer=answers.get(fq.question.slug),
                 parent=self,
             )
-            for question in self.form.questions.all()
+            for fq in formquestions
         ]
 
     def set_answer(self, question_slug, answer):
