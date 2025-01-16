@@ -190,3 +190,86 @@ def test_update_calc_dependency_inside_table(
         "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
         "   Field(demo-outer-table-question-2, None)",
     ]
+
+
+def test_update_calc_dependency_inside_table_with_outer_reference(
+    transactional_db, complex_jexl_form, complex_jexl_doc
+):
+    doc, _, _ = complex_jexl_doc
+
+    assert get_doc_structure(doc) == [
+        "FieldSet(demo-formular-1)",
+        "   Field(demo-outer-table-question-1, None)",
+        "      FieldSet(demo-table-form-1)",
+        "         Field(demo-table-question-1, 3)",
+        "         Field(demo-table-question-2, 1)",
+        "      FieldSet(demo-table-form-1)",
+        "         Field(demo-table-question-1, 20)",
+        "         Field(demo-table-question-2, None)",  # TODO: Should be 100
+        "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
+        "   Field(demo-outer-table-question-2, None)",
+    ]
+
+    # TODO: This implementation corresponds to the current frontend logic, this
+    # might change so that table row documents are attached on creation
+    new_table_doc = api.save_document(form=Form.objects.get(pk="demo-table-form-2"))
+
+    assert get_doc_structure(new_table_doc) == [
+        "      FieldSet(demo-table-form-2)",
+        "         Field(demo-table-question-outer-ref-hidden, None)",
+        "         Field(demo-table-question-outer-ref-calc, None)",
+    ]
+
+    api.save_answer(
+        Question.objects.get(pk="demo-table-question-outer-ref-hidden"),
+        document=new_table_doc,
+        value=30,
+    )
+
+    assert get_doc_structure(new_table_doc) == [
+        "      FieldSet(demo-table-form-2)",
+        "         Field(demo-table-question-outer-ref-hidden, 30)",
+        "         Field(demo-table-question-outer-ref-calc, 30)",
+    ]
+
+    api.save_answer(
+        question="demo-outer-table-question-2", document=doc, value=[new_table_doc.pk]
+    )
+
+    assert get_doc_structure(doc) == [
+        "FieldSet(demo-formular-1)",
+        "   Field(demo-outer-table-question-1, None)",
+        "      FieldSet(demo-table-form-1)",
+        "         Field(demo-table-question-1, 3)",
+        "         Field(demo-table-question-2, 1)",
+        "      FieldSet(demo-table-form-1)",
+        "         Field(demo-table-question-1, 20)",
+        "         Field(demo-table-question-2, 100)",
+        "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
+        "   Field(demo-outer-table-question-2, None)",
+        "      FieldSet(demo-table-form-2)",
+        "         Field(demo-table-question-outer-ref-hidden, 30)",
+        "         Field(demo-table-question-outer-ref-calc, 30)",
+    ]
+
+    api.save_answer(
+        Question.objects.get(pk="demo-table-question-outer-ref-hidden"),
+        document=new_table_doc,
+        value=20,
+    )
+
+    assert get_doc_structure(doc) == [
+        "FieldSet(demo-formular-1)",
+        "   Field(demo-outer-table-question-1, None)",
+        "      FieldSet(demo-table-form-1)",
+        "         Field(demo-table-question-1, 3)",
+        "         Field(demo-table-question-2, 1)",
+        "      FieldSet(demo-table-form-1)",
+        "         Field(demo-table-question-1, 20)",
+        "         Field(demo-table-question-2, 100)",
+        "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
+        "   Field(demo-outer-table-question-2, None)",
+        "      FieldSet(demo-table-form-2)",
+        "         Field(demo-table-question-outer-ref-hidden, 20)",
+        "         Field(demo-table-question-outer-ref-calc, 20)",
+    ]
