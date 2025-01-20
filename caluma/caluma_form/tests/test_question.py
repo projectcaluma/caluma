@@ -93,6 +93,7 @@ def test_query_all_questions(
                 ... on FloatQuestion {
                   floatMinValue: minValue
                   floatMaxValue: maxValue
+                  floatStep: step
                   placeholder
                   hintText
                 }

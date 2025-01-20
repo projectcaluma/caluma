@@ -457,6 +457,7 @@ class IntegerQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
 class FloatQuestion(QuestionQuerysetMixin, FormDjangoObjectType):
     min_value = graphene.Float()
     max_value = graphene.Float()
+    step = graphene.Float()
     placeholder = graphene.String()
     hint_text = graphene.String()
     default_answer = graphene.Field("caluma.caluma_form.schema.FloatAnswer")
