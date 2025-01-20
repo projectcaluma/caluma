@@ -1206,6 +1206,7 @@
     id: ID!
     minValue: Float
     maxValue: Float
+    step: Float
   }
   
   type Flow implements Node {
@@ -2671,6 +2672,7 @@
     isArchived: Boolean
     minValue: Float
     maxValue: Float
+    step: Float
     placeholder: String
     hintText: String
     clientMutationId: String

@@ -335,6 +335,7 @@ class SaveDynamicMultipleChoiceQuestionSerializer(SaveQuestionSerializer):
 class SaveFloatQuestionSerializer(SaveQuestionSerializer):
     min_value = FloatField(required=False, allow_null=True)
     max_value = FloatField(required=False, allow_null=True)
+    step = FloatField(required=False, allow_null=True)
 
     def validate(self, data):
         min_value = (
@@ -351,6 +352,10 @@ class SaveFloatQuestionSerializer(SaveQuestionSerializer):
                 f"max_value {max_value} is smaller than {min_value}"
             )
 
+        step = data.get("step")
+        if step and step < 0:
+            raise exceptions.ValidationError(f"step {step} is smaller than 0")
+
         data["type"] = models.Question.TYPE_FLOAT
         return super().validate(data)
 
@@ -358,6 +363,7 @@ class SaveFloatQuestionSerializer(SaveQuestionSerializer):
         fields = SaveQuestionSerializer.Meta.fields + [
             "min_value",
             "max_value",
+            "step",
             "placeholder",
             "hint_text",
         ]

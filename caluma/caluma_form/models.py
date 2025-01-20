@@ -237,6 +237,14 @@ class Question(core_models.SlugModel):
         self.configuration["color"] = value
 
     @property
+    def step(self):
+        return self.configuration.get("step")
+
+    @step.setter
+    def step(self, value):
+        self.configuration["step"] = value
+
+    @property
     def validate_on_enter(self):
         return self.configuration.get("validate_on_enter")
 

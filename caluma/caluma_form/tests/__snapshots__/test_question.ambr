@@ -245,6 +245,7 @@
             '__typename': 'FloatQuestion',
             'floatMaxValue': 1.0,
             'floatMinValue': 0.0,
+            'floatStep': 0.2,
             'hintText': '',
             'id': 'RmxvYXRRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
             'infoText': '',
@@ -269,6 +270,7 @@
             '__typename': 'FloatQuestion',
             'floatMaxValue': None,
             'floatMinValue': None,
+            'floatStep': None,
             'hintText': '',
             'id': 'RmxvYXRRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
             'infoText': '',
@@ -876,6 +878,27 @@
         'meta': dict({
         }),
         'minValue': 0.0,
+        'slug': 'environmental-ten',
+      }),
+    }),
+  })
+# ---
+# name: test_save_float_question[float-question__configuration2-0.3-True]
+  dict({
+    'saveFloatQuestion': dict({
+      'clientMutationId': 'testid',
+      'question': dict({
+        '__typename': 'FloatQuestion',
+        'defaultAnswer': dict({
+          'value': 0.3,
+        }),
+        'hintText': 'test',
+        'id': 'RmxvYXRRdWVzdGlvbjplbnZpcm9ubWVudGFsLXRlbg==',
+        'label': 'Bonnie Moreno',
+        'maxValue': None,
+        'meta': dict({
+        }),
+        'minValue': None,
         'slug': 'environmental-ten',
       }),
     }),
