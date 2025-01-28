@@ -15,7 +15,12 @@ from ..jexl import QuestionJexl
     "question__type,question__configuration,question__data_source,question__format_validators",
     [
         (models.Question.TYPE_INTEGER, {"max_value": 10, "min_value": 0}, None, []),
-        (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 0.0}, None, []),
+        (
+            models.Question.TYPE_FLOAT,
+            {"max_value": 1.0, "min_value": 0.0, "step": 0.2},
+            None,
+            [],
+        ),
         (models.Question.TYPE_FLOAT, {}, None, []),
         (models.Question.TYPE_DATE, {}, None, []),
         (models.Question.TYPE_TEXT, {"min_length": 10}, None, ["email"]),
@@ -93,6 +98,7 @@ def test_query_all_questions(
                 ... on FloatQuestion {
                   floatMinValue: minValue
                   floatMaxValue: maxValue
+                  floatStep: step
                   placeholder
                   hintText
                 }
@@ -396,6 +402,8 @@ def test_save_textarea_question(db, question, answer, schema_executor):
     [
         (models.Question.TYPE_FLOAT, {"max_value": 10.0, "min_value": 0.0}, 0.3, True),
         (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 10.0}, 0.3, False),
+        (models.Question.TYPE_FLOAT, {"step": 1.0}, 0.3, True),
+        (models.Question.TYPE_FLOAT, {"step": -0.01}, 0.3, False),
     ],
 )
 def test_save_float_question(db, snapshot, question, schema_executor, answer, success):
