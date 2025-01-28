@@ -1,3 +1,10 @@
+# v10.7.0 (09 January 2025)
+
+### Feature
+
+* **float:** Add step configuration ([`a8c265a`](https://github.com/projectcaluma/caluma/commit/a8c265a87666e87621eda8441eac81371c652199))
+
+
 # v10.6.0 (09 January 2025)
 
 ### Feature
