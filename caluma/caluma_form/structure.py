@@ -1,275 +1,664 @@
-"""Hierarchical representation of a document / form."""
+"""
+Structure - Fast and correct form structure representation.
 
+Design requirements:
+
+* Fast initialisation from a document. Use preload if needed to reduce
+  number of queries
+* Eager loading of a full document structure. No lazy-loading with questionable
+  performance expectations
+* Correct navigation via question slugs (JEXL references) from any context
+* Fast lookups once initialized
+* Extensible for caching JEXL expression results
+
+* No properties. Code is always in methods
+"""
+
+from __future__ import annotations
+
+import collections
+import copy
+import typing
 import weakref
-from functools import singledispatch
-from typing import List, Optional
+from abc import ABC
+from collections.abc import Iterable
+from dataclasses import dataclass, field
+from functools import singledispatch, wraps
+from logging import getLogger
+from typing import Optional
 
-from .models import FormQuestion, Question
+from django.db.models import QuerySet
+
+from caluma.caluma_core import exceptions
+
+if typing.TYPE_CHECKING:  # pragma: no cover
+    from caluma.caluma_form.jexl import QuestionJexl
+
+from caluma.caluma_form.models import (
+    Answer,
+    AnswerDocument,
+    FormQuestion,
+    Question,
+)
+
+log = getLogger(__name__)
 
 
 def object_local_memoise(method):
+    """Decorate a method to become object-local memoised.
+
+    In other words - The method will cache it's results. If the method is called
+    twice with the same arguments, it will return the cached result instead.
+
+    For debugging purposes, you can also set `object_local_memoise.enabled`
+    to `False`, which will then behave just as if the memoising didn't happen.
+    """
+
+    @wraps(method)
     def new_method(self, *args, **kwargs):
+        if not object_local_memoise.enabled:  # pragma: no cover
+            # for debugging purposes
+            return method(self, *args, **kwargs)
         if not hasattr(self, "_memoise"):
             self._memoise = {}
+            self._memoise_hit_count = 0
+            self._memoise_miss_count = 0
 
         key = str([args, kwargs, method])
         if key in self._memoise:
+            object_local_memoise.hit_count += 1
+            self._memoise_hit_count += 1
             return self._memoise[key]
         ret = method(self, *args, **kwargs)
+        self._memoise_miss_count += 1
+        object_local_memoise.miss_count += 1
         self._memoise[key] = ret
         return ret
 
     return new_method
 
 
-class Element:
-    aliases = {}
+# This should only be set to `False` for debugging
+setattr(object_local_memoise, "enabled", True)
 
-    def __init__(self, parent=None):
-        self._parent = weakref.ref(parent) if parent else None
+# Statistics - for analysis / debugging
+setattr(object_local_memoise, "hit_count", 0)
+setattr(object_local_memoise, "miss_count", 0)
 
-    def parent(self):
-        return self._parent() if self._parent else None
 
-    def children(self):  # pragma: no cover
-        return []
+def clear_memoise(obj):
+    """Clear memoise cache for given object.
 
-    def root(self):
-        parent = self.parent()
-        if parent:
-            return parent.root()
-        return self
+    If an object uses the `@object_local_memoise` decorator, you can then
+    call `clear_memoise()` on that object to clear all it's cached data.
+    """
+    obj._memoise = {}
 
-    def get(self, name, default=None):
-        name = self.aliases.get(name, name)
 
-        out = getattr(self, name)
+@dataclass
+class BaseField(ABC):
+    """Base class for the field types. This is the interface we aim to provide."""
 
-        # if a method is requested, execute it before continuing
-        if callable(out):
-            out = out()
-        if isinstance(out, Element) or isinstance(out, dict):
-            return out
-        if out is None:
+    parent: Optional["FieldSet"] = field(default=None)
+
+    question: Optional[Question] = field(default=None)
+    answer: Optional[Answer] = field(default=None)
+
+    @object_local_memoise
+    def get_evaluator(self) -> QuestionJexl:
+        """Return the JEXL evaluator for this field."""
+
+        # JEXL is implemented such that it has one context in the engine, and
+        # trying to swap it out to switch context is just problematic. So we use
+        # one JEXL instance per field.
+
+        # deferred import to avoid circular dependency
+        from caluma.caluma_form.jexl import QuestionJexl
+
+        # The "info" block is provided by the global context, but we need
+        # to patch it to represent some local information:  The "form" and
+        # "document" bits should point to the current context, not to the global
+        # structure. This is a bit unfortunate, but we *have* to fill this in
+        # two separate places to avoid breaking compatibility
+        context = collections.ChainMap(
+            # We need a deep copy of the global context, so we can
+            # extend the info block without leaking
+            copy.deepcopy(self.get_global_context()),
+            self.get_context(),
+        )
+
+        context["info"].update(self.get_local_info_context())
+
+        # Legacy form ref - pointing to the root form. Thinking... can we
+        # deprecate this in some reasonable way and let users know without
+        # breaking stuff?
+        context["form"] = context["info"]["root"]["form"]
+
+        return QuestionJexl(field=self, context=context)
+
+    def get_root(self):
+        return self.parent.get_root() if self.parent else self
+
+    @object_local_memoise
+    def get_local_info_context(self):
+        """Return the dictionary to be used in the local `info` context block.
+
+         Properties (See Ember-Caluma's field source for reference):
+         - `form`: Legacy property pointing to the root form.
+           -> defined in get_evaluator() as we're only returning `info` here
+        * Form information
+             - `info.form`: The form this question is attached to.
+             - `info.formMeta`: The meta of the form this question is attached to.
+             - `info.parent.form`: The parent form if applicable.
+             - `info.parent.formMeta`: The parent form meta if applicable.
+             - `info.root.form`: The new property for the root form.
+             - `info.root.formMeta`: The new property for the root form meta.
+        * Case information is taken from the global context
+             - `info.case.form`: The cases' form (works for task forms and case forms).
+             - `info.case.workflow`: The cases' workflow (works for task forms and case forms).
+             - `info.case.root.form`: The _root_ cases' form (works for task forms and case forms).
+             - `info.case.root.workflow`: The _root_ cases' workflow (works for task forms and case forms).
+
+        """
+        form = self.get_form()
+
+        if parent_info := self.get_parent_fieldset():
+            parent_data = {
+                "form": parent_info.get_form().slug,
+                "formMeta": parent_info.get_form().meta,
+            }
+        else:
+            parent_data = None
+        return {
+            "question": self.question.slug if self.question else None,
+            "form": form and form.slug or None,
+            "formMeta": form and form.meta or None,
+            "parent": parent_data,
+            # TODO how is "root" expected to behave if we're *already* on root?
+            "root": self.get_root().get_local_info_context() if self.parent else None,
+        }
+
+    def get_parent_fieldset(self):
+        """Return the parent fieldset, according to JEXL semantics.
+
+        In JEXL, the parent refers to the next field up that represents another
+        form. In Rows for example, this is two levels up, but in regular nested
+        forms, it's only one level up.
+        """
+        my_form = self.get_form()
+        p = self.parent
+        while p and p.get_form() == my_form:
+            p = p.parent
+        return p
+
+    @object_local_memoise
+    def is_required(self) -> bool:
+        """Return True if the field is required.
+
+        Evaluate the `is_required` expression of the field. But if the field
+        is hidden, it is considered not-required regardless of what the JEXL
+        expression says.
+        """
+
+        if self.is_hidden():
+            # hidden can never be required
+            return False
+        if self.all_dependencies_hidden_or_empty(self.question.is_required):
+            # All dependencies are hidden, which means we can't calculate
+            # the expression at all - assume the field is not required regardless
+            # of the expression
+            return False
+
+        return self.evaluate_jexl(self.question.is_required)
+
+    @object_local_memoise
+    def is_visible(self) -> bool:
+        """Just return the opposite of is_hidden() for convenience."""
+        return not self.is_hidden()
+
+    @object_local_memoise
+    def all_dependencies_hidden_or_empty(self, expr):
+        """Check if all dependencies of the expression are hidden or empty.
+
+        Note: If there are no dependencies, we return False. Question slugs
+        referring to missing fields are ignored.
+        """
+        dependencies = list(self.get_evaluator().extract_referenced_questions(expr))
+        dep_fields = {
+            dep: self.get_field(dep) for dep in dependencies if self.get_field(dep)
+        }
+
+        return dep_fields and all(
+            # Field missing may be acceptable if it's used in an `answer`
+            # transform with a default. Therefore if a field is missing here,
+            # we consider it as "empty"/"hidden"
+            (field.is_hidden() or field.is_empty()) if field else True
+            for field in dep_fields.values()
+        )
+
+    @object_local_memoise
+    def is_hidden(self, raise_on_error=True) -> bool:
+        """Return True if the field is hidden.
+
+        A field is hidden if either it's parent is hidden, or it's `is_hidden`
+        JEXL expression evaluates to `True`.
+        """
+        if self.parent and self.parent.is_hidden():
+            # If the parent is hidden, then *we* are implicitly also hidden,
+            # without even evaluating our own is_hidden expression
+            return True
+
+        if not self.question and not self.parent:
+            # Root field is always visible
+            return False
+
+        if self.all_dependencies_hidden_or_empty(self.question.is_hidden):
+            # All dependencies are hidden, which means we can't calculate
+            # the expression at all, and therefore we don't show this field
+            # in the form.
+            return True
+
+        try:
+            return self.evaluate_jexl(self.question.is_hidden, raise_on_error)
+        except exceptions.QuestionMissing:
+            if raise_on_error:
+                # if raise_on_error is False, we ignore this one as well.
+                # should be used internally only, for example in get_value()
+                raise
+            # If the expression fails, we assume an error
+            # and consider ourselves as hidden
+            return True
+
+    @object_local_memoise
+    def slug(self):
+        return self.question and self.question.slug or None
+
+    def get_context(self) -> collections.ChainMap: ...
+
+    @object_local_memoise
+    def get_field(self, slug) -> BaseField:
+        return self.get_context().get(slug)
+
+    @object_local_memoise
+    def find_field_by_answer(self, answer) -> BaseField:
+        q_field = self.get_field(answer.question_id)
+        if q_field and q_field.answer and q_field.answer.pk == answer.pk:
+            return q_field
+
+        # answer is not in "our" document, probably we're in a row doc.
+        # Therefore, search "everywhere"
+        for fld in self.get_root().find_all_fields_by_slug(answer.question_id):
+            if fld.answer and fld.answer.pk == answer.pk:
+                return fld
+        return None
+
+    def refresh(self, answer=None):
+        """Refresh this field's answer.
+
+        If an answer is given, use it and update the structure in-place.
+        Otherwise, look in the DB.
+
+        Also clear out all the caches on our own field as well as all
+        the calc dependents.
+
+        Note: Saving the answer is the caller's responsibility, we only
+        update the structure in-memory.
+        """
+        if answer:
+            self.answer = answer
+
+        # TODO: update / save answer
+        # TODO: reset caches in all dependents (calc dependents are easy, but what
+        # about the rest? Like visibility dependents etc?)
+        clear_memoise(self)
+        for dep in self.question.calc_dependents:
+            for dep_field in self.get_root().find_all_fields_by_slug(dep):
+                dep_field.refresh()
+
+    def calculate(self):
+        try:
+            return self.evaluate_jexl(self.question.calc_expression)
+        except Exception:
+            # In calc, if an expression evaluation fails, we just return None.
+            # We could be in an unattached table row, for example, and we'd
+            # do the recalculation when we're actually being attached.
             return None
-        return str(out)
+
+    def evaluate_jexl(self, expression: str, raise_on_error=True):
+        # Some stupid shortcuts to avoid building up an evaluation context for
+        # ~90% of cases where the expression is a simple "true" or "false"
+        fast_results = {"true": True, "false": False}
+        if (fast_result := fast_results.get(expression)) is not None:
+            return fast_result
+
+        eval = self.get_evaluator()
+
+        try:
+            return eval.evaluate(expression, raise_on_error)
+        except exceptions.QuestionMissing:
+            raise
+        except Exception as exc:
+            log.error(
+                f"Error while evaluating expression on question {self.slug()}: "
+                f"{expression!r}: {str(exc)}"
+            )
+            if raise_on_error:
+                raise RuntimeError(
+                    f"Error while evaluating expression on question {self.slug()}: "
+                    f"{expression!r}. The system log contains more information"
+                )
+            # return None is implied
+
+    def get_global_context(self) -> dict:
+        return self._global_context
+
+    @object_local_memoise
+    def get_form(self):
+        """Return the form in which this field *resides*.
+
+        Note this may be different from the .form property, which for
+        fieldsets and rowsets will contain the sub/row form instead.
+        """
+        parent_form = self.parent.form if self.parent else None
+        return parent_form or self.form or None
 
 
-class Field(Element):
-    def __init__(self, document, form, question, answer=None, parent=None):
-        super().__init__(parent)
-        self.document = document
-        self.form = form
+@dataclass
+class ValueField(BaseField):
+    """Represent a field in the form.
+
+    This is roughly 1:1 with a question, but repeated in case of a table
+    row for example.
+    """
+
+    # empty string is acceptable
+    EMPTY_VALUES = ([], (), {}, None)
+
+    @object_local_memoise
+    def get_value(self):
+        if self.answer and not self.is_hidden(raise_on_error=False):
+            if self.answer.value not in self.EMPTY_VALUES:
+                return self.answer.value
+            if self.question.type == Question.TYPE_DATE and self.answer.date:
+                return self.answer.date
+            if self.question.type == Question.TYPE_FILES:
+                # TODO return files - how exactly? Returning list-of-filenames
+                # for now
+                return [f.name for f in self.answer.files.all()]
+        return self.question.empty_value()
+
+    @object_local_memoise
+    def get_context(self) -> collections.ChainMap:
+        return self.parent.get_context()
+
+    @object_local_memoise
+    def is_empty(self):
+        if not self.answer:
+            return True
+        is_date = self.question.type == Question.TYPE_DATE
+        is_files = self.question.type == Question.TYPE_FILES
+        return (
+            # Yeah it's weird - get_value should return empty string if that's
+            # what the answer has stored, but is_empty() should treat it as
+            # empty, still ¯\_(ツ)_/¯
+            not bool(
+                (self.answer.value not in (*self.EMPTY_VALUES, ""))
+                or (is_date and self.answer.date is not None)
+                or (is_files and self.answer.files.exists())
+            )
+            # Being hidden makes you empty even if an answer exists
+            or self.is_hidden()
+        )
+
+    def get_global_context(self) -> dict:
+        return self.parent.get_global_context()
+
+    def __str__(self):
+        return f"Field({self.question.slug}, {self.get_value()})"
+
+    def __repr__(self):
+        return f"ValueField(q={self.question.slug}, v={self.get_value()})"
+
+
+class FieldSet(BaseField):
+    def __init__(
+        self, document, form=None, parent=None, question=None, global_context=None
+    ):
+        # TODO: prefetch document once we have the structure built up
+        #
+        self.question = question
+        self._document = document
+        self.form = form or document.form
+
+        self._global_context = global_context or {"info": {}}
+
+        # uplinks always weak
+        self.parent = weakref.proxy(parent) if parent else None
+
+        self._own_fields = {}
+
+        if parent:
+            # Our context is an extension of the parent's context. That way, we can
+            # see the fields from the parent context.
+            self._context = collections.ChainMap(
+                self._own_fields, self.parent.get_context()
+            )
+
+            # Extending parent's context with our own: This makes our own fields
+            # visible in the parent context as well
+            self._extend_root_context(self._own_fields)
+        else:
+            # Root fieldset
+            self._context = collections.ChainMap(self._own_fields)
+
+        self._build_context()
+
+    def _extend_root_context(self, new_map):
+        if self.parent:
+            self.parent._extend_root_context(new_map)
+        else:
+            self._context.maps.append(new_map)
+
+    @object_local_memoise
+    def is_empty(self):
+        # Fieldset: If *any* field is non-empty, we consider ourselves also
+        # non-empty.
+        # We reverse the lookup here to speed up (don't need to see if *all* are
+        # empty, just if *one* has a value)
+        if self.is_hidden():
+            # Hidden makes us empty, even if there's theoretically a value.
+            # We do the "cheap" check first, then iterate over the children.
+            return True
+        has_at_least_one_value = any(not child.is_empty() for child in self.children())
+        return not has_at_least_one_value
+
+    def get_context(self):
+        return self._context
+
+    @object_local_memoise
+    def get_value(self):
+        if self.is_empty():
+            # is_empty() will return True if we're hidden, so
+            # no need to double-check
+            return {}
+        return {
+            formfield.question.slug: formfield.get_value()
+            for formfield in self._own_fields.values()
+        }
+
+    def is_required(self) -> bool:
+        # Fieldsets (in other words - subforms) should never be required,
+        # regardless of what their JEXL says
+        return False
+
+    def get_all_fields(self) -> Iterable[BaseField]:
+        """Return all fields in the structure, as an iterator.
+
+        Yields (slug,field) tuples. But note that a slug may be repeated
+        as we iterate over table rows.
+
+        NOTE: For tables, the same *question* may be repeated in each row. This
+        is intended and normal behaviour.
+        """
+        for formfield in self._own_fields.values():
+            yield formfield
+            if isinstance(formfield, FieldSet):
+                yield from formfield.get_all_fields()
+            elif isinstance(formfield, RowSet):
+                # row sets *must* have fieldsets as children. Let's loop
+                # over them here
+                for child in formfield.children():
+                    yield child
+                    yield from child.get_all_fields()
+
+    def find_all_fields_by_slug(self, slug: str) -> list[BaseField]:
+        """Return all fields with the given question slug.
+
+        This may return multiple fields, as tables are traversed as well.
+
+        Used for recalculation of calc fields, and other places that may need
+        to see all fields for a given question.
+
+        If you need the one field that the `answer` transform would return in
+        this context, use `.get_field()` instead.
+        """
+        result = []
+        for formfield in self.get_all_fields():
+            if formfield.slug() == slug:
+                result.append(formfield)
+        return result
+
+    def children(self):
+        # This is already sorted, as the context buildup
+        # is doing that for us.
+        return list(self._own_fields.values())
+
+    def _build_context(self):
+        # context inheritance: The ChainMap allows lookups in "parent"
+        # contexts, so a row context will be able to look "out". We implement
+        # form questions the same way, even though not strictly neccessary
+
+        root_answers = self._document.answers.all().select_related("question")
+        answers_by_q_slug = {ans.question_id: ans for ans in root_answers}
+
+        formquestions: QuerySet[FormQuestion] = FormQuestion.objects.filter(
+            form=self.form
+        ).order_by("-sort")
+
+        for fq in formquestions:
+            question = fq.question
+            if question.type == Question.TYPE_FORM:
+                self._context[question.slug] = FieldSet(
+                    document=self._document,
+                    # question=question,
+                    form=question.sub_form,
+                    parent=self,
+                    question=question,
+                    global_context=self.get_global_context(),
+                )
+            elif question.type == Question.TYPE_TABLE:
+                self._context[question.slug] = RowSet(
+                    question=question,
+                    answer=answers_by_q_slug.get(question.slug),
+                    parent=self,
+                )
+            else:
+                # "leaf" question
+                self._context[question.slug] = ValueField(
+                    question=question,
+                    answer=answers_by_q_slug.get(question.slug),
+                    parent=self,
+                )
+
+    def __str__(self):
+        return f"FieldSet({self.form.slug})"
+
+    def __repr__(self):
+        q_slug = self.question.slug if self.question else "(root)"
+
+        return f"FieldSet(q={q_slug}, f={self.form.slug})"
+
+
+class RowSet(BaseField):
+    rows: list[FieldSet]
+
+    def __init__(self, question, parent, answer: Optional[Answer] = None):
+        self.form = question.row_form
         self.question = question
         self.answer = answer
 
-    @classmethod
-    def factory(cls, document, form, question, answer=None, parent=None):
-        if question.type == Question.TYPE_FORM:
-            return FieldSet(
-                document, form=question.sub_form, question=question, parent=parent
-            )
-        elif question.type == Question.TYPE_TABLE:
-            return RowField(
-                document,
-                form=question.row_form,
-                question=question,
-                answer=answer,
-                parent=parent,
+        if not parent:  # pragma: no cover
+            raise exceptions.ConfigurationError(
+                f"Table question {self.slug()} has no parent"
             )
 
-        return Field(document, form, question, answer, parent=parent)
+        self.parent = weakref.proxy(parent)
 
-    def value(self):
-        if self.answer is None:
-            # no answer object at all - return empty in every case
-            return self.question.empty_value()
-
-        elif self.answer.value is not None:
-            return self.answer.value
-
-        elif self.question.type == Question.TYPE_TABLE:  # pragma: no cover
-            return [
-                {cell.question.slug: cell.value() for cell in row.children()}
-                for row in self.children()
+        if answer:
+            self.rows = [
+                FieldSet(
+                    document=row_doc.document,
+                    question=question,
+                    form=question.row_form,
+                    parent=self,
+                    global_context=self.get_global_context(),
+                )
+                for row_doc in AnswerDocument.objects.all()
+                .filter(answer=answer)
+                .order_by("-sort")
             ]
+        else:
+            self.rows = []
 
-        elif self.question.type == Question.TYPE_FILES:
-            return [f.name for f in self.answer.files.all()]
-
-        elif self.question.type == Question.TYPE_DATE:
-            return self.answer.date
-
-        elif self.question.type in (
-            Question.TYPE_MULTIPLE_CHOICE,
-            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
-        ):
+    def get_value(self):
+        if self.is_hidden():  # pragma: no cover
             return []
 
-        # no value, no special handling
-        return None
+        return [row.get_value() for row in self.children()]
 
-    def __repr__(self):
-        return f"<Field question={self.question.slug}, value={self.value()} hidden=({self.question.is_hidden}) req=({self.question.is_required})>"
+    def get_all_fields(self) -> Iterable[BaseField]:
+        for row in self.children():
+            yield row
+            # Row field children are always FieldSets
+            yield from row.get_all_fields()
 
+    def get_context(self):
+        # Rowset does not have it's own context: Any field within is
+        # basically in it's own world (but has a view onto the "outside")
+        return self.parent.get_context()
 
-class RowField(Field):
-    @object_local_memoise
     def children(self):
-        if not self.answer:
-            return []  # pragma: no cover
+        return self.rows
 
-        # We're sorting in python-space here to reuse the already-executed query
-        # for the answerdocument_set. Sorting in DB would re-issue the query
-        rows = sorted(
-            self.answer.answerdocument_set.all(),
-            key=lambda answer_document: -answer_document.sort,
-        )
-        return [
-            FieldSet(
-                ans_doc.document,
-                self.question.row_form,
-                question=self.question,
-                parent=self.parent(),
-            )
-            for ans_doc in rows
-        ]
-
-
-class FieldSet(Element):
-    aliases = {"formMeta": "form_meta"}
-
-    def __init__(self, document, form, question=None, parent=None):
-        super().__init__(parent)
-        self.document = document
-        self.form = form
-        self.form_meta = form.meta
-        self.question = question
-        self._fields = None
-        self._sub_forms = None
-        self._case = "NOTSET"
-
-    @property
-    def case(self):
-        if self._case != "NOTSET":
-            return self._case  # pragma: no cover
-
-        if hasattr(self.document.family, "work_item"):
-            case = self.document.family.work_item.case
-        elif hasattr(self.document.family, "case"):
-            # if we're not in a task form, we might be the root document
-            case = self.document.family.case
-        else:
-            self._case = None
-            return self._case
-
-        root = case.family
-        self._case = {
-            "form": case.document.form.slug,
-            "workflow": case.workflow.slug,
-            "root": {
-                "form": root.document.form.slug,
-                "workflow": root.workflow.slug,
-            },
-        }
-        return self._case
-
-    @property
-    def fields(self):
-        if self._fields is None:
-            self._fields = {field.question.slug: field for field in self.children()}
-        return self._fields
-
-    @property
-    def sub_forms(self) -> List[Field]:
-        if self._sub_forms is None:
-            self._sub_forms = [
-                field
-                for field in self.children()
-                if field.question.type == Question.TYPE_FORM
-            ] + [
-                child
-                for field in self.children()
-                for child in field.children()
-                if field.question.type == Question.TYPE_TABLE
-            ]
-        return self._sub_forms
-
-    def get_field(
-        self, question_slug: str, check_parent: bool = True
-    ) -> Optional[Field]:
-        """Collect fields where the question occurs throughout this structure.
-
-        Cases:
-        0. question not in structure
-        1. question is in the same form (-> greedily returns the question)
-        2. question in a neighbor form, ie. answer would be in same document (excluding tables)
-        3. question in multiple neighbor forms
-        4. question in a table form (same fieldset)
-        5. (question in a table form (different row))
-        6. question in a table form, lower than current fieldset
-        7. question in upper structure (from table row)
-
-        Expected:
-        0: return []
-        1-3: answer exists once, but might be in multiple forms -> multiple fields
-        4: return only row-local fields (not looking up / other rows)
-        5: incomplete row missing answer -> return fields with empty value (like case 4)
-        6: return all fields for all rows
-        7: same as 1-3
-        """
-
-        field = self.fields.get(question_slug)
-
-        if field:
-            return field
-
-        elif check_parent:
-            field = self.parent().get_field(question_slug) if self.parent() else None
-            if field:
-                return field
-
-        # OK start looking in subforms / row forms below our level.
-        # Since we're looking down, we're disallowing recursing to outer context
-        # to avoid recursing back to where we are
-        for subform in self.sub_forms:
-            sub_field = subform.get_field(question_slug, check_parent=False)
-            if sub_field:
-                return sub_field
-
-        # if we reach this line, we didn't find the question
-        return None
+    def _extend_root_context(self, new_map):
+        # Rowset: We do not recurse further up when extending context,
+        # and we're also not updating our own context from the rows
+        pass
 
     @object_local_memoise
-    def children(self):
-        answers = {ans.question_id: ans for ans in self.document.answers.all()}
-        formquestions = FormQuestion.objects.filter(form=self.form).order_by("-sort")
-
-        return [
-            Field.factory(
-                document=self.document,
-                form=self.form,
-                question=fq.question,
-                answer=answers.get(fq.question.slug),
-                parent=self,
+    def get_global_context(self) -> dict:
+        if not self.parent:  # pragma: no cover
+            raise exceptions.ConfigurationError(
+                f"Table question {self.slug()} has no parent"
             )
-            for fq in formquestions
-        ]
 
-    def set_answer(self, question_slug, answer):
-        field = self.get_field(question_slug)
-        if field:
-            field.answer = answer
+        return self.parent.get_global_context()
+
+    @object_local_memoise
+    def is_empty(self):
+        # Table is considered empty if it has no rows.
+        # Hidden implies empty, even if there *theoretically* is an answer
+        # present
+        return self.is_hidden() or not bool(self.rows)
+
+    def __str__(self):
+        return f"RowSet({self.form.slug})"
 
     def __repr__(self):
-        q_slug = self.question.slug if self.question else None
-        if q_slug:
-            return f"<FieldSet fq={q_slug}, doc={self.document.pk} hidden=({self.question.is_hidden}) req=({self.question.is_required})>"
-
-        return f"<FieldSet form={self.form.slug}, doc={self.document.pk}>"
+        return f"RowSet(q={self.question.slug}, f={self.form.slug})"
 
 
-def print_document_structure(document):  # pragma: no cover
+def print_structure(fieldset: FieldSet, print_fn=None, method=str):
     """Print a document's structure.
 
     Intended halfway as an example on how to use the structure
@@ -277,17 +666,56 @@ def print_document_structure(document):  # pragma: no cover
     """
     ind = {"i": 0}
 
+    print_fn = print_fn or print
+
     @singledispatch
-    def visit(vis):
+    def visit(vis):  # pragma: no cover
+        # Should never happen - for completeness only
         raise Exception(f"generic visit(): {vis}")
 
-    @visit.register(Element)
-    def _(vis):
-        print("   " * ind["i"], vis)
+    @visit.register(FieldSet)
+    def _(vis: FieldSet):
+        print_fn("   " * ind["i"], method(vis))
         ind["i"] += 1
-        for c in vis.children():
-            visit(c)
+        for sub in vis.children():
+            visit(sub)
         ind["i"] -= 1
 
-    struc = FieldSet(document, document.form)
-    visit(struc)
+    @visit.register(RowSet)
+    def _(vis: RowSet):
+        print_fn("   " * ind["i"], method(vis))
+        ind["i"] += 1
+        for sub in vis.children():
+            visit(sub)
+        ind["i"] -= 1
+
+    @visit.register(ValueField)
+    def _(vis):
+        print_fn("   " * ind["i"], method(vis))
+
+    visit(fieldset)
+
+
+def list_structure(fieldset, method=str):
+    """List the given fieldset's structure.
+
+    Use the given method (Default: str()) for stringification.
+    Return a list of strings, each representing a field in the structure,
+    properly indented, useful for visualisation
+    """
+    out_lines = []
+
+    def fake_print(*args):
+        out_lines.append(" ".join([x for x in args]))
+
+    print_structure(fieldset, print_fn=fake_print, method=method)
+    return out_lines
+
+
+def list_document_structure(document, method=str):
+    """List the given document's structure.
+
+    Use the given method (Default: str()) for stringification.
+    """
+    fs = FieldSet(document)
+    return list_structure(fs, method)

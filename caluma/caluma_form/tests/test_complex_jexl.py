@@ -1,5 +1,4 @@
 # Test cases for the (NEW!) structure utility class
-from functools import singledispatch
 from pathlib import Path
 
 import pytest
@@ -9,42 +8,20 @@ from caluma.caluma_form import api, structure
 from caluma.caluma_form.models import AnswerDocument, Document, Form, Question
 
 
-def get_doc_structure(document):
-    """Return a list of strings that represent the given document's structure."""
-
-    ind = {"i": 0}
-    res = []
-
-    @singledispatch
-    def visit(vis):
-        raise Exception(f"generic visit(): {vis}")
-
-    @visit.register(structure.FieldSet)
-    def _(vis):
-        res.append("   " * ind["i"] + f"FieldSet({vis.form.slug})")
-        ind["i"] += 1
-        for c in vis.children():
-            visit(c)
-        ind["i"] -= 1
-
-    @visit.register(structure.Element)
-    def _(vis):
-        res.append(
-            "   " * ind["i"]
-            + f"Field({vis.question.slug}, {vis.answer.value if vis.answer else None})"
-        )
-        ind["i"] += 1
-        for c in vis.children():
-            visit(c)
-        ind["i"] -= 1
-
-    struc = structure.FieldSet(document, document.form)
-    visit(struc)
-    return res
-
-
 @pytest.fixture
 def complex_jexl_form():
+    """Return a form with a bit of structure.
+
+    The structure is as follows:
+
+        demo-formular-1 (Root form)
+           demo-outer-table-question-1 (Table)
+              demo-table-form-1 (Row form)
+                 demo-table-question-1 (Integer)
+                 demo-table-question-2 (Calculated)
+           demo-outer-question-1
+           demo-outer-table-question-2
+    """
     # Complex JEXL evaluation tests:
     # * Recalculation witin table rows
     # * Visibility checks in "outer" form with indirect calc question evaluation
@@ -56,6 +33,21 @@ def complex_jexl_form():
 
 @pytest.fixture
 def complex_jexl_doc(complex_jexl_form):
+    """Return a document with a few questions answered.
+
+    The structure is as follows:
+
+    FieldSet(demo-formular-1)
+       Field(demo-outer-table-question-1, None)
+          FieldSet(demo-table-form-1)
+             Field(demo-table-question-1, 3)
+             Field(demo-table-question-2, 1)
+          FieldSet(demo-table-form-1)
+             Field(demo-table-question-1, 20)
+             Field(demo-table-question-2, 100)
+       Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)
+       Field(demo-outer-table-question-2, None)
+    """
     # -> root_doc, row1, row2 as tuple
     doc = Document.objects.create(form=complex_jexl_form)
 
@@ -95,17 +87,17 @@ def test_evaluating_calc_inside_table(
 ):
     doc, *_ = complex_jexl_doc
 
-    assert get_doc_structure(doc) == [
-        "FieldSet(demo-formular-1)",
-        "   Field(demo-outer-table-question-1, None)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 3)",
-        "         Field(demo-table-question-2, 1)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 20)",
-        "         Field(demo-table-question-2, 100)",
-        "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "   Field(demo-outer-table-question-2, None)",
+    assert structure.list_document_structure(doc, method=repr) == [
+        " FieldSet(q=(root), f=demo-formular-1)",
+        "    RowSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "          ValueField(q=demo-table-question-1, v=3)",
+        "          ValueField(q=demo-table-question-2, v=1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "          ValueField(q=demo-table-question-1, v=20)",
+        "          ValueField(q=demo-table-question-2, v=100)",
+        "    ValueField(q=demo-outer-question-1, v=demo-outer-question-1-outer-option-a)",
+        "    RowSet(q=demo-outer-table-question-2, f=demo-table-form-2)",
     ]
 
 
@@ -114,81 +106,86 @@ def test_update_calc_dependency_inside_table(
 ):
     doc, row1, row2 = complex_jexl_doc
 
-    assert get_doc_structure(doc) == [
-        "FieldSet(demo-formular-1)",
-        "   Field(demo-outer-table-question-1, None)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 3)",
-        "         Field(demo-table-question-2, 1)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 2)",
-        "         Field(demo-table-question-2, 1)",
-        "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "   Field(demo-outer-table-question-2, None)",
+    assert structure.list_document_structure(doc, method=repr) == [
+        " FieldSet(q=(root), f=demo-formular-1)",
+        "    RowSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "          ValueField(q=demo-table-question-1, v=3)",
+        "          ValueField(q=demo-table-question-2, v=1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "          ValueField(q=demo-table-question-1, v=20)",
+        "          ValueField(q=demo-table-question-2, v=100)",
+        "    ValueField(q=demo-outer-question-1, v=demo-outer-question-1-outer-option-a)",
+        "    RowSet(q=demo-outer-table-question-2, f=demo-table-form-2)",
     ]
-
     api.save_answer(
         Question.objects.get(pk="demo-table-question-1"), document=row1, value=30
     )
-    assert get_doc_structure(doc) == [
-        "FieldSet(demo-formular-1)",
-        "   Field(demo-outer-table-question-1, None)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 30)",
-        "         Field(demo-table-question-2, 100)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 2)",
-        "         Field(demo-table-question-2, 1)",
-        "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "   Field(demo-outer-table-question-2, None)",
-    ]
+    assert (
+        structure.list_document_structure(doc, method=repr)
+        == [
+            " FieldSet(q=(root), f=demo-formular-1)",
+            "    RowSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+            "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+            "          ValueField(q=demo-table-question-1, v=30)",  # this was set
+            "          ValueField(q=demo-table-question-2, v=100)",  # should have been recalc'd
+            "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+            "          ValueField(q=demo-table-question-1, v=20)",
+            "          ValueField(q=demo-table-question-2, v=100)",
+            "    ValueField(q=demo-outer-question-1, v=demo-outer-question-1-outer-option-a)",
+            "    RowSet(q=demo-outer-table-question-2, f=demo-table-form-2)",
+        ]
+    )
 
     api.save_answer(
         Question.objects.get(pk="demo-table-question-1"), document=row1, value=3
     )
-    assert get_doc_structure(doc) == [
-        "FieldSet(demo-formular-1)",
-        "   Field(demo-outer-table-question-1, None)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 3)",
-        "         Field(demo-table-question-2, 1)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 2)",
-        "         Field(demo-table-question-2, 1)",
-        "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "   Field(demo-outer-table-question-2, None)",
+    assert structure.list_document_structure(doc, method=repr) == [
+        " FieldSet(q=(root), f=demo-formular-1)",
+        "    RowSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "          ValueField(q=demo-table-question-1, v=3)",  # updated again
+        "          ValueField(q=demo-table-question-2, v=1)",  # recalculated again
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "          ValueField(q=demo-table-question-1, v=20)",
+        "          ValueField(q=demo-table-question-2, v=100)",
+        "    ValueField(q=demo-outer-question-1, v=demo-outer-question-1-outer-option-a)",
+        "    RowSet(q=demo-outer-table-question-2, f=demo-table-form-2)",
     ]
 
     api.save_answer(
-        Question.objects.get(pk="demo-table-question-1"), document=row2, value=20
+        Question.objects.get(pk="demo-table-question-1"), document=row2, value=40
     )
-    assert get_doc_structure(doc) == [
-        "FieldSet(demo-formular-1)",
-        "   Field(demo-outer-table-question-1, None)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 3)",
-        "         Field(demo-table-question-2, 1)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 20)",
-        "         Field(demo-table-question-2, 100)",
-        "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "   Field(demo-outer-table-question-2, None)",
-    ]
+    assert (
+        structure.list_document_structure(doc, method=repr)
+        == [
+            " FieldSet(q=(root), f=demo-formular-1)",
+            "    RowSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+            "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+            "          ValueField(q=demo-table-question-1, v=3)",
+            "          ValueField(q=demo-table-question-2, v=1)",
+            "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+            "          ValueField(q=demo-table-question-1, v=40)",  # updated here
+            "          ValueField(q=demo-table-question-2, v=100)",  # recalculated , same value
+            "    ValueField(q=demo-outer-question-1, v=demo-outer-question-1-outer-option-a)",
+            "    RowSet(q=demo-outer-table-question-2, f=demo-table-form-2)",
+        ]
+    )
 
     api.save_answer(
         Question.objects.get(pk="demo-table-question-1"), document=row2, value=2
     )
-    assert get_doc_structure(doc) == [
-        "FieldSet(demo-formular-1)",
-        "   Field(demo-outer-table-question-1, None)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 3)",
-        "         Field(demo-table-question-2, 1)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 2)",
-        "         Field(demo-table-question-2, 1)",
-        "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "   Field(demo-outer-table-question-2, None)",
+    assert structure.list_document_structure(doc, method=repr) == [
+        " FieldSet(q=(root), f=demo-formular-1)",
+        "    RowSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "          ValueField(q=demo-table-question-1, v=3)",
+        "          ValueField(q=demo-table-question-2, v=1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "          ValueField(q=demo-table-question-1, v=2)",  # updated
+        "          ValueField(q=demo-table-question-2, v=1)",  # recalculated
+        "    ValueField(q=demo-outer-question-1, v=demo-outer-question-1-outer-option-a)",
+        "    RowSet(q=demo-outer-table-question-2, f=demo-table-form-2)",
     ]
 
 
@@ -197,27 +194,27 @@ def test_update_calc_dependency_inside_table_with_outer_reference(
 ):
     doc, _, _ = complex_jexl_doc
 
-    assert get_doc_structure(doc) == [
-        "FieldSet(demo-formular-1)",
-        "   Field(demo-outer-table-question-1, None)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 3)",
-        "         Field(demo-table-question-2, 1)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 20)",
-        "         Field(demo-table-question-2, None)",  # TODO: Should be 100
-        "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "   Field(demo-outer-table-question-2, None)",
+    assert structure.list_document_structure(doc) == [
+        " FieldSet(demo-formular-1)",
+        "    RowSet(demo-table-form-1)",
+        "       FieldSet(demo-table-form-1)",
+        "          Field(demo-table-question-1, 3)",
+        "          Field(demo-table-question-2, 1)",
+        "       FieldSet(demo-table-form-1)",
+        "          Field(demo-table-question-1, 20)",
+        "          Field(demo-table-question-2, 100)",
+        "    Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
+        "    RowSet(demo-table-form-2)",
     ]
 
     # TODO: This implementation corresponds to the current frontend logic, this
     # might change so that table row documents are attached on creation
     new_table_doc = api.save_document(form=Form.objects.get(pk="demo-table-form-2"))
 
-    assert get_doc_structure(new_table_doc) == [
-        "      FieldSet(demo-table-form-2)",
-        "         Field(demo-table-question-outer-ref-hidden, None)",
-        "         Field(demo-table-question-outer-ref-calc, None)",
+    assert structure.list_document_structure(new_table_doc) == [
+        " FieldSet(demo-table-form-2)",
+        "    Field(demo-table-question-outer-ref-hidden, None)",
+        "    Field(demo-table-question-outer-ref-calc, None)",
     ]
 
     api.save_answer(
@@ -226,30 +223,39 @@ def test_update_calc_dependency_inside_table_with_outer_reference(
         value=30,
     )
 
-    assert get_doc_structure(new_table_doc) == [
-        "      FieldSet(demo-table-form-2)",
-        "         Field(demo-table-question-outer-ref-hidden, 30)",
-        "         Field(demo-table-question-outer-ref-calc, 30)",
+    # We did save a value of 30, but the `outer-ref-hidden` refers to
+    # an out-of-reach question in it's `is_hidden` expression, thus is
+    # considered hidden itself. In turn, the `outer-ref-calc` can't calculate
+    # either.
+    assert structure.list_document_structure(new_table_doc) == [
+        " FieldSet(demo-table-form-2)",
+        "    Field(demo-table-question-outer-ref-hidden, None)",
+        "    Field(demo-table-question-outer-ref-calc, None)",
     ]
 
+    # We now attach the table row to the main document, which should make
+    # it fully calculated, as the outer questions referenced from within
+    # the table are now reachable.
     api.save_answer(
-        question="demo-outer-table-question-2", document=doc, value=[new_table_doc.pk]
+        question=Question.objects.get(pk="demo-outer-table-question-2"),
+        document=doc,
+        value=[new_table_doc.pk],
     )
 
-    assert get_doc_structure(doc) == [
-        "FieldSet(demo-formular-1)",
-        "   Field(demo-outer-table-question-1, None)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 3)",
-        "         Field(demo-table-question-2, 1)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 20)",
-        "         Field(demo-table-question-2, 100)",
-        "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "   Field(demo-outer-table-question-2, None)",
-        "      FieldSet(demo-table-form-2)",
-        "         Field(demo-table-question-outer-ref-hidden, 30)",
-        "         Field(demo-table-question-outer-ref-calc, 30)",
+    assert structure.list_document_structure(doc) == [
+        " FieldSet(demo-formular-1)",
+        "    RowSet(demo-table-form-1)",
+        "       FieldSet(demo-table-form-1)",
+        "          Field(demo-table-question-1, 3)",
+        "          Field(demo-table-question-2, 1)",
+        "       FieldSet(demo-table-form-1)",
+        "          Field(demo-table-question-1, 20)",
+        "          Field(demo-table-question-2, 100)",
+        "    Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
+        "    RowSet(demo-table-form-2)",
+        "       FieldSet(demo-table-form-2)",
+        "          Field(demo-table-question-outer-ref-hidden, 30)",
+        "          Field(demo-table-question-outer-ref-calc, 30)",
     ]
 
     api.save_answer(
@@ -258,18 +264,44 @@ def test_update_calc_dependency_inside_table_with_outer_reference(
         value=20,
     )
 
-    assert get_doc_structure(doc) == [
-        "FieldSet(demo-formular-1)",
-        "   Field(demo-outer-table-question-1, None)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 3)",
-        "         Field(demo-table-question-2, 1)",
-        "      FieldSet(demo-table-form-1)",
-        "         Field(demo-table-question-1, 20)",
-        "         Field(demo-table-question-2, 100)",
-        "   Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "   Field(demo-outer-table-question-2, None)",
-        "      FieldSet(demo-table-form-2)",
-        "         Field(demo-table-question-outer-ref-hidden, 20)",
-        "         Field(demo-table-question-outer-ref-calc, 20)",
+    assert structure.list_document_structure(doc) == [
+        " FieldSet(demo-formular-1)",
+        "    RowSet(demo-table-form-1)",
+        "       FieldSet(demo-table-form-1)",
+        "          Field(demo-table-question-1, 3)",
+        "          Field(demo-table-question-2, 1)",
+        "       FieldSet(demo-table-form-1)",
+        "          Field(demo-table-question-1, 20)",
+        "          Field(demo-table-question-2, 100)",
+        "    Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
+        "    RowSet(demo-table-form-2)",
+        "       FieldSet(demo-table-form-2)",
+        "          Field(demo-table-question-outer-ref-hidden, 20)",
+        "          Field(demo-table-question-outer-ref-calc, 20)",
     ]
+
+
+def test_structure_caching(transactional_db, complex_jexl_form, complex_jexl_doc):
+    doc, _, _ = complex_jexl_doc
+
+    hit_count_before = structure.object_local_memoise.hit_count
+    miss_count_before = structure.object_local_memoise.miss_count
+
+    assert structure.list_document_structure(doc) == [
+        " FieldSet(demo-formular-1)",
+        "    RowSet(demo-table-form-1)",
+        "       FieldSet(demo-table-form-1)",
+        "          Field(demo-table-question-1, 3)",
+        "          Field(demo-table-question-2, 1)",
+        "       FieldSet(demo-table-form-1)",
+        "          Field(demo-table-question-1, 20)",
+        "          Field(demo-table-question-2, 100)",
+        "    Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
+        "    RowSet(demo-table-form-2)",
+    ]
+
+    # Note: If those fail, just update the counts. I'm more interested in a
+    # rather rough overview of cache hits, not the exact numbers. Changing the
+    # caching will affect hese numbers.
+    assert structure.object_local_memoise.hit_count - hit_count_before == 46
+    assert structure.object_local_memoise.miss_count - miss_count_before == 54
