@@ -67,9 +67,9 @@ def fix_foreign_key_types(apps, connection):
                 target_params = field.target_field.db_parameters(connection)
 
                 # verify django-internal specified type
-                assert (
-                    fk_params["type"] == target_params["type"]
-                ), f"Foreign key field {field}: type mismatch with destination in django-internal representation"
+                assert fk_params["type"] == target_params["type"], (
+                    f"Foreign key field {field}: type mismatch with destination in django-internal representation"
+                )
 
                 # check if the DB agrees
                 fk_dbtype = col_type_from_db(field, connection)

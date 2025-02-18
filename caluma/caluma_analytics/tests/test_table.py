@@ -98,9 +98,9 @@ def test_create_table(db, snapshot, schema_executor):
 
     result = schema_executor(QUERY_SEARCH_TABLE, variable_values={"search": "bar Foo"})
     assert not result.errors
-    assert (
-        len(result.data["allAnalyticsTables"]["edges"]) == 1
-    ), "Search in description should work"
+    assert len(result.data["allAnalyticsTables"]["edges"]) == 1, (
+        "Search in description should work"
+    )
 
 
 @pytest.mark.parametrize(
