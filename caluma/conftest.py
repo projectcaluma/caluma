@@ -2,6 +2,7 @@ import contextlib
 import datetime
 import functools
 import inspect
+import itertools
 import sys
 from collections import defaultdict
 
@@ -265,11 +266,15 @@ def form_and_document(
            * sub_form: sub_form
                * question: sub_question
     """
+    sorter = itertools.count(9999, -1)
 
     def fallback_factory(factory, **kwargs):
         existing = factory._meta.model.objects.filter(**kwargs).first()
         if existing:
             return existing
+        if factory is form_question_factory:
+            # Make form structure / sorting deterministic
+            kwargs["sort"] = next(sorter)
         return factory(**kwargs)
 
     def factory(use_table=False, use_subform=False, table_row_count=1):
