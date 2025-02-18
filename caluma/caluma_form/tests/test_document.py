@@ -5,6 +5,8 @@ from django.utils.dateparse import parse_date
 from graphql_relay import to_global_id
 from rest_framework.exceptions import ValidationError
 
+from caluma.caluma_data_source.tests.data_sources import MyDataSourceWithOnCopy
+
 from ...caluma_core.relay import extract_global_id
 from ...caluma_core.tests import extract_serializer_input_fields
 from ...caluma_core.visibilities import BaseVisibility, filter_queryset_for
@@ -1151,7 +1153,12 @@ def test_copy_document(
     form_question_factory,
     schema_executor,
     minio_mock,
+    settings,
 ):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.caluma_data_source.tests.data_sources.MyDataSource",
+    ]
+
     main_form = form_factory(slug="main-form")
     table_question = question_factory(
         type=Question.TYPE_TABLE, slug="table-question", row_form=form_factory()
@@ -1291,6 +1298,176 @@ def test_copy_document(
     assert set(ans.value for ans in result_table_answer_document.answers.all()) == set(
         ans.value for ans in row_document_1.answers.all()
     )
+
+
+@pytest.mark.parametrize(
+    "on_copy_result",
+    ["discard", "change", None],
+)
+def test_copy_document_datasource_on_copy(
+    db,
+    document_factory,
+    answer_factory,
+    dynamic_option_factory,
+    form_factory,
+    form_question_factory,
+    schema_executor,
+    settings,
+    on_copy_result,
+):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.caluma_data_source.tests.data_sources.MyDataSourceWithOnCopy",
+    ]
+
+    # extract testing datasource values
+    data_source = MyDataSourceWithOnCopy()
+    allowed_values = data_source.get_data()
+    value1 = allowed_values[0][0]
+    value2 = allowed_values[1][0]
+    value3 = allowed_values[2][0]
+    changed_value, changed_label = data_source.get_change_value()
+
+    # use the middle value for testing retaining the value as-is
+    if on_copy_result is None:
+        on_copy_result = value2
+
+    # set up the main form with dynamic choice and multiple choice questions
+    main_form = form_factory(slug="main-form")
+    dynamic_choice_question = form_question_factory(
+        form=main_form,
+        question__type=Question.TYPE_DYNAMIC_CHOICE,
+    )
+    dynamic_choice_question.question.data_source = "MyDataSourceWithOnCopy"
+    dynamic_choice_question.question.save()
+    dynamic_multiple_choice_question = form_question_factory(
+        form=main_form,
+        question__type=Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+    )
+    dynamic_multiple_choice_question.question.data_source = "MyDataSourceWithOnCopy"
+    dynamic_multiple_choice_question.question.save()
+    main_document = document_factory(form=main_form)
+
+    # answer single choice with the on_copy_result
+    answer_factory(
+        question=dynamic_choice_question.question,
+        document=main_document,
+        value=str(on_copy_result),
+    )
+    # answer multiple choice with the set: value1, on_copy_result and value3
+    answer_factory(
+        question=dynamic_multiple_choice_question.question,
+        document=main_document,
+        value=[
+            str(value1),
+            str(on_copy_result),
+            str(value3),
+        ],
+    )
+    # generate the dynamic options accordingly
+    for question, value in [
+        (dynamic_choice_question.question, on_copy_result),
+        (dynamic_multiple_choice_question.question, value1),
+        (dynamic_multiple_choice_question.question, on_copy_result),
+        (dynamic_multiple_choice_question.question, value3),
+    ]:
+        dynamic_option_factory(question=question, document=main_document, slug=value)
+
+    old_option = DynamicOption.objects.filter(
+        question=dynamic_choice_question.question, document=main_document
+    ).first()
+    old_multi_options = DynamicOption.objects.filter(
+        question=dynamic_multiple_choice_question.question, document=main_document
+    )
+
+    query = """
+        mutation CopyDocument($input: CopyDocumentInput!) {
+          copyDocument(input: $input) {
+            document {
+              id
+            }
+            clientMutationId
+          }
+        }
+    """
+
+    result = schema_executor(
+        query, variable_values={"input": {"source": str(main_document.pk)}}
+    )
+    assert not result.errors
+
+    # fetch the copied document
+    result_document_id = extract_global_id(
+        result.data["copyDocument"]["document"]["id"]
+    )
+    new_document = Document.objects.get(pk=result_document_id)
+
+    # fetch copied data for single dynamic options
+    new_answer = new_document.answers.get(question=dynamic_choice_question.question)
+    new_option = DynamicOption.objects.filter(
+        question=dynamic_choice_question.question, document=new_document
+    ).first()
+
+    # test option and answer result of the single dynamic option
+    if on_copy_result == "discard":
+        # discarded, so the dynamic option is not copied
+        assert new_option is None
+        assert new_answer.value is None
+    elif on_copy_result == "change":
+        # changed, so the dynamic option is copied but with a different slug and label
+        new_option.slug = changed_value
+        new_option.label = changed_label
+        assert new_answer.value == new_option.slug
+    else:
+        # retained, so the dynamic option is copied as-is
+        assert old_option.slug == new_option.slug
+        assert old_option.label == new_option.label
+        assert new_answer.value == old_option.slug
+
+    # fetch copied data for multiple dynamic options
+    new_multi_answer = new_document.answers.get(
+        question=dynamic_multiple_choice_question.question
+    )
+    new_multi_options = DynamicOption.objects.filter(
+        question=dynamic_multiple_choice_question.question,
+        document=new_document,
+    )
+
+    # test option and answer result of the multiple dynamic options
+    if on_copy_result == "discard":
+        # discarded, so the middle dynamic option is discarded
+        assert old_multi_options.count() - 1 == new_multi_options.count()
+        assert new_multi_answer.value == [
+            str(value1),
+            str(value3),
+        ]
+    elif on_copy_result == "change":
+        # changed, so the dynamic option is copied but with a different slug and label
+        assert old_multi_options.count() == new_multi_options.count()
+        assert old_multi_options[0].slug == new_multi_options[0].slug
+        assert old_multi_options[0].label == new_multi_options[0].label
+        assert new_multi_options[1].slug == changed_value
+        assert new_multi_options[1].label == changed_label
+        assert old_multi_options[2].slug == new_multi_options[2].slug
+        assert old_multi_options[2].label == new_multi_options[2].label
+        assert new_multi_answer.value == [
+            str(value1),
+            str(changed_value),
+            str(value3),
+        ]
+    else:
+        # retained, so the dynamic options are copied as-is
+        assert old_multi_options.count() == new_multi_options.count()
+        assert set(old_multi_options.values_list("slug", flat=True)) == set(
+            new_multi_options.values_list("slug", flat=True)
+        )
+        assert set(map(str, old_multi_options.values_list("label", flat=True))) == set(
+            map(str, new_multi_options.values_list("label", flat=True))
+        )
+        assert new_multi_answer.value == [
+            str(value1),
+            str(value2),
+            str(value3),
+        ]
 
 
 def assert_props(doc, answer):

@@ -91,3 +91,28 @@ class MyDataSourceWithContext(BaseDataSource):
             label += f" foo: {context['foo']}"
 
         return [[slug, label]]
+
+
+class MyDataSourceWithOnCopy(BaseDataSource):
+    info = "Data source using on copy for testing"
+
+    def get_data(self):
+        return [
+            ["169cac4c-ab46-4521-bdba-4385f26ffb3", "label1"],
+            ["34948dc6-4b16-4a72-890b-cdbdc7da9f2", "label2"],
+            ["0935c1bc-5ff3-44a4-9089-03eac8872b0", "label3"],
+        ]
+
+    def get_change_value(self):
+        return ["changedv-4b16-4a72-890b-cdbdc7da9f2", "changed label2"]
+
+    def on_copy(self, old_answer, new_answer, old_value):
+        old_slug, _ = old_value
+
+        if old_slug == "discard":
+            return (None, None)
+
+        if old_slug == "change":
+            return self.get_change_value()
+
+        return old_value

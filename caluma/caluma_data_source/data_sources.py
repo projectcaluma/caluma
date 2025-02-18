@@ -86,3 +86,6 @@ class BaseDataSource:
                 raise e
             return self.default
         return new_data
+
+    def on_copy(self, old_answer, new_answer, old_value):
+        return old_value
