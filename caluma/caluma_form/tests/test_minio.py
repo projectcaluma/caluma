@@ -20,6 +20,8 @@ def is_badssl_down():  # pragma: no cover
 )
 @pytest.mark.xfail(is_badssl_down(), reason="Badssl.com unreachable")
 def test_minio_disable_cert_checks(db, settings, disable_cert_checks, debug):
+    urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
     settings.MINIO_DISABLE_CERT_CHECKS = disable_cert_checks
     settings.DEBUG = debug
 

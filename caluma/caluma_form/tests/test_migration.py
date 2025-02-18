@@ -296,16 +296,16 @@ def _verify_foreign_key_types(apps):
                 target_params = field.target_field.db_parameters(connection)
 
                 # verify django-internal specified type
-                assert (
-                    fk_params["type"] == target_params["type"]
-                ), f"Foreign key field {field}: type mismatch with destination in django-internal representation"
+                assert fk_params["type"] == target_params["type"], (
+                    f"Foreign key field {field}: type mismatch with destination in django-internal representation"
+                )
 
                 # check if the DB agrees
                 fk_dbtype = col_type_from_db(field, connection)
                 target_dbtype = col_type_from_db(field.target_field, connection)
-                assert (
-                    fk_dbtype == target_dbtype
-                ), f"Foreign key field {field}: type mismatch with destination in DB"
+                assert fk_dbtype == target_dbtype, (
+                    f"Foreign key field {field}: type mismatch with destination in DB"
+                )
 
 
 def test_slugfield_length_correctness(post_migrate_to_current_state):

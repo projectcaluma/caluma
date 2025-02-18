@@ -83,7 +83,7 @@ class Command(BaseCommand):  # pragma: no cover
         for table in tables:
             query = f"""ALTER TABLE {table} RENAME TO {self.prefix}{table};"""
             if self.revert:
-                query = f"""ALTER TABLE {table} RENAME TO {table.replace(self.prefix, '')};"""
+                query = f"""ALTER TABLE {table} RENAME TO {table.replace(self.prefix, "")};"""
             queries.append(query)
         return queries
 
@@ -92,7 +92,7 @@ class Command(BaseCommand):  # pragma: no cover
         for sequence in sequences:
             query = f"""ALTER SEQUENCE {sequence} RENAME TO {self.prefix}{sequence};"""
             if self.revert:
-                query = f"""ALTER SEQUENCE {sequence} RENAME TO {sequence.replace(self.prefix, '')};"""
+                query = f"""ALTER SEQUENCE {sequence} RENAME TO {sequence.replace(self.prefix, "")};"""
             queries.append(query)
         return queries
 
