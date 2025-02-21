@@ -513,3 +513,60 @@ def test_file_answer_mutation_update_missing_file(
         result.errors[0].args[0]
     )
     assert answer.files.count() == 0
+
+
+@pytest.mark.parametrize(
+    "question_type, answer_value, old_slug, new_slug, expected",
+    [
+        # retain old value for single choice if it doesn't match the old_slug
+        (Question.TYPE_DYNAMIC_CHOICE, None, "test", "new", None),
+        (Question.TYPE_DYNAMIC_CHOICE, "other", "test", "new", "other"),
+        # use the new value for single choice if the old_slug matches the current answer
+        (Question.TYPE_DYNAMIC_CHOICE, "test", "test", "new", "new"),
+        (Question.TYPE_DYNAMIC_CHOICE, "test", "test", None, None),
+        # don't change the value for multi choice if the old_slug isn't in the current answer
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, None, "test", "new", None),
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["other"], "test", "new", ["other"]),
+        # replace the old_slug for multi choice with the new_slug in the current answer if it's present
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["test"], "test", "new", ["new"]),
+        (
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            ["other", "test"],
+            "test",
+            "new",
+            ["other", "new"],
+        ),
+        (
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            ["other", "other2"],
+            "test",
+            "new",
+            ["other", "other2"],
+        ),
+        # discard the old_slug for multi choice if the new_slug is None
+        (
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            ["other", "test"],
+            "test",
+            None,
+            ["other"],
+        ),
+    ],
+)
+def test_modify_changed_choice_answer(
+    db,
+    question_factory,
+    answer_factory,
+    question_type,
+    answer_value,
+    old_slug,
+    new_slug,
+    expected,
+):
+    question = question_factory(type=question_type)
+    answer = answer_factory(question=question, value=answer_value)
+
+    assert (
+        answer.modify_changed_choice_answer(question, answer_value, old_slug, new_slug)
+        == expected
+    )
