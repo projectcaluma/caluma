@@ -21,13 +21,12 @@ import copy
 import typing
 import weakref
 from abc import ABC
+from collections import defaultdict
 from collections.abc import Iterable
 from dataclasses import dataclass, field
 from functools import singledispatch, wraps
 from logging import getLogger
 from typing import Optional
-
-from django.db.models import QuerySet
 
 from caluma.caluma_core import exceptions
 
@@ -37,8 +36,13 @@ if typing.TYPE_CHECKING:  # pragma: no cover
 from caluma.caluma_form.models import (
     Answer,
     AnswerDocument,
+    Document,
+    File,
+    Form,
     FormQuestion,
+    Option,
     Question,
+    QuestionOption,
 )
 
 log = getLogger(__name__)
@@ -95,6 +99,164 @@ def clear_memoise(obj):
     obj._memoise = {}
 
 
+class FastLoader:
+    """Load everything in a document/form combination as fast as possible.
+
+    The FastLoader is intended to reduce the number of queries as much as
+    possible. It uses prefetching and other techniques, and provides fast (dict)
+    lookup to any involved entities.
+
+    Note: We treat all keys as strings, even UUIDs. This makes us a bit
+    more compatible with various sources of keys.
+
+    While you *can* use the fastloader with any document, it will likely
+    load too much if only a sub-document is given
+    """
+
+    def __init__(self, document, form=None):
+        self._document = document.family_id
+
+        # Form bits
+        self._forms: dict[str, Form] = {}
+        self._questions: dict[str, Question] = {}
+        self._questions_by_form: dict[str, list[Question]] = defaultdict(list)
+        self._question_options: dict[str, list[Option]] = defaultdict(list)
+        self._answers_by_document = defaultdict(dict)
+
+        # Document bits
+        self._documents: dict[str, Document] = {}
+        self._answers: dict[str, Answer] = {}
+        self._table_rows_by_answer = defaultdict(list)
+        self._answerdocuments: dict[str, AnswerDocument] = {}
+        self._files: dict[str, File] = {}
+        self._files_by_answer = defaultdict(list)
+
+        self._load_document_entities()
+
+        known_forms = set(doc.form_id for doc in self._documents.values())
+        self._load_form_entities(known_forms)
+
+    def _load_form_entities(self, known_forms):
+        form_questions = (
+            FormQuestion.objects.filter(form__in=known_forms)
+            .select_related("question")
+            .select_related("form")
+            .order_by("-sort")
+        )
+        choice_questions = []
+
+        collected_forms = set()
+
+        for fq in form_questions:
+            if fq.form_id not in self._forms:
+                self._forms[fq.form_id] = fq.form
+
+            # This is already pre-sorted, so we can naively append() here
+            self._questions_by_form[fq.form_id].append(fq.question)
+            self._questions[fq.question.pk] = fq.question
+
+            if fq.question.type == Question.TYPE_TABLE:
+                collected_forms.add(fq.question.row_form_id)
+            if fq.question.type == Question.TYPE_FORM:
+                collected_forms.add(fq.question.sub_form_id)
+
+            # Prepare next step - fetch ordered choices
+            if fq.question.type in [
+                Question.TYPE_CHOICE,
+                Question.TYPE_MULTIPLE_CHOICE,
+            ]:
+                choice_questions.append(fq.question)
+
+        # It could be that the requested forms don't have any questions. We'd still
+        # need to add them to our "known" set.
+        # TODO: Maybe we can just set *some* value in self._forms, if nobody actually
+        # wants to *use* the form objects themselves
+        missing_forms = set(known_forms) - set(self._forms)
+        if missing_forms:
+            for form in Form.objects.filter(slug__in=missing_forms):
+                self._forms[form.pk] = form
+
+        if choice_questions:
+            for qo in (
+                QuestionOption.objects.filter(question__in=choice_questions)
+                .order_by("-sort")
+                .select_related("option")
+            ):
+                self._question_options[qo.question_id].append(qo.option)
+
+        newly_collected_forms = collected_forms - set(self._forms.keys())
+        if newly_collected_forms:
+            self._load_form_entities(list(newly_collected_forms))
+
+    def _load_document_entities(self):
+        # First: All Documents - These are fetchable via zero JOINs
+        self._documents = {
+            str(document.pk): document
+            for document in Document.objects.filter(family=self._document)
+        }
+        # Second: All Answers - These are fetchable via zero JOINs, as we
+        # already have all the documents
+        self._answers = {
+            str(answer.pk): answer
+            for answer in Answer.objects.filter(document__in=self._documents.keys())
+        }
+        for ans in self._answers.values():
+            self._answers_by_document[str(ans.document_id)][ans.question_id] = ans
+
+        self._answerdocuments = {
+            str(answerdocument.pk): answerdocument
+            for answerdocument in AnswerDocument.objects.filter(
+                # This works, as there should only be the root doc, and any
+                # other document in here will be a row doc. So one mismatch,
+                # the rest should match just fine
+                document__in=self._documents.keys()
+            ).order_by("answer_id", "-sort")
+        }
+        for ad in self._answerdocuments.values():
+            self._table_rows_by_answer[str(ad.answer_id)].append(str(ad.document_id))
+
+        # TODO: This uses a JOIN despite us having the answers already loaded.
+        # However we don't know the answer's question types yet, so instead of passing
+        # a big number of answer ids here (only a few of which will be file answers)
+        # we instead use the documents, reducing the munber of params, and therefore
+        # speeding up the query.
+        for file in File.objects.filter(
+            answer__document__in=self._documents.keys()
+        ).order_by("answer_id", "created_at"):
+            self._files_by_answer[str(file.answer_id)].append(file)
+
+    def question_for_answer(self, answer_id):
+        ans = self._answers[str(answer_id)]
+        return self._questions[ans.question_id]
+
+    def answers_for_document(self, document_id: str) -> dict[str, Answer]:
+        """Return an unordered dict of all answers in the given document.
+
+        The resulting dict is keyed by the question slug, pointing to the
+        answer object.
+        """
+        return self._answers_by_document[str(document_id)]
+
+    def files_for_answer(self, answer_id: str) -> list[File]:
+        return self._files_by_answer[str(answer_id)]
+
+    def questions_for_form(self, form_id) -> list[Question]:
+        return self._questions_by_form[form_id]
+
+    def form_by_id(self, form_id: str) -> Form:
+        if form_id not in self._forms:
+            log.warning("Fastloader: Form %s was not preloaded - loading now", form_id)
+            self._load_form_entities([form_id])
+        return self._forms[form_id]
+
+    def rows_for_table_answer(self, answer_id: str) -> list[Document]:
+        document_ids = self._table_rows_by_answer[str(str(answer_id))]
+        return [self._documents[doc_id] for doc_id in document_ids]
+
+    def options_for_question(self, question_id):
+        return self._question_options[question_id]
+
+
 @dataclass
 class BaseField(ABC):
     """Base class for the field types. This is the interface we aim to provide."""
@@ -103,6 +265,11 @@ class BaseField(ABC):
 
     question: Optional[Question] = field(default=None)
     answer: Optional[Answer] = field(default=None)
+
+    _fastloader: Optional[FastLoader] = field(default=None)
+
+    def _make_fastloader(self, document, form=None):
+        return FastLoader(document, form)
 
     @object_local_memoise
     def get_evaluator(self) -> QuestionJexl:
@@ -379,12 +546,16 @@ class ValueField(BaseField):
             if self.question.type == Question.TYPE_FILES:
                 # TODO return files - how exactly? Returning list-of-filenames
                 # for now
-                return [f.name for f in self.answer.files.all()]
+                file_objs = self._fastloader.files_for_answer(self.answer.pk)
+                return [f.name for f in file_objs]
         return self.question.empty_value()
 
     @object_local_memoise
     def get_context(self) -> collections.ChainMap:
         return self.parent.get_context()
+
+    def get_options(self):
+        return self._fastloader.options_for_question(self.slug())
 
     @object_local_memoise
     def is_empty(self):
@@ -417,13 +588,21 @@ class ValueField(BaseField):
 
 class FieldSet(BaseField):
     def __init__(
-        self, document, form=None, parent=None, question=None, global_context=None
+        self,
+        document,
+        form=None,
+        parent=None,
+        question=None,
+        global_context=None,
+        _fastloader=None,
     ):
         # TODO: prefetch document once we have the structure built up
         #
         self.question = question
         self._document = document
         self.form = form or document.form
+
+        self._fastloader = _fastloader or self._make_fastloader(document, self.form)
 
         self._global_context = global_context or {"info": {}}
 
@@ -545,29 +724,26 @@ class FieldSet(BaseField):
         # contexts, so a row context will be able to look "out". We implement
         # form questions the same way, even though not strictly neccessary
 
-        root_answers = self._document.answers.all().select_related("question")
-        answers_by_q_slug = {ans.question_id: ans for ans in root_answers}
+        answers_by_q_slug = self._fastloader.answers_for_document(self._document.pk)
 
-        formquestions: QuerySet[FormQuestion] = FormQuestion.objects.filter(
-            form=self.form
-        ).order_by("-sort")
+        questions = self._fastloader.questions_for_form(self.form.pk)
 
-        for fq in formquestions:
-            question = fq.question
+        for question in questions:
             if question.type == Question.TYPE_FORM:
                 self._context[question.slug] = FieldSet(
                     document=self._document,
-                    # question=question,
-                    form=question.sub_form,
+                    form=self._fastloader.form_by_id(question.sub_form_id),
                     parent=self,
                     question=question,
                     global_context=self.get_global_context(),
+                    _fastloader=self._fastloader,
                 )
             elif question.type == Question.TYPE_TABLE:
                 self._context[question.slug] = RowSet(
                     question=question,
                     answer=answers_by_q_slug.get(question.slug),
                     parent=self,
+                    _fastloader=self._fastloader,
                 )
             else:
                 # "leaf" question
@@ -575,6 +751,7 @@ class FieldSet(BaseField):
                     question=question,
                     answer=answers_by_q_slug.get(question.slug),
                     parent=self,
+                    _fastloader=self._fastloader,
                 )
 
     def __str__(self):
@@ -589,10 +766,13 @@ class FieldSet(BaseField):
 class RowSet(BaseField):
     rows: list[FieldSet]
 
-    def __init__(self, question, parent, answer: Optional[Answer] = None):
+    def __init__(
+        self, question, parent, answer: Optional[Answer] = None, _fastloader=None
+    ):
         self.form = question.row_form
         self.question = question
         self.answer = answer
+        self._fastloader = _fastloader or self._make_fastloader(parent._document)
 
         if not parent:  # pragma: no cover
             raise exceptions.ConfigurationError(
@@ -604,15 +784,14 @@ class RowSet(BaseField):
         if answer:
             self.rows = [
                 FieldSet(
-                    document=row_doc.document,
+                    document=row_doc,
                     question=question,
-                    form=question.row_form,
+                    form=self._fastloader.form_by_id(question.row_form_id),
                     parent=self,
                     global_context=self.get_global_context(),
+                    _fastloader=self._fastloader,
                 )
-                for row_doc in AnswerDocument.objects.all()
-                .filter(answer=answer)
-                .order_by("-sort")
+                for row_doc in self._fastloader.rows_for_table_answer(answer.pk)
             ]
         else:
             self.rows = []
@@ -622,6 +801,10 @@ class RowSet(BaseField):
             return []
 
         return [row.get_value() for row in self.children()]
+
+    @object_local_memoise
+    def get_column_questions(self):
+        return self._fastloader.questions_for_form(self.form.pk)
 
     def get_all_fields(self) -> Iterable[BaseField]:
         for row in self.children():

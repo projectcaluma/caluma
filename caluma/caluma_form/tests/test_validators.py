@@ -235,7 +235,9 @@ def test_validate_table(
         document=main_document, question=main_table_question_1.question, value=None
     )
 
-    row_document_1 = document_factory(form=main_table_question_1.question.row_form)
+    row_document_1 = document_factory(
+        form=main_table_question_1.question.row_form, family=main_document
+    )
     answer_document_factory(document=row_document_1, answer=table_answer)
 
     answer_factory(
@@ -679,7 +681,7 @@ def test_validate_missing_in_table(
     if table_required:
         # Table required. But we only fill it partially, this
         # should raise an error
-        row_doc = document_factory(form=sub_form)
+        row_doc = document_factory(form=sub_form, family=document)
         answer_document_factory(answer=table_ans, document=row_doc)
         row_doc.answers.create(question=sub_question1, value="hi")
 
@@ -763,7 +765,7 @@ def test_validate_form_in_table(
     document = document_factory(form=top_form)
     table_ans = answer_factory(document=document, question=table_question)
 
-    row_doc = document_factory(form=sub_form)
+    row_doc = document_factory(form=sub_form, family=document)
     answer_document_factory(answer=table_ans, document=row_doc)
     row_doc.answers.create(question=sub_question1, value="hi")
 

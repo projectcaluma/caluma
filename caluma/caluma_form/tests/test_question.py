@@ -1290,7 +1290,7 @@ def test_init_of_calc_questions_queries(
         question__calc_expression="'table'|answer|mapby('column')|sum + 'top_question'|answer + 'sub_question'|answer",
     )
 
-    with django_assert_num_queries(86):
+    with django_assert_num_queries(41):
         # TODO: This used to be 35 queries - I think we need to redo the
         # whole preload for the new structure to get this down again
         api.save_answer(questions_dict["top_question"], document, value="1")
