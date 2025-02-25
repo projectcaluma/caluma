@@ -319,7 +319,7 @@ class DocumentValidator:
         **kwargs,
     ):
         if not validation_context:
-            validation_context = self._validation_context(document)
+            validation_context = self.get_validation_context(document)
 
         required_but_empty = []
 
@@ -411,6 +411,9 @@ class DocumentValidator:
         This evaluates the `is_hidden` expression for each question to decide
         if the question is visible.
         Return a list of question slugs that are visible.
+
+        Note: If you pass in a validation context, it's the caller's
+        responsibility to ensure it's the right one
         """
         if validation_context is None:
             validation_context = self.get_validation_context(document)
