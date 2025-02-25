@@ -580,6 +580,20 @@ class BaseField(ABC):
         parent_form = self.parent.form if self.parent else None
         return parent_form or self.form or None
 
+    def get_path(self):  # pragma: no cover
+        """Return a path to the current field.
+
+        The path is a human-readable path to the current field, starting from
+        the root. This allows having more context visible
+        """
+
+        # This is mainly for debugging
+        if not self.parent:
+            return "(root)"
+        ppath = self.parent.get_path()
+        typeinfo = type(self).__name__[0]
+        return f"{ppath} -> {typeinfo}:{self.slug()}"
+
 
 @dataclass
 class ValueField(BaseField):
