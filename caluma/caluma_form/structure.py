@@ -829,6 +829,24 @@ class FieldSet(BaseField):
 
         return f"FieldSet(q={q_slug}, f={self.form.slug})"
 
+    def print_structure(self, print_fn=None, method=str):  # pragma: no cover
+        """Print the structure as a hierarchical list of text.
+
+        You can pass an alternate print function, and also define a custom
+        function for turning the fields into text. For example, calling with
+        method=repr gives more information than the default method=str.
+        """
+        return print_structure(self, print_fn, method=method)
+
+    def list_structure(self, method=str):  # pragma: no cover
+        """Return the structure as a  list of text, indented.
+
+        You can pass an alternate print function, and also define a custom
+        function for turning the fields into text. For example, calling with
+        method=repr gives more information than the default method=str.
+        """
+        return list_structure(self, method)
+
 
 class RowSet(BaseField):
     rows: list[FieldSet]
