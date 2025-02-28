@@ -1,3 +1,20 @@
+# v11.0.0 (28 February 2025)
+
+
+### Feature
+
+* **structure:** Introduce a fast-loading mechanism ([`e82cb5e`](https://github.com/projectcaluma/caluma/commit/e82cb5ea005904e96fa98339a7f50ee964b8325b))
+
+### Fix
+
+* **structure:** Correctly sort questions and table rows ([`36a6080`](https://github.com/projectcaluma/caluma/commit/36a60809033dfa3b8d34b45a0369f0224e5b94ab))
+
+### Breaking
+
+* Code that uses the form jexl and / or structure code most likely will need to be rewritten. The changes are small-ish, but still semantically not exactly equal. ([`7c997b7`](https://github.com/projectcaluma/caluma/commit/7c997b70850a4c4e7f046714d8a1ab56a89ef950))
+  See https://github.com/projectcaluma/caluma/pull/2356 for further details.
+
+
 # v10.7.0 (09 January 2025)
 
 ### Feature
