@@ -1,17 +1,16 @@
 import sys
-from collections import defaultdict
 from datetime import date
 from logging import getLogger
 
-from django.db.models import Q
 from django_filters.constants import EMPTY_VALUES
 from rest_framework import exceptions
 
 from caluma.caluma_data_source.data_source_handlers import get_data_sources
+from caluma.caluma_form import structure
+from caluma.caluma_workflow.models import Case
 
-from . import jexl, models, structure
+from . import jexl, models
 from .format_validators import get_format_validators
-from .jexl import QuestionJexl
 from .models import DynamicOption, Question
 
 log = getLogger()
@@ -89,38 +88,43 @@ class AnswerValidator:
                 f"Invalid value {value}. Should be of type date.", slugs=[question.slug]
             )
 
+    def _structure_field(self, document, question, validation_context):
+        if validation_context:  # pragma: todo cover
+            # Note about coverage: This is in fact covered, but in some python
+            # versions, pytest-cov fails to see it when run with xdist, and I
+            # don't have the patience to actually debug that stuff right now
+            # The test that covers this branch is here:
+            # `caluma_form.tests.test_option.test_validate_form_with_jexl_option`
+
+            # If valdiation context is passed in from the DocumentValidator, we
+            # already have the *field* we need, and no further work is needed.
+            if validation_context.slug() != question.slug:  # pragma: no cover
+                # This only happens if *programmer* made an error, therefore we're
+                # not explicitly covering it
+                raise exceptions.ConfigurationError(
+                    f"Passed validation context does not belong to question {question.slug}"
+                )
+            return validation_context
+
+        # If we need to create the context ourselves here, we'll need to fetch
+        # the field from the context.
+        validation_context = structure.FieldSet(document)
+        return validation_context.get_field(question.slug)
+
     def _evaluate_options_jexl(
         self, document, question, validation_context=None, qs=None
     ):
-        def _validation_context(document):
-            # we need to build the context in two steps (for now), as
-            # `self.visible_questions()` already needs a context to evaluate
-            # `is_hidden` expressions
-            intermediate_context = {
-                "form": document.family.form,
-                "document": document.family,
-                "visible_questions": None,
-                "jexl_cache": defaultdict(dict),
-                "structure": structure.FieldSet(document.family, document.family.form),
-            }
+        """Return a list of slugs that are, according to their is_hidden JEXL, visible."""
 
-            return intermediate_context
+        if not document and not validation_context:
+            # Saving options of a default answer. Can't evaluate the options'
+            # JEXL anyway, so allow all of them (and hit the DB, don't optimize
+            # and use the structure code)
+            return [o.slug for o in question.options.all()]
 
-        options = qs if qs else question.options.all()
-
-        # short circuit if none of the options has an `is_hidden`-jexl
-        if not options.exclude(
-            Q(is_hidden="false") | Q(is_hidden__isnull=True)
-        ).exists():
-            return [o.slug for o in options]
-
-        validation_context = validation_context or _validation_context(document)
-
-        jexl = QuestionJexl(validation_context)
-        with jexl.use_field_context(
-            validation_context["structure"].get_field(question.slug)
-        ):
-            return [o.slug for o in options if not jexl.evaluate(o.is_hidden)]
+        field = self._structure_field(document, question, validation_context)
+        options = field.get_options()
+        return [o.slug for o in options if not field.evaluate_jexl(o.is_hidden)]
 
     def visible_options(self, document, question, qs):
         return self._evaluate_options_jexl(document, question, qs=qs)
@@ -218,11 +222,22 @@ class AnswerValidator:
         ).delete()
 
     def _validate_question_table(
-        self, question, value, document, user, instance=None, origin=False, **kwargs
+        self,
+        question,
+        value,
+        document,
+        user,
+        validation_context: structure.RowSet,
+        instance=None,
+        origin=False,
+        **kwargs,
     ):
         if not origin:
-            for row_doc in value:
-                DocumentValidator().validate(row_doc, user=user, **kwargs)
+            # Rowsets should always be validated in context, so we can use that
+            for row in validation_context.children():
+                DocumentValidator().validate(
+                    row._document, user=user, **kwargs, validation_context=row
+                )
             return
 
         # this answer was the entry-point of the validation
@@ -310,167 +325,110 @@ class DocumentValidator:
         **kwargs,
     ):
         if not validation_context:
-            validation_context = self._validation_context(document)
+            validation_context = self.get_validation_context(document)
 
-        self._validate_required(validation_context)
+        required_but_empty = []
 
-        for answer in document.answers.filter(
-            question_id__in=validation_context["visible_questions"]
-        ):
-            validator = AnswerValidator()
-            validator.validate(
-                document=document,
-                question=answer.question,
-                value=answer.value,
-                documents=answer.documents.all(),
-                user=user,
-                validation_context=validation_context,
-                data_source_context=data_source_context,
+        all_fields = list(validation_context.get_all_fields())
+        for field in all_fields:
+            if field.is_required() and field.is_empty():
+                required_but_empty.append(field)
+
+        if required_but_empty:
+            # When dealing with tables, the same question slug
+            # might be missing multiple times. So we're normalizing a bit here
+            affected_slugs = sorted(
+                set([f.slug() for f in required_but_empty if f.slug()])
             )
 
-    def _validation_context(self, document):
-        # we need to build the context in two steps (for now), as
-        # `self.visible_questions()` already needs a context to evaluate
-        # `is_hidden` expressions
-        intermediate_context = {
-            "form": document.form,
-            "document": document,
-            "visible_questions": None,
-            "jexl_cache": defaultdict(dict),
-            "structure": structure.FieldSet(document, document.form),
+            question_s, is_are = (
+                ("Question", "is") if len(affected_slugs) == 1 else ("Questions", "are")
+            )
+            raise CustomValidationError(
+                f"{question_s} {', '.join(affected_slugs)} "
+                f"{is_are} required but not provided.",
+                slugs=affected_slugs,
+            )
+
+        for field in all_fields:
+            if field.is_visible() and field.answer:
+                # if answer is not given, the required_but_empty check above would
+                # already have raised an exception
+                validator = AnswerValidator()
+                validator.validate(
+                    document=field.answer.document,
+                    question=field.question,
+                    value=field.answer.value,
+                    documents=field.answer.documents.all(),
+                    user=user,
+                    validation_context=field,
+                    data_source_context=data_source_context,
+                )
+
+    def get_validation_context(self, document):
+        relevant_case: Case = (
+            getattr(document, "case", None)
+            or getattr(getattr(document, "work_item", None), "case", None)
+            or None
+        )
+
+        case_form = (
+            relevant_case.document.form_id
+            if relevant_case and relevant_case.document
+            else None
+        )
+        case_family_form = (
+            relevant_case.family.document.form_id
+            if relevant_case and relevant_case.family.document
+            else None
+        )
+        case_info = (
+            {
+                # Why are we even represent this in context of the case?
+                # The form does not belong there, it's not even there in
+                # the model
+                "form": case_form,
+                "workflow": relevant_case.workflow_id,
+                "root": {
+                    "form": case_family_form,
+                    "workflow": relevant_case.family.workflow_id,
+                },
+            }
+            if relevant_case
+            else None
+        )
+        workitem_info = (
+            document.work_item.__dict__ if hasattr(document, "work_item") else None
+        )
+        context = {
+            "info": {
+                "document": document.family,
+                "form": document.form,
+                "case": case_info,
+                "work_item": workitem_info,
+            }
         }
 
-        intermediate_context["visible_questions"] = self.visible_questions(
-            document, intermediate_context
-        )
-        return intermediate_context
+        return structure.FieldSet(document, global_context=context)
 
-    def visible_questions(self, document, validation_context=None):
+    def visible_questions(self, document, validation_context=None) -> list[Question]:
         """Evaluate the visibility of the questions for the given context.
 
         This evaluates the `is_hidden` expression for each question to decide
         if the question is visible.
         Return a list of question slugs that are visible.
+
+        Note: If you pass in a validation context, it's the caller's
+        responsibility to ensure it's the right one
         """
-        if not validation_context:
-            validation_context = self._validation_context(document)
-        visible_questions = []
+        if validation_context is None:
+            validation_context = self.get_validation_context(document)
 
-        q_jexl = jexl.QuestionJexl(validation_context)
-        for field in validation_context["structure"].children():
-            question = field.question
-            try:
-                is_hidden = q_jexl.is_hidden(field)
-
-                if is_hidden:
-                    # no need to descend further
-                    continue
-
-                visible_questions.append(question.slug)
-                if question.type == Question.TYPE_FORM:
-                    # answers to questions in subforms are still in
-                    # the top level document
-                    sub_context = {**validation_context, "structure": field}
-                    visible_questions.extend(
-                        self.visible_questions(document, sub_context)
-                    )
-
-                elif question.type == Question.TYPE_TABLE:
-                    row_visibles = set()
-                    # make a copy of the validation context, so we
-                    # can reuse it for each row
-                    row_context = {**validation_context}
-                    for row in field.children():
-                        sub_context = {**row_context, "structure": row}
-                        row_visibles.update(
-                            self.visible_questions(document, sub_context)
-                        )
-                    visible_questions.extend(row_visibles)
-
-            except (jexl.QuestionMissing, exceptions.ValidationError):
-                raise
-            except Exception as exc:
-                log.error(
-                    f"Error while evaluating `is_hidden` expression on question {question.slug}: "
-                    f"{question.is_hidden}: {str(exc)}"
-                )
-                raise RuntimeError(
-                    f"Error while evaluating `is_hidden` expression on question {question.slug}: "
-                    f"{question.is_hidden}. The system log contains more information"
-                )
-        return visible_questions
-
-    def _validate_required(self, validation_context):  # noqa: C901
-        """Validate the 'requiredness' of the given answers.
-
-        Raise exceptions if a required question is not answered.
-
-        Since we're iterating and evaluating `is_hidden` as well for this
-        purpose, we help our call site by returning a list of *non-hidden*
-        question slugs.
-        """
-        required_but_empty = []
-
-        q_jexl = jexl.QuestionJexl(validation_context)
-        for field in validation_context["structure"].children():
-            question = field.question
-            try:
-                is_hidden = question.slug not in validation_context["visible_questions"]
-                if is_hidden:
-                    continue
-
-                # The above `is_hidden` is globally cached per question, mainly to optimize DB access.
-                # This means a question could be marked "visible" as it would be visible
-                # in another row, but would still be hidden in the local row, if this is a
-                # table question context.  Thus, in this case we need to re-evaluate it's
-                # hiddenness. Luckily, the JEXL evaluator caches those values (locally).
-                with q_jexl.use_field_context(field):
-                    if q_jexl.is_hidden(field):
-                        continue
-
-                is_required = q_jexl.is_required(field)
-
-                if question.type == Question.TYPE_FORM:
-                    # form questions's answers are still in the top level document
-                    sub_context = {**validation_context, "structure": field}
-                    self._validate_required(sub_context)
-
-                elif question.type == Question.TYPE_TABLE:
-                    # We need to validate presence in at least one row, but only
-                    # if the table question is required.
-                    if is_required and not field.children():
-                        raise CustomValidationError(
-                            f"no rows in {question.slug}", slugs=[question.slug]
-                        )
-                    for row in field.children():
-                        sub_context = {**validation_context, "structure": row}
-                        self._validate_required(sub_context)
-                else:
-                    value = field.value()
-                    if value in EMPTY_VALUES and is_required:
-                        required_but_empty.append(question.slug)
-
-            except CustomValidationError as exc:
-                required_but_empty.extend(exc.slugs)
-
-            except (jexl.QuestionMissing, exceptions.ValidationError):
-                raise
-            except Exception as exc:
-                log.error(
-                    f"Error while evaluating `is_required` expression on question {question.slug}: "
-                    f"{question.is_required}: {str(exc)}"
-                )
-
-                raise RuntimeError(
-                    f"Error while evaluating `is_required` expression on question {question.slug}: "
-                    f"{question.is_required}. The system log contains more information"
-                )
-
-        if required_but_empty:
-            raise CustomValidationError(
-                f"Questions {','.join(required_but_empty)} are required but not provided.",
-                slugs=required_but_empty,
-            )
+        return [
+            field.question
+            for field in validation_context.get_all_fields()
+            if field.is_visible()
+        ]
 
 
 class QuestionValidator:
@@ -498,7 +456,7 @@ class QuestionValidator:
         if not expr:
             return
 
-        question_jexl = jexl.QuestionJexl()
+        question_jexl = jexl.QuestionJexl(field=None)
         deps = set(question_jexl.extract_referenced_questions(expr))
 
         inexistent_slugs = deps - set(

@@ -2,11 +2,11 @@ import minio
 import pytest
 from rest_framework.exceptions import ValidationError
 
+from ...caluma_core.exceptions import QuestionMissing
 from ...caluma_core.tests import extract_serializer_input_fields
 from ...caluma_form import api
 from ...caluma_form.models import DynamicOption, Question
 from .. import serializers, structure
-from ..jexl import QuestionMissing
 from ..validators import DocumentValidator, QuestionValidator
 
 
@@ -34,7 +34,7 @@ def test_validate_hidden_required_field(
     form_question.question.save()
 
     document = document_factory(form=form_question.form)
-    error_msg = f"Questions {form_question.question.slug} are required but not provided"
+    error_msg = f"Question {form_question.question.slug} is required but not provided"
     if should_throw:
         with pytest.raises(ValidationError, match=error_msg):
             DocumentValidator().validate(document, admin_user)
@@ -235,7 +235,9 @@ def test_validate_table(
         document=main_document, question=main_table_question_1.question, value=None
     )
 
-    row_document_1 = document_factory(form=main_table_question_1.question.row_form)
+    row_document_1 = document_factory(
+        form=main_table_question_1.question.row_form, family=main_document
+    )
     answer_document_factory(document=row_document_1, answer=table_answer)
 
     answer_factory(
@@ -252,7 +254,7 @@ def test_validate_table(
         q_slug = sub_question_b.question.slug
         if required_jexl_sub == "false":
             q_slug = other_q_2.question.slug
-        error_msg = f"Questions {q_slug} are required but not provided"
+        error_msg = f"Question {q_slug} is required but not provided"
         with pytest.raises(ValidationError, match=error_msg):
             DocumentValidator().validate(main_document, admin_user)
     else:
@@ -315,7 +317,7 @@ def test_validate_empty_answers(
 ):
     struct = structure.FieldSet(document, document.form)
     field = struct.get_field(question.slug)
-    answer_value = field.value() if field else field
+    answer_value = field.get_value() if field else field
     assert answer_value == expected_value
 
 
@@ -328,7 +330,7 @@ def test_validate_empty_answers(
             "'foo' in blah",
             "false",
             "",
-            "Error while evaluating `is_required` expression on question q-slug: 'foo' in blah. The system log contains more information",
+            "Error while evaluating expression on question q-slug: \"'foo' in blah\". The system log contains more information",
         ),
         (
             "q-slug",
@@ -336,7 +338,7 @@ def test_validate_empty_answers(
             "true",
             "'foo' in blah",
             "",
-            "Error while evaluating `is_hidden` expression on question q-slug: 'foo' in blah. The system log contains more information",
+            "Error while evaluating expression on question q-slug: \"'foo' in blah\". The system log contains more information",
         ),
         (
             "q-slug",
@@ -489,7 +491,7 @@ def test_validate_hidden_subform(
             DocumentValidator().validate(document, admin_user)
         # Verify that the sub_sub_question is not the cause of the exception:
         # it should not be checked at all because it's parent is always hidden
-        assert excinfo.match(r"Questions \bsub_question\s.* required but not provided.")
+        assert excinfo.match(r"Question sub_question is required but not provided.")
 
         # can't do `not excinfo.match()` as it throws an AssertionError itself
         # if it can't match :()
@@ -620,7 +622,7 @@ def test_validate_missing_in_subform(
 
     # Verify that the sub_sub_question is not the cause of the exception:
     # it should not be checked at all because it's parent is always hidden
-    assert excinfo.match(r"Questions \bsub_question\s.* required but not provided.")
+    assert excinfo.match(r"Question sub_question is required but not provided.")
 
 
 @pytest.mark.parametrize("table_required", [True, False])
@@ -679,7 +681,7 @@ def test_validate_missing_in_table(
     if table_required:
         # Table required. But we only fill it partially, this
         # should raise an error
-        row_doc = document_factory(form=sub_form)
+        row_doc = document_factory(form=sub_form, family=document)
         answer_document_factory(answer=table_ans, document=row_doc)
         row_doc.answers.create(question=sub_question1, value="hi")
 
@@ -687,9 +689,7 @@ def test_validate_missing_in_table(
             DocumentValidator().validate(document, admin_user)
         # Verify that the sub_sub_question is not the cause of the exception:
         # it should not be checked at all because it's parent is always hidden
-        assert excinfo.match(
-            r"Questions \bsub_question2\s.* required but not provided."
-        )
+        assert excinfo.match(r"Question sub_question2 is required but not provided.")
 
     else:
         # should not raise
@@ -698,7 +698,14 @@ def test_validate_missing_in_table(
 
 @pytest.mark.parametrize(
     "column_is_hidden,expect_error",
-    [("form == 'topform'", False), ("form == 'rowform'", True)],
+    [
+        # `form == 'topform'` should evaluate to True, the question is hidden
+        # and the answer therefore not required.
+        ("form == 'topform'", False),
+        # `form == 'rowform'` should evaluate to False, the question is required
+        # and the missing answer therefore triggers an error.
+        ("form == 'rowform'", True),
+    ],
 )
 def test_validate_form_in_table(
     db,
@@ -712,6 +719,11 @@ def test_validate_form_in_table(
     expect_error,
     admin_user,
 ):
+    """Ensure that the `form` expression is correct within a table row.
+
+    The `form` expression should refer to the root form (legacy, you should
+    actually use `info.root_form` instead)
+    """
     # First, build our nested form:
     #     top_form
     #       \__ table_question # requiredness parametrized
@@ -753,7 +765,7 @@ def test_validate_form_in_table(
     document = document_factory(form=top_form)
     table_ans = answer_factory(document=document, question=table_question)
 
-    row_doc = document_factory(form=sub_form)
+    row_doc = document_factory(form=sub_form, family=document)
     answer_document_factory(answer=table_ans, document=row_doc)
     row_doc.answers.create(question=sub_question1, value="hi")
 
@@ -765,9 +777,7 @@ def test_validate_form_in_table(
             DocumentValidator().validate(document, admin_user)
         # Verify that the sub_sub_question is not the cause of the exception:
         # it should not be checked at all because it's parent is always hidden
-        assert excinfo.match(
-            r"Questions \bsub_question2\s.* required but not provided."
-        )
+        assert excinfo.match(r"Question sub_question2 is required but not provided.")
 
     else:
         # Should not raise, as the "form" referenced by the

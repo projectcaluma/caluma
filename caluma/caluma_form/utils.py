@@ -1,7 +1,11 @@
+from logging import getLogger
+
 from django.db.models import Prefetch
 
 from caluma.caluma_form import models, structure
 from caluma.caluma_form.jexl import QuestionJexl
+
+log = getLogger(__name__)
 
 
 def prefetch_document(document_id):
@@ -83,7 +87,18 @@ def _build_document_prefetch_statements(prefix="", prefetch_options=False):
 
 
 def update_calc_dependents(slug, old_expr, new_expr):
-    jexl = QuestionJexl()
+    """Update the calc_dependents lists of our calc *dependencies*.
+
+    The given (old and new) expressions are analyzed to see which
+    questions are referenced in "our" calc question. Then, those
+    questions' calc_dependents list is updated, such that it correctly
+    represents the new situation.
+
+    Example: If our expression newly contains the question `foo`, then the
+    `foo` question needs to know about it (we add "our" slug to the `foo`s
+    calc dependents)
+    """
+    jexl = QuestionJexl(field=None)
     old_q = set(
         list(jexl.extract_referenced_questions(old_expr))
         + list(jexl.extract_referenced_mapby_questions(old_expr))
@@ -108,37 +123,50 @@ def update_calc_dependents(slug, old_expr, new_expr):
         question.save()
 
 
-def update_or_create_calc_answer(
-    question, document, struc=None, update_dependents=True
+def recalculate_field(
+    calc_field: structure.ValueField, update_recursively: bool = True
 ):
-    root_doc = document.family
+    """Recalculate the given value field and store the new answer.
 
-    if not struc:
-        struc = structure.FieldSet(root_doc, root_doc.form)
+    If it's not a calculated field, nothing happens.
+    """
+    if calc_field.question.type != models.Question.TYPE_CALCULATED_FLOAT:
+        # Not a calc field - skip
+        return  # pragma: no cover
 
-    field = struc.get_field(question.slug)
-
-    # skip if question doesn't exist in this document structure
-    if field is None:
-        return
-
-    jexl = QuestionJexl(
-        {"form": field.form, "document": field.document, "structure": field.parent()}
-    )
-
-    # Ignore errors because we evaluate greedily as soon as possible. At
-    # this moment we might be missing some answers or the expression might
-    # be invalid, in which case we return None
-    value = jexl.evaluate(field.question.calc_expression, raise_on_error=False)
+    value = calc_field.calculate()
 
     answer, _ = models.Answer.objects.update_or_create(
-        question=question, document=field.document, defaults={"value": value}
+        question=calc_field.question,
+        document=calc_field.parent._document,
+        defaults={"value": value},
     )
     # also save new answer to structure for reuse
-    struc.set_answer(question.slug, answer)
+    calc_field.refresh(answer)
+    if update_recursively:
+        recalculate_dependent_fields(calc_field, update_recursively)
 
-    if update_dependents:
-        for _question in models.Question.objects.filter(
-            pk__in=field.question.calc_dependents
-        ):
-            update_or_create_calc_answer(_question, document, struc)
+
+def recalculate_dependent_fields(
+    changed_field: structure.ValueField, update_recursively: bool = True
+):
+    """Update any calculated dependencies of the given field.
+
+    If `update_recursively=False` is passed, no subsequent calc dependencies
+    are updated (left to the caller in that case).
+    """
+    for dep_slug in changed_field.question.calc_dependents:
+        dep_field = changed_field.get_field(dep_slug)
+        if not dep_field:  # pragma: no cover
+            # Calculated field is not in our form structure, which is
+            # absolutely valid and OK
+            continue
+        recalculate_field(dep_field, update_recursively)
+
+
+def update_or_create_calc_answer(question, document, update_dependents=True):
+    """Recalculate all answers in the document after calc dependency change."""
+
+    root = structure.FieldSet(document.family)
+    for field in root.find_all_fields_by_slug(question.slug):
+        recalculate_field(field, update_recursively=update_calc_dependents)

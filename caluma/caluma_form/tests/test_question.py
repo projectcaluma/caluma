@@ -7,7 +7,7 @@ from caluma.caluma_core.tests import (
     extract_serializer_input_fields,
 )
 
-from .. import api, models, serializers
+from .. import api, domain_logic, models, serializers
 from ..jexl import QuestionJexl
 
 
@@ -1005,7 +1005,7 @@ def test_calculated_question(
     result = schema_executor(query, variable_values=inp)
     assert not result.errors
 
-    calc_answer = calc_question.answers.filter().first()
+    calc_answer.refresh_from_db()
     assert calc_answer
     assert calc_answer.value == expected
 
@@ -1136,7 +1136,8 @@ def test_calculated_question_update_calc_expr(
 
     calc_ans = document.answers.get(question_id="calc_question")
     assert calc_ans.value == 101
-    # spying on update_or_create_calc_answer doesn't seem to work, so we spy on QuestionJexl.evaluate instead
+    # spying on update_or_create_calc_answer doesn't seem to work, so we spy on
+    # QuestionJexl.evaluate instead
     spy = mocker.spy(QuestionJexl, "evaluate")
     calc_question.calc_expression = "'sub_question'|answer -1"
     calc_question.save()
@@ -1149,6 +1150,37 @@ def test_calculated_question_update_calc_expr(
     calc_question.save()
     # if the calc expression is not changed, no jexl evaluation should be done
     assert spy.call_count == call_count
+
+
+def test_recalc_missing_dependency(
+    db, schema_executor, form_and_document, form_question_factory, mocker
+):
+    """
+    Test recalculation behaviour for missing dependency.
+
+    Verify the update mechanism works correctly even if a calc dependency
+    does not exist in a given form.
+    """
+    form, document, questions_dict, answers_dict = form_and_document(True, True)
+
+    sub_question = questions_dict["sub_question"]
+    sub_question.type = models.Question.TYPE_INTEGER
+    sub_question.save()
+
+    spy = mocker.spy(domain_logic.SaveAnswerLogic, "update_calc_dependents")
+
+    # Calculated question in another form
+    form_question_factory(
+        # in another form entirely
+        question__slug="some_calc_question",
+        question__type=models.Question.TYPE_CALCULATED_FLOAT,
+        question__calc_expression="'sub_question'|answer + 1",
+    ).question
+
+    # update answer - should trigger recalc
+    api.save_answer(sub_question, document, value=100)
+
+    assert spy.call_count > 0
 
 
 def test_calculated_question_answer_document(
@@ -1263,5 +1295,8 @@ def test_init_of_calc_questions_queries(
         question__calc_expression="'table'|answer|mapby('column')|sum + 'top_question'|answer + 'sub_question'|answer",
     )
 
-    with django_assert_num_queries(35):
+    with django_assert_num_queries(42):
+        # This used to be 35 queries, however they were more complex and
+        # therefore more demanding on the DB. The fastloader tries to do
+        # as little JOINs as possible to speed things up
         api.save_answer(questions_dict["top_question"], document, value="1")

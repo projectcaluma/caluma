@@ -363,50 +363,53 @@ def test_query_all_documents_filter_answers_by_questions(
     assert set(expect_data) == set(result_lengths)
 
 
-@pytest.mark.parametrize("use_python_api", [True, False])
-@pytest.mark.parametrize("update", [True, False])
-def test_save_document(
-    db,
-    document,
-    schema_executor,
-    form_factory,
-    form_question_factory,
-    answer_factory,
-    update,
-    use_python_api,
-):
-    query = """
-        mutation SaveDocument($input: SaveDocumentInput!) {
-          saveDocument(input: $input) {
-            document {
-              form {
-                slug
-              }
-              id
-              answers {
-                edges {
-                  node {
-                    ... on StringAnswer {
-                      strValue: value
-                    }
-                    ... on IntegerAnswer {
-                      intValue: value
-                    }
-                    ... on FloatAnswer {
-                      floatValue: value
-                    }
-                  }
+SAVE_DOCUMENT_QUERY = """
+    mutation SaveDocument($input: SaveDocumentInput!) {
+      saveDocument(input: $input) {
+        document {
+          form {
+            slug
+          }
+          id
+          answers {
+            edges {
+              node {
+                ... on StringAnswer {
+                  strValue: value
+                }
+                ... on IntegerAnswer {
+                  intValue: value
+                }
+                ... on FloatAnswer {
+                  floatValue: value
                 }
               }
             }
-            clientMutationId
           }
         }
-    """
+        clientMutationId
+      }
+    }
+"""
 
+
+def _setup_for_save_document(form_question_factory, answer_factory, form_factory, form):
+    """Set up form structure for the save_document test cases.
+
+    Just to avoid copy/pasta or a complicated multiplex test.
+
+    Use the given `form` and add some structure to it:
+
+    * `some_int` - Integer
+    * (random slug) - calculated float on basis of above question
+    * subform (random slug)
+        - sub form question (random slug) - Text with default answer
+    """
     # create an integer question that has a default answer
     form_question_int = form_question_factory(
-        question__type=Question.TYPE_INTEGER, form=document.form
+        question__type=Question.TYPE_INTEGER,
+        form=form,
+        question__slug="some_int",
     )
     default_answer = answer_factory(
         question=form_question_int.question, value=23, document=None
@@ -417,7 +420,7 @@ def test_save_document(
     # create a calculated question referencing the integer question we created above
     form_question_factory(
         question__type=Question.TYPE_CALCULATED_FLOAT,
-        form=document.form,
+        form=form,
         question__calc_expression=f"'{form_question_int.question.slug}'|answer * 2",
     )
 
@@ -425,7 +428,7 @@ def test_save_document(
     sub_form = form_factory()
     form_question_factory(
         question__type=Question.TYPE_FORM,
-        form=document.form,
+        form=form,
         question__sub_form=sub_form,
     )
     sub_form_question = form_question_factory(
@@ -437,63 +440,119 @@ def test_save_document(
     sub_form_question.question.default_answer = sub_default_answer
     sub_form_question.question.save()
 
+
+@pytest.mark.parametrize("update", [True, False])
+def test_save_document_client(
+    db,
+    document,
+    schema_executor,
+    form_factory,
+    form_question_factory,
+    answer_factory,
+    update,
+):
+    """Test saving of a document via GQL client.
+
+    We test two variants - either an Update, or a Create operation.
+    The test form contains two questions with a default answer, as well as
+    a calculated question.
+
+    In the Create operation, we assume that the default answers are copied into
+    the new document, and then the calculated question is, well, calculated and
+    is added as an answer to the document as well, leading to three answers on the
+    document.
+
+    In the Update operation, the form is actually created after the document,
+    and so during the form construction (see `_setup_for_save_document()`), when
+    the calculated question is attached to the form, it's being run, creating
+    an (empty) answer. But changing (or adding) default answers shall not
+    update existing documents, and thus the resulting number of answers in this
+    operation is just the one (calc) answer.
+    """
+    _setup_for_save_document(
+        form_question_factory, answer_factory, form_factory, document.form
+    )
+    default_answer = document.form.questions.get(slug="some_int").default_answer
     inp = {
         "input": extract_serializer_input_fields(
             serializers.DocumentSerializer, document
         )
     }
+    if not update:
+        # not update = create = we don't pass the ID
+        del inp["input"]["id"]
 
-    if not use_python_api:
-        if not update:
-            # not update = create = we don't pass the ID
-            del inp["input"]["id"]
+    result = schema_executor(SAVE_DOCUMENT_QUERY, variable_values=inp)
 
-        result = schema_executor(query, variable_values=inp)
+    assert not result.errors
+    assert result.data["saveDocument"]["document"]["form"]["slug"] == document.form.slug
 
-        assert not result.errors
-        assert (
-            result.data["saveDocument"]["document"]["form"]["slug"]
-            == document.form.slug
-        )
+    same_id = extract_global_id(result.data["saveDocument"]["document"]["id"]) == str(
+        document.id
+    )
 
-        same_id = extract_global_id(
-            result.data["saveDocument"]["document"]["id"]
-        ) == str(document.id)
+    # if updating, the resulting document must be the same
+    assert same_id == update
 
-        # if updating, the resulting document must be the same
-        assert same_id == update
-
-        assert len(result.data["saveDocument"]["document"]["answers"]["edges"]) == (
-            1 if update else 3
-        )
-        if not update:
-            assert sorted(
-                [
-                    str(a["node"]["intValue"])
-                    if "intValue" in a["node"]
-                    else (
-                        a["node"]["strValue"]
-                        if "strValue" in a["node"]
-                        else str(a["node"]["floatValue"])
-                    )
-                    for a in result.data["saveDocument"]["document"]["answers"]["edges"]
-                ]
-            ) == ["23", "46.0", "foo"]
-    else:
-        doc = (
-            api.save_document(document.form, document=document)
-            if update
-            else api.save_document(document.form)
-        )
-        assert (doc.pk == document.pk) == update
-
-        assert doc.answers.count() == (1 if update else 3)
-        if not update:
-            assert sorted([str(a.value) for a in doc.answers.iterator()]) == [
-                "23",
-                "46",
-                "foo",
+    # 1 in update is the calc question's answer, but the questions with default
+    # answers don't get their answers auto-created. 3 is a new document,
+    # therefore the default answers get copied into the document
+    assert len(result.data["saveDocument"]["document"]["answers"]["edges"]) == (
+        1 if update else 3
+    )
+    if not update:
+        assert sorted(
+            [
+                str(a["node"]["intValue"])
+                if "intValue" in a["node"]
+                else (
+                    a["node"]["strValue"]
+                    if "strValue" in a["node"]
+                    else str(a["node"]["floatValue"])
+                )
+                for a in result.data["saveDocument"]["document"]["answers"]["edges"]
             ]
+        ) == ["23", "46.0", "foo"]
+
+    # Make sure the default answers document is still None
+    default_answer.refresh_from_db()
+    assert default_answer.document_id is None
+
+
+@pytest.mark.parametrize("update", [True, False])
+def test_save_document_python(
+    db,
+    document,
+    schema_executor,
+    form_factory,
+    form_question_factory,
+    answer_factory,
+    update,
+):
+    """Test saving a document via the Python API.
+
+    For detailed explanation about the expected behaviour, see the docs for
+    `test_save_document_client()`.
+    """
+    _setup_for_save_document(
+        form_question_factory, answer_factory, form_factory, document.form
+    )
+    default_answer = document.form.questions.get(slug="some_int").default_answer
+
+    doc = (
+        api.save_document(document.form, document=document)
+        if update
+        else api.save_document(document.form)
+    )
+    assert (doc.pk == document.pk) == update
+
+    assert doc.answers.count() == (1 if update else 3)
+    if not update:
+        assert sorted([str(a.value) for a in doc.answers.iterator()]) == [
+            "23",
+            "46",
+            "foo",
+        ]
 
     # Make sure the default answers document is still None
     default_answer.refresh_from_db()
@@ -555,6 +614,9 @@ def test_save_document_answer(  # noqa:C901
     use_python_api,
     admin_user,
 ):
+    # question needs to be part of our form
+    answer.document.form.questions.add(question, through_defaults={"sort": 3})
+
     mutation_func = mutation[0].lower() + mutation[1:]
     query = f"""
         mutation {mutation}($input: {mutation}Input!) {{
@@ -709,6 +771,7 @@ def test_save_document_table_answer_invalid_row_document(
     schema_executor,
     answer,
     document_factory,
+    form_question_factory,
     question,
     form_factory,
     question_factory,
@@ -716,8 +779,11 @@ def test_save_document_table_answer_invalid_row_document(
     """Ensure that we can save incomplete row documents."""
     question.row_form = form_factory()
     question.save()
-
-    question.row_form.questions.add(question_factory(is_required="true"))
+    # question needs to be part of our form
+    form_question_factory(
+        form=question.row_form, question=question_factory(is_required="true")
+    )
+    form_question_factory(form=answer.document.form, question=question)
 
     query = """
         mutation SaveDocumentTableAnswer($input: SaveDocumentTableAnswerInput!) {
@@ -769,6 +835,7 @@ def test_save_document_table_answer_setting_family(
     answer,
     answer_factory,
     document_factory,
+    form_question_factory,
     answer_document_factory,
 ):
     query = """
@@ -784,6 +851,8 @@ def test_save_document_table_answer_setting_family(
             serializers.SaveAnswerSerializer, answer
         )
     }
+
+    form_question_factory(form=answer.document.form, question=answer.question)
 
     main_pk = answer.document.pk
     main_family = answer.document.family
@@ -1539,7 +1608,7 @@ def test_efficient_init_of_calc_questions(
     spy = mocker.spy(QuestionJexl, "evaluate")
     document = api.save_document(form)
     # twice for calc value, once for hidden state of calc-1
-    assert spy.call_count == 3
+    assert spy.call_count == 2
 
     calc_ans = document.answers.get(question_id="calc-2")
     assert calc_ans.value == 2

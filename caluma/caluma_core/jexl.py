@@ -243,18 +243,3 @@ class ExtractTransformArgumentAnalyzer(CalumaAnalyzer):
                         yield arg.value
 
         yield from self.generic_visit(transform)
-
-
-class ExtractTransformSubjectAndArgumentsAnalyzer(CalumaAnalyzer):
-    """
-    Extract all referenced subjects and arguments of a given transforms.
-
-    If no transforms are given all references of all transforms will be extracted.
-    """
-
-    def visit_Transform(self, transform):
-        if not self.transforms or transform.name in self.transforms:
-            if not isinstance(transform.subject, type(transform)):
-                yield (transform.subject.value, transform.args)
-
-        yield from self.generic_visit(transform)

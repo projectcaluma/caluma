@@ -518,8 +518,14 @@ class Answer(core_models.BaseModel):
         super().delete(args, kwargs)
 
     def create_answer_documents(self, documents):
+        """Create AnswerDocuments for this table question, and attach them.
+
+        Return a dict with two keys: "created", and "updated", each
+        containing a list of document IDs that were either created or kept.
+        """
         family = getattr(self.document, "family", None)
         document_ids = [document.pk for document in documents]
+        res = {"updated": [], "created": []}
 
         for sort, document_id in enumerate(reversed(document_ids), start=1):
             ans_doc, created = AnswerDocument.objects.get_or_create(
@@ -532,6 +538,10 @@ class Answer(core_models.BaseModel):
                 # Already-existing documents are already in the family,
                 # so we're updating only the newly attached rows
                 ans_doc.document.set_family(family)
+                res["created"].append(document_id)
+            else:
+                res["updated"].append(document_id)
+        return res
 
     def unlink_unused_rows(self, docs_to_keep):
         existing = AnswerDocument.objects.filter(answer=self).exclude(

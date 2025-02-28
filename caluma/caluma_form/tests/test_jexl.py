@@ -1,3 +1,8 @@
+import gc
+import itertools
+from collections import Counter
+from contextlib import nullcontext as does_not_raise
+
 import pytest
 
 from .. import models, structure, validators
@@ -19,7 +24,7 @@ from ..models import Question
     ],
 )
 def test_question_jexl_validate(expression, num_errors):
-    jexl = QuestionJexl()
+    jexl = QuestionJexl(field=None)
     assert len(list(jexl.validate(expression))) == num_errors
 
 
@@ -37,18 +42,22 @@ def test_question_jexl_validate(expression, num_errors):
     ],
 )
 def test_intersects_operator(expression, result):
-    assert QuestionJexl().evaluate(expression) == result
+    assert QuestionJexl(field=None).evaluate(expression) == result
 
 
 @pytest.mark.parametrize("form__slug", ["f-main-slug"])
 def test_jexl_form(db, form):
+    # TODO: this test is not really meaningful anymore with the new
+    # form jexl classes
     answer_by_question = {
         "a1": {"value": "A1", "form": form},
         "b1": {"value": "B1", "form": form},
     }
 
     assert (
-        QuestionJexl({"answers": answer_by_question, "form": form}).evaluate("form")
+        QuestionJexl(
+            field=None, context={"answers": answer_by_question, "form": form.slug}
+        ).evaluate("form")
         == "f-main-slug"
     )
 
@@ -62,17 +71,14 @@ def test_all_deps_hidden(db, form, document_factory, form_question_factory):
     ).question
     document = document_factory(form=form)
 
-    qj = QuestionJexl(
-        {
-            "document": document,
-            "answers": {},
-            "form": form,
-            "structure": structure.FieldSet(document, document.form),
-        }
-    )
-    field = structure.Field(document, document.form, q2)
-    assert qj.is_hidden(field)
-    assert not qj.is_required(field)
+    struc = structure.FieldSet(document)
+    field = struc.get_field(q2.slug)
+    # Q2 is dependent on Q1 for it's hidden and required properties.
+    # Since Q1 is hidden, Q2 can't really evaluate both expressions.
+    # Therefore, is_hidden should evaluate to True, but
+    # is_required should evaluate to False
+    assert field.is_hidden()
+    assert not field.is_required()
 
 
 @pytest.mark.parametrize("fq_is_hidden", ["true", "false"])
@@ -272,9 +278,13 @@ def test_new_jexl_expressions(
     elif document_owner == "root_case":
         root_case = case_factory(workflow__slug="main-case-workflow", document=document)
 
-    # expression test method: we delete an answer and set it's is_hidden
+    document.refresh_from_db()
+
+    # Expression test method: we delete an answer and set it's is_hidden
     # to an expression to be tested. If the expression evaluates to True,
-    # we won't have a ValidationError.
+    # the question is hidden and the missing answer is not a problem, thus
+    # we don't get a validation error. If it evaluates to False, the missing answer
+    # causes an exception, and we will know.
     answers[question].delete()
     questions[question].is_hidden = expr
     questions[question].save()
@@ -284,10 +294,28 @@ def test_new_jexl_expressions(
         try:
             validator.validate(document, info)
             return True
-        except validators.CustomValidationError:  # pragma: no cover
+        except validators.CustomValidationError:
             return False
 
-    assert do_check() == expectation
+    # The following few lines are just to generate a more useful assertion
+    # message in case the expectations are not met. They're not influencing
+    # the actual result
+    context = []
+    from caluma.caluma_form import structure
+
+    fieldset = structure.FieldSet(document)
+    structure.print_structure(
+        fieldset,
+        print_fn=lambda *x: context.append(" ".join([str(f) for f in x])),
+    )
+    ctx_str = "\n".join(context)
+    result = do_check()
+    relevant_field = fieldset.find_all_fields_by_slug(question)[0]
+    assert result == expectation, (
+        f"Expected JEXL({expr}) on question '{question}' to evaluate "
+        f"to {expectation} but got {result}; context was: \n{ctx_str};\n"
+        f"field-local `info` context: {relevant_field.get_local_info_context()}"
+    )
 
 
 def test_answer_transform_on_hidden_question(info, form_and_document):
@@ -325,6 +353,18 @@ def test_answer_transform_on_hidden_question(info, form_and_document):
     ].is_required = "'sub_question'|answer == null && 'top_question'|answer=='xyz'"
     questions["column"].is_hidden = "false"
     questions["column"].save()
+
+    # We're just validating the assumptions here for better understanding of
+    # the test situation
+    assert structure.list_document_structure(document, method=repr) == [
+        " FieldSet(q=(root), f=top_form)",
+        "    ValueField(q=top_question, v=xyz)",
+        "    RowSet(q=table, f=row_form)",
+        "       FieldSet(q=table, f=row_form)",
+        "          ValueField(q=column, v=None)",  # this is our test field
+        "    FieldSet(q=form, f=sub_form)",
+        "       ValueField(q=sub_question, v=None)",
+    ]
 
     validator = validators.DocumentValidator()
     with pytest.raises(validators.CustomValidationError):
@@ -370,7 +410,7 @@ def test_answer_transform_on_hidden_question_types(
     )
     table = questions["table"]
     row_form = table.row_form
-    row_doc = document_factory(form=row_form)
+    row_doc = document_factory(form=row_form, family=document)
     answer_factory(document=row_doc, question=questions["column"])
     answers["table"].documents.add(row_doc)
 
@@ -385,17 +425,10 @@ def test_answer_transform_on_hidden_question_types(
     questions["top_question"].type = question_type
     questions["top_question"].save()
 
-    qj = QuestionJexl(
-        {
-            "document": document,
-            "answers": answers,
-            "form": form,
-            "structure": structure.FieldSet(document, document.form),
-        }
-    )
+    struc = structure.FieldSet(document)
+    field = struc.get_field("form")
 
-    field = structure.Field(document, form, questions["form"])
-    assert qj.is_hidden(field)
+    assert field.is_hidden()
 
 
 @pytest.mark.parametrize(
@@ -544,18 +577,11 @@ def test_is_hidden_neighboring_table(
         form=form, question__type=Question.TYPE_FORM, question__sub_form=neighbor_form
     )
 
-    qj = QuestionJexl(
-        {
-            "document": document,
-            "answers": answers,
-            "form": form,
-            "structure": structure.FieldSet(document, document.form),
-        }
-    )
+    struc = structure.FieldSet(document)
 
-    field = structure.Field(document, form, neighbor_sub_question)
+    field = struc.get_field(neighbor_sub_question.slug)
 
-    assert qj.is_hidden(field)
+    assert field.is_hidden()
 
     validator = validators.DocumentValidator()
     assert neighbor_sub_question not in validator.visible_questions(document)
@@ -585,3 +611,90 @@ def test_optional_answer_transform(info, form_and_document):
 
     with pytest.raises(QuestionMissing):
         validator.validate(document, info)
+
+
+def _gc_object_counts_by_type():
+    # We sort, so the insertion order into the counter is something
+    # sorta-kinda useful. Otherwise, we'd get a random-ish insertion order
+    # that makes looking at the counter difficult (for humans)
+    o_types_sorted = sorted(
+        ((type(o).__module__, type(o).__qualname__) for o in gc.get_objects())
+    )
+    return Counter(o_types_sorted)
+
+
+def test_jexl2_memory_leaks(info, form_and_document):
+    """Ensure our JEXL and form structures do not leak memory.
+
+    We use quite a lot of forward and back references between objects, and
+    those need to be cleaned up when the work is done, as otherwise we may
+    use up a lot of memory over time.
+
+    Measure the GC stats before and after a simple document validation call,
+    and if anything is left over that wasn't there before, we consider it a
+    bug.
+    """
+    form, document, questions, answers = form_and_document(
+        use_table=True, use_subform=True
+    )
+
+    gc.collect()
+
+    stats_before = _gc_object_counts_by_type()
+    stats_after = Counter()  # so it's already there
+
+    validator = validators.DocumentValidator()
+    validator.validate(document, info)
+
+    # Delete the validator, and with this, everything should be gone
+    # To validate the test, comment-out this line, and the test should fail
+    del validator
+
+    gc.collect()
+    stats_after = _gc_object_counts_by_type()
+
+    # We are not concerned about django's or any other module's leaks,
+    # just our own
+    relevant_diffs = {}
+    for mod, cls in sorted(
+        set(itertools.chain(stats_before.keys(), stats_after.keys()))
+    ):
+        before = stats_before[mod, cls]
+        after = stats_after[mod, cls]
+        if mod.startswith("caluma"):
+            # Only look at caluma data. Graphene and Python interna are
+            # hard to keep track of (and not our responsibility to fix)
+            relevant_diffs[mod, cls] = (before, after)
+
+    # Should be empty
+    for (mod, cls), (before, after) in relevant_diffs.items():
+        leaked = after - before
+        assert leaked == 0, (
+            f"Leak detected: {mod}.{cls} was {before} before test run, "
+            f"but {after} afterwards (leaked {leaked} objects)"
+        )
+
+
+@pytest.mark.parametrize(
+    "do_raise, expectation",
+    [
+        (True, pytest.raises(RuntimeError)),
+        (False, does_not_raise()),
+    ],
+)
+def test_evaluate_error_no_raise(info, form_and_document, do_raise, expectation):
+    """When passing raise_on_error=False, ensure it's honored."""
+    form, document, questions, answers = form_and_document(
+        use_table=False, use_subform=False
+    )
+
+    # Syntactically valid, but should cause a type error
+    questions["top_question"].is_hidden = "1234 / 0 == 1"
+    questions["top_question"].save()
+
+    fieldset = structure.FieldSet(document)
+
+    top_q_field = fieldset.get_field("top_question")
+
+    with expectation:
+        assert top_q_field.is_hidden(raise_on_error=do_raise) is None

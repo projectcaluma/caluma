@@ -18,7 +18,7 @@ from .jexl import QuestionJexl
 
 class QuestionJexlField(serializers.JexlField):
     def __init__(self, **kwargs):
-        super().__init__(QuestionJexl(), **kwargs)
+        super().__init__(QuestionJexl(field=None), **kwargs)
 
 
 class ButtonActionField(serializers.CalumaChoiceField):

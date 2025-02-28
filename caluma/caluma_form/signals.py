@@ -103,7 +103,10 @@ def remove_calc_dependents(sender, instance, **kwargs):
 @filter_events(lambda instance: instance.type == models.Question.TYPE_CALCULATED_FLOAT)
 @filter_events(lambda instance: getattr(instance, "calc_expression_changed", False))
 def update_calc_from_question(sender, instance, created, update_fields, **kwargs):
-    for document in models.Document.objects.filter(form__questions=instance):
+    # TODO: we need to find documents that contain this form as a subform
+    # as well. This would only find documents where the question is attached
+    # top-level.
+    for document in models.Document.objects.filter(form__questions=instance).iterator():
         update_or_create_calc_answer(instance, document)
 
 
@@ -113,5 +116,8 @@ def update_calc_from_question(sender, instance, created, update_fields, **kwargs
     lambda instance: instance.question.type == models.Question.TYPE_CALCULATED_FLOAT
 )
 def update_calc_from_form_question(sender, instance, created, **kwargs):
-    for document in instance.form.documents.all():
+    # TODO: we need to find documents that contain this form as a subform
+    # as well. This would only find documents where the question is attached
+    # top-level.
+    for document in instance.form.documents.all().iterator():
         update_or_create_calc_answer(instance.question, document)

@@ -239,3 +239,43 @@ def test_option_is_hidden_save(
 
     result = schema_executor(query, variable_values=variables)
     assert bool(result.errors) is is_hidden
+
+
+@pytest.mark.parametrize(
+    "option_jexl_setup",
+    [
+        [models.Question.TYPE_CHOICE, True],
+        [models.Question.TYPE_CHOICE, False],
+    ],
+    indirect=["option_jexl_setup"],
+)
+def test_validate_form_with_jexl_option(db, option_jexl_setup, schema_executor):
+    """Ensure full document validation with JEXL options works as intended.
+
+    This triggers some internal validator flows from the document validator
+    to the answer validator that we need to ensure works correctly, as it
+    depends on proper handling of the form structure data, passing it down
+    from document to answer validator.
+    """
+    document, is_hidden, choice_question_option = option_jexl_setup()
+
+    query = """
+        query($id: ID!) {
+          documentValidity(id: $id) {
+            edges {
+              node {
+                id
+                isValid
+                errors {
+                  slug
+                  errorMsg
+                }
+              }
+            }
+          }
+        }
+    """
+
+    result = schema_executor(query, variable_values={"id": str(document.id)})
+
+    assert not result.errors
