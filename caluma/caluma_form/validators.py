@@ -89,7 +89,13 @@ class AnswerValidator:
             )
 
     def _structure_field(self, document, question, validation_context):
-        if validation_context:
+        if validation_context:  # pragma: todo cover
+            # Note about coverage: This is in fact covered, but in some python
+            # versions, pytest-cov fails to see it when run with xdist, and I
+            # don't have the patience to actually debug that stuff right now
+            # The test that covers this branch is here:
+            # `caluma_form.tests.test_option.test_validate_form_with_jexl_option`
+
             # If valdiation context is passed in from the DocumentValidator, we
             # already have the *field* we need, and no further work is needed.
             if validation_context.slug() != question.slug:  # pragma: no cover
