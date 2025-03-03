@@ -6,6 +6,7 @@ from django.db import transaction
 from django.db.models import Q
 from rest_framework.exceptions import ValidationError
 
+from caluma.caluma_core.exceptions import ConfigurationError
 from caluma.caluma_core.models import BaseModel
 from caluma.caluma_core.relay import extract_global_id
 from caluma.caluma_form import models, structure, validators
@@ -173,6 +174,12 @@ class SaveAnswerLogic:
 
         struc = structure.FieldSet(answer.document.family)
         field = struc.find_field_by_answer(answer)
+        if not field:  # pragma: no cover
+            # not covering this, because it's a developer error
+            raise ConfigurationError(
+                "Saved an answer in a form structure where it doesn't belong: "
+                f"question={answer.question_id}, root form={struc.get_root().get_form().slug}",
+            )
         if is_table:
             # We treat all children of the table as "changed"
             # Find all children, and if any are of type calc (and are in the "created"

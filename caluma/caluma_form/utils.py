@@ -89,4 +89,4 @@ def update_or_create_calc_answer(question, document, update_dependents=True):
 
     root = structure.FieldSet(document.family)
     for field in root.find_all_fields_by_slug(question.slug):
-        recalculate_field(field, update_recursively=update_calc_dependents)
+        recalculate_field(field, update_recursively=update_dependents)
