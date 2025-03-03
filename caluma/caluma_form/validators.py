@@ -5,6 +5,7 @@ from logging import getLogger
 from django_filters.constants import EMPTY_VALUES
 from rest_framework import exceptions
 
+from caluma.caluma_core.exceptions import ConfigurationError
 from caluma.caluma_data_source.data_source_handlers import get_data_sources
 from caluma.caluma_form import structure
 from caluma.caluma_workflow.models import Case
@@ -89,6 +90,13 @@ class AnswerValidator:
             )
 
     def _structure_field(self, document, question, validation_context):
+        """Return the requested structure field, and the root context.
+
+        The root context is mostly not used, but needed to ensure it won't go
+        out of scope before the field (form structure has only weakrefs from
+        child to parent, and we don't want the parent to go out of scope, as it
+        will break child (field) behaviour).
+        """
         if validation_context:  # pragma: todo cover
             # Note about coverage: This is in fact covered, but in some python
             # versions, pytest-cov fails to see it when run with xdist, and I
@@ -101,15 +109,15 @@ class AnswerValidator:
             if validation_context.slug() != question.slug:  # pragma: no cover
                 # This only happens if *programmer* made an error, therefore we're
                 # not explicitly covering it
-                raise exceptions.ConfigurationError(
+                raise ConfigurationError(
                     f"Passed validation context does not belong to question {question.slug}"
                 )
-            return validation_context
+            return validation_context, validation_context.get_root()
 
         # If we need to create the context ourselves here, we'll need to fetch
         # the field from the context.
         validation_context = structure.FieldSet(document)
-        return validation_context.get_field(question.slug)
+        return validation_context.get_field(question.slug), validation_context
 
     def _evaluate_options_jexl(
         self, document, question, validation_context=None, qs=None
@@ -122,7 +130,15 @@ class AnswerValidator:
             # and use the structure code)
             return [o.slug for o in question.options.all()]
 
-        field = self._structure_field(document, question, validation_context)
+        field, _root = self._structure_field(document, question, validation_context)
+        if not field:  # pragma: no cover
+            # This only happens if *programmer* made an error, therefore we're
+            # not explicitly covering it
+            raise ConfigurationError(
+                f"Field for question '{question.slug}' not found "
+                f"in form '{document.form_id}'"
+            )
+
         options = field.get_options()
         return [o.slug for o in options if not field.evaluate_jexl(o.is_hidden)]
 
