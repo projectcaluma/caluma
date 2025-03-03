@@ -66,7 +66,7 @@ pytest-xdist = "3.6.1"
 python-semantic-release = "7.34.6"
 requests-mock = "1.12.1"
 reuse = "5.0.2"
-ruff = "0.9.6"
+ruff = "0.9.9"
 syrupy = "4.8.2"
 
 
