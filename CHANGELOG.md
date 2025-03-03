@@ -1,3 +1,13 @@
+# v11.0.1 (03 March 2025)
+
+### Fix
+
+* Pass correct parameter  dealing in calc field recalculation ([`1536ab8`](https://github.com/projectcaluma/caluma/commit/1536ab8c66bc5bb352d3ca04175d82ba0f514d4a))
+* **form:** Error when saving an answer that does't belong to a form ([`c27a045`](https://github.com/projectcaluma/caluma/commit/c27a0459e8d43b7b989fd2f4b5881a033d715cb1))
+* **validators:** Import exception from the correct place ([`6fe8566`](https://github.com/projectcaluma/caluma/commit/6fe8566706e9676de0dc538002c60ee9d0c3d780))
+* **jexl:** Fix crashes in form validation when validating options ([`a9ed291`](https://github.com/projectcaluma/caluma/commit/a9ed2915ae6e6ad302da449cc1eacfd745a7730e))
+
+
 # v11.0.0 (28 February 2025)
 
 
