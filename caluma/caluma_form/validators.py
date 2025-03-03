@@ -5,6 +5,7 @@ from logging import getLogger
 from django_filters.constants import EMPTY_VALUES
 from rest_framework import exceptions
 
+from caluma.caluma_core.exceptions import ConfigurationError
 from caluma.caluma_data_source.data_source_handlers import get_data_sources
 from caluma.caluma_form import structure
 from caluma.caluma_workflow.models import Case
@@ -108,7 +109,7 @@ class AnswerValidator:
             if validation_context.slug() != question.slug:  # pragma: no cover
                 # This only happens if *programmer* made an error, therefore we're
                 # not explicitly covering it
-                raise exceptions.ConfigurationError(
+                raise ConfigurationError(
                     f"Passed validation context does not belong to question {question.slug}"
                 )
             return validation_context, validation_context.get_root()
@@ -130,8 +131,10 @@ class AnswerValidator:
             return [o.slug for o in question.options.all()]
 
         field, _root = self._structure_field(document, question, validation_context)
-        if not field:
-            raise exceptions.ConfigurationError(
+        if not field:  # pragma: no cover
+            # This only happens if *programmer* made an error, therefore we're
+            # not explicitly covering it
+            raise ConfigurationError(
                 f"Field for question '{question.slug}' not found "
                 f"in form '{document.form_id}'"
             )
