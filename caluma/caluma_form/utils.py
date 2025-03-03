@@ -1,89 +1,9 @@
 from logging import getLogger
 
-from django.db.models import Prefetch
-
 from caluma.caluma_form import models, structure
 from caluma.caluma_form.jexl import QuestionJexl
 
 log = getLogger(__name__)
-
-
-def prefetch_document(document_id):
-    """Fetch a document while prefetching the entire structure.
-
-    This is needed to reduce the query count when almost all the form data
-    is needed for a given document, e.g. when recalculating calculated
-    answers: in order to evaluate calc expressions the complete document
-    structure is needed, which would otherwise result in a lot of queries.
-    """
-    return (
-        models.Document.objects.filter(pk=document_id)
-        .prefetch_related(*_build_document_prefetch_statements(prefetch_options=True))
-        .first()
-    )
-
-
-def _build_document_prefetch_statements(prefix="", prefetch_options=False):
-    question_queryset = models.Question.objects.select_related(
-        "sub_form", "row_form"
-    ).order_by("-formquestion__sort")
-
-    if prefetch_options:
-        question_queryset = question_queryset.prefetch_related(
-            Prefetch(
-                "options",
-                queryset=models.Option.objects.order_by("-questionoption__sort"),
-            )
-        )
-
-    if prefix:  # pragma: no cover
-        prefix += "__"
-
-    return [
-        f"{prefix}answers",
-        f"{prefix}dynamicoption_set",
-        Prefetch(
-            f"{prefix}answers__answerdocument_set",
-            queryset=models.AnswerDocument.objects.select_related(
-                "document__form", "document__family"
-            )
-            .prefetch_related("document__answers", "document__form__questions")
-            .order_by("-sort"),
-        ),
-        Prefetch(
-            # root form -> questions
-            f"{prefix}form__questions",
-            queryset=question_queryset.prefetch_related(
-                Prefetch(
-                    # root form -> row forms -> questions
-                    "row_form__questions",
-                    queryset=question_queryset,
-                ),
-                Prefetch(
-                    # root form -> sub forms -> questions
-                    "sub_form__questions",
-                    queryset=question_queryset.prefetch_related(
-                        Prefetch(
-                            # root form -> sub forms -> row forms -> questions
-                            "row_form__questions",
-                            queryset=question_queryset,
-                        ),
-                        Prefetch(
-                            # root form -> sub forms -> sub forms -> questions
-                            "sub_form__questions",
-                            queryset=question_queryset.prefetch_related(
-                                Prefetch(
-                                    # root form -> sub forms -> sub forms -> row forms -> questions
-                                    "row_form__questions",
-                                    queryset=question_queryset,
-                                ),
-                            ),
-                        ),
-                    ),
-                ),
-            ),
-        ),
-    ]
 
 
 def update_calc_dependents(slug, old_expr, new_expr):

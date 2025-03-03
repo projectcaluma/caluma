@@ -1295,8 +1295,5 @@ def test_init_of_calc_questions_queries(
         question__calc_expression="'table'|answer|mapby('column')|sum + 'top_question'|answer + 'sub_question'|answer",
     )
 
-    with django_assert_num_queries(42):
-        # This used to be 35 queries, however they were more complex and
-        # therefore more demanding on the DB. The fastloader tries to do
-        # as little JOINs as possible to speed things up
+    with django_assert_num_queries(31):
         api.save_answer(questions_dict["top_question"], document, value="1")
