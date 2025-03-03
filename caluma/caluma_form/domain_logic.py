@@ -8,7 +8,7 @@ from rest_framework.exceptions import ValidationError
 
 from caluma.caluma_core.models import BaseModel
 from caluma.caluma_core.relay import extract_global_id
-from caluma.caluma_form import models, structure, utils, validators
+from caluma.caluma_form import models, structure, validators
 from caluma.caluma_form.utils import recalculate_field
 from caluma.caluma_user.models import BaseUser
 from caluma.utils import update_model
@@ -171,9 +171,7 @@ class SaveAnswerLogic:
             return
         log.debug("update_calc_dependents(%s)", answer)
 
-        root_doc = utils.prefetch_document(answer.document.family_id)
-        struc = structure.FieldSet(root_doc)
-
+        struc = structure.FieldSet(answer.document.family)
         field = struc.find_field_by_answer(answer)
         if is_table:
             # We treat all children of the table as "changed"
@@ -345,8 +343,7 @@ class SaveDocumentLogic:
         In order to do this efficiently, we get all calculated questions with
         their dependents, sort them topoligically, and then update their answer.
         """
-        root_doc = utils.prefetch_document(document.family_id)
-        struc = structure.FieldSet(root_doc)
+        struc = structure.FieldSet(document.family)
 
         calculated_fields = (
             field
