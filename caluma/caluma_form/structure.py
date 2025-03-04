@@ -65,9 +65,7 @@ def object_local_memoise(method):
             # for debugging purposes
             return method(self, *args, **kwargs)
         if not hasattr(self, "_memoise"):
-            self._memoise = {}
-            self._memoise_hit_count = 0
-            self._memoise_miss_count = 0
+            clear_memoise(self)
 
         key = str([args, kwargs, method])
         if key in self._memoise:
@@ -98,6 +96,8 @@ def clear_memoise(obj):
     call `clear_memoise()` on that object to clear all it's cached data.
     """
     obj._memoise = {}
+    obj._memoise_hit_count = 0
+    obj._memoise_miss_count = 0
 
 
 class FastLoader:
