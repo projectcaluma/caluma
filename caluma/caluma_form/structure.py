@@ -225,7 +225,7 @@ class FastLoader:
                 Question.TYPE_CHOICE,
                 Question.TYPE_MULTIPLE_CHOICE,
             ]:
-                choice_questions.append(fq.question)
+                choice_questions.append(fq.question.pk)
 
         # It could be that the requested forms don't have any questions. We'd still
         # need to add them to our "known" set.
@@ -237,8 +237,10 @@ class FastLoader:
                 self._forms[form.pk] = form
 
         if choice_questions:
+            already_have_options = set(self._question_options.keys())
+            newly_needed = set(choice_questions) - already_have_options
             for qo in (
-                QuestionOption.objects.filter(question__in=choice_questions)
+                QuestionOption.objects.filter(question__in=newly_needed)
                 .order_by("-sort")
                 .select_related("option")
             ):
