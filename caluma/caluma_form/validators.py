@@ -116,7 +116,7 @@ class AnswerValidator:
 
         # If we need to create the context ourselves here, we'll need to fetch
         # the field from the context.
-        validation_context = structure.FieldSet(document)
+        validation_context = DocumentValidator().get_validation_context(document)
         return validation_context.get_field(question.slug), validation_context
 
     def _evaluate_options_jexl(
@@ -381,7 +381,7 @@ class DocumentValidator:
                     data_source_context=data_source_context,
                 )
 
-    def get_validation_context(self, document):
+    def get_validation_context(self, document, _fastloader=None):
         relevant_case: Case = (
             getattr(document, "case", None)
             or getattr(getattr(document, "work_item", None), "case", None)
@@ -425,7 +425,11 @@ class DocumentValidator:
             }
         }
 
-        return structure.FieldSet(document, global_context=context)
+        return structure.FieldSet(
+            document,
+            global_context=context,
+            _fastloader=_fastloader,
+        )
 
     def visible_questions(self, document, validation_context=None) -> list[Question]:
         """Evaluate the visibility of the questions for the given context.
