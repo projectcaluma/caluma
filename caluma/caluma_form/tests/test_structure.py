@@ -266,7 +266,10 @@ def test_options(simple_form_structure, form_question_factory, question_option_f
         question__type="choice", form=simple_form_structure.form
     ).question
 
-    opts = question_option_factory.create_batch(4, question=choice_q)
+    opts = sorted(
+        question_option_factory.create_batch(4, question=choice_q),
+        key=lambda x: -x.sort,
+    )
     assert choice_q.options.exists()
 
     fieldset = structure.FieldSet(simple_form_structure)

@@ -835,7 +835,7 @@
           }),
           dict({
             'node': dict({
-              'label': 'Mary White',
+              'label': 'Robert Skinner',
               'slug': 'anothervalue',
             }),
           }),

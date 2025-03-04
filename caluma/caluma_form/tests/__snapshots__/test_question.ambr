@@ -951,8 +951,8 @@
         '__typename': 'MultipleChoiceQuestion',
         'defaultAnswer': dict({
           'value': list([
+            'successful-job',
             'maybe-stock-capital',
-            'court-ask',
           ]),
         }),
         'hintText': 'test',
@@ -964,14 +964,14 @@
           'edges': list([
             dict({
               'node': dict({
-                'label': 'William Ramos',
-                'slug': 'maybe-stock-capital',
+                'label': 'Jennifer Lee',
+                'slug': 'successful-job',
               }),
             }),
             dict({
               'node': dict({
-                'label': 'Scott Powell',
-                'slug': 'court-ask',
+                'label': 'William Ramos',
+                'slug': 'maybe-stock-capital',
               }),
             }),
           ]),
