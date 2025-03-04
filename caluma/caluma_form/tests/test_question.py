@@ -1167,7 +1167,7 @@ def test_recalc_missing_dependency(
     sub_question.type = models.Question.TYPE_INTEGER
     sub_question.save()
 
-    spy = mocker.spy(domain_logic.SaveAnswerLogic, "update_calc_dependents")
+    spy = mocker.spy(domain_logic.SaveAnswerLogic, "recalculate_dependents")
 
     # Calculated question in another form
     form_question_factory(
