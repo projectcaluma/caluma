@@ -157,7 +157,7 @@ class SaveAnswerLogic:
         return answer
 
     @staticmethod
-    def update_calc_dependents(answer, update_info):
+    def recalculate_dependents(answer, update_info):
         """Update the dependent calc answers when this given answer has changed.
 
         The update_info is used in the context of table questions, when we need
@@ -225,7 +225,7 @@ class SaveAnswerLogic:
         if answer.question.type == models.Question.TYPE_TABLE:
             update_info = answer.create_answer_documents(documents)
 
-        cls.update_calc_dependents(answer, update_info)
+        cls.recalculate_dependents(answer, update_info)
 
         return answer
 
@@ -245,7 +245,7 @@ class SaveAnswerLogic:
         if answer.question.type == models.Question.TYPE_TABLE:
             update_info = answer.create_answer_documents(documents)
 
-        cls.update_calc_dependents(answer, update_info)
+        cls.recalculate_dependents(answer, update_info)
 
         answer.refresh_from_db()
         return answer
