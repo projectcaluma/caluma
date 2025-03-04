@@ -196,9 +196,10 @@ def test_option_is_hidden(
     options = result.data["allDocuments"]["edges"][0]["node"]["answers"]["edges"][0][
         "node"
     ]["question"]["options"]["edges"]
-    expected = [{"node": {"slug": "bar"}}, {"node": {"slug": "thing-piece"}}]
+
+    expected = [{"node": {"slug": "piece-training"}}, {"node": {"slug": "bar"}}]
     if is_hidden:
-        expected = [{"node": {"slug": "thing-piece"}}]
+        expected = [{"node": {"slug": "piece-training"}}]
     assert options == expected
 
 

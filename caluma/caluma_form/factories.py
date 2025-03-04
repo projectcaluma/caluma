@@ -132,7 +132,7 @@ class OptionFactory(DjangoModelFactory):
 class QuestionOptionFactory(DjangoModelFactory):
     option = SubFactory(OptionFactory)
     question = SubFactory(QuestionFactory, type=models.Question.TYPE_CHOICE)
-    sort = 0
+    sort = Faker("pyint")
 
     class Meta:
         model = models.QuestionOption
