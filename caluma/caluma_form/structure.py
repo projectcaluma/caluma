@@ -114,12 +114,30 @@ class FastLoader:
     load too much if only a sub-document is given
     """
 
-    def __init__(self, document, form=None):
-        self._document = document.family_id
+    @classmethod
+    def for_document(cls, document):
+        new_self = cls()
+        new_self._load_document_entities([document.family])
+        new_self._load_form_entities(
+            set(doc.form_id for doc in new_self._documents.values())
+        )
+        return new_self
 
+    @classmethod
+    def for_queryset(cls, document_qs):
+        new_self = cls()
+        new_self._load_document_entities(document_qs)
+        new_self._load_form_entities(
+            set(doc.form_id for doc in new_self._documents.values())
+        )
+        return new_self
+
+    def __init__(self):
         # Lazy import needed here
         from caluma.caluma_form.jexl import QuestionJexl
 
+        # Evaluator is only used for extracting answer transforms & friends,
+        # so is field-independent here
         self._evaluator = QuestionJexl(field=None)
 
         # Form bits
@@ -128,14 +146,6 @@ class FastLoader:
         self._questions_by_form: dict[str, list[Question]] = defaultdict(list)
         self._question_options: dict[str, list[Option]] = defaultdict(list)
         self._answers_by_document = defaultdict(dict)
-
-        # Jexl dependency graph: question(A) -> question(B) -> list of expr type
-        # Question B depends on Question A via expression "type". May be multiple types
-        # This is "reversed" due to the fact that we mostly need "downstream"
-        # updates when updating (recalculating) a field
-        self._jexl_dependencies: dict[str, dict[str, str]] = defaultdict(
-            lambda: defaultdict(list)
-        )
 
         # Document bits
         self._documents: dict[str, Document] = {}
@@ -146,10 +156,13 @@ class FastLoader:
         self._files_by_answer = defaultdict(list)
         self._dynamic_options_by_question = defaultdict(dict)
 
-        self._load_document_entities()
-
-        known_forms = set(doc.form_id for doc in self._documents.values())
-        self._load_form_entities(known_forms)
+        # Jexl dependency graph: question(A) -> question(B) -> list of expr type
+        # Question B depends on Question A via expression "type". May be multiple types
+        # This is "reversed" due to the fact that we mostly need "downstream"
+        # updates when updating (recalculating) a field
+        self._jexl_dependencies: dict[str, dict[str, str]] = defaultdict(
+            lambda: defaultdict(list)
+        )
 
     def _store_question(self, question):
         self._questions[question.pk] = question
@@ -160,6 +173,8 @@ class FastLoader:
             if not jexl_expr or "|" not in str(jexl_expr):
                 # not interesting - no transform in the expr
                 continue
+            # Evaluator is only used for extracting answer transforms & friends,
+            # so is field-independent here
             for dependency_slug in self._evaluator.extract_referenced_questions(
                 jexl_expr
             ):
@@ -233,20 +248,20 @@ class FastLoader:
         if newly_collected_forms:
             self._load_form_entities(list(newly_collected_forms))
 
-    def _load_document_entities(self):
+    def _load_document_entities(self, documents):
         # First: All Documents - These are fetchable via zero JOINs
+        if isinstance(documents, list):
+            families = [doc.family_id for doc in documents]
+        else:
+            families = documents.values("family_id")
+
         self._documents = {
             str(document.pk): document
-            for document in Document.objects.filter(family=self._document)
+            for document in Document.objects.filter(family__in=families)
         }
         # Second: All Answers - These are fetchable via zero JOINs, as we
         # already have all the documents
-        self._answers = {
-            str(answer.pk): answer
-            for answer in Answer.objects.filter(document__in=self._documents.keys())
-        }
-        for ans in self._answers.values():
-            self._answers_by_document[str(ans.document_id)][ans.question_id] = ans
+        self._load_answers(self._documents.keys())
 
         self._answerdocuments = {
             str(answerdocument.pk): answerdocument
@@ -271,6 +286,15 @@ class FastLoader:
             self._files_by_answer[str(file.answer_id)].append(file)
 
         self._load_dynamic_options()
+
+    def _load_answers(self, documents):
+        new_answers = {
+            str(answer.pk): answer
+            for answer in Answer.objects.filter(document__in=documents)
+        }
+        self._answers.update(new_answers)
+        for ans in new_answers.values():
+            self._answers_by_document[str(ans.document_id)][ans.question_id] = ans
 
     def _load_dynamic_options(self):
         for do in DynamicOption.objects.filter(document__in=self._documents):
@@ -322,8 +346,8 @@ class BaseField(ABC):
 
     _fastloader: Optional[FastLoader] = field(default=None)
 
-    def _make_fastloader(self, document, form=None):
-        return FastLoader(document, form)
+    def _make_fastloader(self, document):
+        return FastLoader.for_document(document)
 
     @object_local_memoise
     def get_evaluator(self) -> QuestionJexl:
@@ -679,9 +703,9 @@ class FieldSet(BaseField):
         #
         self.question = question
         self._document = document
-        self.form = form or document.form
 
-        self._fastloader = _fastloader or self._make_fastloader(document, self.form)
+        self._fastloader = _fastloader or self._make_fastloader(document)
+        self.form = form or self._fastloader.form_by_id(document.form_id)
 
         self._global_context = global_context or {"info": {}}
 

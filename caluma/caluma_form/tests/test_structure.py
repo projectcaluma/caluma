@@ -5,7 +5,7 @@ from datetime import date, datetime
 import pytest
 
 from caluma.caluma_form import structure
-from caluma.caluma_form.models import Answer, Question
+from caluma.caluma_form.models import Answer, Document, Question
 
 
 @pytest.fixture()
@@ -311,7 +311,7 @@ def test_fastloader_deferred_form_load(simple_form_structure, form_factory, capl
     """
     form = form_factory()
 
-    loader = structure.FastLoader(simple_form_structure)
+    loader = structure.FastLoader.for_document(simple_form_structure)
     expected_msg = f"Fastloader: Form {form.slug} was not preloaded - loading now"
 
     # Precondition, just to visualize the expected behaviour
@@ -339,3 +339,60 @@ def test_fastloader_question_for_answer(simple_form_structure):
     assert isinstance(question, Question)
 
     assert question.slug == field.slug()
+
+
+def test_fastloader_multiple_documents(
+    simple_form_structure, form_factory, django_assert_num_queries
+):
+    """Verify behaviour of the fastloader's form_by_id() method.
+
+    FastLoader.form_by_id() needs to load any missing form if given an
+    unknown form slug. This should not happen (things should be preloaded
+    properly), so we also check for an appropriate warning message.
+    """
+
+    doc2 = simple_form_structure.copy()
+    doc3 = simple_form_structure.copy()
+
+    qs = Document.objects.filter(pk__in=[simple_form_structure.pk, doc2.pk, doc3.pk])
+
+    with django_assert_num_queries(7):
+        fl_doc = structure.FastLoader.for_document(simple_form_structure)
+    with django_assert_num_queries(7):
+        fl_qs = structure.FastLoader.for_queryset(qs)
+
+    expected_structure = [
+        " FieldSet(root)",
+        "    Field(leaf1, Some Value)",
+        "    Field(leaf2, 33)",
+        "    FieldSet(measure-evening)",
+        "       Field(sub_leaf1, None)",
+        "       Field(sub_leaf2, None)",
+        "       RowSet(too-wonder-option)",
+        "          FieldSet(too-wonder-option)",
+        "             Field(row_field_1, 2025-01-13)",
+        "             Field(row_field_2, 99.5)",
+        "             Field(row_calc, None)",
+        "          FieldSet(too-wonder-option)",
+        "             Field(row_field_1, 2025-01-10)",
+        "             Field(row_field_2, 23.0)",
+        "             Field(row_calc, None)",
+    ]
+
+    with django_assert_num_queries(1):
+        # TODO: should be 0 queries - everything *should* already be loaded
+        # Feel free to optimize one day - it's just fetching the table row form
+        struc1 = structure.FieldSet(simple_form_structure, _fastloader=fl_doc)
+        assert struc1.list_structure() == expected_structure
+
+    with django_assert_num_queries(1):
+        # TODO: should be 0 queries - everything *should* already be loaded
+        # Feel free to optimize one day - it's just fetching the table row form
+        struc1 = structure.FieldSet(simple_form_structure, _fastloader=fl_qs)
+        assert struc1.list_structure() == expected_structure
+
+        struc2 = structure.FieldSet(doc2, _fastloader=fl_qs)
+        assert struc2.list_structure() == expected_structure
+
+        struc3 = structure.FieldSet(doc3, _fastloader=fl_qs)
+        assert struc3.list_structure() == expected_structure
