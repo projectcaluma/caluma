@@ -5,7 +5,7 @@ from datetime import date, datetime
 import pytest
 
 from caluma.caluma_form import structure
-from caluma.caluma_form.models import Answer, Document, Question
+from caluma.caluma_form.models import Answer, Document, FormQuestion, Question
 
 
 @pytest.fixture()
@@ -396,3 +396,26 @@ def test_fastloader_multiple_documents(
 
         struc3 = structure.FieldSet(doc3, _fastloader=fl_qs)
         assert struc3.list_structure() == expected_structure
+
+
+def test_fastloader_no_duplicate_options(
+    simple_form_structure, form_factory, question_factory, question_option_factory
+):
+    """Validate option behaviour in the fastloader.
+
+    Verify that multiple occurrences of an option question does not duplicate
+    the options in the fastloader.
+    """
+
+    # We need a choice question that is located in multiple places of our form
+    # structure.
+    choice_q = question_factory(type=Question.TYPE_CHOICE)
+    the_options = question_option_factory.create_batch(4, question=choice_q)
+    FormQuestion.objects.create(form_id="root", question=choice_q, sort=988)
+    FormQuestion.objects.create(form_id="measure-evening", question=choice_q, sort=987)
+
+    struc = structure.FieldSet(simple_form_structure)
+
+    assert len(the_options) == len(
+        struc._fastloader.options_for_question(choice_q.slug)
+    )
