@@ -1,6 +1,6 @@
 from logging import getLogger
 
-from caluma.caluma_form import models, structure
+from caluma.caluma_form import models, structure, validators
 from caluma.caluma_form.jexl import QuestionJexl
 
 log = getLogger(__name__)
@@ -87,6 +87,6 @@ def recalculate_dependent_fields(
 def update_or_create_calc_answer(question, document, update_dependents=True):
     """Recalculate all answers in the document after calc dependency change."""
 
-    root = structure.FieldSet(document.family)
+    root = validators.DocumentValidator().get_validation_context(document.family)
     for field in root.find_all_fields_by_slug(question.slug):
         recalculate_field(field, update_recursively=update_dependents)
