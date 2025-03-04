@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "caluma"
-version = "11.0.1"
+version = "11.0.2"
 description = "Caluma Service providing GraphQL API"
 homepage = "https://caluma.io"
 repository = "https://github.com/projectcaluma/caluma"

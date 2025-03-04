@@ -1,3 +1,9 @@
+# v11.0.2 (04 March 2025)
+
+### Fix
+
+* **deps:** Fix django-filter version range ([`f7a7f7c`](https://github.com/projectcaluma/caluma/commit/f7a7f7c412f634a4c145ac3ea6ff727e03f9de79))
+
 # v11.0.1 (03 March 2025)
 
 ### Fix
