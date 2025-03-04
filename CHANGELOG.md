@@ -1,3 +1,15 @@
+# v11.1.0 (04 March 2025)
+
+### Feature
+
+* **forms:** Extend structure fastloader to support multiple documents ([`28ca840`](https://github.com/projectcaluma/caluma/commit/28ca8403fc4c96bdb8ef2f4cb0d1ede056444003))
+
+### Fix
+
+* Deterministic option sort ([`8f2a25a`](https://github.com/projectcaluma/caluma/commit/8f2a25a331a7bb5c94bfc05ab6b1fc9a13521cfe))
+* **structure:** Question options should not be loaded multiple times ([`cba8fbe`](https://github.com/projectcaluma/caluma/commit/cba8fbe2565cdb1932f7c1af2f2791ec0591beb3))
+
+
 # v11.0.2 (04 March 2025)
 
 ### Fix
