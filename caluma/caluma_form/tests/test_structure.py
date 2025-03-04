@@ -5,6 +5,7 @@ from datetime import date, datetime
 import pytest
 
 from caluma.caluma_form import structure
+from caluma.caluma_form.api import save_answer
 from caluma.caluma_form.models import Answer, Document, FormQuestion, Question
 
 
@@ -422,3 +423,60 @@ def test_fastloader_no_duplicate_options(
     assert len(the_options) == len(
         struc._fastloader.options_for_question(choice_q.slug)
     )
+
+
+def test_multistage_calculation_updates(
+    simple_form_structure,
+    form_factory,
+    django_assert_num_queries,
+    form_question_factory,
+):
+    """Verify recalculation behaviour across multiple calc stages.
+
+    A chain of calculations across tables is done to ensure we get the right
+    values at each step and don't end up in a cache trap
+    """
+    form_question_factory(
+        form_id="root",
+        question__type=Question.TYPE_CALCULATED_FLOAT,
+        question__slug="outer-calc",
+        question__calc_expression="'sub_table'|answer([])|mapby('row_calc')|sum",
+    )
+
+    struc0 = structure.FieldSet(simple_form_structure)
+
+    assert struc0._fastloader._questions["leaf2"].calc_dependents == ["row_calc"]
+    assert struc0._fastloader._questions["row_field_2"].calc_dependents == ["row_calc"]
+    assert struc0._fastloader._questions["row_calc"].calc_dependents == ["outer-calc"]
+    assert struc0._fastloader._questions["outer-calc"].calc_dependents == []
+
+    for field in struc0.find_all_fields_by_slug("row_field_2"):
+        answer = save_answer(
+            field.question, field.answer.document, value=field.answer.value + 2
+        )
+        field.refresh(answer)
+
+    struc1 = structure.FieldSet(simple_form_structure)
+
+    # The struc0 should be internally-refreshed, so must match another
+    # structure constructed freshly from DB
+    assert struc0.list_structure() == struc1.list_structure()
+
+    assert struc1.list_structure() == [
+        " FieldSet(root)",
+        "    Field(leaf1, Some Value)",
+        "    Field(leaf2, 33)",
+        "    FieldSet(measure-evening)",
+        "       Field(sub_leaf1, None)",
+        "       Field(sub_leaf2, None)",
+        "       RowSet(too-wonder-option)",
+        "          FieldSet(too-wonder-option)",
+        "             Field(row_field_1, 2025-01-13)",
+        "             Field(row_field_2, 101.5)",
+        "             Field(row_calc, 134.5)",
+        "          FieldSet(too-wonder-option)",
+        "             Field(row_field_1, 2025-01-10)",
+        "             Field(row_field_2, 25.0)",
+        "             Field(row_calc, 58.0)",
+        "    Field(outer-calc, 192.5)",
+    ]

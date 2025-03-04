@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import collections
 import copy
+import itertools
 import typing
 import weakref
 from abc import ABC
@@ -175,9 +176,13 @@ class FastLoader:
                 continue
             # Evaluator is only used for extracting answer transforms & friends,
             # so is field-independent here
-            for dependency_slug in self._evaluator.extract_referenced_questions(
-                jexl_expr
-            ):
+            referenced_questions = set(
+                itertools.chain(
+                    self._evaluator.extract_referenced_questions(jexl_expr),
+                    self._evaluator.extract_referenced_mapby_questions(jexl_expr),
+                )
+            )
+            for dependency_slug in referenced_questions:
                 self._jexl_dependencies[dependency_slug][question.pk].append(
                     expr_property
                 )
@@ -553,6 +558,12 @@ class BaseField(ABC):
         """
         if answer:
             self.answer = answer
+        elif self.answer:
+            self.answer.refresh_from_db()
+        elif not isinstance(self, FieldSet):
+            self.answer = Answer.objects.filter(
+                question=self.question, document=self.parent._document
+            ).first()
 
         clear_memoise(self)
         for dep in self._fastloader.dependents_of_question(self.slug()):
@@ -754,7 +765,6 @@ class FieldSet(BaseField):
     def get_context(self):
         return self._context
 
-    @object_local_memoise
     def get_value(self):
         if self.is_empty():
             # is_empty() will return True if we're hidden, so
