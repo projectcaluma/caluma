@@ -1,3 +1,10 @@
+# v11.1.1 (04 March 2025)
+
+### Fix
+
+* **structure:** Correctly update structure in-place for recalculations ([`8cccc7e`](https://github.com/projectcaluma/caluma/commit/8cccc7ef60fd5b7f9b0459e2c26b324485dc523a))
+* **structure:** Fix passing of global validation context for structure ([`2b1f7e4`](https://github.com/projectcaluma/caluma/commit/2b1f7e413c0063cca9bed5b47c387378d9bc3343))
+
 # v11.1.0 (04 March 2025)
 
 ### Feature
