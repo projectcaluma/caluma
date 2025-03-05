@@ -48,7 +48,10 @@
 
 * Code that uses the form jexl and / or structure code most likely will need to be rewritten. The changes are small-ish, but still semantically not exactly equal. ([`7c997b7`](https://github.com/projectcaluma/caluma/commit/7c997b70850a4c4e7f046714d8a1ab56a89ef950))
   See https://github.com/projectcaluma/caluma/pull/2356 for further details.
-
+* While not yet (technically) breaking, we do not support Python versions
+  of 3.9 and earlier. Update your Python to 3.10 or ideally, 3.13. Support
+  for Python versions will be according to Python's own version schedule:
+  https://devguide.python.org/versions/
 
 # v10.7.0 (09 January 2025)
 
