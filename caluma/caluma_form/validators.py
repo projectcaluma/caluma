@@ -130,6 +130,14 @@ class AnswerValidator:
             # and use the structure code)
             return [o.slug for o in question.options.all()]
 
+        elif not validation_context:
+            # First see if we really need to build up the validation context. If
+            # not, we can speed things up significantly
+            all_options = list(question.options.all())
+            if all(opt.is_hidden in ("false", "") for opt in all_options):
+                # no JEXL evaluation neccessary
+                return [o.slug for o in all_options]
+
         field, _root = self._structure_field(document, question, validation_context)
         if not field:  # pragma: no cover
             # This only happens if *programmer* made an error, therefore we're
