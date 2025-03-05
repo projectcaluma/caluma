@@ -332,7 +332,7 @@ class FastLoader:
         return self._forms[form_id]
 
     def rows_for_table_answer(self, answer_id: str) -> list[Document]:
-        document_ids = self._table_rows_by_answer[str(str(answer_id))]
+        document_ids = self._table_rows_by_answer[str(answer_id)]
         return [self._documents[doc_id] for doc_id in document_ids]
 
     def options_for_question(self, question_id):
