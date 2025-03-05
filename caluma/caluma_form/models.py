@@ -1,6 +1,6 @@
-import uuid
 from functools import wraps
 
+import uuid_extensions
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.db import models, transaction
@@ -483,7 +483,9 @@ class Answer(core_models.BaseModel):
 
     # We need to replicate the UUIDModel in order to register it as historical model.
     # Otherwise simple_history complains that the model is already registered,
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(
+        primary_key=True, default=uuid_extensions.uuid7, editable=False
+    )
     question = models.ForeignKey(
         "caluma_form.Question", on_delete=models.DO_NOTHING, related_name="answers"
     )
