@@ -799,3 +799,43 @@ def test_validate_integer_0(
     with pytest.raises(ValidationError) as excinfo:
         DocumentValidator().validate(document, admin_user)
     assert excinfo.match("Invalid value 0")
+
+
+@pytest.mark.parametrize(
+    "option_jexl, expect_queries, expect_jexl_evaluations",
+    [
+        # pre-recognized "visible" jexl, no JEXL and few queries
+        ("", 9, 0),
+        # pre-recognized "visible" jexl, no JEXL and few queries
+        ("false", 9, 0),
+        # not pre-recognized - needs to be evaluated in full doc context
+        # therefore more queries needed, and JEXL expressions are evaluated
+        ("!true", 18, 5),
+    ],
+)
+def test_validate_options_without_jexl(
+    db,
+    django_assert_num_queries,
+    form_question_factory,
+    question_option_factory,
+    document,
+    option_jexl,
+    expect_queries,
+    expect_jexl_evaluations,
+    mocker,
+):
+    """Ensure that validating options only evaluates JEXL if actually needed."""
+    form_question_factory(form=document.form)
+    form_question_factory(form=document.form)
+    form_question_factory(form=document.form)
+    fq = form_question_factory(question__type=Question.TYPE_CHOICE, form=document.form)
+    options = question_option_factory.create_batch(
+        5, question=fq.question, option__is_hidden=option_jexl
+    )
+
+    spy = mocker.spy(structure.BaseField, "evaluate_jexl")
+
+    with django_assert_num_queries(expect_queries):
+        api.save_answer(fq.question, document, value=options[3].option_id)
+
+    assert spy.call_count == expect_jexl_evaluations
