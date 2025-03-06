@@ -102,6 +102,8 @@ DYNAMIC_GROUPS_CLASSES = env.list("DYNAMIC_GROUPS_CLASSES", default=[])
 
 DYNAMIC_TASKS_CLASSES = env.list("DYNAMIC_TASKS_CLASSES", default=[])
 
+MANAGER_CLASSES = env.list("MANAGER_CLASSES", default=[])
+
 # simple history
 SIMPLE_HISTORY_HISTORY_ID_USE_UUID = True
 

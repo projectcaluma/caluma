@@ -9,6 +9,7 @@ class DefaultConfig(AppConfig):
     name = "caluma.caluma_core"
 
     def ready(self):
+        from .managers import register_custom_managers
         from .mutation import Mutation
         from .serializers import ModelSerializer
         from .types import Node
@@ -28,3 +29,5 @@ class DefaultConfig(AppConfig):
             import_module(module)
 
         import_module("caluma.caluma_form.signals")
+
+        register_custom_managers()
