@@ -5,7 +5,7 @@ ENV HOME=/home/caluma
 
 ENV PYTHONUNBUFFERED=1
 ENV APP_HOME=/app
-ENV DJANGO_SETTINGS_MODULE caluma.settings.django
+ENV DJANGO_SETTINGS_MODULE=caluma.settings.django
 
 RUN mkdir -p $APP_HOME \
     && useradd -u 901 -r caluma --create-home \
@@ -33,4 +33,4 @@ COPY . $APP_HOME
 
 EXPOSE 8000
 
-CMD /bin/sh -c "wait-for-it $DATABASE_HOST:${DATABASE_PORT:-5432} -- poetry run python manage.py migrate && poetry run gunicorn --workers 10 --access-logfile - --limit-request-line 16384 --bind :8000 caluma.wsgi"
+CMD ["/bin/sh", "-c", "wait-for-it $DATABASE_HOST:${DATABASE_PORT:-5432} -- poetry run python manage.py migrate && poetry run gunicorn --workers 10 --access-logfile - --limit-request-line 16384 --bind :8000 caluma.wsgi"]
