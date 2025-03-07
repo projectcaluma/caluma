@@ -1,3 +1,10 @@
+# v11.1.2 (07 March 2025)
+
+### Fix
+
+* **perf:** Don't load full document in memory if not needed for options ([`581d2d0`](https://github.com/projectcaluma/caluma/commit/581d2d056daeee0394c94f20dd64c36ff12a7be8))
+
+
 # v11.1.1 (04 March 2025)
 
 ### Fix
