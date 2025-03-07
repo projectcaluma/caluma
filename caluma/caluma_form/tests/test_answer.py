@@ -513,3 +513,73 @@ def test_file_answer_mutation_update_missing_file(
         result.errors[0].args[0]
     )
     assert answer.files.count() == 0
+
+
+@pytest.mark.parametrize(
+    "question_type, answer_value, old_slug, new_slug, expected",
+    [
+        # retain old value for single choice if it doesn't match the old_slug
+        (Question.TYPE_DYNAMIC_CHOICE, None, "test", "new", None),
+        (Question.TYPE_DYNAMIC_CHOICE, "other", "test", "new", "other"),
+        # use the new value for single choice if the slug matches the current answer
+        (Question.TYPE_DYNAMIC_CHOICE, "test", "test", "new", "new"),
+        (Question.TYPE_DYNAMIC_CHOICE, "test", "test", None, None),
+        # don't change the value for multi choice if the slug is not present
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, None, "test", "new", None),
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["other"], "test", "new", ["other"]),
+        # replace the old_slug for multi choice with the new_slug if present
+        (Question.TYPE_DYNAMIC_MULTIPLE_CHOICE, ["test"], "test", "new", ["new"]),
+        (
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            ["other", "test"],
+            "test",
+            "new",
+            ["other", "new"],
+        ),
+        (
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            ["other", "other2"],
+            "test",
+            "new",
+            ["other", "other2"],
+        ),
+        # discard the old_slug for multi choice if the new_slug is None
+        (
+            Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            ["other", "test"],
+            "test",
+            None,
+            ["other"],
+        ),
+    ],
+)
+def test_modify_changed_choice_answer(
+    db,
+    question_factory,
+    answer_factory,
+    question_type,
+    answer_value,
+    old_slug,
+    new_slug,
+    expected,
+):
+    """Test the effects of modify_changed_choice_answer.
+
+    For single dynamic choice questions:
+    - The old answer value remains unchanged if it doesn't match the old_slug
+    - The answer value is replaced with the new_slug if the old_slug matches the old
+        answer value
+    - The answer value will be None if the new_slug is None
+
+    For multiple dynamic choice questions:
+    - The answer list remains unchanged if the old_slug is not in the answer list
+    - The old_slug is replaced with the new_slug in the answer list if it is present
+    - The old_slug is discarded from the answer list if the new_slug is None
+    """
+    question = question_factory(type=question_type)
+    answer = answer_factory(question=question, value=answer_value)
+
+    assert (
+        answer.modify_changed_choice_answer(question, old_slug, new_slug, answer_value)
+        == expected
+    )

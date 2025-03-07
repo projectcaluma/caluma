@@ -1,6 +1,7 @@
 import logging
+from typing import Tuple
 
-from caluma.caluma_form.models import DynamicOption
+from caluma.caluma_form.models import Answer, DynamicOption
 from caluma.utils import is_iterable_and_no_string
 
 logger = logging.getLogger(__name__)
@@ -86,3 +87,25 @@ class BaseDataSource:
                 raise e
             return self.default
         return new_data
+
+    def on_copy(
+        self, old_answer: Answer, new_answer: Answer, old_value: Tuple[str, str]
+    ) -> Tuple[str | None, str | None]:
+        """Alter the dynamic option when an Answer with this datasource gets copied.
+
+        When an answer of type TYPE_DYNAMIC_CHOICE or TYPE_DYNAMIC_MULTIPLE_CHOICE
+        gets copied the meaning of the slug and label of the dynamic option could
+        potentially change when the datasource data changes. During the answer copy
+        process the linked datasource it's on_copy method will be called to decide what
+        to do with existing answer values.
+
+        The decided outcome can be either retain, change or discard as follows:
+
+        - return the same slug,label tuple to not perform any change (default behavior)
+        - return an altered slug or(/and) label to save the answer value with
+            a new value or(/and) update the dynamic option label
+        - return a None value in the tuple for the slug, which will discard the
+            answer value, and prevent copying the dynamic option
+
+        """
+        return old_value

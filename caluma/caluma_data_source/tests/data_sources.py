@@ -1,7 +1,10 @@
+from typing import Tuple
+
 from uuid_extensions import uuid7str
 
 from caluma.caluma_data_source.data_sources import BaseDataSource
 from caluma.caluma_data_source.utils import data_source_cache
+from caluma.caluma_form.models import Answer
 
 
 class MyDataSource(BaseDataSource):
@@ -91,3 +94,43 @@ class MyDataSourceWithContext(BaseDataSource):
             label += f" foo: {context['foo']}"
 
         return [[slug, label]]
+
+
+class MyDataSourceWithOnCopy(BaseDataSource):
+    info = "Data source using on copy for testing"
+
+    def get_data(self):
+        return [
+            ["169cac4c-ab46-4521-bdba-4385f26ffb3", "label1"],
+            ["34948dc6-4b16-4a72-890b-cdbdc7da9f2", "label2"],
+            ["0935c1bc-5ff3-44a4-9089-03eac8872b0", "label3"],
+        ]
+
+    def get_discard_value(self):
+        return (None, None)
+
+    def get_change_value(self):
+        return ("changedv-4b16-4a72-890b-cdbdc7da9f2", "changed label2")
+
+    def on_copy(
+        self, old_answer: Answer, new_answer: Answer, old_value: Tuple[str, str]
+    ) -> Tuple[str | None, str | None]:
+        """Simulate different on_copy behaviors based on the slug.
+
+        Examples:
+            - Pass "discard" as the old slug, to return the get_discard_value to
+                discard the answer
+            - Pass "change" as the old slug, to return the get_change_value to change
+                the answer
+            - In all other cases, return the unchanged old_value
+
+        """
+        old_slug, _ = old_value
+
+        if old_slug == "discard":
+            return self.get_discard_value()
+
+        if old_slug == "change":
+            return self.get_change_value()
+
+        return old_value
