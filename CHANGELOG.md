@@ -1,3 +1,14 @@
+# v11.2.0 (17 March 2025)
+
+### Feature
+
+* **copy:** Adds on_copy to datasources to alter dynamic values ([`9c076e5`](https://github.com/projectcaluma/caluma/commit/9c076e5053844bae9bbe5913124b0cc4b6053303))
+* Use uuid7 instead of uuid4 from now on ([`915e454`](https://github.com/projectcaluma/caluma/commit/915e454cdc5fdb729e2c8b8ba6e600600cf3e932))
+
+### Fix
+
+* **perf:** Don't load full document in memory if not needed for options ([`506bec9`](https://github.com/projectcaluma/caluma/commit/506bec927ae75af95829297ad143124320dac985))
+
 # v11.1.1 (04 March 2025)
 
 ### Fix
@@ -105,9 +116,9 @@
 # v10.3.1 (9 August 2024)
 ### Fix
 
-* **deps:** Update dependencies ([`322dc23`](https://github.com/anehx/caluma/commit/322dc23853ebfd4c7f2039523da3c268cb623d49))
-* **jexl:** Always add root info ([`7b154f8`](https://github.com/anehx/caluma/commit/7b154f82bc9525548a2203d1a8cd022fca026fbc))
-* **code of conduct:** Contact mail address ([`29aaf2e`](https://github.com/anehx/caluma/commit/29aaf2e725f726140330be766d8ebc4e054e82af))
+* **deps:** Update dependencies ([`322dc23`](https://github.com/projectcaluma/caluma/commit/322dc23853ebfd4c7f2039523da3c268cb623d49))
+* **jexl:** Always add root info ([`7b154f8`](https://github.com/projectcaluma/caluma/commit/7b154f82bc9525548a2203d1a8cd022fca026fbc))
+* **code of conduct:** Contact mail address ([`29aaf2e`](https://github.com/projectcaluma/caluma/commit/29aaf2e725f726140330be766d8ebc4e054e82af))
 
 # v10.3.0 (15 July 2024)
 ### Feature
