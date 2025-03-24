@@ -890,10 +890,11 @@ class RowSet(BaseField):
     def __init__(
         self, question, parent, answer: Optional[Answer] = None, _fastloader=None
     ):
-        self.form = question.row_form
         self.question = question
         self.answer = answer
+
         self._fastloader = _fastloader or self._make_fastloader(parent._document)
+        self.form = self._fastloader.form_by_id(question.row_form_id)
 
         if not parent:  # pragma: no cover
             raise exceptions.ConfigurationError(
