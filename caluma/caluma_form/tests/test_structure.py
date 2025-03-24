@@ -383,15 +383,11 @@ def test_fastloader_multiple_documents(
         "             Field(row_calc, None)",
     ]
 
-    with django_assert_num_queries(1):
-        # TODO: should be 0 queries - everything *should* already be loaded
-        # Feel free to optimize one day - it's just fetching the table row form
+    with django_assert_num_queries(0):
         struc1 = structure.FieldSet(simple_form_structure, _fastloader=fl_doc)
         assert struc1.list_structure() == expected_structure
 
-    with django_assert_num_queries(1):
-        # TODO: should be 0 queries - everything *should* already be loaded
-        # Feel free to optimize one day - it's just fetching the table row form
+    with django_assert_num_queries(0):
         struc1 = structure.FieldSet(simple_form_structure, _fastloader=fl_qs)
         assert struc1.list_structure() == expected_structure
 
