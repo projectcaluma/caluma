@@ -404,6 +404,7 @@ def test_answer_transform_on_hidden_question_types(
     answer_factory,
     question_type,
     expected_value,
+    form_factory,
 ):
     form, document, questions, answers = form_and_document(
         use_table=True, use_subform=True
@@ -423,6 +424,9 @@ def test_answer_transform_on_hidden_question_types(
 
     questions["top_question"].is_hidden = "true"
     questions["top_question"].type = question_type
+    questions["top_question"].row_form = (
+        form_factory() if question_type == Question.TYPE_TABLE else None
+    )
     questions["top_question"].save()
 
     struc = structure.FieldSet(document)
