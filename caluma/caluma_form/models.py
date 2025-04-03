@@ -422,34 +422,94 @@ class Document(core_models.UUIDModel):
             modified_by_user=user.username if user else None,
             modified_by_group=user.group if user else None,
         )
+
+        is_main_doc = False
         if not family:
+            is_main_doc = True
             family = new_document
 
-        non_dynamic_answers = self.answers.exclude(
-            question__type__in=[
-                Question.TYPE_DYNAMIC_CHOICE,
-                Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
-            ]
-        )
-        dynamic_answers = self.answers.filter(
-            question__type__in=[
-                Question.TYPE_DYNAMIC_CHOICE,
-                Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
-            ]
-        )
-
-        # first copy all non dynamic answers, then the dynamic answers
-        # because dynamic answers can reference to values of non dynamic answers
-        for answers in [non_dynamic_answers, dynamic_answers]:
-            for source_answer in answers:
-                source_answer.copy(
-                    document_family=family, to_document=new_document, user=user
-                )
+        for source_answer in self.answers.all():
+            source_answer.copy(
+                document_family=family, to_document=new_document, user=user
+            )
 
         new_document.meta.pop("_defer_calculation", None)
         new_document.save()
 
+        if is_main_doc:
+            self._update_dynamic_answers_after_copy(family)
+
         return new_document
+
+    def _update_dynamic_answers_after_copy(self, family):
+        """Update all dynamic answers of the document family.
+
+        when the main doc is completely copied, this means all nested documents and
+        answers have been copied as well. Fetch all answers of the document family
+        and update the dynamic options of the answers through the data source on_copy
+        method.
+        """
+
+        # get all dynamic answers of the document family
+        family_dynamic_answers = Answer.objects.filter(
+            document__in=Document.objects.filter(family=family).values_list(
+                "pk", flat=True
+            ),
+            question__type__in=[
+                Question.TYPE_DYNAMIC_CHOICE,
+                Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+            ],
+        )
+
+        for new_answer in family_dynamic_answers:
+            answer_value_changed = False
+
+            # initialize the data source used by the dynamic question
+            data_source_class = get_data_sources(dic=True)[
+                new_answer.question.data_source
+            ]
+            data_source = data_source_class()
+
+            for new_dynamic_option in DynamicOption.objects.filter(
+                document=new_answer.document, question=new_answer.question
+            ):
+                # get the old answer from the source document for comparison
+                old_answer = Answer.objects.get(
+                    document=new_answer.document.source,
+                    question=new_answer.question,
+                )
+
+                # let the data source decide what to do with the answer value.
+                new_slug, new_label = data_source.on_copy(
+                    old_answer=old_answer,
+                    new_answer=new_answer,
+                    old_value=(new_dynamic_option.slug, new_dynamic_option.label),
+                )
+
+                # modify the answer value if the datasource decides to change or
+                # discard the answer value.
+                if new_slug is None or new_slug != new_dynamic_option.slug:
+                    answer_value_changed = True
+                    new_answer.value = new_answer.modify_changed_choice_answer(
+                        new_answer.question,
+                        new_dynamic_option.slug,
+                        new_slug,
+                        new_answer.value,
+                    )
+
+                # update the dynamic option if the slug has changed
+                if new_slug and new_slug != new_dynamic_option.slug:
+                    new_dynamic_option.slug = new_slug
+                    new_dynamic_option.label = new_label
+                    new_dynamic_option.save()
+
+                # delete the dynamic option if the slug is None
+                elif not new_slug:
+                    new_dynamic_option.delete()
+
+            # save the answer value if changed after checking all dynamic options
+            if answer_value_changed:
+                new_answer.save(update_fields=["value"])
 
     @cached_property
     def last_modified_answer(self):
@@ -626,46 +686,19 @@ class Answer(core_models.BaseModel):
             Question.TYPE_DYNAMIC_CHOICE,
             Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
         ]:
-            answer_value_changed = False
-
-            data_source_class = get_data_sources(dic=True)[self.question.data_source]
-            data_source = data_source_class()
-
             for dynamic_option in DynamicOption.objects.filter(
                 document=self.document, question=self.question
             ):
-                # let the data source decide what to do with the answer value.
-                new_slug, new_label = data_source.on_copy(
-                    old_answer=self,
-                    new_answer=new_answer,
-                    old_value=(dynamic_option.slug, dynamic_option.label),
+                DynamicOption.objects.update_or_create(
+                    document=to_document,
+                    question=dynamic_option.question,
+                    slug=dynamic_option.slug,
+                    defaults={
+                        "label": dynamic_option.label,
+                        "created_by_user": user.username if user else None,
+                        "created_by_group": user.group if user else None,
+                    },
                 )
-
-                # modify the answer value if the datasource decides to change or
-                # discard the answer value.
-                if new_slug is None or new_slug != dynamic_option.slug:
-                    answer_value_changed = True
-                    new_answer.value = self.modify_changed_choice_answer(
-                        self.question, dynamic_option.slug, new_slug, new_answer.value
-                    )
-
-                # only copy the dynamic option, when the datasource did not decide to
-                # discard the answer value.
-                if new_slug:
-                    DynamicOption.objects.update_or_create(
-                        document=to_document,
-                        question=dynamic_option.question,
-                        slug=new_slug,
-                        defaults={
-                            "label": new_label,
-                            "created_by_user": user.username if user else None,
-                            "created_by_group": user.group if user else None,
-                        },
-                    )
-
-            # save the answer value if changed after checking all dynamic options
-            if answer_value_changed:
-                new_answer.save(update_fields=["value"])
 
         # TableAnswer: copy AnswerDocument too
         for answer_doc in AnswerDocument.objects.filter(answer=self):
