@@ -1527,7 +1527,7 @@ def test_copy_document_datasource_on_copy(
     new_multi_options = DynamicOption.objects.filter(
         question=dynamic_multiple_choice_question.question,
         document=new_document,
-    )
+    ).order_by("created_at")
     if on_copy_result == "discard":
         # discarded, so the middle dynamic option is not copied.
         assert old_multi_options.count() - 1 == new_multi_options.count()
