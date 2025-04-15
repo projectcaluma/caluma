@@ -1,3 +1,9 @@
+# v11.1.3 (15 April 2025)
+
+### Fix
+
+* **structure:** Take form for a new row set from the fastloader ([`a08f566`](https://github.com/projectcaluma/caluma/commit/a08f5669a96ca6e421285a10a29e479077b7c848))
+
 # v11.1.2 (07 March 2025)
 
 ### Fix
