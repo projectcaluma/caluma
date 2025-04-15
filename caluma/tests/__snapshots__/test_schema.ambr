@@ -3313,6 +3313,7 @@
   
   input TaskFilterSetType {
     slug: String
+    slugs: [String]
     name: String
     description: String
   
