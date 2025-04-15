@@ -134,10 +134,11 @@ class CaseOrderSet(BaseFilterSet):
 
 class TaskFilterSet(MetaFilterSet):
     search = SearchFilter(fields=("slug", "name", "description"))
+    slugs = MultipleChoiceFilter(field_name="slug")
 
     class Meta:
         model = models.Task
-        fields = ("slug", "name", "description", "type", "is_archived")
+        fields = ("slug", "slugs", "name", "description", "type", "is_archived")
 
 
 class TaskOrderSet(BaseFilterSet):
