@@ -1,3 +1,13 @@
+# v11.3.0 (16 April 2025)
+
+### Feature
+
+* **gql:** Add filter for multiple task slugs to allTasks ([`347aa2a`](https://github.com/anehx/caluma/commit/347aa2a00cb13b3220c675cd505d5e4c50f1f865))
+
+### Fix
+
+* **history:** Make history aware of potential proxy models ([`f336c67`](https://github.com/anehx/caluma/commit/f336c672594e439f2bc3fc04601e40dbc1f79e6b))
+
 # v11.2.1 (24 March 2025)
 
 ### Fix
