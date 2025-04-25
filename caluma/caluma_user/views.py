@@ -45,6 +45,19 @@ if settings.QUERY_DEPTH_LIMIT:  # pragma: no cover
 
 
 class AuthenticationGraphQLView(GraphQLView):
+    @classmethod
+    def _requests_session(cls):
+        """
+        Return a requests session that's kept alive over time.
+
+        We use a "global" requests session for auth, as the initialisation of
+        SSL context and re-opening of a TCP connection to the OIDC IDP can cause
+        some additional load (and work time) that we want to avoid if possible.
+        """
+        if not hasattr(cls, "_http_client"):
+            setattr(cls, "_http_client", requests.Session())
+        return cls._http_client
+
     if custom_validation_rules:  # pragma: no cover
         validation_rules = tuple(custom_validation_rules)
 
@@ -71,7 +84,7 @@ class AuthenticationGraphQLView(GraphQLView):
         return auth[1]
 
     def get_userinfo(self, token):
-        response = requests.get(
+        response = self._requests_session().get(
             settings.OIDC_USERINFO_ENDPOINT,
             verify=settings.OIDC_VERIFY_SSL,
             headers={"Authorization": f"Bearer {smart_str(token)}"},
