@@ -1,3 +1,9 @@
+# v11.1.4 (25 April 2025)
+
+### Fix
+
+* **perf:** Keep auth http session alive across requests ([`18d4d6a`](https://github.com/projectcaluma/caluma/commit/18d4d6aae6e719fd0423ccaf6dd4f0a8ff69723f))
+
 # v11.1.3 (15 April 2025)
 
 ### Fix
