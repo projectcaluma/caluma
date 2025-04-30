@@ -1,0 +1,35 @@
+---
+name: Schedule
+
+on:
+  schedule:
+    - cron: 4 4 * * *
+  workflow_dispatch:
+
+jobs:
+  scan:
+    strategy:
+      matrix:
+        image: ["caluma", "caluma:11.1"]
+
+    name: scan ${{ matrix.image }} image
+    runs-on: ubuntu-latest
+    permissions:
+      actions: none
+      checks: none
+      contents: none
+      deployments: none
+      issues: none
+      packages: write
+      pull-requests: none
+      repository-projects: none
+      security-events: write
+      statuses: none
+      # needed for `cosign attest`
+      id-token: write
+    steps:
+      - uses: adfinis/container-scanning-action@v0.2.12
+        with:
+          image-ref: ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}
+          attest: true
+          token: ${{ secrets.GITHUB_TOKEN }}

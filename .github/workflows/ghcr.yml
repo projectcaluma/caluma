@@ -58,6 +58,7 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v6
+        id: docker
         with:
           context: .
           file: ./Dockerfile
@@ -66,3 +67,12 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Sign Caluma image and attach SBOM attestation
+        uses: adfinis/container-scanning-action@v0.2.12
+        if: github.event_name == 'release' && github.event.action == 'created'
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          digest: ${{ steps.docker.outputs.digest }}
+          attest: true

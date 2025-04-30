@@ -13,6 +13,7 @@ Files:
     .github/workflows/ghcr.yml
     .github/workflows/pypi.yml
     .github/workflows/tests.yml
+    .github/workflows/schedule.yaml
     .gitignore
     .gitlint
     .pre-commit-config.yaml
