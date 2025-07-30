@@ -48,7 +48,7 @@ uuid7 = "^0.1.0"
 # Dev dependencies are always pinned to an exact version (No caret or tilde
 # matching) to ensure everyone uses the same version of the tools, especially
 # linters & formatters
-django-extensions = "3.2.3"
+django-extensions = "4.1"
 factory-boy = "3.3.3"
 Faker = "37.3.0"
 gitlint = "0.19.1"
