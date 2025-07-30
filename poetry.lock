@@ -2545,14 +2545,14 @@ doc = ["sphinx"]
 
 [[package]]
 name = "syrupy"
-version = "4.8.2"
+version = "4.9.1"
 description = "Pytest Snapshot Test Utility"
 optional = false
 python-versions = ">=3.8.1"
 groups = ["dev"]
 files = [
-    {file = "syrupy-4.8.2-py3-none-any.whl", hash = "sha256:1fee874d422cfb1342aa746a65936d6500178beeb6fe26cb3a970c626fbe6058"},
-    {file = "syrupy-4.8.2.tar.gz", hash = "sha256:8418748be9cc050bf156d2e6c551dbc1768d591d36652e945a52ab3b0303a899"},
+    {file = "syrupy-4.9.1-py3-none-any.whl", hash = "sha256:b94cc12ed0e5e75b448255430af642516842a2374a46936dd2650cfb6dd20eda"},
+    {file = "syrupy-4.9.1.tar.gz", hash = "sha256:b7d0fcadad80a7d2f6c4c71917918e8ebe2483e8c703dfc8d49cdbb01081f9a4"},
 ]
 
 [package.dependencies]
@@ -2821,4 +2821,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.9.13"
-content-hash = "2fd51ffb34ff8be94ce822269874594b4ae96f100ef16d5b8e09492a95bb5efc"
+content-hash = "80f817135cba03b9e8e027c950d79b83fd8e6cc77e33e01e0a7ae5b7bbc84f89"
