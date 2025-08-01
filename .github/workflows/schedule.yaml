@@ -28,7 +28,7 @@ jobs:
       # needed for `cosign attest`
       id-token: write
     steps:
-      - uses: adfinis/container-scanning-action@v0.2.13
+      - uses: adfinis/container-scanning-action@v0.3.0
         with:
           image-ref: ghcr.io/${{ github.repository_owner }}/${{ matrix.image }}
           attest: true
