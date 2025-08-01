@@ -69,7 +69,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Sign Caluma image and attach SBOM attestation
-        uses: adfinis/container-scanning-action@v0.2.13
+        uses: adfinis/container-scanning-action@v0.3.0
         if: github.event_name == 'release' && github.event.action == 'created'
         with:
           image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
