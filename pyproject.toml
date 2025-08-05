@@ -18,9 +18,9 @@ include = ["CHANGELOG.md"]
 exclude = ["caluma/**/tests"]
 
 [tool.poetry.dependencies]
-python = "^3.9.13"
+python = ">=3.10,<4.0.0"
 dateparser = "^1.2.1"
-Django = "^4.2.19"
+Django = "^5.2.4"
 django-cors-headers = "^4.7.0"
 django-environ = "^0.12.0"
 django-filter = ">=23.5,<26.0"

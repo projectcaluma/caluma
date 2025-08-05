@@ -35,7 +35,7 @@ class StartCaseLogic:
         return data
 
     @staticmethod
-    def pre_start(validated_data, user, context=None):
+    def pre_start(validated_data, user, parent_work_item=None, context=None):
         send_event(
             events.pre_create_case,
             sender="pre_create_case",
@@ -45,7 +45,6 @@ class StartCaseLogic:
             context=context,
         )
 
-        parent_work_item = validated_data.get("parent_work_item")
         validated_data["status"] = models.Case.STATUS_RUNNING
 
         form = validated_data.pop("form", None)
