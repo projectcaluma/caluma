@@ -1,3 +1,13 @@
+# v12.0.0 (03 September 2025)
+
+### Feature
+
+* **deps:** Update dependencies ([`9343a04`](https://github.com/anehx/caluma/commit/9343a0473d32d124598498bf3638cd027f308b26))
+
+### Breaking
+
+* This removes support for Python < 3.12. Django 5.2 also drops support for PostgreSQL 13 which will therefore not be tested by Caluma anymore. If you're using Caluma as an app with Django 4.2 it is still expected to work. ([`9343a04`](https://github.com/anehx/caluma/commit/9343a0473d32d124598498bf3638cd027f308b26))
+
 # v11.3.0 (16 April 2025)
 
 ### Feature
@@ -24,6 +34,25 @@
 ### Fix
 
 * **perf:** Don't load full document in memory if not needed for options ([`506bec9`](https://github.com/projectcaluma/caluma/commit/506bec927ae75af95829297ad143124320dac985))
+
+# v11.1.4 (25 April 2025)
+
+### Fix
+
+* **perf:** Keep auth http session alive across requests ([`18d4d6a`](https://github.com/projectcaluma/caluma/commit/18d4d6aae6e719fd0423ccaf6dd4f0a8ff69723f))
+
+# v11.1.3 (15 April 2025)
+
+### Fix
+
+* **structure:** Take form for a new row set from the fastloader ([`a08f566`](https://github.com/projectcaluma/caluma/commit/a08f5669a96ca6e421285a10a29e479077b7c848))
+
+# v11.1.2 (07 March 2025)
+
+### Fix
+
+* **perf:** Don't load full document in memory if not needed for options ([`581d2d0`](https://github.com/projectcaluma/caluma/commit/581d2d056daeee0394c94f20dd64c36ff12a7be8))
+* A few other code cleanups (CI, small refactorings)
 
 # v11.1.1 (04 March 2025)
 
