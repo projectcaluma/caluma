@@ -33,4 +33,4 @@ updates:
     ignore:
       - dependency-name: python
         versions:
-          - ">3.12"
+          - ">=3.13"

@@ -1,4 +1,4 @@
-from factory import Faker, SubFactory
+from factory import Faker, SubFactory, post_generation
 from factory.django import DjangoModelFactory as FactoryDjangoModelFactory
 
 from ..caluma_core.factories import DjangoModelFactory
@@ -76,8 +76,19 @@ class CaseFactory(DjangoModelFactory):
     meta = {}
     document = SubFactory(DocumentFactory)
 
+    @post_generation
+    def parent_work_item(obj, create, extracted, **kwargs):
+        # Create reverse one-to-one related object when passed as a param
+        if extracted is None:
+            return
+
+        parent_work_item = extracted
+        parent_work_item.child_case = obj
+        parent_work_item.save()
+
     class Meta:
         model = models.Case
+        skip_postgeneration_save = True
 
 
 class WorkItemFactory(DjangoModelFactory):

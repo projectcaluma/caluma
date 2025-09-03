@@ -533,6 +533,9 @@ class DocumentSerializer(serializers.ModelSerializer):
 
 
 class SaveAnswerSerializer(serializers.ModelSerializer):
+    document = serializers.GlobalIDPrimaryKeyRelatedField(
+        queryset=models.Document.objects, required=True
+    )
     data_source_context = JSONField(
         encoder=None,
         required=False,

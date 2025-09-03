@@ -34,7 +34,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.12"
           cache: "poetry"
 
       - name: Set UID
@@ -108,7 +108,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.12"
           cache: "poetry"
 
       - name: Set UID
@@ -124,13 +124,6 @@ jobs:
 
       - name: Run tests
         run: poetry run pytest --no-cov-on-fail --cov --create-db -vv
-
-  compatibility-tests-postgres-13:
-    name: "Compatibility tests"
-    uses: ./.github/workflows/compatibility-tests.yml
-    needs: [lint]
-    with:
-      postgres: "13"
 
   compatibility-tests-postgres-14:
     name: "Compatibility tests"
