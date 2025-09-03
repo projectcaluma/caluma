@@ -28,12 +28,12 @@ def start_case(
     ... )
     <Case: Case object (some-uuid)>
     """
-    data = {"workflow": workflow, "form": form, "parent_work_item": parent_work_item}
+    data = {"workflow": workflow, "form": form}
 
     data.update(kwargs)
 
     validated_data = domain_logic.StartCaseLogic.pre_start(
-        domain_logic.StartCaseLogic.validate_for_start(data), user
+        domain_logic.StartCaseLogic.validate_for_start(data), user, parent_work_item
     )
 
     case = models.Case.objects.create(**validated_data)

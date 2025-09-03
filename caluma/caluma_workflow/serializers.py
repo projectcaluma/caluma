@@ -220,12 +220,23 @@ class SaveCaseSerializer(ContextModelSerializer):
     def create(self, validated_data):
         user = self.context["request"].user
 
-        validated_data = domain_logic.StartCaseLogic.pre_start(validated_data, user)
+        # Remove parent_work_item from validated_data before case creation.
+        #
+        # Django has never saved reverse one-to-one relation and starting with
+        # version 5.2 raises an exception when passing one as a param to the
+        # create method.
+        #
+        # See https://code.djangoproject.com/ticket/34586
+        parent_work_item = validated_data.pop("parent_work_item", None)
+
+        validated_data = domain_logic.StartCaseLogic.pre_start(
+            validated_data, user, parent_work_item
+        )
 
         case = super().create(validated_data)
 
         return domain_logic.StartCaseLogic.post_start(
-            case, user, validated_data.get("parent_work_item"), self.context_data
+            case, user, parent_work_item, self.context_data
         )
 
     class Meta:
