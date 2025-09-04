@@ -1838,7 +1838,7 @@
     modifiedByGroup: String
     slug: String!
     label: String!
-    isHidden: String!
+    isHidden: QuestionJexl!
     isArchived: Boolean!
     meta: GenericScalar
   
@@ -2757,7 +2757,7 @@
     slug: String!
     label: String!
     isArchived: Boolean
-    isHidden: String
+    isHidden: QuestionJexl
     meta: JSONString
     clientMutationId: String
   }
