@@ -399,7 +399,10 @@
               'edges': list([
                 dict({
                   'node': dict({
-                    'errorMsg': 'Please enter a valid e-mail address',
+                    'allowedQuestionTypes': list([
+                      'text',
+                      'textarea',
+                    ]),
                     'name': 'E-mail address',
                     'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
                     'slug': 'email',
@@ -862,7 +865,7 @@
     }),
   })
 # ---
-# name: test_save_float_question[float-question__configuration0-0.3-True]
+# name: test_save_float_question[question__configuration0-question__format_validators0-0.3-True-float]
   dict({
     'saveFloatQuestion': dict({
       'clientMutationId': 'testid',
@@ -883,7 +886,7 @@
     }),
   })
 # ---
-# name: test_save_float_question[float-question__configuration2-0.3-True]
+# name: test_save_float_question[question__configuration2-question__format_validators2-0.3-True-float]
   dict({
     'saveFloatQuestion': dict({
       'clientMutationId': 'testid',

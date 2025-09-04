@@ -201,8 +201,8 @@ class QuestionQuerysetMixin(object):
 class FormatValidator(ObjectType):
     slug = graphene.String(required=True)
     name = graphene.String(required=True)
-    regex = graphene.String(required=True)
-    error_msg = graphene.String(required=True)
+    regex = graphene.String(required=False)
+    allowed_question_types = graphene.List(graphene.String)
 
 
 class FormatValidatorConnection(CountableConnectionBase):

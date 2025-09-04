@@ -5,10 +5,13 @@ from warnings import warn
 from django.conf import settings
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
+from graphql.error import GraphQLError
 from localized_fields.value import LocalizedValue
-from rest_framework.exceptions import ValidationError
 
+from caluma.caluma_form.models import Question
 from caluma.deprecation import CalumaDeprecationWarning
+
+FORMAT_VALIDATION_FAILED = "format_validation_failed"
 
 
 def translate(text):
@@ -22,6 +25,7 @@ class BaseFormatValidator:
     r"""Basic format validator class to be extended by any format validator implementation.
 
     A custom format validator class could look like this:
+
     ```
     >>> from caluma.caluma_form.format_validators import BaseFormatValidator
     ... from django.utils.translation import gettext_lazy as _
@@ -33,12 +37,35 @@ class BaseFormatValidator:
     ...     regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
     ...     error_msg = _("Not an e-mail address")
     ```
+
+    If your format validator can't be implemented using a regex, you may also
+    implement a custom `is_valid` class method yourself. The method takes two
+    arguments, the value that is being validated and the document as context for
+    more elaborate validations:
+
+    ```
+    >>> from caluma.caluma_form.format_validators import BaseFormatValidator
+    ... from django.utils.translation import gettext_lazy as _
+    ...
+    ...
+    ... class CustomFormatValidator(BaseFormatValidator):
+    ...     slug = "even-date"
+    ...     name = _("Even date")
+    ...     error_msg = _("Not an even date")
+    ...
+    ...     @classmethod
+    ...     def is_valid(cls, value, document):
+    ...         return value.day() % 2 == 0
+    ```
     """
 
+    regex = None
+    allowed_question_types = [Question.TYPE_TEXT, Question.TYPE_TEXTAREA]
+
     def __init_subclass__(cls, **kwargs):
-        for prop in ["slug", "regex", "name", "error_msg"]:  # pragma: no cover
+        for prop in ["slug", "name", "error_msg"]:  # pragma: no cover
             if not hasattr(cls, prop):
-                # Make sure that `slug`, `regex`, `name` and `error_msg` are
+                # Make sure that `slug`, `name` and `error_msg` are
                 # defined properties on the class inheriting from this base
                 # class
                 raise NotImplementedError(
@@ -57,9 +84,19 @@ class BaseFormatValidator:
                 )
 
     @classmethod
-    def validate(self, value, document):
-        if not re.match(self.regex, value):
-            raise ValidationError(translate(self.error_msg))
+    def validate(cls, value, document):
+        if not cls.is_valid(value, document):
+            raise GraphQLError(
+                translate(cls.error_msg),
+                extensions={"code": FORMAT_VALIDATION_FAILED},
+            )
+
+    @classmethod
+    def is_valid(cls, value, document):
+        if not cls.regex:  # pragma: no cover
+            raise NotImplementedError("Property `regex` is missing")
+
+        return re.match(cls.regex, value)
 
 
 class EMailFormatValidator(BaseFormatValidator):
@@ -79,7 +116,9 @@ class PhoneNumberFormatValidator(BaseFormatValidator):
 base_format_validators = [EMailFormatValidator, PhoneNumberFormatValidator]
 
 
-FormatValidator = namedtuple("FormatValidator", ["slug", "name", "regex", "error_msg"])
+FormatValidator = namedtuple(
+    "FormatValidator", ["slug", "name", "regex", "allowed_question_types"]
+)
 
 
 def get_format_validators(include=None, dic=False):
@@ -104,7 +143,7 @@ def get_format_validators(include=None, dic=False):
             slug=ds.slug,
             name=translate(ds.name),
             regex=ds.regex,
-            error_msg=translate(ds.error_msg),
+            allowed_question_types=ds.allowed_question_types,
         )
         for ds in format_validator_classes
     ]
