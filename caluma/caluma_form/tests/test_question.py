@@ -71,7 +71,7 @@ def test_query_all_questions(
                         slug
                         name
                         regex
-                        errorMsg
+                        allowedQuestionTypes
                       }
                     }
                   }
@@ -87,7 +87,7 @@ def test_query_all_questions(
                         slug
                         name
                         regex
-                        errorMsg
+                        allowedQuestionTypes
                       }
                     }
                   }
@@ -310,7 +310,7 @@ def test_save_text_question(db, question, schema_executor, answer, success):
                       slug
                       name
                       regex
-                      errorMsg
+                      allowedQuestionTypes
                     }
                   }
                 }
@@ -397,13 +397,15 @@ def test_save_textarea_question(db, question, answer, schema_executor):
     assert result.data["saveTextareaQuestion"]["question"]["hintText"] == "test"
 
 
+@pytest.mark.parametrize("question__type", [models.Question.TYPE_FLOAT])
 @pytest.mark.parametrize(
-    "question__type,question__configuration,answer__value,success",
+    "question__configuration,question__format_validators,answer__value,success",
     [
-        (models.Question.TYPE_FLOAT, {"max_value": 10.0, "min_value": 0.0}, 0.3, True),
-        (models.Question.TYPE_FLOAT, {"max_value": 1.0, "min_value": 10.0}, 0.3, False),
-        (models.Question.TYPE_FLOAT, {"step": 1.0}, 0.3, True),
-        (models.Question.TYPE_FLOAT, {"step": -0.01}, 0.3, False),
+        ({"max_value": 10.0, "min_value": 0.0}, [], 0.3, True),
+        ({"max_value": 1.0, "min_value": 10.0}, [], 0.3, False),
+        ({"step": 1.0}, [], 0.3, True),
+        ({"step": -0.01}, [], 0.3, False),
+        ({}, ["email"], 10.0, False),
     ],
 )
 def test_save_float_question(db, snapshot, question, schema_executor, answer, success):

@@ -65,7 +65,10 @@
       'edges': list([
         dict({
           'node': dict({
-            'errorMsg': 'Not valid',
+            'allowedQuestionTypes': list([
+              'text',
+              'textarea',
+            ]),
             'name': 'test name english',
             'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
             'slug': 'test-validator',
@@ -73,7 +76,20 @@
         }),
         dict({
           'node': dict({
-            'errorMsg': 'Please enter a valid e-mail address',
+            'allowedQuestionTypes': list([
+              'date',
+            ]),
+            'name': 'my date validator',
+            'regex': None,
+            'slug': 'my-date-validator',
+          }),
+        }),
+        dict({
+          'node': dict({
+            'allowedQuestionTypes': list([
+              'text',
+              'textarea',
+            ]),
             'name': 'E-mail address',
             'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
             'slug': 'email',
@@ -81,7 +97,10 @@
         }),
         dict({
           'node': dict({
-            'errorMsg': 'Please enter a valid phone number',
+            'allowedQuestionTypes': list([
+              'text',
+              'textarea',
+            ]),
             'name': 'Phone number',
             'regex': '^[\\s\\/\\.\\(\\)-]*(?:\\+|0|00)(?:[\\s\\/\\.\\(\\)-]*\\d[\\s\\/\\.\\(\\)-]*){6,20}$',
             'slug': 'phone-number',
@@ -89,10 +108,10 @@
         }),
       ]),
       'pageInfo': dict({
-        'endCursor': 'YXJyYXljb25uZWN0aW9uOjI=',
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjM=',
         'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
       }),
-      'totalCount': 3,
+      'totalCount': 4,
     }),
   })
 # ---
@@ -102,7 +121,10 @@
       'edges': list([
         dict({
           'node': dict({
-            'errorMsg': 'Nicht valid',
+            'allowedQuestionTypes': list([
+              'text',
+              'textarea',
+            ]),
             'name': 'test name deutsch',
             'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
             'slug': 'test-validator',
@@ -110,7 +132,20 @@
         }),
         dict({
           'node': dict({
-            'errorMsg': 'Bitte geben Sie eine gültige E-Mail Adresse ein',
+            'allowedQuestionTypes': list([
+              'date',
+            ]),
+            'name': 'my date validator',
+            'regex': None,
+            'slug': 'my-date-validator',
+          }),
+        }),
+        dict({
+          'node': dict({
+            'allowedQuestionTypes': list([
+              'text',
+              'textarea',
+            ]),
             'name': 'E-Mail Adresse',
             'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
             'slug': 'email',
@@ -118,7 +153,10 @@
         }),
         dict({
           'node': dict({
-            'errorMsg': 'Bitte geben Sie eine gültige Telefonnummer ein',
+            'allowedQuestionTypes': list([
+              'text',
+              'textarea',
+            ]),
             'name': 'Telefonnummer',
             'regex': '^[\\s\\/\\.\\(\\)-]*(?:\\+|0|00)(?:[\\s\\/\\.\\(\\)-]*\\d[\\s\\/\\.\\(\\)-]*){6,20}$',
             'slug': 'phone-number',
@@ -126,10 +164,10 @@
         }),
       ]),
       'pageInfo': dict({
-        'endCursor': 'YXJyYXljb25uZWN0aW9uOjI=',
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjM=',
         'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
       }),
-      'totalCount': 3,
+      'totalCount': 4,
     }),
   })
 # ---
@@ -139,7 +177,10 @@
       'edges': list([
         dict({
           'node': dict({
-            'errorMsg': 'Not valid',
+            'allowedQuestionTypes': list([
+              'text',
+              'textarea',
+            ]),
             'name': 'test name english',
             'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
             'slug': 'test-validator',
@@ -147,7 +188,20 @@
         }),
         dict({
           'node': dict({
-            'errorMsg': 'Veuillez entrer une addresse e-mail valide',
+            'allowedQuestionTypes': list([
+              'date',
+            ]),
+            'name': 'my date validator',
+            'regex': None,
+            'slug': 'my-date-validator',
+          }),
+        }),
+        dict({
+          'node': dict({
+            'allowedQuestionTypes': list([
+              'text',
+              'textarea',
+            ]),
             'name': 'Adresse e-mail',
             'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
             'slug': 'email',
@@ -155,7 +209,10 @@
         }),
         dict({
           'node': dict({
-            'errorMsg': 'Veuillez entrer un numéro de téléphone valide',
+            'allowedQuestionTypes': list([
+              'text',
+              'textarea',
+            ]),
             'name': 'Numéro de téléphone',
             'regex': '^[\\s\\/\\.\\(\\)-]*(?:\\+|0|00)(?:[\\s\\/\\.\\(\\)-]*\\d[\\s\\/\\.\\(\\)-]*){6,20}$',
             'slug': 'phone-number',
@@ -163,10 +220,10 @@
         }),
       ]),
       'pageInfo': dict({
-        'endCursor': 'YXJyYXljb25uZWN0aW9uOjI=',
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjM=',
         'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
       }),
-      'totalCount': 3,
+      'totalCount': 4,
     }),
   })
 # ---
@@ -176,7 +233,10 @@
       'edges': list([
         dict({
           'node': dict({
-            'errorMsg': 'Not valid',
+            'allowedQuestionTypes': list([
+              'text',
+              'textarea',
+            ]),
             'name': 'test name english',
             'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
             'slug': 'test-validator',
@@ -184,7 +244,20 @@
         }),
         dict({
           'node': dict({
-            'errorMsg': 'Please enter a valid e-mail address',
+            'allowedQuestionTypes': list([
+              'date',
+            ]),
+            'name': 'my date validator',
+            'regex': None,
+            'slug': 'my-date-validator',
+          }),
+        }),
+        dict({
+          'node': dict({
+            'allowedQuestionTypes': list([
+              'text',
+              'textarea',
+            ]),
             'name': 'E-mail address',
             'regex': '(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$)',
             'slug': 'email',
@@ -192,7 +265,10 @@
         }),
         dict({
           'node': dict({
-            'errorMsg': 'Please enter a valid phone number',
+            'allowedQuestionTypes': list([
+              'text',
+              'textarea',
+            ]),
             'name': 'Phone number',
             'regex': '^[\\s\\/\\.\\(\\)-]*(?:\\+|0|00)(?:[\\s\\/\\.\\(\\)-]*\\d[\\s\\/\\.\\(\\)-]*){6,20}$',
             'slug': 'phone-number',
@@ -200,10 +276,10 @@
         }),
       ]),
       'pageInfo': dict({
-        'endCursor': 'YXJyYXljb25uZWN0aW9uOjI=',
+        'endCursor': 'YXJyYXljb25uZWN0aW9uOjM=',
         'startCursor': 'YXJyYXljb25uZWN0aW9uOjA=',
       }),
-      'totalCount': 3,
+      'totalCount': 4,
     }),
   })
 # ---
