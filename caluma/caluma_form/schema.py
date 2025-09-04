@@ -169,6 +169,7 @@ class Question(Node, graphene.Interface):
 
 class Option(FormDjangoObjectType):
     meta = generic.GenericScalar()
+    is_hidden = QuestionJexl(required=True)
 
     resolve_source = suppressable_visibility_resolver()
 

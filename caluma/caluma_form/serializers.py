@@ -496,6 +496,8 @@ class SaveActionButtonQuestionSerializer(SaveQuestionSerializer):
 
 
 class SaveOptionSerializer(serializers.ModelSerializer):
+    is_hidden = QuestionJexlField(required=False)
+
     class Meta:
         fields = ["slug", "label", "is_archived", "is_hidden", "meta"]
         model = models.Option
