@@ -1370,8 +1370,8 @@
   type FormatValidator {
     slug: String!
     name: String!
-    regex: String!
-    errorMsg: String!
+    regex: String
+    allowedQuestionTypes: [String]
   }
   
   type FormatValidatorConnection {
@@ -2304,6 +2304,7 @@
     isArchived: Boolean
     options: [ID]!
     hintText: String
+    formatValidators: [String]
     clientMutationId: String
   }
   
@@ -2396,6 +2397,7 @@
     meta: JSONString
     isArchived: Boolean
     hintText: String
+    formatValidators: [String]
     clientMutationId: String
   }
   
@@ -2614,6 +2616,7 @@
     isArchived: Boolean
     dataSource: String!
     hintText: String
+    formatValidators: [String]
     clientMutationId: String
   }
   
@@ -2632,6 +2635,7 @@
     isArchived: Boolean
     dataSource: String!
     hintText: String
+    formatValidators: [String]
     clientMutationId: String
   }
   
@@ -2654,6 +2658,7 @@
     meta: JSONString
     isArchived: Boolean
     hintText: String
+    formatValidators: [String]
     clientMutationId: String
   }
   
@@ -2675,6 +2680,7 @@
     step: Float
     placeholder: String
     hintText: String
+    formatValidators: [String]
     clientMutationId: String
   }
   
@@ -2727,6 +2733,7 @@
     maxValue: Int
     placeholder: String
     hintText: String
+    formatValidators: [String]
     clientMutationId: String
   }
   
@@ -2745,6 +2752,7 @@
     isArchived: Boolean
     options: [ID]!
     hintText: String
+    formatValidators: [String]
     clientMutationId: String
   }
   
@@ -2832,6 +2840,7 @@
     """Form that represents rows of a TableQuestion"""
     rowForm: ID!
     hintText: String
+    formatValidators: [String]
     clientMutationId: String
   }
   
