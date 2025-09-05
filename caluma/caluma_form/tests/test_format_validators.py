@@ -1,17 +1,26 @@
+import warnings
+
 import pytest
 from django.utils import translation
+
+from caluma.deprecation import CalumaDeprecationWarning
 
 from ...caluma_core.tests import extract_serializer_input_fields
 from ..format_validators import BaseFormatValidator, base_format_validators
 from ..models import Question
 from ..serializers import SaveAnswerSerializer
 
+with warnings.catch_warnings():
+    # Explicitly ignore the expected deprecation warning as we raise warnings to
+    # errors while testing. We explicitly want to test that it still works with
+    # the deprecated syntax.
+    warnings.filterwarnings("ignore", category=CalumaDeprecationWarning)
 
-class MyFormatValidator(BaseFormatValidator):
-    slug = "test-validator"
-    name = {"en": "test name english", "de": "test name deutsch"}
-    regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
-    error_msg = {"en": "Not valid", "de": "Nicht valid"}
+    class MyFormatValidator(BaseFormatValidator):
+        slug = "test-validator"
+        name = {"en": "test name english", "de": "test name deutsch"}
+        regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
+        error_msg = {"en": "Not valid", "de": "Nicht valid"}
 
 
 def test_fetch_format_validators(snapshot, schema_executor, settings):
@@ -95,7 +104,7 @@ def test_base_format_validators(
     if success:
         snapshot.assert_match(result.data)
     if not success:
-        error_msgs = [fv.error_msg["en"] for fv in base_format_validators]
+        error_msgs = [fv.error_msg for fv in base_format_validators]
         assert (
             str(result.errors[0].original_error.detail["non_field_errors"][0])
             in error_msgs

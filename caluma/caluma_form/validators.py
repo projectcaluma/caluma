@@ -336,7 +336,7 @@ class AnswerValidator:
 
         format_validators = get_format_validators(dic=True)
         for validator_slug in question.format_validators:
-            format_validators[validator_slug]().validate(value, document)
+            format_validators[validator_slug].validate(value, document)
 
 
 class DocumentValidator:

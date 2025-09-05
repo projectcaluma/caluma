@@ -19,7 +19,7 @@ WORKDIR $APP_HOME
 
 RUN \
     --mount=type=cache,target=/var/cache/apt \
-    apt-get update && apt-get install -y --no-install-recommends wait-for-it build-essential
+    apt-get update && apt-get install -y --no-install-recommends wait-for-it build-essential gettext
 
 RUN pip install -U poetry
 
