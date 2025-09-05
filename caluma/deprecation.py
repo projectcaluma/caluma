@@ -1,0 +1,2 @@
+class CalumaDeprecationWarning(DeprecationWarning):
+    pass

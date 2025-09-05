@@ -1,10 +1,21 @@
 import re
 from collections import namedtuple
+from warnings import warn
 
 from django.conf import settings
 from django.utils.module_loading import import_string
+from django.utils.translation import gettext_lazy as _
 from localized_fields.value import LocalizedValue
 from rest_framework.exceptions import ValidationError
+
+from caluma.deprecation import CalumaDeprecationWarning
+
+
+def translate(text):
+    if isinstance(text, dict):
+        return LocalizedValue(text).translate()
+
+    return str(text)
 
 
 class BaseFormatValidator:
@@ -13,50 +24,56 @@ class BaseFormatValidator:
     A custom format validator class could look like this:
     ```
     >>> from caluma.caluma_form.format_validators import BaseFormatValidator
+    ... from django.utils.translation import gettext_lazy as _
     ...
     ...
     ... class CustomFormatValidator(BaseFormatValidator):
     ...     slug = "email"
-    ...     name = {"en": "E-mail", "de": "E-Mail"}
+    ...     name = _("E-mail")
     ...     regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
-    ...     error_msg = {"en": "Not an e-mail address", "de": "Keine E-Mail adresse"}
+    ...     error_msg = _("Not an e-mail address")
     ```
     """
 
-    # `name` and `error_msg` are just dicts and get cast to `LocalizedValue` when needed.
-    #  This is to not break with the existing API.
+    def __init_subclass__(cls, **kwargs):
+        for prop in ["slug", "regex", "name", "error_msg"]:  # pragma: no cover
+            if not hasattr(cls, prop):
+                # Make sure that `slug`, `regex`, `name` and `error_msg` are
+                # defined properties on the class inheriting from this base
+                # class
+                raise NotImplementedError(
+                    f"{cls.__name__} is missing required property `{prop}`"
+                )
 
-    def __init__(self):
-        if not all(
-            [self.slug, self.regex, self.name, self.error_msg]
-        ):  # pragma: no cover
-            raise NotImplementedError("Missing properties!")
+        for prop in ["name", "error_msg"]:
+            if isinstance(getattr(cls, prop), dict):
+                # Previously, inheriting classes could define a dictionary with
+                # locale codes as keys and the respective translation for that
+                # locale in the value. This behaviour was deprecated in favour
+                # of using lazy translations with gettext.
+                warn(
+                    f"{cls.__name__}: Defining `{prop}` as dictionary is deprecated. Please use `django.utils.translation.gettext_lazy` instead.",
+                    CalumaDeprecationWarning,
+                )
 
+    @classmethod
     def validate(self, value, document):
         if not re.match(self.regex, value):
-            raise ValidationError(LocalizedValue(self.error_msg).translate())
+            raise ValidationError(translate(self.error_msg))
 
 
 class EMailFormatValidator(BaseFormatValidator):
     slug = "email"
-    name = {"en": "E-mail address", "de": "E-Mail Adresse", "fr": "Adresse e-mail"}
+    name = _("E-mail address")
     regex = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)"
-    error_msg = {
-        "en": "Please enter a valid e-mail address",
-        "de": "Bitte geben Sie eine gültige E-Mail Adresse ein",
-        "fr": "Veuillez entrer une addresse e-mail valide",
-    }
+    error_msg = _("Please enter a valid e-mail address")
 
 
 class PhoneNumberFormatValidator(BaseFormatValidator):
     slug = "phone-number"
-    name = {"en": "Phone number", "de": "Telefonnummer", "fr": "Numéro de téléphone"}
+    name = _("Phone number")
     regex = r"^[\s\/\.\(\)-]*(?:\+|0|00)(?:[\s\/\.\(\)-]*\d[\s\/\.\(\)-]*){6,20}$"
-    error_msg = {
-        "en": "Please enter a valid phone number",
-        "de": "Bitte geben Sie eine gültige Telefonnummer ein",
-        "fr": "Veuillez entrer un numéro de téléphone valide",
-    }
+    error_msg = _("Please enter a valid phone number")
 
 
 base_format_validators = [EMailFormatValidator, PhoneNumberFormatValidator]
@@ -85,9 +102,9 @@ def get_format_validators(include=None, dic=False):
     return [
         FormatValidator(
             slug=ds.slug,
-            name=LocalizedValue(ds.name).translate(),
+            name=translate(ds.name),
             regex=ds.regex,
-            error_msg=LocalizedValue(ds.error_msg).translate(),
+            error_msg=translate(ds.error_msg),
         )
         for ds in format_validator_classes
     ]

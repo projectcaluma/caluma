@@ -35,6 +35,8 @@ Files:
     caluma/*.py
     caluma/*.ambr
     caluma/*.json
+    caluma/*.po
+    caluma/*.mo
 Copyright: 2019 Adfinis AG <info@adfinis.com>
 License: GPL-3.0-or-later
 
