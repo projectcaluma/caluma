@@ -1,3 +1,14 @@
+# v12.1.0 (11 September 2025)
+
+### Feature
+
+* **form:** Allow custom validators on all questions ([`fdf6fde`](https://github.com/anehx/caluma/commit/fdf6fde4e3878abc7c88c21483f0e8bfed3f04cb))
+* **format-validator:** Use gettext to define translated messages ([`7cb5840`](https://github.com/anehx/caluma/commit/7cb584039b69117365e767ac12e5b325b1f9a770))
+
+### Fix
+
+* **schema:** Fix expected graphql type for is_hidden on options ([`1fdd679`](https://github.com/anehx/caluma/commit/1fdd6794a8fb54a2a9b1bb5d1ffd76b41bad9312))
+
 # v12.0.0 (03 September 2025)
 
 ### Feature
