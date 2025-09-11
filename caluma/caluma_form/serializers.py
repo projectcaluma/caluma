@@ -240,12 +240,14 @@ class SaveTextareaQuestionSerializer(SaveQuestionSerializer):
 
 
 class SaveDateQuestionSerializer(SaveQuestionSerializer):
+    format_validators = ListField(child=CharField(), required=False)
+
     def validate(self, data):
         data["type"] = models.Question.TYPE_DATE
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["hint_text"]
+        fields = SaveQuestionSerializer.Meta.fields + ["hint_text", "format_validators"]
 
 
 class SaveQuestionOptionsMixin(object):
@@ -288,54 +290,75 @@ class SaveMultipleChoiceQuestionSerializer(
     options = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Option.objects.all(), many=True, required=True
     )
+    format_validators = ListField(child=CharField(), required=False)
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_MULTIPLE_CHOICE
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["options", "hint_text"]
+        fields = SaveQuestionSerializer.Meta.fields + [
+            "options",
+            "hint_text",
+            "format_validators",
+        ]
 
 
 class SaveChoiceQuestionSerializer(SaveQuestionOptionsMixin, SaveQuestionSerializer):
     options = serializers.GlobalIDPrimaryKeyRelatedField(
         queryset=models.Option.objects.all(), many=True, required=True
     )
+    format_validators = ListField(child=CharField(), required=False)
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_CHOICE
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["options", "hint_text"]
+        fields = SaveQuestionSerializer.Meta.fields + [
+            "options",
+            "hint_text",
+            "format_validators",
+        ]
 
 
 class SaveDynamicChoiceQuestionSerializer(SaveQuestionSerializer):
     data_source = CharField()
+    format_validators = ListField(child=CharField(), required=False)
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_DYNAMIC_CHOICE
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["data_source", "hint_text"]
+        fields = SaveQuestionSerializer.Meta.fields + [
+            "data_source",
+            "hint_text",
+            "format_validators",
+        ]
 
 
 class SaveDynamicMultipleChoiceQuestionSerializer(SaveQuestionSerializer):
     data_source = CharField()
+    format_validators = ListField(child=CharField(), required=False)
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["data_source", "hint_text"]
+        fields = SaveQuestionSerializer.Meta.fields + [
+            "data_source",
+            "hint_text",
+            "format_validators",
+        ]
 
 
 class SaveFloatQuestionSerializer(SaveQuestionSerializer):
     min_value = FloatField(required=False, allow_null=True)
     max_value = FloatField(required=False, allow_null=True)
     step = FloatField(required=False, allow_null=True)
+    format_validators = ListField(child=CharField(), required=False)
 
     def validate(self, data):
         min_value = (
@@ -366,12 +389,14 @@ class SaveFloatQuestionSerializer(SaveQuestionSerializer):
             "step",
             "placeholder",
             "hint_text",
+            "format_validators",
         ]
 
 
 class SaveIntegerQuestionSerializer(SaveQuestionSerializer):
     min_value = IntegerField(required=False, allow_null=True)
     max_value = IntegerField(required=False, allow_null=True)
+    format_validators = ListField(child=CharField(), required=False)
 
     def validate(self, data):
         min_value = (
@@ -397,6 +422,7 @@ class SaveIntegerQuestionSerializer(SaveQuestionSerializer):
             "max_value",
             "placeholder",
             "hint_text",
+            "format_validators",
         ]
 
 
@@ -406,13 +432,18 @@ class SaveTableQuestionSerializer(SaveQuestionSerializer):
         required=True,
         help_text=models.Question._meta.get_field("row_form").help_text,
     )
+    format_validators = ListField(child=CharField(), required=False)
 
     def validate(self, data):
         data["type"] = models.Question.TYPE_TABLE
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["row_form", "hint_text"]
+        fields = SaveQuestionSerializer.Meta.fields + [
+            "row_form",
+            "hint_text",
+            "format_validators",
+        ]
 
 
 class SaveFormQuestionSerializer(SaveQuestionSerializer):
@@ -429,12 +460,14 @@ class SaveFormQuestionSerializer(SaveQuestionSerializer):
 
 
 class SaveFileQuestionSerializer(SaveQuestionSerializer):
+    format_validators = ListField(child=CharField(), required=False)
+
     def validate(self, data):
         data["type"] = models.Question.TYPE_FILES
         return super().validate(data)
 
     class Meta(SaveQuestionSerializer.Meta):
-        fields = SaveQuestionSerializer.Meta.fields + ["hint_text"]
+        fields = SaveQuestionSerializer.Meta.fields + ["hint_text", "format_validators"]
 
 
 class SaveStaticQuestionSerializer(SaveQuestionSerializer):

@@ -2,6 +2,7 @@ import json
 
 import pytest
 from django.utils.dateparse import parse_date
+from graphql.error import GraphQLError
 from graphql_relay import to_global_id
 from rest_framework.exceptions import ValidationError
 
@@ -719,7 +720,7 @@ def test_save_document_answer(  # noqa:C901
             )
             snapshot.assert_match(answer)
         else:
-            with pytest.raises(ValidationError):
+            with pytest.raises((ValidationError, GraphQLError)):
                 api.save_answer(
                     question,
                     answer.document,

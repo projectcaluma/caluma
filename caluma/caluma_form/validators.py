@@ -462,14 +462,21 @@ class DocumentValidator:
 class QuestionValidator:
     @staticmethod
     def _validate_format_validators(data):
-        format_validators = data.get("format_validators")
+        format_validators = data.get("format_validators", [])
         if format_validators:
             fv = get_format_validators(include=format_validators, dic=True)
-            diff_list = list(set(format_validators) - set(fv))
-            if diff_list:
-                raise exceptions.ValidationError(
-                    f"Invalid format validators {diff_list}."
-                )
+
+            for slug in format_validators:
+                validator = fv.get(slug)
+
+                if validator is None:
+                    raise exceptions.ValidationError(
+                        f"Invalid format validator {slug}."
+                    )
+                elif data["type"] not in validator.allowed_question_types:
+                    raise exceptions.ValidationError(
+                        f"Format validators {slug} is not allowed for this question type."
+                    )
 
     @staticmethod
     def _validate_data_source(data_source):
@@ -498,7 +505,12 @@ class QuestionValidator:
             )
 
     def validate(self, data):
-        if data["type"] in [models.Question.TYPE_TEXT, models.Question.TYPE_TEXTAREA]:
+        if data["type"] not in [
+            models.Question.TYPE_ACTION_BUTTON,
+            models.Question.TYPE_CALCULATED_FLOAT,
+            models.Question.TYPE_STATIC,
+            models.Question.TYPE_FORM,
+        ]:
             self._validate_format_validators(data)
         elif data["type"] == models.Question.TYPE_CALCULATED_FLOAT:
             self._validate_calc_expression(data)
