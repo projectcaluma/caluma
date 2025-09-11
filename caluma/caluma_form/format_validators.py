@@ -87,7 +87,7 @@ class BaseFormatValidator:
     def validate(cls, value, document):
         if not cls.is_valid(value, document):
             raise GraphQLError(
-                translate(cls.error_msg),
+                translate(cls.error_msg % cls.get_error_msg_args(value, document)),
                 extensions={"code": FORMAT_VALIDATION_FAILED},
             )
 
@@ -97,6 +97,10 @@ class BaseFormatValidator:
             raise NotImplementedError("Property `regex` is missing")
 
         return re.match(cls.regex, value)
+
+    @classmethod
+    def get_error_msg_args(cls, value, document):
+        return dict(value=value)
 
 
 class EMailFormatValidator(BaseFormatValidator):

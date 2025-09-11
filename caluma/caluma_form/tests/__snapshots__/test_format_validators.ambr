@@ -1,5 +1,5 @@
 # serializer version: 1
-# name: test_base_format_validators[question__format_validators1--True-text]
+# name: test_base_format_validators[question__format_validators1--None-text]
   dict({
     'saveDocumentStringAnswer': dict({
       'answer': dict({
@@ -9,7 +9,7 @@
     }),
   })
 # ---
-# name: test_base_format_validators[question__format_validators1--True-textarea]
+# name: test_base_format_validators[question__format_validators1--None-textarea]
   dict({
     'saveDocumentStringAnswer': dict({
       'answer': dict({
@@ -19,7 +19,7 @@
     }),
   })
 # ---
-# name: test_base_format_validators[question__format_validators2-test@example.com-True-text]
+# name: test_base_format_validators[question__format_validators2-test@example.com-None-text]
   dict({
     'saveDocumentStringAnswer': dict({
       'answer': dict({
@@ -29,7 +29,7 @@
     }),
   })
 # ---
-# name: test_base_format_validators[question__format_validators2-test@example.com-True-textarea]
+# name: test_base_format_validators[question__format_validators2-test@example.com-None-textarea]
   dict({
     'saveDocumentStringAnswer': dict({
       'answer': dict({
@@ -39,7 +39,7 @@
     }),
   })
 # ---
-# name: test_base_format_validators[question__format_validators4-+411234567890-True-text]
+# name: test_base_format_validators[question__format_validators4-+411234567890-None-text]
   dict({
     'saveDocumentStringAnswer': dict({
       'answer': dict({
@@ -49,7 +49,7 @@
     }),
   })
 # ---
-# name: test_base_format_validators[question__format_validators4-+411234567890-True-textarea]
+# name: test_base_format_validators[question__format_validators4-+411234567890-None-textarea]
   dict({
     'saveDocumentStringAnswer': dict({
       'answer': dict({

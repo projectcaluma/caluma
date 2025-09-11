@@ -30,12 +30,16 @@ with warnings.catch_warnings():
 class MyDateValidator(BaseFormatValidator):
     slug = "my-date-validator"
     name = "my date validator"
-    error_msg = "Day must be an even number"
+    error_msg = "%(day)s is not an even day"
     allowed_question_types = [Question.TYPE_DATE]
 
     @classmethod
     def is_valid(cls, value, document):
         return value.day % 2 == 0
+
+    @classmethod
+    def get_error_msg_args(cls, value, document):
+        return dict(day=value.day)
 
 
 def test_fetch_format_validators(snapshot, schema_executor, settings):
@@ -85,19 +89,27 @@ def test_fetch_format_validators(snapshot, schema_executor, settings):
 
 @pytest.mark.parametrize("question__type", [Question.TYPE_TEXT, Question.TYPE_TEXTAREA])
 @pytest.mark.parametrize(
-    "question__format_validators,answer__value,success",
+    "question__format_validators,answer__value,expected_error",
     [
-        (["email"], "some text", False),
-        (["email"], "", True),
-        (["email"], "test@example.com", True),
-        (["phone-number"], "some text", False),
-        (["phone-number"], "+411234567890", True),
-        (["email", "phone-number"], "+411234567890", False),
-        (["email", "phone-number"], "test@example.com", False),
+        (["email"], "some text", "Please enter a valid e-mail address"),
+        (["email"], "", None),
+        (["email"], "test@example.com", None),
+        (["phone-number"], "some text", "Please enter a valid phone number"),
+        (["phone-number"], "+411234567890", None),
+        (
+            ["email", "phone-number"],
+            "+411234567890",
+            "Please enter a valid e-mail address",
+        ),
+        (
+            ["email", "phone-number"],
+            "test@example.com",
+            "Please enter a valid phone number",
+        ),
     ],
 )
 def test_base_format_validators(
-    db, snapshot, question, answer, success, schema_executor
+    db, snapshot, question, answer, expected_error, schema_executor
 ):
     query = """
         mutation SaveDocumentStringAnswer($input: SaveDocumentStringAnswerInput!) {
@@ -116,13 +128,13 @@ def test_base_format_validators(
 
     result = schema_executor(query, variable_values=inp)
 
+    success = expected_error is None
     assert not bool(result.errors) == success
     if success:
         snapshot.assert_match(result.data)
     if not success:
-        error_msgs = [fv.error_msg for fv in base_format_validators]
         assert result.errors[0].extensions.get("code") == FORMAT_VALIDATION_FAILED
-        assert result.errors[0].message in error_msgs
+        assert result.errors[0].message == expected_error
 
 
 @pytest.mark.parametrize(
@@ -157,4 +169,4 @@ def test_custom_format_validators(
     assert not bool(result.errors) == success
     if not success:
         assert result.errors[0].extensions.get("code") == FORMAT_VALIDATION_FAILED
-        assert result.errors[0].message == "Day must be an even number"
+        assert result.errors[0].message == "5 is not an even day"
