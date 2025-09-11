@@ -6,11 +6,7 @@ from django.utils import translation
 from caluma.deprecation import CalumaDeprecationWarning
 
 from ...caluma_core.tests import extract_serializer_input_fields
-from ..format_validators import (
-    FORMAT_VALIDATION_FAILED,
-    BaseFormatValidator,
-    base_format_validators,
-)
+from ..format_validators import FORMAT_VALIDATION_FAILED, BaseFormatValidator
 from ..models import Question
 from ..serializers import SaveAnswerSerializer
 
@@ -30,16 +26,16 @@ with warnings.catch_warnings():
 class MyDateValidator(BaseFormatValidator):
     slug = "my-date-validator"
     name = "my date validator"
-    error_msg = "%(day)s is not an even day"
+    error_msg = "%(day)s is not an even day which is required for question %(label)s"
     allowed_question_types = [Question.TYPE_DATE]
 
     @classmethod
-    def is_valid(cls, value, document):
+    def is_valid(cls, value, document, question):
         return value.day % 2 == 0
 
     @classmethod
-    def get_error_msg_args(cls, value, document):
-        return dict(day=value.day)
+    def get_error_msg_args(cls, value, document, question):
+        return dict(day=value.day, label=question.label.translate())
 
 
 def test_fetch_format_validators(snapshot, schema_executor, settings):
@@ -138,8 +134,8 @@ def test_base_format_validators(
 
 
 @pytest.mark.parametrize(
-    "question__type,question__format_validators",
-    [(Question.TYPE_DATE, ["my-date-validator"])],
+    "question__type,question__format_validators,question__label",
+    [(Question.TYPE_DATE, ["my-date-validator"], "ASDF")],
 )
 @pytest.mark.parametrize(
     "answer__value,success",
@@ -169,4 +165,7 @@ def test_custom_format_validators(
     assert not bool(result.errors) == success
     if not success:
         assert result.errors[0].extensions.get("code") == FORMAT_VALIDATION_FAILED
-        assert result.errors[0].message == "5 is not an even day"
+        assert (
+            result.errors[0].message
+            == "5 is not an even day which is required for question ASDF"
+        )
