@@ -582,6 +582,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
+    formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     defaultAnswer: StringAnswer
     forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
     options(offset: Int, before: String, after: String, first: Int, last: Int, filter: [OptionFilterSetType], order: [OptionOrderSetType]): OptionConnection
@@ -814,6 +815,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
+    formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     defaultAnswer: DateAnswer
     forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
@@ -1002,6 +1004,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
+    formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
     options(
       """JSON object passed as context to the data source"""
@@ -1035,6 +1038,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
+    formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
     options(
       """JSON object passed as context to the data source"""
@@ -1159,6 +1163,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
+    formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
     """The ID of the object"""
@@ -1199,6 +1204,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
+    formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     defaultAnswer: FloatAnswer
     forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
@@ -1674,6 +1680,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
+    formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     defaultAnswer: IntegerAnswer
     forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
@@ -1744,6 +1751,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
+    formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     defaultAnswer: ListAnswer
     forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
     options(offset: Int, before: String, after: String, first: Int, last: Int, filter: [OptionFilterSetType], order: [OptionOrderSetType]): OptionConnection
@@ -3275,6 +3283,7 @@
     hintText: String
     meta: GenericScalar!
     source: Question
+    formatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     defaultAnswer: TableAnswer
     forms(offset: Int, before: String, after: String, first: Int, last: Int, filter: [FormFilterSetType], order: [FormOrderSetType]): FormConnection
   
