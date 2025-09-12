@@ -1,3 +1,10 @@
+# v12.2.0 (12 September 2025)
+
+### Feature
+
+* **format-validators:** Add question as context when validating ([`b4b62a5`](https://github.com/anehx/caluma/commit/b4b62a57f3f74c1d1460b8d949ddbd843b955068))
+* **format-validators:** Allow dynamic arguments for error messages ([`bdd77c7`](https://github.com/anehx/caluma/commit/bdd77c7d429eb0017e5dba8ffb968b4a25b7a657))
+
 # v12.1.0 (11 September 2025)
 
 ### Feature
