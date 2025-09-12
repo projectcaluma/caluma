@@ -18,7 +18,7 @@ updates:
     ignore:
       - dependency-name: django
         versions:
-          - ">=5"
+          - ">=6"
       - dependency-name: python-semantic-release
         versions:
           - ">=8"
