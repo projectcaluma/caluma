@@ -1,3 +1,9 @@
+# v12.2.1 (12 September 2025)
+
+### Fix
+
+* **format-validators:** Expose format validators on question graphs ([`7b35221`](https://github.com/anehx/caluma/commit/7b352216caf1275b21f25d063b003ff47812b893))
+
 # v12.2.0 (12 September 2025)
 
 ### Feature
