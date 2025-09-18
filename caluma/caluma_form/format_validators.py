@@ -54,7 +54,7 @@ class BaseFormatValidator:
     ...     error_msg = _("Not an even date")
     ...
     ...     @classmethod
-    ...     def is_valid(cls, value, document):
+    ...     def is_valid(cls, value, document, question):
     ...         return value.day() % 2 == 0
     ```
     """
