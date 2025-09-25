@@ -1125,6 +1125,7 @@
     id: ID!
     name: String!
     answer: FilesAnswer
+    isDraft: Boolean!
     uploadUrl: String
     downloadUrl: String
     metadata: GenericScalar
