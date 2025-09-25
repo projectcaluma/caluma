@@ -186,7 +186,7 @@ def test_intersects_operator(expression, result):
         ("[{ key: 1.4 }, {key: 2.6}]|mapby('key')|sum", 4),
         ("[[{ key: 1.4 }, {key: 2.6}]|mapby('key')|sum]|round", None),
         # stringify
-        ("[['test1', 'test2'], [1,2]]|stringify", '[["test1", "test2"], [1, 2]]'),
+        ("[['test1', 'test2'], [1,2]]|stringify", '[["test1","test2"],[1,2]]'),
         ("1|stringify", "1"),
         # flatten
         (
