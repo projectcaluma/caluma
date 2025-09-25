@@ -73,7 +73,13 @@ class JEXL(pyjexl.JEXL):
         self._expr_stack = []
 
         self.add_transform("mapby", self._mapby_transform)
-        self.add_transform("stringify", lambda obj: json.dumps(obj))
+        self.add_transform(
+            "stringify",
+            # Eliminate whitespace through the json.dumps separators parameter
+            # to ensure the stringify transform result is the same in caluma
+            # and ember-caluma
+            lambda obj: json.dumps(obj, separators=(",", ":")),
+        )
         self.add_transform("flatten", self._flatten_transform)
         self.add_transform("length", self._length_transform)
         self.add_binary_operator(
