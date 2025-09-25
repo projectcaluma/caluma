@@ -1,3 +1,13 @@
+# v12.2.2 (25 September 2025)
+
+### Fix
+
+* **jexl:** Remove whitespace in stringify transform ([`dd44dd8`](https://github.com/projectcaluma/caluma/commit/dd44dd84d230a7b9b61e6fcc608ad5ab85f21f80))
+
+### Documentation
+
+* **format-validators:** Add missing question argument to docstring ([`25fbcb7`](https://github.com/projectcaluma/caluma/commit/25fbcb7504d721a4c44cff3949a4a99dee18b09d))
+
 # v12.2.1 (12 September 2025)
 
 ### Fix
