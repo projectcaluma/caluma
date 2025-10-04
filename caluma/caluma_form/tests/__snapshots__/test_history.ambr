@@ -28,7 +28,7 @@
           dict({
             'node': dict({
               '__typename': 'HistoricalStringAnswer',
-              'historyUserId': 'AnonymousUser',
+              'historyUserId': None,
               'value': 'first anon - revision 3',
             }),
           }),
@@ -48,7 +48,7 @@
           dict({
             'node': dict({
               '__typename': 'HistoricalStringAnswer',
-              'historyUserId': 'AnonymousUser',
+              'historyUserId': None,
               'value': 'second anon - revision 4',
             }),
           }),
