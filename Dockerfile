@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.12.12-slim
 
 # Needs to be set for users with manually set UID
 ENV HOME=/home/caluma
