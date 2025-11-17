@@ -625,6 +625,26 @@ class RedoWorkItemLogic:
         that task's workitem (redoable).
         We allow redoing a work item if at least one ready work item allows "our" task
         to be re-done.
+
+        This is simplified as for instance the redoable property is on TaskFlow and not on WorkItem.
+
+        WorkItem1 {
+            task = start
+            status = COMPLETED
+        }
+        WorkItem2 {
+            task = end
+            status = COMPLETED
+            redoable = "'start'|task"
+        }
+        WorkItem3 {
+            task = end
+            status = READY
+            redoable = "'start'|task"
+        }
+
+        For the example above, from both WorkItem2 and WorkItem3 the WorkItem1 can be redone.
+        But from WorkItem3 WorkItem2 cannot be redone.
         """
         if work_item.status == models.WorkItem.STATUS_READY:
             raise ValidationError("Ready work items can't be redone.")
