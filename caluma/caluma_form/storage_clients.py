@@ -62,7 +62,7 @@ class Minio:
                 ),
             )
         self.client = minio.Minio(
-            endpoint,
+            endpoint=endpoint,
             access_key=access_key,
             secret_key=secret_key,
             secure=secure,
