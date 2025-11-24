@@ -1,3 +1,13 @@
+# v12.2.3 (24 November 2025)
+### Fix
+
+* Downgrade minio because of breaking changes ([`b9ae27a`](https://github.com/projectcaluma/caluma/commit/b9ae27a1c10594d42e8e759432ab9ff6d8583093))
+
+### Documentation
+
+* **work_flow redo:** Add some examples to make clear where the redoable condition is tested ([`67cf01b`](https://github.com/projectcaluma/caluma/commit/67cf01b32a2bba7bc3711eeda7d0b4580dd8fae8))
+* Update release procedure in maintainer instructions ([`b664ec5`](https://github.com/projectcaluma/caluma/commit/b664ec5b238636b43ebb7bf334fb954bdadf4f04))
+
 # v12.2.2 (25 September 2025)
 
 ### Fix
