@@ -1,3 +1,8 @@
+# v12.2.4 (30 December 2025)
+### Fix
+
+* **minio:** Add region parameter to support garage s3 storage ([`f58f589`](https://github.com/derrabauke/caluma/commit/f58f5893c376168d109e7d3ac5e855ddfc298bd5))
+
 # v12.2.3 (24 November 2025)
 ### Fix
 
