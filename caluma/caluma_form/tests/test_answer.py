@@ -355,8 +355,8 @@ def test_file_answer_metadata(db, answer, schema_executor, minio_mock):
     # before "upload"
     old_stat = minio_mock.stat_object.return_value
     minio_mock.stat_object.side_effect = minio.error.S3Error(
-        "NoSuchKey",
-        "object does not exist",
+        code="NoSuchKey",
+        message="object does not exist",
         resource="bla",
         request_id=134,
         host_id="minio",

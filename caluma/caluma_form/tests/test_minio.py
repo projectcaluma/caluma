@@ -46,8 +46,8 @@ def test_minio_disable_cert_checks(db, settings, disable_cert_checks, debug):
 def _put_side_effect(*_, **__):
     # first call, raise an exception, second time, succeed
     yield minio.error.S3Error(
-        "NoSuchBucket",
-        "Bucket does not exist",
+        code="NoSuchBucket",
+        message="Bucket does not exist",
         resource="adsf",
         request_id="fake",
         host_id="fake",

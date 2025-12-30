@@ -47,6 +47,7 @@ class Minio:
         access_key = settings.MINIO_STORAGE_ACCESS_KEY
         secret_key = settings.MINIO_STORAGE_SECRET_KEY
         secure = settings.MINIO_STORAGE_USE_HTTPS
+        region = settings.MINIO_STORAGE_REGION_NAME
 
         minio_http_client = None
         if settings.DEBUG and settings.MINIO_DISABLE_CERT_CHECKS:
@@ -67,6 +68,7 @@ class Minio:
             secret_key=secret_key,
             secure=secure,
             http_client=minio_http_client,
+            region=region,
         )
         self.bucket = settings.MINIO_STORAGE_MEDIA_BUCKET_NAME
 
