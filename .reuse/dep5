@@ -19,8 +19,8 @@ Files:
     .pre-commit-config.yaml
     caluma/caluma_form/fixtures/form-fixture.json
     commit-msg
-    docker-compose.override.yml
-    docker-compose.yml
+    compose.override.yaml
+    compose.yaml
     Dockerfile
     manage.py
     MANIFEST.in

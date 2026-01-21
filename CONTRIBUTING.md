@@ -25,7 +25,7 @@ open an development environment.
 # only needs to be run once
 echo UID=$UID > .env
 # open shell
-docker-compose run --rm caluma bash
+docker compose run --rm caluma bash
 ```
 
 ### Testing
@@ -69,7 +69,7 @@ In case you're adding new requirements you simply need to build the docker conta
 again for those to be installed and re-open shell.
 
 ```bash
-docker-compose build --pull
+docker compose build --pull
 ```
 
 ### Setup pre commit
