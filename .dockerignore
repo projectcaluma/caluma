@@ -15,6 +15,5 @@ __pycache__
 .pytest_cache
 .Python
 .python-version
-README.md
 *.swp
 .venv
