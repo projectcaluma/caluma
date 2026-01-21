@@ -71,16 +71,6 @@ ruff = "0.13.0"
 syrupy = "4.9.1"
 
 
-[tool.isort]
-skip = ["migrations", "snapshots"]
-known_first_party = ["caluma"]
-known_third_party = ["dateparser"]
-multi_line_output = 3
-include_trailing_comma = true
-force_grid_wrap = 0
-combine_as_imports = true
-line_length = 88
-
 [tool.pytest.ini_options]
 addopts = "-n auto --reuse-db --randomly-seed=1521188766 --randomly-dont-reorganize"
 DJANGO_SETTINGS_MODULE = "caluma.settings.django"
@@ -140,7 +130,8 @@ max-complexity = 11
 
 [tool.ruff.lint.isort]
 combine-as-imports = true
-
+known-first-party = ["caluma"]
+known-third-party = ["dateparser"]
 
 [tool.coverage.run]
 source = ["."]
