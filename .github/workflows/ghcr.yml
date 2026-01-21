@@ -28,8 +28,18 @@ jobs:
   container-registry:
     runs-on: ubuntu-latest
     permissions:
-      packages: write
+      actions: none
+      checks: none
       contents: read
+      deployments: none
+      issues: none
+      packages: write
+      pull-requests: none
+      repository-projects: none
+      security-events: write
+      statuses: none
+      # needed for `cosign attest`
+      id-token: write
 
     steps:
       - uses: actions/checkout@v5
