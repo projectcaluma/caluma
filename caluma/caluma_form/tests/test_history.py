@@ -63,7 +63,7 @@ def test_history(db, question, document, schema_executor, admin_schema_executor)
     )
     assert history[1].value == "dolor"
 
-    assert history[0].history_user == "AnonymousUser"
+    assert history[0].history_user is None
     assert history[0].value == "sit"
 
 

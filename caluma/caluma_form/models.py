@@ -787,6 +787,7 @@ class File(core_models.UUIDModel):
     answer = models.ForeignKey(
         Answer, on_delete=models.CASCADE, related_name="files", null=True, default=None
     )
+    is_draft = models.BooleanField(default=True)
 
     @_ignore_missing_file
     def _move_blob(self):
