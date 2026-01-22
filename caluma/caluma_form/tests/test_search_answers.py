@@ -95,6 +95,49 @@ def test_search(
 
 
 @pytest.mark.parametrize(
+    "answer_value,search_text,lookup,expect_count",
+    [
+        # ("foo", "foo", "EXACT_WORD", 1),
+        # ("foo", "fo", "EXACT_WORD", 0),
+        # ("foo", "oo", "CONTAINS", 1),
+        # ("foo", "bar", "CONTAINS", 1),
+        ("foo", '"fo', "STARTSWITH", 1),
+        # ("foo", "oo", "STARTSWITH", 0),
+    ],
+)
+def test_search_lookups(
+    schema_executor, db, answer_factory, answer_value, search_text, lookup, expect_count
+):
+    answer = answer_factory(value=answer_value)
+
+    query = """
+        query ($search: [SearchAnswersFilterType!]) {
+          allDocuments(filter: [{searchAnswers: $search}]) {
+            edges {
+              node {
+                id
+              }
+            }
+          }
+        }
+    """
+    variables = {
+        "search": [
+            {
+                "questions": [answer.question.slug],
+                "value": search_text,
+                "lookup": lookup,
+            }
+        ]
+    }
+    result = schema_executor(query, variable_values=variables)
+
+    assert not result.errors
+    edges = result.data["allDocuments"]["edges"]
+    assert len(edges) == expect_count
+
+
+@pytest.mark.parametrize(
     "question_type, search_text",
     [
         (models.Question.TYPE_CHOICE, "hello world"),
