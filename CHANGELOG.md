@@ -1,9 +1,17 @@
+# v12.2.5 (23 January 2026)
+
+### Fix
+
+* Use multi stage docker file ([`c1c661f`](https://github.com/derrabauke/caluma/commit/c1c661f4cbe1c016906a7fcec2a0d7cce3dccc26))
+
 # v12.2.4 (30 December 2025)
+
 ### Fix
 
 * **minio:** Add region parameter to support garage s3 storage ([`f58f589`](https://github.com/derrabauke/caluma/commit/f58f5893c376168d109e7d3ac5e855ddfc298bd5))
 
 # v12.2.3 (24 November 2025)
+
 ### Fix
 
 * Downgrade minio because of breaking changes ([`b9ae27a`](https://github.com/projectcaluma/caluma/commit/b9ae27a1c10594d42e8e759432ab9ff6d8583093))
