@@ -1914,21 +1914,21 @@ testing = ["Django", "django-configurations (>=2.0)"]
 
 [[package]]
 name = "pytest-env"
-version = "1.1.5"
+version = "1.2.0"
 description = "pytest plugin that allows you to add environment variables."
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "pytest_env-1.1.5-py3-none-any.whl", hash = "sha256:ce90cf8772878515c24b31cd97c7fa1f4481cd68d588419fd45f10ecaee6bc30"},
-    {file = "pytest_env-1.1.5.tar.gz", hash = "sha256:91209840aa0e43385073ac464a554ad2947cc2fd663a9debf88d03b01e0cc1cf"},
+    {file = "pytest_env-1.2.0-py3-none-any.whl", hash = "sha256:d7e5b7198f9b83c795377c09feefa45d56083834e60d04767efd64819fc9da00"},
+    {file = "pytest_env-1.2.0.tar.gz", hash = "sha256:475e2ebe8626cee01f491f304a74b12137742397d6c784ea4bc258f069232b80"},
 ]
 
 [package.dependencies]
-pytest = ">=8.3.3"
+pytest = ">=8.4.2"
 
 [package.extras]
-testing = ["covdefaults (>=2.3)", "coverage (>=7.6.1)", "pytest-mock (>=3.14)"]
+testing = ["covdefaults (>=2.3)", "coverage (>=7.10.7)", "pytest-mock (>=3.15.1)"]
 
 [[package]]
 name = "pytest-factoryboy"
@@ -2765,4 +2765,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4"
-content-hash = "a151233cfadfca73fdf2b8e97516d1bfd68aa0cea552cda767023631579172c8"
+content-hash = "b2346ea61557c62193e5a1428bc03bfb3320703d7f0b8aa53906fa319493bf52"
