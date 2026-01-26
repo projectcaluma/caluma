@@ -28,8 +28,17 @@ jobs:
   container-registry:
     runs-on: ubuntu-latest
     permissions:
+      actions: none
+      checks: none
+      contents: none
+      deployments: none
+      issues: none
       packages: write
-      contents: read
+      pull-requests: none
+      repository-projects: none
+      security-events: write # needed to write sarif to security tab
+      statuses: none
+      id-token: write # needed for signing the images with GitHub OIDC using cosign
 
     steps:
       - uses: actions/checkout@v5
