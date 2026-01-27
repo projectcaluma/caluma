@@ -1501,7 +1501,7 @@
     source: Document
     historyDate: DateTime!
     historyType: String
-    historicalAnswers(asOf: DateTime!, before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
+    historicalAnswers(asOf: DateTime!, excludeDeleted: Boolean = false, before: String, after: String, first: Int, last: Int): HistoricalAnswerConnection
     documentId: UUID
   }
   
@@ -1528,7 +1528,7 @@
   
     """The ID of the object"""
     id: ID!
-    value(asOf: DateTime!): [HistoricalFile]
+    value(asOf: DateTime!, excludeDeleted: Boolean = false): [HistoricalFile]
     meta: GenericScalar!
     historyUserId: String
     question: Question!
@@ -1635,7 +1635,7 @@
   
     """The ID of the object"""
     id: ID!
-    value(asOf: DateTime!): [HistoricalDocument]
+    value(asOf: DateTime!, excludeDeleted: Boolean = false): [HistoricalDocument]
     meta: GenericScalar!
     historyUserId: String
     question: Question!
