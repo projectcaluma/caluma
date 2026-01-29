@@ -1171,6 +1171,7 @@ class Mutation(object):
 class ValidationEntry(ObjectType):
     slug = graphene.String(required=True)
     error_msg = graphene.String(required=True)
+    error_code = graphene.String(required=True)
 
 
 class ValidationResult(ObjectType):

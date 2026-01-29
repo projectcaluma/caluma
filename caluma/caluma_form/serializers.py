@@ -592,7 +592,8 @@ class SaveAnswerSerializer(serializers.ModelSerializer):
                 data.pop("data_source_context", None),
             )
         except CustomFormatValidationError as exc:
-            raise GraphQLError(exc.detail[0], extensions={"code": exc.code})
+            detail = exc.detail[0]
+            raise GraphQLError(str(detail), extensions={"code": detail.code})
 
         return super().validate(data)
 
