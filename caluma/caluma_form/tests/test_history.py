@@ -118,19 +118,25 @@ def test_document_as_of(
     timestamp3 = timezone.now()
 
     document.answers.get(question=q1.question).delete()
+    timestamp4 = timezone.now()
+
+    variables = {"id": str(document.pk), "asOf": timestamp1, "excludeDeleted": False}
+    document.delete()
+    timestamp5 = timezone.now()
 
     historical_query = """
-        query documentAsOf($id: ID!, $asOf: DateTime!) {
+        query documentAsOf($id: ID!, $asOf: DateTime!, $excludeDeleted: Boolean) {
           documentAsOf (id: $id, asOf: $asOf) {
             meta
             documentId
-            historicalAnswers (asOf: $asOf) {
+            historicalAnswers (asOf: $asOf, excludeDeleted: $excludeDeleted) {
               edges {
                 node {
                   ...on HistoricalStringAnswer {
                     __typename
                     value
                     historyUserId
+                    historyType
                   }
                 }
               }
@@ -138,8 +144,6 @@ def test_document_as_of(
           }
         }
     """
-
-    variables = {"id": str(document.pk), "asOf": timestamp1}
 
     result = admin_schema_executor(historical_query, variable_values=variables)
     assert not result.errors
@@ -151,6 +155,31 @@ def test_document_as_of(
     snapshot.assert_match(result.data)
 
     variables["asOf"] = timestamp3
+    result = admin_schema_executor(historical_query, variable_values=variables)
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+    # Test after deletion, will show as historyType "-"
+    variables["asOf"] = timestamp4
+    result = admin_schema_executor(historical_query, variable_values=variables)
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+    # Test excludeDeleted=True after deletion, will show no deleted answers
+    variables["excludeDeleted"] = True
+    result = admin_schema_executor(historical_query, variable_values=variables)
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+    # Test after document deletion, will be shown as historyType "-".
+    variables["asOf"] = timestamp5
+    variables["excludeDeleted"] = False
+    result = admin_schema_executor(historical_query, variable_values=variables)
+    assert not result.errors
+    snapshot.assert_match(result.data)
+
+    # Excluding deleted should give an empty document
+    variables["excludeDeleted"] = True
     result = admin_schema_executor(historical_query, variable_values=variables)
     assert not result.errors
     snapshot.assert_match(result.data)
@@ -270,8 +299,10 @@ def test_historical_file_answer(
     )
 
 
+@pytest.mark.parametrize("exclude_deleted", [False, True])
 def test_historical_table_answer(
     db,
+    exclude_deleted,
     form_factory,
     document_factory,
     form_question_factory,
@@ -302,7 +333,7 @@ def test_historical_table_answer(
     )
 
     row2_document = document_factory(form=row_f)
-    answer = answer_factory(
+    answer2 = answer_factory(
         question=q_row.question, document=row2_document, value="second row value"
     )
 
@@ -312,22 +343,28 @@ def test_historical_table_answer(
         document=row1_document,
         sort=0,
     )
-    answer_document_factory(answer=ad.answer, document=row2_document, sort=1)
+    ad2 = answer_document_factory(answer=ad.answer, document=row2_document, sort=1)
 
     timestamp_init = timezone.now()
 
-    answer.delete()
+    answer2.delete()
+    row2_document.delete()
+    ad2.delete()
+
     timestamp_2 = timezone.now()
 
     historical_query = """
-        query documentAsOf($id: ID!, $asOf1: DateTime!, $asOf2: DateTime!) {
+        query documentAsOf($id: ID!, $asOf1: DateTime!, $asOf2: DateTime!, $excludeDeleted: Boolean!) {
           d1: documentAsOf (id: $id, asOf: $asOf1) {
+            historyType
             historicalAnswers (asOf: $asOf1) {
               edges {
                 node {
                   ...on HistoricalTableAnswer {
                     __typename
+                    historyType
                     value (asOf: $asOf1) {
+                      historyType
                       historicalAnswers (asOf: $asOf1) {
                         edges {
                           node {
@@ -345,13 +382,16 @@ def test_historical_table_answer(
             }
           }
           d2: documentAsOf (id: $id, asOf: $asOf2) {
-            historicalAnswers (asOf: $asOf2) {
+            historyType
+            historicalAnswers (asOf: $asOf2, excludeDeleted: $excludeDeleted) {
               edges {
                 node {
                   ...on HistoricalTableAnswer {
                     __typename
-                    value (asOf: $asOf2) {
-                      historicalAnswers (asOf: $asOf2) {
+                    historyType
+                    value (asOf: $asOf2, excludeDeleted: $excludeDeleted) {
+                      historyType
+                      historicalAnswers (asOf: $asOf2, excludeDeleted: $excludeDeleted) {
                         edges {
                           node {
                             ...on HistoricalStringAnswer {
@@ -374,6 +414,7 @@ def test_historical_table_answer(
         "id": str(main_document.pk),
         "asOf1": timestamp_init,
         "asOf2": timestamp_2,
+        "excludeDeleted": exclude_deleted,
     }
     result = schema_executor(historical_query, variable_values=variables)
     assert not result.errors

@@ -8,6 +8,7 @@
           dict({
             'node': dict({
               '__typename': 'HistoricalStringAnswer',
+              'historyType': '+',
               'historyUserId': 'admin',
               'value': 'first admin - revision 1',
             }),
@@ -28,6 +29,7 @@
           dict({
             'node': dict({
               '__typename': 'HistoricalStringAnswer',
+              'historyType': '~',
               'historyUserId': 'AnonymousUser',
               'value': 'first anon - revision 3',
             }),
@@ -48,6 +50,7 @@
           dict({
             'node': dict({
               '__typename': 'HistoricalStringAnswer',
+              'historyType': '~',
               'historyUserId': 'AnonymousUser',
               'value': 'second anon - revision 4',
             }),
@@ -59,7 +62,75 @@
     }),
   })
 # ---
-# name: test_historical_table_answer
+# name: test_document_as_of.3
+  dict({
+    'documentAsOf': dict({
+      'documentId': '890ca108-d93d-4725-9066-7d0bddad8230',
+      'historicalAnswers': dict({
+        'edges': list([
+          dict({
+            'node': dict({
+              '__typename': 'HistoricalStringAnswer',
+              'historyType': '-',
+              'historyUserId': 'AnonymousUser',
+              'value': 'second anon - revision 4',
+            }),
+          }),
+        ]),
+      }),
+      'meta': dict({
+      }),
+    }),
+  })
+# ---
+# name: test_document_as_of.4
+  dict({
+    'documentAsOf': dict({
+      'documentId': '890ca108-d93d-4725-9066-7d0bddad8230',
+      'historicalAnswers': dict({
+        'edges': list([
+        ]),
+      }),
+      'meta': dict({
+      }),
+    }),
+  })
+# ---
+# name: test_document_as_of.5
+  dict({
+    'documentAsOf': dict({
+      'documentId': '890ca108-d93d-4725-9066-7d0bddad8230',
+      'historicalAnswers': dict({
+        'edges': list([
+          dict({
+            'node': dict({
+              '__typename': 'HistoricalStringAnswer',
+              'historyType': '-',
+              'historyUserId': 'AnonymousUser',
+              'value': 'second anon - revision 4',
+            }),
+          }),
+        ]),
+      }),
+      'meta': dict({
+      }),
+    }),
+  })
+# ---
+# name: test_document_as_of.6
+  dict({
+    'documentAsOf': dict({
+      'documentId': '890ca108-d93d-4725-9066-7d0bddad8230',
+      'historicalAnswers': dict({
+        'edges': list([
+        ]),
+      }),
+      'meta': dict({
+      }),
+    }),
+  })
+# ---
+# name: test_historical_table_answer[False]
   dict({
     'd1': dict({
       'historicalAnswers': dict({
@@ -67,6 +138,7 @@
           dict({
             'node': dict({
               '__typename': 'HistoricalTableAnswer',
+              'historyType': '+',
               'value': list([
                 dict({
                   'historicalAnswers': dict({
@@ -79,6 +151,7 @@
                       }),
                     ]),
                   }),
+                  'historyType': '+',
                 }),
                 dict({
                   'historicalAnswers': dict({
@@ -91,12 +164,14 @@
                       }),
                     ]),
                   }),
+                  'historyType': '+',
                 }),
               ]),
             }),
           }),
         ]),
       }),
+      'historyType': '+',
     }),
     'd2': dict({
       'historicalAnswers': dict({
@@ -104,6 +179,7 @@
           dict({
             'node': dict({
               '__typename': 'HistoricalTableAnswer',
+              'historyType': '+',
               'value': list([
                 dict({
                   'historicalAnswers': dict({
@@ -116,6 +192,7 @@
                       }),
                     ]),
                   }),
+                  'historyType': '+',
                 }),
                 dict({
                   'historicalAnswers': dict({
@@ -128,12 +205,87 @@
                       }),
                     ]),
                   }),
+                  'historyType': '-',
                 }),
               ]),
             }),
           }),
         ]),
       }),
+      'historyType': '+',
+    }),
+  })
+# ---
+# name: test_historical_table_answer[True]
+  dict({
+    'd1': dict({
+      'historicalAnswers': dict({
+        'edges': list([
+          dict({
+            'node': dict({
+              '__typename': 'HistoricalTableAnswer',
+              'historyType': '+',
+              'value': list([
+                dict({
+                  'historicalAnswers': dict({
+                    'edges': list([
+                      dict({
+                        'node': dict({
+                          'historyType': '+',
+                          'value': 'first row value',
+                        }),
+                      }),
+                    ]),
+                  }),
+                  'historyType': '+',
+                }),
+                dict({
+                  'historicalAnswers': dict({
+                    'edges': list([
+                      dict({
+                        'node': dict({
+                          'historyType': '+',
+                          'value': 'second row value',
+                        }),
+                      }),
+                    ]),
+                  }),
+                  'historyType': '+',
+                }),
+              ]),
+            }),
+          }),
+        ]),
+      }),
+      'historyType': '+',
+    }),
+    'd2': dict({
+      'historicalAnswers': dict({
+        'edges': list([
+          dict({
+            'node': dict({
+              '__typename': 'HistoricalTableAnswer',
+              'historyType': '+',
+              'value': list([
+                dict({
+                  'historicalAnswers': dict({
+                    'edges': list([
+                      dict({
+                        'node': dict({
+                          'historyType': '+',
+                          'value': 'first row value',
+                        }),
+                      }),
+                    ]),
+                  }),
+                  'historyType': '+',
+                }),
+              ]),
+            }),
+          }),
+        ]),
+      }),
+      'historyType': '+',
     }),
   })
 # ---

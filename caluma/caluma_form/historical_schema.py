@@ -1,4 +1,5 @@
 import graphene
+from django.db.models import Subquery
 from django.http import Http404
 from graphene import relay
 from graphene.types import ObjectType, generic
@@ -30,10 +31,33 @@ def historical_qs_as_of(queryset, date, pk_attr):
     """
     # This could become unnecessary as soon as
     # https://github.com/treyhunner/django-simple-history/issues/397 is resolved.
+
+    # pk_attr refers to the column on the history table that points to the
+    # primary key of the original table, history_id is the primary key of the
+    # history table itself.
+    # So we do a ordered distinct on pk_attr to get the latest history entry
+    # for each original object.
     return (
         queryset.filter(history_date__lte=date)
         .order_by(pk_attr, "-history_date")
         .distinct(pk_attr)
+    )
+
+
+def resolve_as_of(base_qs, as_of, pk_attr, exclude_deleted=False):
+    # select only the latest versions before the cutoff date.
+    qs = historical_qs_as_of(base_qs, as_of, pk_attr)
+
+    # if we don't want to exclude deleted entries, return the full qs.
+    if not exclude_deleted:
+        return qs
+
+    # Select the history_id's (history primary key) of the latest entries,
+    # and use them in a subquery to filter out deletions (history_type='-').
+    latest_ids = qs.values("history_id")
+
+    return base_qs.model.objects.filter(history_id__in=Subquery(latest_ids)).exclude(
+        history_type="-"
     )
 
 
@@ -121,12 +145,16 @@ class HistoricalFilesAnswer(FilesAnswer):
         HistoricalFile,
         required=False,
         as_of=graphene.types.datetime.DateTime(required=True),
+        exclude_deleted=graphene.Boolean(default_value=False),
     )
 
-    def resolve_value(self, info, as_of, **args):
+    def resolve_value(self, info, *, as_of, exclude_deleted=False, **kwargs):
         # we need to use the HistoricalFile of the correct revision
-        return historical_qs_as_of(models.File.history, as_of, pk_attr="id").filter(
-            answer_id=self.id
+        return resolve_as_of(
+            models.File.history.filter(answer_id=self.id),
+            as_of,
+            pk_attr="id",
+            exclude_deleted=exclude_deleted,
         )
 
     class Meta:
@@ -140,6 +168,7 @@ class HistoricalDocument(FormDjangoObjectType):
     historical_answers = ConnectionField(
         HistoricalAnswerConnection,
         as_of=graphene.types.datetime.DateTime(required=True),
+        exclude_deleted=graphene.Boolean(default_value=False),
     )
     history_date = graphene.types.datetime.DateTime(required=True)
     history_user_id = graphene.String()
@@ -150,9 +179,14 @@ class HistoricalDocument(FormDjangoObjectType):
     def resolve_document_id(self, info, *args, **kwargs):
         return self.id
 
-    def resolve_historical_answers(self, info, as_of, *args, **kwargs):
-        return historical_qs_as_of(
-            models.Answer.history.filter(document_id=self.id), as_of, "id"
+    def resolve_historical_answers(
+        self, info, *, as_of, exclude_deleted=False, **kwargs
+    ):
+        return resolve_as_of(
+            models.Answer.history.filter(document_id=self.id),
+            as_of,
+            pk_attr="id",
+            exclude_deleted=exclude_deleted,
         )
 
     class Meta:
@@ -167,24 +201,33 @@ class HistoricalTableAnswer(TableAnswer):
         HistoricalDocument,
         required=False,
         as_of=graphene.types.datetime.DateTime(required=True),
+        exclude_deleted=graphene.Boolean(default_value=False),
     )
 
-    def resolve_value(self, info, as_of, *args):
-        answerdocuments_unordered = historical_qs_as_of(
-            models.AnswerDocument.history.filter(answer_id=self.id), as_of, "id"
+    def resolve_value(self, info, *, as_of, exclude_deleted=False, **kwargs):
+        answerdocuments_unordered = resolve_as_of(
+            models.AnswerDocument.history.filter(answer_id=self.id),
+            as_of,
+            pk_attr="id",
+            exclude_deleted=exclude_deleted,
         )
 
         # ordering has to happen in a separate query because of the use of `distinct()`
         answerdocuments = models.AnswerDocument.history.filter(
-            pk__in=answerdocuments_unordered
+            pk__in=[ad.pk for ad in answerdocuments_unordered]
         ).order_by("sort")
 
         documents = [
-            models.Document.history.filter(
-                id=ad.document_id, history_date__lte=as_of
-            ).latest("history_date")
+            resolve_as_of(
+                models.Document.history.all().filter(id=ad.document_id),
+                as_of,
+                pk_attr="id",
+                exclude_deleted=exclude_deleted,
+            )
             for ad in answerdocuments
         ]
+        # ignore dropped documents because of exclude_deleted.
+        documents = [doc[0] for doc in documents if doc]
 
         # Since python 3.6, `list(dict.fromkeys(somelist))` is the most performant way
         # to remove duplicates from a list, while retaining it's order.
@@ -205,6 +248,7 @@ def document_as_of(info, document_global_id, timestamp):
     document_id = extract_global_id(document_global_id)
     document_qs = HistoricalDocument.get_queryset(models.Document.history.all(), info)
     document = document_qs.filter(id=document_id, history_date__lte=timestamp).first()
+
     if not document:
         raise Http404("No HistoricalDocument matches the given query.")
     return document
