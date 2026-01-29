@@ -1,3 +1,14 @@
+# v12.3.0 (30 January 2026)
+
+### Feature
+
+* **document-validity:** Expose error code in document validity graph ([`2b4a3a0`](https://github.com/nlzet/caluma/commit/2b4a3a087fbeede040be0d8b116f6ed1c7e3d9c0))
+* **historical:** Add parameter to exclude deleted documents ([`629a360`](https://github.com/nlzet/caluma/commit/629a36070dfd4994a6065157f2731a252cbd3fbf))
+
+### Fix
+
+* **format-validators:** Only raise custom graphql error for save answer mutation ([`737bf7c`](https://github.com/nlzet/caluma/commit/737bf7cc5fed47317581f5ddcf331608fd22e7ee))
+
 # v12.2.5 (23 January 2026)
 
 ### Fix
