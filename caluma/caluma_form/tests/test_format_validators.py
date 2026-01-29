@@ -6,7 +6,8 @@ from django.utils import translation
 from caluma.deprecation import CalumaDeprecationWarning
 
 from ...caluma_core.tests import extract_serializer_input_fields
-from ..format_validators import FORMAT_VALIDATION_FAILED, BaseFormatValidator
+from ..exceptions import FORMAT_VALIDATION_FAILED
+from ..format_validators import BaseFormatValidator
 from ..models import Question
 from ..serializers import SaveAnswerSerializer
 

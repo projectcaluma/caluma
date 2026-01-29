@@ -1,4 +1,5 @@
 from django.db import transaction
+from graphql.error import GraphQLError
 from rest_framework import exceptions
 from rest_framework.serializers import (
     BooleanField,
@@ -10,6 +11,8 @@ from rest_framework.serializers import (
     ListField,
     PrimaryKeyRelatedField,
 )
+
+from caluma.caluma_form.exceptions import CustomFormatValidationError
 
 from ..caluma_core import serializers
 from . import domain_logic, models, validators
@@ -580,13 +583,17 @@ class SaveAnswerSerializer(serializers.ModelSerializer):
     )
 
     def validate(self, data):
-        data = domain_logic.SaveAnswerLogic.validate_for_save(
-            data,
-            self.context["request"].user,
-            self.instance,
-            True,
-            data.pop("data_source_context", None),
-        )
+        try:
+            data = domain_logic.SaveAnswerLogic.validate_for_save(
+                data,
+                self.context["request"].user,
+                self.instance,
+                True,
+                data.pop("data_source_context", None),
+            )
+        except CustomFormatValidationError as exc:
+            raise GraphQLError(exc.detail[0], extensions={"code": exc.code})
+
         return super().validate(data)
 
     @transaction.atomic

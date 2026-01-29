@@ -11,23 +11,11 @@ from caluma.caluma_form import structure
 from caluma.caluma_workflow.models import Case
 
 from . import jexl, models
+from .exceptions import CustomValidationError
 from .format_validators import get_format_validators
 from .models import DynamicOption, Question
 
 log = getLogger()
-
-
-class CustomValidationError(exceptions.ValidationError):
-    """Custom validation error to carry more information.
-
-    This can carry more information about the error, so the documentValidity
-    query can show more useful information.
-    """
-
-    def __init__(self, detail, code=None, slugs=None):
-        slugs = slugs if slugs else []
-        super().__init__(detail, code)
-        self.slugs = slugs
 
 
 class AnswerValidator:

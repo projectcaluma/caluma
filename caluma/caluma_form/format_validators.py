@@ -5,13 +5,11 @@ from warnings import warn
 from django.conf import settings
 from django.utils.module_loading import import_string
 from django.utils.translation import gettext_lazy as _
-from graphql.error import GraphQLError
 from localized_fields.value import LocalizedValue
 
+from caluma.caluma_form.exceptions import CustomFormatValidationError
 from caluma.caluma_form.models import Question
 from caluma.deprecation import CalumaDeprecationWarning
-
-FORMAT_VALIDATION_FAILED = "format_validation_failed"
 
 
 def translate(text):
@@ -86,11 +84,11 @@ class BaseFormatValidator:
     @classmethod
     def validate(cls, value, document, question):
         if not cls.is_valid(value, document, question):
-            raise GraphQLError(
+            raise CustomFormatValidationError(
                 translate(
                     cls.error_msg % cls.get_error_msg_args(value, document, question)
                 ),
-                extensions={"code": FORMAT_VALIDATION_FAILED},
+                slugs=[question.slug],
             )
 
     @classmethod
