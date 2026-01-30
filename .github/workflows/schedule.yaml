@@ -10,7 +10,7 @@ jobs:
   scan:
     strategy:
       matrix:
-        image: ["caluma", "caluma:11.1"]
+        image: ["caluma"]
 
     name: scan ${{ matrix.image }} image
     runs-on: ubuntu-latest
