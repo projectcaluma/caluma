@@ -622,7 +622,7 @@ def _gc_object_counts_by_type():
     # sorta-kinda useful. Otherwise, we'd get a random-ish insertion order
     # that makes looking at the counter difficult (for humans)
     o_types_sorted = sorted(
-        ((type(o).__module__, type(o).__qualname__) for o in gc.get_objects())
+        ((str(type(o).__module__), str(type(o).__qualname__)) for o in gc.get_objects())
     )
     return Counter(o_types_sorted)
 
