@@ -1006,6 +1006,7 @@ def test_validity_query(
                 errors {
                   slug
                   errorMsg
+                  errorCode
                 }
               }
             }
@@ -1068,6 +1069,7 @@ def test_validity_query_with_context(
                 errors {
                   slug
                   errorMsg
+                  errorCode
                 }
               }
             }

@@ -17,4 +17,4 @@ class CustomValidationError(exceptions.ValidationError):
 
 
 class CustomFormatValidationError(CustomValidationError):
-    code = FORMAT_VALIDATION_FAILED
+    default_code = FORMAT_VALIDATION_FAILED

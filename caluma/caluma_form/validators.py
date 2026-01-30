@@ -516,7 +516,10 @@ def get_document_validity(document, user, **kwargs):
         validator.validate(document, user, **kwargs)
     except CustomValidationError as exc:
         is_valid = False
-        detail = str(exc.detail[0])
-        errors = [{"slug": slug, "error_msg": detail} for slug in exc.slugs]
+        detail = exc.detail[0]
+        errors = [
+            {"slug": slug, "error_msg": str(detail), "error_code": detail.code}
+            for slug in exc.slugs
+        ]
 
     return {"id": document.id, "is_valid": is_valid, "errors": errors}

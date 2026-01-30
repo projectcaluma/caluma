@@ -3437,6 +3437,7 @@
   type ValidationEntry {
     slug: String!
     errorMsg: String!
+    errorCode: String!
   }
   
   type ValidationResult {
