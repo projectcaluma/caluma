@@ -10,10 +10,11 @@ class CustomValidationError(exceptions.ValidationError):
     query can show more useful information.
     """
 
-    def __init__(self, detail, code=None, slugs=None):
-        slugs = slugs if slugs else []
+    def __init__(self, detail, code=None, slugs=None, document_id=None):
         super().__init__(detail, code)
-        self.slugs = slugs
+
+        self.slugs = slugs if slugs else []
+        self.document_id = str(document_id) if document_id else None
 
 
 class CustomFormatValidationError(CustomValidationError):

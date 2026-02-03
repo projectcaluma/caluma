@@ -19,7 +19,7 @@ log = getLogger()
 
 
 class AnswerValidator:
-    def _validate_question_text(self, question, value, **kwargs):
+    def _validate_question_text(self, question, value, document, **kwargs):
         min_length = question.min_length if question.min_length is not None else 0
         max_length = (
             question.max_length if question.max_length is not None else sys.maxsize
@@ -34,12 +34,13 @@ class AnswerValidator:
                 f"Invalid value {value}. "
                 f"Should be of type str, and it's length between {min_length} and {max_length}",
                 slugs=[question.slug],
+                document_id=document.pk,
             )
 
-    def _validate_question_textarea(self, question, value, **kwargs):
-        self._validate_question_text(question, value)
+    def _validate_question_textarea(self, question, value, document, **kwargs):
+        self._validate_question_text(question, value, document=document)
 
-    def _validate_question_float(self, question, value, **kwargs):
+    def _validate_question_float(self, question, value, document, **kwargs):
         min_value = (
             question.min_value if question.min_value is not None else float("-inf")
         )
@@ -53,9 +54,10 @@ class AnswerValidator:
                 f"Should be of type float, not lower than {min_value} "
                 f"and not greater than {max_value}",
                 slugs=[question.slug],
+                document_id=document.pk,
             )
 
-    def _validate_question_integer(self, question, value, **kwargs):
+    def _validate_question_integer(self, question, value, document, **kwargs):
         min_value = (
             question.min_value if question.min_value is not None else float("-inf")
         )
@@ -69,12 +71,15 @@ class AnswerValidator:
                 f"Should be of type int, not lower than {min_value} "
                 f"and not greater than {max_value}",
                 slugs=[question.slug],
+                document_id=document.pk,
             )
 
-    def _validate_question_date(self, question, value, **kwargs):
+    def _validate_question_date(self, question, value, document, **kwargs):
         if not isinstance(value, date):
             raise CustomValidationError(
-                f"Invalid value {value}. Should be of type date.", slugs=[question.slug]
+                f"Invalid value {value}. Should be of type date.",
+                slugs=[question.slug],
+                document_id=document.pk,
             )
 
     def _structure_field(self, document, question, validation_context):
@@ -153,6 +158,7 @@ class AnswerValidator:
                 f"Invalid value {value}. "
                 f"Should be of type str and one of the options {', '.join(options)}",
                 slugs=[question.slug],
+                document_id=document.pk,
             )
 
     def _validate_question_multiple_choice(
@@ -168,6 +174,7 @@ class AnswerValidator:
                 f"Invalid options [{', '.join(invalid_options)}]. "
                 f"Should be one of the options [{', '.join(options)}]",
                 slugs=[question.slug],
+                document_id=document.pk,
             )
 
     def _validate_question_dynamic_choice(
@@ -175,7 +182,9 @@ class AnswerValidator:
     ):
         if not isinstance(value, str):
             raise CustomValidationError(
-                f'Invalid value "{value}". Must be of type str.', slugs=[question.slug]
+                f'Invalid value "{value}". Must be of type str.',
+                slugs=[question.slug],
+                document_id=document.pk,
             )
 
         self._validate_dynamic_option(
@@ -188,7 +197,9 @@ class AnswerValidator:
     ):
         if not isinstance(value, list):
             raise CustomValidationError(
-                f'Invalid value: "{value}". Must be of type list', slugs=[question.slug]
+                f'Invalid value: "{value}". Must be of type list',
+                slugs=[question.slug],
+                document_id=document.pk,
             )
 
         for v in value:
@@ -196,6 +207,7 @@ class AnswerValidator:
                 raise CustomValidationError(
                     f'Invalid value: "{v}". Must be of type string',
                     slugs=[question.slug],
+                    document_id=document.pk,
                 )
             self._validate_dynamic_option(
                 question, document, v, user, data_source_context
@@ -214,7 +226,9 @@ class AnswerValidator:
         )
         if valid_label is False:
             raise CustomValidationError(
-                f'Invalid value "{option}". Not a valid option.', slugs=[question.slug]
+                f'Invalid value "{option}". Not a valid option.',
+                slugs=[question.slug],
+                document_id=document.pk,
             )
 
         DynamicOption.objects.get_or_create(
@@ -360,6 +374,7 @@ class DocumentValidator:
                 f"{question_s} {', '.join(affected_slugs)} "
                 f"{is_are} required but not provided.",
                 slugs=affected_slugs,
+                document_id=document.pk,
             )
 
         for field in all_fields:
@@ -518,7 +533,12 @@ def get_document_validity(document, user, **kwargs):
         is_valid = False
         detail = exc.detail[0]
         errors = [
-            {"slug": slug, "error_msg": str(detail), "error_code": detail.code}
+            {
+                "slug": slug,
+                "error_msg": str(detail),
+                "error_code": detail.code,
+                "document_id": exc.document_id,
+            }
             for slug in exc.slugs
         ]
 
