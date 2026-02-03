@@ -1,3 +1,9 @@
+# v12.3.1 (3 February 2026)
+
+### Fix
+
+* **form api:** Pass data source context to validations in save_answer ([`c72c5b6`](https://github.com/projectcaluma/caluma/commit/c72c5b61209cdf2f1a9ba5b616c0a2dacbfb941b))
+
 # v12.3.0 (30 January 2026)
 
 ### Feature
