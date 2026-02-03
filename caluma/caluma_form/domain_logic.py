@@ -44,9 +44,15 @@ class BaseLogic:
 
 class SaveAnswerLogic:
     @classmethod
-    def get_new_answer(cls, data, user, answer):
+    def get_new_answer(cls, data, user, answer, data_source_context=None):
         validated_data = cls.pre_save(
-            cls.validate_for_save(data, user, answer=answer, origin=True)
+            cls.validate_for_save(
+                data,
+                user,
+                answer=answer,
+                origin=True,
+                data_source_context=data_source_context,
+            )
         )
 
         files = validated_data.pop("files", None)
@@ -256,7 +262,11 @@ class SaveAnswerLogic:
 class SaveDefaultAnswerLogic(SaveAnswerLogic):
     @staticmethod
     def validate_for_save(
-        data: dict, user: BaseUser, answer: models.Answer = None, origin: bool = False
+        data: dict,
+        user: BaseUser,
+        answer: models.Answer = None,
+        origin: bool = False,
+        data_source_context: dict = None,
     ) -> dict:
         if data["question"].type in [
             models.Question.TYPE_FILES,
@@ -271,7 +281,9 @@ class SaveDefaultAnswerLogic(SaveAnswerLogic):
             )
 
         data["document"] = None  # send None as document for validation
-        return SaveAnswerLogic.validate_for_save(data, user, answer, origin)
+        return SaveAnswerLogic.validate_for_save(
+            data, user, answer, origin, data_source_context
+        )
 
     @staticmethod
     @transaction.atomic
