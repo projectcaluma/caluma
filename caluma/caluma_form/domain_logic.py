@@ -44,14 +44,14 @@ class BaseLogic:
 
 class SaveAnswerLogic:
     @classmethod
-    def get_new_answer(cls, data, user, answer, data_source_context=None):
+    def get_new_answer(cls, data, user, answer, context=None):
         validated_data = cls.pre_save(
             cls.validate_for_save(
                 data,
                 user,
                 answer=answer,
                 origin=True,
-                data_source_context=data_source_context,
+                context=context,
             )
         )
 
@@ -118,7 +118,7 @@ class SaveAnswerLogic:
         user: BaseUser,
         answer: models.Answer = None,
         origin: bool = False,
-        data_source_context: dict = None,
+        context: dict = None,
     ) -> dict:
         question = data["question"]
 
@@ -147,7 +147,7 @@ class SaveAnswerLogic:
             user=user,
             instance=answer,
             origin=origin,
-            data_source_context=data_source_context,
+            data_source_context=context,
         )
 
         return data
@@ -266,7 +266,7 @@ class SaveDefaultAnswerLogic(SaveAnswerLogic):
         user: BaseUser,
         answer: models.Answer = None,
         origin: bool = False,
-        data_source_context: dict = None,
+        context: dict = None,
     ) -> dict:
         if data["question"].type in [
             models.Question.TYPE_FILES,
@@ -281,9 +281,7 @@ class SaveDefaultAnswerLogic(SaveAnswerLogic):
             )
 
         data["document"] = None  # send None as document for validation
-        return SaveAnswerLogic.validate_for_save(
-            data, user, answer, origin, data_source_context
-        )
+        return SaveAnswerLogic.validate_for_save(data, user, answer, origin, context)
 
     @staticmethod
     @transaction.atomic
