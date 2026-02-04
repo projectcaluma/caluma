@@ -7,7 +7,7 @@ def test_save_answer_with_context(db, mocker, question_factory, document):
     mocker.patch.object(AnswerValidator, "validate")
 
     question = question_factory(type="text")
-    save_answer(question, document, value="foo", data_source_context={"bar": "baz"})
+    save_answer(question, document, value="foo", context={"bar": "baz"})
 
     answer = Answer.objects.first()
     assert answer.value == "foo"

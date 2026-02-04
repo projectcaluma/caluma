@@ -9,7 +9,7 @@ def save_answer(
     document: Optional[models.Document] = None,
     user: Optional[BaseUser] = None,
     value: Optional[Any] = None,
-    data_source_context: Optional[dict] = None,
+    context: Optional[dict] = None,
     **kwargs,
 ) -> models.Answer:
     """
@@ -24,7 +24,7 @@ def save_answer(
 
     answer = models.Answer.objects.filter(question=question, document=document).first()
     answer = domain_logic.SaveAnswerLogic.get_new_answer(
-        data, user, answer, data_source_context=data_source_context
+        data, user, answer, context=context
     )
 
     return answer
