@@ -3438,9 +3438,13 @@
     slug: String!
     errorMsg: String!
     errorCode: String!
+  
+    """References the document ID. This may reference table rows."""
+    documentId: ID!
   }
   
   type ValidationResult {
+    """References the document ID"""
     id: ID
     isValid: Boolean
     errors: [ValidationEntry]

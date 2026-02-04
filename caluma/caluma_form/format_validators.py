@@ -89,6 +89,7 @@ class BaseFormatValidator:
                     cls.error_msg % cls.get_error_msg_args(value, document, question)
                 ),
                 slugs=[question.slug],
+                document_id=document.pk,
             )
 
     @classmethod

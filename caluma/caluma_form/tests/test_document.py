@@ -961,16 +961,17 @@ def test_query_answer_node(db, answer, schema_executor):
     assert not result.errors
 
 
-@pytest.mark.parametrize("value,is_valid", [(None, False), ("Test", True)])
+@pytest.mark.parametrize("error_location", [("root"), ("table"), (None)])
 def test_validity_query(
     db,
     document,
+    document_factory,
     form_question_factory,
+    form_factory,
     form,
-    is_valid,
+    error_location,
     schema_executor,
     settings,
-    value,
 ):
     settings.DATA_SOURCE_CLASSES = [
         "caluma.caluma_data_source.tests.data_sources.MyDataSource"
@@ -990,11 +991,34 @@ def test_validity_query(
         question__is_required="true",
     ).question
 
+    table_question = form_question_factory(
+        form=form,
+        question__type=Question.TYPE_TABLE,
+        question__is_required="true",
+        question__row_form=form_factory(),
+    ).question
+
+    row_question = form_question_factory(
+        form=table_question.row_form,
+        question__type=Question.TYPE_TEXT,
+        question__is_required="true",
+        question__format_validators=["email"],
+    ).question
+
     document.form = form
     document.save()
 
-    document.answers.create(question=text_question, value=value)
+    root_value = None if error_location == "root" else "Test"
+    table_value = "test.com" if error_location == "table" else "test@test.com"
+
+    document.answers.create(question=text_question, value=root_value)
     document.answers.create(question=dynamic_question, value="something")
+
+    table_document = document_factory(form=table_question.row_form, family=document)
+    table_document.answers.create(question=row_question, value=table_value)
+
+    table_answer = document.answers.create(question=table_question)
+    table_answer.documents.add(table_document)
 
     query = """
         query($id: ID!) {
@@ -1007,6 +1031,7 @@ def test_validity_query(
                   slug
                   errorMsg
                   errorCode
+                  documentId
                 }
               }
             }
@@ -1016,14 +1041,22 @@ def test_validity_query(
 
     result = schema_executor(query, variable_values={"id": str(document.id)})
 
+    is_valid = not bool(error_location)
     # if is_valid, we expect 0 errors, otherwise one
     num_errors = int(not is_valid)
 
-    assert result.data["documentValidity"]["edges"][0]["node"]["id"] == str(document.id)
-    assert result.data["documentValidity"]["edges"][0]["node"]["isValid"] == is_valid
-    assert (
-        len(result.data["documentValidity"]["edges"][0]["node"]["errors"]) == num_errors
-    )
+    validity = result.data["documentValidity"]["edges"][0]["node"]
+
+    assert validity["id"] == str(document.id)
+    assert validity["isValid"] == is_valid
+    assert len(validity["errors"]) == num_errors
+
+    if error_location == "root":
+        assert validity["errors"][0]["documentId"] == str(document.pk)
+        assert validity["errors"][0]["documentId"] == validity["id"]
+    elif error_location == "table":
+        assert validity["errors"][0]["documentId"] == str(table_document.pk)
+        assert validity["errors"][0]["documentId"] != validity["id"]
 
 
 @pytest.mark.parametrize("question__data_source", ["MyDataSourceWithContext"])

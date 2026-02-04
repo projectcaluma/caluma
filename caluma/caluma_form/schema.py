@@ -1172,11 +1172,14 @@ class ValidationEntry(ObjectType):
     slug = graphene.String(required=True)
     error_msg = graphene.String(required=True)
     error_code = graphene.String(required=True)
+    document_id = graphene.ID(
+        required=True,
+        description="References the document ID. This may reference table rows.",
+    )
 
 
 class ValidationResult(ObjectType):
-    id = graphene.ID()
-    id.__doc__ = "References the document ID"
+    id = graphene.ID(description="References the document ID")
 
     is_valid = graphene.Boolean()
     errors = graphene.List(ValidationEntry)
