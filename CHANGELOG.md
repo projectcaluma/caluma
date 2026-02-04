@@ -1,4 +1,11 @@
+# v12.3.3 (4 February 2026)
+
+### Fix
+
+* **validation:** Pass document ID to validation errors ([`d9cf17b`](https://github.com/projectcaluma/caluma/commit/d9cf17b9e4bd7c0bd96a00654c8e31328484e916))
+
 # v12.3.2 (4 February 2026)
+
 ### Fix
 
 * **api:** Revert rename of context argument in save_answer ([`dca2a21`](https://github.com/projectcaluma/caluma/commit/dca2a214d638d2ef59fdff3c9b12bffd1d4eaf3d))
