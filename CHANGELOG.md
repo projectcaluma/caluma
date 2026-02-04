@@ -1,3 +1,8 @@
+# v12.3.2 (4 February 2026)
+### Fix
+
+* **api:** Revert rename of context argument in save_answer ([`dca2a21`](https://github.com/projectcaluma/caluma/commit/dca2a214d638d2ef59fdff3c9b12bffd1d4eaf3d))
+
 # v12.3.1 (3 February 2026)
 
 ### Fix
