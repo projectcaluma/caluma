@@ -583,3 +583,53 @@ def test_modify_changed_choice_answer(
         answer.modify_changed_choice_answer(question, old_slug, new_slug, answer_value)
         == expected
     )
+
+
+@pytest.mark.parametrize("is_valid", [True, False])
+def test_answer_validity(
+    db,
+    document,
+    form_question_factory,
+    form,
+    schema_executor,
+    is_valid,
+):
+    question = form_question_factory(
+        form=form,
+        question__type=Question.TYPE_TEXT,
+        question__is_required="true",
+        question__format_validators=["email"],
+    ).question
+
+    value = "test@test.com" if is_valid else "test.com"
+    answer = document.answers.create(question=question, value=value)
+
+    query = """
+        query($id: ID!) {
+          answerValidity(id: $id) {
+            edges {
+              node {
+                id
+                isValid
+                errors {
+                  slug
+                  errorMsg
+                  errorCode
+                  documentId
+                }
+              }
+            }
+          }
+        }
+    """
+
+    result = schema_executor(query, variable_values={"id": str(answer.id)})
+
+    # if is_valid, we expect 0 errors, otherwise one
+    num_errors = int(not is_valid)
+
+    validity = result.data["answerValidity"]["edges"][0]["node"]
+
+    assert validity["id"] == str(answer.id)
+    assert validity["isValid"] == is_valid
+    assert len(validity["errors"]) == num_errors
