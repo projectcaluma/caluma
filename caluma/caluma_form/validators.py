@@ -552,10 +552,14 @@ def get_validity():  # pragma: no cover
 
 @get_validity.register(models.Document)
 def _(document, user, **kwargs):
+    validator = DocumentValidator()
+    validation_context = validator.get_validation_context(document.family)
+
     is_valid, errors = run_validation(
-        DocumentValidator().validate,
+        validator.validate,
         document=document,
         user=user,
+        validation_context=validation_context,
         **kwargs,
     )
 
@@ -564,6 +568,10 @@ def _(document, user, **kwargs):
 
 @get_validity.register(models.Answer)
 def _(answer, user, **kwargs):
+    validation_context = DocumentValidator().get_validation_context(
+        answer.document.family
+    )
+
     is_valid, errors = run_validation(
         AnswerValidator().validate,
         document=answer.document,
@@ -571,6 +579,7 @@ def _(answer, user, **kwargs):
         value=answer.value,
         documents=answer.documents.all(),
         user=user,
+        validation_context=validation_context,
         **kwargs,
     )
 
