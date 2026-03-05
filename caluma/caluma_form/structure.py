@@ -422,7 +422,6 @@ class BaseField(ABC):
         else:
             parent_data = None
         return {
-            "question": self.question.slug if self.question else None,
             "form": form and form.slug or None,
             "formMeta": form and form.meta or None,
             "parent": parent_data,
