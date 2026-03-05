@@ -346,7 +346,7 @@ class FastLoader:
 class BaseField(ABC):
     """Base class for the field types. This is the interface we aim to provide."""
 
-    parent: Optional["FieldSet"] = field(default=None)
+    parent: Optional["FieldSet" | "RowSet"] = field(default=None)
 
     question: Optional[Question] = field(default=None)
     answer: Optional[Answer] = field(default=None)
