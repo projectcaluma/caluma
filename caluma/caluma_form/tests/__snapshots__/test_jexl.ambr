@@ -1,0 +1,92 @@
+# serializer version: 1
+# name: test_jexl_context[cell_question]
+  dict({
+    'column': ValueField(q=column, v=-14.7052420113822),
+    'form': 'top_form',
+    'info': dict({
+      'form': 'row_form',
+      'formMeta': None,
+      'parent': dict({
+        'form': 'top_form',
+        'formMeta': dict({
+          'is-top-form': True,
+          'level': 0,
+        }),
+      }),
+      'question': 'column',
+      'root': dict({
+        'form': 'top_form',
+        'formMeta': dict({
+          'is-top-form': True,
+          'level': 0,
+        }),
+        'parent': None,
+        'question': None,
+        'root': None,
+      }),
+    }),
+    'sub_question': ValueField(q=sub_question, v=1990),
+    'table': RowSet(q=table, f=row_form),
+    'top_question': ValueField(q=top_question, v=Shelly Watson),
+  })
+# ---
+# name: test_jexl_context[sub_question]
+  dict({
+    'form': 'top_form',
+    'info': dict({
+      'form': 'sub_form',
+      'formMeta': dict({
+        'is-top-form': False,
+        'level': 1,
+      }),
+      'parent': dict({
+        'form': 'top_form',
+        'formMeta': dict({
+          'is-top-form': True,
+          'level': 0,
+        }),
+      }),
+      'question': 'sub_question',
+      'root': dict({
+        'form': 'top_form',
+        'formMeta': dict({
+          'is-top-form': True,
+          'level': 0,
+        }),
+        'parent': None,
+        'question': None,
+        'root': None,
+      }),
+    }),
+    'sub_question': ValueField(q=sub_question, v=1990),
+    'table': RowSet(q=table, f=row_form),
+    'top_question': ValueField(q=top_question, v=Shelly Watson),
+  })
+# ---
+# name: test_jexl_context[top_question]
+  dict({
+    'form': 'top_form',
+    'info': dict({
+      'form': 'top_form',
+      'formMeta': dict({
+        'is-top-form': True,
+        'level': 0,
+      }),
+      'parent': None,
+      'question': 'top_question',
+      'root': dict({
+        'form': 'top_form',
+        'formMeta': dict({
+          'is-top-form': True,
+          'level': 0,
+        }),
+        'parent': None,
+        'question': None,
+        'root': None,
+      }),
+    }),
+    'sub_question': ValueField(q=sub_question, v=1990),
+    'table': RowSet(q=table, f=row_form),
+    'top_question': ValueField(q=top_question, v=Shelly Watson),
+  })
+# ---
