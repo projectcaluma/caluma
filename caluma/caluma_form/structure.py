@@ -412,6 +412,7 @@ class BaseField(ABC):
 
         """
         form = self.get_form()
+        root_form = self.get_root().get_form()
 
         if parent_info := self.get_parent_fieldset():
             parent_data = {
@@ -424,8 +425,10 @@ class BaseField(ABC):
             "form": form.slug,
             "formMeta": form.meta,
             "parent": parent_data,
-            # TODO how is "root" expected to behave if we're *already* on root?
-            "root": self.get_root().get_local_info_context() if self.parent else None,
+            "root": {
+                "form": root_form.slug,
+                "formMeta": root_form.meta,
+            },
         }
 
     def get_parent_fieldset(self):

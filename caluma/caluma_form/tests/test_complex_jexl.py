@@ -303,5 +303,5 @@ def test_structure_caching(transactional_db, complex_jexl_form, complex_jexl_doc
     # Note: If those fail, just update the counts. I'm more interested in a
     # rather rough overview of cache hits, not the exact numbers. Changing the
     # caching will affect hese numbers.
-    assert structure.object_local_memoise.hit_count - hit_count_before == 46
-    assert structure.object_local_memoise.miss_count - miss_count_before == 49
+    assert structure.object_local_memoise.hit_count - hit_count_before == 45
+    assert structure.object_local_memoise.miss_count - miss_count_before == 48
