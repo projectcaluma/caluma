@@ -376,7 +376,6 @@ class BaseField(ABC):
             # We need a deep copy of the global context, so we can
             # extend the info block without leaking
             copy.deepcopy(self.get_global_context()),
-            self.get_context(),
         )
 
         context["info"].update(self.get_local_info_context())

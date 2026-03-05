@@ -1,7 +1,6 @@
 # serializer version: 1
 # name: test_jexl_context[cell_question]
   dict({
-    'column': ValueField(q=column, v=-14.7052420113822),
     'form': 'top_form',
     'info': dict({
       'form': 'row_form',
@@ -23,9 +22,6 @@
         'root': None,
       }),
     }),
-    'sub_question': ValueField(q=sub_question, v=1990),
-    'table': RowSet(q=table, f=row_form),
-    'top_question': ValueField(q=top_question, v=Shelly Watson),
   })
 # ---
 # name: test_jexl_context[sub_question]
@@ -54,9 +50,6 @@
         'root': None,
       }),
     }),
-    'sub_question': ValueField(q=sub_question, v=1990),
-    'table': RowSet(q=table, f=row_form),
-    'top_question': ValueField(q=top_question, v=Shelly Watson),
   })
 # ---
 # name: test_jexl_context[top_question]
@@ -79,8 +72,5 @@
         'root': None,
       }),
     }),
-    'sub_question': ValueField(q=sub_question, v=1990),
-    'table': RowSet(q=table, f=row_form),
-    'top_question': ValueField(q=top_question, v=Shelly Watson),
   })
 # ---
