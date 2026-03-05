@@ -4,7 +4,8 @@
     'form': 'top_form',
     'info': dict({
       'form': 'row_form',
-      'formMeta': None,
+      'formMeta': dict({
+      }),
       'parent': dict({
         'form': 'top_form',
         'formMeta': dict({

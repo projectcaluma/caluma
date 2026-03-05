@@ -421,8 +421,8 @@ class BaseField(ABC):
         else:
             parent_data = None
         return {
-            "form": form and form.slug or None,
-            "formMeta": form and form.meta or None,
+            "form": form.slug,
+            "formMeta": form.meta,
             "parent": parent_data,
             # TODO how is "root" expected to behave if we're *already* on root?
             "root": self.get_root().get_local_info_context() if self.parent else None,
