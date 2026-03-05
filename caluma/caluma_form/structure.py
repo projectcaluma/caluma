@@ -402,6 +402,7 @@ class BaseField(ABC):
              - `info.formMeta`: The meta of the form this question is attached to.
              - `info.parent.form`: The parent form if applicable.
              - `info.parent.formMeta`: The parent form meta if applicable.
+             - `info.parent.question`: The parent question (table or form question)
              - `info.root.form`: The new property for the root form.
              - `info.root.formMeta`: The new property for the root form meta.
         * Case information is taken from the global context
@@ -418,6 +419,7 @@ class BaseField(ABC):
             parent_data = {
                 "form": parent_info.get_form().slug,
                 "formMeta": parent_info.get_form().meta,
+                "question": parent_info.question.slug,
             }
         else:
             parent_data = None

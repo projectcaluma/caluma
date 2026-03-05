@@ -12,6 +12,7 @@
           'is-top-form': True,
           'level': 0,
         }),
+        'question': 'table',
       }),
       'root': dict({
         'form': 'top_form',
@@ -38,6 +39,7 @@
           'is-top-form': True,
           'level': 0,
         }),
+        'question': 'form',
       }),
       'root': dict({
         'form': 'top_form',
