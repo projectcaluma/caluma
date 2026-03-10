@@ -1,4 +1,4 @@
-from factory import Faker, SubFactory
+from factory import Faker, LazyFunction, SubFactory
 
 from ..caluma_core.factories import DjangoModelFactory
 from . import models
@@ -12,7 +12,7 @@ class AnalyticsTableFactory(DjangoModelFactory):
         ext_word_list=[i for i, _ in models.AnalyticsTable.STARTING_OBJECT_CHOICES],
     )
 
-    meta = {}
+    meta = LazyFunction(lambda: {})
 
     class Meta:
         model = models.AnalyticsTable
@@ -20,7 +20,7 @@ class AnalyticsTableFactory(DjangoModelFactory):
 
 class AnalyticsFieldFactory(DjangoModelFactory):
     alias = Faker("slug")
-    meta = {}
+    meta = LazyFunction(lambda: {})
     data_source = Faker("slug")
     table = SubFactory(AnalyticsTableFactory)
 
