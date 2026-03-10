@@ -1,3 +1,9 @@
+# v12.3.4 (10 March 2026)
+
+### Fix
+
+* **tests:** The model factories must not contain mutable attributes ([`a158497`](https://github.com/projectcaluma/caluma/commit/a15849786fb5457d5cdb15d3999e05b56fb1e9af))
+
 # v12.3.3 (4 February 2026)
 
 ### Fix
