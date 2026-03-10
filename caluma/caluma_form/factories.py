@@ -3,6 +3,7 @@ from django.db.models.signals import post_save
 from factory import (
     Faker,
     LazyAttribute,
+    LazyFunction,
     Maybe,
     SubFactory,
     django,
@@ -32,7 +33,7 @@ class FormFactory(DjangoModelFactory):
     slug = Faker("slug")
     name = Faker("multilang", faker_provider="name")
     description = Faker("multilang", faker_provider="text")
-    meta = {}
+    meta = LazyFunction(lambda: {})
     is_published = False
     is_archived = False
 
@@ -46,10 +47,10 @@ class QuestionFactory(DjangoModelFactory):
     type = Faker("word", ext_word_list=AUTO_QUESTION_TYPES)
     is_required = "true"
     is_hidden = "false"
-    configuration = {}
-    meta = {}
+    configuration = LazyFunction(lambda: {})
+    meta = LazyFunction(lambda: {})
     is_archived = False
-    format_validators = []
+    format_validators = LazyFunction(lambda: [])
 
     row_form = Maybe(
         "is_table", yes_declaration=SubFactory(FormFactory), no_declaration=None
@@ -72,7 +73,7 @@ class QuestionFactory(DjangoModelFactory):
     calc_expression = Maybe(
         "is_calc_float", yes_declaration="-1.0", no_declaration=None
     )
-    calc_dependents = []
+    calc_dependents = LazyFunction(lambda: [])
 
     # action button question
     action = Maybe(
@@ -103,11 +104,13 @@ class QuestionFactory(DjangoModelFactory):
         is_table = LazyAttribute(lambda q: q.type == models.Question.TYPE_TABLE)
         is_form = LazyAttribute(lambda q: q.type == models.Question.TYPE_FORM)
         is_dynamic = LazyAttribute(
-            lambda q: q.type
-            in [
-                models.Question.TYPE_DYNAMIC_CHOICE,
-                models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
-            ]
+            lambda q: (
+                q.type
+                in [
+                    models.Question.TYPE_DYNAMIC_CHOICE,
+                    models.Question.TYPE_DYNAMIC_MULTIPLE_CHOICE,
+                ]
+            )
         )
         is_static = LazyAttribute(lambda q: q.type == models.Question.TYPE_STATIC)
         is_calc_float = LazyAttribute(
@@ -123,7 +126,7 @@ class OptionFactory(DjangoModelFactory):
     label = Faker("multilang", faker_provider="name")
     is_hidden = "false"
     is_archived = False
-    meta = {}
+    meta = LazyFunction(lambda: {})
 
     class Meta:
         model = models.Option
@@ -150,7 +153,7 @@ class FormQuestionFactory(DjangoModelFactory):
 class DocumentFactory(DjangoModelFactory):
     form = SubFactory(FormFactory)
     family = None
-    meta = {}
+    meta = LazyFunction(lambda: {})
 
     class Meta:
         model = models.Document
@@ -159,7 +162,7 @@ class DocumentFactory(DjangoModelFactory):
 class AnswerFactory(DjangoModelFactory):
     question = SubFactory(QuestionFactory)
     document = SubFactory(DocumentFactory)
-    meta = {}
+    meta = LazyFunction(lambda: {})
 
     @lazy_attribute
     def value(self):

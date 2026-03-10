@@ -1,4 +1,4 @@
-from factory import Faker, SubFactory, post_generation
+from factory import Faker, LazyFunction, SubFactory, post_generation
 from factory.django import DjangoModelFactory as FactoryDjangoModelFactory
 
 from ..caluma_core.factories import DjangoModelFactory
@@ -13,7 +13,7 @@ class TaskFactory(DjangoModelFactory):
     address_groups = None
     control_groups = None
     description = Faker("multilang", faker_provider="text")
-    meta = {}
+    meta = LazyFunction(lambda: {})
     is_archived = False
     form = SubFactory(FormFactory)
     lead_time = None
@@ -28,7 +28,7 @@ class WorkflowFactory(DjangoModelFactory):
     slug = Faker("slug")
     name = Faker("multilang", faker_provider="name")
     description = Faker("multilang", faker_provider="text")
-    meta = {}
+    meta = LazyFunction(lambda: {})
     is_published = False
     is_archived = False
     allow_all_forms = False
@@ -73,7 +73,7 @@ class TaskFlowFactory(DjangoModelFactory):
 class CaseFactory(DjangoModelFactory):
     workflow = SubFactory(WorkflowFactory)
     status = models.Case.STATUS_RUNNING
-    meta = {}
+    meta = LazyFunction(lambda: {})
     document = SubFactory(DocumentFactory)
 
     @post_generation
@@ -99,10 +99,10 @@ class WorkItemFactory(DjangoModelFactory):
     closed_by_group = None
     deadline = None
     status = models.WorkItem.STATUS_READY
-    meta = {}
-    addressed_groups = []
-    controlling_groups = []
-    assigned_users = []
+    meta = LazyFunction(lambda: {})
+    addressed_groups = LazyFunction(lambda: [])
+    controlling_groups = LazyFunction(lambda: [])
+    assigned_users = LazyFunction(lambda: [])
     task = SubFactory(TaskFactory)
     case = SubFactory(CaseFactory)
     child_case = SubFactory(CaseFactory)
