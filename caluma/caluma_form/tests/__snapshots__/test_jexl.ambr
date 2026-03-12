@@ -1,0 +1,73 @@
+# serializer version: 1
+# name: test_jexl_context[cell_question]
+  dict({
+    'form': 'top_form',
+    'info': dict({
+      'form': 'row_form',
+      'formMeta': dict({
+      }),
+      'parent': dict({
+        'form': 'top_form',
+        'formMeta': dict({
+          'is-top-form': True,
+          'level': 0,
+        }),
+        'question': 'table',
+      }),
+      'root': dict({
+        'form': 'top_form',
+        'formMeta': dict({
+          'is-top-form': True,
+          'level': 0,
+        }),
+      }),
+    }),
+  })
+# ---
+# name: test_jexl_context[sub_question]
+  dict({
+    'form': 'top_form',
+    'info': dict({
+      'form': 'sub_form',
+      'formMeta': dict({
+        'is-top-form': False,
+        'level': 1,
+      }),
+      'parent': dict({
+        'form': 'top_form',
+        'formMeta': dict({
+          'is-top-form': True,
+          'level': 0,
+        }),
+        'question': 'form',
+      }),
+      'root': dict({
+        'form': 'top_form',
+        'formMeta': dict({
+          'is-top-form': True,
+          'level': 0,
+        }),
+      }),
+    }),
+  })
+# ---
+# name: test_jexl_context[top_question]
+  dict({
+    'form': 'top_form',
+    'info': dict({
+      'form': 'top_form',
+      'formMeta': dict({
+        'is-top-form': True,
+        'level': 0,
+      }),
+      'parent': None,
+      'root': dict({
+        'form': 'top_form',
+        'formMeta': dict({
+          'is-top-form': True,
+          'level': 0,
+        }),
+      }),
+    }),
+  })
+# ---

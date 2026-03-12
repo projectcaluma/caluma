@@ -702,3 +702,30 @@ def test_evaluate_error_no_raise(info, form_and_document, do_raise, expectation)
 
     with expectation:
         assert top_q_field.is_hidden(raise_on_error=do_raise) is None
+
+
+def test_jexl_context(form_and_document, snapshot):
+    """Test the JEXL context structure as a whole.
+
+    This test is looking at the JEXL context as a whole so developerss can see
+    the actual structure that we document.
+
+    The documentation on what properties we expect can be found in the
+    `BaseField.get_local_info_context` method located in
+    `caluma/caluma_form/structure.py`.
+    """
+
+    from caluma.caluma_form import structure
+
+    form, document, questions, answers = form_and_document(
+        use_table=True, use_subform=True
+    )
+
+    struct = structure.FieldSet(document)
+
+    for name, field in [
+        ("top_question", struct.get_field("top_question")),
+        ("sub_question", struct.get_field("sub_question")),
+        ("cell_question", struct.get_field("table").children()[0].get_field("column")),
+    ]:
+        assert snapshot(name=name) == dict(field.get_evaluator().context.data)

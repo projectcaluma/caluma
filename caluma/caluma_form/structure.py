@@ -346,7 +346,7 @@ class FastLoader:
 class BaseField(ABC):
     """Base class for the field types. This is the interface we aim to provide."""
 
-    parent: Optional["FieldSet"] = field(default=None)
+    parent: Optional["FieldSet" | "RowSet"] = field(default=None)
 
     question: Optional[Question] = field(default=None)
     answer: Optional[Answer] = field(default=None)
@@ -376,7 +376,6 @@ class BaseField(ABC):
             # We need a deep copy of the global context, so we can
             # extend the info block without leaking
             copy.deepcopy(self.get_global_context()),
-            self.get_context(),
         )
 
         context["info"].update(self.get_local_info_context())
@@ -403,6 +402,7 @@ class BaseField(ABC):
              - `info.formMeta`: The meta of the form this question is attached to.
              - `info.parent.form`: The parent form if applicable.
              - `info.parent.formMeta`: The parent form meta if applicable.
+             - `info.parent.question`: The parent question (table or form question)
              - `info.root.form`: The new property for the root form.
              - `info.root.formMeta`: The new property for the root form meta.
         * Case information is taken from the global context
@@ -413,21 +413,24 @@ class BaseField(ABC):
 
         """
         form = self.get_form()
+        root_form = self.get_root().get_form()
 
         if parent_info := self.get_parent_fieldset():
             parent_data = {
                 "form": parent_info.get_form().slug,
                 "formMeta": parent_info.get_form().meta,
+                "question": parent_info.question.slug,
             }
         else:
             parent_data = None
         return {
-            "question": self.question.slug if self.question else None,
-            "form": form and form.slug or None,
-            "formMeta": form and form.meta or None,
+            "form": form.slug,
+            "formMeta": form.meta,
             "parent": parent_data,
-            # TODO how is "root" expected to behave if we're *already* on root?
-            "root": self.get_root().get_local_info_context() if self.parent else None,
+            "root": {
+                "form": root_form.slug,
+                "formMeta": root_form.meta,
+            },
         }
 
     def get_parent_fieldset(self):
