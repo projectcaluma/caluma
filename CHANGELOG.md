@@ -1,3 +1,9 @@
+# v12.4.0 (18 March 2026)
+
+### Feature
+
+* **jexl:** Add `parent.question` to JEXL context ([`2bfb411`](https://github.com/projectcaluma/caluma/commit/2bfb41107b3e2e8db2e02e3e9e55fd891959e976))
+
 # v12.3.4 (10 March 2026)
 
 ### Fix
