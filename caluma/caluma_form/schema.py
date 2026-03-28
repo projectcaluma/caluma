@@ -25,7 +25,7 @@ from ..caluma_data_source.data_source_handlers import get_data_source_data
 from ..caluma_data_source.schema import DataSourceDataConnection
 from . import filters, models, serializers
 from .format_validators import get_format_validators
-from .validators import get_document_validity
+from .validators import get_validity
 
 
 def resolve_answer(answer):
@@ -1179,7 +1179,7 @@ class ValidationEntry(ObjectType):
 
 
 class ValidationResult(ObjectType):
-    id = graphene.ID(description="References the document ID")
+    id = graphene.ID(description="References the document or answer ID")
 
     is_valid = graphene.Boolean()
     errors = graphene.List(ValidationEntry)
@@ -1190,13 +1190,17 @@ class DocumentValidityConnection(CountableConnectionBase):
         node = ValidationResult
 
 
-def validate_document(info, document_global_id, **kwargs):
-    document_id = extract_global_id(document_global_id)
+class AnswerValidityConnection(CountableConnectionBase):
+    class Meta:
+        node = ValidationResult
 
-    document_qs = Document.get_queryset(models.Document.objects.all(), info)
 
-    document = get_object_or_404(document_qs, pk=document_id)
-    result = get_document_validity(document, info.context.user, **kwargs)
+def validate(qs, info, global_id, **kwargs):
+    result = get_validity(
+        get_object_or_404(qs, pk=extract_global_id(global_id)),
+        info.context.user,
+        **kwargs,
+    )
 
     errors = result.pop("errors")
     result = ValidationResult(
@@ -1243,11 +1247,30 @@ class Query:
         data_source_context=graphene.JSONString(),
     )
 
+    answer_validity = ConnectionField(
+        DocumentValidityConnection,
+        id=graphene.ID(required=True),
+        data_source_context=graphene.JSONString(),
+    )
+
     def resolve_all_format_validators(self, info, **kwargs):
         return get_format_validators()
 
     def resolve_document_validity(self, info, id, **kwargs):
-        return validate_document(info, id, **kwargs)
+        return validate(
+            Document.get_queryset(models.Document.objects.all(), info),
+            info,
+            id,
+            **kwargs,
+        )
+
+    def resolve_answer_validity(self, info, id, **kwargs):
+        return validate(
+            Answer.get_queryset(models.Answer.objects.all(), info),
+            info,
+            id,
+            **kwargs,
+        )
 
 
 QUESTION_ANSWER_TYPES = {
