@@ -1,5 +1,6 @@
 import sys
 from datetime import date
+from functools import singledispatch
 from logging import getLogger
 
 from django_filters.constants import EMPTY_VALUES
@@ -522,13 +523,12 @@ class QuestionValidator:
             self._validate_data_source(data["dataSource"])
 
 
-def get_document_validity(document, user, **kwargs):
-    validator = DocumentValidator()
+def run_validation(validation_fn, *args, **kwargs):
     is_valid = True
     errors = []
 
     try:
-        validator.validate(document, user, **kwargs)
+        validation_fn(*args, **kwargs)
     except CustomValidationError as exc:
         is_valid = False
         detail = exc.detail[0]
@@ -542,4 +542,45 @@ def get_document_validity(document, user, **kwargs):
             for slug in exc.slugs
         ]
 
+    return is_valid, errors
+
+
+@singledispatch
+def get_validity():  # pragma: no cover
+    raise NotImplementedError()
+
+
+@get_validity.register(models.Document)
+def _(document, user, **kwargs):
+    validator = DocumentValidator()
+    validation_context = validator.get_validation_context(document.family)
+
+    is_valid, errors = run_validation(
+        validator.validate,
+        document=document,
+        user=user,
+        validation_context=validation_context,
+        **kwargs,
+    )
+
     return {"id": document.id, "is_valid": is_valid, "errors": errors}
+
+
+@get_validity.register(models.Answer)
+def _(answer, user, **kwargs):
+    validation_context = DocumentValidator().get_validation_context(
+        answer.document.family
+    )
+
+    is_valid, errors = run_validation(
+        AnswerValidator().validate,
+        document=answer.document,
+        question=answer.question,
+        value=answer.value,
+        documents=answer.documents.all(),
+        user=user,
+        validation_context=validation_context,
+        **kwargs,
+    )
+
+    return {"id": answer.id, "is_valid": is_valid, "errors": errors}
