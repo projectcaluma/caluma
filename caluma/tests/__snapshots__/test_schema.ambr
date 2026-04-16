@@ -1946,6 +1946,7 @@
     allFormatValidators(before: String, after: String, first: Int, last: Int): FormatValidatorConnection
     allUsedDynamicOptions(offset: Int, before: String, after: String, first: Int, last: Int, filter: [DynamicOptionFilterSetType], order: [DynamicOptionOrderSetType]): DynamicOptionConnection
     documentValidity(id: ID!, dataSourceContext: JSONString, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
+    answerValidity(id: ID!, dataSourceContext: JSONString, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
     node(
       """The ID of the object"""
       id: ID!
@@ -3444,7 +3445,7 @@
   }
   
   type ValidationResult {
-    """References the document ID"""
+    """References the document or answer ID"""
     id: ID
     isValid: Boolean
     errors: [ValidationEntry]
