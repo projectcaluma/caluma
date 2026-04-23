@@ -1960,21 +1960,22 @@ testing = ["Django", "django-configurations (>=2.0)"]
 
 [[package]]
 name = "pytest-env"
-version = "1.2.0"
+version = "1.6.0"
 description = "pytest plugin that allows you to add environment variables."
 optional = false
 python-versions = ">=3.10"
 groups = ["dev"]
 files = [
-    {file = "pytest_env-1.2.0-py3-none-any.whl", hash = "sha256:d7e5b7198f9b83c795377c09feefa45d56083834e60d04767efd64819fc9da00"},
-    {file = "pytest_env-1.2.0.tar.gz", hash = "sha256:475e2ebe8626cee01f491f304a74b12137742397d6c784ea4bc258f069232b80"},
+    {file = "pytest_env-1.6.0-py3-none-any.whl", hash = "sha256:1e7f8a62215e5885835daaed694de8657c908505b964ec8097a7ce77b403d9a3"},
+    {file = "pytest_env-1.6.0.tar.gz", hash = "sha256:ac02d6fba16af54d61e311dd70a3c61024a4e966881ea844affc3c8f0bf207d3"},
 ]
 
 [package.dependencies]
-pytest = ">=8.4.2"
+pytest = ">=9.0.2"
+python-dotenv = ">=1.2.2"
 
 [package.extras]
-testing = ["covdefaults (>=2.3)", "coverage (>=7.10.7)", "pytest-mock (>=3.15.1)"]
+testing = ["covdefaults (>=2.3)", "coverage (>=7.13.4)", "pytest-mock (>=3.15.1)"]
 
 [[package]]
 name = "pytest-factoryboy"
@@ -2097,6 +2098,21 @@ charset-normalizer = "*"
 
 [package.extras]
 test = ["pytest", "pytest-cov"]
+
+[[package]]
+name = "python-dotenv"
+version = "1.2.2"
+description = "Read key-value pairs from a .env file and set them as environment variables"
+optional = false
+python-versions = ">=3.10"
+groups = ["dev"]
+files = [
+    {file = "python_dotenv-1.2.2-py3-none-any.whl", hash = "sha256:1d8214789a24de455a8b8bd8ae6fe3c6b69a5e3d64aa8a8e5d68e694bbcb285a"},
+    {file = "python_dotenv-1.2.2.tar.gz", hash = "sha256:2c371a91fbd7ba082c2c1dc1f8bf89ca22564a087c2c287cd9b662adde799cf3"},
+]
+
+[package.extras]
+cli = ["click (>=5.0)"]
 
 [[package]]
 name = "python-gitlab"
@@ -2893,4 +2909,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4"
-content-hash = "6bf958428eeed35dcaad3f461bc63d4d24520f51a222931db0b7254954edf564"
+content-hash = "568fe39a384eff0b15a7bc04e11e1ec97c4071114196b98a452320f71e3d64d0"
