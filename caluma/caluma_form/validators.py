@@ -297,12 +297,17 @@ class AnswerValidator:
         data_source_context=None,
         **kwargs,
     ):
-        # Check all possible fields for value
-        value = None
-        for i in ["documents", "files", "date", "value"]:
-            value = kwargs.get(i, value)
-            if value:
-                break
+        # Get value from kwargs depending on the question type
+        if question.type == Question.TYPE_DATE:
+            value = kwargs["date"]
+        elif question.type == Question.TYPE_TABLE:
+            documents = kwargs["documents"]
+            value = list(documents) if documents else None
+        elif question.type == Question.TYPE_FILES:
+            files = kwargs["files"]
+            value = list(files) if files else None
+        else:
+            value = kwargs["value"]
 
         # empty values are allowed
         # required check will be done in DocumentValidator
@@ -386,7 +391,9 @@ class DocumentValidator:
                     document=field.answer.document,
                     question=field.question,
                     value=field.answer.value,
+                    date=field.answer.date,
                     documents=field.answer.documents.all(),
+                    files=field.answer.files.all(),
                     user=user,
                     validation_context=field,
                     data_source_context=data_source_context,

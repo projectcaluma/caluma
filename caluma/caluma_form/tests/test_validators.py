@@ -1,3 +1,5 @@
+import datetime
+
 import minio
 import pytest
 from rest_framework.exceptions import ValidationError
@@ -839,3 +841,57 @@ def test_validate_options_without_jexl(
         api.save_answer(fq.question, document, value=options[3].option_id)
 
     assert spy.call_count == expect_jexl_evaluations
+
+
+@pytest.mark.parametrize("question__is_required", ["false"])
+@pytest.mark.parametrize(
+    "question__type,method_name",
+    [
+        (Question.TYPE_DATE, "_validate_question_date"),
+        (Question.TYPE_TABLE, "_validate_question_table"),
+        (Question.TYPE_FILES, "_validate_question_files"),
+    ],
+)
+def test_validate_custom_value_field(
+    db,
+    admin_user,
+    answer,
+    document_factory,
+    document,
+    file_factory,
+    form_question,
+    method_name,
+    mocker,
+    question,
+):
+    """Test that question types using other fields than `value` are validated.
+
+    This test makes sure that question types using another property (e.g. date
+    questions using `date`) to get the value are being validated properly and
+    are not wrongly interpreted as empty since the `value` property is `None`.
+    """
+
+    validate_fn = mocker.patch(
+        f"caluma.caluma_form.validators.AnswerValidator.{method_name}"
+    )
+
+    date = None
+    files = []
+    documents = []
+
+    if question.type == Question.TYPE_DATE:
+        date = datetime.date(2026, 5, 7)
+    elif question.type == Question.TYPE_TABLE:
+        documents = document_factory.create_batch(2)
+    elif question.type == Question.TYPE_FILES:
+        files = file_factory.create_batch(2)
+
+    answer.value = None
+    answer.date = date
+    answer.documents.set(documents)
+    answer.files.set(files)
+    answer.save()
+
+    DocumentValidator().validate(document, admin_user)
+
+    assert validate_fn.call_count == 1
