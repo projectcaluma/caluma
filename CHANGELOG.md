@@ -1,3 +1,9 @@
+# v12.4.1 (11 May 2026)
+
+### Fix
+
+* **validation:** Fix date and files answer validation ([`e2e0359`](https://github.com/projectcaluma/caluma/commit/e2e035990a38ea73162e3b8aaa9a5f71d0e746dd))
+
 # v12.4.0 (18 March 2026)
 
 ### Feature
