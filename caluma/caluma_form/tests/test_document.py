@@ -1851,3 +1851,83 @@ def test_efficient_init_of_calc_questions(
 
     calc_ans = document.answers.get(question_id="calc-2")
     assert calc_ans.value == 2
+
+
+@pytest.mark.parametrize("is_valid", [True, False])
+def test_validity_query_table(
+    db,
+    document,
+    document_factory,
+    form_question_factory,
+    form_factory,
+    form,
+    is_valid,
+    schema_executor,
+    settings,
+):
+    settings.DATA_SOURCE_CLASSES = [
+        "caluma.caluma_data_source.tests.data_sources.MyDataSource"
+    ]
+
+    root_question = form_question_factory(
+        form=form,
+        question__slug="root-question",
+        question__type=Question.TYPE_TEXT,
+    ).question
+
+    table_question = form_question_factory(
+        form=form,
+        question__type=Question.TYPE_TABLE,
+        question__is_required="true",
+        question__row_form=form_factory(),
+    ).question
+
+    row_question = form_question_factory(
+        form=table_question.row_form,
+        question__type=Question.TYPE_TEXT,
+        question__is_required="'root-question'|answer == 'require-table'",
+    ).question
+
+    document.form = form
+    document.save()
+
+    document.answers.create(
+        question=root_question,
+        value="dont-require-table" if is_valid else "require-table",
+    )
+
+    table_document = document_factory(form=table_question.row_form, family=document)
+    table_document.answers.create(question=row_question, value=None)
+
+    table_answer = document.answers.create(question=table_question)
+    table_answer.documents.add(table_document)
+
+    query = """
+        query($id: ID!) {
+          documentValidity(id: $id) {
+            edges {
+              node {
+                id
+                isValid
+                errors {
+                  slug
+                  errorMsg
+                  errorCode
+                  documentId
+                }
+              }
+            }
+          }
+        }
+    """
+
+    result = schema_executor(query, variable_values={"id": str(table_document.id)})
+
+    # if is_valid, we expect 0 errors, otherwise one
+    num_errors = int(not is_valid)
+
+    validity = result.data["documentValidity"]["edges"][0]["node"]
+
+    assert validity["id"] == str(table_document.id)
+    assert validity["isValid"] == is_valid
+    assert len(validity["errors"]) == num_errors
