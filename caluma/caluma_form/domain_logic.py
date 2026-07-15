@@ -1,4 +1,3 @@
-from graphlib import TopologicalSorter
 from logging import getLogger
 from typing import Optional
 
@@ -10,7 +9,10 @@ from caluma.caluma_core.exceptions import ConfigurationError
 from caluma.caluma_core.models import BaseModel
 from caluma.caluma_core.relay import extract_global_id
 from caluma.caluma_form import models, validators
-from caluma.caluma_form.utils import recalculate_field
+from caluma.caluma_form.calc_questions import (
+    recalculate_all_calc_fields,
+    recalculate_dependent_fields,
+)
 from caluma.caluma_user.models import BaseUser
 from caluma.utils import update_model
 
@@ -188,47 +190,19 @@ class SaveAnswerLogic:
                 "Saved an answer in a form structure where it doesn't belong: "
                 f"question={answer.question_id}, root form={struc.get_root().get_form().slug}",
             )
-        if is_table:
-            # We treat all children of the table as "changed"
-            # Find all children, and if any are of type calc (and are in the "created"
-            # update info bit), recalculate them.
-            for child in field.get_all_fields():
-                if (
-                    child.question.type == models.Question.TYPE_CALCULATED_FLOAT
-                    and child.parent._document.pk in update_info["created"]
-                ):
-                    recalculate_field(child)
 
-        field_rowset = field.get_containing_rowset()
+        roots = [field]
+        if is_table and update_info.get("created"):
+            # New rows might have calculated fields depending on fields outside
+            # the table. Make sure we catch them as well
+            created_ids = set(update_info["created"])
+            for row in field.children():
+                if row._document.pk in created_ids:
+                    for child in row.get_all_fields():
+                        if child.question.type == models.Question.TYPE_CALCULATED_FLOAT:
+                            roots.append(child)
 
-        for dep_slug in field.question.calc_dependents or []:
-            # ... maybe this is enough? Cause this will find the closest "match",
-            # going only to the outer context from a table if the field is not found
-            # inside of it
-            for dep_field in struc.find_all_fields_by_slug(dep_slug):
-                # Need to iterate, because a calc question could reside *inside*
-                # a table row, so there could be multiple of them, all needing to
-                # be updated because of "our" change
-
-                # If the changed field, and the dependent are both inside a table,
-                # then we only need to update the dependent inside the same row
-                dep_field_rowset = dep_field.get_containing_rowset()
-
-                both_are_tables = field_rowset and dep_field_rowset
-                same_table = field_rowset == dep_field_rowset
-                same_row = dep_field.parent is field.parent
-
-                # need_recalc is only False exactly if both are in the same
-                # table, but not the same row
-                need_recalc = not (both_are_tables and same_table and not same_row)
-
-                if need_recalc:
-                    log.debug(
-                        "update_calc_dependents(%s): updating question %s",
-                        answer,
-                        dep_field.question.pk,
-                    )
-                    recalculate_field(dep_field)
+        recalculate_dependent_fields(*roots, recalculate_roots=True)
 
     @classmethod
     @transaction.atomic
@@ -365,39 +339,8 @@ class SaveDocumentLogic:
         document.meta.pop("_defer_calculation", None)
         document.save()
 
-        SaveDocumentLogic._initialize_calculated_answers(document)
-
-        return document
-
-    @staticmethod
-    def _initialize_calculated_answers(document):
-        """
-        Initialize all calculated questions in the document.
-
-        In order to do this efficiently, we get all calculated questions with
-        their dependents, sort them topoligically, and then update their answer.
-        """
         struc = validators.DocumentValidator().get_validation_context(document.family)
-
-        calculated_fields = (
-            field
-            for field in struc.get_all_fields()
-            if field.question.type == models.Question.TYPE_CALCULATED_FLOAT
-        )
-
-        adjacency_list = {
-            field.slug(): field.question.calc_dependents for field in calculated_fields
-        }
-        ts = TopologicalSorter(adjacency_list)
-        # TopologicalSorter expects the adjacency_list the "other way around", i.e.
-        # for every node the incoming nodes should be given. To account for this, we
-        # just reverse the resulting order.
-        sorted_question_slugs = list(reversed(list(ts.static_order())))
-
-        for slug in sorted_question_slugs:
-            print("question", slug)
-            for field in struc.find_all_fields_by_slug(slug):
-                recalculate_field(field, update_recursively=False)
+        recalculate_all_calc_fields(struc)
 
         return document
 

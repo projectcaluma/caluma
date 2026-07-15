@@ -357,20 +357,6 @@ class BaseField(ABC):
         return FastLoader.for_document(document)
 
     @object_local_memoise
-    def get_containing_rowset(self) -> RowSet | None:
-        """
-        Check if field is part of a table and return the containing rowset if true.
-
-        If the field is not part of a table, return None.
-        """
-        p = self
-        while p:
-            p = p.parent
-            if isinstance(p, RowSet):
-                return p
-        return None
-
-    @object_local_memoise
     def get_evaluator(self) -> QuestionJexl:
         """Return the JEXL evaluator for this field."""
 
@@ -561,7 +547,7 @@ class BaseField(ABC):
                 return fld
         return None
 
-    def refresh(self, answer=None):
+    def refresh(self, answer=None, recursive=True):
         """Refresh this field's answer.
 
         If an answer is given, use it and update the structure in-place.
@@ -572,6 +558,12 @@ class BaseField(ABC):
 
         Note: Saving the answer is the caller's responsibility, we only
         update the structure in-memory.
+
+        By default, this will also refresh all calculated questions that
+        depend on this field. If you know what you're doing, you can speed
+        things up by passing `recursive=False` here. It is then your
+        responsibility to refresh / recalculate any dependents as needed to
+        keep the structure in a consistent state.
         """
         if answer:
             self.answer = answer
@@ -583,6 +575,8 @@ class BaseField(ABC):
             ).first()
 
         clear_memoise(self)
+        if not recursive:
+            return
         for dep in self._fastloader.dependents_of_question(self.slug()):
             for dep_field in self.get_root().find_all_fields_by_slug(dep):
                 dep_field.refresh()
@@ -610,13 +604,13 @@ class BaseField(ABC):
         except exceptions.QuestionMissing:
             raise
         except Exception as exc:
-            log.error(
-                f"Error while evaluating expression on question {self.slug()}: "
+            log.debug(
+                f"Error while evaluating expression on question {self.get_path()}: "
                 f"{expression!r}: {str(exc)}"
             )
             if raise_on_error:
                 raise RuntimeError(
-                    f"Error while evaluating expression on question {self.slug()}: "
+                    f"Error while evaluating expression on question {self.get_path()}: "
                     f"{expression!r}. The system log contains more information"
                 )
             # return None is implied
@@ -634,7 +628,7 @@ class BaseField(ABC):
         parent_form = self.parent.form if self.parent else None
         return parent_form or self.form or None
 
-    def get_path(self):  # pragma: no cover
+    def get_path(self):
         """Return a path to the current field.
 
         The path is a human-readable path to the current field, starting from
@@ -643,10 +637,15 @@ class BaseField(ABC):
 
         # This is mainly for debugging
         if not self.parent:
-            return "(root)"
+            # root fieldset, return form slug
+            return f"({self.form.slug})"
+        # special case: if parent is a rowset, inject the row number
+        row_idx = ""
+        if isinstance(self.parent, RowSet) and self.rownum is not None:
+            row_idx = f"[{self.rownum}]"
+
         ppath = self.parent.get_path()
-        typeinfo = type(self).__name__[0]
-        return f"{ppath} -> {typeinfo}:{self.slug()}"
+        return f"{ppath}{row_idx}.{self.slug()}"
 
 
 @dataclass
@@ -720,6 +719,8 @@ class ValueField(BaseField):
 
 
 class FieldSet(BaseField):
+    rownum: int | None = field(default=None)
+
     def __init__(
         self,
         document,
@@ -727,12 +728,12 @@ class FieldSet(BaseField):
         parent=None,
         question=None,
         global_context=None,
+        rownum=None,
         _fastloader=None,
     ):
-        # TODO: prefetch document once we have the structure built up
-        #
         self.question = question
         self._document = document
+        self.rownum = rownum
 
         self._fastloader = _fastloader or self._make_fastloader(document)
         self.form = form or self._fastloader.form_by_id(document.form_id)
@@ -875,12 +876,15 @@ class FieldSet(BaseField):
                 )
 
     def __str__(self):
-        return f"FieldSet({self.form.slug})"
+        rowinfo = f" #{self.rownum}" if self.rownum else ""
+
+        return f"FieldSet({self.form.slug}{rowinfo})"
 
     def __repr__(self):
         q_slug = self.question.slug if self.question else "(root)"
+        rowinfo = f", r={self.rownum}" if self.rownum else ""
 
-        return f"FieldSet(q={q_slug}, f={self.form.slug})"
+        return f"FieldSet(q={q_slug}, f={self.form.slug}{rowinfo})"
 
     def print_structure(self, print_fn=None, method=str):  # pragma: no cover
         """Print the structure as a hierarchical list of text.
@@ -928,9 +932,12 @@ class RowSet(BaseField):
                     form=self._fastloader.form_by_id(question.row_form_id),
                     parent=self,
                     global_context=self.get_global_context(),
+                    rownum=rownum,
                     _fastloader=self._fastloader,
                 )
-                for row_doc in self._fastloader.rows_for_table_answer(answer.pk)
+                for rownum, row_doc in enumerate(
+                    self._fastloader.rows_for_table_answer(answer.pk), start=1
+                )
             ]
         else:
             self.rows = []

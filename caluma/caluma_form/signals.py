@@ -12,7 +12,13 @@ from caluma.caluma_core.events import filter_events
 from caluma.utils import disable_raw
 
 from . import models
-from .utils import update_calc_dependents, update_or_create_calc_answer
+from .calc_questions import (
+    update_calc_dependents,
+    update_or_create_calc_answer,
+)
+from .utils import (
+    forms_containing_question,
+)
 
 
 @receiver(pre_create_historical_record, sender=models.HistoricalAnswer)
@@ -103,11 +109,8 @@ def remove_calc_dependents(sender, instance, **kwargs):
 @filter_events(lambda instance: instance.type == models.Question.TYPE_CALCULATED_FLOAT)
 @filter_events(lambda instance: getattr(instance, "calc_expression_changed", False))
 def update_calc_from_question(sender, instance, created, update_fields, **kwargs):
-    # TODO: we need to find documents that contain this form as a subform
-    # as well. This would only find documents where the question is attached
-    # top-level.
-    for document in models.Document.objects.filter(form__questions=instance).iterator():
-        update_or_create_calc_answer(instance, document)
+
+    _recalculate_all_questions(instance)
 
 
 @receiver(post_save, sender=models.FormQuestion)
@@ -116,8 +119,18 @@ def update_calc_from_question(sender, instance, created, update_fields, **kwargs
     lambda instance: instance.question.type == models.Question.TYPE_CALCULATED_FLOAT
 )
 def update_calc_from_form_question(sender, instance, created, **kwargs):
-    # TODO: we need to find documents that contain this form as a subform
-    # as well. This would only find documents where the question is attached
-    # top-level.
-    for document in instance.form.documents.all().iterator():
-        update_or_create_calc_answer(instance.question, document)
+    _recalculate_all_questions(instance.question)
+
+
+def _recalculate_all_questions(question):
+    forms = forms_containing_question(question)
+    seen_family_ids = set()
+    for document in (
+        models.Document.objects.filter(form__in=forms)
+        .select_related("family")
+        .only("family")
+        .iterator()
+    ):
+        if document.family.pk not in seen_family_ids:
+            update_or_create_calc_answer(question, document.family)
+        seen_family_ids.add(document.family.pk)

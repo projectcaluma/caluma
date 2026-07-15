@@ -360,7 +360,7 @@ def test_answer_transform_on_hidden_question(info, form_and_document):
         " FieldSet(q=(root), f=top_form)",
         "    ValueField(q=top_question, v=xyz)",
         "    RowSet(q=table, f=row_form)",
-        "       FieldSet(q=table, f=row_form)",
+        "       FieldSet(q=table, f=row_form, r=1)",
         "          ValueField(q=column, v=None)",  # this is our test field
         "    FieldSet(q=form, f=sub_form)",
         "       ValueField(q=sub_question, v=None)",

@@ -130,10 +130,10 @@ def test_recalculate_sibling_rows_in_table(form_factory, form_question_factory, 
     assert structure.list_document_structure(main_doc) == [
         " FieldSet(root)",
         "    RowSet(table)",
-        "       FieldSet(row)",
+        "       FieldSet(row #1)",
         "          Field(col1, 10)",
         "          Field(col2, 20)",
-        "       FieldSet(row)",
+        "       FieldSet(row #2)",
         "          Field(col1, 20)",
         "          Field(col2, 40)",
     ]
@@ -143,7 +143,11 @@ def test_recalculate_sibling_rows_in_table(form_factory, form_question_factory, 
         save_answer(question=column1, value=99, document=row1doc)
 
     # col2 should only be updated once
-    update_msgs = [msg for msg in caplog.messages if "updating question col2" in msg]
+    update_msgs = [
+        msg
+        for msg in caplog.messages
+        if "Recalculating (root).table[2].table.col2" in msg
+    ]
     assert len(update_msgs) == 1
 
     # Check for correct recalculation
