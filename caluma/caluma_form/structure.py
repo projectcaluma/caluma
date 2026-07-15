@@ -357,6 +357,20 @@ class BaseField(ABC):
         return FastLoader.for_document(document)
 
     @object_local_memoise
+    def get_containing_rowset(self) -> RowSet | None:
+        """
+        Check if field is part of a table and return the containing rowset if true.
+
+        If the field is not part of a table, return None.
+        """
+        p = self
+        while p:
+            p = p.parent
+            if isinstance(p, RowSet):
+                return p
+        return None
+
+    @object_local_memoise
     def get_evaluator(self) -> QuestionJexl:
         """Return the JEXL evaluator for this field."""
 

@@ -199,6 +199,8 @@ class SaveAnswerLogic:
                 ):
                     recalculate_field(child)
 
+        field_rowset = field.get_containing_rowset()
+
         for dep_slug in field.question.calc_dependents or []:
             # ... maybe this is enough? Cause this will find the closest "match",
             # going only to the outer context from a table if the field is not found
@@ -208,12 +210,25 @@ class SaveAnswerLogic:
                 # a table row, so there could be multiple of them, all needing to
                 # be updated because of "our" change
 
-                log.debug(
-                    "update_calc_dependents(%s): updating question %s",
-                    answer,
-                    dep_field.question.pk,
-                )
-                recalculate_field(dep_field)
+                # If the changed field, and the dependent are both inside a table,
+                # then we only need to update the dependent inside the same row
+                dep_field_rowset = dep_field.get_containing_rowset()
+
+                both_are_tables = field_rowset and dep_field_rowset
+                same_table = field_rowset == dep_field_rowset
+                same_row = dep_field.parent is field.parent
+
+                # need_recalc is only False exactly if both are in the same
+                # table, but not the same row
+                need_recalc = not (both_are_tables and same_table and not same_row)
+
+                if need_recalc:
+                    log.debug(
+                        "update_calc_dependents(%s): updating question %s",
+                        answer,
+                        dep_field.question.pk,
+                    )
+                    recalculate_field(dep_field)
 
     @classmethod
     @transaction.atomic
