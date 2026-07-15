@@ -1,3 +1,18 @@
+# v12.5.0 (15 Jul 2026)
+
+### Feature
+
+* **validation:** Add graph to validate a single answer ([`ab3399b`](https://github.com/projectcaluma/caluma/commit/ab3399bc007806a29907aa6e7bc6273fdcd6d01b))
+
+### Fix
+
+* **validation:** Make sure validity graphs pass full context ([`6b2a4ca`](https://github.com/projectcaluma/caluma/commit/6b2a4ca565bfb740b3df2eb5971a27484ce0915b))
+
+### Performance
+
+* **form:** Recalculate only once in table rows ([`cca0441`](https://github.com/projectcaluma/caluma/commit/cca044186da7b2b9e56a9c25a14efca834b0c156))
+
+
 # v12.4.1 (11 May 2026)
 
 ### Fix
