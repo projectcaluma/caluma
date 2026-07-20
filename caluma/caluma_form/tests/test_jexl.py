@@ -729,3 +729,43 @@ def test_jexl_context(form_and_document, snapshot):
         ("cell_question", struct.get_field("table").children()[0].get_field("column")),
     ]:
         assert snapshot(name=name) == dict(field.get_evaluator().context.data)
+
+
+@pytest.mark.parametrize(
+    ("dep_is_hidden", "dep_value", "expected_value"),
+    [
+        (True, None, 2),
+        (False, None, 2),
+        (False, 2, 4),
+    ],
+)
+@pytest.mark.django_db
+def test_calc_expression_default_value(
+    form,
+    dep_value,
+    dep_is_hidden,
+    expected_value,
+    form_and_document,
+    form_question_factory,
+    answer_factory,
+):
+    form, document, questions, answers = form_and_document(
+        use_table=True, use_subform=True
+    )
+
+    dep = form_question_factory(
+        form=form,
+        question__slug="dep",
+        question__type=models.Question.TYPE_INTEGER,
+        question__is_hidden=str(dep_is_hidden).lower(),
+    ).question
+    calc = form_question_factory(
+        form=form,
+        question__slug="calc",
+        question__type=models.Question.TYPE_CALCULATED_FLOAT,
+        question__calc_expression="'dep'|answer(1) * 2",
+    ).question
+
+    answer_factory(document=document, question=dep, value=dep_value)
+
+    assert structure.FieldSet(document).get_field(calc.pk).calculate() == expected_value
