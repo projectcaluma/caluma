@@ -129,7 +129,7 @@ def test_recalculate_sibling_rows_in_table(form_factory, form_question_factory, 
     # Ensure (more for us devs) that we got the right structure
     assert structure.list_document_structure(main_doc) == [
         " FieldSet(root)",
-        "    RowSet(row)",
+        "    RowSet(table)",
         "       FieldSet(row)",
         "          Field(col1, 10)",
         "          Field(col2, 20)",

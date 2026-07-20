@@ -981,7 +981,7 @@ class RowSet(BaseField):
         return self.is_hidden() or not bool(self.rows)
 
     def __str__(self):
-        return f"RowSet({self.form.slug})"
+        return f"RowSet({self.question.slug})"
 
     def __repr__(self):
         return f"RowSet(q={self.question.slug}, f={self.form.slug})"

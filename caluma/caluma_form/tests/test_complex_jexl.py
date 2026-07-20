@@ -196,7 +196,7 @@ def test_update_calc_dependency_inside_table_with_outer_reference(
 
     assert structure.list_document_structure(doc) == [
         " FieldSet(demo-formular-1)",
-        "    RowSet(demo-table-form-1)",
+        "    RowSet(demo-outer-table-question-1)",
         "       FieldSet(demo-table-form-1)",
         "          Field(demo-table-question-1, 3)",
         "          Field(demo-table-question-2, 1)",
@@ -204,7 +204,7 @@ def test_update_calc_dependency_inside_table_with_outer_reference(
         "          Field(demo-table-question-1, 20)",
         "          Field(demo-table-question-2, 100)",
         "    Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "    RowSet(demo-table-form-2)",
+        "    RowSet(demo-outer-table-question-2)",
     ]
 
     # TODO: This implementation corresponds to the current frontend logic, this
@@ -244,7 +244,7 @@ def test_update_calc_dependency_inside_table_with_outer_reference(
 
     assert structure.list_document_structure(doc) == [
         " FieldSet(demo-formular-1)",
-        "    RowSet(demo-table-form-1)",
+        "    RowSet(demo-outer-table-question-1)",
         "       FieldSet(demo-table-form-1)",
         "          Field(demo-table-question-1, 3)",
         "          Field(demo-table-question-2, 1)",
@@ -252,7 +252,7 @@ def test_update_calc_dependency_inside_table_with_outer_reference(
         "          Field(demo-table-question-1, 20)",
         "          Field(demo-table-question-2, 100)",
         "    Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "    RowSet(demo-table-form-2)",
+        "    RowSet(demo-outer-table-question-2)",
         "       FieldSet(demo-table-form-2)",
         "          Field(demo-table-question-outer-ref-hidden, 30)",
         "          Field(demo-table-question-outer-ref-calc, 30)",
@@ -266,7 +266,7 @@ def test_update_calc_dependency_inside_table_with_outer_reference(
 
     assert structure.list_document_structure(doc) == [
         " FieldSet(demo-formular-1)",
-        "    RowSet(demo-table-form-1)",
+        "    RowSet(demo-outer-table-question-1)",
         "       FieldSet(demo-table-form-1)",
         "          Field(demo-table-question-1, 3)",
         "          Field(demo-table-question-2, 1)",
@@ -274,7 +274,7 @@ def test_update_calc_dependency_inside_table_with_outer_reference(
         "          Field(demo-table-question-1, 20)",
         "          Field(demo-table-question-2, 100)",
         "    Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "    RowSet(demo-table-form-2)",
+        "    RowSet(demo-outer-table-question-2)",
         "       FieldSet(demo-table-form-2)",
         "          Field(demo-table-question-outer-ref-hidden, 20)",
         "          Field(demo-table-question-outer-ref-calc, 20)",
@@ -289,7 +289,7 @@ def test_structure_caching(transactional_db, complex_jexl_form, complex_jexl_doc
 
     assert structure.list_document_structure(doc) == [
         " FieldSet(demo-formular-1)",
-        "    RowSet(demo-table-form-1)",
+        "    RowSet(demo-outer-table-question-1)",
         "       FieldSet(demo-table-form-1)",
         "          Field(demo-table-question-1, 3)",
         "          Field(demo-table-question-2, 1)",
@@ -297,7 +297,7 @@ def test_structure_caching(transactional_db, complex_jexl_form, complex_jexl_doc
         "          Field(demo-table-question-1, 20)",
         "          Field(demo-table-question-2, 100)",
         "    Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
-        "    RowSet(demo-table-form-2)",
+        "    RowSet(demo-outer-table-question-2)",
     ]
 
     # Note: If those fail, just update the counts. I'm more interested in a
