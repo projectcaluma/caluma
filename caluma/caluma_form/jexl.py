@@ -66,12 +66,7 @@ class QuestionJexl(JEXL):
                     f"Question `{question_slug}` could not be found in form {self.field.get_form()}"
                 )
 
-        if field.is_hidden():
-            # Hidden fields *always* return the empty value, even if we have
-            # a default
-            return field.question.empty_value()
-        elif field.is_empty():
-            # not hidden, but empty
+        if field.is_hidden() or field.is_empty():
             return _default_or_empty()
 
         return field.get_value()
