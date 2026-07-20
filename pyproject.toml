@@ -68,7 +68,7 @@ python-semantic-release = "7.34.6"
 requests-mock = "1.12.1"
 reuse = "6.2.0"
 ruff = "0.15.21"
-syrupy = "5.1.0"
+syrupy = "5.5.3"
 
 
 [tool.pytest.ini_options]
