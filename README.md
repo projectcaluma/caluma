@@ -26,6 +26,48 @@ Schema introspection and documentation is available at [http://localhost:8000/gr
 
 You can read more about running and configuring Caluma in the [documentation](https://caluma.gitbook.io).
 
+## YAML scaffold import command
+
+You can scaffold forms, questions and options with a YAML file via Django management command:
+
+```bash
+./manage.py import_forms /path/to/forms.yaml
+```
+
+Use `--update` to allow updating already existing entities. Without this flag, the command aborts on the first existing form/question/option slug.
+
+Use `--dry-run` to validate the file (schema, references, duplicates, conflicts) without persisting any changes.
+
+The YAML format is optimized for fast initial scaffolding:
+
+- Top-level key is `forms`.
+- Form `slug` is optional and defaults to slugified `label`/`name`.
+- Question `type` defaults to `text`.
+- If `options` are defined and `type` is omitted, question type defaults to `choice`.
+- Question `required` defaults to `false` and maps to Caluma `is_required` JEXL (`\"true\"`/`\"false\"`).
+- Option entries can be plain strings or objects (`label`, `slug`, `is_hidden`, `meta`).
+- Option slugs default to question-scoped values: `<question-slug>-<option-label-slug>`.
+- Localized fields can be plain strings or language maps; a top-level `language` key (or `--language`) converts plain strings to localized values for that language.
+
+Example:
+
+```yaml
+language: de
+forms:
+  - label: Hauptformular
+    questions:
+      - label: Freitext
+      - label: Auswahl
+        options:
+          - Erste Option
+          - label: Zweite Option
+  - label: Übergeordnete Form
+    questions:
+      - label: Zeilen
+        type: table
+        row_form: hauptformular
+```
+
 ## License
 
 Code released under the [GPL-3.0-or-later license](LICENSE).
