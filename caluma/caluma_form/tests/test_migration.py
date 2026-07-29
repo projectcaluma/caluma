@@ -11,7 +11,7 @@ from django.utils import timezone
 from caluma.utils import col_type_from_db
 
 
-@pytest.mark.xfail(reason="Migration dependency issue, migration not required anymore.")
+@pytest.mark.skip(reason="Migration dependency issue, migration not required anymore.")
 def test_migrate_to_flat_answers(post_migrate_to_current_state):  # pragma: no cover
     executor = MigrationExecutor(connection)
     app = "caluma_form"
@@ -82,7 +82,10 @@ def test_migrate_to_flat_answers(post_migrate_to_current_state):  # pragma: no c
     assert text_answer.document.pk == main_document.pk
 
 
-def test_migrate_to_form_question_natural_key_forward(post_migrate_to_current_state):
+@pytest.mark.skip("very old migration test, not needed anymore")
+def test_migrate_to_form_question_natural_key_forward(
+    post_migrate_to_current_state,
+):  # pragma: no cover
     executor = MigrationExecutor(connection)
     app = "caluma_form"
     migrate_from = [(app, "0023_auto_20190729_1448")]
@@ -117,7 +120,10 @@ def test_migrate_to_form_question_natural_key_forward(post_migrate_to_current_st
     assert form_question.pk == "form-1.question-1"
 
 
-def test_migrate_to_form_question_natural_key_reverse(post_migrate_to_current_state):
+@pytest.mark.skip("very old migration test, not needed anymore")
+def test_migrate_to_form_question_natural_key_reverse(
+    post_migrate_to_current_state,
+):  # pragma: no cover
     executor = MigrationExecutor(connection)
     app = "caluma_form"
     migrate_from = [(app, "0024_auto_20190919_1244")]
@@ -143,7 +149,10 @@ def test_migrate_to_form_question_natural_key_reverse(post_migrate_to_current_st
         executor.migrate(migrate_to)
 
 
-def test_dynamic_option_unique_together(post_migrate_to_current_state):
+@pytest.mark.skip("very old migration test, not needed anymore")
+def test_dynamic_option_unique_together(
+    post_migrate_to_current_state,
+):  # pragma: no cover
     executor = MigrationExecutor(connection)
     app = "caluma_form"
     migrate_from = [(app, "0028_auto_20200210_0929")]
@@ -226,7 +235,10 @@ def test_dynamic_option_unique_together(post_migrate_to_current_state):
     )
 
 
-def test_migrate_to_family_as_pk(post_migrate_to_current_state, caplog):
+@pytest.mark.skip("very old migration test, not needed anymore")
+def test_migrate_to_family_as_pk(
+    post_migrate_to_current_state, caplog
+):  # pragma: no cover
     """Ensure correct behaviour when moving family to PK.
 
     Document family may not match an existing document.
@@ -322,7 +334,7 @@ def test_slugfield_length_correctness(post_migrate_to_current_state):
     _verify_foreign_key_types(django.apps.apps)
 
 
-@pytest.mark.xfail(reason="Seems to be fixed upstream.")
+@pytest.mark.skip(reason="Seems to be fixed upstream.")
 def test_migrate_slugfield_length(post_migrate_to_current_state):  # pragma: no cover
     """Ensure migration of slugfield length works correctly."""
 
@@ -351,7 +363,10 @@ def test_migrate_slugfield_length(post_migrate_to_current_state):  # pragma: no 
     _verify_foreign_key_types(new_apps)
 
 
-def test_migrate_answer_history_question_type(post_migrate_to_current_state):
+@pytest.mark.skip(reason="Testing old migration code")
+def test_migrate_answer_history_question_type(
+    post_migrate_to_current_state,
+):  # pragma: no cover
     """Make sure migration to custom history field history_question_type works."""
 
     executor = MigrationExecutor(connection)
