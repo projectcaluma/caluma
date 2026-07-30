@@ -115,11 +115,55 @@ def update_calc_from_question(sender, instance, created, update_fields, **kwargs
 
 @receiver(post_save, sender=models.FormQuestion)
 @disable_raw
-@filter_events(
-    lambda instance: instance.question.type == models.Question.TYPE_CALCULATED_FLOAT
-)
 def update_calc_from_form_question(sender, instance, created, **kwargs):
-    _recalculate_all_questions(instance.question)
+    if not created:
+        return
+
+    # Use a fresh question object from DB to avoid stale caches
+    question = models.Question.objects.get(pk=instance.question_id)
+
+    if question.default_answer:
+        for document in models.Document.objects.filter(form=instance.form).iterator():
+            if not models.Answer.objects.filter(
+                question=question, document=document
+            ).exists():
+                question.default_answer.copy(
+                    to_document=document, document_family=document.family
+                )
+
+    if question.type == models.Question.TYPE_CALCULATED_FLOAT:
+        _recalculate_all_questions(question)
+
+    _recalculate_dependents(question)
+
+
+@receiver(post_delete, sender=models.FormQuestion)
+@disable_raw
+def update_calc_on_form_question_delete(sender, instance, **kwargs):
+    _recalculate_dependents(instance.question)
+
+
+@receiver(post_delete, sender=models.Question)
+@disable_raw
+def update_calc_on_question_delete(sender, instance, **kwargs):
+    _recalculate_dependents(instance)
+
+
+def _recalculate_dependents(question):
+    # Find calc questions depending on this question.
+    # We look at both the pre-calculated calc_dependents list AND we search
+    # the calc_expression directly as a fallback.
+    dependents = set(question.calc_dependents)
+    expression_deps = models.Question.objects.filter(
+        type=models.Question.TYPE_CALCULATED_FLOAT,
+        calc_expression__icontains=f"'{question.slug}'",
+    )
+    for q in expression_deps:
+        dependents.add(q.slug)
+
+    for q_calc_slug in dependents:
+        q_calc = models.Question.objects.get(slug=q_calc_slug)
+        _recalculate_all_questions(q_calc)
 
 
 def _recalculate_all_questions(question):

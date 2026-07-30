@@ -38,13 +38,13 @@ def update_calc_dependents(slug, old_expr, new_expr):
     questions = models.Question.objects.filter(pk__in=list(to_add | to_remove))
 
     for question in questions:
-        deps = set(question.calc_dependents)
         if question.slug in to_add:
-            deps.add(slug)
-        else:
-            deps.remove(slug)
-        question.calc_dependents = list(deps)
-        question.save()
+            if slug not in question.calc_dependents:
+                question.calc_dependents.append(slug)
+                question.save()
+        elif slug in question.calc_dependents:
+            question.calc_dependents.remove(slug)
+            question.save()
 
 
 def recalculate_and_update_dependents(calc_field: structure.ValueField):
@@ -212,7 +212,12 @@ class DependencyList(list):
         for field in self:
             log.debug("Recalculating %s", field.get_path())
             is_root = id(field) in self._roots
-            if allow_culling and not is_root and not self.get_reason_for(field):
+            if (
+                allow_culling
+                and not is_root
+                and not self.get_reason_for(field)
+                and field.answer
+            ):
                 # There is no reason (anymore) to recalculate this field,
                 # as none of the recalculations of the dependencies have changed
                 # their value

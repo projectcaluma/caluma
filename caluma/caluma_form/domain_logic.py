@@ -166,13 +166,8 @@ class SaveAnswerLogic:
 
     @staticmethod
     def recalculate_dependents(answer, update_info):
-        """Update the dependent calc answers when this given answer has changed.
-
-        The update_info is used in the context of table questions, when we need
-        to know in which rows to look for calc questions (as they may depend on
-        out-of-row questions)
-        """
-        is_table = update_info and answer.question.type == models.Question.TYPE_TABLE
+        """Update the dependent calc answers when this given answer has changed."""
+        is_table = answer.question.type == models.Question.TYPE_TABLE
         if not is_table and not answer.question.calc_dependents:
             return
         if not answer.document:
@@ -191,18 +186,7 @@ class SaveAnswerLogic:
                 f"question={answer.question_id}, root form={struc.get_root().get_form().slug}",
             )
 
-        roots = [field]
-        if is_table and update_info.get("created"):
-            # New rows might have calculated fields depending on fields outside
-            # the table. Make sure we catch them as well
-            created_ids = set(update_info["created"])
-            for row in field.children():
-                if row._document.pk in created_ids:
-                    for child in row.get_all_fields():
-                        if child.question.type == models.Question.TYPE_CALCULATED_FLOAT:
-                            roots.append(child)
-
-        recalculate_dependent_fields(*roots, recalculate_roots=True)
+        recalculate_dependent_fields(field)
 
     @classmethod
     @transaction.atomic
@@ -244,8 +228,56 @@ class SaveAnswerLogic:
 
         cls.recalculate_dependents(answer, update_info)
 
-        answer.refresh_from_db()
         return answer
+
+
+class RemoveAnswerLogic:
+    @classmethod
+    @transaction.atomic
+    def delete(cls, answer: models.Answer, user: Optional[BaseUser] = None):
+        """Delete an answer and trigger recalculation of dependents."""
+        if not answer.document:  # pragma: no cover
+            answer.delete()
+            return
+
+        struc = validators.DocumentValidator().get_validation_context(
+            answer.document.family
+        )
+        field = struc.find_field_by_answer(answer)
+
+        answer.delete()
+
+        if field:
+            field.answer = None
+            recalculate_dependent_fields(field)
+
+
+class RemoveDocumentLogic:
+    @classmethod
+    @transaction.atomic
+    def delete(cls, document: models.Document, user: Optional[BaseUser] = None):
+        """Delete a document and trigger recalculation of table aggregation fields."""
+        if hasattr(document, "case"):
+            raise Exception("You cannot remove a Document, if it's attached to a case.")
+
+        # Find all table answers that reference this document as a row
+        affected_answers = list(models.Answer.objects.filter(documents=document))
+
+        for answer in document.answers.filter(
+            question__type=models.Question.TYPE_TABLE
+        ):
+            for row_doc in answer.documents.all():
+                cls.delete(row_doc, user)
+
+        document.delete()
+
+        for answer in affected_answers:
+            struc = validators.DocumentValidator().get_validation_context(
+                answer.document.family
+            )
+            field = struc.find_field_by_answer(answer)
+            if field:
+                recalculate_dependent_fields(field)
 
 
 class SaveDefaultAnswerLogic(SaveAnswerLogic):
