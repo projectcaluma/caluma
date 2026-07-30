@@ -111,7 +111,9 @@ class AnswerValidator:
         # If we need to create the context ourselves here, we'll need to fetch
         # the field from the context.
         validation_context = DocumentValidator().get_validation_context(document)
-        return validation_context.get_field(question.slug), validation_context
+        field_candidates = validation_context.find_all_fields_by_slug(question.slug)
+        field = next(f for f in field_candidates if f.parent._document == document)
+        return field, validation_context
 
     def _evaluate_options_jexl(
         self, document, question, validation_context=None, qs=None

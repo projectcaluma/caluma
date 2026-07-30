@@ -1138,6 +1138,7 @@ def test_calculated_question_update_calc_expr(
 
     calc_ans = document.answers.get(question_id="calc_question")
     assert calc_ans.value == 101
+
     # spying on update_or_create_calc_answer doesn't seem to work, so we spy on
     # QuestionJexl.evaluate instead
     spy = mocker.spy(QuestionJexl, "evaluate")
@@ -1297,5 +1298,5 @@ def test_init_of_calc_questions_queries(
         question__calc_expression="'table'|answer|mapby('column')|sum + 'top_question'|answer + 'sub_question'|answer",
     )
 
-    with django_assert_num_queries(33):
+    with django_assert_num_queries(27):
         api.save_answer(questions_dict["top_question"], document, value="1")

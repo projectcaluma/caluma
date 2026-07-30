@@ -108,11 +108,11 @@ def test_printing_structure(simple_form_structure):
         "       Field(sub_leaf1, None)",
         "       Field(sub_leaf2, None)",
         "       RowSet(sub_table)",
-        "          FieldSet(too-wonder-option)",
+        "          FieldSet(too-wonder-option #1)",
         "             Field(row_field_1, 2025-01-13)",
         "             Field(row_field_2, 99.5)",
         "             Field(row_calc, None)",
-        "          FieldSet(too-wonder-option)",
+        "          FieldSet(too-wonder-option #2)",
         "             Field(row_field_1, 2025-01-10)",
         "             Field(row_field_2, 23.0)",
         "             Field(row_calc, None)",
@@ -373,11 +373,11 @@ def test_fastloader_multiple_documents(
         "       Field(sub_leaf1, None)",
         "       Field(sub_leaf2, None)",
         "       RowSet(sub_table)",
-        "          FieldSet(too-wonder-option)",
+        "          FieldSet(too-wonder-option #1)",
         "             Field(row_field_1, 2025-01-13)",
         "             Field(row_field_2, 99.5)",
         "             Field(row_calc, None)",
-        "          FieldSet(too-wonder-option)",
+        "          FieldSet(too-wonder-option #2)",
         "             Field(row_field_1, 2025-01-10)",
         "             Field(row_field_2, 23.0)",
         "             Field(row_calc, None)",
@@ -466,13 +466,58 @@ def test_multistage_calculation_updates(
         "       Field(sub_leaf1, None)",
         "       Field(sub_leaf2, None)",
         "       RowSet(sub_table)",
-        "          FieldSet(too-wonder-option)",
+        "          FieldSet(too-wonder-option #1)",
         "             Field(row_field_1, 2025-01-13)",
         "             Field(row_field_2, 101.5)",
         "             Field(row_calc, 134.5)",
-        "          FieldSet(too-wonder-option)",
+        "          FieldSet(too-wonder-option #2)",
         "             Field(row_field_1, 2025-01-10)",
         "             Field(row_field_2, 25.0)",
         "             Field(row_calc, 58.0)",
         "    Field(outer-calc, 192.5)",
     ]
+
+
+@pytest.mark.django_db
+def test_get_all_fields(form_and_document):
+    """Test get_all_fields utility on FieldSet and RowSet."""
+
+    form, doc, questions, answers = form_and_document(
+        use_table=True, use_subform=True, table_row_count=2
+    )
+
+    root = structure.FieldSet(doc)
+    all_fields = list(root.get_all_fields())
+
+    slugs = [f.slug() for f in all_fields]
+    assert "top_question" in slugs
+    assert "table" in slugs
+    assert "column" in slugs
+    assert slugs.count("column") == 2
+    assert "form" in slugs
+    assert "sub_question" in slugs
+
+    # Total field count:
+    # * top_question
+    # * table
+    # * row1_fs
+    # * row1_col
+    # * row2_fs
+    # * row2_col
+    # * subform_fs
+    # * sub_question
+    assert len(all_fields) == 8
+
+    # Test RowSet.get_all_fields specifically
+    table_rowset = root.get_field("table")
+    assert isinstance(table_rowset, structure.RowSet)
+    table_fields = list(table_rowset.get_all_fields())
+
+    # Expected table fields:
+    # 1. row 1 (FieldSet)
+    # 2. row 1 column (ValueField)
+    # 3. row 2 (FieldSet)
+    # 4. row 2 column (ValueField)
+    assert len(table_fields) == 4
+    table_slugs = [f.slug() for f in table_fields]
+    assert table_slugs.count("column") == 2

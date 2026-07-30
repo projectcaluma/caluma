@@ -503,6 +503,7 @@ def test_save_document_client(
     assert len(result.data["saveDocument"]["document"]["answers"]["edges"]) == (
         1 if update else 3
     )
+
     if not update:
         assert sorted(
             [

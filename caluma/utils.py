@@ -39,7 +39,7 @@ def col_type_from_db(field, connection):
     return res
 
 
-def fix_foreign_key_types(apps, connection):
+def fix_foreign_key_types(apps, connection):  # pragma: no cover
     """Ensure all foreign keys pointing to slug fields are correct type."""
 
     # I'm really not happy that this code needs to exist. I'ts a sign that

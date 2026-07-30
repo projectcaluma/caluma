@@ -332,7 +332,7 @@ def test_validate_empty_answers(
             "'foo' in blah",
             "false",
             "",
-            "Error while evaluating expression on question q-slug: \"'foo' in blah\". The system log contains more information",
+            "Error while evaluating expression on question ({form_slug}).{question_slug}: \"'foo' in blah\". The system log contains more information",
         ),
         (
             "q-slug",
@@ -340,7 +340,7 @@ def test_validate_empty_answers(
             "true",
             "'foo' in blah",
             "",
-            "Error while evaluating expression on question q-slug: \"'foo' in blah\". The system log contains more information",
+            "Error while evaluating expression on question ({form_slug}).{question_slug}: \"'foo' in blah\". The system log contains more information",
         ),
         (
             "q-slug",
@@ -356,6 +356,9 @@ def test_validate_invalid_jexl(
     db, form_question, document, answer, question, exception_message, admin_user
 ):
     if exception_message is not None:
+        exception_message = exception_message.format(
+            form_slug=document.form.slug, question_slug=question.slug
+        )
         with pytest.raises(RuntimeError) as exc:
             DocumentValidator().validate(document, admin_user)
         assert exc.value.args[0] == exception_message

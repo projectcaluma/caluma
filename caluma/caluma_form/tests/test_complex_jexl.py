@@ -39,10 +39,10 @@ def complex_jexl_doc(complex_jexl_form):
 
     FieldSet(demo-formular-1)
        Field(demo-outer-table-question-1, None)
-          FieldSet(demo-table-form-1)
+          FieldSet(demo-table-form-1 #1)
              Field(demo-table-question-1, 3)
              Field(demo-table-question-2, 1)
-          FieldSet(demo-table-form-1)
+          FieldSet(demo-table-form-1 #2)
              Field(demo-table-question-1, 20)
              Field(demo-table-question-2, 100)
        Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)
@@ -90,10 +90,10 @@ def test_evaluating_calc_inside_table(
     assert structure.list_document_structure(doc, method=repr) == [
         " FieldSet(q=(root), f=demo-formular-1)",
         "    RowSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
-        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1, r=1)",
         "          ValueField(q=demo-table-question-1, v=3)",
         "          ValueField(q=demo-table-question-2, v=1)",
-        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1, r=2)",
         "          ValueField(q=demo-table-question-1, v=20)",
         "          ValueField(q=demo-table-question-2, v=100)",
         "    ValueField(q=demo-outer-question-1, v=demo-outer-question-1-outer-option-a)",
@@ -109,10 +109,10 @@ def test_update_calc_dependency_inside_table(
     assert structure.list_document_structure(doc, method=repr) == [
         " FieldSet(q=(root), f=demo-formular-1)",
         "    RowSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
-        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1, r=1)",
         "          ValueField(q=demo-table-question-1, v=3)",
         "          ValueField(q=demo-table-question-2, v=1)",
-        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1, r=2)",
         "          ValueField(q=demo-table-question-1, v=20)",
         "          ValueField(q=demo-table-question-2, v=100)",
         "    ValueField(q=demo-outer-question-1, v=demo-outer-question-1-outer-option-a)",
@@ -126,10 +126,10 @@ def test_update_calc_dependency_inside_table(
         == [
             " FieldSet(q=(root), f=demo-formular-1)",
             "    RowSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
-            "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+            "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1, r=1)",
             "          ValueField(q=demo-table-question-1, v=30)",  # this was set
             "          ValueField(q=demo-table-question-2, v=100)",  # should have been recalc'd
-            "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+            "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1, r=2)",
             "          ValueField(q=demo-table-question-1, v=20)",
             "          ValueField(q=demo-table-question-2, v=100)",
             "    ValueField(q=demo-outer-question-1, v=demo-outer-question-1-outer-option-a)",
@@ -143,10 +143,10 @@ def test_update_calc_dependency_inside_table(
     assert structure.list_document_structure(doc, method=repr) == [
         " FieldSet(q=(root), f=demo-formular-1)",
         "    RowSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
-        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1, r=1)",
         "          ValueField(q=demo-table-question-1, v=3)",  # updated again
         "          ValueField(q=demo-table-question-2, v=1)",  # recalculated again
-        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1, r=2)",
         "          ValueField(q=demo-table-question-1, v=20)",
         "          ValueField(q=demo-table-question-2, v=100)",
         "    ValueField(q=demo-outer-question-1, v=demo-outer-question-1-outer-option-a)",
@@ -161,10 +161,10 @@ def test_update_calc_dependency_inside_table(
         == [
             " FieldSet(q=(root), f=demo-formular-1)",
             "    RowSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
-            "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+            "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1, r=1)",
             "          ValueField(q=demo-table-question-1, v=3)",
             "          ValueField(q=demo-table-question-2, v=1)",
-            "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+            "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1, r=2)",
             "          ValueField(q=demo-table-question-1, v=40)",  # updated here
             "          ValueField(q=demo-table-question-2, v=100)",  # recalculated , same value
             "    ValueField(q=demo-outer-question-1, v=demo-outer-question-1-outer-option-a)",
@@ -178,10 +178,10 @@ def test_update_calc_dependency_inside_table(
     assert structure.list_document_structure(doc, method=repr) == [
         " FieldSet(q=(root), f=demo-formular-1)",
         "    RowSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
-        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1, r=1)",
         "          ValueField(q=demo-table-question-1, v=3)",
         "          ValueField(q=demo-table-question-2, v=1)",
-        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1)",
+        "       FieldSet(q=demo-outer-table-question-1, f=demo-table-form-1, r=2)",
         "          ValueField(q=demo-table-question-1, v=2)",  # updated
         "          ValueField(q=demo-table-question-2, v=1)",  # recalculated
         "    ValueField(q=demo-outer-question-1, v=demo-outer-question-1-outer-option-a)",
@@ -197,10 +197,10 @@ def test_update_calc_dependency_inside_table_with_outer_reference(
     assert structure.list_document_structure(doc) == [
         " FieldSet(demo-formular-1)",
         "    RowSet(demo-outer-table-question-1)",
-        "       FieldSet(demo-table-form-1)",
+        "       FieldSet(demo-table-form-1 #1)",
         "          Field(demo-table-question-1, 3)",
         "          Field(demo-table-question-2, 1)",
-        "       FieldSet(demo-table-form-1)",
+        "       FieldSet(demo-table-form-1 #2)",
         "          Field(demo-table-question-1, 20)",
         "          Field(demo-table-question-2, 100)",
         "    Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
@@ -245,15 +245,15 @@ def test_update_calc_dependency_inside_table_with_outer_reference(
     assert structure.list_document_structure(doc) == [
         " FieldSet(demo-formular-1)",
         "    RowSet(demo-outer-table-question-1)",
-        "       FieldSet(demo-table-form-1)",
+        "       FieldSet(demo-table-form-1 #1)",
         "          Field(demo-table-question-1, 3)",
         "          Field(demo-table-question-2, 1)",
-        "       FieldSet(demo-table-form-1)",
+        "       FieldSet(demo-table-form-1 #2)",
         "          Field(demo-table-question-1, 20)",
         "          Field(demo-table-question-2, 100)",
         "    Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
         "    RowSet(demo-outer-table-question-2)",
-        "       FieldSet(demo-table-form-2)",
+        "       FieldSet(demo-table-form-2 #1)",
         "          Field(demo-table-question-outer-ref-hidden, 30)",
         "          Field(demo-table-question-outer-ref-calc, 30)",
     ]
@@ -267,15 +267,15 @@ def test_update_calc_dependency_inside_table_with_outer_reference(
     assert structure.list_document_structure(doc) == [
         " FieldSet(demo-formular-1)",
         "    RowSet(demo-outer-table-question-1)",
-        "       FieldSet(demo-table-form-1)",
+        "       FieldSet(demo-table-form-1 #1)",
         "          Field(demo-table-question-1, 3)",
         "          Field(demo-table-question-2, 1)",
-        "       FieldSet(demo-table-form-1)",
+        "       FieldSet(demo-table-form-1 #2)",
         "          Field(demo-table-question-1, 20)",
         "          Field(demo-table-question-2, 100)",
         "    Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
         "    RowSet(demo-outer-table-question-2)",
-        "       FieldSet(demo-table-form-2)",
+        "       FieldSet(demo-table-form-2 #1)",
         "          Field(demo-table-question-outer-ref-hidden, 20)",
         "          Field(demo-table-question-outer-ref-calc, 20)",
     ]
@@ -290,10 +290,10 @@ def test_structure_caching(transactional_db, complex_jexl_form, complex_jexl_doc
     assert structure.list_document_structure(doc) == [
         " FieldSet(demo-formular-1)",
         "    RowSet(demo-outer-table-question-1)",
-        "       FieldSet(demo-table-form-1)",
+        "       FieldSet(demo-table-form-1 #1)",
         "          Field(demo-table-question-1, 3)",
         "          Field(demo-table-question-2, 1)",
-        "       FieldSet(demo-table-form-1)",
+        "       FieldSet(demo-table-form-1 #2)",
         "          Field(demo-table-question-1, 20)",
         "          Field(demo-table-question-2, 100)",
         "    Field(demo-outer-question-1, demo-outer-question-1-outer-option-a)",
