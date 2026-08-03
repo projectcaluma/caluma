@@ -1,3 +1,13 @@
+# v12.5.1 (03 August 2026)
+
+### Fix
+
+* **calc-questions:** Robust recalculation on deletion and form changes ([`8885124`](https://github.com/projectcaluma/caluma/commit/8885124462538f78b9f7d6a2ddbb97c68096aa3e))
+
+### Performance
+
+* **form:** Improve calculated-question performance significantly ([`2e07675`](https://github.com/projectcaluma/caluma/commit/2e076755e143e5fee65f9e3ee5df356d84d97516))
+
 # v12.5.0 (21 July 2026)
 
 ### Feature
