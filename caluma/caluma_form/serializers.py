@@ -685,7 +685,7 @@ class RemoveAnswerSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        instance.delete()
+        domain_logic.RemoveAnswerLogic.delete(instance, self.context["request"].user)
         return instance
 
     class Meta:
@@ -782,16 +782,9 @@ class RemoveDocumentSerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        if hasattr(instance, "case"):
-            raise Exception("You cannot remove a Document, if it's attached to a case.")
-
-        for answer in instance.answers.filter(
-            question__type=models.Question.TYPE_TABLE
-        ):
-            answer.documents.all().delete()
-
-        instance.delete()
-
+        domain_logic.RemoveDocumentLogic.delete(
+            instance, user=self.context["request"].user
+        )
         return instance
 
     class Meta:

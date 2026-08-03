@@ -73,7 +73,6 @@ class QuestionFactory(DjangoModelFactory):
     calc_expression = Maybe(
         "is_calc_float", yes_declaration="-1.0", no_declaration=None
     )
-    calc_dependents = LazyFunction(lambda: [])
 
     # action button question
     action = Maybe(
