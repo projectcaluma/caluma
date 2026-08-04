@@ -9,7 +9,7 @@ from rest_framework import exceptions
 from caluma.caluma_core.exceptions import ConfigurationError
 from caluma.caluma_data_source.data_source_handlers import get_data_sources
 from caluma.caluma_form import structure
-from caluma.caluma_workflow.models import Case
+from caluma.caluma_workflow.models import Case, WorkItem
 
 from . import jexl, models
 from .exceptions import CustomValidationError
@@ -403,10 +403,11 @@ class DocumentValidator:
                 )
 
     def get_validation_context(self, document, _fastloader=None):
-        relevant_case: Case = (
-            getattr(document, "case", None)
-            or getattr(getattr(document, "work_item", None), "case", None)
-            or None
+        relevant_case: Case = getattr(document, "case", None) or getattr(
+            getattr(document, "work_item", None), "case", None
+        )
+        work_item: WorkItem = getattr(document, "work_item", None) or getattr(
+            relevant_case, "parent_work_item", None
         )
 
         case_form = (
@@ -419,6 +420,7 @@ class DocumentValidator:
             if relevant_case and relevant_case.family.document
             else None
         )
+
         case_info = (
             {
                 # Why are we even represent this in context of the case?
@@ -426,19 +428,26 @@ class DocumentValidator:
                 # the model
                 "form": case_form,
                 "workflow": relevant_case.workflow_id,
+                "meta": relevant_case.meta,
                 "root": {
                     "form": case_family_form,
                     "workflow": relevant_case.family.workflow_id,
+                    "meta": relevant_case.family.meta,
                 },
             }
             if relevant_case
             else None
         )
 
+        workitem_info = (
+            {"task": work_item.task_id, "meta": work_item.meta} if work_item else None
+        )
+
         context = {
             "info": {
                 "form": document.form,
                 "case": case_info,
+                "workItem": workitem_info,
             }
         }
 

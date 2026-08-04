@@ -732,10 +732,16 @@ def test_jexl_context(  # noqa: C901
         root_case.document = document
         root_case.save()
     elif document_type == "work_item":
-        work_item_factory(case=root_case, document=document, child_case=None)
+        work_item_factory(
+            task__slug="regular_task",
+            case=root_case,
+            document=document,
+            child_case=None,
+        )
     elif document_type == "child_case":
         work_item_factory(
             case=root_case,
+            task__slug="task_with_child_case",
             child_case__workflow__slug="child_workflow",
             child_case__document=document,
             child_case__family=root_case,
@@ -771,32 +777,55 @@ def test_jexl_context(  # noqa: C901
     sub_ctx = _ctx(struct.get_field("sub_question"))
     cell_ctx = _ctx(struct.get_field("table").children()[0].get_field("column"))
 
+    case_keys = {
+        "info.case",
+        "info.case.form",
+        "info.case.workflow",
+        "info.case.meta",
+        "info.case.root",
+        "info.case.root.form",
+        "info.case.root.workflow",
+        "info.case.root.meta",
+        "info.workItem",
+    }
+
     if document_type == "case":
         assert _v(top_ctx, "info.case.form") == "top_form"
         assert _v(top_ctx, "info.case.workflow") == "root_workflow"
+        assert _v(top_ctx, "info.case.meta") is not None
         assert _v(top_ctx, "info.case.root.form") == "top_form"
         assert _v(top_ctx, "info.case.root.workflow") == "root_workflow"
+        assert _v(top_ctx, "info.case.root.meta") is not None
+        assert _v(top_ctx, "info.workItem") is None
 
     elif document_type == "work_item":
         assert _v(top_ctx, "info.case.form") == "root_form"
         assert _v(top_ctx, "info.case.workflow") == "root_workflow"
         assert _v(top_ctx, "info.case.root.form") == "root_form"
         assert _v(top_ctx, "info.case.root.workflow") == "root_workflow"
+        assert _v(top_ctx, "info.case.root.meta") is not None
+        assert _v(top_ctx, "info.workItem.task") == "regular_task"
+        assert _v(top_ctx, "info.workItem.meta") is not None
+
+        case_keys |= {
+            "info.workItem.task",
+            "info.workItem.meta",
+        }
 
     elif document_type == "child_case":
         assert _v(top_ctx, "info.case.form") == "top_form"
         assert _v(top_ctx, "info.case.workflow") == "child_workflow"
+        assert _v(top_ctx, "info.case.meta") is not None
         assert _v(top_ctx, "info.case.root.form") == "root_form"
         assert _v(top_ctx, "info.case.root.workflow") == "root_workflow"
+        assert _v(top_ctx, "info.case.root.meta") is not None
+        assert _v(top_ctx, "info.workItem.task") == "task_with_child_case"
+        assert _v(top_ctx, "info.workItem.meta") is not None
 
-    case_keys = {
-        "info.case",
-        "info.case.form",
-        "info.case.workflow",
-        "info.case.root",
-        "info.case.root.form",
-        "info.case.root.workflow",
-    }
+        case_keys |= {
+            "info.workItem.task",
+            "info.workItem.meta",
+        }
 
     assert _v(top_ctx, "form") == "top_form"
     assert _v(top_ctx, "info.form") == "top_form"
