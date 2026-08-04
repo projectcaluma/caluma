@@ -434,15 +434,11 @@ class DocumentValidator:
             if relevant_case
             else None
         )
-        workitem_info = (
-            document.work_item.__dict__ if hasattr(document, "work_item") else None
-        )
+
         context = {
             "info": {
-                "document": document.family,
                 "form": document.form,
                 "case": case_info,
-                "work_item": workitem_info,
             }
         }
 

@@ -796,45 +796,7 @@ def test_jexl_context(  # noqa: C901
         "info.case.root",
         "info.case.root.form",
         "info.case.root.workflow",
-        # This is wrong, the context doesn't need the document and work item
-        "info.document",
-        "info.work_item",
     }
-
-    if document_type == "work_item":
-        # This is even more wrong, we should not expose the whole work item data
-        case_keys |= {
-            "info.work_item._state",
-            "info.work_item.addressed_groups",
-            "info.work_item.assigned_users",
-            "info.work_item.case_id",
-            "info.work_item.child_case_id",
-            "info.work_item.closed_at",
-            "info.work_item.closed_by_group",
-            "info.work_item.closed_by_user",
-            "info.work_item.controlling_groups",
-            "info.work_item.created_at",
-            "info.work_item.created_by_group",
-            "info.work_item.created_by_user",
-            "info.work_item.deadline",
-            "info.work_item.description",
-            "info.work_item.description.de",
-            "info.work_item.description.en",
-            "info.work_item.description.fr",
-            "info.work_item.document_id",
-            "info.work_item.id",
-            "info.work_item.meta",
-            "info.work_item.modified_at",
-            "info.work_item.modified_by_group",
-            "info.work_item.modified_by_user",
-            "info.work_item.name",
-            "info.work_item.name.de",
-            "info.work_item.name.en",
-            "info.work_item.name.fr",
-            "info.work_item.previous_work_item_id",
-            "info.work_item.status",
-            "info.work_item.task_id",
-        }
 
     assert _v(top_ctx, "form") == "top_form"
     assert _v(top_ctx, "info.form") == "top_form"
