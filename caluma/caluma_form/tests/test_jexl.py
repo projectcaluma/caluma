@@ -2,12 +2,13 @@ import gc
 import itertools
 from collections import Counter
 from contextlib import nullcontext as does_not_raise
+from typing import Any
 
 import pytest
 
-from .. import models, structure, validators
-from ..jexl import QuestionJexl, QuestionMissing
-from ..models import Question
+from caluma.caluma_form import models, structure, validators
+from caluma.caluma_form.jexl import QuestionJexl, QuestionMissing
+from caluma.caluma_form.models import Question
 
 
 @pytest.mark.parametrize(
@@ -704,10 +705,13 @@ def test_evaluate_error_no_raise(info, form_and_document, do_raise, expectation)
         assert top_q_field.is_hidden(raise_on_error=do_raise) is None
 
 
-def test_jexl_context(form_and_document, snapshot):
+@pytest.mark.parametrize("document_type", ["case", "work_item", "child_case"])
+def test_jexl_context(  # noqa: C901
+    case_factory, document_type, form_and_document, work_item_factory
+):
     """Test the JEXL context structure as a whole.
 
-    This test is looking at the JEXL context as a whole so developerss can see
+    This test is looking at the JEXL context as a whole so developers can see
     the actual structure that we document.
 
     The documentation on what properties we expect can be found in the
@@ -715,20 +719,195 @@ def test_jexl_context(form_and_document, snapshot):
     `caluma/caluma_form/structure.py`.
     """
 
-    from caluma.caluma_form import structure
-
     form, document, questions, answers = form_and_document(
         use_table=True, use_subform=True
     )
 
-    struct = structure.FieldSet(document)
+    root_case = case_factory(
+        document__form__slug="root_form",
+        workflow__slug="root_workflow",
+    )
 
-    for name, field in [
-        ("top_question", struct.get_field("top_question")),
-        ("sub_question", struct.get_field("sub_question")),
-        ("cell_question", struct.get_field("table").children()[0].get_field("column")),
-    ]:
-        assert snapshot(name=name) == dict(field.get_evaluator().context.data)
+    if document_type == "case":
+        root_case.document = document
+        root_case.save()
+    elif document_type == "work_item":
+        work_item_factory(case=root_case, document=document, child_case=None)
+    elif document_type == "child_case":
+        work_item_factory(
+            case=root_case,
+            child_case__workflow__slug="child_workflow",
+            child_case__document=document,
+            child_case__family=root_case,
+        )
+
+    document.refresh_from_db()
+
+    validator = validators.DocumentValidator()
+    struct = validator.get_validation_context(document)
+
+    def _ctx(field: structure.BaseField) -> dict:
+        """Return the JEXL context data of the given field."""
+        return field.get_evaluator().context.data
+
+    def _v(obj: dict, key: str) -> Any:
+        """Return the value at the given dotted path, eg `info.parent.form`."""
+        path = key.split(".")
+        for key in path:
+            obj = obj[key]
+        return obj
+
+    def _paths(obj: dict, prefix: str = "") -> set[str]:
+        """Return the set of all dict keys as dotted paths, eg `info.parent.form`."""
+        paths = set()
+        for key, value in obj.items():
+            path = f"{prefix}{key}"
+            paths.add(path)
+            if isinstance(value, dict) and not path.endswith("Meta"):
+                paths |= _paths(value, prefix=f"{path}.")
+        return paths
+
+    top_ctx = _ctx(struct.get_field("top_question"))
+    sub_ctx = _ctx(struct.get_field("sub_question"))
+    cell_ctx = _ctx(struct.get_field("table").children()[0].get_field("column"))
+
+    if document_type == "case":
+        assert _v(top_ctx, "info.case.form") == "top_form"
+        assert _v(top_ctx, "info.case.workflow") == "root_workflow"
+        assert _v(top_ctx, "info.case.root.form") == "top_form"
+        assert _v(top_ctx, "info.case.root.workflow") == "root_workflow"
+
+    elif document_type == "work_item":
+        assert _v(top_ctx, "info.case.form") == "root_form"
+        assert _v(top_ctx, "info.case.workflow") == "root_workflow"
+        assert _v(top_ctx, "info.case.root.form") == "root_form"
+        assert _v(top_ctx, "info.case.root.workflow") == "root_workflow"
+
+    elif document_type == "child_case":
+        assert _v(top_ctx, "info.case.form") == "top_form"
+        assert _v(top_ctx, "info.case.workflow") == "child_workflow"
+        assert _v(top_ctx, "info.case.root.form") == "root_form"
+        assert _v(top_ctx, "info.case.root.workflow") == "root_workflow"
+
+    case_keys = {
+        "info.case",
+        "info.case.form",
+        "info.case.workflow",
+        "info.case.root",
+        "info.case.root.form",
+        "info.case.root.workflow",
+        # This is wrong, the context doesn't need the document and work item
+        "info.document",
+        "info.work_item",
+    }
+
+    if document_type == "work_item":
+        # This is even more wrong, we should not expose the whole work item data
+        case_keys |= {
+            "info.work_item._state",
+            "info.work_item.addressed_groups",
+            "info.work_item.assigned_users",
+            "info.work_item.case_id",
+            "info.work_item.child_case_id",
+            "info.work_item.closed_at",
+            "info.work_item.closed_by_group",
+            "info.work_item.closed_by_user",
+            "info.work_item.controlling_groups",
+            "info.work_item.created_at",
+            "info.work_item.created_by_group",
+            "info.work_item.created_by_user",
+            "info.work_item.deadline",
+            "info.work_item.description",
+            "info.work_item.description.de",
+            "info.work_item.description.en",
+            "info.work_item.description.fr",
+            "info.work_item.document_id",
+            "info.work_item.id",
+            "info.work_item.meta",
+            "info.work_item.modified_at",
+            "info.work_item.modified_by_group",
+            "info.work_item.modified_by_user",
+            "info.work_item.name",
+            "info.work_item.name.de",
+            "info.work_item.name.en",
+            "info.work_item.name.fr",
+            "info.work_item.previous_work_item_id",
+            "info.work_item.status",
+            "info.work_item.task_id",
+        }
+
+    assert _v(top_ctx, "form") == "top_form"
+    assert _v(top_ctx, "info.form") == "top_form"
+    assert _v(top_ctx, "info.formMeta") is not None
+    assert _v(top_ctx, "info.parent") is None
+    assert _v(top_ctx, "info.root.form") == "top_form"
+    assert _v(top_ctx, "info.root.formMeta") is not None
+    assert (
+        _paths(top_ctx)
+        == {
+            "form",
+            "info",
+            "info.form",
+            "info.formMeta",
+            "info.parent",
+            "info.root",
+            "info.root.form",
+            "info.root.formMeta",
+        }
+        | case_keys
+    )
+
+    assert _v(sub_ctx, "form") == "top_form"
+    assert _v(sub_ctx, "info.form") == "sub_form"
+    assert _v(sub_ctx, "info.formMeta") is not None
+    assert _v(sub_ctx, "info.parent.form") == "top_form"
+    assert _v(sub_ctx, "info.parent.formMeta") is not None
+    assert _v(sub_ctx, "info.parent.question") == "form"
+    assert _v(sub_ctx, "info.root.form") == "top_form"
+    assert _v(sub_ctx, "info.root.formMeta") is not None
+    assert (
+        _paths(sub_ctx)
+        == {
+            "form",
+            "info",
+            "info.form",
+            "info.formMeta",
+            "info.parent",
+            "info.parent.form",
+            "info.parent.formMeta",
+            "info.parent.question",
+            "info.root",
+            "info.root.form",
+            "info.root.formMeta",
+        }
+        | case_keys
+    )
+
+    assert _v(cell_ctx, "form") == "top_form"
+    assert _v(cell_ctx, "info.form") == "row_form"
+    assert _v(cell_ctx, "info.formMeta") is not None
+    assert _v(cell_ctx, "info.parent.form") == "top_form"
+    assert _v(cell_ctx, "info.parent.formMeta") is not None
+    assert _v(cell_ctx, "info.parent.question") == "table"
+    assert _v(cell_ctx, "info.root.form") == "top_form"
+    assert _v(cell_ctx, "info.root.formMeta") is not None
+    assert (
+        _paths(cell_ctx)
+        == {
+            "form",
+            "info",
+            "info.form",
+            "info.formMeta",
+            "info.parent",
+            "info.parent.form",
+            "info.parent.formMeta",
+            "info.parent.question",
+            "info.root",
+            "info.root.form",
+            "info.root.formMeta",
+        }
+        | case_keys
+    )
 
 
 @pytest.mark.parametrize(
