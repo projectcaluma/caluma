@@ -1298,5 +1298,5 @@ def test_init_of_calc_questions_queries(
         question__calc_expression="'table'|answer|mapby('column')|sum + 'top_question'|answer + 'sub_question'|answer",
     )
 
-    with django_assert_num_queries(25):
+    with django_assert_num_queries(24):
         api.save_answer(questions_dict["top_question"], document, value="1")

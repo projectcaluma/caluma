@@ -708,9 +708,9 @@ def test_evaluate_error_no_raise(info, form_and_document, do_raise, expectation)
 @pytest.mark.parametrize(
     ("document_type", "expected_queries"),
     [
-        ("case", 6),
-        ("work_item", 7),
-        ("child_case", 6),
+        ("case", 5),
+        ("work_item", 6),
+        ("child_case", 5),
     ],
 )
 def test_jexl_context(  # noqa: C901

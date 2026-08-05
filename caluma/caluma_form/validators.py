@@ -445,7 +445,6 @@ class DocumentValidator:
 
         context = {
             "info": {
-                "form": document.form,
                 "case": case_info,
                 "workItem": workitem_info,
             }
