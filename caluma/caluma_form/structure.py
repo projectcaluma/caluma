@@ -408,8 +408,13 @@ class BaseField(ABC):
         * Case information is taken from the global context
              - `info.case.form`: The cases' form (works for task forms and case forms).
              - `info.case.workflow`: The cases' workflow (works for task forms and case forms).
+             - `info.case.meta`: The cases' meta (works for task forms and case forms).
              - `info.case.root.form`: The _root_ cases' form (works for task forms and case forms).
              - `info.case.root.workflow`: The _root_ cases' workflow (works for task forms and case forms).
+             - `info.case.root.meta`: The _root_ cases' meta (works for task forms and case forms).
+        * Work item information (via `document.work_item` or `document.case.parent_work_item`)
+             - `info.workItem.task`: The task slug of the work item
+             - `info.workItem.meta`: The meta of the work item
 
         """
         form = self.get_form()
