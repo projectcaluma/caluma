@@ -403,6 +403,9 @@ class DocumentValidator:
                 )
 
     def get_validation_context(self, document, _fastloader=None):
+        fastloader = _fastloader or structure.FastLoader.for_document(document)
+        document = fastloader.document_by_id(document.pk)
+
         relevant_case: Case = getattr(document, "case", None) or getattr(
             getattr(document, "work_item", None), "case", None
         )
@@ -453,7 +456,7 @@ class DocumentValidator:
         return structure.FieldSet(
             document,
             global_context=context,
-            _fastloader=_fastloader,
+            _fastloader=fastloader,
         )
 
     def visible_questions(self, document, validation_context=None) -> list[Question]:

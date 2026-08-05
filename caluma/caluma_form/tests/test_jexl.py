@@ -705,19 +705,11 @@ def test_evaluate_error_no_raise(info, form_and_document, do_raise, expectation)
         assert top_q_field.is_hidden(raise_on_error=do_raise) is None
 
 
-@pytest.mark.parametrize(
-    ("document_type", "expected_queries"),
-    [
-        ("case", 5),
-        ("work_item", 6),
-        ("child_case", 5),
-    ],
-)
+@pytest.mark.parametrize("document_type", ["case", "work_item", "child_case"])
 def test_jexl_context(  # noqa: C901
     case_factory,
     django_assert_num_queries,
     document_type,
-    expected_queries,
     form_and_document,
     work_item_factory,
 ):
@@ -766,7 +758,7 @@ def test_jexl_context(  # noqa: C901
     # queries of the validation context itself
     fastloader = structure.FastLoader.for_document(document)
 
-    with django_assert_num_queries(expected_queries):
+    with django_assert_num_queries(0):
         struct = validator.get_validation_context(document, _fastloader=fastloader)
 
     def _ctx(field: structure.BaseField) -> dict:
