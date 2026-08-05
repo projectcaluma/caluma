@@ -1,3 +1,13 @@
+# v12.6.0 (05 August 2026)
+
+### Feature
+
+* **jexl:** Expose case and work item meta in JEXL context ([`f78589d`](https://github.com/projectcaluma/caluma/commit/f78589d82778dfe6b4afa11f0ed5b86d3a7bb927))
+
+### Fix
+
+* **deps:** Update django to v5.2.17 ([`f1e402d`](https://github.com/projectcaluma/caluma/commit/f1e402dcd7b01008e0af105631dba942d0d25908))
+
 # v12.5.1 (03 August 2026)
 
 ### Fix
