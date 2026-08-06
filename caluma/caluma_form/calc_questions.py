@@ -76,9 +76,10 @@ def recalculate_field(calc_field: structure.ValueField) -> bool:
         # Not a calc field - skip
         return True
 
+    log.debug("Recalculating %s", calc_field.get_path())
     start = time.time()
 
-    old_value = calc_field.get_value()
+    old_value = calc_field.get_value(ignore_hidden=True)
     value = calc_field.calculate()
 
     did_change = value != old_value
@@ -98,7 +99,11 @@ def recalculate_field(calc_field: structure.ValueField) -> bool:
         calc_field.refresh(answer, recursive=False)
     duration = time.time() - start
 
-    status = "updated value" if did_change else "did not change value"
+    status = (
+        f"updated value: {old_value} --> {value}"
+        if did_change
+        else "did not change value"
+    )
     log.debug(
         "Recalculation(%s): took %1.3fs, %s", calc_field.get_path(), duration, status
     )
@@ -119,6 +124,10 @@ class DependencyList(list):
         if not changed_fields:  # pragma: no cover
             # Nothing to do
             return
+        log.debug(
+            "New recalc dependency list: %s",
+            "; ".join(f.get_path() for f in changed_fields),
+        )
 
         # field-id -> list[field-id] mapping
         self._reasons: defaultdict[id, list[id]] = defaultdict(list)
@@ -210,7 +219,6 @@ class DependencyList(list):
         been recalculated already.
         """
         for field in self:
-            log.debug("Recalculating %s", field.get_path())
             is_root = id(field) in self._roots
             if (
                 allow_culling

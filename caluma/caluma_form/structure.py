@@ -561,6 +561,26 @@ class BaseField(ABC):
         return self.get_context().get(slug)
 
     @object_local_memoise
+    def find_field_by_document_and_question(
+        self, document: Document | str, question: Question | str
+    ):
+        """Return te field for this specific document/question combination.
+
+        This is useful for finding a field during validation, and an answer
+        object might not yet exist.
+        """
+        document_id = document.pk if isinstance(document, Document) else document
+        question_id = question.pk if isinstance(question, Question) else question
+        # answer is not in "our" document, probably we're in a row doc.
+        # Therefore, search "everywhere"
+
+        field_candidates = self.find_all_fields_by_slug(question_id)
+        field = next(
+            (f for f in field_candidates if f.parent._document.pk == document_id), None
+        )
+        return field
+
+    @object_local_memoise
     def find_field_by_answer(self, answer) -> BaseField:
         q_field = self.get_field(answer.question_id)
         if q_field and q_field.answer and q_field.answer.pk == answer.pk:
@@ -686,8 +706,15 @@ class ValueField(BaseField):
     EMPTY_VALUES = ([], (), {}, None)
 
     @object_local_memoise
-    def get_value(self):
-        if self.answer and not self.is_hidden(raise_on_error=False):
+    def get_value(self, ignore_hidden=False):
+        """Return the value of the field, if available.
+
+        If you pass `ignore_hidden=True`, the hidden state is not checked,
+        and the stored value is returned even if the field is currently hidden.
+        This is useful for recalculation code, and should not be used elsewhere.
+        """
+
+        if self.answer and (ignore_hidden or not self.is_hidden(raise_on_error=False)):
             if self.answer.value not in self.EMPTY_VALUES:
                 return self.answer.value
             if self.question.type == Question.TYPE_DATE and self.answer.date:
