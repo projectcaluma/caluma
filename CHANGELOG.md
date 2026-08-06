@@ -1,3 +1,10 @@
+# v12.6.1 (06 August 2026)
+
+### Performance
+
+* **jexl:** Load the validation context relations with the documents ([`609451b`](https://github.com/projectcaluma/caluma/commit/609451b07f6193daf53dc999cca7dbaf6f3fb5c4))
+* **jexl:** Don't annotate form in global validation context ([`e678020`](https://github.com/projectcaluma/caluma/commit/e67802012eb9ccfdd506f6fcdf26c00b7dcaea9b))
+
 # v12.6.0 (05 August 2026)
 
 ### Feature
