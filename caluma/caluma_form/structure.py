@@ -115,6 +115,22 @@ class FastLoader:
     load too much if only a sub-document is given
     """
 
+    VALIDATION_CONTEXT_RELATIONS = (
+        "case__family__document",
+        "case__parent_work_item",
+        "work_item__case__document",
+        "work_item__case__family__document",
+    )
+    """
+    Relations of a document that `DocumentValidator.get_validation_context()`
+    traverses to build the global JEXL context. We load them along with the
+    documents themselves, so they don't cause any queries of their own.
+
+    Note that every segment of a path is joined separately, so
+    `case__family__document` results in three JOINs. The intermediate relations
+    are implied and don't need to be listed on their own.
+    """
+
     @classmethod
     def for_document(cls, document):
         new_self = cls()
@@ -264,7 +280,9 @@ class FastLoader:
 
         self._documents = {
             str(document.pk): document
-            for document in Document.objects.filter(family__in=families)
+            for document in Document.objects.filter(family__in=families).select_related(
+                *self.VALIDATION_CONTEXT_RELATIONS
+            )
         }
         # Second: All Answers - These are fetchable via zero JOINs, as we
         # already have all the documents
@@ -330,6 +348,9 @@ class FastLoader:
             log.warning("Fastloader: Form %s was not preloaded - loading now", form_id)
             self._load_form_entities([form_id])
         return self._forms[form_id]
+
+    def document_by_id(self, document_id: str) -> Document | None:
+        return self._documents.get(str(document_id))
 
     def rows_for_table_answer(self, answer_id: str) -> list[Document]:
         document_ids = self._table_rows_by_answer[str(answer_id)]
