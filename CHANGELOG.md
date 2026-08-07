@@ -1,3 +1,13 @@
+# v12.7.0 (07 August 2026)
+
+### Feature
+
+* **jexl:** Add graph for the global JEXL context of a document ([`6ef7356`](https://github.com/projectcaluma/caluma/commit/6ef7356ec94e9a1c333314c67a8dc3c3b8566f77))
+
+### Fix
+
+* **form:** Correctly evaluate option jexl, improve logging ([`7bbab86`](https://github.com/projectcaluma/caluma/commit/7bbab869e6b5e954f54df03f130ec2535543aae3))
+
 # v12.6.1 (06 August 2026)
 
 ### Performance
