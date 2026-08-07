@@ -109,11 +109,13 @@ class AnswerValidator:
             return validation_context, validation_context.get_root()
 
         # If we need to create the context ourselves here, we'll need to fetch
-        # the field from the context.
-        validation_context = DocumentValidator().get_validation_context(document)
-        field_candidates = validation_context.find_all_fields_by_slug(question.slug)
-        field = next(f for f in field_candidates if f.parent._document == document)
-        return field, validation_context
+        # the field from the context. As our document could be a table row, we
+        # and table questions can refer to "external" questions, we need the full family
+        root_context = DocumentValidator().get_validation_context(document.family)
+
+        return root_context.find_field_by_document_and_question(
+            document, question.slug
+        ), root_context
 
     def _evaluate_options_jexl(
         self, document, question, validation_context=None, qs=None
@@ -134,6 +136,7 @@ class AnswerValidator:
                 # no JEXL evaluation neccessary
                 return [o.slug for o in all_options]
 
+        # This won't do too much as we already have a validation context
         field, _root = self._structure_field(document, question, validation_context)
         if not field:  # pragma: no cover
             # This only happens if *programmer* made an error, therefore we're
