@@ -402,10 +402,18 @@ class DocumentValidator:
                     data_source_context=data_source_context,
                 )
 
-    def get_validation_context(self, document, _fastloader=None):
-        fastloader = _fastloader or structure.FastLoader.for_document(document)
-        document = fastloader.document_by_id(document.pk)
+    def build_global_context(self, document: models.Document) -> dict:
+        """Build the global JEXL context for the given document.
 
+        The global context is the part of the JEXL context that is the same
+        for every field of a document, so it only depends on the document's
+        family and the case / work item it is attached to.
+
+        Note that this only traverses the relations listed in
+        `structure.FastLoader.VALIDATION_CONTEXT_RELATIONS`. Pass a document
+        that has them selected (see `FastLoader` or
+        `Document.objects.select_related()`) to avoid extra queries.
+        """
         relevant_case: Case = getattr(document, "case", None) or getattr(
             getattr(document, "work_item", None), "case", None
         )
@@ -446,16 +454,20 @@ class DocumentValidator:
             {"task": work_item.task_id, "meta": work_item.meta} if work_item else None
         )
 
-        context = {
+        return {
             "info": {
                 "case": case_info,
                 "workItem": workitem_info,
             }
         }
 
+    def get_validation_context(self, document, _fastloader=None):
+        fastloader = _fastloader or structure.FastLoader.for_document(document)
+        document = fastloader.document_by_id(document.pk)
+
         return structure.FieldSet(
             document,
-            global_context=context,
+            global_context=self.build_global_context(document),
             _fastloader=fastloader,
         )
 

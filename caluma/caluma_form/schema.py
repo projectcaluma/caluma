@@ -23,9 +23,9 @@ from ..caluma_core.types import (
 )
 from ..caluma_data_source.data_source_handlers import get_data_source_data
 from ..caluma_data_source.schema import DataSourceDataConnection
-from . import filters, models, serializers
+from . import filters, models, serializers, structure
 from .format_validators import get_format_validators
-from .validators import get_validity
+from .validators import DocumentValidator, get_validity
 
 
 def resolve_answer(answer):
@@ -1253,6 +1253,16 @@ class Query:
         data_source_context=graphene.JSONString(),
     )
 
+    document_global_jexl_context = generic.GenericScalar(
+        id=graphene.ID(required=True),
+        description=(
+            "The global context for JEXL evaluation in the frontend. Contains "
+            "information about the related case, work item, etc. This is the "
+            "part of the JEXL context that is the same for every field of a "
+            "document."
+        ),
+    )
+
     def resolve_all_format_validators(self, info, **kwargs):
         return get_format_validators()
 
@@ -1271,6 +1281,27 @@ class Query:
             id,
             **kwargs,
         )
+
+    def resolve_document_global_jexl_context(self, info, id):
+        """Build the global JEXL context of the given document's family.
+
+        Visibility is only enforced on the document itself. The case, work
+        item and friends the context is built from are *not* run through the
+        visibility layer - they are needed to evaluate the document's JEXL
+        expressions, so whoever may see the document may see them as well.
+        """
+        document = get_object_or_404(
+            Document.get_queryset(models.Document.objects.all(), info),
+            pk=extract_global_id(id),
+        )
+
+        # The context is the same for the whole family, so a row or sub-form
+        # document must yield the context of its root document.
+        root_document = models.Document.objects.select_related(
+            *structure.FastLoader.VALIDATION_CONTEXT_RELATIONS
+        ).get(pk=document.family_id)
+
+        return DocumentValidator().build_global_context(root_document)
 
 
 QUESTION_ANSWER_TYPES = {

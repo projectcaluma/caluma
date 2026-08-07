@@ -705,14 +705,44 @@ def test_evaluate_error_no_raise(info, form_and_document, do_raise, expectation)
         assert top_q_field.is_hidden(raise_on_error=do_raise) is None
 
 
-@pytest.mark.parametrize("document_type", ["case", "work_item", "child_case"])
-def test_jexl_context(  # noqa: C901
-    case_factory,
-    django_assert_num_queries,
-    document_type,
-    form_and_document,
-    work_item_factory,
-):
+@pytest.fixture(params=["case", "work_item", "child_case"])
+def document_of_type(request, form_and_document, case_factory, work_item_factory):
+    document = form_and_document(use_table=True, use_subform=True)[1]
+
+    root_case = case_factory(
+        document__form__slug="root_form",
+        workflow__slug="root_workflow",
+        meta={"root-case": True},
+    )
+
+    if request.param == "case":
+        root_case.document = document
+        root_case.save()
+    elif request.param == "work_item":
+        work_item_factory(
+            task__slug="regular_task",
+            case=root_case,
+            document=document,
+            child_case=None,
+            meta={"direct-work-item": True},
+        )
+    elif request.param == "child_case":
+        work_item_factory(
+            case=root_case,
+            meta={"parent-work-item": True},
+            task__slug="task_with_child_case",
+            child_case__workflow__slug="child_workflow",
+            child_case__document=document,
+            child_case__family=root_case,
+            child_case__meta={"child-case": True},
+        )
+
+    document.refresh_from_db()
+
+    yield request.param, document
+
+
+def test_jexl_context(django_assert_num_queries, document_of_type):
     """Test the JEXL context structure as a whole.
 
     This test is looking at the JEXL context as a whole so developers can see
@@ -723,35 +753,7 @@ def test_jexl_context(  # noqa: C901
     `caluma/caluma_form/structure.py`.
     """
 
-    form, document, questions, answers = form_and_document(
-        use_table=True, use_subform=True
-    )
-
-    root_case = case_factory(
-        document__form__slug="root_form",
-        workflow__slug="root_workflow",
-    )
-
-    if document_type == "case":
-        root_case.document = document
-        root_case.save()
-    elif document_type == "work_item":
-        work_item_factory(
-            task__slug="regular_task",
-            case=root_case,
-            document=document,
-            child_case=None,
-        )
-    elif document_type == "child_case":
-        work_item_factory(
-            case=root_case,
-            task__slug="task_with_child_case",
-            child_case__workflow__slug="child_workflow",
-            child_case__document=document,
-            child_case__family=root_case,
-        )
-
-    document.refresh_from_db()
+    document_type, document = document_of_type
 
     validator = validators.DocumentValidator()
     # The fastloader is tested separately - pass it in so we only count the
@@ -778,7 +780,7 @@ def test_jexl_context(  # noqa: C901
         for key, value in obj.items():
             path = f"{prefix}{key}"
             paths.add(path)
-            if isinstance(value, dict) and not path.endswith("Meta"):
+            if isinstance(value, dict) and not path.endswith(("Meta", "meta")):
                 paths |= _paths(value, prefix=f"{path}.")
         return paths
 
@@ -908,6 +910,29 @@ def test_jexl_context(  # noqa: C901
         }
         | case_keys
     )
+
+
+def test_global_jexl_context_graph(
+    document_of_type, django_assert_num_queries, schema_executor
+):
+    _, document = document_of_type
+
+    # One query for the (visibility filtered) document itself, one for the
+    # root document with all the relations the context is built from
+    with django_assert_num_queries(2):
+        result = schema_executor(
+            """
+            query ($id: ID!) {
+              documentGlobalJexlContext(id: $id)
+            }
+            """,
+            variable_values={"id": str(document.pk)},
+        )
+
+    assert not result.errors
+    assert result.data[
+        "documentGlobalJexlContext"
+    ] == validators.DocumentValidator().build_global_context(document)
 
 
 @pytest.mark.parametrize(

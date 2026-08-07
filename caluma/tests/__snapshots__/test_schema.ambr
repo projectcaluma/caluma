@@ -1947,6 +1947,11 @@
     allUsedDynamicOptions(offset: Int, before: String, after: String, first: Int, last: Int, filter: [DynamicOptionFilterSetType], order: [DynamicOptionOrderSetType]): DynamicOptionConnection
     documentValidity(id: ID!, dataSourceContext: JSONString, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
     answerValidity(id: ID!, dataSourceContext: JSONString, before: String, after: String, first: Int, last: Int): DocumentValidityConnection
+  
+    """
+    The global context for JEXL evaluation in the frontend. Contains information about the related case, work item, etc. This is the part of the JEXL context that is the same for every field of a document.
+    """
+    documentGlobalJexlContext(id: ID!): GenericScalar
     node(
       """The ID of the object"""
       id: ID!
