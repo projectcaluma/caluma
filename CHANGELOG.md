@@ -1,3 +1,10 @@
+# 12.7.1 (27 August 2026)
+
+### Fix
+
+* **form:** Lock document families for all mutations ([`86b593b`](https://github.com/projectcaluma/caluma/commit/86b593b73b7cce86638c83b73b040b2079e1df38))
+* **form:** Select document family for update to avoid race conditions ([`bed9029`](https://github.com/projectcaluma/caluma/commit/bed90292fd2f2c591fddf76141d1d2ca64370dcc))
+
 # v12.7.0 (07 August 2026)
 
 ### Feature
