@@ -280,9 +280,9 @@ class FastLoader:
 
         self._documents = {
             str(document.pk): document
-            for document in Document.objects.filter(family__in=families).select_related(
-                *self.VALIDATION_CONTEXT_RELATIONS
-            )
+            for document in Document.objects.filter(
+                family__in=families
+            ).prefetch_related(*self.VALIDATION_CONTEXT_RELATIONS)
         }
         # Second: All Answers - These are fetchable via zero JOINs, as we
         # already have all the documents
