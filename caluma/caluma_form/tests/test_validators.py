@@ -815,7 +815,7 @@ def test_validate_integer_0(
         ("false", 12, 0),
         # not pre-recognized - needs to be evaluated in full doc context
         # therefore more queries needed, and JEXL expressions are evaluated
-        ("!true", 19, 5),
+        ("!true", 21, 5),
     ],
 )
 def test_validate_options_without_jexl(

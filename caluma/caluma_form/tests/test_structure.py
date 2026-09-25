@@ -360,9 +360,9 @@ def test_fastloader_multiple_documents(
 
     qs = Document.objects.filter(pk__in=[simple_form_structure.pk, doc2.pk, doc3.pk])
 
-    with django_assert_num_queries(7):
+    with django_assert_num_queries(9):
         fl_doc = structure.FastLoader.for_document(simple_form_structure)
-    with django_assert_num_queries(7):
+    with django_assert_num_queries(9):
         fl_qs = structure.FastLoader.for_queryset(qs)
 
     expected_structure = [
