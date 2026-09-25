@@ -16,13 +16,26 @@ services:
     # command: ./manage.py runprofileserver --use-cprofile 0.0.0.0:8000 --nothreading --prof-path /app
     environment:
       - ENV=development
-  minio:
-    image: minio/minio:RELEASE.2022-01-08T03-11-54Z@sha256:7d9c041cf592851fc42b970dc1e56f49fe0600c658e75833825ac1c75ec0e9da
+      # The MINIO storage configuration doesn't imply that we need to use
+      # MinIO: We currently use Garage, but due to backwards-compatibility, the
+      # settigns ar still named MINIO_*
+      - MINIO_STORAGE_ENDPOINT=garage:3900
+      - MINIO_STORAGE_ACCESS_KEY=s3storageadmin
+      - MINIO_STORAGE_SECRET_KEY=s3storageSecret
+      - MINIO_STORAGE_REGION_NAME=garage
+  garage:
+    image: dxflrs/garage:v2.3.0@sha256:866bd13ed2038ba7e7190e840482bc27234c4afaf77be8cfa439ae088c1e4690
     volumes:
-      - minio_data:/data
+      - ./garage.toml:/etc/garage.toml:ro
+      - garage_meta:/var/lib/garage/meta
+      - garage_data:/var/lib/garage/data
     ports:
-      - "9000:9000"
+      - "3900:3900"
     environment:
-      - MINIO_ACCESS_KEY=minio
-      - MINIO_SECRET_KEY=minio123
-    command: server data
+      - GARAGE_DEFAULT_ACCESS_KEY=s3storageadmin
+      - GARAGE_DEFAULT_SECRET_KEY=s3storageSecret
+      - GARAGE_DEFAULT_BUCKET=caluma-media
+    command: /garage server --single-node --default-bucket
+volumes:
+  garage_meta:
+  garage_data:
