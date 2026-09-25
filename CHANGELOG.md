@@ -1,3 +1,9 @@
+# 12.7.2 (25 September 2026)
+
+### Fix
+
+* **perf:** Improve fastloader performance by prefetching ([`79ebc9f`](https://github.com/projectcaluma/caluma/commit/79ebc9fe58ffb7446023d5828f39eaaf232803b9))
+
 # 12.7.1 (27 August 2026)
 
 ### Fix
