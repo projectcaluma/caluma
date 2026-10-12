@@ -152,3 +152,10 @@ jobs:
     needs: [lint]
     with:
       postgres: "17"
+
+  compatibility-tests-postgres-18:
+    name: "Compatibility tests"
+    uses: ./.github/workflows/compatibility-tests.yml
+    needs: [lint]
+    with:
+      postgres: "18"
