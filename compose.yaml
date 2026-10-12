@@ -1,13 +1,13 @@
 services:
   db:
-    image: postgres:14-alpine@sha256:4ea9e5ed06591da7ea23eb65465e8d3187fe79f4d5ec3ae976d29a33b013e77a
+    image: postgres:18.6-alpine@sha256:77f585114c32fbca283dc835b0596f4e52b51b4c6662d7810b2f4084f60a1873
     environment:
       - POSTGRES_USER=caluma
       # following option is a must to configure on production system:
       # https://hub.docker.com/_/postgres
       # - POSTGRES_PASSWORD=
     volumes:
-      - dbdata:/var/lib/postgresql/data
+      - dbdata:/var/lib/postgresql
     command: -p ${DATABASE_PORT:-5432}
   caluma:
     image: ghcr.io/projectcaluma/caluma:latest
