@@ -40,3 +40,13 @@ updates:
           - ">=3.13"
     cooldown:
       default-days: 7
+  - package-ecosystem: docker-compose
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: friday
+      time: "12:00"
+      timezone: "Europe/Zurich"
+    open-pull-requests-limit: 10
+    cooldown:
+      default-days: 7

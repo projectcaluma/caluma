@@ -87,7 +87,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:14-alpine
+        image: postgres:18-alpine
         env:
           POSTGRES_USER: caluma
           POSTGRES_PASSWORD: caluma
@@ -152,3 +152,10 @@ jobs:
     needs: [lint]
     with:
       postgres: "17"
+
+  compatibility-tests-postgres-18:
+    name: "Compatibility tests"
+    uses: ./.github/workflows/compatibility-tests.yml
+    needs: [lint]
+    with:
+      postgres: "18"

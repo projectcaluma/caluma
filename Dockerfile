@@ -1,4 +1,4 @@
-FROM python:3.12.14-alpine AS base
+FROM python:3.12.14-alpine@sha256:4c47124a8391cb7a9f571164147d154777cf012a4ece5f86097130d7a4478111 AS base
 
 RUN apk update --no-cache && \
     apk upgrade --no-cache && \
