@@ -7,14 +7,13 @@
           'node': dict({
             '__typename': 'SimpleTask',
             'description': '''
-              All response later state. Rock event recent public final.
-              Hope star check record well.
-              With Mr letter eye way society. Move enter them his half long.
+              Special budget so draw learn.
+              Military decision woman others direction by cut my. Among entire success people offer among effort.
             ''',
             'meta': dict({
             }),
-            'name': 'Taylor Williams',
-            'slug': 'suggest-adult-allow',
+            'name': 'Timothy Lin',
+            'slug': 'recent-pick-accept',
           }),
         }),
       ]),
@@ -30,8 +29,8 @@
         '__typename': 'CompleteTaskFormTask',
         'meta': dict({
         }),
-        'name': 'Taylor Williams',
-        'slug': 'suggest-adult-allow',
+        'name': 'Angela Calhoun',
+        'slug': 'must-away-thousand',
       }),
     }),
   })
@@ -44,8 +43,8 @@
         '__typename': 'CompleteWorkflowFormTask',
         'meta': dict({
         }),
-        'name': 'Taylor Williams',
-        'slug': 'suggest-adult-allow',
+        'name': 'Stephanie Arias',
+        'slug': 'government-doctor',
       }),
     }),
   })
@@ -58,8 +57,8 @@
         '__typename': 'SimpleTask',
         'meta': dict({
         }),
-        'name': 'Taylor Williams',
-        'slug': 'suggest-adult-allow',
+        'name': 'William Lopez',
+        'slug': 'fish-despite',
       }),
     }),
   })

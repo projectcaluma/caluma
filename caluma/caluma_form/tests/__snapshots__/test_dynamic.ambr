@@ -5,12 +5,12 @@
       'edges': list([
         dict({
           'node': dict({
-            'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+            'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOnNpZGUtcmVhZC15ZWFo',
             'options': dict({
               'edges': list([
                 dict({
                   'node': dict({
-                    'label': 'q: environmental-ten',
+                    'label': 'q: side-read-yeah',
                     'slug': 'option-without-context',
                   }),
                 }),
@@ -28,12 +28,12 @@
       'edges': list([
         dict({
           'node': dict({
-            'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
+            'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZmFtaWx5LXN0b3AtcGljay1tcg==',
             'options': dict({
               'edges': list([
                 dict({
                   'node': dict({
-                    'label': 'q: environmental-ten',
+                    'label': 'q: family-stop-pick-mr',
                     'slug': 'option-without-context',
                   }),
                 }),
@@ -51,12 +51,12 @@
       'edges': list([
         dict({
           'node': dict({
-            'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOmVudmlyb25tZW50YWwtdGVu',
+            'id': 'RHluYW1pY0Nob2ljZVF1ZXN0aW9uOnNpbWlsYXItd2UtY2FyZQ==',
             'options': dict({
               'edges': list([
                 dict({
                   'node': dict({
-                    'label': 'q: environmental-ten foo: bar',
+                    'label': 'q: similar-we-care foo: bar',
                     'slug': 'option-with-context',
                   }),
                 }),
@@ -74,12 +74,12 @@
       'edges': list([
         dict({
           'node': dict({
-            'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZW52aXJvbm1lbnRhbC10ZW4=',
+            'id': 'RHluYW1pY011bHRpcGxlQ2hvaWNlUXVlc3Rpb246ZXhlY3V0aXZlLW1hdHRlcg==',
             'options': dict({
               'edges': list([
                 dict({
                   'node': dict({
-                    'label': 'q: environmental-ten foo: bar',
+                    'label': 'q: executive-matter foo: bar',
                     'slug': 'option-with-context',
                   }),
                 }),
@@ -101,7 +101,7 @@
     'saveDocumentStringAnswer': dict({
       'answer': dict({
         'selectedOption': dict({
-          'label': 'q: environmental-ten foo: bar',
+          'label': 'q: per-benefit-explain foo: bar',
           'slug': 'option-with-context',
         }),
       }),
@@ -113,7 +113,7 @@
     'saveDocumentStringAnswer': dict({
       'answer': dict({
         'selectedOption': dict({
-          'label': 'q: environmental-ten',
+          'label': 'q: remember-prevent',
           'slug': 'option-without-context',
         }),
       }),
@@ -133,7 +133,7 @@
           'edges': list([
             dict({
               'node': dict({
-                'label': 'q: environmental-ten foo: bar',
+                'label': 'q: strategy-chance foo: bar',
                 'slug': 'option-with-context',
               }),
             }),
@@ -156,7 +156,7 @@
           'edges': list([
             dict({
               'node': dict({
-                'label': 'q: environmental-ten',
+                'label': 'q: among-population',
                 'slug': 'option-without-context',
               }),
             }),
