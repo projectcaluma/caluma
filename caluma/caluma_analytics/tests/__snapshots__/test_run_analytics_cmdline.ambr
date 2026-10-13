@@ -3,9 +3,9 @@
   dict({
     'data': list([
       '------------------------------------   --------------  ',
-      'case1pk   Shelly Watson   ',
-      'case2pk   Daniel Stewart  ',
-      'case3pk   Annette Mason   ',
+      'case1pk   Sandra Jones    ',
+      'case2pk   Jason Taylor    ',
+      'case3pk   Danny Thompson  ',
       'case_id                                blablub         ',
     ]),
     'stderr': '',
@@ -15,8 +15,8 @@
   dict({
     'data': list([
       '------------------------------------   --------------  ',
-      'case1pk   Shelly Watson   ',
-      'case2pk   Daniel Stewart  ',
+      'case1pk   Deborah Strong  ',
+      'case2pk   Jordan Cox      ',
       'case_id                                blablub         ',
     ]),
     'stderr': '',
@@ -25,11 +25,11 @@
 # name: test_cmdline_output[output_mode1-False-expect_output1-cases]
   dict({
     'data': list([
-      '------------------------------------   --------------  ',
-      'case1pk   Shelly Watson   ',
-      'case2pk   Daniel Stewart  ',
-      'case3pk   Annette Mason   ',
-      'case_id                                blablub         ',
+      '------------------------------------   ------------  ',
+      'case1pk   Katie Jones   ',
+      'case2pk   Cody Lam DVM  ',
+      'case3pk   Adam Hodges   ',
+      'case_id                                blablub       ',
     ]),
     'stderr': '''
       -- SQL: 
@@ -117,8 +117,8 @@
   dict({
     'data': list([
       '------------------------------------   --------------  ',
-      'case1pk   Shelly Watson   ',
-      'case2pk   Daniel Stewart  ',
+      'case1pk   Anthony Sloan   ',
+      'case2pk   Jennifer Rocha  ',
       'case_id                                blablub         ',
     ]),
     'stderr': '''
@@ -198,10 +198,10 @@
       
       
       ) AS analytics_900d5
-      WHERE "analytics_result_blablub" IN (%(flt_analytics_result_blablub_8201d)s, %(flt_analytics_result_blablub_8e5e6)s)
+      WHERE "analytics_result_blablub" IN (%(flt_analytics_result_blablub_fe40b)s, %(flt_analytics_result_blablub_1fa61)s)
       -- PARAMS: 
-      --     flt_analytics_result_blablub_8201d: Shelly Watson
-      --     flt_analytics_result_blablub_8e5e6: Daniel Stewart
+      --     flt_analytics_result_blablub_fe40b: Anthony Sloan
+      --     flt_analytics_result_blablub_1fa61: Jennifer Rocha
   
     ''',
   })
@@ -373,10 +373,10 @@
       
       
       ) AS analytics_900d5
-      WHERE "analytics_result_blablub" IN (%(flt_analytics_result_blablub_8201d)s, %(flt_analytics_result_blablub_8e5e6)s)
+      WHERE "analytics_result_blablub" IN (%(flt_analytics_result_blablub_28b66)s, %(flt_analytics_result_blablub_e1695)s)
       -- PARAMS: 
-      --     flt_analytics_result_blablub_8201d: Shelly Watson
-      --     flt_analytics_result_blablub_8e5e6: Daniel Stewart
+      --     flt_analytics_result_blablub_28b66: Jamie Gray
+      --     flt_analytics_result_blablub_e1695: Thomas Rivera
   
     ''',
   })
@@ -385,16 +385,16 @@
   dict({
     'data': list([
       dict({
-        'blablub': 'Annette Mason',
-        'case_id': 'case3pk',
+        'blablub': 'David Zamora',
+        'case_id': 'case1pk',
       }),
       dict({
-        'blablub': 'Daniel Stewart',
+        'blablub': 'James Powell',
         'case_id': 'case2pk',
       }),
       dict({
-        'blablub': 'Shelly Watson',
-        'case_id': 'case1pk',
+        'blablub': 'Katie Rodriguez',
+        'case_id': 'case3pk',
       }),
     ]),
     'stderr': '',
@@ -404,12 +404,12 @@
   dict({
     'data': list([
       dict({
-        'blablub': 'Daniel Stewart',
-        'case_id': 'case2pk',
+        'blablub': 'Antonio Brown',
+        'case_id': 'case1pk',
       }),
       dict({
-        'blablub': 'Shelly Watson',
-        'case_id': 'case1pk',
+        'blablub': 'Ashlee Johnson',
+        'case_id': 'case2pk',
       }),
     ]),
     'stderr': '',
@@ -419,7 +419,7 @@
   '''
   No analytics table specified. The following tables are available:
     ID:                  NAME:
-    environmental-ten    Bonnie Moreno
+    share-hair-pm        Jeffery Hill
   
   '''
 # ---

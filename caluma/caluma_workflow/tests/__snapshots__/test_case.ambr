@@ -5,7 +5,7 @@
       'case': dict({
         'document': dict({
           'form': dict({
-            'slug': 'suggest-adult-allow',
+            'slug': 'agent-all-start',
           }),
         }),
         'status': 'CANCELED',
@@ -29,7 +29,7 @@
       'case': dict({
         'document': dict({
           'form': dict({
-            'slug': 'suggest-adult-allow',
+            'slug': 'dark-example',
           }),
         }),
         'status': 'CANCELED',
@@ -670,7 +670,7 @@
       'case': dict({
         'document': dict({
           'form': dict({
-            'slug': 'suggest-adult-allow',
+            'slug': 'such-board-enough',
           }),
         }),
         'parentWorkItem': None,
@@ -683,7 +683,7 @@
                 ]),
                 'document': dict({
                   'form': dict({
-                    'slug': 'suggest-adult-allow',
+                    'slug': 'such-board-enough',
                   }),
                 }),
                 'status': 'READY',
@@ -702,7 +702,7 @@
       'case': dict({
         'document': dict({
           'form': dict({
-            'slug': 'suggest-adult-allow',
+            'slug': 'east-guess-dark',
           }),
         }),
         'parentWorkItem': None,
@@ -715,7 +715,7 @@
                 ]),
                 'document': dict({
                   'form': dict({
-                    'slug': 'suggest-adult-allow',
+                    'slug': 'east-guess-dark',
                   }),
                 }),
                 'status': 'READY',
@@ -734,7 +734,7 @@
       'case': dict({
         'document': dict({
           'form': dict({
-            'slug': 'suggest-adult-allow',
+            'slug': 'ability-both-speech',
           }),
         }),
         'parentWorkItem': None,
@@ -748,7 +748,7 @@
                 ]),
                 'document': dict({
                   'form': dict({
-                    'slug': 'suggest-adult-allow',
+                    'slug': 'ability-both-speech',
                   }),
                 }),
                 'status': 'READY',
@@ -767,7 +767,7 @@
       'case': dict({
         'document': dict({
           'form': dict({
-            'slug': 'suggest-adult-allow',
+            'slug': 'thing-summer-view',
           }),
         }),
         'parentWorkItem': None,
@@ -781,7 +781,7 @@
                 ]),
                 'document': dict({
                   'form': dict({
-                    'slug': 'suggest-adult-allow',
+                    'slug': 'thing-summer-view',
                   }),
                 }),
                 'status': 'READY',
@@ -800,7 +800,7 @@
       'case': dict({
         'document': dict({
           'form': dict({
-            'slug': 'suggest-adult-allow',
+            'slug': 'eye-teacher-hold',
           }),
         }),
         'parentWorkItem': dict({
@@ -815,7 +815,7 @@
                 ]),
                 'document': dict({
                   'form': dict({
-                    'slug': 'suggest-adult-allow',
+                    'slug': 'eye-teacher-hold',
                   }),
                 }),
                 'status': 'READY',
@@ -834,7 +834,7 @@
       'case': dict({
         'document': dict({
           'form': dict({
-            'slug': 'suggest-adult-allow',
+            'slug': 'everyone-tell-floor',
           }),
         }),
         'parentWorkItem': dict({
@@ -849,7 +849,7 @@
                 ]),
                 'document': dict({
                   'form': dict({
-                    'slug': 'suggest-adult-allow',
+                    'slug': 'everyone-tell-floor',
                   }),
                 }),
                 'status': 'READY',
@@ -868,7 +868,7 @@
       'case': dict({
         'document': dict({
           'form': dict({
-            'slug': 'suggest-adult-allow',
+            'slug': 'information',
           }),
         }),
         'parentWorkItem': dict({
@@ -883,7 +883,7 @@
                 ]),
                 'document': dict({
                   'form': dict({
-                    'slug': 'suggest-adult-allow',
+                    'slug': 'information',
                   }),
                 }),
                 'status': 'READY',
@@ -902,7 +902,7 @@
       'case': dict({
         'document': dict({
           'form': dict({
-            'slug': 'suggest-adult-allow',
+            'slug': 'everyone-group',
           }),
         }),
         'parentWorkItem': dict({
@@ -917,7 +917,7 @@
                 ]),
                 'document': dict({
                   'form': dict({
-                    'slug': 'suggest-adult-allow',
+                    'slug': 'everyone-group',
                   }),
                 }),
                 'status': 'READY',

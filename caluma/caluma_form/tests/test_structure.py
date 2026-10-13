@@ -25,7 +25,11 @@ def simple_form_structure(
     ).question
 
     root_formquestion = form_question_factory(
-        form=form, question__type=Question.TYPE_FORM, question__slug="subform", sort=70
+        form=form,
+        question__type=Question.TYPE_FORM,
+        question__slug="subform",
+        question__sub_form__slug="sub_form",
+        sort=70,
     ).question
     assert root_formquestion.sub_form
 
@@ -46,6 +50,7 @@ def simple_form_structure(
         form=root_formquestion.sub_form,
         question__type=Question.TYPE_TABLE,
         question__slug="sub_table",
+        question__row_form__slug="row_form",
         sort=40,
     ).question
 
@@ -104,15 +109,15 @@ def test_printing_structure(simple_form_structure):
         " FieldSet(root)",
         "    Field(leaf1, Some Value)",
         "    Field(leaf2, 33)",
-        "    FieldSet(measure-evening)",
+        "    FieldSet(sub_form)",
         "       Field(sub_leaf1, None)",
         "       Field(sub_leaf2, None)",
         "       RowSet(sub_table)",
-        "          FieldSet(too-wonder-option #1)",
+        "          FieldSet(row_form #1)",
         "             Field(row_field_1, 2025-01-13)",
         "             Field(row_field_2, 99.5)",
         "             Field(row_calc, None)",
-        "          FieldSet(too-wonder-option #2)",
+        "          FieldSet(row_form #2)",
         "             Field(row_field_1, 2025-01-10)",
         "             Field(row_field_2, 23.0)",
         "             Field(row_calc, None)",
@@ -369,15 +374,15 @@ def test_fastloader_multiple_documents(
         " FieldSet(root)",
         "    Field(leaf1, Some Value)",
         "    Field(leaf2, 33)",
-        "    FieldSet(measure-evening)",
+        "    FieldSet(sub_form)",
         "       Field(sub_leaf1, None)",
         "       Field(sub_leaf2, None)",
         "       RowSet(sub_table)",
-        "          FieldSet(too-wonder-option #1)",
+        "          FieldSet(row_form #1)",
         "             Field(row_field_1, 2025-01-13)",
         "             Field(row_field_2, 99.5)",
         "             Field(row_calc, None)",
-        "          FieldSet(too-wonder-option #2)",
+        "          FieldSet(row_form #2)",
         "             Field(row_field_1, 2025-01-10)",
         "             Field(row_field_2, 23.0)",
         "             Field(row_calc, None)",
@@ -412,7 +417,7 @@ def test_fastloader_no_duplicate_options(
     choice_q = question_factory(type=Question.TYPE_CHOICE)
     the_options = question_option_factory.create_batch(4, question=choice_q)
     FormQuestion.objects.create(form_id="root", question=choice_q, sort=988)
-    FormQuestion.objects.create(form_id="measure-evening", question=choice_q, sort=987)
+    FormQuestion.objects.create(form_id="sub_form", question=choice_q, sort=987)
 
     struc = structure.FieldSet(simple_form_structure)
 
@@ -462,15 +467,15 @@ def test_multistage_calculation_updates(
         " FieldSet(root)",
         "    Field(leaf1, Some Value)",
         "    Field(leaf2, 33)",
-        "    FieldSet(measure-evening)",
+        "    FieldSet(sub_form)",
         "       Field(sub_leaf1, None)",
         "       Field(sub_leaf2, None)",
         "       RowSet(sub_table)",
-        "          FieldSet(too-wonder-option #1)",
+        "          FieldSet(row_form #1)",
         "             Field(row_field_1, 2025-01-13)",
         "             Field(row_field_2, 101.5)",
         "             Field(row_calc, 134.5)",
-        "          FieldSet(too-wonder-option #2)",
+        "          FieldSet(row_form #2)",
         "             Field(row_field_1, 2025-01-10)",
         "             Field(row_field_2, 25.0)",
         "             Field(row_calc, 58.0)",

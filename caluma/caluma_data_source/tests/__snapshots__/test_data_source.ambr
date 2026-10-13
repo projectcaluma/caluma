@@ -13,7 +13,7 @@
       'edges': list([
         dict({
           'node': dict({
-            'label': 'q: environmental-ten',
+            'label': 'q: green-month-network',
             'slug': 'option-without-context',
           }),
         }),
@@ -35,7 +35,7 @@
       'edges': list([
         dict({
           'node': dict({
-            'label': 'q: environmental-ten foo: bar',
+            'label': 'q: give-defense foo: bar',
             'slug': 'option-with-context',
           }),
         }),

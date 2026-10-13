@@ -830,9 +830,9 @@ def test_validate_options_without_jexl(
     mocker,
 ):
     """Ensure that validating options only evaluates JEXL if actually needed."""
-    form_question_factory(form=document.form)
-    form_question_factory(form=document.form)
-    form_question_factory(form=document.form)
+    form_question_factory.create_batch(
+        3, question__type=Question.TYPE_TEXT, form=document.form
+    )
     fq = form_question_factory(question__type=Question.TYPE_CHOICE, form=document.form)
     options = question_option_factory.create_batch(
         5, question=fq.question, option__is_hidden=option_jexl
