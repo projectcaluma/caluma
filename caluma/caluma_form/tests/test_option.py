@@ -70,11 +70,14 @@ def option_jexl_setup(
             is_hidden_jexl = f"'{text_question.slug}'|answer == 'foo'"
         question_option = question_option_factory(
             option__is_hidden=is_hidden_jexl,
-            option__slug="bar",
+            option__slug="option-1",
             question__type=question_type,
+            sort=1,
         )
         question_option_selected = question_option_factory(
-            question=question_option.question
+            option__slug="option-2",
+            question=question_option.question,
+            sort=2,
         )
         answer_document_factory(
             document=document,
@@ -197,9 +200,9 @@ def test_option_is_hidden(
         "node"
     ]["question"]["options"]["edges"]
 
-    expected = [{"node": {"slug": "piece-training"}}, {"node": {"slug": "bar"}}]
+    expected = [{"node": {"slug": "option-2"}}, {"node": {"slug": "option-1"}}]
     if is_hidden:
-        expected = [{"node": {"slug": "piece-training"}}]
+        expected = [{"node": {"slug": "option-2"}}]
     assert options == expected
 
 

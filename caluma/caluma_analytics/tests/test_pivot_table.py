@@ -99,10 +99,15 @@ def test_run_analytics_gql(
 
         summary = result.data["analyticsTable"]["resultData"]["summary"]["edges"]
 
+        expected_sum = sum(
+            case.document.answers.get(question_id="sub_question").value
+            for case in analytics_cases
+        )
+
         summary_dict = {col["node"]["alias"]: col["node"]["value"] for col in summary}
         assert summary_dict == {
             "status": "0",
             "last_created": "0",
             "quarter": "0",
-            "sub_question_sumsumsum": "17448.0",
+            "sub_question_sumsumsum": str(float(expected_sum)),
         }

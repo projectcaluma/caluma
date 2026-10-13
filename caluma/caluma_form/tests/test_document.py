@@ -150,8 +150,14 @@ def test_complex_document_query_performance(
     django_assert_num_queries,
     minio_mock,
 ):
-    answers = answer_factory.create_batch(5, document=document)
-    for answer in answers:
+    for question_type in [
+        Question.TYPE_TEXT,
+        Question.TYPE_INTEGER,
+        Question.TYPE_FLOAT,
+        Question.TYPE_DATE,
+        Question.TYPE_CHOICE,
+    ]:
+        answer = answer_factory(question__type=question_type, document=document)
         form_question_factory(question=answer.question, form=form)
     multiple_choice_question = question_factory(type=Question.TYPE_MULTIPLE_CHOICE)
     form_question_factory(question=multiple_choice_question, form=form)
@@ -284,7 +290,7 @@ def test_complex_document_query_performance(
         }
     """
 
-    with django_assert_num_queries(10):
+    with django_assert_num_queries(9):
         result = schema_executor(query, variable_values={"id": str(document.pk)})
     assert not result.errors
 
