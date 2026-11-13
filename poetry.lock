@@ -768,14 +768,14 @@ django = ">=5.2"
 
 [[package]]
 name = "django-watchman"
-version = "1.5.0"
+version = "2.0.0"
 description = "django-watchman exposes a status endpoint for your backing services"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "django_watchman-1.5.0-py3-none-any.whl", hash = "sha256:cd9b5d9796102db0d49f1162ad30b47e054d1413ce03214c580d19a274c02a0c"},
-    {file = "django_watchman-1.5.0.tar.gz", hash = "sha256:924e819e51a10a6e08210cde12588544317d6697725634fccef40b9d675bc19e"},
+    {file = "django_watchman-2.0.0-py3-none-any.whl", hash = "sha256:233f4b03225481bfa082606879517e0c22d9a18c453066aa53af2c583aeec16d"},
+    {file = "django_watchman-2.0.0.tar.gz", hash = "sha256:e76774b1f515b9f41b58c53ae249c2dfee35711699fa08813b98a15e22ae0d36"},
 ]
 
 [package.dependencies]
@@ -2893,4 +2893,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<4"
-content-hash = "34a3e6cd58442c3e3fa1660ccc0bf2e8c7a28fb5f7674095298c81deee9f1c58"
+content-hash = "8e7c1c1c98eb28629ab7b7357a276d2775ded54733dc75019611374bd18b2599"
